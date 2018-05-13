@@ -6,5 +6,7 @@ I'm a hobbyist programmer, so this code might not be optimal, feel free to make 
 I would like this project to be a community project, so if you have some time and knowledge to give, I'll be glad to add you to the contributor of this project :)
 
 Currently working on the project:
+ 
 ReignStumble - Lead Developer
+ 
 Dizzzy - Concept/Ideas/Beta tester
