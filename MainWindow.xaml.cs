@@ -34,7 +34,6 @@ namespace DICUI
                 else
                 {
                     LBL_Status.Content = "No CD or DVD found !";
-
                 }
             BTN_Search.IsEnabled = true;
             }
@@ -52,7 +51,6 @@ namespace DICUI
             }
         }
 
-
         public async void StartDumping()
         {
             String VAR_Type = "";
@@ -62,8 +60,6 @@ namespace DICUI
             String VAR_OutputFilename = TXT_OutputFilename.Text;
             String VAR_DriveSpeed = CB_DriveSpeed.Text;
             Boolean VAR_IsPSX = false;
-
-
             BTN_Start.IsEnabled = false;
 
             switch (Convert.ToString(CB_DiscType.Text))
@@ -199,7 +195,6 @@ namespace DICUI
                     break;
             }
 
-
             await Task.Run(
                 () =>
                 {
@@ -223,16 +218,11 @@ namespace DICUI
                     writetext.WriteLine("psxt001z" + " " + "\""+ VAR_OutputDirectory + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z3.txt");
                     writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".sub\" > " + "\"" + VAR_OutputDirectory + "libcrypt.txt");
                     writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + VAR_DriveLetter + " > " + "\"" + VAR_OutputDirectory + "libcryptdrv.log");
-
                 }
-
-
                 Process processpsx = new Process();
                 processpsx.StartInfo.FileName = "PSX.bat";
                 processpsx.Start();
                 processpsx.WaitForExit();
-                
-
             }
             BTN_Start.IsEnabled = true;
 
@@ -254,7 +244,6 @@ namespace DICUI
             BrowseFolder();
         }
 
-
         private void BTN_Search_Click(object sender, RoutedEventArgs e)
         {
             ScanForDisk();
@@ -263,6 +252,16 @@ namespace DICUI
         private void CB_DiscType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             LBL_Status.Content = "Ready to dump";
+        }
+
+        private void CB_DriveSpeed_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (CB_DriveSpeed.SelectedIndex == 4)
+            {
+                CB_DriveSpeed.Items.Clear();
+                CB_DriveSpeed.IsEditable = true;
+                
+            }
         }
     }
 }
