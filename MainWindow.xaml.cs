@@ -175,7 +175,11 @@ namespace DICUI
                     break;
                 case "Sony PlayStation 4":
                     VAR_Type = "bd";
-                    VAR_Switches = "???????????????????????";
+                    VAR_Switches = "";
+                    break;
+                case "XBOX ONE":
+                    VAR_Type = "bd";
+                    VAR_Switches = "";
                     break;
                 case "IBM PC Compatible (CD-Rom) SecuROM":
                     VAR_Type = "cd";

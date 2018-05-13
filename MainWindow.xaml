@@ -59,6 +59,7 @@
                 <ComboBoxItem Content="Sony PlayStation 2 (DVD-Rom)"/>
                 <ComboBoxItem Content="Sony PlayStation 4"/>
                 <ComboBoxItem Content="VTech V.Flash - V.Smile Pro"/>
+                <ComboBoxItem Content="XBOX ONE"/>
                 <ComboBoxItem Content="---------- Computers ----------" IsEnabled="False"/>
                 <ComboBoxItem Content="Apple Macintosh (CD-Rom)"/>
                 <ComboBoxItem Content="Apple Macintosh (DVD-Rom)"/>
