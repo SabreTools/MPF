@@ -10,3 +10,11 @@ Currently working on the project:
 ReignStumble - Lead Developer
  
 Dizzzy - Concept/Ideas/Beta tester
+
+ 
+ 
+2018-05-12
+ 
+-----------Initial Build V. 1.0 BETA 1-------------
+ 
+Download here: https://github.com/reignstumble/DICUI/blob/master/DICUI_1.0_Beta_1.zip
