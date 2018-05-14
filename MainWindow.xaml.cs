@@ -303,7 +303,7 @@ namespace DICUI
                 // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
                 using (StreamWriter writetext = new StreamWriter("PS4orXBOXONE.bat"))
                 {
-                    writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + VAR_DriveLetter + ":" + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
+                    writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + VAR_DriveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
                 }
                 Process processps4orxboxone = new Process();
                 processps4orxboxone.StartInfo.FileName = "PS4orXBOXONE.bat";
