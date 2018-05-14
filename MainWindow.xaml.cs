@@ -188,22 +188,9 @@ namespace DICUI
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
-                // TODO: Can protection be determined by a check automatically?
-                case "IBM PC Compatible (CD-Rom) No Copy Protection":
-                    VAR_Type = "dvd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "IBM PC Compatible (CD-Rom) SecuROM":
+                case "IBM PC Compatible (CD-Rom)":
                     VAR_Type = "cd";
-                    VAR_Switches = "/c2 /ns";
-                    break;
-                case "IBM PC Compatible (CD-Rom) Detectable Protection":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2 /sf";
-                    break;
-                case "IBM PC Compatible (CD-Rom) C2 Error Protection":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2 /ss";
+                    VAR_Switches = "/c2 /ns /sf /ss";
                     break;
                 case "IBM PC Compatible (DVD-Rom)":
                     VAR_Type = "dvd";
@@ -254,13 +241,11 @@ namespace DICUI
                 #region Others
 
                 case "Audio CD":
-                    VAR_Type = "audio";
-                    break;
-                case "IBM PC Compatible(CD - Rom) No Copy Protection":
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
                 case "BD-Video":
+                    VAR_Type = "bd";
                     VAR_Switches = "";
                     break;
                 case "DVD-Video":

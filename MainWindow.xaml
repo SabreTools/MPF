@@ -66,10 +66,7 @@
                 <ComboBoxItem Content="Apple Macintosh (CD-Rom)"/>
                 <ComboBoxItem Content="Apple Macintosh (DVD-Rom)"/>
                 <ComboBoxItem Content="Fujitsu FM Towns series"/>
-                <ComboBoxItem Content="IBM PC Compatible (CD-Rom) No Copy Protection"/>
-                <ComboBoxItem Content="IBM PC Compatible (CD-Rom) SecuROM"/>
-                <ComboBoxItem Content="IBM PC Compatible (CD-Rom) Detectable Protection"/>
-                <ComboBoxItem Content="IBM PC Compatible (CD-Rom) C2 Error Protection"/>
+                <ComboBoxItem Content="IBM PC Compatible (CD-Rom)"/>
                 <ComboBoxItem Content="IBM PC Compatible (DVD-Rom)"/>
                 <ComboBoxItem Content="NEC PC-88"/>
                 <ComboBoxItem Content="NEC PC-98"/>
