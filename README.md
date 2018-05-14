@@ -9,7 +9,7 @@ Currently working on the project:
  
 ReignStumble - Lead Developer
 
-mnadareski - Contributer
+darksabre76 - Contributer
 
 NHellFire - Contributer
 
