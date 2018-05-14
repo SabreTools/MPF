@@ -255,7 +255,7 @@ namespace DICUI
 
                 case "Audio CD":
                     VAR_Type = "audio";
-
+                    break;
                 case "IBM PC Compatible(CD - Rom) No Copy Protection":
                     VAR_Type = "cd";
 
