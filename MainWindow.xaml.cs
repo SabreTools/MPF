@@ -163,7 +163,7 @@ namespace DICUI
                     VAR_Switches = "";
                     break;
                 case "IBM PC Compatible(CD - Rom) No Copy Protection":
-                    VAR_Type = "dvd";
+                    VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
                 case "BD-Video":
