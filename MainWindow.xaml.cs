@@ -241,14 +241,11 @@ namespace DICUI
                 #region Others
 
                 case "Audio CD":
-                    VAR_Type = "audio";
-
-                case "IBM PC Compatible(CD - Rom) No Copy Protection":
                     VAR_Type = "cd";
-
                     VAR_Switches = "/c2";
                     break;
                 case "BD-Video":
+					VAR_Type = "bd";
                     VAR_Switches = "";
                     break;
                 case "DVD-Video":
