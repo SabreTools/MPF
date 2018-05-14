@@ -18,3 +18,9 @@ Dizzzy - Concept/Ideas/Beta tester
 -----------Initial Build V.1.0-------------
  
 Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI_1.0.zip
+
+2018-05-13
+ 
+-----------Latest Build V.1.01-------------
+
+Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI_1.01.zip
