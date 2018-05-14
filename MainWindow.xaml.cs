@@ -65,10 +65,11 @@ namespace DICUI
 
             switch (Convert.ToString(CB_DiscType.Text))
             {
+                #region Consoles
+
                 case "Bandai Playdia Quick Interactive System":
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
-                    
                     break;
                 case "Bandai / Apple Pippin":
                     VAR_Type = "cd";
@@ -82,9 +83,33 @@ namespace DICUI
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
-                case "NEC PC-FX / PC-Engine / TurboGrafx CD":
+                case "Microsoft XBOX":
+                    // Placeholder for later use
+                    break;
+                case "Microsoft XBOX 360":
+                    // Placeholder for later use
+                    break;
+                case "Microsoft XBOX One":
+                    VAR_Type = "bd";
+                    VAR_Switches = "";
+                    VAR_IsXBOXorPS4 = true;
+                    break;
+                case "NEC PC-Engine / TurboGrafx CD":
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
+                    break;
+                case "NEC PC-FX / PC-FXGA":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Nintendo GameCube":
+                    // Placeholder for later use
+                    break;
+                case "Nintendo Wii":
+                    // Placeholder for later use
+                    break;
+                case "Nintendo Wii U":
+                    // Placeholder for later use
                     break;
                 case "Panasonic 3DO":
                     VAR_Type = "cd";
@@ -94,7 +119,14 @@ namespace DICUI
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
-                case "Sega CD / Mega CD / Saturn":
+                case "Sega CD / Mega CD":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Sega Dreamcast":
+                    // Placeholder for later use
+                    break;
+                case "Sega Saturn":
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
@@ -102,51 +134,12 @@ namespace DICUI
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
+                case "Sony PlayStation":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    VAR_IsPSX = true;
+                    break;
                 case "Sony PlayStation 2 (CD-Rom)":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "VTech V.Flash - V.Smile Pro":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "Apple Macintosh (CD-Rom)":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "FM Towns series":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "NEC PC-88 / PC-98":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "Audio CD":
-                    VAR_Type = "audio";
-                    VAR_Switches = "/c2";
-                    break;
-                case "PalmOS":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "Photo CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "PlayStation GameShark Updates":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "Sega Lindbergh":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "Tomy Kiss-Site":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "Video CD":
                     VAR_Type = "cd";
                     VAR_Switches = "/c2";
                     break;
@@ -154,35 +147,51 @@ namespace DICUI
                     VAR_Type = "dvd";
                     VAR_Switches = "";
                     break;
-                case "Apple Macintosh (DVD-Rom)":
-                    VAR_Type = "dvd";
-                    VAR_Switches = "";
-                    break;
-                case "IBM PC Compatible (DVD-Rom)":
-                    VAR_Type = "dvd";
-                    VAR_Switches = "";
-                    break;
-                case "IBM PC Compatible(CD - Rom) No Copy Protection":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    break;
-                case "BD-Video":
-                    VAR_Switches = "";
-                    break;
-                case "Sony PlayStation":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    VAR_IsPSX = true;
+                case "Sony PlayStation 3":
+                    // Placeholder for later use
                     break;
                 case "Sony PlayStation 4":
                     VAR_Type = "bd";
                     VAR_Switches = "";
                     VAR_IsXBOXorPS4 = true;
                     break;
-                case "XBOX ONE":
-                    VAR_Type = "bd";
+                case "Sony PlayStation Portable":
+                    // No-op - PSP can't be dumped with DIC
+                    break;
+                case "VM Labs NUON":
+                    // Placeholder for later use
+                    break;
+                case "VTech V.Flash - V.Smile Pro":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "ZAPiT Games Game Wave Family Entertainment System":
+                    // Placeholder for later use
+                    break;
+
+                #endregion
+
+                #region Computers
+
+                case "Acorn Archimedes":
+                    // Placeholder for later use
+                    break;
+                case "Apple Macintosh (CD-Rom)":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Apple Macintosh (DVD-Rom)":
+                    VAR_Type = "dvd";
                     VAR_Switches = "";
-                    VAR_IsXBOXorPS4 = true;
+                    break;
+                case "Fujitsu FM Towns series":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                // TODO: Can protection be determined by a check automatically?
+                case "IBM PC Compatible (CD-Rom) No Copy Protection":
+                    VAR_Type = "dvd";
+                    VAR_Switches = "/c2";
                     break;
                 case "IBM PC Compatible (CD-Rom) SecuROM":
                     VAR_Type = "cd";
@@ -196,7 +205,99 @@ namespace DICUI
                     VAR_Type = "cd";
                     VAR_Switches = "/c2 /ss";
                     break;
+                case "IBM PC Compatible (DVD-Rom)":
+                    VAR_Type = "dvd";
+                    VAR_Switches = "";
+                    break;
+                case "NEC PC-88":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "NEC PC-98":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Sharp X68000":
+                    // Placeholder for later use
+                    break;
+
+                #endregion
+
+                #region Arcade
+
+                case "Namco / Sega / Nintendo Triforce":
+                    // Placeholder for later use
+                    break;
+                case "Sega Chihiro":
+                    // Placeholder for later use
+                    break;
+                case "Sega Lindbergh":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Sega Naomi":
+                    // Placeholder for later use
+                    break;
+                case "Sega Naomi 2":
+                    // Placeholder for later use
+                    break;
+                case "TAB-Austria Quizard":
+                    // Placeholder for later use
+                    break;
+
+                case "Tandy / Memorex Visual Information System":
+                    // Placeholder for later use
+                    break;
+
+                #endregion
+
+                #region Others
+
+                case "Audio CD":
+                    VAR_Type = "audio";
+
+                case "IBM PC Compatible(CD - Rom) No Copy Protection":
+                    VAR_Type = "cd";
+
+                    VAR_Switches = "/c2";
+                    break;
+                case "BD-Video":
+                    VAR_Switches = "";
+                    break;
+                case "DVD-Video":
+                    VAR_Type = "dvd";
+                    break;
+                case "PalmOS":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Philips CD-i Digital Video":
+                    // Placeholder for later use
+                    break;
+                case "Photo CD":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "PlayStation GameShark Updates":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Tao iKTV":
+                    // Placeholder for later use
+                    break;
+                case "Tomy Kiss-Site":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+                case "Video CD":
+                    VAR_Type = "cd";
+                    VAR_Switches = "/c2";
+                    break;
+
+                #endregion
+
                 case "Unknown":
+                default:
                     VAR_Type = "";
                     VAR_Switches = "";
                     break;
