@@ -66,8 +66,8 @@
                 <ComboBoxItem Content="Apple Macintosh (CD-Rom)"/>
                 <ComboBoxItem Content="Apple Macintosh (DVD-Rom)"/>
                 <ComboBoxItem Content="Fujitsu FM Towns series"/>
-				<ComboBoxItem Content="IBM PC Compatible (CD-Rom)"/>
-				<ComboBoxItem Content="IBM PC Compatible (DVD-Rom)"/>
+                <ComboBoxItem Content="IBM PC Compatible (CD-Rom)"/>
+                <ComboBoxItem Content="IBM PC Compatible (DVD-Rom)"/>
                 <ComboBoxItem Content="NEC PC-88"/>
                 <ComboBoxItem Content="NEC PC-98"/>
                 <ComboBoxItem Content="---------- Arcade ----------" IsEnabled="False"/>

@@ -245,7 +245,7 @@ namespace DICUI
                     VAR_Switches = "/c2";
                     break;
                 case "BD-Video":
-					VAR_Type = "bd";
+                    VAR_Type = "bd";
                     VAR_Switches = "";
                     break;
                 case "DVD-Video":
