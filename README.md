@@ -21,6 +21,6 @@ Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI
 
 2018-05-13
  
------------Latest Build V.1.01-------------
+-----------Latest Build V.1.01b-------------
 
-Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI_1.01.zip
+Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI_1.01b.zip
