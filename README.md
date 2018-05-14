@@ -19,5 +19,7 @@ Dizzzy - Concept/Ideas/Beta tester
  
 2018-05-14
 
-Version 1.01c released:
+
+Version 1.01d released:
+
 https://github.com/reignstumble/DICUI/releases
