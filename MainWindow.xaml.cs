@@ -291,7 +291,7 @@ namespace DICUI
                 () =>
                 {
                     Process process = new Process();
-                    process.StartInfo.FileName = "Release_ANSI\\DiscImageCreator.exe";
+                    process.StartInfo.FileName = Properties.Settings.Default.DiscImageCreatorLocation; // TODO: Make this configurable in UI
                     process.StartInfo.Arguments = VAR_Type + " " + VAR_DriveLetter + " \"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + "\" " + VAR_DriveSpeed + " " + VAR_Switches;
                     Console.WriteLine(process.StartInfo.Arguments);
                     process.Start();
@@ -300,6 +300,7 @@ namespace DICUI
 
             if (VAR_IsXBOXorPS4 == true)
             {
+				// TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
                 using (StreamWriter writetext = new StreamWriter("PS4orXBOXONE.bat"))
                 {
                     writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + VAR_DriveLetter + ":" + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
@@ -311,7 +312,8 @@ namespace DICUI
             }
             if (VAR_IsPSX == true)
             {
-                using (StreamWriter writetext = new StreamWriter("PSX.bat"))
+				// TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
+				using (StreamWriter writetext = new StreamWriter("PSX.bat"))
                 {
                     writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
                     writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
@@ -328,9 +330,6 @@ namespace DICUI
                 processpsx.WaitForExit();
             }
             BTN_Start.IsEnabled = true;
-
-
-
         }
 
         public MainWindow()
@@ -361,12 +360,12 @@ namespace DICUI
 
         private void CB_DriveSpeed_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+			// TODO: Figure out how to keep the list of items while also allowing the custom input
             if (CB_DriveSpeed.SelectedIndex == 4)
             {
-                CB_DriveSpeed.Items.Clear();
-                CB_DriveSpeed.IsEditable = true;
-                
-            }
+				CB_DriveSpeed.Items.Clear();
+				CB_DriveSpeed.IsEditable = true;
+			}
         }
     }
 }

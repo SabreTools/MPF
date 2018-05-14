@@ -93,8 +93,8 @@
                 <ComboBoxItem Content="8"/>
                 <ComboBoxItem Content="16"/>
                 <ComboBoxItem Content="48"/>
-                <ComboBoxItem Content="Custom"/>
-            </ComboBox>
+				<ComboBoxItem Content="Custom"/>
+			</ComboBox>
 
 
         </Grid>
