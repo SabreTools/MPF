@@ -49,34 +49,39 @@
                 <ComboBoxItem Content="Bandai / Apple Pippin"/>
                 <ComboBoxItem Content="Commodore Amiga CD / CD32 / CDTV"/>
                 <ComboBoxItem Content="Mattel HyperScan"/>
-                <ComboBoxItem Content="NEC PC-FX / PC-Engine / TurboGrafx CD"/>
+                <ComboBoxItem Content="Microsoft XBOX One"/>
+                <ComboBoxItem Content="NEC PC-Engine / TurboGrafx CD"/>
+                <ComboBoxItem Content="NEC PC-FX / PC-FXGA"/>
                 <ComboBoxItem Content="Panasonic 3DO"/>
                 <ComboBoxItem Content="Philips CD-i"/>
-                <ComboBoxItem Content="Sega CD / Mega CD / Saturn"/>
+                <ComboBoxItem Content="Sega CD / Mega CD"/>
+                <ComboBoxItem Content="Sega Saturn"/>
                 <ComboBoxItem Content="SNK Neo Geo CD"/>
                 <ComboBoxItem Content="Sony PlayStation"/>
                 <ComboBoxItem Content="Sony PlayStation 2 (CD-Rom)"/>
                 <ComboBoxItem Content="Sony PlayStation 2 (DVD-Rom)"/>
                 <ComboBoxItem Content="Sony PlayStation 4"/>
                 <ComboBoxItem Content="VTech V.Flash - V.Smile Pro"/>
-                <ComboBoxItem Content="XBOX ONE"/>
                 <ComboBoxItem Content="---------- Computers ----------" IsEnabled="False"/>
                 <ComboBoxItem Content="Apple Macintosh (CD-Rom)"/>
                 <ComboBoxItem Content="Apple Macintosh (DVD-Rom)"/>
-                <ComboBoxItem Content="FM Towns series"/>
+                <ComboBoxItem Content="Fujitsu FM Towns series"/>
+                <ComboBoxItem Content="IBM PC Compatible (CD-Rom) No Copy Protection"/>
                 <ComboBoxItem Content="IBM PC Compatible (CD-Rom) SecuROM"/>
                 <ComboBoxItem Content="IBM PC Compatible (CD-Rom) Detectable Protection"/>
                 <ComboBoxItem Content="IBM PC Compatible (CD-Rom) C2 Error Protection"/>
-                <ComboBoxItem Content="IBM PC Compatible(CD - Rom) No Copy Protection"/>
                 <ComboBoxItem Content="IBM PC Compatible (DVD-Rom)"/>
-                <ComboBoxItem Content="NEC PC-88 / PC-98"/>
+                <ComboBoxItem Content="NEC PC-88"/>
+                <ComboBoxItem Content="NEC PC-98"/>
+                <ComboBoxItem Content="---------- Arcade ----------" IsEnabled="False"/>
+                <ComboBoxItem Content="Sega Lindbergh"/>
                 <ComboBoxItem Content="---------- Others ----------" IsEnabled="False"/>
                 <ComboBoxItem Content="Audio CD"/>
                 <ComboBoxItem Content="BD-Video"/>
+                <ComboBoxItem Content="DVD-Video"/>
                 <ComboBoxItem Content="PalmOS"/>
                 <ComboBoxItem Content="Photo CD"/>
                 <ComboBoxItem Content="PlayStation GameShark Updates"/>
-                <ComboBoxItem Content="Sega Lindbergh"/>
                 <ComboBoxItem Content="Tomy Kiss-Site"/>
                 <ComboBoxItem Content="Video CD"/>
             </ComboBox>
