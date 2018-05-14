@@ -60,6 +60,7 @@ namespace DICUI
             String VAR_OutputFilename = TXT_OutputFilename.Text;
             String VAR_DriveSpeed = CB_DriveSpeed.Text;
             Boolean VAR_IsPSX = false;
+            Boolean VAR_IsXBOXorPS4 = false;
             BTN_Start.IsEnabled = false;
 
             switch (Convert.ToString(CB_DiscType.Text))
@@ -176,10 +177,12 @@ namespace DICUI
                 case "Sony PlayStation 4":
                     VAR_Type = "bd";
                     VAR_Switches = "";
+                    VAR_IsXBOXorPS4 = true;
                     break;
                 case "XBOX ONE":
                     VAR_Type = "bd";
                     VAR_Switches = "";
+                    VAR_IsXBOXorPS4 = true;
                     break;
                 case "IBM PC Compatible (CD-Rom) SecuROM":
                     VAR_Type = "cd";
@@ -210,16 +213,27 @@ namespace DICUI
                     process.WaitForExit();
                 });
 
+            if (VAR_IsXBOXorPS4 == true)
+            {
+                using (StreamWriter writetext = new StreamWriter("PS4orXBOXONE.bat"))
+                {
+                    writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + VAR_DriveLetter + ":" + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
+                }
+                Process processps4orxboxone = new Process();
+                processps4orxboxone.StartInfo.FileName = "PS4orXBOXONE.bat";
+                processps4orxboxone.Start();
+                processps4orxboxone.WaitForExit();
+            }
             if (VAR_IsPSX == true)
             {
                 using (StreamWriter writetext = new StreamWriter("PSX.bat"))
                 {
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".bin" + "\" > " + "\"" +  VAR_OutputDirectory + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "edccchk1.txt");
                     writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "edccchk1.txt");
                     writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "edccchk1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\""+ VAR_OutputDirectory + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory  + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z2.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\""+ VAR_OutputDirectory + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z3.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z1.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z2.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z3.txt");
                     writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".sub\" > " + "\"" + VAR_OutputDirectory + "libcrypt.txt");
                     writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + VAR_DriveLetter + " > " + "\"" + VAR_OutputDirectory + "libcryptdrv.log");
                 }
@@ -229,6 +243,8 @@ namespace DICUI
                 processpsx.WaitForExit();
             }
             BTN_Start.IsEnabled = true;
+
+
 
         }
 
