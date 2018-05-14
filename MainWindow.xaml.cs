@@ -228,14 +228,14 @@ namespace DICUI
             {
                 using (StreamWriter writetext = new StreamWriter("PSX.bat"))
                 {
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "edccchk1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z2.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "psxt001z3.txt");
-                    writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + VAR_OutputDirectory + VAR_OutputFilename + ".sub\" > " + "\"" + VAR_OutputDirectory + "libcrypt.txt");
-                    writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + VAR_DriveLetter + " > " + "\"" + VAR_OutputDirectory + "libcryptdrv.log");
+                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "psxt001z1.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "psxt001z2.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "psxt001z3.txt");
+                    writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".sub\" > " + "\"" + VAR_OutputDirectory + "\\" + "libcrypt.txt");
+                    writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + VAR_DriveLetter + " > " + "\"" + VAR_OutputDirectory + "\\" + "libcryptdrv.log");
                 }
                 Process processpsx = new Process();
                 processpsx.StartInfo.FileName = "PSX.bat";
