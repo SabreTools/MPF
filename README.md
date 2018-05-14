@@ -8,19 +8,16 @@ I would like this project to be a community project, so if you have some time an
 Currently working on the project:
  
 ReignStumble - Lead Developer
- 
+
+mnadareski - Contributer
+
+NHellFire - Contributer
+
 Dizzzy - Concept/Ideas/Beta tester
 
  
  
-2018-05-12
- 
------------Initial Build V.1.0-------------
- 
-Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI_1.0.zip
+2018-05-14
 
-2018-05-13
- 
------------Latest Build V.1.01b-------------
-
-Download here: https://github.com/reignstumble/DICUI/blob/master/Downloads/DICUI_1.01b.zip
+Version 1.01c released:
+https://github.com/reignstumble/DICUI/releases
