@@ -78,19 +78,19 @@ namespace DICUI
 
                 case "Bandai Playdia Quick Interactive System":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Bandai / Apple Pippin":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Commodore Amiga CD / CD32 / CDTV":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Mattel HyperScan":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Microsoft XBOX":
                     // Placeholder for later use
@@ -105,11 +105,11 @@ namespace DICUI
                     break;
                 case "NEC PC-Engine / TurboGrafx CD":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "NEC PC-FX / PC-FXGA":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Nintendo GameCube":
                     // Placeholder for later use
@@ -122,35 +122,35 @@ namespace DICUI
                     break;
                 case "Panasonic 3DO":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Philips CD-i":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Sega CD / Mega CD":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Sega Dreamcast":
                     // Placeholder for later use
                     break;
                 case "Sega Saturn":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "SNK Neo Geo CD":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Sony PlayStation":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     isPSX = true;
                     break;
                 case "Sony PlayStation 2 (CD-Rom)":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Sony PlayStation 2 (DVD-Rom)":
                     discType = "dvd";
@@ -172,7 +172,7 @@ namespace DICUI
                     break;
                 case "VTech V.Flash - V.Smile Pro":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "ZAPiT Games Game Wave Family Entertainment System":
                     // Placeholder for later use
@@ -187,7 +187,7 @@ namespace DICUI
                     break;
                 case "Apple Macintosh (CD-Rom)":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Apple Macintosh (DVD-Rom)":
                     discType = "dvd";
@@ -195,11 +195,11 @@ namespace DICUI
                     break;
                 case "Fujitsu FM Towns series":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "IBM PC Compatible (CD-Rom)":
                     discType = "cd";
-                    processArguments = "/c2 /ns /sf /ss";
+                    processArguments = "/c2 20 /ns /sf /ss";
                     break;
                 case "IBM PC Compatible (DVD-Rom)":
                     discType = "dvd";
@@ -207,11 +207,11 @@ namespace DICUI
                     break;
                 case "NEC PC-88":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "NEC PC-98":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Sharp X68000":
                     // Placeholder for later use
@@ -229,7 +229,7 @@ namespace DICUI
                     break;
                 case "Sega Lindbergh":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Sega Naomi":
                     // Placeholder for later use
@@ -251,7 +251,7 @@ namespace DICUI
 
                 case "Audio CD":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "BD-Video":
                     discType = "bd";
@@ -262,29 +262,29 @@ namespace DICUI
                     break;
                 case "PalmOS":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Philips CD-i Digital Video":
                     // Placeholder for later use
                     break;
                 case "Photo CD":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "PlayStation GameShark Updates":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Tao iKTV":
                     // Placeholder for later use
                     break;
                 case "Tomy Kiss-Site":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
                 case "Video CD":
                     discType = "cd";
-                    processArguments = "/c2";
+                    processArguments = "/c2 20";
                     break;
 
                 #endregion
