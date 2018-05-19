@@ -5,30 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Disc Image Creator GUI" Height="350" Width="500">
+        Title="Disc Image Creator GUI" Height="400" Width="600">
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="13*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
+            <RowDefinition Height="4*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
+        <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
+        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,4.6,5.2,4.8" HorizontalAlignment="Stretch" Header="Controls"/>
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5.2,5.2,4.8" HorizontalAlignment="Stretch" Header="Status"/>
 
-
-        <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" HorizontalAlignment="Stretch" Header="Informations Input"/>
-        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" HorizontalAlignment="Stretch" Header="Control"/>
-        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" HorizontalAlignment="Stretch" Header="Status"/>
-
-
-        <Grid Grid.Row="0" Grid.Column="0" Margin="15,25,15,10">
+        <Grid Grid.Row="0" Grid.Column="0" Margin="15,25,15.2,10.4" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="3*"/>
+                <ColumnDefinition Width="2.5*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -37,12 +37,13 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Disc Type</Label>
-            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
-            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
-            <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-            <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
+            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">DiscImageCreator Path</Label>
+            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
+            <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
+            <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
+            <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
 
-            <ComboBox x:Name="CB_DiscType" Grid.Row="0" Grid.Column="1" Height="22" Text="Bandai Playdia Quick Interactive System" SelectionChanged="CB_DiscType_SelectionChanged">
+            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" Text="Bandai Playdia Quick Interactive System" DropDownClosed="cmb_DiscType_DropDownClosed" SelectionChanged="cmb_DiscType_SelectionChanged">
                 <ComboBoxItem Content="Unknown"/>
                 <ComboBoxItem Content="---------- Consoles ----------" IsEnabled="False"/>
                 <ComboBoxItem Content="Bandai Playdia Quick Interactive System"/>
@@ -82,46 +83,51 @@
                 <ComboBoxItem Content="Tomy Kiss-Site"/>
                 <ComboBoxItem Content="Video CD"/>
             </ComboBox>
-            <TextBox x:Name="TXT_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22"></TextBox>
-            <TextBox x:Name="TXT_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="290" HorizontalAlignment="left" Text="ISO" ></TextBox>
-            <Button x:Name="BTN_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="BTN_OutputDirectoryBrowse_Click" ></Button>
-            <ComboBox x:Name="CB_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left">
 
-            </ComboBox>
-            <ComboBox x:Name="CB_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="CB_DriveSpeed_SelectionChanged">
+            <TextBox x:Name="TXT_DiscImageCreatorPath" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" IsEnabled="False" ></TextBox>
+            <Button x:Name="BTN_DiscImageCreatorBrowse" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" IsEnabled="False"></Button>
+
+            <TextBox x:Name="txt_OutputFilename" Grid.Row="2" Grid.Column="1" Height="22"></TextBox>
+
+            <TextBox x:Name="txt_OutputDirectory" Grid.Row="3" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" Text="ISO" ></TextBox>
+            <Button x:Name="BTN_OutputDirectoryBrowse" Grid.Row="3" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="BTN_OutputDirectoryBrowse_Click" ></Button>
+
+            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left"></ComboBox>
+
+            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="5" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left"  SelectionChanged="cmb_DriveSpeed_SelectionChanged">
                 <ComboBoxItem Content="4"/>
                 <ComboBoxItem Content="8"/>
                 <ComboBoxItem Content="16"/>
                 <ComboBoxItem Content="48"/>
                 <ComboBoxItem Content="Custom"/>
             </ComboBox>
-
-
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" Margin="15,20,15,10">
+        <Grid Grid.Row="1" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Button x:Name="BTN_Start" Grid.Row="0" Grid.Column="0" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="BTN_Start_Click" IsEnabled="False" />
-               <Button x:Name="BTN_Search" Grid.Row="0" Grid.Column="1" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="BTN_Search_Click" />
-        </Grid>
-
-        <Grid Grid.Row="2" Grid.Column="0" Margin="15,20,15,10">
-            <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Label x:Name="LBL_Status" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for CD or DVD..." />
+
+            <Button x:Name="btn_Start" Grid.Row="0" Grid.Column="0" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="btn_Start_Click" IsEnabled="False" />
+            <Button x:Name="btn_Search" Grid.Row="0" Grid.Column="1" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="btn_Search_Click" />
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="0" Margin="15,20.2,15.2,9.8" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label x:Name="lbl_Status" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for CD or DVD..." />
 
         </Grid>
+
     </Grid>
-
+    
 </Window>

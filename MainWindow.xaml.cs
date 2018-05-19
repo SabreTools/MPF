@@ -6,36 +6,48 @@ using WinForms = System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
+
 namespace DICUI
 {
+
     public partial class MainWindow : Window
     {
+        public String discType;
+        public String processArguments;
+        public String dicPath = "Programs\\DiscImageCreator.exe";
+        public String driveLetter;
+        public String outputDirectory;
+        public String outputFileName;
+        public String driveSpeed;
+        public Boolean isPSX = false;
+        public Boolean isXboneOrPS4 = false;
+
         public void ScanForDisk()
         {
-            BTN_Search.IsEnabled = false;
-            CB_DriveLetter.Items.Clear();
+            btn_Search.IsEnabled = false;
+            cmb_DriveLetter.Items.Clear();
             foreach (var d in DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.CDRom))
             {
                 if (d.IsReady == true)
                 {
-                    TXT_OutputFilename.Text = d.VolumeLabel;
+                    txt_OutputFilename.Text = d.VolumeLabel;
                     
-                    if (TXT_OutputFilename.Text == "")
+                    if (txt_OutputFilename.Text == "")
                     {
-                        TXT_OutputFilename.Text = "unknown";
+                        txt_OutputFilename.Text = "unknown";
                     }
-                    CB_DriveLetter.Items.Add(d.Name.Replace(":\\", ""));
-                    CB_DriveLetter.SelectedIndex = 0;
-                    TXT_OutputDirectory.Text = "ISO" + "\\" + TXT_OutputFilename.Text + "\\";
-                    LBL_Status.Content = "CD or DVD found ! Choose your Disc Type";
-                    BTN_Start.IsEnabled = true;
-                    CB_DriveSpeed.Text = "8";
+                    cmb_DriveLetter.Items.Add(d.Name.Replace(":\\", ""));
+                    cmb_DriveLetter.SelectedIndex = 0;
+                    txt_OutputDirectory.Text = "ISO" + "\\" + txt_OutputFilename.Text + "\\";
+                    lbl_Status.Content = "CD or DVD found ! Choose your Disc Type";
+                    btn_Start.IsEnabled = true;
+                    cmb_DriveSpeed.Text = "8";
                 }
                 else
                 {
-                    LBL_Status.Content = "No CD or DVD found !";
+                    lbl_Status.Content = "No CD or DVD found !";
                 }
-            BTN_Search.IsEnabled = true;
+            btn_Search.IsEnabled = true;
             }
         }
 
@@ -47,41 +59,38 @@ namespace DICUI
             if (result == WinForms.DialogResult.OK)
             {
                 String sPath = folderDialog.SelectedPath;
-                TXT_OutputDirectory.Text = sPath;
+                txt_OutputDirectory.Text = sPath;
             }
         }
 
         public async void StartDumping()
         {
-            String VAR_Type = "";
-            String VAR_Switches = "";
-            String VAR_DriveLetter = CB_DriveLetter.Text;
-            String VAR_OutputDirectory = TXT_OutputDirectory.Text;
-            String VAR_OutputFilename = TXT_OutputFilename.Text;
-            String VAR_DriveSpeed = CB_DriveSpeed.Text;
-            Boolean VAR_IsPSX = false;
-            Boolean VAR_IsXBOXorPS4 = false;
-            BTN_Start.IsEnabled = false;
 
-            switch (Convert.ToString(CB_DiscType.Text))
+            driveLetter = cmb_DriveLetter.Text;
+            outputDirectory = txt_OutputDirectory.Text;
+            outputFileName = txt_OutputFilename.Text;
+            driveSpeed = cmb_DriveSpeed.Text;
+            btn_Start.IsEnabled = false;
+
+            switch (Convert.ToString(cmb_DiscType.Text))
             {
                 #region Consoles
 
                 case "Bandai Playdia Quick Interactive System":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Bandai / Apple Pippin":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Commodore Amiga CD / CD32 / CDTV":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Mattel HyperScan":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Microsoft XBOX":
                     // Placeholder for later use
@@ -90,17 +99,17 @@ namespace DICUI
                     // Placeholder for later use
                     break;
                 case "Microsoft XBOX One":
-                    VAR_Type = "bd";
-                    VAR_Switches = "";
-                    VAR_IsXBOXorPS4 = true;
+                    discType = "bd";
+                    processArguments = "";
+                    isXboneOrPS4 = true;
                     break;
                 case "NEC PC-Engine / TurboGrafx CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "NEC PC-FX / PC-FXGA":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Nintendo GameCube":
                     // Placeholder for later use
@@ -112,48 +121,48 @@ namespace DICUI
                     // Placeholder for later use
                     break;
                 case "Panasonic 3DO":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Philips CD-i":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Sega CD / Mega CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Sega Dreamcast":
                     // Placeholder for later use
                     break;
                 case "Sega Saturn":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "SNK Neo Geo CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Sony PlayStation":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
-                    VAR_IsPSX = true;
+                    discType = "cd";
+                    processArguments = "/c2";
+                    isPSX = true;
                     break;
                 case "Sony PlayStation 2 (CD-Rom)":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Sony PlayStation 2 (DVD-Rom)":
-                    VAR_Type = "dvd";
-                    VAR_Switches = "";
+                    discType = "dvd";
+                    processArguments = "";
                     break;
                 case "Sony PlayStation 3":
                     // Placeholder for later use
                     break;
                 case "Sony PlayStation 4":
-                    VAR_Type = "bd";
-                    VAR_Switches = "";
-                    VAR_IsXBOXorPS4 = true;
+                    discType = "bd";
+                    processArguments = "";
+                    isXboneOrPS4 = true;
                     break;
                 case "Sony PlayStation Portable":
                     // No-op - PSP can't be dumped with DIC
@@ -162,8 +171,8 @@ namespace DICUI
                     // Placeholder for later use
                     break;
                 case "VTech V.Flash - V.Smile Pro":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "ZAPiT Games Game Wave Family Entertainment System":
                     // Placeholder for later use
@@ -177,32 +186,32 @@ namespace DICUI
                     // Placeholder for later use
                     break;
                 case "Apple Macintosh (CD-Rom)":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Apple Macintosh (DVD-Rom)":
-                    VAR_Type = "dvd";
-                    VAR_Switches = "";
+                    discType = "dvd";
+                    processArguments = "";
                     break;
                 case "Fujitsu FM Towns series":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "IBM PC Compatible (CD-Rom)":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2 /ns /sf /ss";
+                    discType = "cd";
+                    processArguments = "/c2 /ns /sf /ss";
                     break;
                 case "IBM PC Compatible (DVD-Rom)":
-                    VAR_Type = "dvd";
-                    VAR_Switches = "";
+                    discType = "dvd";
+                    processArguments = "";
                     break;
                 case "NEC PC-88":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "NEC PC-98":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Sharp X68000":
                     // Placeholder for later use
@@ -219,8 +228,8 @@ namespace DICUI
                     // Placeholder for later use
                     break;
                 case "Sega Lindbergh":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Sega Naomi":
                     // Placeholder for later use
@@ -241,49 +250,49 @@ namespace DICUI
                 #region Others
 
                 case "Audio CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "BD-Video":
-                    VAR_Type = "bd";
-                    VAR_Switches = "";
+                    discType = "bd";
+                    processArguments = "";
                     break;
                 case "DVD-Video":
-                    VAR_Type = "dvd";
+                    discType = "dvd";
                     break;
                 case "PalmOS":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Philips CD-i Digital Video":
                     // Placeholder for later use
                     break;
                 case "Photo CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "PlayStation GameShark Updates":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Tao iKTV":
                     // Placeholder for later use
                     break;
                 case "Tomy Kiss-Site":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
                 case "Video CD":
-                    VAR_Type = "cd";
-                    VAR_Switches = "/c2";
+                    discType = "cd";
+                    processArguments = "/c2";
                     break;
 
                 #endregion
 
                 case "Unknown":
                 default:
-                    VAR_Type = "";
-                    VAR_Switches = "";
+                    discType = "";
+                    processArguments = "";
                     break;
             }
 
@@ -291,45 +300,45 @@ namespace DICUI
                 () =>
                 {
                     Process process = new Process();
-                    process.StartInfo.FileName = Properties.Settings.Default.DiscImageCreatorLocation; // TODO: Make this configurable in UI
-                    process.StartInfo.Arguments = VAR_Type + " " + VAR_DriveLetter + " \"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + "\" " + VAR_DriveSpeed + " " + VAR_Switches;
+                    process.StartInfo.FileName = dicPath; // TODO: Make this configurable in UI
+                    process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + outputDirectory + "\\" + outputFileName + "\" " + driveSpeed + " " + processArguments;
                     Console.WriteLine(process.StartInfo.Arguments);
                     process.Start();
                     process.WaitForExit();
                 });
 
-            if (VAR_IsXBOXorPS4 == true)
+            if (isXboneOrPS4 == true)
             {
                 // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
-                using (StreamWriter writetext = new StreamWriter("PS4orXBOXONE.bat"))
+                using (StreamWriter writetext = new StreamWriter("XboneOrPS4.bat"))
                 {
-                    writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + VAR_DriveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
+                    writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
                 }
-                Process processps4orxboxone = new Process();
-                processps4orxboxone.StartInfo.FileName = "PS4orXBOXONE.bat";
-                processps4orxboxone.Start();
-                processps4orxboxone.WaitForExit();
+                Process processXboneOrPS4 = new Process();
+                processXboneOrPS4.StartInfo.FileName = "XboneOrPS4.bat";
+                processXboneOrPS4.Start();
+                processXboneOrPS4.WaitForExit();
             }
-            if (VAR_IsPSX == true)
+            if (isPSX == true)
             {
                 // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
                 using (StreamWriter writetext = new StreamWriter("PSX.bat"))
                 {
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "psxt001z1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 1).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "psxt001z2.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + " (Track 01).bin" + "\" > " + "\"" + VAR_OutputDirectory + "\\" + "psxt001z3.txt");
-                    writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + VAR_OutputDirectory + "\\" + VAR_OutputFilename + ".sub\" > " + "\"" + VAR_OutputDirectory + "\\" + "libcrypt.txt");
-                    writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + VAR_DriveLetter + " > " + "\"" + VAR_OutputDirectory + "\\" + "libcryptdrv.log");
+                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
+                    writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
+                    writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
+                    writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
                 }
                 Process processpsx = new Process();
                 processpsx.StartInfo.FileName = "PSX.bat";
                 processpsx.Start();
                 processpsx.WaitForExit();
             }
-            BTN_Start.IsEnabled = true;
+            btn_Start.IsEnabled = true;
         }
 
         public MainWindow()
@@ -338,7 +347,7 @@ namespace DICUI
             ScanForDisk();
         }
 
-        private void BTN_Start_Click(object sender, RoutedEventArgs e)
+        private void btn_Start_Click(object sender, RoutedEventArgs e)
         {
             StartDumping();  
         }
@@ -348,24 +357,55 @@ namespace DICUI
             BrowseFolder();
         }
 
-        private void BTN_Search_Click(object sender, RoutedEventArgs e)
+        private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             ScanForDisk();
         }
 
-        private void CB_DiscType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+
+
+        private void cmb_DiscType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            LBL_Status.Content = "Ready to dump";
+
+
+            lbl_Status.Content = "Ready to dump";
         }
 
-        private void CB_DriveSpeed_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void cmb_DriveSpeed_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             // TODO: Figure out how to keep the list of items while also allowing the custom input
-            if (CB_DriveSpeed.SelectedIndex == 4)
+            if (cmb_DriveSpeed.SelectedIndex == 4)
             {
-                CB_DriveSpeed.Items.Clear();
-                CB_DriveSpeed.IsEditable = true;
+                cmb_DriveSpeed.Items.Clear();
+                cmb_DriveSpeed.IsEditable = true;
             }
+        }
+
+        private void cmb_DiscType_DropDownClosed(object sender, EventArgs e)
+        {
+            switch (Convert.ToString(cmb_DiscType.Text))
+            {
+
+                case "Sony PlayStation 4":
+                    cmb_DriveSpeed.Items.Clear();
+                    cmb_DriveSpeed.IsEnabled = false;
+                    break;
+                case "Microsoft XBOX One":
+                    cmb_DriveSpeed.Items.Clear();
+                    cmb_DriveSpeed.IsEnabled = false;
+                    break;
+                default:
+                    cmb_DriveSpeed.IsEnabled = true;
+                    cmb_DriveSpeed.Items.Clear();
+                    cmb_DriveSpeed.Items.Add("4");
+                    cmb_DriveSpeed.Items.Add("8");
+                    cmb_DriveSpeed.Items.Add("16");
+                    cmb_DriveSpeed.Items.Add("48");
+                    cmb_DriveSpeed.Items.Add("Custom");
+                    cmb_DriveSpeed.SelectedIndex = 1;
+                    break;
+            }
+
         }
     }
 }
