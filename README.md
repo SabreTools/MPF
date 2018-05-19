@@ -1,6 +1,11 @@
 # DICUI
 This is my current progress on my C# Disc Image Creator UI.
 
+I am using Disc Image Creator, created by Sarami, and would like to thanks him for this great software.
+
+You can get the latest code and released on his github right here:
+https://github.com/saramibreak/DiscImageCreator
+
 I'm a hobbyist programmer, so this code might not be optimal, feel free to make your recommendation / Pull request.
 
 I would like this project to be a community project, so if you have some time and knowledge to give, I'll be glad to add you to the contributor of this project :)
@@ -18,8 +23,20 @@ Dizzzy - Concept/Ideas/Beta tester
 
  
 --------------------------------------------------------------------------
+2018-05-18
+--------------------------------------------------------------------------
+
+Version 1.02 released:
+
+- Fixed XBOX One and PS4 Drive Speed issue.
+- Started implementing DiscImageCreator Path selection.
+- Conforming my naming for objects and variable.
+
+--------------------------------------------------------------------------
 2018-05-14
 --------------------------------------------------------------------------
 Version 1.01d released:
 
+
+Download the latest release here:
 https://github.com/reignstumble/DICUI/releases
