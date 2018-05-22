@@ -26,11 +26,12 @@ Dizzzy - Concept/Ideas/Beta tester
 2018-05-18
 --------------------------------------------------------------------------
 
-Version 1.02 released:
+Version 1.02b released:
 
-- Fixed XBOX One and PS4 Drive Speed issue.
-- Started implementing DiscImageCreator Path selection.
-- Conforming my naming for objects and variable.
+- Fixed XBOX One and PS4 Drive Speed issue. (1.02)
+- Started implementing DiscImageCreator Path selection. (1.02)
+- Conforming my naming for objects and variable. (1.02)
+- Added missing DLL (1.02b)
 
 --------------------------------------------------------------------------
 2018-05-14
