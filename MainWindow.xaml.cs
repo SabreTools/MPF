@@ -240,7 +240,6 @@ namespace DICUI
                 case "TAB-Austria Quizard":
                     // Placeholder for later use
                     break;
-
                 case "Tandy / Memorex Visual Information System":
                     // Placeholder for later use
                     break;
