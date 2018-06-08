@@ -118,7 +118,7 @@ namespace DICUI
                 case KnownSystem.AppleMacintosh:
                     return "Apple Macintosh";
                 case KnownSystem.CommodoreAmigaCD:
-                    return "CommodoreAmigaCD";
+                    return "Commodore Amiga CD";
                 case KnownSystem.FujitsuFMTowns:
                     return "Fujitsu FM Towns series";
                 case KnownSystem.IBMPCCompatible:
