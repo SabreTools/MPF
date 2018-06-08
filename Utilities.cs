@@ -517,5 +517,67 @@ namespace DICUI
 
 			return parameters;
 		}
+
+		/// <summary>
+		/// Create a list of systems matched to their respective enums
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>
+		/// This returns a List of Tuples whose structure is as follows:
+		///		Item 1: Printable name
+		///		Item 2: KnownSystem mapping
+		///		Item 3: DiscType mapping
+		///	If something has a "string, null, null" value, it should be assumed that it is a separator
+		/// </remarks>
+		public static List<Tuple<string, KnownSystem?, DiscType?>> CreateListOfSystems()
+		{
+			List<Tuple<string, KnownSystem?, DiscType?>> mapping = new List<Tuple<string, KnownSystem?, DiscType?>>();
+
+			foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
+			{
+				// In the special cases of breaks, we want to add the proper mappings for sections
+				switch (system)
+				{
+					// Consoles section
+					case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
+						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Consoles ----------", null, null));
+						break;
+
+					// Computers section
+					case KnownSystem.AcornArchimedes:
+						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Computers ----------", null, null));
+						break;
+
+					// Arcade section
+					case KnownSystem.NamcoSegaNintendoTriforce:
+						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Arcade ----------", null, null));
+						break;
+
+					// Other section
+					case KnownSystem.AudioCD:
+						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Others ----------", null, null));
+						break;
+				}
+
+				// First, get a list of all DiscTypes for a given KnownSystem
+				List<DiscType> types = GetValidDiscTypes(system);
+
+				// If we have a single type, we don't want to postfix the system name with it
+				if (types.Count == 0)
+				{
+					mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system), system, types[0]));
+				}
+				// Otherwise, postfix the system name properly
+				else
+				{
+					foreach (DiscType type in types)
+					{
+						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system) + "(" + DiscTypeToString(type) + ")", system, type));
+					}
+				}
+			}
+
+			return mapping;
+		}
 	}
 }
