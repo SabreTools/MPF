@@ -26,7 +26,7 @@
 	/// Known systems
 	/// </summary>
 	/// <remarks>Ensure that Utilities methods are updated as well</remarks>
-	public enum System
+	public enum KnownSystem
 	{
 		NONE = 0,
 

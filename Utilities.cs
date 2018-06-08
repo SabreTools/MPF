@@ -10,139 +10,139 @@ namespace DICUI
 		/// </summary>
 		/// <param name="sys">System value to convert</param>
 		/// <returns>String representing the value, if possible</returns>
-		public static string SystemToString(System sys)
+		public static string SystemToString(KnownSystem sys)
 		{
 			switch (sys)
 			{
 				#region Consoles
 
-				case System.BandaiPlaydiaQuickInteractiveSystem:
+				case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
 					return "Bandai Playdia Quick Interactive System";
-				case System.BandaiApplePippin:
+				case KnownSystem.BandaiApplePippin:
 					return "Bandai / Apple Pippin";
-				case System.CommodoreAmigaCD32:
+				case KnownSystem.CommodoreAmigaCD32:
 					return "Commodore Amiga CD32";
-				case System.CommodoreAmigaCDTV:
+				case KnownSystem.CommodoreAmigaCDTV:
 					return "Commodore Amiga CDTV";
-				case System.MattelHyperscan:
+				case KnownSystem.MattelHyperscan:
 					return "Mattel HyperScan";
-				case System.MicrosoftXBOX:
+				case KnownSystem.MicrosoftXBOX:
 					return "Microsoft XBOX";
-				case System.MicrosoftXBOX360:
+				case KnownSystem.MicrosoftXBOX360:
 					return "Microsoft XBOX 360";
-				case System.MicrosoftXBOXOne:
+				case KnownSystem.MicrosoftXBOXOne:
 					return "Microsoft XBOX One";
-				case System.NECPCEngineTurboGrafxCD:
+				case KnownSystem.NECPCEngineTurboGrafxCD:
 					return "NEC PC-Engine / TurboGrafx CD";
-				case System.NECPCFX:
+				case KnownSystem.NECPCFX:
 					return "NEC PC-FX / PC-FXGA";
-				case System.NintendoGameCube:
+				case KnownSystem.NintendoGameCube:
 					return "Nintendo GameCube";
-				case System.NintendoWii:
+				case KnownSystem.NintendoWii:
 					return "Nintendo Wii";
-				case System.NintendoWiiU:
+				case KnownSystem.NintendoWiiU:
 					return "Nintendo Wii U";
-				case System.Panasonic3DOInteractiveMultiplayer:
+				case KnownSystem.Panasonic3DOInteractiveMultiplayer:
 					return "Panasonic 3DO Interactive Multiplayer";
-				case System.PhilipsCDi:
+				case KnownSystem.PhilipsCDi:
 					return "Philips CD-i";
-				case System.SegaCDMegaCD:
+				case KnownSystem.SegaCDMegaCD:
 					return "Sega CD / Mega CD";
-				case System.SegaDreamcast:
+				case KnownSystem.SegaDreamcast:
 					return "Sega Dreamcast";
-				case System.SegaSaturn:
+				case KnownSystem.SegaSaturn:
 					return "Sega Saturn";
-				case System.SNKNeoGeoCD:
+				case KnownSystem.SNKNeoGeoCD:
 					return "SNK Neo Geo CD";
-				case System.SonyPlayStation:
+				case KnownSystem.SonyPlayStation:
 					return "Sony PlayStation";
-				case System.SonyPlayStation2:
+				case KnownSystem.SonyPlayStation2:
 					return "Sony PlayStation 2";
-				case System.SonyPlayStation3:
+				case KnownSystem.SonyPlayStation3:
 					return "Sony PlayStation 3";
-				case System.SonyPlayStation4:
+				case KnownSystem.SonyPlayStation4:
 					return "Sony PlayStation 4";
-				case System.SonyPlayStationPortable:
+				case KnownSystem.SonyPlayStationPortable:
 					return "Sony PlayStation Portable";
-				case System.VMLabsNuon:
+				case KnownSystem.VMLabsNuon:
 					return "VM Labs NUON";
-				case System.VTechVFlashVSmilePro:
+				case KnownSystem.VTechVFlashVSmilePro:
 					return "VTech V.Flash - V.Smile Pro";
-				case System.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+				case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
 					return "ZAPiT Games Game Wave Family Entertainment System";
 
 				#endregion
 
 				#region Computers
 
-				case System.AcornArchimedes:
+				case KnownSystem.AcornArchimedes:
 					return "Acorn Archimedes";
-				case System.AppleMacintosh:
+				case KnownSystem.AppleMacintosh:
 					return "Apple Macintosh";
-				case System.CommodoreAmigaCD:
+				case KnownSystem.CommodoreAmigaCD:
 					return "CommodoreAmigaCD";
-				case System.FujitsuFMTowns:
+				case KnownSystem.FujitsuFMTowns:
 					return "Fujitsu FM Towns series";
-				case System.IBMPCCompatible:
+				case KnownSystem.IBMPCCompatible:
 					return "IBM PC Compatible";
-				case System.NECPC88:
+				case KnownSystem.NECPC88:
 					return "NEC PC-88";
-				case System.NECPC98:
+				case KnownSystem.NECPC98:
 					return "NEC PC-98";
-				case System.SharpX68000:
+				case KnownSystem.SharpX68000:
 					return "Sharp X68000";
 
 				#endregion
 
 				#region Arcade
 
-				case System.NamcoSegaNintendoTriforce:
+				case KnownSystem.NamcoSegaNintendoTriforce:
 					return "Namco / Sega / Nintendo Triforce";
-				case System.NamcoSystem246:
+				case KnownSystem.NamcoSystem246:
 					return "Namco System 246";
-				case System.SegaChihiro:
+				case KnownSystem.SegaChihiro:
 					return "Sega Chihiro";
-				case System.SegaLindbergh:
+				case KnownSystem.SegaLindbergh:
 					return "Sega Lindbergh";
-				case System.SegaNaomi:
+				case KnownSystem.SegaNaomi:
 					return "Sega Naomi";
-				case System.SegaNaomi2:
+				case KnownSystem.SegaNaomi2:
 					return "Sega Naomi 2";
-				case System.TABAustriaQuizard:
+				case KnownSystem.TABAustriaQuizard:
 					return "TAB-Austria Quizard";
-				case System.TandyMemorexVisualInformationSystem:
+				case KnownSystem.TandyMemorexVisualInformationSystem:
 					return "Tandy / Memorex Visual Information System";
 
 				#endregion
 
 				#region Others
 
-				case System.AudioCD:
+				case KnownSystem.AudioCD:
 					return "Audio CD";
-				case System.BDVideo:
+				case KnownSystem.BDVideo:
 					return "BD-Video";
-				case System.DVDVideo:
+				case KnownSystem.DVDVideo:
 					return "DVD-Video";
-				case System.EnhancedCD:
+				case KnownSystem.EnhancedCD:
 					return "Enhanced CD";
-				case System.PalmOS:
+				case KnownSystem.PalmOS:
 					return "PalmOS";
-				case System.PhilipsCDiDigitalVideo:
+				case KnownSystem.PhilipsCDiDigitalVideo:
 					return "Philips CD-i Digital Video";
-				case System.PhotoCD:
+				case KnownSystem.PhotoCD:
 					return "Photo CD";
-				case System.PlayStationGameSharkUpdates:
+				case KnownSystem.PlayStationGameSharkUpdates:
 					return "PlayStation GameShark Updates";
-				case System.TaoiKTV:
+				case KnownSystem.TaoiKTV:
 					return "Tao iKTV";
-				case System.TomyKissSite:
+				case KnownSystem.TomyKissSite:
 					return "Tomy Kiss-Site";
-				case System.VideoCD:
+				case KnownSystem.VideoCD:
 					return "Video CD";
 
 				#endregion
 
-				case System.NONE:
+				case KnownSystem.NONE:
 				default:
 					return "Unknown";
 			}
@@ -153,7 +153,7 @@ namespace DICUI
 		/// </summary>
 		/// <param name="sys">System value to check</param>
 		/// <returns>List of DiscTypes</returns>
-		public static List<DiscType> GetValidDiscTypes(System sys)
+		public static List<DiscType> GetValidDiscTypes(KnownSystem sys)
 		{
 			List<DiscType> types = new List<DiscType>();
 			
@@ -161,94 +161,94 @@ namespace DICUI
 			{
 				#region Consoles
 
-				case System.BandaiPlaydiaQuickInteractiveSystem:
+				case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
 					types.Add(DiscType.CD);
 					break;
-				case System.BandaiApplePippin:
+				case KnownSystem.BandaiApplePippin:
 					types.Add(DiscType.CD);
 					break;
-				case System.CommodoreAmigaCD32:
+				case KnownSystem.CommodoreAmigaCD32:
 					types.Add(DiscType.CD);
 					break;
-				case System.CommodoreAmigaCDTV:
+				case KnownSystem.CommodoreAmigaCDTV:
 					types.Add(DiscType.CD);
 					break;
-				case System.MattelHyperscan:
+				case KnownSystem.MattelHyperscan:
 					types.Add(DiscType.CD);
 					break;
-				case System.MicrosoftXBOX:
+				case KnownSystem.MicrosoftXBOX:
 					types.Add(DiscType.CD);
 					types.Add(DiscType.DVD5);
 					break;
-				case System.MicrosoftXBOX360:
+				case KnownSystem.MicrosoftXBOX360:
 					types.Add(DiscType.CD);
 					types.Add(DiscType.DVD9);
 					types.Add(DiscType.HDDVD);
 					break;
-				case System.MicrosoftXBOXOne:
+				case KnownSystem.MicrosoftXBOXOne:
 					types.Add(DiscType.BD25);
 					types.Add(DiscType.BD50);
 					break;
-				case System.NECPCEngineTurboGrafxCD:
+				case KnownSystem.NECPCEngineTurboGrafxCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.NECPCFX:
+				case KnownSystem.NECPCFX:
 					types.Add(DiscType.CD);
 					break;
-				case System.NintendoGameCube:
+				case KnownSystem.NintendoGameCube:
 					types.Add(DiscType.GameCubeGameDisc);
 					break;
-				case System.NintendoWii:
+				case KnownSystem.NintendoWii:
 					types.Add(DiscType.DVD5); // TODO: Confirm
 					types.Add(DiscType.DVD9); // TODO: Confirm
 					break;
-				case System.NintendoWiiU:
+				case KnownSystem.NintendoWiiU:
 					types.Add(DiscType.DVD5); // TODO: Confirm
 					break;
-				case System.Panasonic3DOInteractiveMultiplayer:
+				case KnownSystem.Panasonic3DOInteractiveMultiplayer:
 					types.Add(DiscType.CD);
 					break;
-				case System.PhilipsCDi:
+				case KnownSystem.PhilipsCDi:
 					types.Add(DiscType.CD);
 					break;
-				case System.SegaCDMegaCD:
+				case KnownSystem.SegaCDMegaCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.SegaDreamcast:
+				case KnownSystem.SegaDreamcast:
 					types.Add(DiscType.GDROM);
 					break;
-				case System.SegaSaturn:
+				case KnownSystem.SegaSaturn:
 					types.Add(DiscType.CD);
 					break;
-				case System.SNKNeoGeoCD:
+				case KnownSystem.SNKNeoGeoCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.SonyPlayStation:
+				case KnownSystem.SonyPlayStation:
 					types.Add(DiscType.CD);
 					break;
-				case System.SonyPlayStation2:
+				case KnownSystem.SonyPlayStation2:
 					types.Add(DiscType.CD);
 					types.Add(DiscType.DVD5);
 					types.Add(DiscType.DVD9);
 					break;
-				case System.SonyPlayStation3:
+				case KnownSystem.SonyPlayStation3:
 					types.Add(DiscType.BD25);
 					types.Add(DiscType.BD50);
 					break;
-				case System.SonyPlayStation4:
+				case KnownSystem.SonyPlayStation4:
 					types.Add(DiscType.BD25);
 					types.Add(DiscType.BD50);
 					break;
-				case System.SonyPlayStationPortable:
+				case KnownSystem.SonyPlayStationPortable:
 					types.Add(DiscType.UMD);
 					break;
-				case System.VMLabsNuon:
+				case KnownSystem.VMLabsNuon:
 					types.Add(DiscType.DVD5); // TODO: Confirm
 					break;
-				case System.VTechVFlashVSmilePro:
+				case KnownSystem.VTechVFlashVSmilePro:
 					types.Add(DiscType.CD);
 					break;
-				case System.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+				case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
 					types.Add(DiscType.DVD5);
 					break;
 
@@ -256,34 +256,34 @@ namespace DICUI
 
 				#region Computers
 
-				case System.AcornArchimedes:
+				case KnownSystem.AcornArchimedes:
 					types.Add(DiscType.CD);
 					break;
-				case System.AppleMacintosh:
-					types.Add(DiscType.CD);
-					types.Add(DiscType.DVD5);
-					types.Add(DiscType.DVD9);
-					types.Add(DiscType.Floppy);
-					break;
-				case System.CommodoreAmigaCD:
-					types.Add(DiscType.CD);
-					break;
-				case System.FujitsuFMTowns:
-					types.Add(DiscType.CD);
-					break;
-				case System.IBMPCCompatible:
+				case KnownSystem.AppleMacintosh:
 					types.Add(DiscType.CD);
 					types.Add(DiscType.DVD5);
 					types.Add(DiscType.DVD9);
 					types.Add(DiscType.Floppy);
 					break;
-				case System.NECPC88:
+				case KnownSystem.CommodoreAmigaCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.NECPC98:
+				case KnownSystem.FujitsuFMTowns:
 					types.Add(DiscType.CD);
 					break;
-				case System.SharpX68000:
+				case KnownSystem.IBMPCCompatible:
+					types.Add(DiscType.CD);
+					types.Add(DiscType.DVD5);
+					types.Add(DiscType.DVD9);
+					types.Add(DiscType.Floppy);
+					break;
+				case KnownSystem.NECPC88:
+					types.Add(DiscType.CD);
+					break;
+				case KnownSystem.NECPC98:
+					types.Add(DiscType.CD);
+					break;
+				case KnownSystem.SharpX68000:
 					types.Add(DiscType.CD);
 					break;
 
@@ -291,25 +291,25 @@ namespace DICUI
 
 				#region Arcade
 
-				case System.NamcoSegaNintendoTriforce:
+				case KnownSystem.NamcoSegaNintendoTriforce:
 					types.Add(DiscType.GDROM);
 					break;
-				case System.SegaChihiro:
+				case KnownSystem.SegaChihiro:
 					types.Add(DiscType.GDROM);
 					break;
-				case System.SegaLindbergh:
+				case KnownSystem.SegaLindbergh:
 					types.Add(DiscType.DVD5); // TODO: Confirm
 					break;
-				case System.SegaNaomi:
+				case KnownSystem.SegaNaomi:
 					types.Add(DiscType.GDROM);
 					break;
-				case System.SegaNaomi2:
+				case KnownSystem.SegaNaomi2:
 					types.Add(DiscType.GDROM);
 					break;
-				case System.TABAustriaQuizard:
+				case KnownSystem.TABAustriaQuizard:
 					types.Add(DiscType.CD);
 					break;
-				case System.TandyMemorexVisualInformationSystem:
+				case KnownSystem.TandyMemorexVisualInformationSystem:
 					types.Add(DiscType.CD);
 					break;
 
@@ -317,45 +317,45 @@ namespace DICUI
 
 				#region Others
 
-				case System.AudioCD:
+				case KnownSystem.AudioCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.BDVideo:
+				case KnownSystem.BDVideo:
 					types.Add(DiscType.BD25);
 					types.Add(DiscType.BD50);
 					break;
-				case System.DVDVideo:
+				case KnownSystem.DVDVideo:
 					types.Add(DiscType.DVD5);
 					types.Add(DiscType.DVD9);
 					break;
-				case System.EnhancedCD:
+				case KnownSystem.EnhancedCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.PalmOS:
+				case KnownSystem.PalmOS:
 					types.Add(DiscType.CD);
 					break;
-				case System.PhilipsCDiDigitalVideo:
+				case KnownSystem.PhilipsCDiDigitalVideo:
 					types.Add(DiscType.CD);
 					break;
-				case System.PhotoCD:
+				case KnownSystem.PhotoCD:
 					types.Add(DiscType.CD);
 					break;
-				case System.PlayStationGameSharkUpdates:
+				case KnownSystem.PlayStationGameSharkUpdates:
 					types.Add(DiscType.CD);
 					break;
-				case System.TaoiKTV:
+				case KnownSystem.TaoiKTV:
 					types.Add(DiscType.CD);
 					break;
-				case System.TomyKissSite:
+				case KnownSystem.TomyKissSite:
 					types.Add(DiscType.CD);
 					break;
-				case System.VideoCD:
+				case KnownSystem.VideoCD:
 					types.Add(DiscType.CD);
 					break;
 
 				#endregion
 
-				case System.NONE:
+				case KnownSystem.NONE:
 				default:
 					types.Add(DiscType.NONE);
 					break;
@@ -411,7 +411,7 @@ namespace DICUI
 		/// <param name="sys">System value to check</param>
 		/// <param name="type">DiscType value to check</param>
 		/// <returns>List of strings representing the parameters</returns>
-		public static List<string> GetDefaultParameters(System sys, DiscType type)
+		public static List<string> GetDefaultParameters(KnownSystem sys, DiscType type)
 		{
 			// First check to see if the combination of system and disctype is valid
 			List<DiscType> validTypes = GetValidDiscTypes(sys);
@@ -430,16 +430,16 @@ namespace DICUI
 
 					switch (sys)
 					{
-						case System.AppleMacintosh:
-						case System.IBMPCCompatible:
+						case KnownSystem.AppleMacintosh:
+						case KnownSystem.IBMPCCompatible:
 							parameters.Add("/ns");
 							parameters.Add("/sf");
 							parameters.Add("/ss");
 							break;
-						case System.NECPCEngineTurboGrafxCD:
+						case KnownSystem.NECPCEngineTurboGrafxCD:
 							parameters.Add("/m");
 							break;
-						case System.SonyPlayStation:
+						case KnownSystem.SonyPlayStation:
 							parameters.Add("/am");
 							break;
 					}
