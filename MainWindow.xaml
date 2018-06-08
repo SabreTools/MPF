@@ -43,46 +43,7 @@
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
             <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
 
-            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" Text="Bandai Playdia Quick Interactive System" DropDownClosed="cmb_DiscType_DropDownClosed" SelectionChanged="cmb_DiscType_SelectionChanged">
-                <ComboBoxItem Content="Unknown"/>
-                <ComboBoxItem Content="---------- Consoles ----------" IsEnabled="False"/>
-                <ComboBoxItem Content="Bandai Playdia Quick Interactive System"/>
-                <ComboBoxItem Content="Bandai / Apple Pippin"/>
-                <ComboBoxItem Content="Commodore Amiga CD / CD32 / CDTV"/>
-                <ComboBoxItem Content="Mattel HyperScan"/>
-                <ComboBoxItem Content="Microsoft XBOX One"/>
-                <ComboBoxItem Content="NEC PC-Engine / TurboGrafx CD"/>
-                <ComboBoxItem Content="NEC PC-FX / PC-FXGA"/>
-                <ComboBoxItem Content="Panasonic 3DO"/>
-                <ComboBoxItem Content="Philips CD-i"/>
-                <ComboBoxItem Content="Sega CD / Mega CD"/>
-                <ComboBoxItem Content="Sega Saturn"/>
-                <ComboBoxItem Content="SNK Neo Geo CD"/>
-                <ComboBoxItem Content="Sony PlayStation"/>
-                <ComboBoxItem Content="Sony PlayStation 2 (CD-Rom)"/>
-                <ComboBoxItem Content="Sony PlayStation 2 (DVD-Rom)"/>
-                <ComboBoxItem Content="Sony PlayStation 4"/>
-                <ComboBoxItem Content="VTech V.Flash - V.Smile Pro"/>
-                <ComboBoxItem Content="---------- Computers ----------" IsEnabled="False"/>
-                <ComboBoxItem Content="Apple Macintosh (CD-Rom)"/>
-                <ComboBoxItem Content="Apple Macintosh (DVD-Rom)"/>
-                <ComboBoxItem Content="Fujitsu FM Towns series"/>
-                <ComboBoxItem Content="IBM PC Compatible (CD-Rom)"/>
-                <ComboBoxItem Content="IBM PC Compatible (DVD-Rom)"/>
-                <ComboBoxItem Content="NEC PC-88"/>
-                <ComboBoxItem Content="NEC PC-98"/>
-                <ComboBoxItem Content="---------- Arcade ----------" IsEnabled="False"/>
-                <ComboBoxItem Content="Sega Lindbergh"/>
-                <ComboBoxItem Content="---------- Others ----------" IsEnabled="False"/>
-                <ComboBoxItem Content="Audio CD"/>
-                <ComboBoxItem Content="BD-Video"/>
-                <ComboBoxItem Content="DVD-Video"/>
-                <ComboBoxItem Content="PalmOS"/>
-                <ComboBoxItem Content="Photo CD"/>
-                <ComboBoxItem Content="PlayStation GameShark Updates"/>
-                <ComboBoxItem Content="Tomy Kiss-Site"/>
-                <ComboBoxItem Content="Video CD"/>
-            </ComboBox>
+            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" DropDownClosed="cmb_DiscType_DropDownClosed" SelectionChanged="cmb_DiscType_SelectionChanged" />
 
             <TextBox x:Name="TXT_DiscImageCreatorPath" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" IsEnabled="False" ></TextBox>
             <Button x:Name="BTN_DiscImageCreatorBrowse" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" IsEnabled="False"></Button>

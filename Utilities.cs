@@ -10,7 +10,7 @@ namespace DICUI
 		/// </summary>
 		/// <param name="type">DiscType value to convert</param>
 		/// <returns>String representing the value, if possible</returns>
-		public static string DiscTypeToString(DiscType type)
+		public static string DiscTypeToString(DiscType? type)
 		{
 			switch (type)
 			{
@@ -48,7 +48,7 @@ namespace DICUI
 		/// </summary>
 		/// <param name="sys">KnownSystem value to convert</param>
 		/// <returns>String representing the value, if possible</returns>
-		public static string KnownSystemToString(KnownSystem sys)
+		public static string KnownSystemToString(KnownSystem? sys)
 		{
 			switch (sys)
 			{
@@ -191,9 +191,9 @@ namespace DICUI
 		/// </summary>
 		/// <param name="sys">KnownSystem value to check</param>
 		/// <returns>List of DiscTypes</returns>
-		public static List<DiscType> GetValidDiscTypes(KnownSystem sys)
+		public static List<DiscType?> GetValidDiscTypes(KnownSystem? sys)
 		{
-			List<DiscType> types = new List<DiscType>();
+			List<DiscType?> types = new List<DiscType?>();
 			
 			switch (sys)
 			{
@@ -407,7 +407,7 @@ namespace DICUI
 		/// </summary>
 		/// <param name="type">DiscType value to check</param>
 		/// <returns>String containing the command, null on error</returns>
-		public static string GetBaseCommand(DiscType type)
+		public static string GetBaseCommand(DiscType? type)
 		{
 			switch (type)
 			{
@@ -449,10 +449,10 @@ namespace DICUI
 		/// <param name="sys">KnownSystem value to check</param>
 		/// <param name="type">DiscType value to check</param>
 		/// <returns>List of strings representing the parameters</returns>
-		public static List<string> GetDefaultParameters(KnownSystem sys, DiscType type)
+		public static List<string> GetDefaultParameters(KnownSystem? sys, DiscType? type)
 		{
 			// First check to see if the combination of system and disctype is valid
-			List<DiscType> validTypes = GetValidDiscTypes(sys);
+			List<DiscType?> validTypes = GetValidDiscTypes(sys);
 			if (!validTypes.Contains(type))
 			{
 				Console.WriteLine("Invalid DiscType '{0}' for System '{1}'", type.ToString(), KnownSystemToString(sys));
@@ -560,7 +560,7 @@ namespace DICUI
 				}
 
 				// First, get a list of all DiscTypes for a given KnownSystem
-				List<DiscType> types = GetValidDiscTypes(system);
+				List<DiscType?> types = GetValidDiscTypes(system);
 
 				// If we have a single type, we don't want to postfix the system name with it
 				if (types.Count == 1)
