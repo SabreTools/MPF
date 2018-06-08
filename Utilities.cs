@@ -563,7 +563,7 @@ namespace DICUI
 				List<DiscType> types = GetValidDiscTypes(system);
 
 				// If we have a single type, we don't want to postfix the system name with it
-				if (types.Count == 0)
+				if (types.Count == 1)
 				{
 					mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system), system, types[0]));
 				}
@@ -572,7 +572,7 @@ namespace DICUI
 				{
 					foreach (DiscType type in types)
 					{
-						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system) + "(" + DiscTypeToString(type) + ")", system, type));
+						mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system) + " (" + DiscTypeToString(type) + ")", system, type));
 					}
 				}
 			}
