@@ -19,6 +19,7 @@ namespace DICUI
         public String outputDirectory;
         public String outputFileName;
         public String driveSpeed;
+        public Boolean isCDRom = false;
         public Boolean isPSX = false;
         public Boolean isXboneOrPS4 = false;
 
@@ -36,16 +37,16 @@ namespace DICUI
                     {
                         txt_OutputFilename.Text = "unknown";
                     }
-                    cmb_DriveLetter.Items.Add(d.Name.Replace(":\\", ""));
+                    cmb_DriveLetter.Items.Add(d.Name + d.VolumeLabel);
                     cmb_DriveLetter.SelectedIndex = 0;
-                    txt_OutputDirectory.Text = "ISO" + "\\" + txt_OutputFilename.Text + "\\";
+                    txt_OutputDirectory.Text = "ISO" + "\\" + txt_OutputFilename.Text;
                     lbl_Status.Content = "CD or DVD found ! Choose your Disc Type";
                     btn_Start.IsEnabled = true;
                     cmb_DriveSpeed.Text = "8";
                 }
                 else
                 {
-                    lbl_Status.Content = "No CD or DVD found !";
+                    cmb_DriveLetter.Items.Add(d.Name + " (No Disc Found or Not supported by Windows)");
                 }
             btn_Search.IsEnabled = true;
             }
@@ -78,18 +79,22 @@ namespace DICUI
 
                 case "Bandai Playdia Quick Interactive System":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Bandai / Apple Pippin":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Commodore Amiga CD / CD32 / CDTV":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Mattel HyperScan":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Microsoft XBOX":
@@ -105,10 +110,12 @@ namespace DICUI
                     break;
                 case "NEC PC-Engine / TurboGrafx CD":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "NEC PC-FX / PC-FXGA":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Nintendo GameCube":
@@ -122,14 +129,17 @@ namespace DICUI
                     break;
                 case "Panasonic 3DO":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Philips CD-i":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Sega CD / Mega CD":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Sega Dreamcast":
@@ -137,19 +147,23 @@ namespace DICUI
                     break;
                 case "Sega Saturn":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "SNK Neo Geo CD":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Sony PlayStation":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     isPSX = true;
                     break;
                 case "Sony PlayStation 2 (CD-Rom)":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Sony PlayStation 2 (DVD-Rom)":
@@ -172,6 +186,7 @@ namespace DICUI
                     break;
                 case "VTech V.Flash - V.Smile Pro":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "ZAPiT Games Game Wave Family Entertainment System":
@@ -187,6 +202,7 @@ namespace DICUI
                     break;
                 case "Apple Macintosh (CD-Rom)":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Apple Macintosh (DVD-Rom)":
@@ -195,10 +211,12 @@ namespace DICUI
                     break;
                 case "Fujitsu FM Towns series":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "IBM PC Compatible (CD-Rom)":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20 /ns /sf /ss";
                     break;
                 case "IBM PC Compatible (DVD-Rom)":
@@ -207,10 +225,12 @@ namespace DICUI
                     break;
                 case "NEC PC-88":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "NEC PC-98":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Sharp X68000":
@@ -229,6 +249,7 @@ namespace DICUI
                     break;
                 case "Sega Lindbergh":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Sega Naomi":
@@ -251,6 +272,7 @@ namespace DICUI
 
                 case "Audio CD":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "BD-Video":
@@ -262,6 +284,7 @@ namespace DICUI
                     break;
                 case "PalmOS":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Philips CD-i Digital Video":
@@ -269,10 +292,12 @@ namespace DICUI
                     break;
                 case "Photo CD":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "PlayStation GameShark Updates":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Tao iKTV":
@@ -280,10 +305,12 @@ namespace DICUI
                     break;
                 case "Tomy Kiss-Site":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
                 case "Video CD":
                     discType = "cd";
+                    isCDRom = true;
                     processArguments = "/c2 20";
                     break;
 
@@ -335,6 +362,22 @@ namespace DICUI
                 }
                 Process processpsx = new Process();
                 processpsx.StartInfo.FileName = "PSX.bat";
+                processpsx.Start();
+                processpsx.WaitForExit();
+            }
+
+            if (isCDRom == true)
+            {
+                // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
+                using (StreamWriter writetext = new StreamWriter("CDRom.bat"))
+                {
+                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+
+                }
+                Process processpsx = new Process();
+                processpsx.StartInfo.FileName = "CDRom.bat";
                 processpsx.Start();
                 processpsx.WaitForExit();
             }
@@ -405,6 +448,14 @@ namespace DICUI
                     cmb_DriveSpeed.SelectedIndex = 1;
                     break;
             }
+
+        }
+
+        private void cmb_DriveLetter_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            driveLetter = cmb_DriveLetter.SelectedValue.ToString().Substring(0, 1);
+            Console.WriteLine(driveLetter);
+            btn_Start.IsEnabled = true;
 
         }
     }
