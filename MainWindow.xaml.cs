@@ -29,9 +29,9 @@ namespace DICUI
                     {
                         txt_OutputFilename.Text = "unknown";
                     }
-                    cmb_DriveLetter.Items.Add(d.Name.Replace(":\\", ""));
+                    cmb_DriveLetter.Items.Add(d.Name + d.VolumeLabel);
                     cmb_DriveLetter.SelectedIndex = 0;
-                    txt_OutputDirectory.Text = "ISO" + "\\" + txt_OutputFilename.Text + "\\";
+                    txt_OutputDirectory.Text = "ISO" + "\\" + txt_OutputFilename.Text;
                     lbl_Status.Content = "CD or DVD found ! Choose your Disc Type";
                     btn_Start.IsEnabled = true;
                     cmb_DriveSpeed.Text = "8";
@@ -39,7 +39,7 @@ namespace DICUI
                 }
                 else
                 {
-                    lbl_Status.Content = "No CD or DVD found !";
+                    cmb_DriveLetter.Items.Add(d.Name + " (No Disc Found or Not supported by Windows)");
                 }
 
                 btn_Search.IsEnabled = true;
@@ -212,6 +212,14 @@ namespace DICUI
                     cmb_DriveSpeed.SelectedIndex = 1;
                     break;
             }
+
+        }
+
+        private void cmb_DriveLetter_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            driveLetter = cmb_DriveLetter.SelectedValue.ToString().Substring(0, 1);
+            Console.WriteLine(driveLetter);
+            btn_Start.IsEnabled = true;
 
         }
     }
