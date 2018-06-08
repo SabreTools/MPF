@@ -6,11 +6,49 @@ namespace DICUI
 	public static class Utilities
 	{
 		/// <summary>
-		/// Get the string representation of the System enum values
+		/// Get the string representation of the DiscType enum values
 		/// </summary>
-		/// <param name="sys">System value to convert</param>
+		/// <param name="type">DiscType value to convert</param>
 		/// <returns>String representing the value, if possible</returns>
-		public static string SystemToString(KnownSystem sys)
+		public static string DiscTypeToString(DiscType type)
+		{
+			switch (type)
+			{
+				case DiscType.CD:
+					return "CD-ROM";
+				case DiscType.DVD5:
+					return "DVD-5 [Single-Layer]";
+				case DiscType.DVD9:
+					return "DVD-9 [Dual-Layer]";
+				case DiscType.GDROM:
+					return "GD-ROM";
+				case DiscType.HDDVD:
+					return "HD-DVD";
+				case DiscType.BD25:
+					return "BluRay-25 [Single-Layer]";
+				case DiscType.BD50:
+					return "BluRay-50 [Dual-Layer]";
+
+				case DiscType.GameCubeGameDisc:
+					return "GC Mini Disc";
+				case DiscType.UMD:
+					return "UMD";
+
+				case DiscType.Floppy:
+					return "Floppy Disk";
+
+				case DiscType.NONE:
+				default:
+					return "Unknown";
+			}
+		}
+
+		/// <summary>
+		/// Get the string representation of the KnownSystem enum values
+		/// </summary>
+		/// <param name="sys">KnownSystem value to convert</param>
+		/// <returns>String representing the value, if possible</returns>
+		public static string KnownSystemToString(KnownSystem sys)
 		{
 			switch (sys)
 			{
@@ -151,7 +189,7 @@ namespace DICUI
 		/// <summary>
 		/// Get a list of valid DiscTypes for a given system
 		/// </summary>
-		/// <param name="sys">System value to check</param>
+		/// <param name="sys">KnownSystem value to check</param>
 		/// <returns>List of DiscTypes</returns>
 		public static List<DiscType> GetValidDiscTypes(KnownSystem sys)
 		{
@@ -408,7 +446,7 @@ namespace DICUI
 		/// <summary>
 		/// Get list of default parameters for a given system and disc type
 		/// </summary>
-		/// <param name="sys">System value to check</param>
+		/// <param name="sys">KnownSystem value to check</param>
 		/// <param name="type">DiscType value to check</param>
 		/// <returns>List of strings representing the parameters</returns>
 		public static List<string> GetDefaultParameters(KnownSystem sys, DiscType type)
@@ -417,7 +455,7 @@ namespace DICUI
 			List<DiscType> validTypes = GetValidDiscTypes(sys);
 			if (!validTypes.Contains(type))
 			{
-				Console.WriteLine("Invalid DiscType '{0}' for System '{1}'", type.ToString(), SystemToString(sys));
+				Console.WriteLine("Invalid DiscType '{0}' for System '{1}'", type.ToString(), KnownSystemToString(sys));
 				return null;
 			}
 
