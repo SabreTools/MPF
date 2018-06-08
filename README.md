@@ -21,6 +21,17 @@ NHellFire - Contributer
 
 Dizzzy - Concept/Ideas/Beta tester
 
+
+--------------------------------------------------------------------------
+2018-06-08
+--------------------------------------------------------------------------
+
+Version 1.03 released:
+
+- edccchk now run on all CD-Roms
+- Discs unsupported by Windows are now regonized
+- Extra \ when accepting default save has been removed.
+ 
  
 --------------------------------------------------------------------------
 2018-05-18
