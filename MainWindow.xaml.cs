@@ -193,13 +193,11 @@ namespace DICUI
 
         private void cmb_DiscType_DropDownClosed(object sender, EventArgs e)
         {
-            switch (Convert.ToString(cmb_DiscType.Text))
+			var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+			switch (tuple.Item2)
             {
-                case "Sony PlayStation 4":
-                    cmb_DriveSpeed.Items.Clear();
-                    cmb_DriveSpeed.IsEnabled = false;
-                    break;
-                case "Microsoft XBOX One":
+				case KnownSystem.MicrosoftXBOXOne:
+				case KnownSystem.SonyPlayStation4:
                     cmb_DriveSpeed.Items.Clear();
                     cmb_DriveSpeed.IsEnabled = false;
                     break;
