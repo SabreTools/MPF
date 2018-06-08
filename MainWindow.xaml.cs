@@ -13,7 +13,7 @@ namespace DICUI
     public partial class MainWindow : Window
     {
         private const string dicPath = "Programs\\DiscImageCreator.exe"; // TODO: Make configurable in UI or in Settings
-		private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
+        private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
 
         public void ScanForDisk()
         {
@@ -35,12 +35,14 @@ namespace DICUI
                     lbl_Status.Content = "CD or DVD found ! Choose your Disc Type";
                     btn_Start.IsEnabled = true;
                     cmb_DriveSpeed.Text = "8";
+                    break;
                 }
                 else
                 {
                     lbl_Status.Content = "No CD or DVD found !";
                 }
-            btn_Search.IsEnabled = true;
+
+                btn_Search.IsEnabled = true;
             }
         }
 
@@ -58,17 +60,17 @@ namespace DICUI
 
         public async void StartDumping()
         {
-			// Local variables
+            // Local variables
             string driveLetter = cmb_DriveLetter.Text;
-			string outputDirectory = txt_OutputDirectory.Text;
-			string outputFileName = txt_OutputFilename.Text;
-			string driveSpeed = cmb_DriveSpeed.Text;
+            string outputDirectory = txt_OutputDirectory.Text;
+            string outputFileName = txt_OutputFilename.Text;
+            string driveSpeed = cmb_DriveSpeed.Text;
             btn_Start.IsEnabled = false;
 
-			// Get the discType and processArguments from a given system and disc combo
-			var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
-			string discType = Utilities.GetBaseCommand(selected.Item3);
-			string processArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
+            // Get the discType and processArguments from a given system and disc combo
+            var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+            string discType = Utilities.GetBaseCommand(selected.Item3);
+            string processArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
 
             await Task.Run(
                 () =>
@@ -81,41 +83,41 @@ namespace DICUI
                     process.WaitForExit();
                 });
 
-			// Special cases
-			string guid = Guid.NewGuid().ToString();
-			switch (selected.Item2)
-			{
-				case KnownSystem.MicrosoftXBOXOne:
-				case KnownSystem.SonyPlayStation4:
-					// TODO: Direct invocation of program instead of via Batch File
-					using (StreamWriter writetext = new StreamWriter("XboneOrPS4" + guid + ".bat"))
-					{
-						writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
-					}
-					Process processXboneOrPS4 = new Process();
-					processXboneOrPS4.StartInfo.FileName = "XboneOrPS4" + guid + ".bat";
-					processXboneOrPS4.Start();
-					processXboneOrPS4.WaitForExit();
-					break;
-				case KnownSystem.SonyPlayStation:
-					// TODO: Direct invocation of program instead of via Batch File
-					using (StreamWriter writetext = new StreamWriter("PSX" + guid + ".bat"))
-					{
-						writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-						writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-						writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-						writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
-						writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
-						writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
-						writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
-						writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
-					}
-					Process processpsx = new Process();
-					processpsx.StartInfo.FileName = "PSX" + guid + ".bat";
-					processpsx.Start();
-					processpsx.WaitForExit();
-					break;
-			}
+            // Special cases
+            string guid = Guid.NewGuid().ToString();
+            switch (selected.Item2)
+            {
+                case KnownSystem.MicrosoftXBOXOne:
+                case KnownSystem.SonyPlayStation4:
+                    // TODO: Direct invocation of program instead of via Batch File
+                    using (StreamWriter writetext = new StreamWriter("XboneOrPS4" + guid + ".bat"))
+                    {
+                        writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
+                    }
+                    Process processXboneOrPS4 = new Process();
+                    processXboneOrPS4.StartInfo.FileName = "XboneOrPS4" + guid + ".bat";
+                    processXboneOrPS4.Start();
+                    processXboneOrPS4.WaitForExit();
+                    break;
+                case KnownSystem.SonyPlayStation:
+                    // TODO: Direct invocation of program instead of via Batch File
+                    using (StreamWriter writetext = new StreamWriter("PSX" + guid + ".bat"))
+                    {
+                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
+                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
+                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
+                        writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
+                        writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
+                    }
+                    Process processpsx = new Process();
+                    processpsx.StartInfo.FileName = "PSX" + guid + ".bat";
+                    processpsx.Start();
+                    processpsx.WaitForExit();
+                    break;
+            }
 
             btn_Start.IsEnabled = true;
         }
@@ -124,11 +126,12 @@ namespace DICUI
         {
             InitializeComponent();
 
-			// Populate the list of systems and add it to the combo box
-			_systems = Utilities.CreateListOfSystems();
-			cmb_DiscType.ItemsSource = _systems;
-			cmb_DiscType.DisplayMemberPath = "Item1";
-			cmb_DiscType.SelectedIndex = 0;
+            // Populate the list of systems and add it to the combo box
+            _systems = Utilities.CreateListOfSystems();
+            cmb_DiscType.ItemsSource = _systems;
+            cmb_DiscType.DisplayMemberPath = "Item1";
+            cmb_DiscType.SelectedIndex = 0;
+            cmb_DiscType_SelectionChanged(null, null);
 
             ScanForDisk();
         }
@@ -150,14 +153,32 @@ namespace DICUI
 
         private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-			// If we're on a separator, go to the next item
-			var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
-			if (tuple.Item2 == null && tuple.Item3 == null)
-			{
-				cmb_DiscType.SelectedIndex++;
-			}
+            // If we're on a separator, go to the next item
+            var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            if (tuple.Item2 == null && tuple.Item3 == null)
+            {
+                cmb_DiscType.SelectedIndex++;
+                tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            }
 
-            lbl_Status.Content = "Ready to dump";
+            // If we're on an unsupported type, update the status accordingly
+            switch (tuple.Item3)
+            {
+                case DiscType.NONE:
+                    lbl_Status.Content = "Please select a valid disc type";
+                    break;
+                case DiscType.GDROM:
+                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+                case DiscType.GameCubeGameDisc:
+                case DiscType.HDDVD:
+                case DiscType.UMD:
+                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+                default:
+                    lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+            }
         }
 
         private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
