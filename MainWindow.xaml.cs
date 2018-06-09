@@ -1,27 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.IO;
 using WinForms = System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-
 namespace DICUI
 {
-
     public partial class MainWindow : Window
     {
-        public String discType;
-        public String processArguments;
-        public String dicPath = "Programs\\DiscImageCreator.exe";
-        public String driveLetter;
-        public String outputDirectory;
-        public String outputFileName;
-        public String driveSpeed;
-        public Boolean isCDRom = false;
-        public Boolean isPSX = false;
-        public Boolean isXboneOrPS4 = false;
+        private const string dicPath = "Programs\\DiscImageCreator.exe"; // TODO: Make configurable in UI or in Settings
+        private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
 
         public void ScanForDisk()
         {
@@ -43,12 +35,14 @@ namespace DICUI
                     lbl_Status.Content = "CD or DVD found ! Choose your Disc Type";
                     btn_Start.IsEnabled = true;
                     cmb_DriveSpeed.Text = "8";
+                    break;
                 }
                 else
                 {
                     cmb_DriveLetter.Items.Add(d.Name + " (No Disc Found or Not supported by Windows)");
                 }
-            btn_Search.IsEnabled = true;
+
+                btn_Search.IsEnabled = true;
             }
         }
 
@@ -66,327 +60,79 @@ namespace DICUI
 
         public async void StartDumping()
         {
-
-            driveLetter = cmb_DriveLetter.Text;
-            outputDirectory = txt_OutputDirectory.Text;
-            outputFileName = txt_OutputFilename.Text;
-            driveSpeed = cmb_DriveSpeed.Text;
+            // Local variables
+            string driveLetter = cmb_DriveLetter.Text;
+            string outputDirectory = txt_OutputDirectory.Text;
+            string outputFileName = txt_OutputFilename.Text;
+            string driveSpeed = cmb_DriveSpeed.Text;
             btn_Start.IsEnabled = false;
 
-            switch (Convert.ToString(cmb_DiscType.Text))
-            {
-                #region Consoles
-
-                case "Bandai Playdia Quick Interactive System":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Bandai / Apple Pippin":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Commodore Amiga CD / CD32 / CDTV":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Mattel HyperScan":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Microsoft XBOX":
-                    // Placeholder for later use
-                    break;
-                case "Microsoft XBOX 360":
-                    // Placeholder for later use
-                    break;
-                case "Microsoft XBOX One":
-                    discType = "bd";
-                    processArguments = "";
-                    isXboneOrPS4 = true;
-                    break;
-                case "NEC PC-Engine / TurboGrafx CD":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "NEC PC-FX / PC-FXGA":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Nintendo GameCube":
-                    // Placeholder for later use
-                    break;
-                case "Nintendo Wii":
-                    // Placeholder for later use
-                    break;
-                case "Nintendo Wii U":
-                    // Placeholder for later use
-                    break;
-                case "Panasonic 3DO":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Philips CD-i":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Sega CD / Mega CD":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Sega Dreamcast":
-                    // Placeholder for later use
-                    break;
-                case "Sega Saturn":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "SNK Neo Geo CD":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Sony PlayStation":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    isPSX = true;
-                    break;
-                case "Sony PlayStation 2 (CD-Rom)":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Sony PlayStation 2 (DVD-Rom)":
-                    discType = "dvd";
-                    processArguments = "";
-                    break;
-                case "Sony PlayStation 3":
-                    // Placeholder for later use
-                    break;
-                case "Sony PlayStation 4":
-                    discType = "bd";
-                    processArguments = "";
-                    isXboneOrPS4 = true;
-                    break;
-                case "Sony PlayStation Portable":
-                    // No-op - PSP can't be dumped with DIC
-                    break;
-                case "VM Labs NUON":
-                    // Placeholder for later use
-                    break;
-                case "VTech V.Flash - V.Smile Pro":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "ZAPiT Games Game Wave Family Entertainment System":
-                    // Placeholder for later use
-                    break;
-
-                #endregion
-
-                #region Computers
-
-                case "Acorn Archimedes":
-                    // Placeholder for later use
-                    break;
-                case "Apple Macintosh (CD-Rom)":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Apple Macintosh (DVD-Rom)":
-                    discType = "dvd";
-                    processArguments = "";
-                    break;
-                case "Fujitsu FM Towns series":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "IBM PC Compatible (CD-Rom)":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20 /ns /sf /ss";
-                    break;
-                case "IBM PC Compatible (DVD-Rom)":
-                    discType = "dvd";
-                    processArguments = "";
-                    break;
-                case "NEC PC-88":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "NEC PC-98":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Sharp X68000":
-                    // Placeholder for later use
-                    break;
-
-                #endregion
-
-                #region Arcade
-
-                case "Namco / Sega / Nintendo Triforce":
-                    // Placeholder for later use
-                    break;
-                case "Sega Chihiro":
-                    // Placeholder for later use
-                    break;
-                case "Sega Lindbergh":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Sega Naomi":
-                    // Placeholder for later use
-                    break;
-                case "Sega Naomi 2":
-                    // Placeholder for later use
-                    break;
-                case "TAB-Austria Quizard":
-                    // Placeholder for later use
-                    break;
-
-                case "Tandy / Memorex Visual Information System":
-                    // Placeholder for later use
-                    break;
-
-                #endregion
-
-                #region Others
-
-                case "Audio CD":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "BD-Video":
-                    discType = "bd";
-                    processArguments = "";
-                    break;
-                case "DVD-Video":
-                    discType = "dvd";
-                    break;
-                case "PalmOS":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Philips CD-i Digital Video":
-                    // Placeholder for later use
-                    break;
-                case "Photo CD":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "PlayStation GameShark Updates":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Tao iKTV":
-                    // Placeholder for later use
-                    break;
-                case "Tomy Kiss-Site":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-                case "Video CD":
-                    discType = "cd";
-                    isCDRom = true;
-                    processArguments = "/c2 20";
-                    break;
-
-                #endregion
-
-                case "Unknown":
-                default:
-                    discType = "";
-                    processArguments = "";
-                    break;
-            }
+            // Get the discType and processArguments from a given system and disc combo
+            var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+            string discType = Utilities.GetBaseCommand(selected.Item3);
+            string processArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
 
             await Task.Run(
                 () =>
                 {
                     Process process = new Process();
-                    process.StartInfo.FileName = dicPath; // TODO: Make this configurable in UI
+                    process.StartInfo.FileName = dicPath;
                     process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + outputDirectory + "\\" + outputFileName + "\" " + driveSpeed + " " + processArguments;
                     Console.WriteLine(process.StartInfo.Arguments);
                     process.Start();
                     process.WaitForExit();
                 });
 
-            if (isXboneOrPS4 == true)
+            // Special cases
+            string guid = Guid.NewGuid().ToString();
+            switch (selected.Item2)
             {
-                // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
-                using (StreamWriter writetext = new StreamWriter("XboneOrPS4.bat"))
-                {
-                    writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
-                }
-                Process processXboneOrPS4 = new Process();
-                processXboneOrPS4.StartInfo.FileName = "XboneOrPS4.bat";
-                processXboneOrPS4.Start();
-                processXboneOrPS4.WaitForExit();
-            }
-            if (isPSX == true)
-            {
-                // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
-                using (StreamWriter writetext = new StreamWriter("PSX.bat"))
-                {
-                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
-                    writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
-                    writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
-                    writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
-                }
-                Process processpsx = new Process();
-                processpsx.StartInfo.FileName = "PSX.bat";
-                processpsx.Start();
-                processpsx.WaitForExit();
+                case KnownSystem.MicrosoftXBOXOne:
+                case KnownSystem.SonyPlayStation4:
+                    // TODO: Direct invocation of program instead of via Batch File
+                    using (StreamWriter writetext = new StreamWriter("XboneOrPS4" + guid + ".bat"))
+                    {
+                        writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
+                    }
+                    Process processXboneOrPS4 = new Process();
+                    processXboneOrPS4.StartInfo.FileName = "XboneOrPS4" + guid + ".bat";
+                    processXboneOrPS4.Start();
+                    processXboneOrPS4.WaitForExit();
+                    break;
+                case KnownSystem.SonyPlayStation:
+                    // TODO: Direct invocation of program instead of via Batch File
+                    using (StreamWriter writetext = new StreamWriter("PSX" + guid + ".bat"))
+                    {
+                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
+                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
+                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
+                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
+                        writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
+                        writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
+                    }
+                    Process processpsx = new Process();
+                    processpsx.StartInfo.FileName = "PSX" + guid + ".bat";
+                    processpsx.Start();
+                    processpsx.WaitForExit();
+                    break;
             }
 
-            if (isCDRom == true)
-            {
-                // TODO: Add random string / GUID to end of batch file name so that multiple instances can run at once
-                using (StreamWriter writetext = new StreamWriter("CDRom.bat"))
-                {
-                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                    writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-
-                }
-                Process processpsx = new Process();
-                processpsx.StartInfo.FileName = "CDRom.bat";
-                processpsx.Start();
-                processpsx.WaitForExit();
-            }
             btn_Start.IsEnabled = true;
         }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Populate the list of systems and add it to the combo box
+            _systems = Utilities.CreateListOfSystems();
+            cmb_DiscType.ItemsSource = _systems;
+            cmb_DiscType.DisplayMemberPath = "Item1";
+            cmb_DiscType.SelectedIndex = 0;
+            cmb_DiscType_SelectionChanged(null, null);
+
             ScanForDisk();
         }
 
@@ -405,16 +151,37 @@ namespace DICUI
             ScanForDisk();
         }
 
-
-
-        private void cmb_DiscType_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // If we're on a separator, go to the next item
+            var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            if (tuple.Item2 == null && tuple.Item3 == null)
+            {
+                cmb_DiscType.SelectedIndex++;
+                tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            }
 
-
-            lbl_Status.Content = "Ready to dump";
+            // If we're on an unsupported type, update the status accordingly
+            switch (tuple.Item3)
+            {
+                case DiscType.NONE:
+                    lbl_Status.Content = "Please select a valid disc type";
+                    break;
+                case DiscType.GDROM:
+                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+                case DiscType.GameCubeGameDisc:
+                case DiscType.HDDVD:
+                case DiscType.UMD:
+                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+                default:
+                    lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+            }
         }
 
-        private void cmb_DriveSpeed_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // TODO: Figure out how to keep the list of items while also allowing the custom input
             if (cmb_DriveSpeed.SelectedIndex == 4)
@@ -426,14 +193,11 @@ namespace DICUI
 
         private void cmb_DiscType_DropDownClosed(object sender, EventArgs e)
         {
-            switch (Convert.ToString(cmb_DiscType.Text))
+			var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+			switch (tuple.Item2)
             {
-
-                case "Sony PlayStation 4":
-                    cmb_DriveSpeed.Items.Clear();
-                    cmb_DriveSpeed.IsEnabled = false;
-                    break;
-                case "Microsoft XBOX One":
+				case KnownSystem.MicrosoftXBOXOne:
+				case KnownSystem.SonyPlayStation4:
                     cmb_DriveSpeed.Items.Clear();
                     cmb_DriveSpeed.IsEnabled = false;
                     break;
