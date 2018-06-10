@@ -89,11 +89,6 @@ namespace DICUI
             }
         }
 
-        private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // No-op?
-        }
-
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var tuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
