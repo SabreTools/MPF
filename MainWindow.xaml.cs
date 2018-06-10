@@ -11,7 +11,12 @@ namespace DICUI
 {
     public partial class MainWindow : Window
     {
-        private const string dicPath = "Programs\\DiscImageCreator.exe"; // TODO: Make configurable in UI or in Settings
+        // TODO: Make configurable in UI or in Settings
+        private const string defaultOutputPath = "ISO";
+        private const string dicPath = "Programs\\DiscImageCreator.exe";
+        private const string psxtPath = "psxt001z.exe";
+        private const string sgRawPath = "sg_raw.exe";
+
         private List<Tuple<char, string>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
@@ -159,7 +164,7 @@ namespace DICUI
                     {
                         StartInfo = new ProcessStartInfo()
                         {
-                            FileName = "sg_raw.exe", // TODO: Make this configurable
+                            FileName = sgRawPath,
                             Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
                         },
                     };
@@ -170,12 +175,13 @@ namespace DICUI
                     // TODO: Direct invocation of program instead of via Batch File
                     using (StreamWriter writetext = new StreamWriter("PSX" + guid + ".bat"))
                     {
-                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
-                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
-                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
-                        writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
-                        writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
+                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
+                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
+                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
+                        writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
+                        writetext.WriteLine(psxtPath + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
                     }
+
                     Process psxt = new Process();
                     psxt.StartInfo.FileName = "PSX" + guid + ".bat";
                     psxt.Start();
@@ -234,7 +240,6 @@ namespace DICUI
         /// <summary>
         /// Get the default output directory name from the currently selected drive
         /// </summary>
-        /// <remarks>TODO: Make the "ISO" part of the default configurable in UI or Settings</remarks>
         private void GetOutputNames()
         {
             var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
@@ -244,7 +249,7 @@ namespace DICUI
             {
                 if (String.IsNullOrWhiteSpace(txt_OutputDirectory.Text))
                 {
-                    txt_OutputDirectory.Text = "ISO";
+                    txt_OutputDirectory.Text = defaultOutputPath;
                 }
 
                 if (discTuple != null)
