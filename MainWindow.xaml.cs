@@ -89,13 +89,14 @@ namespace DICUI
             {
                 case KnownSystem.MicrosoftXBOXOne:
                 case KnownSystem.SonyPlayStation4:
-                    // TODO: Direct invocation of program instead of via Batch File
-                    using (StreamWriter writetext = new StreamWriter("XboneOrPS4" + guid + ".bat"))
-                    {
-                        writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
-                    }
-                    Process processXboneOrPS4 = new Process();
-                    processXboneOrPS4.StartInfo.FileName = "XboneOrPS4" + guid + ".bat";
+					Process processXboneOrPS4 = new Process()
+					{
+						StartInfo = new ProcessStartInfo()
+						{
+							FileName = "sg_raw.exe", // TODO: Make this configurable
+							Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
+						},
+					};
                     processXboneOrPS4.Start();
                     processXboneOrPS4.WaitForExit();
                     break;
