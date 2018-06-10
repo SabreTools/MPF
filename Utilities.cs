@@ -422,7 +422,6 @@ namespace DICUI
                 case DiscType.GDROM:
                     return "gd"; // TODO: "swap"?
                 case DiscType.HDDVD:
-                    Console.WriteLine("HD-DVD dumping is not supported by DIC");
                     return null;
                 case DiscType.BD25:
                     return "bd";
@@ -433,7 +432,6 @@ namespace DICUI
                 case DiscType.GameCubeGameDisc:
                     return "dvd";
                 case DiscType.UMD:
-                    Console.WriteLine("UMD dumping is not supported by DIC");
                     return null;
 
                 // Non-optical
@@ -457,7 +455,6 @@ namespace DICUI
             List<DiscType?> validTypes = GetValidDiscTypes(sys);
             if (!validTypes.Contains(type))
             {
-                Console.WriteLine("Invalid DiscType '{0}' for System '{1}'", type.ToString(), KnownSystemToString(sys));
                 return null;
             }
 
@@ -494,7 +491,6 @@ namespace DICUI
                     parameters.Add("/c2 20");
                     break;
                 case DiscType.HDDVD:
-                    Console.WriteLine("HD-DVD dumping is not supported by DIC");
                     break;
                 case DiscType.BD25:
                     // Currently no defaults set
@@ -508,7 +504,6 @@ namespace DICUI
                     parameters.Add("/raw");
                     break;
                 case DiscType.UMD:
-                    Console.WriteLine("UMD dumping is not supported by DIC");
                     break;
 
                 // Non-optical

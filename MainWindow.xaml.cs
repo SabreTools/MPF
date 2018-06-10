@@ -144,7 +144,6 @@ namespace DICUI
                     Process process = new Process();
                     process.StartInfo.FileName = dicPath;
                     process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + outputDirectory + "\\" + outputFileName + "\" " + driveSpeed + " " + processArguments;
-                    Console.WriteLine(process.StartInfo.Arguments);
                     process.Start();
                     process.WaitForExit();
                 });
@@ -205,10 +204,10 @@ namespace DICUI
                 case DiscType.NONE:
                     lbl_Status.Content = "Please select a valid disc type";
                     break;
-                case DiscType.GDROM:
+				case DiscType.GameCubeGameDisc:
+				case DiscType.GDROM:
                     lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
                     break;
-                case DiscType.GameCubeGameDisc:
                 case DiscType.HDDVD:
                 case DiscType.UMD:
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
