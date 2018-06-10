@@ -141,7 +141,6 @@ namespace DICUI
         {
             cmb_DriveSpeed.ItemsSource = _driveSpeeds;
             cmb_DriveSpeed.SelectedIndex = 0;
-            cmb_DriveSpeed_SelectionChanged(null, null);
         }
 
         /// <summary>
