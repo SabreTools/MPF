@@ -140,7 +140,7 @@ namespace DICUI
         private void PopulateDriveSpeeds()
         {
             cmb_DriveSpeed.ItemsSource = _driveSpeeds;
-            cmb_DriveSpeed.SelectedIndex = 0;
+            cmb_DriveSpeed.SelectedItem = 8;
         }
 
         /// <summary>
