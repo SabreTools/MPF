@@ -516,6 +516,34 @@ namespace DICUI
         }
 
         /// <summary>
+        /// Get the default extension for a given disc type
+        /// </summary>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>Valid extension (with leading '.'), null on error</returns>
+        public static string GetDefaultExtension(DiscType? type)
+        {
+            switch(type)
+            {
+                case DiscType.CD:
+                case DiscType.GDROM:
+                    return ".bin";
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.HDDVD:
+                case DiscType.BD25:
+                case DiscType.BD50:
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
+                    return ".iso";
+                case DiscType.Floppy:
+                    return ".img";
+                case DiscType.NONE:
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Create a list of systems matched to their respective enums
         /// </summary>
         /// <returns>Systems matched to enums, if possible</returns>

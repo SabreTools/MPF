@@ -50,11 +50,12 @@ namespace DICUI
         private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EnsureDiscInformation();
+            GetOutputNames();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GetOutputDirectoryName();
+            GetOutputNames();
         }
 
         #endregion
@@ -130,20 +131,20 @@ namespace DICUI
             string driveLetter = cmb_DriveLetter.Text;
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFileName = txt_OutputFilename.Text;
-            string driveSpeed = cmb_DriveSpeed.Text;
+            int driveSpeed = (int)cmb_DriveSpeed.SelectedItem;
             btn_Start.IsEnabled = false;
 
             // Get the discType and processArguments from a given system and disc combo
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
             string discType = Utilities.GetBaseCommand(selected.Item3);
-            string processArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
+            string defaultArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
 
             await Task.Run(
                 () =>
                 {
                     Process process = new Process();
                     process.StartInfo.FileName = dicPath;
-                    process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + outputDirectory + "\\" + outputFileName + "\" " + driveSpeed + " " + processArguments;
+                    process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + Path.Combine(outputDirectory, outputFileName) + "\" " + driveSpeed + " " + defaultArguments;
                     process.Start();
                     process.WaitForExit();
                 });
@@ -234,10 +235,23 @@ namespace DICUI
         /// Get the default output directory name from the currently selected drive
         /// </summary>
         /// <remarks>TODO: Make the "ISO" part of the default configurable in UI or Settings</remarks>
-        private void GetOutputDirectoryName()
+        private void GetOutputNames()
         {
-            var tuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
-            txt_OutputDirectory.Text = "ISO" + Path.DirectorySeparatorChar + tuple.Item2;
+            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            var discTuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+
+            if (driveTuple != null)
+            {
+                if (String.IsNullOrWhiteSpace(txt_OutputDirectory.Text))
+                {
+                    txt_OutputDirectory.Text = "ISO";
+                }
+
+                if (discTuple != null)
+                {
+                    txt_OutputFilename.Text = driveTuple.Item2 + Utilities.GetDefaultExtension(discTuple.Item3);
+                }
+            }
         }
 
         #endregion
