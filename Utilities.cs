@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DICUI
 {
@@ -521,7 +523,7 @@ namespace DICUI
         /// <summary>
         /// Create a list of systems matched to their respective enums
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Systems matched to enums, if possible</returns>
         /// <remarks>
         /// This returns a List of Tuples whose structure is as follows:
         ///		Item 1: Printable name
@@ -578,6 +580,23 @@ namespace DICUI
             }
 
             return mapping;
+        }
+
+        /// <summary>
+        /// Create a list of active optical drives matched to their volume labels
+        /// </summary>
+        /// <returns>Active drives, matched to labels, if possible</returns>
+        /// <remarks>
+        /// This returns a List of Tuples whose structure is as follows:
+        ///		Item 1: Drive letter
+        ///		Item 2: Volume label
+        /// </remarks>
+        public static List<Tuple<char, string>> CreateListOfDrives()
+        {
+            return DriveInfo.GetDrives()
+                .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
+                .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
+                .ToList();
         }
     }
 }
