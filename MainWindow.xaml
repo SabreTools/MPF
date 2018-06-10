@@ -42,24 +42,17 @@
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
 
-            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" DropDownClosed="cmb_DiscType_DropDownClosed" SelectionChanged="cmb_DiscType_SelectionChanged" />
+            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" SelectionChanged="cmb_DiscType_SelectionChanged" />
 
-           
             <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22"></TextBox>
 
-            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" Text="ISO" ></TextBox>
-            <Button x:Name="BTN_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="BTN_OutputDirectoryBrowse_Click" ></Button>
+            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" Text="ISO" />
+            <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
 
-            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged"></ComboBox>
+            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged"/>
 
-            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left"  SelectionChanged="cmb_DriveSpeed_SelectionChanged">
-                <ComboBoxItem Content="4"/>
-                <ComboBoxItem Content="8"/>
-                <ComboBoxItem Content="16"/>
-                <ComboBoxItem Content="48"/>
-                <ComboBoxItem Content="Custom"/>
-            </ComboBox>
-        </Grid>
+			<ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left"  SelectionChanged="cmb_DriveSpeed_SelectionChanged"/>
+		</Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
