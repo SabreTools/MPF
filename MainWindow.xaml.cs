@@ -204,8 +204,8 @@ namespace DICUI
                 case DiscType.NONE:
                     lbl_Status.Content = "Please select a valid disc type";
                     break;
-				case DiscType.GameCubeGameDisc:
-				case DiscType.GDROM:
+                case DiscType.GameCubeGameDisc:
+                case DiscType.GDROM:
                     lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
                     break;
                 case DiscType.HDDVD:
