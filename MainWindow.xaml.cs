@@ -49,53 +49,17 @@ namespace DICUI
 
         private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // If we're on a separator, go to the next item
-            var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
-            if (tuple.Item2 == null && tuple.Item3 == null)
-            {
-                cmb_DiscType.SelectedIndex++;
-                tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
-            }
-
-            // If we're on an unsupported type, update the status accordingly
-            switch (tuple.Item3)
-            {
-                case DiscType.NONE:
-                    lbl_Status.Content = "Please select a valid disc type";
-                    break;
-                case DiscType.GDROM:
-                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
-                    break;
-                case DiscType.GameCubeGameDisc:
-                case DiscType.HDDVD:
-                case DiscType.UMD:
-                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
-                    break;
-                default:
-                    lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
-                    break;
-            }
-
-            // If we're in a type that doesn't support drive speeds
-            switch (tuple.Item3)
-            {
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    cmb_DriveSpeed.IsEnabled = false;
-                    break;
-                default:
-                    cmb_DriveSpeed.IsEnabled = true;
-                    break;
-            }
+            EnsureDiscInformation();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var tuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
-            txt_OutputDirectory.Text = "ISO" + Path.DirectorySeparatorChar + tuple.Item2;
+            GetOutputDirectoryName();
         }
 
         #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Get a complete list of supported systems and fill the combo box
@@ -125,12 +89,12 @@ namespace DICUI
             if (cmb_DriveLetter.Items.Count > 0)
             {
                 lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
-				btn_Start.IsEnabled = true;
-			}
+                btn_Start.IsEnabled = true;
+            }
             else
             {
                 lbl_Status.Content = "No valid optical disc found!";
-				btn_Start.IsEnabled = false;
+                btn_Start.IsEnabled = false;
             }
         }
 
@@ -221,5 +185,62 @@ namespace DICUI
 
             btn_Start.IsEnabled = true;
         }
+
+        /// <summary>
+        /// Ensure information is consistent with the currently selected disc type
+        /// </summary>
+        private void EnsureDiscInformation()
+        {
+            // If we're on a separator, go to the next item
+            var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            if (tuple.Item2 == null && tuple.Item3 == null)
+            {
+                cmb_DiscType.SelectedIndex++;
+                tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            }
+
+            // If we're on an unsupported type, update the status accordingly
+            switch (tuple.Item3)
+            {
+                case DiscType.NONE:
+                    lbl_Status.Content = "Please select a valid disc type";
+                    break;
+                case DiscType.GDROM:
+                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+                case DiscType.GameCubeGameDisc:
+                case DiscType.HDDVD:
+                case DiscType.UMD:
+                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+                default:
+                    lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
+                    break;
+            }
+
+            // If we're in a type that doesn't support drive speeds
+            switch (tuple.Item3)
+            {
+                case DiscType.BD25:
+                case DiscType.BD50:
+                    cmb_DriveSpeed.IsEnabled = false;
+                    break;
+                default:
+                    cmb_DriveSpeed.IsEnabled = true;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Get the default output directory name from the currently selected drive
+        /// </summary>
+        /// <remarks>TODO: Make the "ISO" part of the default configurable in UI or Settings</remarks>
+        private void GetOutputDirectoryName()
+        {
+            var tuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            txt_OutputDirectory.Text = "ISO" + Path.DirectorySeparatorChar + tuple.Item2;
+        }
+
+        #endregion
     }
 }
