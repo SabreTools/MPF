@@ -89,7 +89,7 @@ namespace DICUI
             {
                 case KnownSystem.MicrosoftXBOXOne:
                 case KnownSystem.SonyPlayStation4:
-					Process processXboneOrPS4 = new Process()
+					Process sgraw = new Process()
 					{
 						StartInfo = new ProcessStartInfo()
 						{
@@ -97,8 +97,8 @@ namespace DICUI
 							Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
 						},
 					};
-                    processXboneOrPS4.Start();
-                    processXboneOrPS4.WaitForExit();
+                    sgraw.Start();
+                    sgraw.WaitForExit();
                     break;
                 case KnownSystem.SonyPlayStation:
                     // TODO: Direct invocation of program instead of via Batch File
@@ -110,10 +110,10 @@ namespace DICUI
                         writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
                         writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
                     }
-                    Process processpsx = new Process();
-                    processpsx.StartInfo.FileName = "PSX" + guid + ".bat";
-                    processpsx.Start();
-                    processpsx.WaitForExit();
+                    Process psxt = new Process();
+                    psxt.StartInfo.FileName = "PSX" + guid + ".bat";
+                    psxt.Start();
+                    psxt.WaitForExit();
                     break;
             }
 
