@@ -151,6 +151,13 @@ namespace DICUI
                 return;
             }
 
+            // Validate that the required program exits
+            if (!File.Exists(dicPath))
+            {
+                lbl_Status.Content = "Error! Could not find DiscImageCreator!";
+                return;
+            }
+
             await Task.Run(
                 () =>
                 {
@@ -166,11 +173,16 @@ namespace DICUI
                 });
 
             // Special cases
-            string guid = Guid.NewGuid().ToString();
             switch (selected.Item2)
             {
                 case KnownSystem.MicrosoftXBOXOne:
                 case KnownSystem.SonyPlayStation4:
+                    if (!File.Exists(sgRawPath))
+                    {
+                        lbl_Status.Content = "Error! Could not find sg-raw!!";
+                        return;
+                    }
+
                     Process sgraw = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
@@ -183,8 +195,15 @@ namespace DICUI
                     sgraw.WaitForExit();
                     break;
                 case KnownSystem.SonyPlayStation:
+                    if (!File.Exists(psxtPath))
+                    {
+                        lbl_Status.Content = "Error! Could not find psxt001z!";
+                        return;
+                    }
+
                     // TODO: Direct invocation of program instead of via Batch File
-                    using (StreamWriter writetext = new StreamWriter("PSX" + guid + ".bat"))
+                    string batchname = "PSX" + Guid.NewGuid() + ".bat";
+                    using (StreamWriter writetext = new StreamWriter(batchname))
                     {
                         writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
                         writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
@@ -194,9 +213,19 @@ namespace DICUI
                     }
 
                     Process psxt = new Process();
-                    psxt.StartInfo.FileName = "PSX" + guid + ".bat";
+                    psxt.StartInfo.FileName = batchname;
                     psxt.Start();
                     psxt.WaitForExit();
+
+                    // Now try to delete the batch file
+                    try
+                    {
+                        File.Delete(batchname);
+                    }
+                    catch
+                    {
+                        // Right now, we don't care if the batch file can't be deleted
+                    }
                     break;
             }
 
