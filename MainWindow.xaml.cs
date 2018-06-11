@@ -142,14 +142,25 @@ namespace DICUI
             // Get the discType and processArguments from a given system and disc combo
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
             string discType = Utilities.GetBaseCommand(selected.Item3);
-            string defaultArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
+            List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
+
+            // Validate that everything is good
+            if (discType == null || defaultParams == null)
+            {
+                lbl_Status.Content = "Error! Current configuration is not supported!";
+                return;
+            }
 
             await Task.Run(
                 () =>
                 {
                     Process process = new Process();
                     process.StartInfo.FileName = dicPath;
-                    process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + Path.Combine(outputDirectory, outputFileName) + "\" " + driveSpeed + " " + defaultArguments;
+                    process.StartInfo.Arguments = discType
+                        + " " + driveLetter
+                        + " \"" + Path.Combine(outputDirectory, outputFileName) + "\" "
+                        + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? driveSpeed + " " : "")
+                        + string.Join(" ", defaultParams);
                     process.Start();
                     process.WaitForExit();
                 });
