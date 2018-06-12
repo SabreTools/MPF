@@ -63,6 +63,11 @@ namespace DICUI
             GetOutputNames();
         }
 
+        private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
         #endregion
 
         #region Helpers
@@ -138,16 +143,13 @@ namespace DICUI
             string driveLetter = cmb_DriveLetter.Text;
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
-            int driveSpeed = (int)cmb_DriveSpeed.SelectedItem;
             btn_Start.IsEnabled = false;
 
-            // Get the discType and processArguments from a given system and disc combo
+            // Get the currently selected item
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
-            string discType = Utilities.GetBaseCommand(selected.Item3);
-            List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
 
             // Validate that everything is good
-            if (discType == null || defaultParams == null)
+            if (string.IsNullOrWhiteSpace(txt_CustomParameters.Text))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
                 return;
@@ -166,11 +168,7 @@ namespace DICUI
                 {
                     Process process = new Process();
                     process.StartInfo.FileName = dicPath;
-                    process.StartInfo.Arguments = discType
-                        + " " + driveLetter
-                        + " \"" + Path.Combine(outputDirectory, outputFilename) + "\" "
-                        + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? driveSpeed + " " : "")
-                        + string.Join(" ", defaultParams);
+                    process.StartInfo.Arguments = txt_CustomParameters.Text;
                     process.Start();
                     process.WaitForExit();
                 });
@@ -303,6 +301,40 @@ namespace DICUI
                 default:
                     cmb_DriveSpeed.IsEnabled = true;
                     break;
+            }
+
+            // Special case for Custom input
+            if (tuple.Item1 == "Custom Input" && tuple.Item2 == KnownSystem.NONE && tuple.Item3 == DiscType.NONE)
+            {
+                txt_CustomParameters.IsEnabled = true;
+                txt_OutputFilename.IsEnabled = false;
+                txt_OutputDirectory.IsEnabled = false;
+                btn_OutputDirectoryBrowse.IsEnabled = false;
+                cmb_DriveLetter.IsEnabled = false;
+                cmb_DriveSpeed.IsEnabled = false;
+                lbl_Status.Content = "User input mode";
+            }
+            else
+            {
+                txt_CustomParameters.IsEnabled = false;
+                txt_OutputFilename.IsEnabled = true;
+                txt_OutputDirectory.IsEnabled = true;
+                btn_OutputDirectoryBrowse.IsEnabled = true;
+                cmb_DriveLetter.IsEnabled = true;
+                cmb_DriveSpeed.IsEnabled = true;
+
+                // Populate with the correct params for inputs (if we're not on the default option)
+                if (cmb_DiscType.SelectedIndex > 0)
+                {
+                    var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+                    string discType = Utilities.GetBaseCommand(selected.Item3);
+                    List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
+                    txt_CustomParameters.Text = discType
+                        + " " + cmb_DriveLetter.Text
+                        + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text + Utilities.GetDefaultExtension(selected.Item3)) + "\" "
+                        + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                        + string.Join(" ", defaultParams);
+                }
             }
         }
 

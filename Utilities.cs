@@ -603,6 +603,9 @@ namespace DICUI
                 }
             }
 
+            // Add final mapping for "Custom"
+            mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("Custom Input", KnownSystem.NONE, DiscType.NONE));
+
             return mapping;
         }
 
