@@ -247,7 +247,7 @@ namespace DICUI
 
             Dictionary<string, string> templateValues = Utilities.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
             List<string> formattedValues = Utilities.FormatOutputData(templateValues, selected.Item2, selected.Item3);
-            bool success = Utilities.WriteOutputData(formattedValues);
+            bool success = Utilities.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 
             btn_Start.IsEnabled = true;
         }
