@@ -13,9 +13,9 @@ I would like this project to be a community project, so if you have some time an
 --------------------------------------------------------------------------
 Currently working on the project:
  
-ReignStumble - Lead Developer
+ReignStumble - Co-Lead Programmer
 
-darksabre76 - Contributer
+darksabre76 - Co-Lead Programmer
 
 NHellFire - Contributer
 
