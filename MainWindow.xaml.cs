@@ -158,6 +158,7 @@ namespace DICUI
                 return;
             }
 
+            lbl_Status.Content = "Beginning dumping process";
             await Task.Run(
                 () =>
                 {
@@ -171,13 +172,6 @@ namespace DICUI
                     process.Start();
                     process.WaitForExit();
                 });
-
-            // Check to make sure that the output had all the correct files
-            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
-            {
-                lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
-                return;
-            }
 
             // Special cases
             switch (selected.Item2)
@@ -209,6 +203,7 @@ namespace DICUI
                     }
 
                     // Invoke the program with all 3 configurations
+                    // TODO: Use these outputs for PSX information
                     Process psxt001z = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
@@ -244,8 +239,18 @@ namespace DICUI
                     break;
             }
 
-            // TODO: UNUSED
+            // Check to make sure that the output had all the correct files
+            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            {
+                lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
+                return;
+            }
+
+            lbl_Status.Content = "Dumping complete!";
+
             Dictionary<string, string> templateValues = Utilities.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
+            List<string> formattedValues = Utilities.FormatOutputData(templateValues, selected.Item2, selected.Item3);
+            bool success = Utilities.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 
             btn_Start.IsEnabled = true;
         }
