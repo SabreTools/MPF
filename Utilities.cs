@@ -1158,8 +1158,8 @@ namespace DICUI
                         output.Add("Inner " + Constants.ToolstampField + ": " + info["Inner " + Constants.ToolstampField]);
                         break;
                 }
-                output.Add(info[Constants.BarcodeField]);
-                output.Add(info[Constants.ISBNField]);
+                output.Add(info[Constants.BarcodeField + ": " + Constants.BarcodeField]);
+                output.Add(info[Constants.ISBNField + ": " + Constants.ISBNField]);
                 switch (type)
                 {
                     case DiscType.CD:
@@ -1184,7 +1184,7 @@ namespace DICUI
                         break;
                 }
                 output.Add(Constants.PVDField + ":"); output.Add("");
-                output.AddRange(info[Constants.PVDField].Split('\n')); output.Add("");
+                output.AddRange(info[Constants.PVDField].Split('\n'));
                 switch (sys)
                 {
                     case KnownSystem.AppleMacintosh:
@@ -1203,7 +1203,7 @@ namespace DICUI
                         break;
                 }
                 output.Add(Constants.DATField + ":"); output.Add("");
-                output.AddRange(info[Constants.DATField].Split('\n')); output.Add("");
+                output.AddRange(info[Constants.DATField].Split('\n'));
 
                 return output;
             }
