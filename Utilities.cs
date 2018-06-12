@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace DICUI
 {
+    // TODO: Separate into different utility classes based on functionality
     public static class Utilities
     {
         /// <summary>
@@ -621,6 +622,477 @@ namespace DICUI
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
                 .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
                 .ToList();
+        }
+
+        /// <summary>
+        /// Attempts to find the first track of a dumped disc based on the inputs
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <returns>Proper path to first track, null on error</returns>
+        /// <remarks>
+        /// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
+        /// This can lead to a situation where the outputFilename contains a path, but only the filename gets
+        /// used in the processing and can lead to a "false null" return
+        /// </remarks>
+        public static string GetFirstTrack(string outputDirectory, string outputFilename)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // Go through all standard output naming schemes
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            if (File.Exists(combinedBase + ".bin"))
+            {
+                return combinedBase + ".bin";
+            }
+            if (File.Exists(combinedBase + " (Track 1).bin"))
+            {
+                return combinedBase + " (Track 1).bin";
+            }
+            if (File.Exists(combinedBase + " (Track 01).bin"))
+            {
+                return combinedBase + " (Track 01).bin";
+            }
+            if (File.Exists(combinedBase + ".iso"))
+            {
+                return Path.Combine(combinedBase + ".iso");
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Ensures that all required output files have been created
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns></returns>
+        public static bool FoundAllFiles(string outputDirectory, string outputFilename, DiscType? type)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // Now ensure that all required files exist
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            switch(type)
+            {
+                case DiscType.CD:
+                case DiscType.GDROM: // TODO: Verify
+                    return File.Exists(combinedBase + ".c2")
+                        && File.Exists(combinedBase + ".ccd")
+                        && File.Exists(combinedBase + ".cue")
+                        && File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + ".img")
+                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
+                        && File.Exists(combinedBase + ".scm")
+                        && File.Exists(combinedBase + ".sub")
+                        && File.Exists(combinedBase + "_c2Error.txt")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_img.cue")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_subError.txt")
+                        && File.Exists(combinedBase + "_subInfo.txt")
+                        && File.Exists(combinedBase + "_subIntention.txt")
+                        && File.Exists(combinedBase + "_subReadable.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.HDDVD:
+                case DiscType.BD25:
+                case DiscType.BD50:
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case DiscType.Floppy:
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Extract all of the possible information from a given input combination
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <param name="sys">KnownSystem value to check</param>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>Dictionary containing mapped output values, null on error</returns>
+        /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
+        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // First, we want to check that all of the relevant files are there
+            if (!FoundAllFiles(outputDirectory, outputFilename, type))
+            {
+                return null;
+            }
+
+            // Create the output dictionary with all user-inputted values by default
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            Dictionary<string, string> mappings = new Dictionary<string, string>
+            {
+                { "Title", "(REQUIRED)" },
+                { "Disc Number / Letter", "(OPTIONAL)" },
+                { "Disc Title", "(OPTIONAL)" },
+                { "Category", "Games" },
+                { "Region", "World (CHANGE THIS)" },
+                { "Languages", "Klingon (CHANGE THIS)" },
+                { "Disc Serial", "(OPTIONAL)" },
+                { "Barcode", "" },
+                { "ISBN", "" },
+                { "Comments", "(OPTIONAL)" },
+                { "Contents", "(OPTIONAL)" },
+                { "Version", "" },
+                { "Edition/Release", "Original (VERIFY THIS)" },
+                { "Primary Volume Descriptor (PVD)", GetPVD(combinedBase + "_mainInfo.txt") },
+                { "Copy Protection", "(REQUIRED, IF EXISTS)" },
+                { "DAT", GetDatfile(combinedBase + ".dat") },
+            };
+
+            // Now we want to do a check by DiscType and extract all required info
+            switch (type)
+            {
+                case DiscType.CD: // TODO: Add SecuROM data, but only if found
+                case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
+                    mappings["Mastering Ring"] = "";
+                    mappings["Mastering SID Code"] = "";
+                    mappings["Mould SID Code"] = "";
+                    mappings["Additional Mould"] = "";
+                    mappings["Toolstamp or Mastering Code"] = "";
+                    mappings["Error Count"] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
+                        combinedBase + "_c2Error.txt",
+                        combinedBase + "_mainError.txt").ToString();
+                    mappings["Cuesheet"] = GetCuesheet(combinedBase + ".cue");
+                    mappings["Write Offset"] = GetWriteOffset(combinedBase + "_disc.txt");
+
+                    // System-specific options
+                    switch (sys)
+                    {
+                        case KnownSystem.SegaSaturn:
+                            mappings["Header"] = ""; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings["Build Date"] = ""; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            break;
+                        case KnownSystem.SonyPlayStation:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings["EDC"] = "Yes/No";
+                            mappings["Anti-modchip"] = "Yes/No";
+                            mappings["LibCrypt"] = "Yes/No";
+                            break;
+                        case KnownSystem.SonyPlayStation2:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            break;
+                    }
+
+                    break;
+                case DiscType.DVD5:
+                case DiscType.HDDVD:
+                case DiscType.BD25:
+                    mappings["Mastering Ring"] = "";
+                    mappings["Mastering SID Code"] = "";
+                    mappings["Mould SID Code"] = "";
+                    mappings["Additional Mould"] = "";
+                    mappings["Toolstamp or Mastering Code"] = "";
+
+                    // System-specific options
+                    switch (sys)
+                    {
+                        case KnownSystem.SonyPlayStation2:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            break;
+                    }
+
+                    break;
+                case DiscType.DVD9:
+                case DiscType.BD50:
+                    mappings["Outer Mastering Ring"] = "";
+                    mappings["Inner Mastering Ring"] = "";
+                    mappings["Outer Mastering SID Code"] = "";
+                    mappings["Inner Mastering SID Code"] = "";
+                    mappings["Mould SID Code"] = "";
+                    mappings["Additional Mould"] = "";
+                    mappings["Outer Toolstamp or Mastering Code"] = "";
+                    mappings["Inner Toolstamp or Mastering Code"] = "";
+                    mappings["Layerbreak"] = GetLayerbreak(combinedBase + "_disc.txt");
+
+                    // System-specific options
+                    switch (sys)
+                    {
+                        case KnownSystem.SonyPlayStation2:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            break;
+                    }
+
+                    break;
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
+                case DiscType.Floppy:
+                default:
+                    // No-op
+                    break;
+            }
+
+            return mappings;
+        }
+
+        /// <summary>
+        /// Get the proper cuesheet from the input file, if possible
+        /// </summary>
+        /// <param name="cue">.cue file location</param>
+        /// <returns>Full text of cuesheet, null on error</returns>
+        private static string GetCuesheet(string cue)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(cue))
+            {
+                return null;
+            }
+
+            return string.Join("\n", File.ReadAllLines(cue));
+        }
+
+        /// <summary>
+        /// Get the proper datfile from the input file, if possible
+        /// </summary>
+        /// <param name="dat">.dat file location</param>
+        /// <returns>Relevant pieces of the datfile, null on error</returns>
+        private static string GetDatfile(string dat)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(dat))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(dat))
+            {
+                try
+                {
+                    // Make sure this file is a .dat
+                    if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+                    {
+                        return null;
+                    }
+                    if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the rom lines
+                    while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
+                    sr.ReadLine(); // <category>Games</category>
+                    sr.ReadLine(); // <description>Plextor</description>
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string pvd = "", line = sr.ReadLine().Trim();
+                    while (line.StartsWith("<rom"))
+                    {
+                        pvd += line + "\n";
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return pvd.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the detected error count from the input files, if possible
+        /// </summary>
+        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <param name="c2Error">_c2Error.txt file location</param>
+        /// <param name="mainError">_mainError.txt file location</param>
+        /// <returns>Error count if possible, -1 on error</returns>
+        /// <remarks>TODO: Ensure all possible error states are taken care of</remarks>
+        private static long GetErrorCount(string edcecc, string c2Error, string mainError)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(edcecc) || !File.Exists(c2Error) || !File.Exists(mainError))
+            {
+                return -1;
+            }
+
+            // First off, if the mainError file has any contents, we have an uncorrectable error
+            if (new FileInfo(mainError).Length > 0)
+            {
+                return -1;
+            }
+
+            // First line of defense is the EdcEcc error file
+            using (StreamReader sr = File.OpenText(edcecc))
+            {
+                try
+                {
+                    // Fast forward to the PVD
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("[NO ERROR]")
+                        && !line.StartsWith("[WARNING]")
+                        && !line.StartsWith("[ERROR]"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Now that we're at the error line, determine what the value should be
+                    if (line.StartsWith("[NO ERROR]"))
+                    {
+                        return 0;
+                    }
+                    else if (line.StartsWith("[WARNING]"))
+                    {
+                        // Not sure how to handle these properly
+                        return -1;
+                    }
+                    else if (line.StartsWith("[ERROR] Number of sector(s) where user data doesn't match the expected ECC/EDC:"))
+                    {
+                        return Int64.Parse(line.Remove(0, 80));
+                    }
+
+                    return -1;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return -1;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Get the layerbreak from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Layerbreak if possible, null on error</returns>
+        private static string GetLayerbreak(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Make sure this file is a _disc.txt
+                    if (sr.ReadLine() != "========== DiscStructure ==========")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the layerbreak
+                    while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
+
+                    // Now that we're at the layerbreak line, attempt to get the decimal version
+                    return sr.ReadLine().Split(' ')[1];
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the PVD from the input file, if possible
+        /// </summary>
+        /// <param name="mainInfo">_mainInfo.txt file location</param>
+        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
+        private static string GetPVD(string mainInfo)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(mainInfo))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(mainInfo))
+            {
+                try
+                {
+                    // Make sure this file is a _mainInfo.txt
+                    if (sr.ReadLine() != "========== LBA[000016, 0x00010]: Main Channel ==========")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the PVD
+                    while (!sr.ReadLine().StartsWith("0310"));
+
+                    // Now that we're at the PVD, read each line in and concatenate
+                    string pvd = sr.ReadLine() + "\n"; // 0320
+                    pvd += sr.ReadLine() + "\n"; // 0330
+                    pvd += sr.ReadLine() + "\n"; // 0340
+                    pvd += sr.ReadLine() + "\n"; // 0350
+                    pvd += sr.ReadLine() + "\n"; // 0360
+                    pvd += sr.ReadLine() + "\n"; // 0370
+
+                    return pvd;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private static string GetWriteOffset(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Make sure this file is a _disc.txt
+                    if (sr.ReadLine() != "========== TOC ==========")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the offsets
+                    while (!sr.ReadLine().Trim().StartsWith("========== Offset"));
+                    sr.ReadLine(); // Combined Offset
+                    sr.ReadLine(); // Drive Offset
+                    sr.ReadLine(); // Separator line
+
+                    // Now that we're at the offsets, attempt to get the sample offset
+                    return sr.ReadLine().Split(' ').LastOrDefault();
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
         }
     }
 }

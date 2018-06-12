@@ -135,7 +135,7 @@ namespace DICUI
             // Local variables
             string driveLetter = cmb_DriveLetter.Text;
             string outputDirectory = txt_OutputDirectory.Text;
-            string outputFileName = txt_OutputFilename.Text;
+            string outputFilename = txt_OutputFilename.Text;
             int driveSpeed = (int)cmb_DriveSpeed.SelectedItem;
             btn_Start.IsEnabled = false;
 
@@ -165,12 +165,19 @@ namespace DICUI
                     process.StartInfo.FileName = dicPath;
                     process.StartInfo.Arguments = discType
                         + " " + driveLetter
-                        + " \"" + Path.Combine(outputDirectory, outputFileName) + "\" "
+                        + " \"" + Path.Combine(outputDirectory, outputFilename) + "\" "
                         + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? driveSpeed + " " : "")
                         + string.Join(" ", defaultParams);
                     process.Start();
                     process.WaitForExit();
                 });
+
+            // Check to make sure that the output had all the correct files
+            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            {
+                lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
+                return;
+            }
 
             // Special cases
             switch (selected.Item2)
@@ -179,7 +186,7 @@ namespace DICUI
                 case KnownSystem.SonyPlayStation4:
                     if (!File.Exists(sgRawPath))
                     {
-                        lbl_Status.Content = "Error! Could not find sg-raw!!";
+                        lbl_Status.Content = "Error! Could not find sg-raw!";
                         return;
                     }
 
@@ -201,33 +208,44 @@ namespace DICUI
                         return;
                     }
 
-                    // TODO: Direct invocation of program instead of via Batch File
-                    string batchname = "PSX" + Guid.NewGuid() + ".bat";
-                    using (StreamWriter writetext = new StreamWriter(batchname))
+                    // Invoke the program with all 3 configurations
+                    Process psxt001z = new Process()
                     {
-                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
-                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
-                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
-                        writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
-                        writetext.WriteLine(psxtPath + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
-                    }
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = psxtPath,
+                            Arguments = "\"" + Utilities.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
+                        },
+                    };
+                    psxt001z.Start();
+                    psxt001z.WaitForExit();
 
-                    Process psxt = new Process();
-                    psxt.StartInfo.FileName = batchname;
-                    psxt.Start();
-                    psxt.WaitForExit();
+                    psxt001z = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = psxtPath,
+                            Arguments = "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"),
+                        },
+                    };
+                    psxt001z.Start();
+                    psxt001z.WaitForExit();
 
-                    // Now try to delete the batch file
-                    try
+                    psxt001z = new Process()
                     {
-                        File.Delete(batchname);
-                    }
-                    catch
-                    {
-                        // Right now, we don't care if the batch file can't be deleted
-                    }
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = psxtPath,
+                            Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
+                        },
+                    };
+                    psxt001z.Start();
+                    psxt001z.WaitForExit();
                     break;
             }
+
+            // TODO: UNUSED
+            Dictionary<string, string> templateValues = Utilities.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
 
             btn_Start.IsEnabled = true;
         }
