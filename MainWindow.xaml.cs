@@ -77,6 +77,8 @@ namespace DICUI
             cmb_DiscType.DisplayMemberPath = "Item1";
             cmb_DiscType.SelectedIndex = 0;
             cmb_DiscType_SelectionChanged(null, null);
+
+            btn_Start.IsEnabled = false;
         }
 
         /// <summary>
@@ -181,7 +183,7 @@ namespace DICUI
                     if (!File.Exists(sgRawPath))
                     {
                         lbl_Status.Content = "Error! Could not find sg-raw!";
-                        return;
+                        break;
                     }
 
                     Process sgraw = new Process()
@@ -199,7 +201,7 @@ namespace DICUI
                     if (!File.Exists(psxtPath))
                     {
                         lbl_Status.Content = "Error! Could not find psxt001z!";
-                        return;
+                        break;
                     }
 
                     // Invoke the program with all 3 configurations
@@ -273,17 +275,21 @@ namespace DICUI
             {
                 case DiscType.NONE:
                     lbl_Status.Content = "Please select a valid disc type";
+                    btn_Start.IsEnabled = false;
                     break;
                 case DiscType.GameCubeGameDisc:
                 case DiscType.GDROM:
                     lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    btn_Start.IsEnabled = true;
                     break;
                 case DiscType.HDDVD:
                 case DiscType.UMD:
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    btn_Start.IsEnabled = true;
                     break;
                 default:
                     lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
+                    btn_Start.IsEnabled = true;
                     break;
             }
 
