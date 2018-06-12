@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace DICUI
 {
+	// TODO: Separate into different utility classes based on functionality
     public static class Utilities
     {
         /// <summary>
