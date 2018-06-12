@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace DICUI
 {
-	// TODO: Separate into different utility classes based on functionality
+    // TODO: Separate into different utility classes based on functionality
     public static class Utilities
     {
         /// <summary>
@@ -667,20 +667,19 @@ namespace DICUI
         /// </summary>
         /// <param name="outputDirectory">Base directory to use</param>
         /// <param name="outputFilename">Base filename to use</param>
+        /// <param name="type">DiscType value to check</param>
         /// <returns></returns>
-        public static bool FoundAllFiles(string outputDirectory, string outputFilename)
+        public static bool FoundAllFiles(string outputDirectory, string outputFilename, DiscType? type)
         {
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            // Check to see what type of files we should be expecting
-            string ext = Path.GetExtension(GetFirstTrack(outputDirectory, outputFilename)).TrimStart('.');
-
             // Now ensure that all required files exist
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
-            switch(ext)
+            switch(type)
             {
-                case "bin":
+                case DiscType.CD:
+                case DiscType.GDROM: // TODO: Verify
                     return File.Exists(combinedBase + ".c2")
                         && File.Exists(combinedBase + ".ccd")
                         && File.Exists(combinedBase + ".cue")
@@ -701,7 +700,13 @@ namespace DICUI
                         && File.Exists(combinedBase + "_subIntention.txt")
                         && File.Exists(combinedBase + "_subReadable.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
-                case "iso":
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.HDDVD:
+                case DiscType.BD25:
+                case DiscType.BD50:
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                         && File.Exists(combinedBase + "_disc.txt")
@@ -709,9 +714,81 @@ namespace DICUI
                         && File.Exists(combinedBase + "_mainError.txt")
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
+                case DiscType.Floppy:
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// Extract all of the possible information from a given input combination
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <param name="sys">KnownSystem value to check</param>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>Dictionary containing mapped output values, null on error</returns>
+        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
+        {
+            // First, we want to check that all of the relevant files are there
+            if (!FoundAllFiles(outputDirectory, outputFilename, type))
+            {
+                return null;
+            }
+
+            // Create the output dictionary with all user-inputted values by default
+            Dictionary<string, string> mappings = new Dictionary<string, string>
+            {
+                { "Title", "(REQUIRED)" },
+                { "Disc Number / Letter", "(OPTIONAL)" },
+                { "Disc Title", "(OPTIONAL)" },
+                { "Category", "Games" },
+                { "Region", "World (CHANGE THIS)" },
+                { "Languages", "Klingon (CHANGE THIS)" },
+                { "Disc Serial", "(OPTIONAL)" },
+                { "Mastering Ring", "" },
+                { "Mastering SID Code", "" },
+                { "Mould SID Code", "" },
+                { "Additional Mould", "" },
+                { "Toolstamp or Mastering Code", "" },
+                { "Barcode", "" },
+                { "ISBN", "" },
+                { "Comments", "(OPTIONAL)" },
+                { "Contents", "(OPTIONAL)" },
+                { "Version", "" },
+                { "Edition/Release", "Original (VERIFY THIS)" },
+                { "Primary Volume Descriptor (PVD)", "" },
+                { "Copy Protection", "(REQUIRED, IF EXISTS)" },
+                { "DAT", "" },
+            };
+
+            // Now we want to do a check by DiscType and extract all required info
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            switch (type)
+            {
+                case DiscType.CD:
+                case DiscType.GDROM: // TODO: Verify
+                    mappings["Errors Count"] = "(REQUIRED)";
+                    mappings["Cuesheet"] = "";
+                    mappings["Write Offset"] = "";
+                    break;
+                case DiscType.DVD5:
+                case DiscType.HDDVD:
+                case DiscType.BD25:
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
+                    break;
+                case DiscType.DVD9:
+                case DiscType.BD50:
+                    mappings["Layerbreak"] = "(REQUIRED)";
+                    break;
+                case DiscType.Floppy:
+                default:
+                    // No-op
+                    break;
+            }
+
+            return mappings;
         }
     }
 }

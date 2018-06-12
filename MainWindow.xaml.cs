@@ -173,7 +173,7 @@ namespace DICUI
                 });
 
             // Check to make sure that the output had all the correct files
-            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename))
+            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
                 return;
