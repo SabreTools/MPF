@@ -308,17 +308,15 @@ namespace DICUI
             var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
             var discTuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
 
-            if (driveTuple != null)
+            if (driveTuple != null && discTuple != null)
             {
-                if (String.IsNullOrWhiteSpace(txt_OutputDirectory.Text))
-                {
-                    txt_OutputDirectory.Text = defaultOutputPath;
-                }
-
-                if (discTuple != null)
-                {
-                    txt_OutputFilename.Text = driveTuple.Item2 + Utilities.GetDefaultExtension(discTuple.Item3);
-                }
+                txt_OutputDirectory.Text = Path.Combine(defaultOutputPath, driveTuple.Item2);
+                txt_OutputFilename.Text = driveTuple.Item2 + Utilities.GetDefaultExtension(discTuple.Item3);
+            }
+            else
+            {
+                txt_OutputDirectory.Text = defaultOutputPath;
+                txt_OutputFilename.Text = "disc.bin";
             }
         }
 

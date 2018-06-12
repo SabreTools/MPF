@@ -1236,10 +1236,9 @@ namespace DICUI
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Now write out to a generic file
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(combinedBase + "_submissionInfo.txt", FileMode.Create, FileAccess.Write)))
+                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
                     {
