@@ -1,42 +1,48 @@
 ﻿namespace DICUI
 {
-	public static class Constants
-	{
-		// Manual information
+    public static class Constants
+    {
+        // Manual information
 
-		public const string TitleField = "Title";
-		public const string DiscNumberField = "Disc Number / Letter";
-		public const string DiscTitleField = "Disc Title";
-		public const string CategoryField = "Category";
-		public const string RegionField = "Region";
-		public const string LanguagesField = "Languages";
-		public const string DiscSerialField = "Disc Serial";
-		public const string BarcodeField = "Barcode";
-		public const string ISBNField = "ISBN";
-		public const string CommentsField = "Comments";
-		public const string ContentsField = "Contents";
-		public const string VersionField = "Version";
-		public const string EditionField = "Edition/Release";
-		public const string CopyProtectionField = "Copy Protection";
-		public const string MasteringRingField = "Mastering Ring";
-		public const string MasteringSIDField = "Mastering SID Code";
-		public const string MouldSIDField = "Mould SID Code";
-		public const string AdditionalMouldField = "Additional Mould";
-		public const string ToolstampField = "Toolstamp or Mastering Code";
+        public const string TitleField = "Title";
+        public const string DiscNumberField = "Disc Number / Letter";
+        public const string DiscTitleField = "Disc Title";
+        public const string CategoryField = "Category";
+        public const string RegionField = "Region";
+        public const string LanguagesField = "Languages";
+        public const string DiscSerialField = "Disc Serial";
+        public const string BarcodeField = "Barcode";
+        public const string ISBNField = "ISBN";
+        public const string CommentsField = "Comments";
+        public const string ContentsField = "Contents";
+        public const string VersionField = "Version";
+        public const string EditionField = "Edition/Release";
+        public const string CopyProtectionField = "Copy Protection";
+        public const string MasteringRingField = "Mastering Ring";
+        public const string MasteringSIDField = "Mastering SID Code";
+        public const string MouldSIDField = "Mould SID Code";
+        public const string AdditionalMouldField = "Additional Mould";
+        public const string ToolstampField = "Toolstamp or Mastering Code";
 
-		// Automatic Information
+        // Automatic Information
 
-		public const string PVDField = "Primary Volume Descriptor (PVD)";
-		public const string DATField = "DAT";
-		public const string ErrorCountField = "Error Count";
-		public const string CuesheetField = "Cuesheet";
-		public const string WriteOffsetField = "WriteOffset";
-		public const string LayerbreakField = "Layerbreak";
-		public const string PlaystationEXEDateField = "EXE Date"; // TODO: Not automatic yet
-		public const string PlayStationEDCField = "EDC"; // TODO: Not automatic yet
-		public const string PlayStationAntiModchipField = "Anti-modchip"; // TODO: Not automatic yet
-		public const string PlayStationLibCryptField = "LibCrypt"; // TODO: Not automatic yet
-		public const string SaturnHeaderField = "Header"; // TODO: Not automatic yet
-		public const string SaturnBuildDateField = "Build Date"; // TODO: Not automatic yet
-	}
+        public const string PVDField = "Primary Volume Descriptor (PVD)";
+        public const string DATField = "DAT";
+        public const string ErrorCountField = "Error Count";
+        public const string CuesheetField = "Cuesheet";
+        public const string WriteOffsetField = "WriteOffset";
+        public const string LayerbreakField = "Layerbreak";
+        public const string PlaystationEXEDateField = "EXE Date"; // TODO: Not automatic yet
+        public const string PlayStationEDCField = "EDC"; // TODO: Not automatic yet
+        public const string PlayStationAntiModchipField = "Anti-modchip"; // TODO: Not automatic yet
+        public const string PlayStationLibCryptField = "LibCrypt"; // TODO: Not automatic yet
+        public const string SaturnHeaderField = "Header"; // TODO: Not automatic yet
+        public const string SaturnBuildDateField = "Build Date"; // TODO: Not automatic yet
+
+        // Default values
+        public const string RequiredValue = "(REQUIRED)";
+        public const string RequiredIfExistsValue = "(REQUIRED, IF EXISTS)";
+        public const string OptionalValue = "(OPTIONAL)";
+        public const string YesNoValue = "Yes/No";
+    }
 }

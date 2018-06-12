@@ -744,20 +744,20 @@ namespace DICUI
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
             Dictionary<string, string> mappings = new Dictionary<string, string>
             {
-                { Constants.TitleField, "(REQUIRED)" },
-                { Constants.DiscNumberField, "(OPTIONAL)" },
-                { Constants.DiscTitleField, "(OPTIONAL)" },
+                { Constants.TitleField, Constants.RequiredValue },
+                { Constants.DiscNumberField, Constants.OptionalValue },
+                { Constants.DiscTitleField, Constants.OptionalValue },
                 { Constants.CategoryField, "Games" },
                 { Constants.RegionField, "World (CHANGE THIS)" },
                 { Constants.LanguagesField, "Klingon (CHANGE THIS)" },
-                { Constants.DiscSerialField, "(OPTIONAL)" },
-                { Constants.MouldSIDField, "" },
-                { Constants.AdditionalMouldField, "" },
-                { Constants.BarcodeField, "" },
-                { Constants.ISBNField, "" },
-                { Constants.CommentsField, "(OPTIONAL)" },
-                { Constants.ContentsField, "(OPTIONAL)" },
-                { Constants.VersionField, "" },
+                { Constants.DiscSerialField, Constants.RequiredIfExistsValue },
+                { Constants.MouldSIDField, Constants.RequiredIfExistsValue },
+                { Constants.AdditionalMouldField, Constants.RequiredIfExistsValue },
+                { Constants.BarcodeField, Constants.OptionalValue},
+                { Constants.ISBNField, Constants.OptionalValue },
+                { Constants.CommentsField, Constants.OptionalValue },
+                { Constants.ContentsField, Constants.OptionalValue },
+                { Constants.VersionField, Constants.RequiredIfExistsValue },
                 { Constants.EditionField, "Original (VERIFY THIS)" },
                 { Constants.PVDField, GetPVD(combinedBase + "_mainInfo.txt") },
                 { Constants.DATField, GetDatfile(combinedBase + ".dat") },
@@ -768,9 +768,9 @@ namespace DICUI
             {
                 case DiscType.CD: // TODO: Add SecuROM data, but only if found
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
-                    mappings[Constants.MasteringRingField] = "";
-                    mappings[Constants.MasteringSIDField] = "";
-                    mappings[Constants.ToolstampField] = "";
+                    mappings[Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
+                    mappings[Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
+                    mappings[Constants.ToolstampField] = Constants.RequiredIfExistsValue;
                     mappings[Constants.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
@@ -782,20 +782,20 @@ namespace DICUI
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            mappings[Constants.CopyProtectionField] = "(REQUIRED, IF EXISTS)";
+                            mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Constants.SaturnHeaderField] = ""; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
-                            mappings[Constants.SaturnBuildDateField] = ""; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Constants.SaturnHeaderField] = Constants.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Constants.SaturnBuildDateField] = Constants.RequiredValue; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            mappings[Constants.PlayStationEDCField] = "Yes/No";
-                            mappings[Constants.PlayStationAntiModchipField] = "Yes/No";
-                            mappings[Constants.PlayStationLibCryptField] = "Yes/No";
+                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlayStationEDCField] = Constants.YesNoValue;
+                            mappings[Constants.PlayStationAntiModchipField] = Constants.YesNoValue;
+                            mappings[Constants.PlayStationLibCryptField] = Constants.YesNoValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
@@ -803,31 +803,31 @@ namespace DICUI
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
-                    mappings[Constants.MasteringRingField] = "";
-                    mappings[Constants.MasteringSIDField] = "";
-                    mappings[Constants.ToolstampField] = "";
+                    mappings[Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
+                    mappings[Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
+                    mappings[Constants.ToolstampField] = Constants.RequiredIfExistsValue;
 
                     // System-specific options
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            mappings[Constants.CopyProtectionField] = "(REQUIRED, IF EXISTS)";
+                            mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
-                    mappings["Outer " + Constants.MasteringRingField] = "";
-                    mappings["Inner " + Constants.MasteringRingField] = "";
-                    mappings["Outer " + Constants.MasteringSIDField] = "";
-                    mappings["Inner " + Constants.MasteringSIDField] = "";
-                    mappings["Outer " + Constants.ToolstampField] = "";
-                    mappings["Inner " + Constants.ToolstampField] = "";
+                    mappings["Outer " + Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
+                    mappings["Inner " + Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
+                    mappings["Outer " + Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
+                    mappings["Inner " + Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
+                    mappings["Outer " + Constants.ToolstampField] = Constants.RequiredIfExistsValue;
+                    mappings["Inner " + Constants.ToolstampField] = Constants.RequiredIfExistsValue;
                     mappings[Constants.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
 
                     // System-specific options
@@ -835,10 +835,10 @@ namespace DICUI
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            mappings[Constants.CopyProtectionField] = "(REQUIRED, IF EXISTS)";
+                            mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
@@ -1158,8 +1158,8 @@ namespace DICUI
                         output.Add("Inner " + Constants.ToolstampField + ": " + info["Inner " + Constants.ToolstampField]);
                         break;
                 }
-                output.Add(info[Constants.BarcodeField + ": " + Constants.BarcodeField]);
-                output.Add(info[Constants.ISBNField + ": " + Constants.ISBNField]);
+                output.Add(Constants.BarcodeField + ": " + info[Constants.BarcodeField]);
+                output.Add(Constants.ISBNField + ": " + info[Constants.ISBNField]);
                 switch (type)
                 {
                     case DiscType.CD:
@@ -1223,14 +1223,20 @@ namespace DICUI
         /// <returns>True on success, false on error</returns>
         public static bool WriteOutputData(string outputDirectory, string outputFilename, List<string> lines)
         {
-            // First, sanitized the output filename to strip off any potential extension
+            // Check to see if the inputs are valid
+            if (lines == null)
+            {
+                return false;
+            }
+
+            // Then, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Now write out to a generic file
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.OpenWrite(combinedBase + ".txt")))
+                using (StreamWriter sw = new StreamWriter(File.Open(combinedBase + ".txt", FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
                     {
