@@ -728,6 +728,7 @@ namespace DICUI
         /// <param name="sys">KnownSystem value to check</param>
         /// <param name="type">DiscType value to check</param>
         /// <returns>Dictionary containing mapped output values, null on error</returns>
+        /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
         public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
         {
             // First, sanitized the output filename to strip off any potential extension
@@ -764,7 +765,7 @@ namespace DICUI
             // Now we want to do a check by DiscType and extract all required info
             switch (type)
             {
-                case DiscType.CD:
+                case DiscType.CD: // TODO: Add SecuROM data, but only if found
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings["Mastering Ring"] = "";
                     mappings["Mastering SID Code"] = "";
@@ -776,6 +777,25 @@ namespace DICUI
                         combinedBase + "_mainError.txt").ToString();
                     mappings["Cuesheet"] = GetCuesheet(combinedBase + ".cue");
                     mappings["Write Offset"] = GetWriteOffset(combinedBase + "_disc.txt");
+
+                    // System-specific options
+                    switch (sys)
+                    {
+                        case KnownSystem.SegaSaturn:
+                            mappings["Header"] = ""; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings["Build Date"] = ""; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            break;
+                        case KnownSystem.SonyPlayStation:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings["EDC"] = "Yes/No";
+                            mappings["Anti-modchip"] = "Yes/No";
+                            mappings["LibCrypt"] = "Yes/No";
+                            break;
+                        case KnownSystem.SonyPlayStation2:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            break;
+                    }
+
                     break;
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
@@ -785,6 +805,15 @@ namespace DICUI
                     mappings["Mould SID Code"] = "";
                     mappings["Additional Mould"] = "";
                     mappings["Toolstamp or Mastering Code"] = "";
+
+                    // System-specific options
+                    switch (sys)
+                    {
+                        case KnownSystem.SonyPlayStation2:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            break;
+                    }
+
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
@@ -797,6 +826,15 @@ namespace DICUI
                     mappings["Outer Toolstamp or Mastering Code"] = "";
                     mappings["Inner Toolstamp or Mastering Code"] = "";
                     mappings["Layerbreak"] = GetLayerbreak(combinedBase + "_disc.txt");
+
+                    // System-specific options
+                    switch (sys)
+                    {
+                        case KnownSystem.SonyPlayStation2:
+                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            break;
+                    }
+
                     break;
                 case DiscType.GameCubeGameDisc:
                 case DiscType.UMD:
