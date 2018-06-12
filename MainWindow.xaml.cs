@@ -205,9 +205,7 @@ namespace DICUI
                     string batchname = "PSX" + Guid.NewGuid() + ".bat";
                     using (StreamWriter writetext = new StreamWriter(batchname))
                     {
-                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
-                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
-                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
+                        writetext.WriteLine(psxtPath + " " + "\"" + Utilities.GetFirstTrack(outputDirectory, outputFileName) + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
                         writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
                         writetext.WriteLine(psxtPath + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
                     }
