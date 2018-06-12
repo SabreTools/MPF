@@ -208,29 +208,39 @@ namespace DICUI
                         return;
                     }
 
-                    // TODO: Direct invocation of program instead of via Batch File
-                    string batchname = "PSX" + Guid.NewGuid() + ".bat";
-                    using (StreamWriter writetext = new StreamWriter(batchname))
+                    // Invoke the program with all 3 configurations
+                    Process psxt001z = new Process()
                     {
-                        writetext.WriteLine(psxtPath + " " + "\"" + Utilities.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"));
-                        writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"));
-                        writetext.WriteLine(psxtPath + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"));
-                    }
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = psxtPath,
+                            Arguments = "\"" + Utilities.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
+                        },
+                    };
+                    psxt001z.Start();
+                    psxt001z.WaitForExit();
 
-                    Process psxt = new Process();
-                    psxt.StartInfo.FileName = batchname;
-                    psxt.Start();
-                    psxt.WaitForExit();
+                    psxt001z = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = psxtPath,
+                            Arguments = "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"),
+                        },
+                    };
+                    psxt001z.Start();
+                    psxt001z.WaitForExit();
 
-                    // Now try to delete the batch file
-                    try
+                    psxt001z = new Process()
                     {
-                        File.Delete(batchname);
-                    }
-                    catch
-                    {
-                        // Right now, we don't care if the batch file can't be deleted
-                    }
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = psxtPath,
+                            Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
+                        },
+                    };
+                    psxt001z.Start();
+                    psxt001z.WaitForExit();
                     break;
             }
 
