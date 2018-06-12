@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace DICUI
 {
@@ -420,7 +422,6 @@ namespace DICUI
                 case DiscType.GDROM:
                     return "gd"; // TODO: "swap"?
                 case DiscType.HDDVD:
-                    Console.WriteLine("HD-DVD dumping is not supported by DIC");
                     return null;
                 case DiscType.BD25:
                     return "bd";
@@ -431,7 +432,6 @@ namespace DICUI
                 case DiscType.GameCubeGameDisc:
                     return "dvd";
                 case DiscType.UMD:
-                    Console.WriteLine("UMD dumping is not supported by DIC");
                     return null;
 
                 // Non-optical
@@ -455,7 +455,6 @@ namespace DICUI
             List<DiscType?> validTypes = GetValidDiscTypes(sys);
             if (!validTypes.Contains(type))
             {
-                Console.WriteLine("Invalid DiscType '{0}' for System '{1}'", type.ToString(), KnownSystemToString(sys));
                 return null;
             }
 
@@ -492,7 +491,6 @@ namespace DICUI
                     parameters.Add("/c2 20");
                     break;
                 case DiscType.HDDVD:
-                    Console.WriteLine("HD-DVD dumping is not supported by DIC");
                     break;
                 case DiscType.BD25:
                     // Currently no defaults set
@@ -506,7 +504,6 @@ namespace DICUI
                     parameters.Add("/raw");
                     break;
                 case DiscType.UMD:
-                    Console.WriteLine("UMD dumping is not supported by DIC");
                     break;
 
                 // Non-optical
@@ -519,9 +516,37 @@ namespace DICUI
         }
 
         /// <summary>
+        /// Get the default extension for a given disc type
+        /// </summary>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>Valid extension (with leading '.'), null on error</returns>
+        public static string GetDefaultExtension(DiscType? type)
+        {
+            switch(type)
+            {
+                case DiscType.CD:
+                case DiscType.GDROM:
+                    return ".bin";
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.HDDVD:
+                case DiscType.BD25:
+                case DiscType.BD50:
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
+                    return ".iso";
+                case DiscType.Floppy:
+                    return ".img";
+                case DiscType.NONE:
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Create a list of systems matched to their respective enums
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Systems matched to enums, if possible</returns>
         /// <remarks>
         /// This returns a List of Tuples whose structure is as follows:
         ///		Item 1: Printable name
@@ -578,6 +603,24 @@ namespace DICUI
             }
 
             return mapping;
+        }
+
+        /// <summary>
+        /// Create a list of active optical drives matched to their volume labels
+        /// </summary>
+        /// <returns>Active drives, matched to labels, if possible</returns>
+        /// <remarks>
+        /// This returns a List of Tuples whose structure is as follows:
+        ///		Item 1: Drive letter
+        ///		Item 2: Volume label
+        /// </remarks>
+        public static List<Tuple<char, string>> CreateListOfDrives()
+        {
+            // TODO: Floppy drives show up as DriveType.Removable, but so do USB drives, 
+            return DriveInfo.GetDrives()
+                .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
+                .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
+                .ToList();
         }
     }
 }

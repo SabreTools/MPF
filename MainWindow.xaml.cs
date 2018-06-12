@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.IO;
@@ -12,146 +11,231 @@ namespace DICUI
 {
     public partial class MainWindow : Window
     {
-        private const string dicPath = "Programs\\DiscImageCreator.exe"; // TODO: Make configurable in UI or in Settings
+        // TODO: Make configurable in UI or in Settings
+        private const string defaultOutputPath = "ISO";
+        private const string dicPath = "Programs\\DiscImageCreator.exe";
+        private const string psxtPath = "psxt001z.exe";
+        private const string sgRawPath = "sg_raw.exe";
+
+        private List<Tuple<char, string>> _drives { get; set; }
+        private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
-
-        public void ScanForDisk()
-        {
-            btn_Search.IsEnabled = false;
-            cmb_DriveLetter.Items.Clear();
-            foreach (var d in DriveInfo.GetDrives().Where(d => d.DriveType == DriveType.CDRom))
-            {
-                if (d.IsReady == true)
-                {
-                    txt_OutputFilename.Text = d.VolumeLabel;
-                    
-                    if (txt_OutputFilename.Text == "")
-                    {
-                        txt_OutputFilename.Text = "unknown";
-                    }
-                    cmb_DriveLetter.Items.Add(d.Name + d.VolumeLabel);
-                    cmb_DriveLetter.SelectedIndex = 0;
-                    txt_OutputDirectory.Text = "ISO" + "\\" + txt_OutputFilename.Text;
-                    lbl_Status.Content = "CD or DVD found ! Choose your Disc Type";
-                    btn_Start.IsEnabled = true;
-                    cmb_DriveSpeed.Text = "8";
-                    break;
-                }
-                else
-                {
-                    cmb_DriveLetter.Items.Add(d.Name + " (No Disc Found or Not supported by Windows)");
-                }
-
-                btn_Search.IsEnabled = true;
-            }
-        }
-
-        public void BrowseFolder()
-        {
-            WinForms.FolderBrowserDialog folderDialog = new WinForms.FolderBrowserDialog { ShowNewFolderButton = false, SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory };
-            WinForms.DialogResult result = folderDialog.ShowDialog();
-
-            if (result == WinForms.DialogResult.OK)
-            {
-                String sPath = folderDialog.SelectedPath;
-                txt_OutputDirectory.Text = sPath;
-            }
-        }
-
-        public async void StartDumping()
-        {
-            // Local variables
-            string driveLetter = cmb_DriveLetter.Text;
-            string outputDirectory = txt_OutputDirectory.Text;
-            string outputFileName = txt_OutputFilename.Text;
-            string driveSpeed = cmb_DriveSpeed.Text;
-            btn_Start.IsEnabled = false;
-
-            // Get the discType and processArguments from a given system and disc combo
-            var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
-            string discType = Utilities.GetBaseCommand(selected.Item3);
-            string processArguments = string.Join(" ", Utilities.GetDefaultParameters(selected.Item2, selected.Item3));
-
-            await Task.Run(
-                () =>
-                {
-                    Process process = new Process();
-                    process.StartInfo.FileName = dicPath;
-                    process.StartInfo.Arguments = discType + " " + driveLetter + " \"" + outputDirectory + "\\" + outputFileName + "\" " + driveSpeed + " " + processArguments;
-                    Console.WriteLine(process.StartInfo.Arguments);
-                    process.Start();
-                    process.WaitForExit();
-                });
-
-            // Special cases
-            string guid = Guid.NewGuid().ToString();
-            switch (selected.Item2)
-            {
-                case KnownSystem.MicrosoftXBOXOne:
-                case KnownSystem.SonyPlayStation4:
-                    // TODO: Direct invocation of program instead of via Batch File
-                    using (StreamWriter writetext = new StreamWriter("XboneOrPS4" + guid + ".bat"))
-                    {
-                        writetext.WriteLine("sg_raw.exe -v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\"");
-                    }
-                    Process processXboneOrPS4 = new Process();
-                    processXboneOrPS4.StartInfo.FileName = "XboneOrPS4" + guid + ".bat";
-                    processXboneOrPS4.Start();
-                    processXboneOrPS4.WaitForExit();
-                    break;
-                case KnownSystem.SonyPlayStation:
-                    // TODO: Direct invocation of program instead of via Batch File
-                    using (StreamWriter writetext = new StreamWriter("PSX" + guid + ".bat"))
-                    {
-                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                        writetext.WriteLine("edccchk" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "edccchk1.txt");
-                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
-                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
-                        writetext.WriteLine("psxt001z" + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
-                        writetext.WriteLine("psxt001z" + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
-                        writetext.WriteLine("psxt001z" + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
-                    }
-                    Process processpsx = new Process();
-                    processpsx.StartInfo.FileName = "PSX" + guid + ".bat";
-                    processpsx.Start();
-                    processpsx.WaitForExit();
-                    break;
-            }
-
-            btn_Start.IsEnabled = true;
-        }
 
         public MainWindow()
         {
             InitializeComponent();
 
-            // Populate the list of systems and add it to the combo box
-            _systems = Utilities.CreateListOfSystems();
-            cmb_DiscType.ItemsSource = _systems;
-            cmb_DiscType.DisplayMemberPath = "Item1";
-            cmb_DiscType.SelectedIndex = 0;
-            cmb_DiscType_SelectionChanged(null, null);
+            // Populate the list of systems
+            PopulateSystems();
 
-            ScanForDisk();
+            // Populate the list of drives
+            PopulateDrives();
+
+            // Populate the list of drive speeds
+            PopulateDriveSpeeds();
         }
+
+        #region Events
 
         private void btn_Start_Click(object sender, RoutedEventArgs e)
         {
-            StartDumping();  
+            StartDumping();
         }
 
-        private void BTN_OutputDirectoryBrowse_Click(object sender, RoutedEventArgs e)
+        private void btn_OutputDirectoryBrowse_Click(object sender, RoutedEventArgs e)
         {
             BrowseFolder();
         }
 
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
-            ScanForDisk();
+            PopulateDrives();
         }
 
         private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+            GetOutputNames();
+        }
+
+        private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GetOutputNames();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Get a complete list of supported systems and fill the combo box
+        /// </summary>
+        private void PopulateSystems()
+        {
+            _systems = Utilities.CreateListOfSystems();
+            cmb_DiscType.ItemsSource = _systems;
+            cmb_DiscType.DisplayMemberPath = "Item1";
+            cmb_DiscType.SelectedIndex = 0;
+            cmb_DiscType_SelectionChanged(null, null);
+        }
+
+        /// <summary>
+        /// Get a complete list of active disc drives and fill the combo box
+        /// </summary>
+        /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
+        private void PopulateDrives()
+        {
+            // Populate the list of drives and add it to the combo box
+            _drives = Utilities.CreateListOfDrives();
+            cmb_DriveLetter.ItemsSource = _drives;
+            cmb_DriveLetter.DisplayMemberPath = "Item1";
+            cmb_DriveLetter.SelectedIndex = 0;
+            cmb_DriveLetter_SelectionChanged(null, null);
+
+            if (cmb_DriveLetter.Items.Count > 0)
+            {
+                lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
+                btn_Start.IsEnabled = true;
+            }
+            else
+            {
+                lbl_Status.Content = "No valid optical disc found!";
+                btn_Start.IsEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Get a complete list of (possible) disc drive speeds, and fill the combo box
+        /// </summary>
+        private void PopulateDriveSpeeds()
+        {
+            cmb_DriveSpeed.ItemsSource = _driveSpeeds;
+            cmb_DriveSpeed.SelectedItem = 8;
+        }
+
+        /// <summary>
+        /// Browse for an output folder
+        /// </summary>
+        private void BrowseFolder()
+        {
+            WinForms.FolderBrowserDialog folderDialog = new WinForms.FolderBrowserDialog { ShowNewFolderButton = false, SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory };
+            WinForms.DialogResult result = folderDialog.ShowDialog();
+
+            if (result == WinForms.DialogResult.OK)
+            {
+                txt_OutputDirectory.Text = folderDialog.SelectedPath;
+            }
+        }
+
+        /// <summary>
+        /// Begin the dumping process using the given inputs
+        /// </summary>
+        private async void StartDumping()
+        {
+            // Local variables
+            string driveLetter = cmb_DriveLetter.Text;
+            string outputDirectory = txt_OutputDirectory.Text;
+            string outputFileName = txt_OutputFilename.Text;
+            int driveSpeed = (int)cmb_DriveSpeed.SelectedItem;
+            btn_Start.IsEnabled = false;
+
+            // Get the discType and processArguments from a given system and disc combo
+            var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+            string discType = Utilities.GetBaseCommand(selected.Item3);
+            List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
+
+            // Validate that everything is good
+            if (discType == null || defaultParams == null)
+            {
+                lbl_Status.Content = "Error! Current configuration is not supported!";
+                return;
+            }
+
+            // Validate that the required program exits
+            if (!File.Exists(dicPath))
+            {
+                lbl_Status.Content = "Error! Could not find DiscImageCreator!";
+                return;
+            }
+
+            await Task.Run(
+                () =>
+                {
+                    Process process = new Process();
+                    process.StartInfo.FileName = dicPath;
+                    process.StartInfo.Arguments = discType
+                        + " " + driveLetter
+                        + " \"" + Path.Combine(outputDirectory, outputFileName) + "\" "
+                        + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? driveSpeed + " " : "")
+                        + string.Join(" ", defaultParams);
+                    process.Start();
+                    process.WaitForExit();
+                });
+
+            // Special cases
+            switch (selected.Item2)
+            {
+                case KnownSystem.MicrosoftXBOXOne:
+                case KnownSystem.SonyPlayStation4:
+                    if (!File.Exists(sgRawPath))
+                    {
+                        lbl_Status.Content = "Error! Could not find sg-raw!!";
+                        return;
+                    }
+
+                    Process sgraw = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = sgRawPath,
+                            Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
+                        },
+                    };
+                    sgraw.Start();
+                    sgraw.WaitForExit();
+                    break;
+                case KnownSystem.SonyPlayStation:
+                    if (!File.Exists(psxtPath))
+                    {
+                        lbl_Status.Content = "Error! Could not find psxt001z!";
+                        return;
+                    }
+
+                    // TODO: Direct invocation of program instead of via Batch File
+                    string batchname = "PSX" + Guid.NewGuid() + ".bat";
+                    using (StreamWriter writetext = new StreamWriter(batchname))
+                    {
+                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + ".bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z1.txt");
+                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 1).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z2.txt");
+                        writetext.WriteLine(psxtPath + " " + "\"" + outputDirectory + "\\" + outputFileName + " (Track 01).bin" + "\" > " + "\"" + outputDirectory + "\\" + "psxt001z3.txt");
+                        writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + outputDirectory + "\\" + outputFileName + ".sub\" > " + "\"" + outputDirectory + "\\" + "libcrypt.txt");
+                        writetext.WriteLine(psxtPath + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + outputDirectory + "\\" + "libcryptdrv.log");
+                    }
+
+                    Process psxt = new Process();
+                    psxt.StartInfo.FileName = batchname;
+                    psxt.Start();
+                    psxt.WaitForExit();
+
+                    // Now try to delete the batch file
+                    try
+                    {
+                        File.Delete(batchname);
+                    }
+                    catch
+                    {
+                        // Right now, we don't care if the batch file can't be deleted
+                    }
+                    break;
+            }
+
+            btn_Start.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Ensure information is consistent with the currently selected disc type
+        /// </summary>
+        private void EnsureDiscInformation()
         {
             // If we're on a separator, go to the next item
             var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
@@ -167,10 +251,10 @@ namespace DICUI
                 case DiscType.NONE:
                     lbl_Status.Content = "Please select a valid disc type";
                     break;
+                case DiscType.GameCubeGameDisc:
                 case DiscType.GDROM:
                     lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
                     break;
-                case DiscType.GameCubeGameDisc:
                 case DiscType.HDDVD:
                 case DiscType.UMD:
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
@@ -179,48 +263,42 @@ namespace DICUI
                     lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
                     break;
             }
-        }
 
-        private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // TODO: Figure out how to keep the list of items while also allowing the custom input
-            if (cmb_DriveSpeed.SelectedIndex == 4)
+            // If we're in a type that doesn't support drive speeds
+            switch (tuple.Item3)
             {
-                cmb_DriveSpeed.Items.Clear();
-                cmb_DriveSpeed.IsEditable = true;
-            }
-        }
-
-        private void cmb_DiscType_DropDownClosed(object sender, EventArgs e)
-        {
-			var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
-			switch (tuple.Item2)
-            {
-				case KnownSystem.MicrosoftXBOXOne:
-				case KnownSystem.SonyPlayStation4:
-                    cmb_DriveSpeed.Items.Clear();
+                case DiscType.BD25:
+                case DiscType.BD50:
                     cmb_DriveSpeed.IsEnabled = false;
                     break;
                 default:
                     cmb_DriveSpeed.IsEnabled = true;
-                    cmb_DriveSpeed.Items.Clear();
-                    cmb_DriveSpeed.Items.Add("4");
-                    cmb_DriveSpeed.Items.Add("8");
-                    cmb_DriveSpeed.Items.Add("16");
-                    cmb_DriveSpeed.Items.Add("48");
-                    cmb_DriveSpeed.Items.Add("Custom");
-                    cmb_DriveSpeed.SelectedIndex = 1;
                     break;
             }
-
         }
 
-        private void cmb_DriveLetter_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        /// <summary>
+        /// Get the default output directory name from the currently selected drive
+        /// </summary>
+        private void GetOutputNames()
         {
-            driveLetter = cmb_DriveLetter.SelectedValue.ToString().Substring(0, 1);
-            Console.WriteLine(driveLetter);
-            btn_Start.IsEnabled = true;
+            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            var discTuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
 
+            if (driveTuple != null)
+            {
+                if (String.IsNullOrWhiteSpace(txt_OutputDirectory.Text))
+                {
+                    txt_OutputDirectory.Text = defaultOutputPath;
+                }
+
+                if (discTuple != null)
+                {
+                    txt_OutputFilename.Text = driveTuple.Item2 + Utilities.GetDefaultExtension(discTuple.Item3);
+                }
+            }
         }
+
+        #endregion
     }
 }
