@@ -622,5 +622,42 @@ namespace DICUI
                 .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
                 .ToList();
         }
+
+		/// <summary>
+		/// Attempts to find the first track of a dumped disc based on the inputs
+		/// </summary>
+		/// <param name="outputDirectory">Base directory to use</param>
+		/// <param name="outputFilename">Base filename to use</param>
+		/// <returns>Proper path to first track, null on error</returns>
+		/// <remarks>
+		/// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
+		/// This can lead to a situation where the outputFilename contains a path, but only the filename gets
+		/// used in the processing and can lead to a "false null" return
+		/// </remarks>
+		public static string GetFirstTrack(string outputDirectory, string outputFilename)
+		{
+			// First, sanitized the output filename to strip off any potential extension
+			outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+			// Go through all standard output naming schemes
+			if (File.Exists(Path.Combine(outputDirectory, outputFilename + ".bin")))
+			{
+				return Path.Combine(outputDirectory, outputFilename + ".bin");
+			}
+			if (File.Exists(Path.Combine(outputDirectory, outputFilename + " (Track 1).bin")))
+			{
+				return Path.Combine(outputDirectory, outputFilename + " (Track 1).bin");
+			}
+			if (File.Exists(Path.Combine(outputDirectory, outputFilename + " (Track 01).bin")))
+			{
+				return Path.Combine(outputDirectory, outputFilename + " (Track 01).bin");
+			}
+			if (File.Exists(Path.Combine(outputDirectory, outputFilename + ".iso")))
+			{
+				return Path.Combine(outputDirectory, outputFilename + ".iso");
+			}
+
+			return null;
+		}
     }
 }
