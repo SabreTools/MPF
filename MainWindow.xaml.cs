@@ -209,6 +209,7 @@ namespace DICUI
                     }
 
                     // Invoke the program with all 3 configurations
+                    // TODO: Use these outputs for PSX information
                     Process psxt001z = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
@@ -244,8 +245,9 @@ namespace DICUI
                     break;
             }
 
-            // TODO: UNUSED
             Dictionary<string, string> templateValues = Utilities.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
+            List<string> formattedValues = Utilities.FormatOutputData(templateValues, selected.Item2, selected.Item3);
+            bool success = Utilities.WriteOutputData(formattedValues);
 
             btn_Start.IsEnabled = true;
         }

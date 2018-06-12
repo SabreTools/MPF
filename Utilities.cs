@@ -1213,5 +1213,38 @@ namespace DICUI
                 return null;
             }
         }
+
+        /// <summary>
+        /// Write the data to the output folder
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <param name="lines">Preformatted list of lines to write out to the file</param>
+        /// <returns>True on success, false on error</returns>
+        public static bool WriteOutputData(string outputDirectory, string outputFilename, List<string> lines)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // Now write out to a generic file
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(File.OpenWrite(combinedBase + ".txt")))
+                {
+                    foreach (string line in lines)
+                    {
+                        sw.WriteLine(line);
+                    }
+                }
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
     }
 }
