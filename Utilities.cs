@@ -623,41 +623,94 @@ namespace DICUI
                 .ToList();
         }
 
-		/// <summary>
-		/// Attempts to find the first track of a dumped disc based on the inputs
-		/// </summary>
-		/// <param name="outputDirectory">Base directory to use</param>
-		/// <param name="outputFilename">Base filename to use</param>
-		/// <returns>Proper path to first track, null on error</returns>
-		/// <remarks>
-		/// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
-		/// This can lead to a situation where the outputFilename contains a path, but only the filename gets
-		/// used in the processing and can lead to a "false null" return
-		/// </remarks>
-		public static string GetFirstTrack(string outputDirectory, string outputFilename)
-		{
-			// First, sanitized the output filename to strip off any potential extension
-			outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+        /// <summary>
+        /// Attempts to find the first track of a dumped disc based on the inputs
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <returns>Proper path to first track, null on error</returns>
+        /// <remarks>
+        /// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
+        /// This can lead to a situation where the outputFilename contains a path, but only the filename gets
+        /// used in the processing and can lead to a "false null" return
+        /// </remarks>
+        public static string GetFirstTrack(string outputDirectory, string outputFilename)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-			// Go through all standard output naming schemes
-			if (File.Exists(Path.Combine(outputDirectory, outputFilename + ".bin")))
-			{
-				return Path.Combine(outputDirectory, outputFilename + ".bin");
-			}
-			if (File.Exists(Path.Combine(outputDirectory, outputFilename + " (Track 1).bin")))
-			{
-				return Path.Combine(outputDirectory, outputFilename + " (Track 1).bin");
-			}
-			if (File.Exists(Path.Combine(outputDirectory, outputFilename + " (Track 01).bin")))
-			{
-				return Path.Combine(outputDirectory, outputFilename + " (Track 01).bin");
-			}
-			if (File.Exists(Path.Combine(outputDirectory, outputFilename + ".iso")))
-			{
-				return Path.Combine(outputDirectory, outputFilename + ".iso");
-			}
+            // Go through all standard output naming schemes
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            if (File.Exists(combinedBase + ".bin"))
+            {
+                return combinedBase + ".bin";
+            }
+            if (File.Exists(combinedBase + " (Track 1).bin"))
+            {
+                return combinedBase + " (Track 1).bin";
+            }
+            if (File.Exists(combinedBase + " (Track 01).bin"))
+            {
+                return combinedBase + " (Track 01).bin";
+            }
+            if (File.Exists(combinedBase + ".iso"))
+            {
+                return Path.Combine(combinedBase + ".iso");
+            }
 
-			return null;
-		}
+            return null;
+        }
+
+        /// <summary>
+        /// Ensures that all required output files have been created
+        /// </summary>
+        /// <param name="outputDirectory">Base directory to use</param>
+        /// <param name="outputFilename">Base filename to use</param>
+        /// <returns></returns>
+        public static bool FoundAllFiles(string outputDirectory, string outputFilename)
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
+            // Check to see what type of files we should be expecting
+            string ext = Path.GetExtension(GetFirstTrack(outputDirectory, outputFilename)).TrimStart('.');
+
+            // Now ensure that all required files exist
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            switch(ext)
+            {
+                case "bin":
+                    return File.Exists(combinedBase + ".c2")
+                        && File.Exists(combinedBase + ".ccd")
+                        && File.Exists(combinedBase + ".cue")
+                        && File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + ".img")
+                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
+                        && File.Exists(combinedBase + ".scm")
+                        && File.Exists(combinedBase + ".sub")
+                        && File.Exists(combinedBase + "_c2Error.txt")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_img.cue")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_subError.txt")
+                        && File.Exists(combinedBase + "_subInfo.txt")
+                        && File.Exists(combinedBase + "_subIntention.txt")
+                        && File.Exists(combinedBase + "_subReadable.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case "iso":
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                default:
+                    return false;
+            }
+        }
     }
 }

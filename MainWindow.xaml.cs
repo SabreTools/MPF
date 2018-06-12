@@ -135,7 +135,7 @@ namespace DICUI
             // Local variables
             string driveLetter = cmb_DriveLetter.Text;
             string outputDirectory = txt_OutputDirectory.Text;
-            string outputFileName = txt_OutputFilename.Text;
+            string outputFilename = txt_OutputFilename.Text;
             int driveSpeed = (int)cmb_DriveSpeed.SelectedItem;
             btn_Start.IsEnabled = false;
 
@@ -165,12 +165,19 @@ namespace DICUI
                     process.StartInfo.FileName = dicPath;
                     process.StartInfo.Arguments = discType
                         + " " + driveLetter
-                        + " \"" + Path.Combine(outputDirectory, outputFileName) + "\" "
+                        + " \"" + Path.Combine(outputDirectory, outputFilename) + "\" "
                         + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? driveSpeed + " " : "")
                         + string.Join(" ", defaultParams);
                     process.Start();
                     process.WaitForExit();
                 });
+
+            // Check to make sure that the output had all the correct files
+            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename))
+            {
+                lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
+                return;
+            }
 
             // Special cases
             switch (selected.Item2)
@@ -179,7 +186,7 @@ namespace DICUI
                 case KnownSystem.SonyPlayStation4:
                     if (!File.Exists(sgRawPath))
                     {
-                        lbl_Status.Content = "Error! Could not find sg-raw!!";
+                        lbl_Status.Content = "Error! Could not find sg-raw!";
                         return;
                     }
 
@@ -205,8 +212,8 @@ namespace DICUI
                     string batchname = "PSX" + Guid.NewGuid() + ".bat";
                     using (StreamWriter writetext = new StreamWriter(batchname))
                     {
-                        writetext.WriteLine(psxtPath + " " + "\"" + Utilities.GetFirstTrack(outputDirectory, outputFileName) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"));
-                        writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFileName + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"));
+                        writetext.WriteLine(psxtPath + " " + "\"" + Utilities.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"));
+                        writetext.WriteLine(psxtPath + " " + "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"));
                         writetext.WriteLine(psxtPath + " " + "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"));
                     }
 
