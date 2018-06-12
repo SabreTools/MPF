@@ -771,11 +771,11 @@ namespace DICUI
                     mappings["Mould SID Code"] = "";
                     mappings["Additional Mould"] = "";
                     mappings["Toolstamp or Mastering Code"] = "";
-                    mappings["Write Offset"] = "";
                     mappings["Error Count"] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
                     mappings["Cuesheet"] = GetCuesheet(combinedBase + ".cue");
+                    mappings["Write Offset"] = GetWriteOffset(combinedBase + "_disc.txt");
                     break;
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
@@ -971,6 +971,46 @@ namespace DICUI
                     pvd += sr.ReadLine() + "\n"; // 0370
 
                     return pvd;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private static string GetWriteOffset(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Make sure this file is a _disc.txt
+                    if (sr.ReadLine() != "========== TOC ==========")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the offsets
+                    while (!sr.ReadLine().Trim().StartsWith("========== Offset"));
+                    sr.ReadLine(); // Combined Offset
+                    sr.ReadLine(); // Drive Offset
+                    sr.ReadLine(); // Separator line
+
+                    // Now that we're at the offsets, attempt to get the sample offset
+                    return sr.ReadLine().Split(' ').LastOrDefault();
                 }
                 catch
                 {
