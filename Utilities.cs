@@ -796,7 +796,7 @@ namespace DICUI
                     mappings["Additional Mould"] = "";
                     mappings["Outer Toolstamp or Mastering Code"] = "";
                     mappings["Inner Toolstamp or Mastering Code"] = "";
-                    mappings["Layerbreak"] = "(REQUIRED)";
+                    mappings["Layerbreak"] = GetLayerbreak(combinedBase + "_disc.txt");
                     break;
                 case DiscType.GameCubeGameDisc:
                 case DiscType.UMD:
@@ -932,6 +932,43 @@ namespace DICUI
                 {
                     // We don't care what the exception is right now
                     return -1;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Get the layerbreak from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Layerbreak if possible, null on error</returns>
+        private static string GetLayerbreak(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Make sure this file is a _disc.txt
+                    if (sr.ReadLine() != "========== DiscStructure ==========")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the layerbreak
+                    while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
+
+                    // Now that we're at the layerbreak line, attempt to get the decimal version
+                    return sr.ReadLine().Split(' ')[1];
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
                 }
             }
         }
