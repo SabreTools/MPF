@@ -730,6 +730,9 @@ namespace DICUI
         /// <returns>Dictionary containing mapped output values, null on error</returns>
         public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
         {
+            // First, sanitized the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
+
             // First, we want to check that all of the relevant files are there
             if (!FoundAllFiles(outputDirectory, outputFilename, type))
             {
@@ -737,6 +740,7 @@ namespace DICUI
             }
 
             // Create the output dictionary with all user-inputted values by default
+            string combinedBase = Path.Combine(outputDirectory, outputFilename);
             Dictionary<string, string> mappings = new Dictionary<string, string>
             {
                 { "Title", "(REQUIRED)" },
@@ -757,35 +761,31 @@ namespace DICUI
                 { "Contents", "(OPTIONAL)" },
                 { "Version", "" },
                 { "Edition/Release", "Original (VERIFY THIS)" },
-                { "Primary Volume Descriptor (PVD)", "" },
+                { "Primary Volume Descriptor (PVD)", GetPVD(combinedBase + "_mainInfo.txt") },
                 { "Copy Protection", "(REQUIRED, IF EXISTS)" },
-                { "DAT", "" },
+                { "DAT", GetDatfile(combinedBase + ".dat") },
             };
 
             // Now we want to do a check by DiscType and extract all required info
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
             switch (type)
             {
                 case DiscType.CD:
-                case DiscType.GDROM: // TODO: Verify
-                    mappings["Cuesheet"] = "";
+                case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings["Write Offset"] = "";
 
-                    mappings["Primary Volume Descriptor (PVD)"] = GetPVD(combinedBase + "_mainInfo.txt");
                     mappings["Error Count"] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
+                    mappings["Cuesheet"] = GetCuesheet(combinedBase + ".cue");
                     break;
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
                 case DiscType.GameCubeGameDisc:
                 case DiscType.UMD:
-                    mappings["Primary Volume Descriptor (PVD)"] = GetPVD(combinedBase + "_mainInfo.txt");
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
-                    mappings["Primary Volume Descriptor (PVD)"] = GetPVD(combinedBase + "_mainInfo.txt");
                     mappings["Layerbreak"] = "(REQUIRED)";
                     break;
                 case DiscType.Floppy:
@@ -795,6 +795,69 @@ namespace DICUI
             }
 
             return mappings;
+        }
+
+        /// <summary>
+        /// Get the proper cuesheet from the input file, if possible
+        /// </summary>
+        /// <param name="cue">.cue file location</param>
+        /// <returns>Full text of cuesheet, null on error</returns>
+        private static string GetCuesheet(string cue)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(cue))
+            {
+                return null;
+            }
+
+            return string.Join("\n", File.ReadAllLines(cue));
+        }
+
+        /// <summary>
+        /// Get the proper datfile from the input file, if possible
+        /// </summary>
+        /// <param name="dat">.dat file location</param>
+        /// <returns>Relevant pieces of the datfile, null on error</returns>
+        private static string GetDatfile(string dat)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(dat))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(dat))
+            {
+                try
+                {
+                    // Make sure this file is a .dat
+                    if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+                    {
+                        return null;
+                    }
+                    if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the rom lines
+                    while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string pvd = "", line = sr.ReadLine().Trim();
+                    while (line.StartsWith("<rom"))
+                    {
+                        pvd += line + "\n";
+                    }
+
+                    return pvd.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
         }
 
         /// <summary>
