@@ -744,22 +744,23 @@ namespace DICUI
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
             Dictionary<string, string> mappings = new Dictionary<string, string>
             {
-                { "Title", "(REQUIRED)" },
-                { "Disc Number / Letter", "(OPTIONAL)" },
-                { "Disc Title", "(OPTIONAL)" },
-                { "Category", "Games" },
-                { "Region", "World (CHANGE THIS)" },
-                { "Languages", "Klingon (CHANGE THIS)" },
-                { "Disc Serial", "(OPTIONAL)" },
-                { "Barcode", "" },
-                { "ISBN", "" },
-                { "Comments", "(OPTIONAL)" },
-                { "Contents", "(OPTIONAL)" },
-                { "Version", "" },
-                { "Edition/Release", "Original (VERIFY THIS)" },
-                { "Primary Volume Descriptor (PVD)", GetPVD(combinedBase + "_mainInfo.txt") },
-                { "Copy Protection", "(REQUIRED, IF EXISTS)" },
-                { "DAT", GetDatfile(combinedBase + ".dat") },
+                { Constants.TitleField, "(REQUIRED)" },
+                { Constants.DiscNumberField, "(OPTIONAL)" },
+                { Constants.DiscTitleField, "(OPTIONAL)" },
+                { Constants.CategoryField, "Games" },
+                { Constants.RegionField, "World (CHANGE THIS)" },
+                { Constants.LanguagesField, "Klingon (CHANGE THIS)" },
+                { Constants.DiscSerialField, "(OPTIONAL)" },
+                { Constants.MouldSIDField, "" },
+                { Constants.AdditionalMouldField, "" },
+                { Constants.BarcodeField, "" },
+                { Constants.ISBNField, "" },
+                { Constants.CommentsField, "(OPTIONAL)" },
+                { Constants.ContentsField, "(OPTIONAL)" },
+                { Constants.VersionField, "" },
+                { Constants.EditionField, "Original (VERIFY THIS)" },
+                { Constants.PVDField, GetPVD(combinedBase + "_mainInfo.txt") },
+                { Constants.DATField, GetDatfile(combinedBase + ".dat") },
             };
 
             // Now we want to do a check by DiscType and extract all required info
@@ -767,32 +768,34 @@ namespace DICUI
             {
                 case DiscType.CD: // TODO: Add SecuROM data, but only if found
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
-                    mappings["Mastering Ring"] = "";
-                    mappings["Mastering SID Code"] = "";
-                    mappings["Mould SID Code"] = "";
-                    mappings["Additional Mould"] = "";
-                    mappings["Toolstamp or Mastering Code"] = "";
-                    mappings["Error Count"] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
+                    mappings[Constants.MasteringRingField] = "";
+                    mappings[Constants.MasteringSIDField] = "";
+                    mappings[Constants.ToolstampField] = "";
+                    mappings[Constants.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
-                    mappings["Cuesheet"] = GetCuesheet(combinedBase + ".cue");
-                    mappings["Write Offset"] = GetWriteOffset(combinedBase + "_disc.txt");
+                    mappings[Constants.CuesheetField] = GetCuesheet(combinedBase + ".cue");
+                    mappings[Constants.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
 
                     // System-specific options
                     switch (sys)
                     {
+                        case KnownSystem.AppleMacintosh:
+                        case KnownSystem.IBMPCCompatible:
+                            mappings[Constants.CopyProtectionField] = "(REQUIRED, IF EXISTS)";
+                            break;
                         case KnownSystem.SegaSaturn:
-                            mappings["Header"] = ""; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
-                            mappings["Build Date"] = ""; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Constants.SaturnHeaderField] = ""; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Constants.SaturnBuildDateField] = ""; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            mappings["EDC"] = "Yes/No";
-                            mappings["Anti-modchip"] = "Yes/No";
-                            mappings["LibCrypt"] = "Yes/No";
+                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlayStationEDCField] = "Yes/No";
+                            mappings[Constants.PlayStationAntiModchipField] = "Yes/No";
+                            mappings[Constants.PlayStationLibCryptField] = "Yes/No";
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
@@ -800,47 +803,45 @@ namespace DICUI
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
-                    mappings["Mastering Ring"] = "";
-                    mappings["Mastering SID Code"] = "";
-                    mappings["Mould SID Code"] = "";
-                    mappings["Additional Mould"] = "";
-                    mappings["Toolstamp or Mastering Code"] = "";
+                    mappings[Constants.MasteringRingField] = "";
+                    mappings[Constants.MasteringSIDField] = "";
+                    mappings[Constants.ToolstampField] = "";
 
                     // System-specific options
                     switch (sys)
                     {
+                        case KnownSystem.AppleMacintosh:
+                        case KnownSystem.IBMPCCompatible:
+                            mappings[Constants.CopyProtectionField] = "(REQUIRED, IF EXISTS)";
+                            break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
-                    mappings["Outer Mastering Ring"] = "";
-                    mappings["Inner Mastering Ring"] = "";
-                    mappings["Outer Mastering SID Code"] = "";
-                    mappings["Inner Mastering SID Code"] = "";
-                    mappings["Mould SID Code"] = "";
-                    mappings["Additional Mould"] = "";
-                    mappings["Outer Toolstamp or Mastering Code"] = "";
-                    mappings["Inner Toolstamp or Mastering Code"] = "";
-                    mappings["Layerbreak"] = GetLayerbreak(combinedBase + "_disc.txt");
+                    mappings["Outer " + Constants.MasteringRingField] = "";
+                    mappings["Inner " + Constants.MasteringRingField] = "";
+                    mappings["Outer " + Constants.MasteringSIDField] = "";
+                    mappings["Inner " + Constants.MasteringSIDField] = "";
+                    mappings["Outer " + Constants.ToolstampField] = "";
+                    mappings["Inner " + Constants.ToolstampField] = "";
+                    mappings[Constants.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
 
                     // System-specific options
                     switch (sys)
                     {
+                        case KnownSystem.AppleMacintosh:
+                        case KnownSystem.IBMPCCompatible:
+                            mappings[Constants.CopyProtectionField] = "(REQUIRED, IF EXISTS)";
+                            break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings["EXE Date"] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Constants.PlaystationEXEDateField] = ""; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
-                    break;
-                case DiscType.GameCubeGameDisc:
-                case DiscType.UMD:
-                case DiscType.Floppy:
-                default:
-                    // No-op
                     break;
             }
 
@@ -1092,6 +1093,124 @@ namespace DICUI
                     // We don't care what the exception is right now
                     return null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Format the output data in a human readable way, separating each printed line into a new item in the list
+        /// </summary>
+        /// <param name="info">Information dictionary that should contain normalized values</param>
+        /// <param name="sys">KnownSystem value to check</param>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>List of strings representing each line of an output file, null on error</returns>
+        /// <remarks>TODO: Get full list of customizable stuff for other systems</remarks>
+        public static List<string> FormatOutputData(Dictionary<string, string> info, KnownSystem? sys, DiscType? type)
+        {
+            // Check to see if the inputs are valid
+            if (info == null)
+            {
+                return null;
+            }
+
+            try
+            {
+                List<string> output = new List<string>();
+
+                output.Add(Constants.TitleField + ": " + info[Constants.TitleField]);
+                output.Add(Constants.DiscNumberField + ": " + info[Constants.DiscNumberField]);
+                output.Add(Constants.DiscTitleField + ": " + info[Constants.DiscTitleField]);
+                output.Add(Constants.CategoryField + ": " + info[Constants.CategoryField]);
+                output.Add(Constants.RegionField + ": " + info[Constants.RegionField]);
+                output.Add(Constants.LanguagesField + ": " + info[Constants.LanguagesField]);
+                output.Add(Constants.DiscSerialField + ": " + info[Constants.DiscSerialField]);
+                switch(sys)
+                {
+                    case KnownSystem.SegaSaturn:
+                        output.Add(Constants.SaturnBuildDateField + ": " + info[Constants.SaturnBuildDateField]);
+                        break;
+                    case KnownSystem.SonyPlayStation:
+                    case KnownSystem.SonyPlayStation2:
+                        output.Add(Constants.PlaystationEXEDateField + ": " + info[Constants.PlaystationEXEDateField]);
+                        break;
+                }
+                switch (type)
+                {
+                    case DiscType.CD:
+                    case DiscType.GDROM:
+                    case DiscType.DVD5:
+                    case DiscType.HDDVD:
+                    case DiscType.BD25:
+                        output.Add(Constants.MasteringRingField + ": " + info[Constants.MasteringRingField]);
+                        output.Add(Constants.MasteringSIDField + ": " + info[Constants.MasteringSIDField]);
+                        output.Add(Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
+                        output.Add(Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
+                        output.Add(Constants.ToolstampField + ": " + info[Constants.ToolstampField]);
+                        break;
+                    case DiscType.DVD9:
+                    case DiscType.BD50:
+                        output.Add("Outer " + Constants.MasteringRingField + ": " + info["Outer " + Constants.MasteringRingField]);
+                        output.Add("Inner " + Constants.MasteringRingField + ": " + info["Inner " + Constants.MasteringRingField]);
+                        output.Add("Outer " + Constants.MasteringSIDField + ": " + info["Outer " + Constants.MasteringSIDField]);
+                        output.Add("Inner " + Constants.MasteringSIDField + ": " + info["Inner " + Constants.MasteringSIDField]);
+                        output.Add(Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
+                        output.Add(Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
+                        output.Add("Outer " + Constants.ToolstampField + ": " + info["Outer " + Constants.ToolstampField]);
+                        output.Add("Inner " + Constants.ToolstampField + ": " + info["Inner " + Constants.ToolstampField]);
+                        break;
+                }
+                output.Add(info[Constants.BarcodeField]);
+                output.Add(info[Constants.ISBNField]);
+                switch (type)
+                {
+                    case DiscType.CD:
+                    case DiscType.GDROM:
+                        output.Add(Constants.ErrorCountField + ": " + info[Constants.ErrorCountField]);
+                        break;
+                }
+                output.Add(Constants.CommentsField + ": " + info[Constants.CommentsField]);
+                output.Add(Constants.ContentsField + ": " + info[Constants.ContentsField]);
+                output.Add(Constants.VersionField + ": " + info[Constants.VersionField]);
+                output.Add(Constants.EditionField + ": " + info[Constants.EditionField]);
+                switch (sys)
+                {
+                    case KnownSystem.SegaSaturn:
+                        output.Add(Constants.SaturnHeaderField + ":"); output.Add("");
+                        output.AddRange(info[Constants.SaturnHeaderField].Split('\n')); output.Add("");
+                        break;
+                    case KnownSystem.SonyPlayStation:
+                        output.Add(Constants.PlayStationEDCField + ": " + info[Constants.PlayStationEDCField]);
+                        output.Add(Constants.PlayStationAntiModchipField + ": " + info[Constants.PlayStationAntiModchipField]);
+                        output.Add(Constants.PlayStationLibCryptField + ": " + info[Constants.PlayStationLibCryptField]);
+                        break;
+                }
+                output.Add(Constants.PVDField + ":"); output.Add("");
+                output.AddRange(info[Constants.PVDField].Split('\n')); output.Add("");
+                switch (sys)
+                {
+                    case KnownSystem.AppleMacintosh:
+                    case KnownSystem.IBMPCCompatible:
+                        output.Add(Constants.CopyProtectionField + ": " + info[Constants.CopyProtectionField]); output.Add("");
+                        break;
+                }
+                // TODO: Add SecuROM data here for relevant things
+                switch (type)
+                {
+                    case DiscType.CD:
+                    case DiscType.GDROM:
+                        output.Add(Constants.CuesheetField + ":"); output.Add("");
+                        output.AddRange(info[Constants.CuesheetField].Split('\n')); output.Add("");
+                        output.Add(Constants.WriteOffsetField + ": " + info[Constants.WriteOffsetField]); output.Add("");
+                        break;
+                }
+                output.Add(Constants.DATField + ":"); output.Add("");
+                output.AddRange(info[Constants.DATField].Split('\n')); output.Add("");
+
+                return output;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return null;
             }
         }
     }
