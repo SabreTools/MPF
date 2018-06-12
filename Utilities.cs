@@ -750,11 +750,6 @@ namespace DICUI
                 { "Region", "World (CHANGE THIS)" },
                 { "Languages", "Klingon (CHANGE THIS)" },
                 { "Disc Serial", "(OPTIONAL)" },
-                { "Mastering Ring", "" },
-                { "Mastering SID Code", "" },
-                { "Mould SID Code", "" },
-                { "Additional Mould", "" },
-                { "Toolstamp or Mastering Code", "" },
                 { "Barcode", "" },
                 { "ISBN", "" },
                 { "Comments", "(OPTIONAL)" },
@@ -771,8 +766,12 @@ namespace DICUI
             {
                 case DiscType.CD:
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
+                    mappings["Mastering Ring"] = "";
+                    mappings["Mastering SID Code"] = "";
+                    mappings["Mould SID Code"] = "";
+                    mappings["Additional Mould"] = "";
+                    mappings["Toolstamp or Mastering Code"] = "";
                     mappings["Write Offset"] = "";
-
                     mappings["Error Count"] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
@@ -781,13 +780,26 @@ namespace DICUI
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
-                case DiscType.GameCubeGameDisc:
-                case DiscType.UMD:
+                    mappings["Mastering Ring"] = "";
+                    mappings["Mastering SID Code"] = "";
+                    mappings["Mould SID Code"] = "";
+                    mappings["Additional Mould"] = "";
+                    mappings["Toolstamp or Mastering Code"] = "";
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
+                    mappings["Outer Mastering Ring"] = "";
+                    mappings["Inner Mastering Ring"] = "";
+                    mappings["Outer Mastering SID Code"] = "";
+                    mappings["Inner Mastering SID Code"] = "";
+                    mappings["Mould SID Code"] = "";
+                    mappings["Additional Mould"] = "";
+                    mappings["Outer Toolstamp or Mastering Code"] = "";
+                    mappings["Inner Toolstamp or Mastering Code"] = "";
                     mappings["Layerbreak"] = "(REQUIRED)";
                     break;
+                case DiscType.GameCubeGameDisc:
+                case DiscType.UMD:
                 case DiscType.Floppy:
                 default:
                     // No-op
@@ -842,12 +854,15 @@ namespace DICUI
 
                     // Fast forward to the rom lines
                     while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
+                    sr.ReadLine(); // <category>Games</category>
+                    sr.ReadLine(); // <description>Plextor</description>
 
                     // Now that we're at the relevant entries, read each line in and concatenate
                     string pvd = "", line = sr.ReadLine().Trim();
                     while (line.StartsWith("<rom"))
                     {
                         pvd += line + "\n";
+                        line = sr.ReadLine().Trim();
                     }
 
                     return pvd.TrimEnd('\n');
