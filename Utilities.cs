@@ -754,7 +754,6 @@ namespace DICUI
                 { Constants.MouldSIDField, Constants.RequiredIfExistsValue },
                 { Constants.AdditionalMouldField, Constants.RequiredIfExistsValue },
                 { Constants.BarcodeField, Constants.OptionalValue},
-                { Constants.ISBNField, Constants.OptionalValue },
                 { Constants.CommentsField, Constants.OptionalValue },
                 { Constants.ContentsField, Constants.OptionalValue },
                 { Constants.VersionField, Constants.RequiredIfExistsValue },
@@ -782,6 +781,7 @@ namespace DICUI
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
+                            mappings[Constants.ISBNField] = Constants.OptionalValue;
                             mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SegaSaturn:
@@ -812,6 +812,7 @@ namespace DICUI
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
+                            mappings[Constants.ISBNField] = Constants.OptionalValue;
                             mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
@@ -835,6 +836,7 @@ namespace DICUI
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
+                            mappings[Constants.ISBNField] = Constants.OptionalValue;
                             mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
@@ -1133,6 +1135,7 @@ namespace DICUI
                         output.Add(Constants.PlaystationEXEDateField + ": " + info[Constants.PlaystationEXEDateField]);
                         break;
                 }
+                output.Add("Ringcode Information:");
                 switch (type)
                 {
                     case DiscType.CD:
@@ -1140,22 +1143,22 @@ namespace DICUI
                     case DiscType.DVD5:
                     case DiscType.HDDVD:
                     case DiscType.BD25:
-                        output.Add(Constants.MasteringRingField + ": " + info[Constants.MasteringRingField]);
-                        output.Add(Constants.MasteringSIDField + ": " + info[Constants.MasteringSIDField]);
-                        output.Add(Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
-                        output.Add(Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
-                        output.Add(Constants.ToolstampField + ": " + info[Constants.ToolstampField]);
+                        output.Add("\t" + Constants.MasteringRingField + ": " + info[Constants.MasteringRingField]);
+                        output.Add("\t" + Constants.MasteringSIDField + ": " + info[Constants.MasteringSIDField]);
+                        output.Add("\t" + Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
+                        output.Add("\t" + Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
+                        output.Add("\t" + Constants.ToolstampField + ": " + info[Constants.ToolstampField]);
                         break;
                     case DiscType.DVD9:
                     case DiscType.BD50:
-                        output.Add("Outer " + Constants.MasteringRingField + ": " + info["Outer " + Constants.MasteringRingField]);
-                        output.Add("Inner " + Constants.MasteringRingField + ": " + info["Inner " + Constants.MasteringRingField]);
-                        output.Add("Outer " + Constants.MasteringSIDField + ": " + info["Outer " + Constants.MasteringSIDField]);
-                        output.Add("Inner " + Constants.MasteringSIDField + ": " + info["Inner " + Constants.MasteringSIDField]);
-                        output.Add(Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
-                        output.Add(Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
-                        output.Add("Outer " + Constants.ToolstampField + ": " + info["Outer " + Constants.ToolstampField]);
-                        output.Add("Inner " + Constants.ToolstampField + ": " + info["Inner " + Constants.ToolstampField]);
+                        output.Add("\tOuter " + Constants.MasteringRingField + ": " + info["Outer " + Constants.MasteringRingField]);
+                        output.Add("\tInner " + Constants.MasteringRingField + ": " + info["Inner " + Constants.MasteringRingField]);
+                        output.Add("\tOuter " + Constants.MasteringSIDField + ": " + info["Outer " + Constants.MasteringSIDField]);
+                        output.Add("\tInner " + Constants.MasteringSIDField + ": " + info["Inner " + Constants.MasteringSIDField]);
+                        output.Add("\t" + Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
+                        output.Add("\t" + Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
+                        output.Add("\tOuter " + Constants.ToolstampField + ": " + info["Outer " + Constants.ToolstampField]);
+                        output.Add("\tInner " + Constants.ToolstampField + ": " + info["Inner " + Constants.ToolstampField]);
                         break;
                 }
                 output.Add(Constants.BarcodeField + ": " + info[Constants.BarcodeField]);
@@ -1233,10 +1236,9 @@ namespace DICUI
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Now write out to a generic file
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(combinedBase + ".txt", FileMode.Create, FileAccess.Write)))
+                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
                     {
