@@ -768,18 +768,24 @@ namespace DICUI
             {
                 case DiscType.CD:
                 case DiscType.GDROM: // TODO: Verify
-                    mappings["Errors Count"] = "(REQUIRED)";
                     mappings["Cuesheet"] = "";
                     mappings["Write Offset"] = "";
+
+                    mappings["Primary Volume Descriptor (PVD)"] = GetPVD(combinedBase + "_mainInfo.txt");
+                    mappings["Error Count"] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
+                        combinedBase + "_c2Error.txt",
+                        combinedBase + "_mainError.txt").ToString();
                     break;
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
                 case DiscType.GameCubeGameDisc:
                 case DiscType.UMD:
+                    mappings["Primary Volume Descriptor (PVD)"] = GetPVD(combinedBase + "_mainInfo.txt");
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
+                    mappings["Primary Volume Descriptor (PVD)"] = GetPVD(combinedBase + "_mainInfo.txt");
                     mappings["Layerbreak"] = "(REQUIRED)";
                     break;
                 case DiscType.Floppy:
@@ -789,6 +795,111 @@ namespace DICUI
             }
 
             return mappings;
+        }
+
+        /// <summary>
+        /// Get the detected error count from the input files, if possible
+        /// </summary>
+        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <param name="c2Error">_c2Error.txt file location</param>
+        /// <param name="mainError">_mainError.txt file location</param>
+        /// <returns>Error count if possible, -1 on error</returns>
+        /// <remarks>TODO: Ensure all possible error states are taken care of</remarks>
+        private static long GetErrorCount(string edcecc, string c2Error, string mainError)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(edcecc) || !File.Exists(c2Error) || !File.Exists(mainError))
+            {
+                return -1;
+            }
+
+            // First off, if the mainError file has any contents, we have an uncorrectable error
+            if (new FileInfo(mainError).Length > 0)
+            {
+                return -1;
+            }
+
+            // First line of defense is the EdcEcc error file
+            using (StreamReader sr = File.OpenText(edcecc))
+            {
+                try
+                {
+                    // Fast forward to the PVD
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("[NO ERROR]")
+                        && !line.StartsWith("[WARNING]")
+                        && !line.StartsWith("[ERROR]"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Now that we're at the error line, determine what the value should be
+                    if (line.StartsWith("[NO ERROR]"))
+                    {
+                        return 0;
+                    }
+                    else if (line.StartsWith("[WARNING]"))
+                    {
+                        // Not sure how to handle these properly
+                        return -1;
+                    }
+                    else if (line.StartsWith("[ERROR] Number of sector(s) where user data doesn't match the expected ECC/EDC:"))
+                    {
+                        return Int64.Parse(line.Remove(0, 80));
+                    }
+
+                    return -1;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the PVD from the input file, if possible
+        /// </summary>
+        /// <param name="mainInfo">_mainInfo.txt file location</param>
+        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
+        private static string GetPVD(string mainInfo)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(mainInfo))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(mainInfo))
+            {
+                try
+                {
+                    // Make sure this file is a _mainInfo.txt
+                    if (sr.ReadLine() != "========== LBA[000016, 0x00010]: Main Channel ==========")
+                    {
+                        return null;
+                    }
+
+                    // Fast forward to the PVD
+                    while (!sr.ReadLine().StartsWith("0310"));
+
+                    // Now that we're at the PVD, read each line in and concatenate
+                    string pvd = sr.ReadLine() + "\n"; // 0320
+                    pvd += sr.ReadLine() + "\n"; // 0330
+                    pvd += sr.ReadLine() + "\n"; // 0340
+                    pvd += sr.ReadLine() + "\n"; // 0350
+                    pvd += sr.ReadLine() + "\n"; // 0360
+                    pvd += sr.ReadLine() + "\n"; // 0370
+
+                    return pvd;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
         }
     }
 }

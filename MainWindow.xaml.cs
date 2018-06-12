@@ -179,6 +179,9 @@ namespace DICUI
                 return;
             }
 
+            // TODO: UNUSED
+            Dictionary<string, string> templateValues = Utilities.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
+
             // Special cases
             switch (selected.Item2)
             {
