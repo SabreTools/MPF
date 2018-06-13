@@ -149,9 +149,11 @@ namespace DICUI
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
 
             // Validate that everything is good
+            // TODO: Add full validation of the parameters
             if (string.IsNullOrWhiteSpace(txt_CustomParameters.Text))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
+                btn_Start.IsEnabled = true;
                 return;
             }
 
@@ -159,6 +161,7 @@ namespace DICUI
             if (!File.Exists(dicPath))
             {
                 lbl_Status.Content = "Error! Could not find DiscImageCreator!";
+                btn_Start.IsEnabled = true;
                 return;
             }
 
@@ -169,6 +172,7 @@ namespace DICUI
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
                 {
                     lbl_Status.Content = "Dumping aborted!";
+                    btn_Start.IsEnabled = true;
                     return;
                 }
             }
@@ -254,6 +258,7 @@ namespace DICUI
             if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
+                btn_Start.IsEnabled = true;
                 return;
             }
 
