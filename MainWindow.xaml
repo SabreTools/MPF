@@ -30,28 +30,30 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
-
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Disc Type</Label>
-            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
-            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
-            <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-            <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
-
             <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" SelectionChanged="cmb_DiscType_SelectionChanged" />
 
+            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
             <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22"></TextBox>
 
+            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
             <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" Text="ISO" />
             <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
 
+            <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
             <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged"/>
 
-            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left"/>
+            <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
+            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged"/>
+
+            <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Custom Parameters</Label>
+            <TextBox x:Name="txt_CustomParameters" Grid.Row="5" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" IsEnabled="False" />
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
@@ -76,9 +78,6 @@
             </Grid.RowDefinitions>
 
             <Label x:Name="lbl_Status" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for CD or DVD..." />
-
         </Grid>
-
     </Grid>
-    
 </Window>
