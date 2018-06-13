@@ -62,7 +62,7 @@ namespace DICUI
             switch (type)
             {
                 case DiscType.CD:
-                case DiscType.GDROM: // TODO: Verify
+                case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
                     return File.Exists(combinedBase + ".c2")
                         && File.Exists(combinedBase + ".ccd")
                         && File.Exists(combinedBase + ".cue")
