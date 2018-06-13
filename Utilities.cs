@@ -287,7 +287,8 @@ namespace DICUI
                     types.Add(DiscType.UMD);
                     break;
                 case KnownSystem.VMLabsNuon:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.VTechVFlashVSmilePro:
                     types.Add(DiscType.CD);
