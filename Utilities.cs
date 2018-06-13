@@ -775,7 +775,7 @@ namespace DICUI
                     mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
-                    mappings[Template.CuesheetField] = GetCuesheet(combinedBase + ".cue");
+                    mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue");
                     mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
 
                     // System-specific options
@@ -816,6 +816,14 @@ namespace DICUI
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            if (File.Exists(combinedBase + "_subIntention.txt"))
+                            {
+                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
+                                if (fi.Length > 0)
+                                {
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                }
+                            }
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
@@ -853,19 +861,19 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Get the proper cuesheet from the input file, if possible
+        /// Get the full lines from the input file, if possible
         /// </summary>
-        /// <param name="cue">.cue file location</param>
-        /// <returns>Full text of cuesheet, null on error</returns>
-        private static string GetCuesheet(string cue)
+        /// <param name="filename">file location</param>
+        /// <returns>Full text of the file, null on error</returns>
+        private static string GetFullFile(string filename)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(cue))
+            if (!File.Exists(filename))
             {
                 return null;
             }
 
-            return string.Join("\n", File.ReadAllLines(cue));
+            return string.Join("\n", File.ReadAllLines(filename));
         }
 
         /// <summary>
@@ -1195,9 +1203,14 @@ namespace DICUI
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.IBMPCCompatible:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
+
+                        if (info.ContainsKey(Template.SubIntentionField))
+                        {
+                            output.Add(Template.SubIntentionField + ":"); output.Add("");
+                            output.AddRange(info[Template.SubIntentionField].Split('\n'));
+                        }
                         break;
                 }
-                // TODO: Add SecuROM data here for relevant things
                 switch (type)
                 {
                     case DiscType.CD:
