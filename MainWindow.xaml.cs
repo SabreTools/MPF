@@ -20,6 +20,7 @@ namespace DICUI
         private List<Tuple<char, string>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
+        private Process childProcess { get; set; }
 
         public MainWindow()
         {
@@ -37,19 +38,28 @@ namespace DICUI
 
         #region Events
 
-        private void btn_Start_Click(object sender, RoutedEventArgs e)
+        private void btn_StartStop_Click(object sender, RoutedEventArgs e)
         {
-            StartDumping();
+            if ((string)btn_StartStop.Content == "Start Dumping")
+            {
+                StartDumping();
+            }
+            else if ((string)btn_StartStop.Content == "Stop Dumping")
+            {
+                CancelDumping();
+            }
         }
 
         private void btn_OutputDirectoryBrowse_Click(object sender, RoutedEventArgs e)
         {
             BrowseFolder();
+            EnsureDiscInformation();
         }
 
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             PopulateDrives();
+            EnsureDiscInformation();
         }
 
         private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -61,6 +71,7 @@ namespace DICUI
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             GetOutputNames();
+            EnsureDiscInformation();
         }
 
         private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -83,7 +94,7 @@ namespace DICUI
             cmb_DiscType.SelectedIndex = 0;
             cmb_DiscType_SelectionChanged(null, null);
 
-            btn_Start.IsEnabled = false;
+            btn_StartStop.IsEnabled = false;
         }
 
         /// <summary>
@@ -102,12 +113,12 @@ namespace DICUI
             if (cmb_DriveLetter.Items.Count > 0)
             {
                 lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
-                btn_Start.IsEnabled = true;
+                btn_StartStop.IsEnabled = true;
             }
             else
             {
                 lbl_Status.Content = "No valid optical disc found!";
-                btn_Start.IsEnabled = false;
+                btn_StartStop.IsEnabled = false;
             }
         }
 
@@ -143,7 +154,7 @@ namespace DICUI
             string driveLetter = cmb_DriveLetter.Text;
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
-            btn_Start.IsEnabled = false;
+            btn_StartStop.Content = "Stop Dumping";
 
             // Get the currently selected item
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
@@ -153,7 +164,7 @@ namespace DICUI
                 || !Utilities.ValidateParameters(txt_CustomParameters.Text))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
-                btn_Start.IsEnabled = true;
+                btn_StartStop.Content = "Start Dumping";
                 return;
             }
 
@@ -161,7 +172,7 @@ namespace DICUI
             if (!File.Exists(dicPath))
             {
                 lbl_Status.Content = "Error! Could not find DiscImageCreator!";
-                btn_Start.IsEnabled = true;
+                btn_StartStop.Content = "Start Dumping";
                 return;
             }
 
@@ -172,22 +183,22 @@ namespace DICUI
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
                 {
                     lbl_Status.Content = "Dumping aborted!";
-                    btn_Start.IsEnabled = true;
+                    btn_StartStop.Content = "Start Dumping";
                     return;
                 }
             }
 
             lbl_Status.Content = "Beginning dumping process";
-			string parameters = txt_CustomParameters.Text;
+            string parameters = txt_CustomParameters.Text;
 
-			await Task.Run(
+            await Task.Run(
                 () =>
                 {
-                    Process process = new Process();
-                    process.StartInfo.FileName = dicPath;
-                    process.StartInfo.Arguments = parameters;
-                    process.Start();
-                    process.WaitForExit();
+                    childProcess = new Process();
+                    childProcess.StartInfo.FileName = dicPath;
+                    childProcess.StartInfo.Arguments = parameters;
+                    childProcess.Start();
+                    childProcess.WaitForExit();
                 });
 
             // Special cases
@@ -260,7 +271,7 @@ namespace DICUI
             if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
-                btn_Start.IsEnabled = true;
+                btn_StartStop.Content = "Start Dumping";
                 return;
             }
 
@@ -270,7 +281,20 @@ namespace DICUI
             List<string> formattedValues = Utilities.FormatOutputData(templateValues, selected.Item2, selected.Item3);
             bool success = Utilities.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 
-            btn_Start.IsEnabled = true;
+            btn_StartStop.Content = "Start Dumping";
+        }
+
+        /// <summary>
+        /// Cancel an in-progress dumping process
+        /// </summary>
+        private void CancelDumping()
+        {
+            try
+            {
+                childProcess.Kill();
+            }
+            catch
+            { }
         }
 
         /// <summary>
@@ -291,21 +315,21 @@ namespace DICUI
             {
                 case DiscType.NONE:
                     lbl_Status.Content = "Please select a valid disc type";
-                    btn_Start.IsEnabled = false;
+                    btn_StartStop.IsEnabled = false;
                     break;
                 case DiscType.GameCubeGameDisc:
                 case DiscType.GDROM:
                     lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
-                    btn_Start.IsEnabled = true;
+                    btn_StartStop.IsEnabled = true;
                     break;
                 case DiscType.HDDVD:
                 case DiscType.UMD:
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
-                    btn_Start.IsEnabled = true;
+                    btn_StartStop.IsEnabled = true;
                     break;
                 default:
                     lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
-                    btn_Start.IsEnabled = true;
+                    btn_StartStop.IsEnabled = true;
                     break;
             }
 
