@@ -416,27 +416,27 @@ namespace DICUI
             switch (type)
             {
                 case DiscType.CD:
-                    return Constants.CompactDiscCommand;
+                    return DICCommands.CompactDiscCommand;
                 case DiscType.DVD5:
                 case DiscType.DVD9:
-                    return Constants.DVDCommand;
+                    return DICCommands.DVDCommand;
                 case DiscType.GDROM:
-                    return Constants.GDROMCommand; // TODO: Constants.GDROMSwapCommand?
+                    return DICCommands.GDROMCommand; // TODO: Constants.GDROMSwapCommand?
                 case DiscType.HDDVD:
                     return null;
                 case DiscType.BD25:
                 case DiscType.BD50:
-                    return Constants.BDCommand;
+                    return DICCommands.BDCommand;
 
                 // Special Formats
                 case DiscType.GameCubeGameDisc:
-                    return Constants.DVDCommand;
+                    return DICCommands.DVDCommand;
                 case DiscType.UMD:
                     return null;
 
                 // Non-optical
                 case DiscType.Floppy:
-                    return Constants.FloppyCommand;
+                    return DICCommands.FloppyCommand;
 
                 default:
                     return null;
@@ -463,21 +463,21 @@ namespace DICUI
             switch (type)
             {
                 case DiscType.CD:
-                    parameters.Add(Constants.CDC2OpcodeFlag); parameters.Add("20");
+                    parameters.Add(DICCommands.CDC2OpcodeFlag); parameters.Add("20");
 
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            parameters.Add(Constants.CDNoFixSubQSecuROMFlag);
-                            parameters.Add(Constants.CDScanFileProtectFlag);
-                            parameters.Add(Constants.CDScanSectorProtectFlag);
+                            parameters.Add(DICCommands.CDNoFixSubQSecuROMFlag);
+                            parameters.Add(DICCommands.CDScanFileProtectFlag);
+                            parameters.Add(DICCommands.CDScanSectorProtectFlag);
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(Constants.CDMCNFlag);
+                            parameters.Add(DICCommands.CDMCNFlag);
                             break;
                         case KnownSystem.SonyPlayStation:
-                            parameters.Add(Constants.CDScanAnitModFlag);
+                            parameters.Add(DICCommands.CDScanAnitModFlag);
                             break;
                     }
                     break;
@@ -488,7 +488,7 @@ namespace DICUI
                     // Currently no defaults set
                     break;
                 case DiscType.GDROM:
-                    parameters.Add(Constants.CDC2OpcodeFlag); parameters.Add("20");
+                    parameters.Add(DICCommands.CDC2OpcodeFlag); parameters.Add("20");
                     break;
                 case DiscType.HDDVD:
                     break;
@@ -501,7 +501,7 @@ namespace DICUI
 
                 // Special Formats
                 case DiscType.GameCubeGameDisc:
-                    parameters.Add(Constants.DVDRawFlag);
+                    parameters.Add(DICCommands.DVDRawFlag);
                     break;
                 case DiscType.UMD:
                     break;
@@ -746,22 +746,22 @@ namespace DICUI
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
             Dictionary<string, string> mappings = new Dictionary<string, string>
             {
-                { Constants.TitleField, Constants.RequiredValue },
-                { Constants.DiscNumberField, Constants.OptionalValue },
-                { Constants.DiscTitleField, Constants.OptionalValue },
-                { Constants.CategoryField, "Games" },
-                { Constants.RegionField, "World (CHANGE THIS)" },
-                { Constants.LanguagesField, "Klingon (CHANGE THIS)" },
-                { Constants.DiscSerialField, Constants.RequiredIfExistsValue },
-                { Constants.MouldSIDField, Constants.RequiredIfExistsValue },
-                { Constants.AdditionalMouldField, Constants.RequiredIfExistsValue },
-                { Constants.BarcodeField, Constants.OptionalValue},
-                { Constants.CommentsField, Constants.OptionalValue },
-                { Constants.ContentsField, Constants.OptionalValue },
-                { Constants.VersionField, Constants.RequiredIfExistsValue },
-                { Constants.EditionField, "Original (VERIFY THIS)" },
-                { Constants.PVDField, GetPVD(combinedBase + "_mainInfo.txt") },
-                { Constants.DATField, GetDatfile(combinedBase + ".dat") },
+                { Template.TitleField, Template.RequiredValue },
+                { Template.DiscNumberField, Template.OptionalValue },
+                { Template.DiscTitleField, Template.OptionalValue },
+                { Template.CategoryField, "Games" },
+                { Template.RegionField, "World (CHANGE THIS)" },
+                { Template.LanguagesField, "Klingon (CHANGE THIS)" },
+                { Template.DiscSerialField, Template.RequiredIfExistsValue },
+                { Template.MouldSIDField, Template.RequiredIfExistsValue },
+                { Template.AdditionalMouldField, Template.RequiredIfExistsValue },
+                { Template.BarcodeField, Template.OptionalValue},
+                { Template.CommentsField, Template.OptionalValue },
+                { Template.ContentsField, Template.OptionalValue },
+                { Template.VersionField, Template.RequiredIfExistsValue },
+                { Template.EditionField, "Original (VERIFY THIS)" },
+                { Template.PVDField, GetPVD(combinedBase + "_mainInfo.txt") },
+                { Template.DATField, GetDatfile(combinedBase + ".dat") },
             };
 
             // Now we want to do a check by DiscType and extract all required info
@@ -769,35 +769,35 @@ namespace DICUI
             {
                 case DiscType.CD: // TODO: Add SecuROM data, but only if found
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
-                    mappings[Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
-                    mappings[Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
-                    mappings[Constants.ToolstampField] = Constants.RequiredIfExistsValue;
-                    mappings[Constants.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
+                    mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                    mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
+                    mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
-                    mappings[Constants.CuesheetField] = GetCuesheet(combinedBase + ".cue");
-                    mappings[Constants.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
+                    mappings[Template.CuesheetField] = GetCuesheet(combinedBase + ".cue");
+                    mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
 
                     // System-specific options
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            mappings[Constants.ISBNField] = Constants.OptionalValue;
-                            mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
+                            mappings[Template.ISBNField] = Template.OptionalValue;
+                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Constants.SaturnHeaderField] = Constants.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
-                            mappings[Constants.SaturnBuildDateField] = Constants.RequiredValue; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Template.SaturnHeaderField] = Template.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Template.SaturnBuildDateField] = Template.RequiredValue; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            mappings[Constants.PlayStationEDCField] = Constants.YesNoValue;
-                            mappings[Constants.PlayStationAntiModchipField] = Constants.YesNoValue;
-                            mappings[Constants.PlayStationLibCryptField] = Constants.YesNoValue;
+                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlayStationEDCField] = Template.YesNoValue;
+                            mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
+                            mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
@@ -805,44 +805,44 @@ namespace DICUI
                 case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
-                    mappings[Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
-                    mappings[Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
-                    mappings[Constants.ToolstampField] = Constants.RequiredIfExistsValue;
+                    mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                    mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
 
                     // System-specific options
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            mappings[Constants.ISBNField] = Constants.OptionalValue;
-                            mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
+                            mappings[Template.ISBNField] = Template.OptionalValue;
+                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
                     break;
                 case DiscType.DVD9:
                 case DiscType.BD50:
-                    mappings["Outer " + Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
-                    mappings["Inner " + Constants.MasteringRingField] = Constants.RequiredIfExistsValue;
-                    mappings["Outer " + Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
-                    mappings["Inner " + Constants.MasteringSIDField] = Constants.RequiredIfExistsValue;
-                    mappings["Outer " + Constants.ToolstampField] = Constants.RequiredIfExistsValue;
-                    mappings["Inner " + Constants.ToolstampField] = Constants.RequiredIfExistsValue;
-                    mappings[Constants.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
+                    mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                    mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                    mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings["Inner " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
+                    mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
+                    mappings[Template.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
 
                     // System-specific options
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            mappings[Constants.ISBNField] = Constants.OptionalValue;
-                            mappings[Constants.CopyProtectionField] = Constants.RequiredIfExistsValue;
+                            mappings[Template.ISBNField] = Template.OptionalValue;
+                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Constants.PlaystationEXEDateField] = Constants.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
@@ -1120,21 +1120,21 @@ namespace DICUI
             {
                 List<string> output = new List<string>();
 
-                output.Add(Constants.TitleField + ": " + info[Constants.TitleField]);
-                output.Add(Constants.DiscNumberField + ": " + info[Constants.DiscNumberField]);
-                output.Add(Constants.DiscTitleField + ": " + info[Constants.DiscTitleField]);
-                output.Add(Constants.CategoryField + ": " + info[Constants.CategoryField]);
-                output.Add(Constants.RegionField + ": " + info[Constants.RegionField]);
-                output.Add(Constants.LanguagesField + ": " + info[Constants.LanguagesField]);
-                output.Add(Constants.DiscSerialField + ": " + info[Constants.DiscSerialField]);
+                output.Add(Template.TitleField + ": " + info[Template.TitleField]);
+                output.Add(Template.DiscNumberField + ": " + info[Template.DiscNumberField]);
+                output.Add(Template.DiscTitleField + ": " + info[Template.DiscTitleField]);
+                output.Add(Template.CategoryField + ": " + info[Template.CategoryField]);
+                output.Add(Template.RegionField + ": " + info[Template.RegionField]);
+                output.Add(Template.LanguagesField + ": " + info[Template.LanguagesField]);
+                output.Add(Template.DiscSerialField + ": " + info[Template.DiscSerialField]);
                 switch(sys)
                 {
                     case KnownSystem.SegaSaturn:
-                        output.Add(Constants.SaturnBuildDateField + ": " + info[Constants.SaturnBuildDateField]);
+                        output.Add(Template.SaturnBuildDateField + ": " + info[Template.SaturnBuildDateField]);
                         break;
                     case KnownSystem.SonyPlayStation:
                     case KnownSystem.SonyPlayStation2:
-                        output.Add(Constants.PlaystationEXEDateField + ": " + info[Constants.PlaystationEXEDateField]);
+                        output.Add(Template.PlaystationEXEDateField + ": " + info[Template.PlaystationEXEDateField]);
                         break;
                 }
                 output.Add("Ringcode Information:");
@@ -1145,56 +1145,56 @@ namespace DICUI
                     case DiscType.DVD5:
                     case DiscType.HDDVD:
                     case DiscType.BD25:
-                        output.Add("\t" + Constants.MasteringRingField + ": " + info[Constants.MasteringRingField]);
-                        output.Add("\t" + Constants.MasteringSIDField + ": " + info[Constants.MasteringSIDField]);
-                        output.Add("\t" + Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
-                        output.Add("\t" + Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
-                        output.Add("\t" + Constants.ToolstampField + ": " + info[Constants.ToolstampField]);
+                        output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
+                        output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
+                        output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
+                        output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
+                        output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
                         break;
                     case DiscType.DVD9:
                     case DiscType.BD50:
-                        output.Add("\tOuter " + Constants.MasteringRingField + ": " + info["Outer " + Constants.MasteringRingField]);
-                        output.Add("\tInner " + Constants.MasteringRingField + ": " + info["Inner " + Constants.MasteringRingField]);
-                        output.Add("\tOuter " + Constants.MasteringSIDField + ": " + info["Outer " + Constants.MasteringSIDField]);
-                        output.Add("\tInner " + Constants.MasteringSIDField + ": " + info["Inner " + Constants.MasteringSIDField]);
-                        output.Add("\t" + Constants.MouldSIDField + ": " + info[Constants.MouldSIDField]);
-                        output.Add("\t" + Constants.AdditionalMouldField + ": " + info[Constants.AdditionalMouldField]);
-                        output.Add("\tOuter " + Constants.ToolstampField + ": " + info["Outer " + Constants.ToolstampField]);
-                        output.Add("\tInner " + Constants.ToolstampField + ": " + info["Inner " + Constants.ToolstampField]);
+                        output.Add("\tOuter " + Template.MasteringRingField + ": " + info["Outer " + Template.MasteringRingField]);
+                        output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
+                        output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
+                        output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
+                        output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
+                        output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
+                        output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
+                        output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
                         break;
                 }
-                output.Add(Constants.BarcodeField + ": " + info[Constants.BarcodeField]);
-                output.Add(Constants.ISBNField + ": " + info[Constants.ISBNField]);
+                output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
+                output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
                 switch (type)
                 {
                     case DiscType.CD:
                     case DiscType.GDROM:
-                        output.Add(Constants.ErrorCountField + ": " + info[Constants.ErrorCountField]);
+                        output.Add(Template.ErrorCountField + ": " + info[Template.ErrorCountField]);
                         break;
                 }
-                output.Add(Constants.CommentsField + ": " + info[Constants.CommentsField]);
-                output.Add(Constants.ContentsField + ": " + info[Constants.ContentsField]);
-                output.Add(Constants.VersionField + ": " + info[Constants.VersionField]);
-                output.Add(Constants.EditionField + ": " + info[Constants.EditionField]);
+                output.Add(Template.CommentsField + ": " + info[Template.CommentsField]);
+                output.Add(Template.ContentsField + ": " + info[Template.ContentsField]);
+                output.Add(Template.VersionField + ": " + info[Template.VersionField]);
+                output.Add(Template.EditionField + ": " + info[Template.EditionField]);
                 switch (sys)
                 {
                     case KnownSystem.SegaSaturn:
-                        output.Add(Constants.SaturnHeaderField + ":"); output.Add("");
-                        output.AddRange(info[Constants.SaturnHeaderField].Split('\n')); output.Add("");
+                        output.Add(Template.SaturnHeaderField + ":"); output.Add("");
+                        output.AddRange(info[Template.SaturnHeaderField].Split('\n')); output.Add("");
                         break;
                     case KnownSystem.SonyPlayStation:
-                        output.Add(Constants.PlayStationEDCField + ": " + info[Constants.PlayStationEDCField]);
-                        output.Add(Constants.PlayStationAntiModchipField + ": " + info[Constants.PlayStationAntiModchipField]);
-                        output.Add(Constants.PlayStationLibCryptField + ": " + info[Constants.PlayStationLibCryptField]);
+                        output.Add(Template.PlayStationEDCField + ": " + info[Template.PlayStationEDCField]);
+                        output.Add(Template.PlayStationAntiModchipField + ": " + info[Template.PlayStationAntiModchipField]);
+                        output.Add(Template.PlayStationLibCryptField + ": " + info[Template.PlayStationLibCryptField]);
                         break;
                 }
-                output.Add(Constants.PVDField + ":"); output.Add("");
-                output.AddRange(info[Constants.PVDField].Split('\n'));
+                output.Add(Template.PVDField + ":"); output.Add("");
+                output.AddRange(info[Template.PVDField].Split('\n'));
                 switch (sys)
                 {
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.IBMPCCompatible:
-                        output.Add(Constants.CopyProtectionField + ": " + info[Constants.CopyProtectionField]); output.Add("");
+                        output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
                         break;
                 }
                 // TODO: Add SecuROM data here for relevant things
@@ -1202,13 +1202,13 @@ namespace DICUI
                 {
                     case DiscType.CD:
                     case DiscType.GDROM:
-                        output.Add(Constants.CuesheetField + ":"); output.Add("");
-                        output.AddRange(info[Constants.CuesheetField].Split('\n')); output.Add("");
-                        output.Add(Constants.WriteOffsetField + ": " + info[Constants.WriteOffsetField]); output.Add("");
+                        output.Add(Template.CuesheetField + ":"); output.Add("");
+                        output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
+                        output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]); output.Add("");
                         break;
                 }
-                output.Add(Constants.DATField + ":"); output.Add("");
-                output.AddRange(info[Constants.DATField].Split('\n'));
+                output.Add(Template.DATField + ":"); output.Add("");
+                output.AddRange(info[Template.DATField].Split('\n'));
 
                 return output;
             }
@@ -1282,7 +1282,7 @@ namespace DICUI
             // Determine what the commandline should look like given the first item
             switch (parts[0])
             {
-                case Constants.CompactDiscCommand:
+                case DICCommands.CompactDiscCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1305,22 +1305,22 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case Constants.DisableBeepFlag:
-                            case Constants.CDD8OpcodeFlag:
-                            case Constants.CDMCNFlag:
-                            case Constants.CDAMSFFlag:
-                            case Constants.CDReverseFlag:
-                            case Constants.CDMultiSessionFlag:
-                            case Constants.CDScanSectorProtectFlag:
-                            case Constants.CDScanAnitModFlag:
-                            case Constants.CDNoFixSubPFlag:
-                            case Constants.CDNoFixSubQFlag:
-                            case Constants.CDNoFixSubRtoWFlag:
-                            case Constants.CDNoFixSubQLibCryptFlag:
-                            case Constants.CDNoFixSubQSecuROMFlag:
+                            case DICCommands.DisableBeepFlag:
+                            case DICCommands.CDD8OpcodeFlag:
+                            case DICCommands.CDMCNFlag:
+                            case DICCommands.CDAMSFFlag:
+                            case DICCommands.CDReverseFlag:
+                            case DICCommands.CDMultiSessionFlag:
+                            case DICCommands.CDScanSectorProtectFlag:
+                            case DICCommands.CDScanAnitModFlag:
+                            case DICCommands.CDNoFixSubPFlag:
+                            case DICCommands.CDNoFixSubQFlag:
+                            case DICCommands.CDNoFixSubRtoWFlag:
+                            case DICCommands.CDNoFixSubQLibCryptFlag:
+                            case DICCommands.CDNoFixSubQSecuROMFlag:
                                 // No-op, all of these are single flags
                                 break;
-                            case Constants.CDScanFileProtectFlag:
+                            case DICCommands.CDScanFileProtectFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1337,7 +1337,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.ForceUnitAccessFlag:
+                            case DICCommands.ForceUnitAccessFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1354,14 +1354,14 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDAddOffsetFlag:
+                            case DICCommands.CDAddOffsetFlag:
                                 // If the next item isn't a valid number
                                 if (!Int32.TryParse(parts[i + 1], out int af1))
                                 {
                                     return false;
                                 }
                                 break;
-                            case Constants.CDBEOpcodeFlag:
+                            case DICCommands.CDBEOpcodeFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1374,7 +1374,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDC2OpcodeFlag:
+                            case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
                                     // If the next item is a flag, it's good
@@ -1394,7 +1394,7 @@ namespace DICUI
                                     }
                                 }
                                 break;
-                            case Constants.CDSubchannelReadLevelFlag:
+                            case DICCommands.CDSubchannelReadLevelFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1415,7 +1415,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case Constants.GDROMCommand:
+                case DICCommands.GDROMCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1438,15 +1438,15 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case Constants.DisableBeepFlag:
-                            case Constants.CDD8OpcodeFlag:
-                            case Constants.CDNoFixSubPFlag:
-                            case Constants.CDNoFixSubQFlag:
-                            case Constants.CDNoFixSubRtoWFlag:
-                            case Constants.CDNoFixSubQSecuROMFlag:
+                            case DICCommands.DisableBeepFlag:
+                            case DICCommands.CDD8OpcodeFlag:
+                            case DICCommands.CDNoFixSubPFlag:
+                            case DICCommands.CDNoFixSubQFlag:
+                            case DICCommands.CDNoFixSubRtoWFlag:
+                            case DICCommands.CDNoFixSubQSecuROMFlag:
                                 // No-op, all of these are single flags
                                 break;
-                            case Constants.ForceUnitAccessFlag:
+                            case DICCommands.ForceUnitAccessFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1463,7 +1463,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDBEOpcodeFlag:
+                            case DICCommands.CDBEOpcodeFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1476,7 +1476,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDC2OpcodeFlag:
+                            case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
                                     // If the next item is a flag, it's good
@@ -1496,7 +1496,7 @@ namespace DICUI
                                     }
                                 }
                                 break;
-                            case Constants.CDSubchannelReadLevelFlag:
+                            case DICCommands.CDSubchannelReadLevelFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1518,7 +1518,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case Constants.DataCommand:
+                case DICCommands.DataCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1546,17 +1546,17 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case Constants.DisableBeepFlag:
-                            case Constants.CDD8OpcodeFlag:
-                            case Constants.CDReverseFlag:
-                            case Constants.CDScanSectorProtectFlag:
-                            case Constants.CDNoFixSubPFlag:
-                            case Constants.CDNoFixSubQFlag:
-                            case Constants.CDNoFixSubRtoWFlag:
-                            case Constants.CDNoFixSubQSecuROMFlag:
+                            case DICCommands.DisableBeepFlag:
+                            case DICCommands.CDD8OpcodeFlag:
+                            case DICCommands.CDReverseFlag:
+                            case DICCommands.CDScanSectorProtectFlag:
+                            case DICCommands.CDNoFixSubPFlag:
+                            case DICCommands.CDNoFixSubQFlag:
+                            case DICCommands.CDNoFixSubRtoWFlag:
+                            case DICCommands.CDNoFixSubQSecuROMFlag:
                                 // No-op, all of these are single flags
                                 break;
-                            case Constants.ForceUnitAccessFlag:
+                            case DICCommands.ForceUnitAccessFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1573,7 +1573,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDScanFileProtectFlag:
+                            case DICCommands.CDScanFileProtectFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1590,7 +1590,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDBEOpcodeFlag:
+                            case DICCommands.CDBEOpcodeFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1603,7 +1603,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDC2OpcodeFlag:
+                            case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
                                     // If the next item is a flag, it's good
@@ -1623,7 +1623,7 @@ namespace DICUI
                                     }
                                 }
                                 break;
-                            case Constants.CDSubchannelReadLevelFlag:
+                            case DICCommands.CDSubchannelReadLevelFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1645,7 +1645,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case Constants.AudioCommand:
+                case DICCommands.AudioCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1673,15 +1673,15 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case Constants.DisableBeepFlag:
-                            case Constants.CDD8OpcodeFlag:
-                            case Constants.CDNoFixSubPFlag:
-                            case Constants.CDNoFixSubQFlag:
-                            case Constants.CDNoFixSubRtoWFlag:
-                            case Constants.CDNoFixSubQSecuROMFlag:
+                            case DICCommands.DisableBeepFlag:
+                            case DICCommands.CDD8OpcodeFlag:
+                            case DICCommands.CDNoFixSubPFlag:
+                            case DICCommands.CDNoFixSubQFlag:
+                            case DICCommands.CDNoFixSubRtoWFlag:
+                            case DICCommands.CDNoFixSubQSecuROMFlag:
                                 // No-op, all of these are single flags
                                 break;
-                            case Constants.ForceUnitAccessFlag:
+                            case DICCommands.ForceUnitAccessFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1698,14 +1698,14 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDAddOffsetFlag:
+                            case DICCommands.CDAddOffsetFlag:
                                 // If the next item isn't a valid number
                                 if (!Int32.TryParse(parts[i + 1], out int af1))
                                 {
                                     return false;
                                 }
                                 break;
-                            case Constants.CDBEOpcodeFlag:
+                            case DICCommands.CDBEOpcodeFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1718,7 +1718,7 @@ namespace DICUI
                                 }
                                 i++;
                                 break;
-                            case Constants.CDC2OpcodeFlag:
+                            case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
                                     // If the next item is a flag, it's good
@@ -1738,7 +1738,7 @@ namespace DICUI
                                     }
                                 }
                                 break;
-                            case Constants.CDSubchannelReadLevelFlag:
+                            case DICCommands.CDSubchannelReadLevelFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1760,7 +1760,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case Constants.DVDCommand:
+                case DICCommands.DVDCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1783,12 +1783,12 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case Constants.DisableBeepFlag:
-                            case Constants.DVDCMIFlag:
-                            case Constants.DVDRawFlag:
+                            case DICCommands.DisableBeepFlag:
+                            case DICCommands.DVDCMIFlag:
+                            case DICCommands.DVDRawFlag:
                                 // No-op, all of these are single flags
                                 break;
-                            case Constants.ForceUnitAccessFlag:
+                            case DICCommands.ForceUnitAccessFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1810,7 +1810,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case Constants.BDCommand:
+                case DICCommands.BDCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1825,10 +1825,10 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case Constants.DisableBeepFlag:
+                            case DICCommands.DisableBeepFlag:
                                 // No-op, this is a single flag
                                 break;
-                            case Constants.ForceUnitAccessFlag:
+                            case DICCommands.ForceUnitAccessFlag:
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1850,7 +1850,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case Constants.FloppyCommand:
+                case DICCommands.FloppyCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1864,11 +1864,11 @@ namespace DICUI
                         return false;
                     }
                     break;
-                case Constants.StopCommand:
-                case Constants.StartCommand:
-                case Constants.EjectCommand:
-                case Constants.CloseCommand:
-                case Constants.ResetCommand:
+                case DICCommands.StopCommand:
+                case DICCommands.StartCommand:
+                case DICCommands.EjectCommand:
+                case DICCommands.CloseCommand:
+                case DICCommands.ResetCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
@@ -1878,14 +1878,14 @@ namespace DICUI
                         return false;
                     }
                     break;
-                case Constants.SubCommand:
-                case Constants.MDSCommand:
+                case DICCommands.SubCommand:
+                case DICCommands.MDSCommand:
                     if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
                     break;
-                case Constants.GDROMSwapCommand: // TODO: How to validate this?
+                case DICCommands.GDROMSwapCommand: // TODO: How to validate this?
                 default:
                     return false;
             }
