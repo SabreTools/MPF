@@ -65,7 +65,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button x:Name="btn_Start" Grid.Row="0" Grid.Column="0" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="btn_Start_Click" IsEnabled="False" />
+            <Button x:Name="btn_StartStop" Grid.Row="0" Grid.Column="0" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="btn_StartStop_Click" IsEnabled="False" />
             <Button x:Name="btn_Search" Grid.Row="0" Grid.Column="1" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="btn_Search_Click" />
         </Grid>
 
