@@ -73,8 +73,8 @@ namespace DICUI
 
         private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            EnsureDiscInformation();
             GetOutputNames();
+            EnsureDiscInformation();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -410,7 +410,7 @@ namespace DICUI
                     List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
                     txt_CustomParameters.Text = discType
                         + " " + cmb_DriveLetter.Text
-                        + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text + Utilities.GetDefaultExtension(selected.Item3)) + "\" "
+                        + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
