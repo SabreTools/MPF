@@ -414,8 +414,12 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
-            string driveLetter = cmb_DriveLetter.Text;
-            if (String.IsNullOrWhiteSpace(driveLetter))
+            // Get the drive letter from the selected item
+            var selected = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            char driveLetter = selected.Item1;
+
+            // Validate that the required program exits
+            if (!File.Exists(dicPath))
             {
                 return;
             }

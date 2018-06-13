@@ -1773,7 +1773,7 @@ namespace DICUI
                     {
                         return false;
                     }
-                    else if (dvdspeed < 0 || dvdspeed > 16)
+                    else if (dvdspeed < 0 || dvdspeed > 72) // Officialy, 0-16
                     {
                         return false;
                     }
