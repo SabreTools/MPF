@@ -343,7 +343,8 @@ namespace DICUI
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaLindbergh:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.SegaNaomi:
                     types.Add(DiscType.GDROM);
