@@ -1,5 +1,11 @@
 ﻿namespace DICUI
 {
+    public static class UIElements
+    {
+        public const string StartDumping = "Start Dumping";
+        public const string StopDumping = "Stop Dumping";
+    }
+
     public static class DICCommands
     {
         // Commands

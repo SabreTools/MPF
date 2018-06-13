@@ -40,11 +40,11 @@ namespace DICUI
 
         private void btn_StartStop_Click(object sender, RoutedEventArgs e)
         {
-            if ((string)btn_StartStop.Content == "Start Dumping")
+            if ((string)btn_StartStop.Content == UIElements.StartDumping)
             {
                 StartDumping();
             }
-            else if ((string)btn_StartStop.Content == "Stop Dumping")
+            else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
                 CancelDumping();
             }
@@ -154,7 +154,7 @@ namespace DICUI
             string driveLetter = cmb_DriveLetter.Text;
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
-            btn_StartStop.Content = "Stop Dumping";
+            btn_StartStop.Content = UIElements.StopDumping;
 
             // Get the currently selected item
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
@@ -164,7 +164,7 @@ namespace DICUI
                 || !Utilities.ValidateParameters(txt_CustomParameters.Text))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
-                btn_StartStop.Content = "Start Dumping";
+                btn_StartStop.Content = UIElements.StartDumping;
                 return;
             }
 
@@ -172,7 +172,7 @@ namespace DICUI
             if (!File.Exists(dicPath))
             {
                 lbl_Status.Content = "Error! Could not find DiscImageCreator!";
-                btn_StartStop.Content = "Start Dumping";
+                btn_StartStop.Content = UIElements.StartDumping;
                 return;
             }
 
@@ -183,7 +183,7 @@ namespace DICUI
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
                 {
                     lbl_Status.Content = "Dumping aborted!";
-                    btn_StartStop.Content = "Start Dumping";
+                    btn_StartStop.Content = UIElements.StartDumping;
                     return;
                 }
             }
@@ -212,7 +212,7 @@ namespace DICUI
                         break;
                     }
 
-                    Process sgraw = new Process()
+                    childProcess = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
                         {
@@ -220,8 +220,8 @@ namespace DICUI
                             Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
                         },
                     };
-                    sgraw.Start();
-                    sgraw.WaitForExit();
+                    childProcess.Start();
+                    childProcess.WaitForExit();
                     break;
                 case KnownSystem.SonyPlayStation:
                     if (!File.Exists(psxtPath))
@@ -232,7 +232,7 @@ namespace DICUI
 
                     // Invoke the program with all 3 configurations
                     // TODO: Use these outputs for PSX information
-                    Process psxt001z = new Process()
+                    childProcess = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
                         {
@@ -240,10 +240,10 @@ namespace DICUI
                             Arguments = "\"" + Utilities.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
                         },
                     };
-                    psxt001z.Start();
-                    psxt001z.WaitForExit();
+                    childProcess.Start();
+                    childProcess.WaitForExit();
 
-                    psxt001z = new Process()
+                    childProcess = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
                         {
@@ -251,10 +251,10 @@ namespace DICUI
                             Arguments = "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"),
                         },
                     };
-                    psxt001z.Start();
-                    psxt001z.WaitForExit();
+                    childProcess.Start();
+                    childProcess.WaitForExit();
 
-                    psxt001z = new Process()
+                    childProcess = new Process()
                     {
                         StartInfo = new ProcessStartInfo()
                         {
@@ -262,8 +262,8 @@ namespace DICUI
                             Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
                         },
                     };
-                    psxt001z.Start();
-                    psxt001z.WaitForExit();
+                    childProcess.Start();
+                    childProcess.WaitForExit();
                     break;
             }
 
@@ -271,7 +271,7 @@ namespace DICUI
             if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
-                btn_StartStop.Content = "Start Dumping";
+                btn_StartStop.Content = UIElements.StartDumping;
                 return;
             }
 
@@ -281,7 +281,7 @@ namespace DICUI
             List<string> formattedValues = Utilities.FormatOutputData(templateValues, selected.Item2, selected.Item3);
             bool success = Utilities.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 
-            btn_StartStop.Content = "Start Dumping";
+            btn_StartStop.Content = UIElements.StartDumping;
         }
 
         /// <summary>
