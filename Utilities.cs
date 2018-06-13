@@ -33,7 +33,11 @@ namespace DICUI
                     return "BluRay-50 [Dual-Layer]";
 
                 case DiscType.GameCubeGameDisc:
-                    return "GameCube";
+                    return "GameCube Game";
+                case DiscType.WiiOpticalDisc:
+                    return "Wii Optical";
+                case DiscType.WiiUOpticalDisc:
+                    return "Wii U Optical";
                 case DiscType.UMD:
                     return "UMD";
 
@@ -240,11 +244,10 @@ namespace DICUI
                     types.Add(DiscType.GameCubeGameDisc);
                     break;
                 case KnownSystem.NintendoWii:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
-                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    types.Add(DiscType.WiiOpticalDisc);
                     break;
                 case KnownSystem.NintendoWiiU:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.WiiUOpticalDisc);
                     break;
                 case KnownSystem.Panasonic3DOInteractiveMultiplayer:
                     types.Add(DiscType.CD);
@@ -430,6 +433,10 @@ namespace DICUI
                 // Special Formats
                 case DiscType.GameCubeGameDisc:
                     return DICCommands.DVDCommand;
+                case DiscType.WiiOpticalDisc:
+                    return null;
+                case DiscType.WiiUOpticalDisc:
+                    return null;
                 case DiscType.UMD:
                     return null;
 
@@ -502,6 +509,12 @@ namespace DICUI
                 case DiscType.GameCubeGameDisc:
                     parameters.Add(DICCommands.DVDRawFlag);
                     break;
+                case DiscType.WiiOpticalDisc:
+                    // Currently no defaults set
+                    break;
+                case DiscType.WiiUOpticalDisc:
+                    // Currently no defaults set
+                    break;
                 case DiscType.UMD:
                     break;
 
@@ -532,8 +545,11 @@ namespace DICUI
                 case DiscType.BD25:
                 case DiscType.BD50:
                 case DiscType.GameCubeGameDisc:
+                case DiscType.WiiOpticalDisc:
                 case DiscType.UMD:
                     return ".iso";
+                case DiscType.WiiUOpticalDisc:
+                    return ".wud";
                 case DiscType.Floppy:
                     return ".img";
                 case DiscType.NONE:

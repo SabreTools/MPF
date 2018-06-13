@@ -89,6 +89,8 @@ namespace DICUI
                 case DiscType.BD25:
                 case DiscType.BD50:
                 case DiscType.GameCubeGameDisc:
+                case DiscType.WiiOpticalDisc:
+                case DiscType.WiiUOpticalDisc:
                 case DiscType.UMD:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")

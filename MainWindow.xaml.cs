@@ -361,8 +361,10 @@ namespace DICUI
                     break;
                 case DiscType.HDDVD:
                 case DiscType.UMD:
+                case DiscType.WiiOpticalDisc:
+                case DiscType.WiiUOpticalDisc:
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = true;
+                    btn_StartStop.IsEnabled = false;
                     break;
                 default:
                     lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
