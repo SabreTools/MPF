@@ -25,6 +25,17 @@ Dizzzy - Concept/Ideas/Beta tester
 2018-06-13
 --------------------------------------------------------------------------
 
+Version 1.04b released:
+
+- Added subIntention reading
+- Fixed extra extensions being appended
+- Fixed internationalization error (number formatting)
+- Fixed "Custom Input" not working
+
+--------------------------------------------------------------------------
+2018-06-13
+--------------------------------------------------------------------------
+
 Version 1.04a released:
 
 - Fixed issue with empty trays
