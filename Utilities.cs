@@ -956,8 +956,7 @@ namespace DICUI
                     // Fast forward to the PVD
                     string line = sr.ReadLine();
                     while (!line.StartsWith("[NO ERROR]")
-                        && !line.StartsWith("[WARNING]")
-                        && !line.StartsWith("[ERROR]"))
+                        && !line.StartsWith("Total errors:"))
                     {
                         line = sr.ReadLine();
                     }
@@ -967,14 +966,9 @@ namespace DICUI
                     {
                         return 0;
                     }
-                    else if (line.StartsWith("[WARNING]"))
+                    else if (line.StartsWith("Total errors:"))
                     {
-                        // Not sure how to handle these properly
-                        return -1;
-                    }
-                    else if (line.StartsWith("[ERROR] Number of sector(s) where user data doesn't match the expected ECC/EDC:"))
-                    {
-                        return Int64.Parse(line.Remove(0, 80));
+                        return Int64.Parse(line.Remove(0, 14));
                     }
 
                     return -1;
