@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.IO;
 using WinForms = System.Windows.Forms;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace DICUI
 {
@@ -34,6 +35,7 @@ namespace DICUI
 
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
+            SetSupportedDriveSpeed();
         }
 
         #region Events
@@ -59,6 +61,7 @@ namespace DICUI
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             PopulateDrives();
+            SetSupportedDriveSpeed();
             EnsureDiscInformation();
         }
 
@@ -70,6 +73,7 @@ namespace DICUI
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
         }
@@ -194,9 +198,14 @@ namespace DICUI
             await Task.Run(
                 () =>
                 {
-                    childProcess = new Process();
-                    childProcess.StartInfo.FileName = dicPath;
-                    childProcess.StartInfo.Arguments = parameters;
+                    childProcess = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = dicPath,
+                            Arguments = parameters,
+                        },
+                    };
                     childProcess.Start();
                     childProcess.WaitForExit();
                 });
@@ -398,6 +407,42 @@ namespace DICUI
                 txt_OutputDirectory.Text = defaultOutputPath;
                 txt_OutputFilename.Text = "disc.bin";
             }
+        }
+
+        /// <summary>
+        /// Get the highest supported drive speed as reported by DiscImageCreator
+        /// </summary>
+        private void SetSupportedDriveSpeed()
+        {
+            string driveLetter = cmb_DriveLetter.Text;
+            if (String.IsNullOrWhiteSpace(driveLetter))
+            {
+                return;
+            }
+
+            childProcess = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = dicPath,
+                    Arguments = DICCommands.DriveSpeedCommand + " " + driveLetter,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                },
+            };
+            childProcess.Start();
+            childProcess.WaitForExit();
+            string output = childProcess.StandardOutput.ReadToEnd();
+
+            int index = output.IndexOf("ReadSpeedMaximum:");
+            string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
+            if (!Int32.TryParse(readspeed, out int speed))
+            {
+                return;
+            }
+
+            cmb_DriveSpeed.SelectedValue = speed;
         }
 
         #endregion
