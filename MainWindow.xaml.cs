@@ -162,6 +162,17 @@ namespace DICUI
                 return;
             }
 
+            // If a complete dump already exists
+            if (Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            {
+                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                {
+                    lbl_Status.Content = "Dumping aborted!";
+                    return;
+                }
+            }
+
             lbl_Status.Content = "Beginning dumping process";
             await Task.Run(
                 () =>
