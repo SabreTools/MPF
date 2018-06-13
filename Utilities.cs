@@ -1262,7 +1262,7 @@ namespace DICUI
         /// </summary>
         /// <param name="parameters">String representing all parameters</param>
         /// <returns>True if it would be valid, false otherwise</returns>
-		/// <remarks>TODO: Refactor this to make it cleaner</remarks>
+        /// <remarks>TODO: Refactor this to make it cleaner</remarks>
         public static bool ValidateParameters(string parameters)
         {
             // The string has to be valid by itself first
@@ -1283,11 +1283,11 @@ namespace DICUI
             switch (parts[0])
             {
                 case Constants.CompactDiscCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (!File.Exists(parts[2].Trim('\"')))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1303,124 +1303,124 @@ namespace DICUI
                     // Loop through all auxilary flags
                     for (int i = 4; i < parts.Count; i++)
                     {
-						switch (parts[i])
-						{
-							case Constants.DisableBeepFlag:
-							case Constants.CDD8OpcodeFlag:
-							case Constants.CDMCNFlag:
-							case Constants.CDAMSFFlag:
-							case Constants.CDReverseFlag:
-							case Constants.CDMultiSessionFlag:
-							case Constants.CDScanSectorProtectFlag:
-							case Constants.CDScanAnitModFlag:
-							case Constants.CDNoFixSubPFlag:
-							case Constants.CDNoFixSubQFlag:
-							case Constants.CDNoFixSubRtoWFlag:
-							case Constants.CDNoFixSubQLibCryptFlag:
-							case Constants.CDNoFixSubQSecuROMFlag:
-								// No-op, all of these are single flags
-								break;
-							case Constants.CDScanFileProtectFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int sfp1))
-								{
-									return false;
-								}
-								else if (sfp1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
-							case Constants.ForceUnitAccessFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int fua1))
-								{
-									return false;
-								}
-								else if (fua1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
-							case Constants.CDAddOffsetFlag:
-								// If the next item isn't a valid number
-								if (!Int32.TryParse(parts[i + 1], out int af1))
-								{
-									return false;
-								}
-								break;
-							case Constants.CDBEOpcodeFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								else if (parts[i + 1] != "raw"
-									&& (parts[i + 1] != "pack"))
-								{
-									return false;
-								}
-								i++;
-								break;
+                        switch (parts[i])
+                        {
+                            case Constants.DisableBeepFlag:
+                            case Constants.CDD8OpcodeFlag:
+                            case Constants.CDMCNFlag:
+                            case Constants.CDAMSFFlag:
+                            case Constants.CDReverseFlag:
+                            case Constants.CDMultiSessionFlag:
+                            case Constants.CDScanSectorProtectFlag:
+                            case Constants.CDScanAnitModFlag:
+                            case Constants.CDNoFixSubPFlag:
+                            case Constants.CDNoFixSubQFlag:
+                            case Constants.CDNoFixSubRtoWFlag:
+                            case Constants.CDNoFixSubQLibCryptFlag:
+                            case Constants.CDNoFixSubQSecuROMFlag:
+                                // No-op, all of these are single flags
+                                break;
+                            case Constants.CDScanFileProtectFlag:
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int sfp1))
+                                {
+                                    return false;
+                                }
+                                else if (sfp1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
+                            case Constants.ForceUnitAccessFlag:
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
+                                {
+                                    return false;
+                                }
+                                else if (fua1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
+                            case Constants.CDAddOffsetFlag:
+                                // If the next item isn't a valid number
+                                if (!Int32.TryParse(parts[i + 1], out int af1))
+                                {
+                                    return false;
+                                }
+                                break;
+                            case Constants.CDBEOpcodeFlag:
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                else if (parts[i + 1] != "raw"
+                                    && (parts[i + 1] != "pack"))
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDC2OpcodeFlag:
-								for (int j = 1; j < 4; j++)
-								{
-									// If the next item is a flag, it's good
-									if (parts[i + j].StartsWith("\\"))
-									{
-										i += (j - 1);
-										break;
-									}
-									// If the next item isn't a valid number
-									else if (!Int32.TryParse(parts[i + j], out int c2))
-									{
-										return false;
-									}
-									else if (c2 < 0)
-									{
-										return false;
-									}
-								}
-								break;
+                                for (int j = 1; j < 4; j++)
+                                {
+                                    // If the next item is a flag, it's good
+                                    if (parts[i + j].StartsWith("/"))
+                                    {
+                                        i += (j - 1);
+                                        break;
+                                    }
+                                    // If the next item isn't a valid number
+                                    else if (!Int32.TryParse(parts[i + j], out int c2))
+                                    {
+                                        return false;
+                                    }
+                                    else if (c2 < 0)
+                                    {
+                                        return false;
+                                    }
+                                }
+                                break;
                             case Constants.CDSubchannelReadLevelFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int sub))
-								{
-									return false;
-								}
-								else if (sub < 0 || sub > 2)
-								{
-									return false;
-								}
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int sub))
+                                {
+                                    return false;
+                                }
+                                else if (sub < 0 || sub > 2)
+                                {
+                                    return false;
+                                }
+                                break;
                             default:
                                 return false;
                         }
                     }
                     break;
                 case Constants.GDROMCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("\\"))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1447,83 +1447,83 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case Constants.ForceUnitAccessFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int fua1))
-								{
-									return false;
-								}
-								else if (fua1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
+                                {
+                                    return false;
+                                }
+                                else if (fua1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDBEOpcodeFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								else if (parts[i + 1] != "raw"
-									&& (parts[i + 1] != "pack"))
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                else if (parts[i + 1] != "raw"
+                                    && (parts[i + 1] != "pack"))
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDC2OpcodeFlag:
-								for (int j = 1; j < 4; j++)
-								{
-									// If the next item is a flag, it's good
-									if (parts[i + j].StartsWith("\\"))
-									{
-										i += (j - 1);
-										break;
-									}
-									// If the next item isn't a valid number
-									else if (!Int32.TryParse(parts[i + j], out int c2))
-									{
-										return false;
-									}
-									else if (c2 < 0)
-									{
-										return false;
-									}
-								}
-								break;
+                                for (int j = 1; j < 4; j++)
+                                {
+                                    // If the next item is a flag, it's good
+                                    if (parts[i + j].StartsWith("/"))
+                                    {
+                                        i += (j - 1);
+                                        break;
+                                    }
+                                    // If the next item isn't a valid number
+                                    else if (!Int32.TryParse(parts[i + j], out int c2))
+                                    {
+                                        return false;
+                                    }
+                                    else if (c2 < 0)
+                                    {
+                                        return false;
+                                    }
+                                }
+                                break;
                             case Constants.CDSubchannelReadLevelFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int sub))
-								{
-									return false;
-								}
-								else if (sub < 0 || sub > 2)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int sub))
+                                {
+                                    return false;
+                                }
+                                else if (sub < 0 || sub > 2)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             default:
                                 return false;
                         }
                     }
                     break;
                 case Constants.DataCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("\\"))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1557,100 +1557,100 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case Constants.ForceUnitAccessFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int fua1))
-								{
-									return false;
-								}
-								else if (fua1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
+                                {
+                                    return false;
+                                }
+                                else if (fua1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDScanFileProtectFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int sfp1))
-								{
-									return false;
-								}
-								else if (sfp1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int sfp1))
+                                {
+                                    return false;
+                                }
+                                else if (sfp1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDBEOpcodeFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								else if (parts[i + 1] != "raw"
-									&& (parts[i + 1] != "pack"))
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                else if (parts[i + 1] != "raw"
+                                    && (parts[i + 1] != "pack"))
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDC2OpcodeFlag:
-								for (int j = 1; j < 4; j++)
-								{
-									// If the next item is a flag, it's good
-									if (parts[i + j].StartsWith("\\"))
-									{
-										i += (j - 1);
-										break;
-									}
-									// If the next item isn't a valid number
-									else if (!Int32.TryParse(parts[i + j], out int c2))
-									{
-										return false;
-									}
-									else if (c2 < 0)
-									{
-										return false;
-									}
-								}
-								break;
+                                for (int j = 1; j < 4; j++)
+                                {
+                                    // If the next item is a flag, it's good
+                                    if (parts[i + j].StartsWith("/"))
+                                    {
+                                        i += (j - 1);
+                                        break;
+                                    }
+                                    // If the next item isn't a valid number
+                                    else if (!Int32.TryParse(parts[i + j], out int c2))
+                                    {
+                                        return false;
+                                    }
+                                    else if (c2 < 0)
+                                    {
+                                        return false;
+                                    }
+                                }
+                                break;
                             case Constants.CDSubchannelReadLevelFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int sub))
-								{
-									return false;
-								}
-								else if (sub < 0 || sub > 2)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int sub))
+                                {
+                                    return false;
+                                }
+                                else if (sub < 0 || sub > 2)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             default:
                                 return false;
                         }
                     }
                     break;
                 case Constants.AudioCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("\\"))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1682,90 +1682,90 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case Constants.ForceUnitAccessFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int fua1))
-								{
-									return false;
-								}
-								else if (fua1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
+                                {
+                                    return false;
+                                }
+                                else if (fua1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDAddOffsetFlag:
-								// If the next item isn't a valid number
-								if (!Int32.TryParse(parts[i + 1], out int af1))
-								{
-									return false;
-								}
-								break;
+                                // If the next item isn't a valid number
+                                if (!Int32.TryParse(parts[i + 1], out int af1))
+                                {
+                                    return false;
+                                }
+                                break;
                             case Constants.CDBEOpcodeFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								else if (parts[i + 1] != "raw"
-									&& (parts[i + 1] != "pack"))
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                else if (parts[i + 1] != "raw"
+                                    && (parts[i + 1] != "pack"))
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             case Constants.CDC2OpcodeFlag:
-								for (int j = 1; j < 4; j++)
-								{
-									// If the next item is a flag, it's good
-									if (parts[i + j].StartsWith("\\"))
-									{
-										i += (j - 1);
-										break;
-									}
-									// If the next item isn't a valid number
-									else if (!Int32.TryParse(parts[i + j], out int c2))
-									{
-										return false;
-									}
-									else if (c2 < 0)
-									{
-										return false;
-									}
-								}
-								break;
+                                for (int j = 1; j < 4; j++)
+                                {
+                                    // If the next item is a flag, it's good
+                                    if (parts[i + j].StartsWith("/"))
+                                    {
+                                        i += (j - 1);
+                                        break;
+                                    }
+                                    // If the next item isn't a valid number
+                                    else if (!Int32.TryParse(parts[i + j], out int c2))
+                                    {
+                                        return false;
+                                    }
+                                    else if (c2 < 0)
+                                    {
+                                        return false;
+                                    }
+                                }
+                                break;
                             case Constants.CDSubchannelReadLevelFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int sub))
-								{
-									return false;
-								}
-								else if (sub < 0 || sub > 2)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int sub))
+                                {
+                                    return false;
+                                }
+                                else if (sub < 0 || sub > 2)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             default:
                                 return false;
                         }
                     }
                     break;
                 case Constants.DVDCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("\\"))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1789,33 +1789,33 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case Constants.ForceUnitAccessFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int fua1))
-								{
-									return false;
-								}
-								else if (fua1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
+                                {
+                                    return false;
+                                }
+                                else if (fua1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             default:
                                 return false;
                         }
                     }
                     break;
                 case Constants.BDCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("\\"))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1829,33 +1829,33 @@ namespace DICUI
                                 // No-op, this is a single flag
                                 break;
                             case Constants.ForceUnitAccessFlag:
-								// If the next item is a flag, it's good
-								if (parts[i + 1].StartsWith("\\"))
-								{
-									break;
-								}
-								// If the next item isn't a valid number
-								else if (!Int32.TryParse(parts[i + 1], out int fua1))
-								{
-									return false;
-								}
-								else if (fua1 < 0)
-								{
-									return false;
-								}
-								i++;
-								break;
+                                // If the next item is a flag, it's good
+                                if (parts[i + 1].StartsWith("/"))
+                                {
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
+                                {
+                                    return false;
+                                }
+                                else if (fua1 < 0)
+                                {
+                                    return false;
+                                }
+                                i++;
+                                break;
                             default:
                                 return false;
                         }
                     }
                     break;
                 case Constants.FloppyCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("\\"))
+                    else if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
@@ -1869,7 +1869,7 @@ namespace DICUI
                 case Constants.EjectCommand:
                 case Constants.CloseCommand:
                 case Constants.ResetCommand:
-                    if (!Regex.IsMatch(parts[1], @"[a-Z]:?\\?"))
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
                     }
@@ -1880,7 +1880,7 @@ namespace DICUI
                     break;
                 case Constants.SubCommand:
                 case Constants.MDSCommand:
-                    if (parts[2].Trim('\"').StartsWith("\\"))
+                    if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
