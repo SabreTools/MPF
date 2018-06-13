@@ -503,8 +503,9 @@ namespace DICUI
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
             };
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString("1.2*")) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString("2.5*")) });
+
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString(String.Format("{0:n1}*", 1.2))) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString(String.Format("{0:n1}*", 2.5))) });
             grid.RowDefinitions.Add(new RowDefinition());
             grid.RowDefinitions.Add(new RowDefinition());
             grid.RowDefinitions.Add(new RowDefinition());
