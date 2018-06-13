@@ -21,6 +21,19 @@ NHellFire - Contributer
 
 Dizzzy - Concept/Ideas/Beta tester
 
+--------------------------------------------------------------------------
+2018-06-13
+--------------------------------------------------------------------------
+
+Version 1.04 released:
+
+- Behind-the-scenes fixes and formatting
+- Better checks for external programs
+- Automatically changing disc information
+- Custom parameters (and parameter validation)
+- Automatic drive speed selection
+- Automatic submission information creation
+- Add ability to stop a dump from the UI
 
 --------------------------------------------------------------------------
 2018-06-08
