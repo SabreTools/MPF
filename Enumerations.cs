@@ -85,6 +85,8 @@
         SegaLindbergh,
         SegaNaomi,
         SegaNaomi2,
+        SegaNu,
+        SegaRingEdge2,
         TABAustriaQuizard,
         TandyMemorexVisualInformationSystem,
 

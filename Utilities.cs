@@ -153,6 +153,10 @@ namespace DICUI
                     return "Sega Naomi";
                 case KnownSystem.SegaNaomi2:
                     return "Sega Naomi 2";
+                case KnownSystem.SegaNu:
+                    return "Sega Nu";
+                case KnownSystem.SegaRingEdge2:
+                    return "Sega RingEdge 2";
                 case KnownSystem.TABAustriaQuizard:
                     return "TAB-Austria Quizard";
                 case KnownSystem.TandyMemorexVisualInformationSystem:
@@ -351,6 +355,14 @@ namespace DICUI
                     break;
                 case KnownSystem.SegaNaomi2:
                     types.Add(DiscType.GDROM);
+                    break;
+                case KnownSystem.SegaNu:
+                    types.Add(DiscType.BD25);
+                    types.Add(DiscType.BD50);
+                    break;
+                case KnownSystem.SegaRingEdge2:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.TABAustriaQuizard:
                     types.Add(DiscType.CD);
