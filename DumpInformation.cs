@@ -148,7 +148,7 @@ namespace DICUI
             // Now we want to do a check by DiscType and extract all required info
             switch (type)
             {
-                case DiscType.CD: // TODO: Add SecuROM data, but only if found
+                case DiscType.CD:
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
@@ -166,6 +166,14 @@ namespace DICUI
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            if (File.Exists(combinedBase + "_subIntention.txt"))
+                            {
+                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
+                                if (fi.Length > 0)
+                                {
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                }
+                            }
                             break;
                         case KnownSystem.SegaSaturn:
                             mappings[Template.SaturnHeaderField] = Template.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
@@ -229,6 +237,14 @@ namespace DICUI
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            if (File.Exists(combinedBase + "_subIntention.txt"))
+                            {
+                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
+                                if (fi.Length > 0)
+                                {
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                }
+                            }
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
