@@ -391,6 +391,7 @@ namespace DICUI
                 btn_OutputDirectoryBrowse.IsEnabled = false;
                 cmb_DriveLetter.IsEnabled = false;
                 cmb_DriveSpeed.IsEnabled = false;
+                btn_StartStop.IsEnabled = true;
                 lbl_Status.Content = "User input mode";
             }
             else
