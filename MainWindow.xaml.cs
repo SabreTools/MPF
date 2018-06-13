@@ -416,7 +416,10 @@ namespace DICUI
         {
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
-            char driveLetter = selected.Item1;
+            if (selected == null)
+            {
+                return;
+            }
 
             // Validate that the required program exits
             if (!File.Exists(dicPath))
@@ -424,6 +427,7 @@ namespace DICUI
                 return;
             }
 
+            char driveLetter = selected.Item1;
             childProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
