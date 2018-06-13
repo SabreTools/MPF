@@ -916,6 +916,28 @@ namespace DICUI
                         }
                     }
                     break;
+                case DICCommands.GDROMSwapCommand:
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    {
+                        return false;
+                    }
+                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    {
+                        return false;
+                    }
+                    else if (!Int32.TryParse(parts[3], out int cdspeed))
+                    {
+                        return false;
+                    }
+                    else if (cdspeed < 0 || cdspeed > 72)
+                    {
+                        return false;
+                    }
+                    else if (parts.Count > 4)
+                    {
+                        return false;
+                    }
+                    break;
                 case DICCommands.DataCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
@@ -1284,7 +1306,6 @@ namespace DICUI
                         return false;
                     }
                     break;
-                case DICCommands.GDROMSwapCommand: // TODO: How to validate this?
                 default:
                     return false;
             }
