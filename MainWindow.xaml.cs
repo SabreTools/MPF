@@ -149,8 +149,8 @@ namespace DICUI
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
 
             // Validate that everything is good
-            // TODO: Add full validation of the parameters
-            if (string.IsNullOrWhiteSpace(txt_CustomParameters.Text))
+            if (string.IsNullOrWhiteSpace(txt_CustomParameters.Text)
+                || !Utilities.ValidateParameters(txt_CustomParameters.Text))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
                 btn_Start.IsEnabled = true;
@@ -178,12 +178,14 @@ namespace DICUI
             }
 
             lbl_Status.Content = "Beginning dumping process";
-            await Task.Run(
+			string parameters = txt_CustomParameters.Text;
+
+			await Task.Run(
                 () =>
                 {
                     Process process = new Process();
                     process.StartInfo.FileName = dicPath;
-                    process.StartInfo.Arguments = txt_CustomParameters.Text;
+                    process.StartInfo.Arguments = parameters;
                     process.Start();
                     process.WaitForExit();
                 });

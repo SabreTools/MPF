@@ -1,5 +1,6 @@
 ﻿namespace DICUI
 {
+    // TODO: Split into separate classes for each type of constant
     public static class Constants
     {
         // Manual information
@@ -40,9 +41,52 @@
         public const string SaturnBuildDateField = "Build Date"; // TODO: Not automatic yet
 
         // Default values
+
         public const string RequiredValue = "(REQUIRED)";
         public const string RequiredIfExistsValue = "(REQUIRED, IF EXISTS)";
         public const string OptionalValue = "(OPTIONAL)";
         public const string YesNoValue = "Yes/No";
+
+        // Commands
+
+        public const string CompactDiscCommand = "cd";
+        public const string DataCommand = "data";
+        public const string AudioCommand = "audio";
+        public const string GDROMCommand = "gd";
+        public const string GDROMSwapCommand = "swap";
+        public const string DVDCommand = "dvd";
+        public const string BDCommand = "bd";
+        public const string FloppyCommand = "fd";
+        public const string StopCommand = "stop";
+        public const string StartCommand = "start";
+        public const string EjectCommand = "eject";
+        public const string CloseCommand = "close";
+        public const string ResetCommand = "reset";
+        public const string SubCommand = "sub";
+        public const string MDSCommand = "mds";
+
+        // DIC Flags
+
+        public const string ForceUnitAccessFlag = "/f";
+        public const string DisableBeepFlag = "/q";
+        public const string CDAddOffsetFlag = "/a";
+        public const string CDBEOpcodeFlag = "/be";
+        public const string CDD8OpcodeFlag = "/d8";
+        public const string CDC2OpcodeFlag = "/c2";
+        public const string CDMCNFlag = "/m";
+        public const string CDAMSFFlag = "/p";
+        public const string CDReverseFlag = "/r";
+        public const string CDMultiSessionFlag = "/ms";
+        public const string CDScanFileProtectFlag = "/sf";
+        public const string CDScanSectorProtectFlag = "/ss";
+        public const string CDScanAnitModFlag = "/am";
+        public const string CDNoFixSubPFlag = "/np";
+        public const string CDNoFixSubQFlag = "/nq";
+        public const string CDNoFixSubRtoWFlag = "/nr";
+        public const string CDNoFixSubQLibCryptFlag = "/nl";
+        public const string CDNoFixSubQSecuROMFlag = "/ns";
+        public const string CDSubchannelReadLevelFlag = "/s";
+        public const string DVDCMIFlag = "/c";
+        public const string DVDRawFlag = "/raw";
     }
 }
