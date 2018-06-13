@@ -25,6 +25,15 @@ Dizzzy - Concept/Ideas/Beta tester
 2018-06-13
 --------------------------------------------------------------------------
 
+Version 1.04a released:
+
+- Fixed issue with empty trays
+- Added settings dialog
+
+--------------------------------------------------------------------------
+2018-06-13
+--------------------------------------------------------------------------
+
 Version 1.04 released:
 
 - Behind-the-scenes fixes and formatting
