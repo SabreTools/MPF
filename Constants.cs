@@ -25,6 +25,7 @@
         public const string ResetCommand = "reset";
         public const string SubCommand = "sub";
         public const string MDSCommand = "mds";
+        public const string DriveSpeedCommand = "ls"; // Unlisted in help text
 
         // DIC Flags
 

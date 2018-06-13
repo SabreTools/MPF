@@ -1869,6 +1869,7 @@ namespace DICUI
                 case DICCommands.EjectCommand:
                 case DICCommands.CloseCommand:
                 case DICCommands.ResetCommand:
+                case DICCommands.DriveSpeedCommand:
                     if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
                     {
                         return false;
