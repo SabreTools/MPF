@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Disc Image Creator GUI" Height="400" Width="600">
+        Title="Disc Image Creator GUI" Height="450" Width="600">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -13,16 +13,22 @@
             <ColumnDefinition Width="13*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="4*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <GroupBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
-        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,4.6,5.2,4.8" HorizontalAlignment="Stretch" Header="Controls"/>
-        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5.2,5.2,4.8" HorizontalAlignment="Stretch" Header="Status"/>
+        <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" HorizontalAlignment="Stretch" IsLocked="True">
+            <ToolBar>
+                <Button x:Name="tbr_Properties" Content="Properties" Command="Properties" Click="tbr_Properties_Click" CommandManager.CanExecute="tbr_Properties_CanExecute"/>
+            </ToolBar>
+        </ToolBarTray>
+        <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
+        <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,4.6,5.2,4.8" HorizontalAlignment="Stretch" Header="Controls"/>
+        <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5.2,5.2,4.8" HorizontalAlignment="Stretch" Header="Status"/>
 
-        <Grid Grid.Row="0" Grid.Column="0" Margin="15,25,15.2,10.4" Grid.ColumnSpan="2">
+        <Grid Grid.Row="1" Grid.Column="0" Margin="15,25,15.2,10.4" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2.5*"/>
@@ -56,7 +62,7 @@
             <TextBox x:Name="txt_CustomParameters" Grid.Row="5" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" IsEnabled="False" />
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
+        <Grid Grid.Row="2" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -69,7 +75,7 @@
             <Button x:Name="btn_Search" Grid.Row="0" Grid.Column="1" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="btn_Search_Click" />
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="0" Margin="15,20.2,15.2,9.8" Grid.ColumnSpan="2">
+        <Grid Grid.Row="3" Grid.Column="0" Margin="15,20.2,15.2,9.8" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>

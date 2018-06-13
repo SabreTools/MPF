@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -12,20 +13,25 @@ namespace DICUI
 {
     public partial class MainWindow : Window
     {
-        // TODO: Make configurable in UI or in Settings
-        private const string defaultOutputPath = "ISO";
-        private const string dicPath = "Programs\\DiscImageCreator.exe";
-        private const string psxtPath = "psxt001z.exe";
-        private const string sgRawPath = "sg_raw.exe";
+        // Private paths
+        private string defaultOutputPath;
+        private string dicPath;
+        private string psxtPath;
+        private string sgRawPath;
 
+        // Private UI-related variables
         private List<Tuple<char, string>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
         private Process childProcess { get; set; }
+        private Window childWindow { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            // Get all settings
+            GetSettings();
 
             // Populate the list of systems
             PopulateSystems();
@@ -81,6 +87,28 @@ namespace DICUI
         private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EnsureDiscInformation();
+        }
+
+        private void tbr_Properties_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSettings();
+        }
+
+        private void tbr_Properties_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void btn_Settings_Accept_Click(object sender, RoutedEventArgs e)
+        {
+            SaveSettings();
+            childWindow.Close();
+            GetSettings();
+        }
+
+        private void btn_Settings_Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            childWindow.Close();
         }
 
         #endregion
@@ -451,6 +479,163 @@ namespace DICUI
             }
 
             cmb_DriveSpeed.SelectedValue = speed;
+        }
+
+        /// <summary>
+        /// Show all user-configurable settings in a new window
+        /// </summary>
+        private void ShowSettings()
+        {
+            // Create the child window for settings
+            childWindow = new Window()
+            {
+                ShowInTaskbar = false,
+                Owner = Application.Current.MainWindow,
+                Width = 500,
+                Height = 250,
+                ResizeMode = ResizeMode.NoResize,
+            };
+
+            // Create the new Grid-based window
+            var grid = new Grid
+            {
+                Margin = new Thickness(5),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+            };
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString("1.2*")) });
+            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString("2.5*")) });
+            grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition());
+
+            // Create all of the individual items in the panel
+            Label dicPathLabel = new Label();
+            dicPathLabel.Content = "DiscImageCreator Path:";
+            dicPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
+            dicPathLabel.VerticalAlignment = VerticalAlignment.Center;
+            dicPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetRow(dicPathLabel, 0);
+            Grid.SetColumn(dicPathLabel, 0);
+
+            TextBox dicPathSetting = new TextBox();
+            dicPathSetting.Text = ConfigurationManager.AppSettings["dicPath"];
+            dicPathSetting.VerticalAlignment = VerticalAlignment.Center;
+            dicPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Grid.SetRow(dicPathSetting, 0);
+            Grid.SetColumn(dicPathSetting, 1);
+
+            Label psxt001zPathLabel = new Label();
+            psxt001zPathLabel.Content = "psxt001z Path:";
+            psxt001zPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
+            psxt001zPathLabel.VerticalAlignment = VerticalAlignment.Center;
+            psxt001zPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetRow(psxt001zPathLabel, 1);
+            Grid.SetColumn(psxt001zPathLabel, 0);
+
+            TextBox psxt001zPathSetting = new TextBox();
+            psxt001zPathSetting.Text = ConfigurationManager.AppSettings["psxt001zPath"];
+            psxt001zPathSetting.VerticalAlignment = VerticalAlignment.Center;
+            psxt001zPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Grid.SetRow(psxt001zPathSetting, 1);
+            Grid.SetColumn(psxt001zPathSetting, 1);
+
+            Label sgRawPathLabel = new Label();
+            sgRawPathLabel.Content = "sg-raw Path:";
+            sgRawPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
+            sgRawPathLabel.VerticalAlignment = VerticalAlignment.Center;
+            sgRawPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetRow(sgRawPathLabel, 2);
+            Grid.SetColumn(sgRawPathLabel, 0);
+
+            TextBox sgRawPathSetting = new TextBox();
+            sgRawPathSetting.Text = ConfigurationManager.AppSettings["sgRawPath"];
+            sgRawPathSetting.VerticalAlignment = VerticalAlignment.Center;
+            sgRawPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Grid.SetRow(sgRawPathSetting, 2);
+            Grid.SetColumn(sgRawPathSetting, 1);
+
+            Label defaultOutputPathLabel = new Label();
+            defaultOutputPathLabel.Content = "Default Output Path:";
+            defaultOutputPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
+            defaultOutputPathLabel.VerticalAlignment = VerticalAlignment.Center;
+            defaultOutputPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetRow(defaultOutputPathLabel, 3);
+            Grid.SetColumn(defaultOutputPathLabel, 0);
+
+            TextBox defaultOutputPathSetting = new TextBox();
+            defaultOutputPathSetting.Text = ConfigurationManager.AppSettings["defaultOutputPath"];
+            defaultOutputPathSetting.VerticalAlignment = VerticalAlignment.Center;
+            defaultOutputPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Grid.SetRow(defaultOutputPathSetting, 3);
+            Grid.SetColumn(defaultOutputPathSetting, 1);
+
+            Button acceptButton = new Button();
+            acceptButton.Name = "btn_Settings_Accept";
+            acceptButton.Content = "Accept";
+            acceptButton.Click += btn_Settings_Accept_Click;
+            Grid.SetRow(acceptButton, 4);
+            Grid.SetColumn(acceptButton, 0);
+
+            Button cancelButton = new Button();
+            cancelButton.Name = "btn_Settings_Cancel";
+            cancelButton.Content = "Cancel";
+            cancelButton.Click += btn_Settings_Cancel_Click;
+            Grid.SetRow(cancelButton, 4);
+            Grid.SetColumn(cancelButton, 1);
+
+            // Add all of the UI elements
+            grid.Children.Add(dicPathLabel);
+            grid.Children.Add(dicPathSetting);
+            grid.Children.Add(psxt001zPathLabel);
+            grid.Children.Add(psxt001zPathSetting);
+            grid.Children.Add(sgRawPathLabel);
+            grid.Children.Add(sgRawPathSetting);
+            grid.Children.Add(defaultOutputPathLabel);
+            grid.Children.Add(defaultOutputPathSetting);
+            grid.Children.Add(acceptButton);
+            grid.Children.Add(cancelButton);
+
+            // Now show the child window
+            childWindow.Content = grid;
+            childWindow.Show();
+        }
+
+        /// <summary>
+        /// Save settings from the child window, if possible
+        /// </summary>
+        private void SaveSettings()
+        {
+            // If the child window is disposed, we don't think about it
+            if (childWindow == null)
+            {
+                return;
+            }
+
+            // Clear the old settings and set new ones
+            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            configFile.AppSettings.Settings.Remove("dicPath");
+            configFile.AppSettings.Settings.Add("dicPath", ((TextBox)(((Grid)childWindow.Content).Children[1])).Text);
+            configFile.AppSettings.Settings.Remove("psxt001zPath");
+            configFile.AppSettings.Settings.Add("psxt001zPath", ((TextBox)(((Grid)childWindow.Content).Children[3])).Text);
+            configFile.AppSettings.Settings.Remove("sgRawPath");
+            configFile.AppSettings.Settings.Add("sgRawPath", ((TextBox)(((Grid)childWindow.Content).Children[5])).Text);
+            configFile.AppSettings.Settings.Remove("defaultOutputPath");
+            configFile.AppSettings.Settings.Add("defaultOutputPath", ((TextBox)(((Grid)childWindow.Content).Children[7])).Text);
+            configFile.Save(ConfigurationSaveMode.Modified);
+        }
+
+        /// <summary>
+        /// Get settings from the configuration, if possible
+        /// </summary>
+        private void GetSettings()
+        {
+            dicPath = ConfigurationManager.AppSettings["dicPath"] ?? "Programs\\DiscImageCreator.exe";
+            psxtPath = ConfigurationManager.AppSettings["psxt001zPath"] ?? "psxt001z.exe";
+            sgRawPath = ConfigurationManager.AppSettings["sgRawPath"] ?? "sg_raw.exe";
+            defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
         }
 
         #endregion
