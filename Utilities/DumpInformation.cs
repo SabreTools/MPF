@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DICUI.Utilities
 {
@@ -493,8 +494,52 @@ namespace DICUI.Utilities
         /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
         private static string GetPlayStationEXEDate(char driveLetter)
         {
-            // TODO: IMPLEMENT EXE DATE CHECKING
-            return null;
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+            {
+                return null;
+            }
+
+            // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+            {
+                return null;
+            }
+
+            // Let's try reading SYSTEM.CNF to find the "BOOT" value
+            string exeName = null;
+            try
+            {
+                using (StreamReader sr = File.OpenText(systemCnfPath))
+                {
+                    // Not assuming proper ordering, just in case
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("BOOT"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Once it finds the "BOOT" line, extract the name
+                    exeName = Regex.Match(line, @"BOOT.? = cdrom.?:\\(.*?);.*").Groups[1].Value;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+
+            // Now that we have the EXE name, try to get the fileinfo for it
+            string exePath = Path.Combine(drivePath, exeName);
+            if (!File.Exists(exePath))
+            {
+                return null;
+            }
+
+            FileInfo fi = new FileInfo(exePath);
+            return fi.LastWriteTimeUtc.ToString("yyyy-MM-dd");
         }
 
         /// <summary>
