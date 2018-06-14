@@ -197,7 +197,7 @@ namespace DICUI.Utilities
                     }
 
                     break;
-                case DiscType.DVD5: // TODO: Add XBOX-specific outputs to this
+                case DiscType.DVD5: // TODO: Add XBOX360-specific outputs to this
                 case DiscType.HDDVD:
                 case DiscType.BD25:
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -223,13 +223,19 @@ namespace DICUI.Utilities
                                 }
                             }
                             break;
+                        case KnownSystem.MicrosoftXBOX:
+                            mappings[Template.XBOXDMICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXPFICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSCRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSRanges] = Template.RequiredValue;
+                            break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
                     break;
-                case DiscType.DVD9: // TODO: Add XBOX-specific outputs to this
+                case DiscType.DVD9: // TODO: Add XBOX360-specific outputs to this
                 case DiscType.BD50:
                     mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -257,6 +263,12 @@ namespace DICUI.Utilities
                                     mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
                                 }
                             }
+                            break;
+                        case KnownSystem.MicrosoftXBOX:
+                            mappings[Template.XBOXDMICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXPFICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSCRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSRanges] = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
@@ -598,6 +610,13 @@ namespace DICUI.Utilities
                         output.Add(Template.PlayStationLibCryptField + ": " + info[Template.PlayStationLibCryptField]);
                         break;
                 }
+                switch (type)
+                {
+                    case DiscType.DVD9:
+                    case DiscType.BD50:
+                        output.Add(Template.LayerbreakField + ": " + info[Template.LayerbreakField]);
+                        break;
+                }
                 output.Add(Template.PVDField + ":"); output.Add("");
                 output.AddRange(info[Template.PVDField].Split('\n'));
                 switch (sys)
@@ -611,6 +630,13 @@ namespace DICUI.Utilities
                             output.Add(Template.SubIntentionField + ":"); output.Add("");
                             output.AddRange(info[Template.SubIntentionField].Split('\n'));
                         }
+                        break;
+                    case KnownSystem.MicrosoftXBOX:
+                        output.Add(Template.XBOXDMICRC + ": " + info[Template.XBOXDMICRC]);
+                        output.Add(Template.XBOXPFICRC + ": " + info[Template.XBOXPFICRC]);
+                        output.Add(Template.XBOXSSCRC + ": " + info[Template.XBOXSSCRC]); output.Add("");
+                        output.Add(Template.XBOXSSRanges + ":"); output.Add("");
+                        output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
                 }
                 switch (type)
