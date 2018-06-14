@@ -66,6 +66,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
@@ -73,6 +74,7 @@
 
             <Button x:Name="btn_StartStop" Grid.Row="0" Grid.Column="0" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="btn_StartStop_Click" IsEnabled="False" />
             <Button x:Name="btn_Search" Grid.Row="0" Grid.Column="1" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="btn_Search_Click" />
+            <CheckBox x:Name="chk_EjectWhenDone" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Eject When Done" IsChecked="False" />
         </Grid>
 
         <Grid Grid.Row="3" Grid.Column="0" Margin="15,20.2,15.2,9.8" Grid.ColumnSpan="2">
