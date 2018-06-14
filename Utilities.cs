@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Text.RegularExpressions;
 
 namespace DICUI
@@ -642,20 +643,47 @@ namespace DICUI
         /// </summary>
         /// <returns>Active drives, matched to labels, if possible</returns>
         /// <remarks>
-        /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-        /// https://msdn.microsoft.com/en-us/library/system.io.driveinfo.drivetype(v=vs.110).aspx
+        /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// This returns a List of Tuples whose structure is as follows:
         ///		Item 1: Drive letter
         ///		Item 2: Volume label
+        ///		Item 3: (True for floppy drive, false otherwise)
         /// </remarks>
-        public static List<Tuple<char, string>> CreateListOfDrives()
+        public static List<Tuple<char, string, bool>> CreateListOfDrives()
         {
-            // TODO: Floppy drives show up as DriveType.Removable, but so do USB drives
-            return DriveInfo.GetDrives()
+            // Get the floppy drives
+            List<Tuple<char, string, bool>> floppyDrives = new List<Tuple<char, string, bool>>();
+            try
+            {
+                ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_LogicalDisk");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    uint? mediaType = (uint?)queryObj["MediaType"];
+                    if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
+                    {
+                        char devId = queryObj["DeviceID"].ToString()[0];
+                        floppyDrives.Add(new Tuple<char, string, bool>(devId, "FLOPPY", true));
+                    }
+                }
+            }
+            catch
+            {
+                // No-op
+            }
+
+            // Get the optical disc drives
+            List<Tuple<char, string, bool>> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
-                .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
+                .Select(d => new Tuple<char, string, bool>(d.Name[0], d.VolumeLabel, false))
                 .ToList();
+
+            // Add the two lists together, order, and return
+            floppyDrives.AddRange(discDrives);
+            return floppyDrives.OrderBy(i => i.Item1).ToList();
         }
 
         /// <summary>

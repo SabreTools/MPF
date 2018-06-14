@@ -100,6 +100,8 @@ namespace DICUI
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case DiscType.Floppy:
+                    return File.Exists(combinedBase + "_cmd.txt")
+                       && File.Exists(combinedBase + "_disc.txt");
                 default:
                     return false;
             }
@@ -136,15 +138,12 @@ namespace DICUI
                 { Template.RegionField, "World (CHANGE THIS)" },
                 { Template.LanguagesField, "Klingon (CHANGE THIS)" },
                 { Template.DiscSerialField, Template.RequiredIfExistsValue },
-                { Template.MouldSIDField, Template.RequiredIfExistsValue },
-                { Template.AdditionalMouldField, Template.RequiredIfExistsValue },
                 { Template.BarcodeField, Template.OptionalValue},
                 { Template.CommentsField, Template.OptionalValue },
                 { Template.ContentsField, Template.OptionalValue },
                 { Template.VersionField, Template.RequiredIfExistsValue },
                 { Template.EditionField, "Original (VERIFY THIS)" },
-                { Template.PVDField, GetPVD(combinedBase + "_mainInfo.txt") },
-                { Template.DATField, GetDatfile(combinedBase + ".dat") },
+                { Template.DATField, GetDatfile(combinedBase + ".dat") }, // TODO: Petition sarami to add .dat output for floppy images
             };
 
             // Now we want to do a check by DiscType and extract all required info
@@ -154,7 +153,10 @@ namespace DICUI
                 case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
                     mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
@@ -198,7 +200,10 @@ namespace DICUI
                 case DiscType.BD25:
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
 
                     // System-specific options
                     switch (sys)
@@ -228,8 +233,11 @@ namespace DICUI
                     mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                    mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
                     mappings[Template.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
 
                     // System-specific options
