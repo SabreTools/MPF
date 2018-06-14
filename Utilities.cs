@@ -465,73 +465,6 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Get the DiscType associated with a given base command
-        /// </summary>
-        /// <param name="baseCommand">String value to check</param>
-        /// <returns>DiscType if possible, null on error</returns>
-        /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static DiscType? GetDiscType(string baseCommand)
-        {
-            switch (baseCommand)
-            {
-                case DICCommands.CompactDiscCommand:
-                    return DiscType.CD;
-                case DICCommands.GDROMCommand:
-                case DICCommands.GDROMSwapCommand:
-                    return DiscType.GDROM;
-                case DICCommands.DVDCommand:
-                    return DiscType.DVD9;
-                case DICCommands.BDCommand:
-                    return DiscType.BD50;
-                case DICCommands.XBOXCommand:
-                    return DiscType.DVD5;
-
-                // Non-optical
-                case DICCommands.FloppyCommand:
-                    return DiscType.Floppy;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the most common known system for a given DiscType
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? GetKnownSystem(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.Floppy:
-                    return KnownSystem.IBMPCCompatible;
-                case DiscType.GDROM:
-                    return KnownSystem.SegaDreamcast;
-                case DiscType.HDDVD:
-                    return KnownSystem.MicrosoftXBOX360;
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    return KnownSystem.SonyPlayStation3;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    return KnownSystem.NintendoGameCube;
-                case DiscType.WiiOpticalDisc:
-                    return KnownSystem.NintendoWii;
-                case DiscType.WiiUOpticalDisc:
-                    return KnownSystem.NintendoWiiU;
-                case DiscType.UMD:
-                    return KnownSystem.SonyPlayStationPortable;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get list of default parameters for a given system and disc type
         /// </summary>
         /// <param name="sys">KnownSystem value to check</param>
@@ -1287,13 +1220,15 @@ namespace DICUI
         /// Determine the base flags to use for checking a commandline
         /// </summary>
         /// <param name="parameters">Parameters as a string to check</param>
-        /// <param name="command">Output string containing the found command</param>
+        /// <param name="type">Output nullable DiscType containing the found DiscType, if possible</param>
+        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
         /// <param name="letter">Output string containing the found drive letter</param>
         /// <param name="path">Output string containing the found path</param>
         /// <returns>False on error (and all outputs set to null), true otherwise</returns>
-        public static bool DetermineFlags(string parameters, out string command, out string letter, out string path)
+        public static bool DetermineFlags(string parameters, out DiscType? type, out KnownSystem? system, out string letter, out string path)
         {
-            command = null; letter = null; path = null;
+            // Populate all output variables with null
+            type = null; system = null; letter = null; path = null;
 
             // The string has to be valid by itself first
             if (String.IsNullOrWhiteSpace(parameters))
@@ -1309,6 +1244,9 @@ namespace DICUI
                 .Select(m => m.Value)
                 .ToList();
 
+            type = GetDiscType(parts[0]);
+            system = GetKnownSystem(parts[0]);
+
             // Determine what the commandline should look like given the first item
             switch (parts[0])
             {
@@ -1321,8 +1259,6 @@ namespace DICUI
                 case DICCommands.BDCommand:
                 case DICCommands.XBOXCommand:
                 case DICCommands.FloppyCommand:
-                    command = parts[0];
-
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -1335,6 +1271,13 @@ namespace DICUI
                     }
                     path = parts[2].Trim('\"');
 
+                    // Special case for GameCube/Wii
+                    if (parts.Contains(DICFlags.DVDRawFlag))
+                    {
+                        type = DiscType.GameCubeGameDisc;
+                        system = KnownSystem.NintendoGameCube;
+                    }
+
                     break;
                 case DICCommands.StopCommand:
                 case DICCommands.StartCommand:
@@ -1342,8 +1285,6 @@ namespace DICUI
                 case DICCommands.CloseCommand:
                 case DICCommands.ResetCommand:
                 case DICCommands.DriveSpeedCommand:
-                    command = parts[0];
-
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -1353,8 +1294,6 @@ namespace DICUI
                     break;
                 case DICCommands.SubCommand:
                 case DICCommands.MDSCommand:
-                    command = parts[0];
-
                     if (IsFlag(parts[1]))
                     {
                         return false;
@@ -1367,6 +1306,61 @@ namespace DICUI
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the DiscType associated with a given base command
+        /// </summary>
+        /// <param name="baseCommand">String value to check</param>
+        /// <returns>DiscType if possible, null on error</returns>
+        /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
+        private static DiscType? GetDiscType(string baseCommand)
+        {
+            switch (baseCommand)
+            {
+                case DICCommands.CompactDiscCommand:
+                    return DiscType.CD;
+                case DICCommands.GDROMCommand:
+                case DICCommands.GDROMSwapCommand:
+                    return DiscType.GDROM;
+                case DICCommands.DVDCommand:
+                    return DiscType.DVD9;
+                case DICCommands.BDCommand:
+                    return DiscType.BD50;
+                case DICCommands.XBOXCommand:
+                    return DiscType.DVD5;
+
+                // Non-optical
+                case DICCommands.FloppyCommand:
+                    return DiscType.Floppy;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the most common known system for a given DiscType
+        /// </summary>
+        /// <param name="baseCommand">String value to check</param>
+        /// <returns>KnownSystem if possible, null on error</returns>
+        public static KnownSystem? GetKnownSystem(string baseCommand)
+        {
+            switch (baseCommand)
+            {
+                case DICCommands.CompactDiscCommand:
+                case DICCommands.DVDCommand:
+                case DICCommands.FloppyCommand:
+                    return KnownSystem.IBMPCCompatible;
+                case DICCommands.GDROMCommand:
+                case DICCommands.GDROMSwapCommand:
+                    return KnownSystem.SegaDreamcast;
+                case DICCommands.BDCommand:
+                    return KnownSystem.SonyPlayStation3;
+                case DICCommands.XBOXCommand:
+                    return KnownSystem.MicrosoftXBOX;
+                default:
+                    return null;
+            }
         }
     }
 }

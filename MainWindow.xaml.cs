@@ -222,12 +222,10 @@ namespace DICUI
                 return;
             }
 
-            // If we have a known custom configuration, we need to extract the relevant information from it
+            // If we have a custom configuration, we need to extract the best possible information from it
             if (systemName == "Custom Input" && system == KnownSystem.NONE && type == DiscType.NONE)
             {
-                Utilities.DetermineFlags(customParameters, out string command, out string letter, out string path);
-                type = Utilities.GetDiscType(command);
-                system = Utilities.GetKnownSystem(type);
+                Utilities.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
                 driveLetter = letter[0];
                 outputDirectory = Path.GetDirectoryName(path);
                 outputFilename = Path.GetFileName(path);
