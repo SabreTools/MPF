@@ -465,6 +465,71 @@ namespace DICUI
         }
 
         /// <summary>
+        /// Get the DiscType associated with a given base command
+        /// </summary>
+        /// <param name="baseCommand">String value to check</param>
+        /// <returns>DiscType if possible, null on error</returns>
+        /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
+        public static DiscType? GetDiscType(string baseCommand)
+        {
+            switch (baseCommand)
+            {
+                case DICCommands.CompactDiscCommand:
+                    return DiscType.CD;
+                case DICCommands.GDROMCommand:
+                case DICCommands.GDROMSwapCommand:
+                    return DiscType.GDROM;
+                case DICCommands.DVDCommand:
+                    return DiscType.DVD9;
+                case DICCommands.BDCommand:
+                    return DiscType.BD50;
+
+                // Non-optical
+                case DICCommands.FloppyCommand:
+                    return DiscType.Floppy;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the most common known system for a given DiscType
+        /// </summary>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>KnownSystem if possible, null on error</returns>
+        public static KnownSystem? GetKnownSystem(DiscType? type)
+        {
+            switch (type)
+            {
+                case DiscType.CD:
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.Floppy:
+                    return KnownSystem.IBMPCCompatible;
+                case DiscType.GDROM:
+                    return KnownSystem.SegaDreamcast;
+                case DiscType.HDDVD:
+                    return KnownSystem.MicrosoftXBOX360;
+                case DiscType.BD25:
+                case DiscType.BD50:
+                    return KnownSystem.SonyPlayStation3;
+
+                // Special Formats
+                case DiscType.GameCubeGameDisc:
+                    return KnownSystem.NintendoGameCube;
+                case DiscType.WiiOpticalDisc:
+                    return KnownSystem.NintendoWii;
+                case DiscType.WiiUOpticalDisc:
+                    return KnownSystem.NintendoWiiU;
+                case DiscType.UMD:
+                    return KnownSystem.SonyPlayStationPortable;
+
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Get list of default parameters for a given system and disc type
         /// </summary>
         /// <param name="sys">KnownSystem value to check</param>
@@ -750,6 +815,11 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case DICCommands.CDScanFileProtectFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -767,6 +837,11 @@ namespace DICUI
                                 i++;
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -784,6 +859,11 @@ namespace DICUI
                                 i++;
                                 break;
                             case DICCommands.CDAddOffsetFlag:
+                                // If the next item doesn't exist, it's not good
+                                if (parts.Count == i + 1)
+                                {
+                                    return false;
+                                }
                                 // If the next item isn't a valid number
                                 if (!Int32.TryParse(parts[i + 1], out int af1))
                                 {
@@ -791,6 +871,11 @@ namespace DICUI
                                 }
                                 break;
                             case DICCommands.CDBEOpcodeFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -806,6 +891,11 @@ namespace DICUI
                             case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
+                                    // If the next item doesn't exist, it's good
+                                    if (parts.Count == i + j)
+                                    {
+                                        break;
+                                    }
                                     // If the next item is a flag, it's good
                                     if (parts[i + j].StartsWith("/"))
                                     {
@@ -824,6 +914,11 @@ namespace DICUI
                                 }
                                 break;
                             case DICCommands.CDSubchannelReadLevelFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -876,6 +971,11 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -893,6 +993,11 @@ namespace DICUI
                                 i++;
                                 break;
                             case DICCommands.CDBEOpcodeFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -908,6 +1013,11 @@ namespace DICUI
                             case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
+                                    // If the next item doesn't exist, it's good
+                                    if (parts.Count == i + j)
+                                    {
+                                        break;
+                                    }
                                     // If the next item is a flag, it's good
                                     if (parts[i + j].StartsWith("/"))
                                     {
@@ -926,6 +1036,11 @@ namespace DICUI
                                 }
                                 break;
                             case DICCommands.CDSubchannelReadLevelFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1008,6 +1123,11 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1025,6 +1145,11 @@ namespace DICUI
                                 i++;
                                 break;
                             case DICCommands.CDScanFileProtectFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1042,6 +1167,11 @@ namespace DICUI
                                 i++;
                                 break;
                             case DICCommands.CDBEOpcodeFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1057,6 +1187,11 @@ namespace DICUI
                             case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
+                                    // If the next item doesn't exist, it's good
+                                    if (parts.Count == i + j)
+                                    {
+                                        break;
+                                    }
                                     // If the next item is a flag, it's good
                                     if (parts[i + j].StartsWith("/"))
                                     {
@@ -1075,6 +1210,11 @@ namespace DICUI
                                 }
                                 break;
                             case DICCommands.CDSubchannelReadLevelFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1133,6 +1273,11 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1150,6 +1295,11 @@ namespace DICUI
                                 i++;
                                 break;
                             case DICCommands.CDAddOffsetFlag:
+                                // If the next item doesn't exist, it's not good
+                                if (parts.Count == i + 1)
+                                {
+                                    return false;
+                                }
                                 // If the next item isn't a valid number
                                 if (!Int32.TryParse(parts[i + 1], out int af1))
                                 {
@@ -1157,6 +1307,11 @@ namespace DICUI
                                 }
                                 break;
                             case DICCommands.CDBEOpcodeFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1172,6 +1327,11 @@ namespace DICUI
                             case DICCommands.CDC2OpcodeFlag:
                                 for (int j = 1; j < 4; j++)
                                 {
+                                    // If the next item doesn't exist, it's good
+                                    if (parts.Count == i + j)
+                                    {
+                                        break;
+                                    }
                                     // If the next item is a flag, it's good
                                     if (parts[i + j].StartsWith("/"))
                                     {
@@ -1190,6 +1350,11 @@ namespace DICUI
                                 }
                                 break;
                             case DICCommands.CDSubchannelReadLevelFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1240,6 +1405,11 @@ namespace DICUI
                                 // No-op, all of these are single flags
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1280,6 +1450,11 @@ namespace DICUI
                                 // No-op, this is a single flag
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
+                                // If the next item doesn't exist, it's good
+                                if (parts.Count == i + 1)
+                                {
+                                    break;
+                                }
                                 // If the next item is a flag, it's good
                                 if (parts[i + 1].StartsWith("/"))
                                 {
@@ -1332,10 +1507,99 @@ namespace DICUI
                     break;
                 case DICCommands.SubCommand:
                 case DICCommands.MDSCommand:
+                    if (parts[1].Trim('\"').StartsWith("/"))
+                    {
+                        return false;
+                    }
+                    else if (parts.Count > 2)
+                    {
+                        return false;
+                    }
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Determine the base flags to use for checking a commandline
+        /// </summary>
+        /// <param name="parameters">Parameters as a string to check</param>
+        /// <param name="command">Output string containing the found command</param>
+        /// <param name="letter">Output string containing the found drive letter</param>
+        /// <param name="path">Output string containing the found path</param>
+        /// <returns>False on error (and all outputs set to null), true otherwise</returns>
+        public static bool DetermineFlags(string parameters, out string command, out string letter, out string path)
+        {
+            command = null; letter = null; path = null;
+
+            // The string has to be valid by itself first
+            if (String.IsNullOrWhiteSpace(parameters))
+            {
+                return false;
+            }
+
+            // Now split the string into parts for easier validation
+            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
+            parameters = parameters.Trim();
+            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Select(m => m.Value)
+                .ToList();
+
+            // Determine what the commandline should look like given the first item
+            switch (parts[0])
+            {
+                case DICCommands.CompactDiscCommand:
+                case DICCommands.GDROMCommand:
+                case DICCommands.GDROMSwapCommand:
+                case DICCommands.DataCommand:
+                case DICCommands.AudioCommand:
+                case DICCommands.DVDCommand:
+                case DICCommands.BDCommand:
+                case DICCommands.FloppyCommand:
+                    command = parts[0];
+
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    {
+                        return false;
+                    }
+                    letter = parts[1];
+
                     if (parts[2].Trim('\"').StartsWith("/"))
                     {
                         return false;
                     }
+                    path = parts[2].Trim('\"');
+
+                    break;
+                case DICCommands.StopCommand:
+                case DICCommands.StartCommand:
+                case DICCommands.EjectCommand:
+                case DICCommands.CloseCommand:
+                case DICCommands.ResetCommand:
+                case DICCommands.DriveSpeedCommand:
+                    command = parts[0];
+
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    {
+                        return false;
+                    }
+                    letter = parts[1];
+
+                    break;
+                case DICCommands.SubCommand:
+                case DICCommands.MDSCommand:
+                    command = parts[0];
+
+                    if (parts[1].Trim('\"').StartsWith("/"))
+                    {
+                        return false;
+                    }
+                    path = parts[1].Trim('\"');
+
                     break;
                 default:
                     return false;
