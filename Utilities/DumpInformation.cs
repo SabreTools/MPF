@@ -549,8 +549,41 @@ namespace DICUI.Utilities
         /// <returns>Game version if possible, null on error</returns>
         private static string GetPlayStation2Version(char driveLetter)
         {
-            // TODO: IMPLEMENT VERSION CHECKING
-            return null;
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+            {
+                return null;
+            }
+
+            // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+            {
+                return null;
+            }
+
+            // Let's try reading SYSTEM.CNF to find the "VER" value
+            try
+            {
+                using (StreamReader sr = File.OpenText(systemCnfPath))
+                {
+                    // Not assuming proper ordering, just in case
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("VER"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Once it finds the "VER" line, extract the version
+                    return Regex.Match(line, @"VER = (.*)").Groups[1].Value;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
         }
 
         /// <summary>
