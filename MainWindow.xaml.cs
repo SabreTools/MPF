@@ -21,7 +21,7 @@ namespace DICUI
         private string subdumpPath;
 
         // Private UI-related variables
-        private List<Tuple<char, string>> _drives { get; set; }
+        private List<Tuple<char, string, bool>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
         private Process childProcess { get; set; }
@@ -196,7 +196,7 @@ namespace DICUI
         private async void StartDumping()
         {
             // Local variables
-            string driveLetter = cmb_DriveLetter.Text;
+            var driveLetter = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
             btn_StartStop.Content = UIElements.StopDumping;
@@ -206,7 +206,8 @@ namespace DICUI
 
             // Validate that everything is good
             if (string.IsNullOrWhiteSpace(txt_CustomParameters.Text)
-                || !Utilities.ValidateParameters(txt_CustomParameters.Text))
+                || !Utilities.ValidateParameters(txt_CustomParameters.Text)
+                || (driveLetter.Item3 ^ selected.Item3 == DiscType.Floppy))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
                 btn_StartStop.Content = UIElements.StartDumping;
@@ -273,7 +274,7 @@ namespace DICUI
                             StartInfo = new ProcessStartInfo()
                             {
                                 FileName = sgRawPath,
-                                Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
+                                Arguments = "-v -r 4100 -R " + driveLetter.Item1 + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
                             },
                         };
                         childProcess.Start();
@@ -294,7 +295,7 @@ namespace DICUI
                             StartInfo = new ProcessStartInfo()
                             {
                                 FileName = subdumpPath,
-                                Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                                Arguments = "-i " + driveLetter.Item1 + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
                             },
                         };
                         childProcess.Start();
@@ -339,7 +340,7 @@ namespace DICUI
                             StartInfo = new ProcessStartInfo()
                             {
                                 FileName = psxtPath,
-                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
+                                Arguments = "--libcryptdrvfast " + driveLetter.Item1 + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
                             },
                         };
                         childProcess.Start();
@@ -393,7 +394,12 @@ namespace DICUI
 
             CancelDumping();
 
-            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
+            if (driveTuple.Item3)
+            {
+                return;
+            }
+
             await Task.Run(() =>
             {
                 childProcess = new Process()
@@ -453,6 +459,7 @@ namespace DICUI
             // If we're in a type that doesn't support drive speeds
             switch (tuple.Item3)
             {
+                case DiscType.Floppy:
                 case DiscType.BD25:
                 case DiscType.BD50:
                     cmb_DriveSpeed.IsEnabled = false;
@@ -487,13 +494,13 @@ namespace DICUI
                 if (cmb_DiscType.SelectedIndex > 0)
                 {
                     var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
-                    var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string>;
+                    var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string, bool>;
                     string discType = Utilities.GetBaseCommand(selected.Item3);
                     List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
                     txt_CustomParameters.Text = discType
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
-                        + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                        + (selected.Item3 != DiscType.Floppy && selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
             }
@@ -504,7 +511,7 @@ namespace DICUI
         /// </summary>
         private void GetOutputNames()
         {
-            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
             var discTuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
 
             if (driveTuple != null && discTuple != null)
@@ -525,8 +532,8 @@ namespace DICUI
         private void SetSupportedDriveSpeed()
         {
             // Get the drive letter from the selected item
-            var selected = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
-            if (selected == null)
+            var selected = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
+            if (selected == null || selected.Item3)
             {
                 return;
             }
@@ -671,19 +678,39 @@ namespace DICUI
             Grid.SetRow(defaultOutputPathSetting, 4);
             Grid.SetColumn(defaultOutputPathSetting, 1);
 
+            var buttonGrid = new Grid
+            {
+                Margin = new Thickness(5),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+            };
+            buttonGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            buttonGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            buttonGrid.RowDefinitions.Add(new RowDefinition());
+            Grid.SetRow(buttonGrid, 5);
+            Grid.SetColumn(buttonGrid, 0);
+            Grid.SetColumnSpan(buttonGrid, 2);
+
             Button acceptButton = new Button();
             acceptButton.Name = "btn_Settings_Accept";
             acceptButton.Content = "Accept";
             acceptButton.Click += btn_Settings_Accept_Click;
-            Grid.SetRow(acceptButton, 5);
+            acceptButton.VerticalAlignment = VerticalAlignment.Center;
+            acceptButton.HorizontalAlignment = HorizontalAlignment.Center;
+            Grid.SetRow(acceptButton, 0);
             Grid.SetColumn(acceptButton, 0);
 
             Button cancelButton = new Button();
             cancelButton.Name = "btn_Settings_Cancel";
             cancelButton.Content = "Cancel";
             cancelButton.Click += btn_Settings_Cancel_Click;
-            Grid.SetRow(cancelButton, 5);
+            cancelButton.VerticalAlignment = VerticalAlignment.Center;
+            cancelButton.HorizontalAlignment = HorizontalAlignment.Center;
+            Grid.SetRow(cancelButton, 0);
             Grid.SetColumn(cancelButton, 1);
+
+            buttonGrid.Children.Add(acceptButton);
+            buttonGrid.Children.Add(cancelButton);
 
             // Add all of the UI elements
             grid.Children.Add(dicPathLabel);
@@ -696,8 +723,7 @@ namespace DICUI
             grid.Children.Add(subdumpPathSetting);
             grid.Children.Add(defaultOutputPathLabel);
             grid.Children.Add(defaultOutputPathSetting);
-            grid.Children.Add(acceptButton);
-            grid.Children.Add(cancelButton);
+            grid.Children.Add(buttonGrid);
 
             // Now show the child window
             childWindow.Content = grid;
