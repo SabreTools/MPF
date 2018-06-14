@@ -186,7 +186,12 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SegaSaturn:
                             mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
-                            mappings[Template.SaturnBuildDateField] = GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
+                            {
+                                mappings[Template.DiscSerialField] = serial;
+                                mappings[Template.VersionField] = version;
+                                mappings[Template.SaturnBuildDateField] = buildDate;
+                            }
                             break;
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
@@ -616,7 +621,7 @@ namespace DICUI.Utilities
                         byte[] sub = new byte[16];
                         Array.Copy(headerBytes, ptr, sub, 0, 16);
                         headerString += ptr.ToString("X").PadLeft(4, '0') + " : " 
-                            + BitConverter.ToString(sub).Replace("-", " ") + " "
+                            + BitConverter.ToString(sub).Replace("-", " ") + "   "
                             + Encoding.ASCII.GetString(sub) + "\n";
                         ptr += 16;
                     }
@@ -632,14 +637,36 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the EXE date from a PlayStation disc, if possible
+        /// Get the build info from a Saturn disc, if possible
         /// </summary>
-        /// <<param name="firstTrackPath">Path to the first track to check</param>
-        /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
-        private static string GetSaturnBuildDate(string firstTrackPath)
+        /// <<param name="saturnHeader">String representing a formatter variant of the Saturn header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetSaturnBuildInfo(string saturnHeader, out string serial, out string version, out string date)
         {
-            // TODO: IMPLEMENT BULID DATE CHECKING
-            return null;
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (String.IsNullOrWhiteSpace(saturnHeader))
+            {
+                return false;
+            }
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = saturnHeader.Split('\n');
+                string serialVersionLine = header[2].Substring(57);
+                string dateLine = header[3].Substring(57);
+                serial = serialVersionLine.Substring(0, 8);
+                version = serialVersionLine.Substring(10, 6);
+                date = dateLine.Substring(0, 8);
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
+            }
         }
 
         /// <summary>
