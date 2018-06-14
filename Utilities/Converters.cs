@@ -343,12 +343,86 @@ namespace DICUI.Utilities
 
                 #region Arcade
 
+                case KnownSystem.AmigaCUBOCD32:
+                    return "Amiga CUBO CD32";
+                case KnownSystem.AmericanLaserGames3DO:
+                    return "American Laser Games 3DO";
+                case KnownSystem.Atari3DO:
+                    return "Atari 3DO";
+                case KnownSystem.Atronic:
+                    return "Atronic";
+                case KnownSystem.AUSCOMSystem1:
+                    return "AUSCOM System 1";
+                case KnownSystem.BallyGameMagic:
+                    return "Bally Game Magic";
+                case KnownSystem.CapcomCPSystemIII:
+                    return "Capcom CP System III";
+                case KnownSystem.GlobalVRVarious:
+                    return "Global VR PC-based Systems";
+                case KnownSystem.GlobalVRVortek:
+                    return "Global VR Vortek";
+                case KnownSystem.GlobalVRVortekV3:
+                    return "Global VR Vortek V3";
+                case KnownSystem.ICEPCHardware:
+                    return "ICE PC-based Hardware";
+                case KnownSystem.IncredibleTechnologiesEagle:
+                    return "Incredible Technologies Eagle";
+                case KnownSystem.IncredibleTechnologiesVarious:
+                    return "Incredible Technologies PC-based Systems";
+                case KnownSystem.KonamiFirebeat:
+                    return "Konami Firebeat";
+                case KnownSystem.KonamiGVSystem:
+                    return "Konami GV System";
+                case KnownSystem.KonamiM2:
+                    return "Konami M2";
+                case KnownSystem.KonamiPython:
+                    return "Konami Python";
+                case KnownSystem.KonamiPython2:
+                    return "Konami Python 2";
+                case KnownSystem.KonamiSystem573:
+                    return "Konami System 573";
+                case KnownSystem.KonamiTwinkle:
+                    return "Konami Twinkle";
+                case KnownSystem.KonamiVarious:
+                    return "Konami PC-based Systems";
+                case KnownSystem.MeritIndustriesBoardwalk:
+                    return "Merit Industries Boardwalk";
+                case KnownSystem.MeritIndustriesMegaTouchAurora:
+                    return "Merit Industries MegaTouch Aurora";
+                case KnownSystem.MeritIndustriesMegaTouchForce:
+                    return "Merit Industries MegaTouch Force";
+                case KnownSystem.MeritIndustriesMegaTouchION:
+                    return "Merit Industries MegaTouch ION";
+                case KnownSystem.MeritIndustriesMegaTouchMaxx:
+                    return "Merit Industries MegaTouch Maxx";
+                case KnownSystem.MeritIndustriesMegaTouchXL:
+                    return "Merit Industries MegaTouch XL";
+                case KnownSystem.NamcoCapcomSystem256:
+                    return "Namco / Capcom System 256/Super System 256";
+                case KnownSystem.NamcoCapcomTaitoSystem246:
+                    return "Namco / Capcom / Taito System 246";
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     return "Namco / Sega / Nintendo Triforce";
-                case KnownSystem.NamcoSystem246:
-                    return "Namco System 246";
+                case KnownSystem.NamcoSystem12:
+                    return "Namco System 12";
+                case KnownSystem.NamcoSystem357:
+                    return "Namco System 357";
+                case KnownSystem.NewJatreCDi:
+                    return "New Jatre CD-i";
+                case KnownSystem.NichibutsuHighRateSystem:
+                    return "Nichibutsu High Rate System";
+                case KnownSystem.NichibutsuSuperCD:
+                    return "Nichibutsu Super CD";
+                case KnownSystem.NichibutsuXRateSystem:
+                    return "NichibutsuX-Rate System";
+                case KnownSystem.PhotoPlayVarious:
+                    return "PhotoPlay PC-based Systems";
+                case KnownSystem.RawThrillsVarious:
+                    return "Raw Thrills PC-based Systems";
                 case KnownSystem.SegaChihiro:
                     return "Sega Chihiro";
+                case KnownSystem.SegaEuropaR:
+                    return "Sega Europa-R";
                 case KnownSystem.SegaLindbergh:
                     return "Sega Lindbergh";
                 case KnownSystem.SegaNaomi:
@@ -357,12 +431,24 @@ namespace DICUI.Utilities
                     return "Sega Naomi 2";
                 case KnownSystem.SegaNu:
                     return "Sega Nu";
+                case KnownSystem.SegaRingEdge:
+                    return "Sega RingEdge";
                 case KnownSystem.SegaRingEdge2:
                     return "Sega RingEdge 2";
+                case KnownSystem.SegaRingWide:
+                    return "Sega RingWide";
+                case KnownSystem.SegaSTV:
+                    return "Sega STV";
+                case KnownSystem.SegaSystem32:
+                    return "Sega System 32";
+                case KnownSystem.SeibuCATSSystem:
+                    return "Seibu CATS System";
                 case KnownSystem.TABAustriaQuizard:
                     return "TAB-Austria Quizard";
                 case KnownSystem.TandyMemorexVisualInformationSystem:
                     return "Tandy / Memorex Visual Information System";
+                case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
+                    return "Tsunami TsuMo Multi-Game Motion System";
 
                 #endregion
 

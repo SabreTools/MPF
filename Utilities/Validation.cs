@@ -152,11 +152,146 @@ namespace DICUI.Utilities
 
                 #region Arcade
 
+                case KnownSystem.AmigaCUBOCD32:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.AmericanLaserGames3DO:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.Atari3DO:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.Atronic:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.AUSCOMSystem1:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.BallyGameMagic:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.CapcomCPSystemIII:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.GlobalVRVarious:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.GlobalVRVortek:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.GlobalVRVortekV3:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    break;
+                case KnownSystem.ICEPCHardware:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.IncredibleTechnologiesEagle:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.IncredibleTechnologiesVarious:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.KonamiFirebeat:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiGVSystem:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiM2:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiPython:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    break;
+                case KnownSystem.KonamiPython2:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    break;
+                case KnownSystem.KonamiSystem573:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiTwinkle:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiVarious:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesBoardwalk:
+                    types.Add(DiscType.CD); // TODO: Confirm
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchAurora:
+                    types.Add(DiscType.CD); // TODO: Confirm
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchForce:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchION:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchMaxx:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchXL:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NamcoCapcomSystem256:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.NamcoCapcomTaitoSystem246:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     types.Add(DiscType.GDROM);
                     break;
+                case KnownSystem.NamcoSystem12:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NamcoSystem357:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.BD25);
+                    types.Add(DiscType.BD50);
+                    break;
+                case KnownSystem.NewJatreCDi:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NichibutsuHighRateSystem:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NichibutsuSuperCD:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NichibutsuXRateSystem:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.PhotoPlayVarious:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.RawThrillsVarious:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
                 case KnownSystem.SegaChihiro:
                     types.Add(DiscType.GDROM);
+                    break;
+                case KnownSystem.SegaEuropaR:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
                     break;
                 case KnownSystem.SegaLindbergh:
                     types.Add(DiscType.DVD5);
@@ -169,10 +304,30 @@ namespace DICUI.Utilities
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaNu:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     types.Add(DiscType.BD25);
                     types.Add(DiscType.BD50);
                     break;
+                case KnownSystem.SegaRingEdge:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
                 case KnownSystem.SegaRingEdge2:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.SegaRingWide:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.SegaSTV:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.SegaSystem32:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.SeibuCATSSystem:
                     types.Add(DiscType.DVD5);
                     types.Add(DiscType.DVD9);
                     break;
@@ -180,6 +335,9 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.TandyMemorexVisualInformationSystem:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
                     types.Add(DiscType.CD);
                     break;
 
@@ -265,7 +423,7 @@ namespace DICUI.Utilities
                         break;
 
                     // Arcade section
-                    case KnownSystem.NamcoSegaNintendoTriforce:
+                    case KnownSystem.AmigaCUBOCD32:
                         mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Arcade ----------", null, null));
                         break;
 
