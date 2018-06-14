@@ -483,6 +483,8 @@ namespace DICUI
                     return DiscType.DVD9;
                 case DICCommands.BDCommand:
                     return DiscType.BD50;
+                case DICCommands.XBOXCommand:
+                    return DiscType.DVD5;
 
                 // Non-optical
                 case DICCommands.FloppyCommand:
@@ -549,21 +551,21 @@ namespace DICUI
             switch (type)
             {
                 case DiscType.CD:
-                    parameters.Add(DICCommands.CDC2OpcodeFlag); parameters.Add("20");
+                    parameters.Add(DICFlags.CDC2OpcodeFlag); parameters.Add("20");
 
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            parameters.Add(DICCommands.CDNoFixSubQSecuROMFlag);
-                            parameters.Add(DICCommands.CDScanFileProtectFlag);
-                            parameters.Add(DICCommands.CDScanSectorProtectFlag);
+                            parameters.Add(DICFlags.CDNoFixSubQSecuROMFlag);
+                            parameters.Add(DICFlags.CDScanFileProtectFlag);
+                            parameters.Add(DICFlags.CDScanSectorProtectFlag);
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(DICCommands.CDMCNFlag);
+                            parameters.Add(DICFlags.CDMCNFlag);
                             break;
                         case KnownSystem.SonyPlayStation:
-                            parameters.Add(DICCommands.CDScanAnitModFlag);
+                            parameters.Add(DICFlags.CDScanAnitModFlag);
                             break;
                     }
                     break;
@@ -574,7 +576,7 @@ namespace DICUI
                     // Currently no defaults set
                     break;
                 case DiscType.GDROM:
-                    parameters.Add(DICCommands.CDC2OpcodeFlag); parameters.Add("20");
+                    parameters.Add(DICFlags.CDC2OpcodeFlag); parameters.Add("20");
                     break;
                 case DiscType.HDDVD:
                     break;
@@ -587,7 +589,7 @@ namespace DICUI
 
                 // Special Formats
                 case DiscType.GameCubeGameDisc:
-                    parameters.Add(DICCommands.DVDRawFlag);
+                    parameters.Add(DICFlags.DVDRawFlag);
                     break;
                 case DiscType.WiiOpticalDisc:
                     // Currently no defaults set
@@ -834,12 +836,12 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case DICCommands.DisableBeepFlag:
-                            case DICCommands.DVDCMIFlag:
-                            case DICCommands.DVDRawFlag:
+                            case DICFlags.DisableBeepFlag:
+                            case DICFlags.DVDCMIFlag:
+                            case DICFlags.DVDRawFlag:
                                 // No-op, all of these are single flags
                                 break;
-                            case DICCommands.ForceUnitAccessFlag:
+                            case DICFlags.ForceUnitAccessFlag:
                                 // If the next item doesn't exist, it's good
                                 if (!DoesNextExist(parts, i))
                                 {
@@ -863,6 +865,7 @@ namespace DICUI
                     }
                     break;
                 case DICCommands.BDCommand:
+                case DICCommands.XBOXCommand:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -877,10 +880,10 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case DICCommands.DisableBeepFlag:
+                            case DICFlags.DisableBeepFlag:
                                 // No-op, this is a single flag
                                 break;
-                            case DICCommands.ForceUnitAccessFlag:
+                            case DICFlags.ForceUnitAccessFlag:
                                 // If the next item doesn't exist, it's good
                                 if (!DoesNextExist(parts, i))
                                 {
@@ -954,7 +957,7 @@ namespace DICUI
                 {
                     switch(parts[i])
                     {
-                        case DICCommands.DisableBeepFlag:
+                        case DICFlags.DisableBeepFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -963,7 +966,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDD8OpcodeFlag:
+                        case DICFlags.CDD8OpcodeFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -972,45 +975,45 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDMCNFlag:
+                        case DICFlags.CDMCNFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDAMSFFlag:
+                        case DICFlags.CDAMSFFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDReverseFlag:
+                        case DICFlags.CDReverseFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.DataCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDMultiSessionFlag:
+                        case DICFlags.CDMultiSessionFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDScanSectorProtectFlag:
+                        case DICFlags.CDScanSectorProtectFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.DataCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDScanAnitModFlag:
+                        case DICFlags.CDScanAnitModFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubPFlag:
+                        case DICFlags.CDNoFixSubPFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1019,7 +1022,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubQFlag:
+                        case DICFlags.CDNoFixSubQFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1028,7 +1031,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubRtoWFlag:
+                        case DICFlags.CDNoFixSubRtoWFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1037,13 +1040,13 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubQLibCryptFlag:
+                        case DICFlags.CDNoFixSubQLibCryptFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubQSecuROMFlag:
+                        case DICFlags.CDNoFixSubQSecuROMFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1052,7 +1055,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDScanFileProtectFlag:
+                        case DICFlags.CDScanFileProtectFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.DataCommand)
                             {
@@ -1076,7 +1079,7 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICCommands.ForceUnitAccessFlag: // CD, GDROM, Data, Audio
+                        case DICFlags.ForceUnitAccessFlag: // CD, GDROM, Data, Audio
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1102,7 +1105,7 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICCommands.CDAddOffsetFlag:
+                        case DICFlags.CDAddOffsetFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.AudioCommand)
                             {
@@ -1120,7 +1123,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDBEOpcodeFlag:
+                        case DICFlags.CDBEOpcodeFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1146,7 +1149,7 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICCommands.CDC2OpcodeFlag:
+                        case DICFlags.CDC2OpcodeFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1175,7 +1178,7 @@ namespace DICUI
                                 }
                             }
                             break;
-                        case DICCommands.CDSubchannelReadLevelFlag:
+                        case DICFlags.CDSubchannelReadLevelFlag:
                             if (parts[0] != DICCommands.CompactDiscCommand
                                 && parts[0] != DICCommands.GDROMCommand
                                 && parts[0] != DICCommands.DataCommand
@@ -1316,6 +1319,7 @@ namespace DICUI
                 case DICCommands.AudioCommand:
                 case DICCommands.DVDCommand:
                 case DICCommands.BDCommand:
+                case DICCommands.XBOXCommand:
                 case DICCommands.FloppyCommand:
                     command = parts[0];
 
