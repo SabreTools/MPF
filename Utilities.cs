@@ -437,7 +437,7 @@ namespace DICUI
                 case DiscType.DVD9:
                     return DICCommands.DVDCommand;
                 case DiscType.GDROM:
-                    return DICCommands.GDROMCommand; // TODO: Constants.GDROMSwapCommand?
+                    return DICCommands.GDROMCommand;
                 case DiscType.HDDVD:
                     return null;
                 case DiscType.BD25:
