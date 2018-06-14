@@ -648,7 +648,7 @@ namespace DICUI
         /// </remarks>
         public static List<Tuple<char, string>> CreateListOfDrives()
         {
-            // TODO: Floppy drives show up as DriveType.Removable, but so do USB drives, 
+            // TODO: Floppy drives show up as DriveType.Removable, but so do USB drives
             return DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
                 .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
