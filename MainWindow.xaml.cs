@@ -18,6 +18,7 @@ namespace DICUI
         private string dicPath;
         private string psxtPath;
         private string sgRawPath;
+        private string subdumpPath;
 
         // Private UI-related variables
         private List<Tuple<char, string>> _drives { get; set; }
@@ -48,6 +49,7 @@ namespace DICUI
 
         private void btn_StartStop_Click(object sender, RoutedEventArgs e)
         {
+            // Dump or stop the dump
             if ((string)btn_StartStop.Content == UIElements.StartDumping)
             {
                 StartDumping();
@@ -55,6 +57,7 @@ namespace DICUI
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
                 CancelDumping();
+                EjectDisc();
             }
         }
 
@@ -109,6 +112,16 @@ namespace DICUI
         private void btn_Settings_Cancel_Click(object sender, RoutedEventArgs e)
         {
             childWindow.Close();
+        }
+
+        private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
+        private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
         }
 
         #endregion
@@ -223,20 +236,24 @@ namespace DICUI
             lbl_Status.Content = "Beginning dumping process";
             string parameters = txt_CustomParameters.Text;
 
-            await Task.Run(
-                () =>
+            await Task.Run(() =>
+            {
+                childProcess = new Process()
                 {
-                    childProcess = new Process()
+                    StartInfo = new ProcessStartInfo()
                     {
-                        StartInfo = new ProcessStartInfo()
-                        {
-                            FileName = dicPath,
-                            Arguments = parameters,
-                        },
-                    };
-                    childProcess.Start();
-                    childProcess.WaitForExit();
-                });
+                        FileName = dicPath,
+                        Arguments = parameters,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+            });
+
+            if (chk_EjectWhenDone.IsChecked == true)
+            {
+                EjectDisc();
+            }
 
             // Special cases
             switch (selected.Item2)
@@ -249,16 +266,40 @@ namespace DICUI
                         break;
                     }
 
-                    childProcess = new Process()
+                    await Task.Run(() =>
                     {
-                        StartInfo = new ProcessStartInfo()
+                        childProcess = new Process()
                         {
-                            FileName = sgRawPath,
-                            Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
-                        },
-                    };
-                    childProcess.Start();
-                    childProcess.WaitForExit();
+                            StartInfo = new ProcessStartInfo()
+                            {
+                                FileName = sgRawPath,
+                                Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
+                            },
+                        };
+                        childProcess.Start();
+                        childProcess.WaitForExit();
+                    });
+                    break;
+                case KnownSystem.SegaSaturn:
+                    if (!File.Exists(subdumpPath))
+                    {
+                        lbl_Status.Content = "Error! Could not find subdump!";
+                        break;
+                    }
+
+                    await Task.Run(() =>
+                    {
+                        childProcess = new Process()
+                        {
+                            StartInfo = new ProcessStartInfo()
+                            {
+                                FileName = subdumpPath,
+                                Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                            },
+                        };
+                        childProcess.Start();
+                        childProcess.WaitForExit();
+                    });
                     break;
                 case KnownSystem.SonyPlayStation:
                     if (!File.Exists(psxtPath))
@@ -269,38 +310,41 @@ namespace DICUI
 
                     // Invoke the program with all 3 configurations
                     // TODO: Use these outputs for PSX information
-                    childProcess = new Process()
+                    await Task.Run(() =>
                     {
-                        StartInfo = new ProcessStartInfo()
+                        childProcess = new Process()
                         {
-                            FileName = psxtPath,
-                            Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
-                        },
-                    };
-                    childProcess.Start();
-                    childProcess.WaitForExit();
+                            StartInfo = new ProcessStartInfo()
+                            {
+                                FileName = psxtPath,
+                                Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
+                            },
+                        };
+                        childProcess.Start();
+                        childProcess.WaitForExit();
 
-                    childProcess = new Process()
-                    {
-                        StartInfo = new ProcessStartInfo()
+                        childProcess = new Process()
                         {
-                            FileName = psxtPath,
-                            Arguments = "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"),
-                        },
-                    };
-                    childProcess.Start();
-                    childProcess.WaitForExit();
+                            StartInfo = new ProcessStartInfo()
+                            {
+                                FileName = psxtPath,
+                                Arguments = "--libcrypt \"" + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + ".sub") + "\" > \"" + Path.Combine(outputDirectory, "libcrypt.txt"),
+                            },
+                        };
+                        childProcess.Start();
+                        childProcess.WaitForExit();
 
-                    childProcess = new Process()
-                    {
-                        StartInfo = new ProcessStartInfo()
+                        childProcess = new Process()
                         {
-                            FileName = psxtPath,
-                            Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
-                        },
-                    };
-                    childProcess.Start();
-                    childProcess.WaitForExit();
+                            StartInfo = new ProcessStartInfo()
+                            {
+                                FileName = psxtPath,
+                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
+                            },
+                        };
+                        childProcess.Start();
+                        childProcess.WaitForExit();
+                    });
                     break;
             }
 
@@ -309,10 +353,12 @@ namespace DICUI
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
                 btn_StartStop.Content = UIElements.StartDumping;
+                EjectDisc();
                 return;
             }
 
             lbl_Status.Content = "Dumping complete!";
+            EjectDisc();
 
             Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
             List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, selected.Item2, selected.Item3);
@@ -332,6 +378,38 @@ namespace DICUI
             }
             catch
             { }
+        }
+
+        /// <summary>
+        /// Eject the disc using DIC
+        /// </summary>
+        private async void EjectDisc()
+        {
+            // Validate that the required program exits
+            if (!File.Exists(dicPath))
+            {
+                return;
+            }
+
+            CancelDumping();
+
+            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string>;
+            await Task.Run(() =>
+            {
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = dicPath,
+                        Arguments = DICCommands.EjectCommand + " " + driveTuple.Item1,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+            });
         }
 
         /// <summary>
@@ -409,10 +487,11 @@ namespace DICUI
                 if (cmb_DiscType.SelectedIndex > 0)
                 {
                     var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+                    var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string>;
                     string discType = Utilities.GetBaseCommand(selected.Item3);
                     List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
                     txt_CustomParameters.Text = discType
-                        + " " + cmb_DriveLetter.Text
+                        + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
@@ -514,6 +593,7 @@ namespace DICUI
             grid.RowDefinitions.Add(new RowDefinition());
             grid.RowDefinitions.Add(new RowDefinition());
             grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition());
 
             // Create all of the individual items in the panel
             Label dicPathLabel = new Label();
@@ -561,33 +641,48 @@ namespace DICUI
             Grid.SetRow(sgRawPathSetting, 2);
             Grid.SetColumn(sgRawPathSetting, 1);
 
+            Label subdumpPathLabel = new Label();
+            subdumpPathLabel.Content = "subdump Path:";
+            subdumpPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
+            subdumpPathLabel.VerticalAlignment = VerticalAlignment.Center;
+            subdumpPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetRow(subdumpPathLabel, 3);
+            Grid.SetColumn(subdumpPathLabel, 0);
+
+            TextBox subdumpPathSetting = new TextBox();
+            subdumpPathSetting.Text = ConfigurationManager.AppSettings["subdumpPath"];
+            subdumpPathSetting.VerticalAlignment = VerticalAlignment.Center;
+            subdumpPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Grid.SetRow(subdumpPathSetting, 3);
+            Grid.SetColumn(subdumpPathSetting, 1);
+
             Label defaultOutputPathLabel = new Label();
             defaultOutputPathLabel.Content = "Default Output Path:";
             defaultOutputPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
             defaultOutputPathLabel.VerticalAlignment = VerticalAlignment.Center;
             defaultOutputPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(defaultOutputPathLabel, 3);
+            Grid.SetRow(defaultOutputPathLabel, 4);
             Grid.SetColumn(defaultOutputPathLabel, 0);
 
             TextBox defaultOutputPathSetting = new TextBox();
             defaultOutputPathSetting.Text = ConfigurationManager.AppSettings["defaultOutputPath"];
             defaultOutputPathSetting.VerticalAlignment = VerticalAlignment.Center;
             defaultOutputPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(defaultOutputPathSetting, 3);
+            Grid.SetRow(defaultOutputPathSetting, 4);
             Grid.SetColumn(defaultOutputPathSetting, 1);
 
             Button acceptButton = new Button();
             acceptButton.Name = "btn_Settings_Accept";
             acceptButton.Content = "Accept";
             acceptButton.Click += btn_Settings_Accept_Click;
-            Grid.SetRow(acceptButton, 4);
+            Grid.SetRow(acceptButton, 5);
             Grid.SetColumn(acceptButton, 0);
 
             Button cancelButton = new Button();
             cancelButton.Name = "btn_Settings_Cancel";
             cancelButton.Content = "Cancel";
             cancelButton.Click += btn_Settings_Cancel_Click;
-            Grid.SetRow(cancelButton, 4);
+            Grid.SetRow(cancelButton, 5);
             Grid.SetColumn(cancelButton, 1);
 
             // Add all of the UI elements
@@ -597,6 +692,8 @@ namespace DICUI
             grid.Children.Add(psxt001zPathSetting);
             grid.Children.Add(sgRawPathLabel);
             grid.Children.Add(sgRawPathSetting);
+            grid.Children.Add(subdumpPathLabel);
+            grid.Children.Add(subdumpPathSetting);
             grid.Children.Add(defaultOutputPathLabel);
             grid.Children.Add(defaultOutputPathSetting);
             grid.Children.Add(acceptButton);
@@ -626,8 +723,10 @@ namespace DICUI
             configFile.AppSettings.Settings.Add("psxt001zPath", ((TextBox)(((Grid)childWindow.Content).Children[3])).Text);
             configFile.AppSettings.Settings.Remove("sgRawPath");
             configFile.AppSettings.Settings.Add("sgRawPath", ((TextBox)(((Grid)childWindow.Content).Children[5])).Text);
+            configFile.AppSettings.Settings.Remove("subdumpPath");
+            configFile.AppSettings.Settings.Add("subdumpPath", ((TextBox)(((Grid)childWindow.Content).Children[7])).Text);
             configFile.AppSettings.Settings.Remove("defaultOutputPath");
-            configFile.AppSettings.Settings.Add("defaultOutputPath", ((TextBox)(((Grid)childWindow.Content).Children[7])).Text);
+            configFile.AppSettings.Settings.Add("defaultOutputPath", ((TextBox)(((Grid)childWindow.Content).Children[9])).Text);
             configFile.Save(ConfigurationSaveMode.Modified);
         }
 
@@ -639,6 +738,7 @@ namespace DICUI
             dicPath = ConfigurationManager.AppSettings["dicPath"] ?? "Programs\\DiscImageCreator.exe";
             psxtPath = ConfigurationManager.AppSettings["psxt001zPath"] ?? "psxt001z.exe";
             sgRawPath = ConfigurationManager.AppSettings["sgRawPath"] ?? "sg_raw.exe";
+            subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
             defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
         }
 
