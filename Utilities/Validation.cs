@@ -1102,6 +1102,13 @@ namespace DICUI.Utilities
                         type = DiscType.GameCubeGameDisc;
                         system = KnownSystem.NintendoGameCube;
                     }
+                    // Special case for PlayStation
+                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
+                        || parts.Contains(DICFlags.ScanAntiMod))
+                    {
+                        type = DiscType.CD;
+                        system = KnownSystem.SonyPlayStation;
+                    }
                     // Special case for Saturn
                     else if (parts.Contains(DICFlags.SeventyFour))
                     {
