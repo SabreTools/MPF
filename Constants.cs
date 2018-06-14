@@ -59,6 +59,9 @@
         public const string SubchannelReadLevel = "/s";
     }
 
+    /// <summary>
+    /// Template field values for submission info
+    /// </summary>
     public static class Template
     {
         // Manual information
