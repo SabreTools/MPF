@@ -431,7 +431,7 @@ namespace DICUI
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = dicPath,
-                        Arguments = DICCommands.EjectCommand + " " + driveTuple.Item1,
+                        Arguments = DICCommands.Eject + " " + driveTuple.Item1,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -579,7 +579,7 @@ namespace DICUI
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = dicPath,
-                    Arguments = DICCommands.DriveSpeedCommand + " " + driveLetter,
+                    Arguments = DICCommands.DriveSpeed + " " + driveLetter,
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,

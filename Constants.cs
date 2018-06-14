@@ -11,23 +11,23 @@
     /// </summary>
     public static class DICCommands
     {
-        public const string AudioCommand = "audio";
-        public const string BDCommand = "bd";
-        public const string CloseCommand = "close";
-        public const string CompactDiscCommand = "cd";
-        public const string DataCommand = "data";
-        public const string DVDCommand = "dvd";
-        public const string DriveSpeedCommand = "ls";
-        public const string EjectCommand = "eject";
-        public const string FloppyCommand = "fd";
-        public const string GDROMCommand = "gd";
-        public const string GDROMSwapCommand = "swap";
-        public const string MDSCommand = "mds";
-        public const string ResetCommand = "reset";
-        public const string StartCommand = "start";
-        public const string StopCommand = "stop";
-        public const string SubCommand = "sub";
-        public const string XBOXCommand = "xbox";
+        public const string Audio = "audio";
+        public const string BluRay = "bd";
+        public const string Close = "close";
+        public const string CompactDisc = "cd";
+        public const string Data = "data";
+        public const string DigitalVideoDisc = "dvd";
+        public const string DriveSpeed = "ls";
+        public const string Eject = "eject";
+        public const string Floppy = "fd";
+        public const string GDROM = "gd";
+        public const string MDS = "mds";
+        public const string Reset = "reset";
+        public const string Start = "start";
+        public const string Stop = "stop";
+        public const string Sub = "sub";
+        public const string Swap = "swap";
+        public const string XBOX = "xbox";
     }
 
     /// <summary>
@@ -56,6 +56,7 @@
         public const string DVDCMIFlag = "/c";
         public const string DVDRawFlag = "/raw";
         public const string ForceUnitAccessFlag = "/f";
+        public const string SeventyFourFlag = "/74";
     }
 
     public static class Template
