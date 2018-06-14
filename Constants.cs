@@ -1,5 +1,8 @@
 ﻿namespace DICUI
 {
+    /// <summary>
+    /// Text for UI elements
+    /// </summary>
     public static class UIElements
     {
         public const string StartDumping = "Start Dumping";
