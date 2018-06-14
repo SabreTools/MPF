@@ -18,6 +18,7 @@ namespace DICUI
         private string dicPath;
         private string psxtPath;
         private string sgRawPath;
+        private string subdumpPath;
 
         // Private UI-related variables
         private List<Tuple<char, string>> _drives { get; set; }
@@ -270,6 +271,24 @@ namespace DICUI
                     childProcess.Start();
                     childProcess.WaitForExit();
                     break;
+                case KnownSystem.SegaSaturn:
+                    if (!File.Exists(subdumpPath))
+                    {
+                        lbl_Status.Content = "Error! Could not find subdump!";
+                        break;
+                    }
+
+                    childProcess = new Process()
+                    {
+                        StartInfo = new ProcessStartInfo()
+                        {
+                            FileName = subdumpPath,
+                            Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                        },
+                    };
+                    childProcess.Start();
+                    childProcess.WaitForExit();
+                    break;
                 case KnownSystem.SonyPlayStation:
                     if (!File.Exists(psxtPath))
                     {
@@ -295,7 +314,7 @@ namespace DICUI
                         StartInfo = new ProcessStartInfo()
                         {
                             FileName = psxtPath,
-                            Arguments = "--libcrypt " + "\"" + Path.Combine(outputDirectory, outputFilename + ".sub") + "\" > " + "\"" + Path.Combine(outputDirectory, "libcrypt.txt"),
+                            Arguments = "--libcrypt \"" + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + ".sub") + "\" > \"" + Path.Combine(outputDirectory, "libcrypt.txt"),
                         },
                     };
                     childProcess.Start();
@@ -524,6 +543,7 @@ namespace DICUI
             grid.RowDefinitions.Add(new RowDefinition());
             grid.RowDefinitions.Add(new RowDefinition());
             grid.RowDefinitions.Add(new RowDefinition());
+            grid.RowDefinitions.Add(new RowDefinition());
 
             // Create all of the individual items in the panel
             Label dicPathLabel = new Label();
@@ -571,33 +591,48 @@ namespace DICUI
             Grid.SetRow(sgRawPathSetting, 2);
             Grid.SetColumn(sgRawPathSetting, 1);
 
+            Label subdumpPathLabel = new Label();
+            subdumpPathLabel.Content = "subdump Path:";
+            subdumpPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
+            subdumpPathLabel.VerticalAlignment = VerticalAlignment.Center;
+            subdumpPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
+            Grid.SetRow(subdumpPathLabel, 3);
+            Grid.SetColumn(subdumpPathLabel, 0);
+
+            TextBox subdumpPathSetting = new TextBox();
+            subdumpPathSetting.Text = ConfigurationManager.AppSettings["subdumpPath"];
+            subdumpPathSetting.VerticalAlignment = VerticalAlignment.Center;
+            subdumpPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
+            Grid.SetRow(subdumpPathSetting, 3);
+            Grid.SetColumn(subdumpPathSetting, 1);
+
             Label defaultOutputPathLabel = new Label();
             defaultOutputPathLabel.Content = "Default Output Path:";
             defaultOutputPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
             defaultOutputPathLabel.VerticalAlignment = VerticalAlignment.Center;
             defaultOutputPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(defaultOutputPathLabel, 3);
+            Grid.SetRow(defaultOutputPathLabel, 4);
             Grid.SetColumn(defaultOutputPathLabel, 0);
 
             TextBox defaultOutputPathSetting = new TextBox();
             defaultOutputPathSetting.Text = ConfigurationManager.AppSettings["defaultOutputPath"];
             defaultOutputPathSetting.VerticalAlignment = VerticalAlignment.Center;
             defaultOutputPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(defaultOutputPathSetting, 3);
+            Grid.SetRow(defaultOutputPathSetting, 4);
             Grid.SetColumn(defaultOutputPathSetting, 1);
 
             Button acceptButton = new Button();
             acceptButton.Name = "btn_Settings_Accept";
             acceptButton.Content = "Accept";
             acceptButton.Click += btn_Settings_Accept_Click;
-            Grid.SetRow(acceptButton, 4);
+            Grid.SetRow(acceptButton, 5);
             Grid.SetColumn(acceptButton, 0);
 
             Button cancelButton = new Button();
             cancelButton.Name = "btn_Settings_Cancel";
             cancelButton.Content = "Cancel";
             cancelButton.Click += btn_Settings_Cancel_Click;
-            Grid.SetRow(cancelButton, 4);
+            Grid.SetRow(cancelButton, 5);
             Grid.SetColumn(cancelButton, 1);
 
             // Add all of the UI elements
@@ -607,6 +642,8 @@ namespace DICUI
             grid.Children.Add(psxt001zPathSetting);
             grid.Children.Add(sgRawPathLabel);
             grid.Children.Add(sgRawPathSetting);
+            grid.Children.Add(subdumpPathLabel);
+            grid.Children.Add(subdumpPathSetting);
             grid.Children.Add(defaultOutputPathLabel);
             grid.Children.Add(defaultOutputPathSetting);
             grid.Children.Add(acceptButton);
@@ -636,8 +673,10 @@ namespace DICUI
             configFile.AppSettings.Settings.Add("psxt001zPath", ((TextBox)(((Grid)childWindow.Content).Children[3])).Text);
             configFile.AppSettings.Settings.Remove("sgRawPath");
             configFile.AppSettings.Settings.Add("sgRawPath", ((TextBox)(((Grid)childWindow.Content).Children[5])).Text);
+            configFile.AppSettings.Settings.Remove("subdumpPath");
+            configFile.AppSettings.Settings.Add("subdumpPath", ((TextBox)(((Grid)childWindow.Content).Children[7])).Text);
             configFile.AppSettings.Settings.Remove("defaultOutputPath");
-            configFile.AppSettings.Settings.Add("defaultOutputPath", ((TextBox)(((Grid)childWindow.Content).Children[7])).Text);
+            configFile.AppSettings.Settings.Add("defaultOutputPath", ((TextBox)(((Grid)childWindow.Content).Children[9])).Text);
             configFile.Save(ConfigurationSaveMode.Modified);
         }
 
@@ -649,6 +688,7 @@ namespace DICUI
             dicPath = ConfigurationManager.AppSettings["dicPath"] ?? "Programs\\DiscImageCreator.exe";
             psxtPath = ConfigurationManager.AppSettings["psxt001zPath"] ?? "psxt001z.exe";
             sgRawPath = ConfigurationManager.AppSettings["sgRawPath"] ?? "sg_raw.exe";
+            subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
             defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
         }
 
