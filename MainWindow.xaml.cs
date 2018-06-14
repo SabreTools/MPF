@@ -671,19 +671,39 @@ namespace DICUI
             Grid.SetRow(defaultOutputPathSetting, 4);
             Grid.SetColumn(defaultOutputPathSetting, 1);
 
+            var buttonGrid = new Grid
+            {
+                Margin = new Thickness(5),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+            };
+            buttonGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            buttonGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            buttonGrid.RowDefinitions.Add(new RowDefinition());
+            Grid.SetRow(buttonGrid, 5);
+            Grid.SetColumn(buttonGrid, 0);
+            Grid.SetColumnSpan(buttonGrid, 2);
+
             Button acceptButton = new Button();
             acceptButton.Name = "btn_Settings_Accept";
             acceptButton.Content = "Accept";
             acceptButton.Click += btn_Settings_Accept_Click;
-            Grid.SetRow(acceptButton, 5);
+            acceptButton.VerticalAlignment = VerticalAlignment.Center;
+            acceptButton.HorizontalAlignment = HorizontalAlignment.Center;
+            Grid.SetRow(acceptButton, 0);
             Grid.SetColumn(acceptButton, 0);
 
             Button cancelButton = new Button();
             cancelButton.Name = "btn_Settings_Cancel";
             cancelButton.Content = "Cancel";
             cancelButton.Click += btn_Settings_Cancel_Click;
-            Grid.SetRow(cancelButton, 5);
+            cancelButton.VerticalAlignment = VerticalAlignment.Center;
+            cancelButton.HorizontalAlignment = HorizontalAlignment.Center;
+            Grid.SetRow(cancelButton, 0);
             Grid.SetColumn(cancelButton, 1);
+
+            buttonGrid.Children.Add(acceptButton);
+            buttonGrid.Children.Add(cancelButton);
 
             // Add all of the UI elements
             grid.Children.Add(dicPathLabel);
@@ -696,8 +716,7 @@ namespace DICUI
             grid.Children.Add(subdumpPathSetting);
             grid.Children.Add(defaultOutputPathLabel);
             grid.Children.Add(defaultOutputPathSetting);
-            grid.Children.Add(acceptButton);
-            grid.Children.Add(cancelButton);
+            grid.Children.Add(buttonGrid);
 
             // Now show the child window
             childWindow.Content = grid;
