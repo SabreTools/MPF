@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace DICUI.Utilities
@@ -591,10 +592,43 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="firstTrackPath">Path to the first track to check</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private static byte[] GetSaturnHeader(string firstTrackPath)
+        private static string GetSaturnHeader(string firstTrackPath)
         {
-            // TODO: IMPLEMENT HEADER RETRIEVAL
-            return null;
+            // If the file doesn't exist, we can't get the header
+            if (!File.Exists(firstTrackPath))
+            {
+                return null;
+            }
+
+            // Try to open the file and read the correct number of bytes
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(firstTrackPath)))
+                {
+                    br.ReadBytes(0x10);
+                    byte[] headerBytes = br.ReadBytes(0x100);
+
+                    // Now format the bytes in a way we like
+                    string headerString = "";
+                    int ptr = 0;
+                    while (ptr < headerBytes.Length)
+                    {
+                        byte[] sub = new byte[16];
+                        Array.Copy(headerBytes, ptr, sub, 0, 16);
+                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : " 
+                            + BitConverter.ToString(sub).Replace("-", " ") + " "
+                            + Encoding.ASCII.GetString(sub) + "\n";
+                        ptr += 16;
+                    }
+
+                    return headerString.TrimEnd('\n');
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
         }
 
         /// <summary>
@@ -712,7 +746,13 @@ namespace DICUI.Utilities
                         break;
                 }
                 output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
-                output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
+                switch(sys)
+                {
+                    case KnownSystem.AppleMacintosh:
+                    case KnownSystem.IBMPCCompatible:
+                        output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
+                        break;
+                }
                 switch (type)
                 {
                     case DiscType.CD:
