@@ -58,8 +58,8 @@
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
             <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged"/>
 
-            <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Custom Parameters</Label>
-            <TextBox x:Name="txt_CustomParameters" Grid.Row="5" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" IsEnabled="False" />
+            <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Parameters</Label>
+            <TextBox x:Name="txt_Parameters" Grid.Row="5" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" IsEnabled="False" />
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">

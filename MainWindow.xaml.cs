@@ -195,23 +195,42 @@ namespace DICUI
         /// </summary>
         private async void StartDumping()
         {
-            // Local variables
-            var driveLetter = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            string outputDirectory = txt_OutputDirectory.Text;
-            string outputFilename = txt_OutputFilename.Text;
             btn_StartStop.Content = UIElements.StopDumping;
 
-            // Get the currently selected item
+            // Get the currently selected options
+            var driveLetterTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
+            char driveLetter = driveLetterTuple.Item1;
+            bool isFloppy = driveLetterTuple.Item3;
+
+            string outputDirectory = txt_OutputDirectory.Text;
+            string outputFilename = txt_OutputFilename.Text;
+
             var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+            string systemName = selected.Item1;
+            KnownSystem? system = selected.Item2;
+            DiscType? type = selected.Item3;
+
+            string customParameters = txt_Parameters.Text;
 
             // Validate that everything is good
-            if (string.IsNullOrWhiteSpace(txt_CustomParameters.Text)
-                || !Utilities.ValidateParameters(txt_CustomParameters.Text)
-                || (driveLetter.Item3 ^ selected.Item3 == DiscType.Floppy))
+            if (string.IsNullOrWhiteSpace(customParameters)
+                || !Utilities.ValidateParameters(customParameters)
+                || (isFloppy ^ type == DiscType.Floppy))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
                 btn_StartStop.Content = UIElements.StartDumping;
                 return;
+            }
+
+            // If we have a known custom configuration, we need to extract the relevant information from it
+            if (systemName == "Custom Input" && system == KnownSystem.NONE && type == DiscType.NONE)
+            {
+                Utilities.DetermineFlags(customParameters, out string command, out string letter, out string path);
+                type = Utilities.GetDiscType(command);
+                system = Utilities.GetKnownSystem(type);
+                driveLetter = letter[0];
+                outputDirectory = Path.GetDirectoryName(path);
+                outputFilename = Path.GetFileName(path);
             }
 
             // Validate that the required program exits
@@ -223,7 +242,7 @@ namespace DICUI
             }
 
             // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            if (DumpInformation.FoundAllFiles(outputDirectory, outputFilename, type))
             {
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -235,7 +254,7 @@ namespace DICUI
             }
 
             lbl_Status.Content = "Beginning dumping process";
-            string parameters = txt_CustomParameters.Text;
+            string parameters = txt_Parameters.Text;
 
             await Task.Run(() =>
             {
@@ -257,7 +276,7 @@ namespace DICUI
             }
 
             // Special cases
-            switch (selected.Item2)
+            switch (system)
             {
                 case KnownSystem.MicrosoftXBOXOne:
                 case KnownSystem.SonyPlayStation4:
@@ -274,7 +293,7 @@ namespace DICUI
                             StartInfo = new ProcessStartInfo()
                             {
                                 FileName = sgRawPath,
-                                Arguments = "-v -r 4100 -R " + driveLetter.Item1 + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
+                                Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
                             },
                         };
                         childProcess.Start();
@@ -295,7 +314,7 @@ namespace DICUI
                             StartInfo = new ProcessStartInfo()
                             {
                                 FileName = subdumpPath,
-                                Arguments = "-i " + driveLetter.Item1 + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                                Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
                             },
                         };
                         childProcess.Start();
@@ -340,7 +359,7 @@ namespace DICUI
                             StartInfo = new ProcessStartInfo()
                             {
                                 FileName = psxtPath,
-                                Arguments = "--libcryptdrvfast " + driveLetter.Item1 + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
+                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
                             },
                         };
                         childProcess.Start();
@@ -350,19 +369,25 @@ namespace DICUI
             }
 
             // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            if (!DumpInformation.FoundAllFiles(outputDirectory, outputFilename, type))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
                 btn_StartStop.Content = UIElements.StartDumping;
-                EjectDisc();
+                if (chk_EjectWhenDone.IsChecked == true)
+                {
+                    EjectDisc();
+                }
                 return;
             }
 
             lbl_Status.Content = "Dumping complete!";
-            EjectDisc();
+            if (chk_EjectWhenDone.IsChecked == true)
+            {
+                EjectDisc();
+            }
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, selected.Item2, selected.Item3);
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, system, type);
             bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 
             btn_StartStop.Content = UIElements.StartDumping;
@@ -472,7 +497,7 @@ namespace DICUI
             // Special case for Custom input
             if (tuple.Item1 == "Custom Input" && tuple.Item2 == KnownSystem.NONE && tuple.Item3 == DiscType.NONE)
             {
-                txt_CustomParameters.IsEnabled = true;
+                txt_Parameters.IsEnabled = true;
                 txt_OutputFilename.IsEnabled = false;
                 txt_OutputDirectory.IsEnabled = false;
                 btn_OutputDirectoryBrowse.IsEnabled = false;
@@ -483,7 +508,7 @@ namespace DICUI
             }
             else
             {
-                txt_CustomParameters.IsEnabled = false;
+                txt_Parameters.IsEnabled = false;
                 txt_OutputFilename.IsEnabled = true;
                 txt_OutputDirectory.IsEnabled = true;
                 btn_OutputDirectoryBrowse.IsEnabled = true;
@@ -497,7 +522,7 @@ namespace DICUI
                     var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string, bool>;
                     string discType = Utilities.GetBaseCommand(selected.Item3);
                     List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
-                    txt_CustomParameters.Text = discType
+                    txt_Parameters.Text = discType
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selected.Item3 != DiscType.Floppy && selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
