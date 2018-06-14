@@ -209,7 +209,7 @@ namespace DICUI
             }
 
             // If a complete dump already exists
-            if (Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            if (DumpInformation.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
             {
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -274,7 +274,7 @@ namespace DICUI
                         StartInfo = new ProcessStartInfo()
                         {
                             FileName = psxtPath,
-                            Arguments = "\"" + Utilities.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
+                            Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
                         },
                     };
                     childProcess.Start();
@@ -305,7 +305,7 @@ namespace DICUI
             }
 
             // Check to make sure that the output had all the correct files
-            if (!Utilities.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
+            if (!DumpInformation.FoundAllFiles(outputDirectory, outputFilename, selected.Item3))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
                 btn_StartStop.Content = UIElements.StartDumping;
@@ -314,9 +314,9 @@ namespace DICUI
 
             lbl_Status.Content = "Dumping complete!";
 
-            Dictionary<string, string> templateValues = Utilities.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
-            List<string> formattedValues = Utilities.FormatOutputData(templateValues, selected.Item2, selected.Item3);
-            bool success = Utilities.WriteOutputData(outputDirectory, outputFilename, formattedValues);
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, selected.Item2, selected.Item3);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, selected.Item2, selected.Item3);
+            bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 
             btn_StartStop.Content = UIElements.StartDumping;
         }
@@ -361,8 +361,10 @@ namespace DICUI
                     break;
                 case DiscType.HDDVD:
                 case DiscType.UMD:
+                case DiscType.WiiOpticalDisc:
+                case DiscType.WiiUOpticalDisc:
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = true;
+                    btn_StartStop.IsEnabled = false;
                     break;
                 default:
                     lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));

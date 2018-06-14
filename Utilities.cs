@@ -6,7 +6,6 @@ using System.Text.RegularExpressions;
 
 namespace DICUI
 {
-    // TODO: Separate into different utility classes based on functionality
     public static class Utilities
     {
         /// <summary>
@@ -34,7 +33,11 @@ namespace DICUI
                     return "BluRay-50 [Dual-Layer]";
 
                 case DiscType.GameCubeGameDisc:
-                    return "GameCube";
+                    return "GameCube Game";
+                case DiscType.WiiOpticalDisc:
+                    return "Wii Optical";
+                case DiscType.WiiUOpticalDisc:
+                    return "Wii U Optical";
                 case DiscType.UMD:
                     return "UMD";
 
@@ -150,6 +153,10 @@ namespace DICUI
                     return "Sega Naomi";
                 case KnownSystem.SegaNaomi2:
                     return "Sega Naomi 2";
+                case KnownSystem.SegaNu:
+                    return "Sega Nu";
+                case KnownSystem.SegaRingEdge2:
+                    return "Sega RingEdge 2";
                 case KnownSystem.TABAustriaQuizard:
                     return "TAB-Austria Quizard";
                 case KnownSystem.TandyMemorexVisualInformationSystem:
@@ -241,11 +248,10 @@ namespace DICUI
                     types.Add(DiscType.GameCubeGameDisc);
                     break;
                 case KnownSystem.NintendoWii:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
-                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    types.Add(DiscType.WiiOpticalDisc);
                     break;
                 case KnownSystem.NintendoWiiU:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.WiiUOpticalDisc);
                     break;
                 case KnownSystem.Panasonic3DOInteractiveMultiplayer:
                     types.Add(DiscType.CD);
@@ -285,7 +291,8 @@ namespace DICUI
                     types.Add(DiscType.UMD);
                     break;
                 case KnownSystem.VMLabsNuon:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.VTechVFlashVSmilePro:
                     types.Add(DiscType.CD);
@@ -340,13 +347,22 @@ namespace DICUI
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaLindbergh:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.SegaNaomi:
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaNaomi2:
                     types.Add(DiscType.GDROM);
+                    break;
+                case KnownSystem.SegaNu:
+                    types.Add(DiscType.BD25);
+                    types.Add(DiscType.BD50);
+                    break;
+                case KnownSystem.SegaRingEdge2:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.TABAustriaQuizard:
                     types.Add(DiscType.CD);
@@ -421,7 +437,7 @@ namespace DICUI
                 case DiscType.DVD9:
                     return DICCommands.DVDCommand;
                 case DiscType.GDROM:
-                    return DICCommands.GDROMCommand; // TODO: Constants.GDROMSwapCommand?
+                    return DICCommands.GDROMCommand;
                 case DiscType.HDDVD:
                     return null;
                 case DiscType.BD25:
@@ -431,6 +447,10 @@ namespace DICUI
                 // Special Formats
                 case DiscType.GameCubeGameDisc:
                     return DICCommands.DVDCommand;
+                case DiscType.WiiOpticalDisc:
+                    return null;
+                case DiscType.WiiUOpticalDisc:
+                    return null;
                 case DiscType.UMD:
                     return null;
 
@@ -503,6 +523,12 @@ namespace DICUI
                 case DiscType.GameCubeGameDisc:
                     parameters.Add(DICCommands.DVDRawFlag);
                     break;
+                case DiscType.WiiOpticalDisc:
+                    // Currently no defaults set
+                    break;
+                case DiscType.WiiUOpticalDisc:
+                    // Currently no defaults set
+                    break;
                 case DiscType.UMD:
                     break;
 
@@ -533,8 +559,11 @@ namespace DICUI
                 case DiscType.BD25:
                 case DiscType.BD50:
                 case DiscType.GameCubeGameDisc:
+                case DiscType.WiiOpticalDisc:
                 case DiscType.UMD:
                     return ".iso";
+                case DiscType.WiiUOpticalDisc:
+                    return ".wud";
                 case DiscType.Floppy:
                     return ".img";
                 case DiscType.NONE:
@@ -619,655 +648,11 @@ namespace DICUI
         /// </remarks>
         public static List<Tuple<char, string>> CreateListOfDrives()
         {
-            // TODO: Floppy drives show up as DriveType.Removable, but so do USB drives, 
+            // TODO: Floppy drives show up as DriveType.Removable, but so do USB drives
             return DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
                 .Select(d => new Tuple<char, string>(d.Name[0], d.VolumeLabel))
                 .ToList();
-        }
-
-        /// <summary>
-        /// Attempts to find the first track of a dumped disc based on the inputs
-        /// </summary>
-        /// <param name="outputDirectory">Base directory to use</param>
-        /// <param name="outputFilename">Base filename to use</param>
-        /// <returns>Proper path to first track, null on error</returns>
-        /// <remarks>
-        /// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
-        /// This can lead to a situation where the outputFilename contains a path, but only the filename gets
-        /// used in the processing and can lead to a "false null" return
-        /// </remarks>
-        public static string GetFirstTrack(string outputDirectory, string outputFilename)
-        {
-            // First, sanitized the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Go through all standard output naming schemes
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
-            if (File.Exists(combinedBase + ".bin"))
-            {
-                return combinedBase + ".bin";
-            }
-            if (File.Exists(combinedBase + " (Track 1).bin"))
-            {
-                return combinedBase + " (Track 1).bin";
-            }
-            if (File.Exists(combinedBase + " (Track 01).bin"))
-            {
-                return combinedBase + " (Track 01).bin";
-            }
-            if (File.Exists(combinedBase + ".iso"))
-            {
-                return Path.Combine(combinedBase + ".iso");
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Ensures that all required output files have been created
-        /// </summary>
-        /// <param name="outputDirectory">Base directory to use</param>
-        /// <param name="outputFilename">Base filename to use</param>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns></returns>
-        public static bool FoundAllFiles(string outputDirectory, string outputFilename, DiscType? type)
-        {
-            // First, sanitized the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Now ensure that all required files exist
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
-            switch(type)
-            {
-                case DiscType.CD:
-                case DiscType.GDROM: // TODO: Verify
-                    return File.Exists(combinedBase + ".c2")
-                        && File.Exists(combinedBase + ".ccd")
-                        && File.Exists(combinedBase + ".cue")
-                        && File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + ".img")
-                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
-                        && File.Exists(combinedBase + ".scm")
-                        && File.Exists(combinedBase + ".sub")
-                        && File.Exists(combinedBase + "_c2Error.txt")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_img.cue")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_subError.txt")
-                        && File.Exists(combinedBase + "_subInfo.txt")
-                        && File.Exists(combinedBase + "_subIntention.txt")
-                        && File.Exists(combinedBase + "_subReadable.txt")
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.HDDVD:
-                case DiscType.BD25:
-                case DiscType.BD50:
-                case DiscType.GameCubeGameDisc:
-                case DiscType.UMD:
-                    return File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case DiscType.Floppy:
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// Extract all of the possible information from a given input combination
-        /// </summary>
-        /// <param name="outputDirectory">Base directory to use</param>
-        /// <param name="outputFilename">Base filename to use</param>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>Dictionary containing mapped output values, null on error</returns>
-        /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
-        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
-        {
-            // First, sanitized the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // First, we want to check that all of the relevant files are there
-            if (!FoundAllFiles(outputDirectory, outputFilename, type))
-            {
-                return null;
-            }
-
-            // Create the output dictionary with all user-inputted values by default
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
-            Dictionary<string, string> mappings = new Dictionary<string, string>
-            {
-                { Template.TitleField, Template.RequiredValue },
-                { Template.DiscNumberField, Template.OptionalValue },
-                { Template.DiscTitleField, Template.OptionalValue },
-                { Template.CategoryField, "Games" },
-                { Template.RegionField, "World (CHANGE THIS)" },
-                { Template.LanguagesField, "Klingon (CHANGE THIS)" },
-                { Template.DiscSerialField, Template.RequiredIfExistsValue },
-                { Template.MouldSIDField, Template.RequiredIfExistsValue },
-                { Template.AdditionalMouldField, Template.RequiredIfExistsValue },
-                { Template.BarcodeField, Template.OptionalValue},
-                { Template.CommentsField, Template.OptionalValue },
-                { Template.ContentsField, Template.OptionalValue },
-                { Template.VersionField, Template.RequiredIfExistsValue },
-                { Template.EditionField, "Original (VERIFY THIS)" },
-                { Template.PVDField, GetPVD(combinedBase + "_mainInfo.txt") },
-                { Template.DATField, GetDatfile(combinedBase + ".dat") },
-            };
-
-            // Now we want to do a check by DiscType and extract all required info
-            switch (type)
-            {
-                case DiscType.CD: // TODO: Add SecuROM data, but only if found
-                case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
-                    mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
-                        combinedBase + "_c2Error.txt",
-                        combinedBase + "_mainError.txt").ToString();
-                    mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue");
-                    mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
-
-                    // System-specific options
-                    switch (sys)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
-                            break;
-                        case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = Template.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
-                            mappings[Template.SaturnBuildDateField] = Template.RequiredValue; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
-                            break;
-                        case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            mappings[Template.PlayStationEDCField] = Template.YesNoValue;
-                            mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
-                            mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
-                            break;
-                        case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            break;
-                    }
-
-                    break;
-                case DiscType.DVD5:
-                case DiscType.HDDVD:
-                case DiscType.BD25:
-                    mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-
-                    // System-specific options
-                    switch (sys)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
-                            if (File.Exists(combinedBase + "_subIntention.txt"))
-                            {
-                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
-                                if (fi.Length > 0)
-                                {
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
-                                }
-                            }
-                            break;
-                        case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            break;
-                    }
-
-                    break;
-                case DiscType.DVD9:
-                case DiscType.BD50:
-                    mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings["Inner " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
-
-                    // System-specific options
-                    switch (sys)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
-                            break;
-                        case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
-                            break;
-                    }
-
-                    break;
-            }
-
-            return mappings;
-        }
-
-        /// <summary>
-        /// Get the full lines from the input file, if possible
-        /// </summary>
-        /// <param name="filename">file location</param>
-        /// <returns>Full text of the file, null on error</returns>
-        private static string GetFullFile(string filename)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(filename))
-            {
-                return null;
-            }
-
-            return string.Join("\n", File.ReadAllLines(filename));
-        }
-
-        /// <summary>
-        /// Get the proper datfile from the input file, if possible
-        /// </summary>
-        /// <param name="dat">.dat file location</param>
-        /// <returns>Relevant pieces of the datfile, null on error</returns>
-        private static string GetDatfile(string dat)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(dat))
-            {
-                return null;
-            }
-
-            using (StreamReader sr = File.OpenText(dat))
-            {
-                try
-                {
-                    // Make sure this file is a .dat
-                    if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-                    {
-                        return null;
-                    }
-                    if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
-                    {
-                        return null;
-                    }
-
-                    // Fast forward to the rom lines
-                    while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
-                    sr.ReadLine(); // <category>Games</category>
-                    sr.ReadLine(); // <description>Plextor</description>
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    string pvd = "", line = sr.ReadLine().Trim();
-                    while (line.StartsWith("<rom"))
-                    {
-                        pvd += line + "\n";
-                        line = sr.ReadLine().Trim();
-                    }
-
-                    return pvd.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the detected error count from the input files, if possible
-        /// </summary>
-        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
-        /// <param name="c2Error">_c2Error.txt file location</param>
-        /// <param name="mainError">_mainError.txt file location</param>
-        /// <returns>Error count if possible, -1 on error</returns>
-        /// <remarks>TODO: Ensure all possible error states are taken care of</remarks>
-        private static long GetErrorCount(string edcecc, string c2Error, string mainError)
-        {
-            // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(edcecc) || !File.Exists(c2Error) || !File.Exists(mainError))
-            {
-                return -1;
-            }
-
-            // First off, if the mainError file has any contents, we have an uncorrectable error
-            if (new FileInfo(mainError).Length > 0)
-            {
-                return -1;
-            }
-
-            // First line of defense is the EdcEcc error file
-            using (StreamReader sr = File.OpenText(edcecc))
-            {
-                try
-                {
-                    // Fast forward to the PVD
-                    string line = sr.ReadLine();
-                    while (!line.StartsWith("[NO ERROR]")
-                        && !line.StartsWith("[WARNING]")
-                        && !line.StartsWith("[ERROR]"))
-                    {
-                        line = sr.ReadLine();
-                    }
-
-                    // Now that we're at the error line, determine what the value should be
-                    if (line.StartsWith("[NO ERROR]"))
-                    {
-                        return 0;
-                    }
-                    else if (line.StartsWith("[WARNING]"))
-                    {
-                        // Not sure how to handle these properly
-                        return -1;
-                    }
-                    else if (line.StartsWith("[ERROR] Number of sector(s) where user data doesn't match the expected ECC/EDC:"))
-                    {
-                        return Int64.Parse(line.Remove(0, 80));
-                    }
-
-                    return -1;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return -1;
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Get the layerbreak from the input file, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Layerbreak if possible, null on error</returns>
-        private static string GetLayerbreak(string disc)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-            {
-                return null;
-            }
-
-            using (StreamReader sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== DiscStructure ==========")
-                    {
-                        return null;
-                    }
-
-                    // Fast forward to the layerbreak
-                    while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
-
-                    // Now that we're at the layerbreak line, attempt to get the decimal version
-                    return sr.ReadLine().Split(' ')[1];
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the PVD from the input file, if possible
-        /// </summary>
-        /// <param name="mainInfo">_mainInfo.txt file location</param>
-        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
-        private static string GetPVD(string mainInfo)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(mainInfo))
-            {
-                return null;
-            }
-
-            using (StreamReader sr = File.OpenText(mainInfo))
-            {
-                try
-                {
-                    // Make sure this file is a _mainInfo.txt
-                    if (sr.ReadLine() != "========== LBA[000016, 0x00010]: Main Channel ==========")
-                    {
-                        return null;
-                    }
-
-                    // Fast forward to the PVD
-                    while (!sr.ReadLine().StartsWith("0310"));
-
-                    // Now that we're at the PVD, read each line in and concatenate
-                    string pvd = sr.ReadLine() + "\n"; // 0320
-                    pvd += sr.ReadLine() + "\n"; // 0330
-                    pvd += sr.ReadLine() + "\n"; // 0340
-                    pvd += sr.ReadLine() + "\n"; // 0350
-                    pvd += sr.ReadLine() + "\n"; // 0360
-                    pvd += sr.ReadLine() + "\n"; // 0370
-
-                    return pvd;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the write offset from the input file, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Sample write offset if possible, null on error</returns>
-        private static string GetWriteOffset(string disc)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-            {
-                return null;
-            }
-
-            using (StreamReader sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== TOC ==========")
-                    {
-                        return null;
-                    }
-
-                    // Fast forward to the offsets
-                    while (!sr.ReadLine().Trim().StartsWith("========== Offset"));
-                    sr.ReadLine(); // Combined Offset
-                    sr.ReadLine(); // Drive Offset
-                    sr.ReadLine(); // Separator line
-
-                    // Now that we're at the offsets, attempt to get the sample offset
-                    return sr.ReadLine().Split(' ').LastOrDefault();
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Format the output data in a human readable way, separating each printed line into a new item in the list
-        /// </summary>
-        /// <param name="info">Information dictionary that should contain normalized values</param>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>List of strings representing each line of an output file, null on error</returns>
-        /// <remarks>TODO: Get full list of customizable stuff for other systems</remarks>
-        public static List<string> FormatOutputData(Dictionary<string, string> info, KnownSystem? sys, DiscType? type)
-        {
-            // Check to see if the inputs are valid
-            if (info == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                List<string> output = new List<string>();
-
-                output.Add(Template.TitleField + ": " + info[Template.TitleField]);
-                output.Add(Template.DiscNumberField + ": " + info[Template.DiscNumberField]);
-                output.Add(Template.DiscTitleField + ": " + info[Template.DiscTitleField]);
-                output.Add(Template.CategoryField + ": " + info[Template.CategoryField]);
-                output.Add(Template.RegionField + ": " + info[Template.RegionField]);
-                output.Add(Template.LanguagesField + ": " + info[Template.LanguagesField]);
-                output.Add(Template.DiscSerialField + ": " + info[Template.DiscSerialField]);
-                switch(sys)
-                {
-                    case KnownSystem.SegaSaturn:
-                        output.Add(Template.SaturnBuildDateField + ": " + info[Template.SaturnBuildDateField]);
-                        break;
-                    case KnownSystem.SonyPlayStation:
-                    case KnownSystem.SonyPlayStation2:
-                        output.Add(Template.PlaystationEXEDateField + ": " + info[Template.PlaystationEXEDateField]);
-                        break;
-                }
-                output.Add("Ringcode Information:");
-                switch (type)
-                {
-                    case DiscType.CD:
-                    case DiscType.GDROM:
-                    case DiscType.DVD5:
-                    case DiscType.HDDVD:
-                    case DiscType.BD25:
-                        output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
-                        output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
-                        output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
-                        output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
-                        output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
-                        break;
-                    case DiscType.DVD9:
-                    case DiscType.BD50:
-                        output.Add("\tOuter " + Template.MasteringRingField + ": " + info["Outer " + Template.MasteringRingField]);
-                        output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
-                        output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
-                        output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
-                        output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
-                        output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
-                        output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
-                        output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
-                        break;
-                }
-                output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
-                output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
-                switch (type)
-                {
-                    case DiscType.CD:
-                    case DiscType.GDROM:
-                        output.Add(Template.ErrorCountField + ": " + info[Template.ErrorCountField]);
-                        break;
-                }
-                output.Add(Template.CommentsField + ": " + info[Template.CommentsField]);
-                output.Add(Template.ContentsField + ": " + info[Template.ContentsField]);
-                output.Add(Template.VersionField + ": " + info[Template.VersionField]);
-                output.Add(Template.EditionField + ": " + info[Template.EditionField]);
-                switch (sys)
-                {
-                    case KnownSystem.SegaSaturn:
-                        output.Add(Template.SaturnHeaderField + ":"); output.Add("");
-                        output.AddRange(info[Template.SaturnHeaderField].Split('\n')); output.Add("");
-                        break;
-                    case KnownSystem.SonyPlayStation:
-                        output.Add(Template.PlayStationEDCField + ": " + info[Template.PlayStationEDCField]);
-                        output.Add(Template.PlayStationAntiModchipField + ": " + info[Template.PlayStationAntiModchipField]);
-                        output.Add(Template.PlayStationLibCryptField + ": " + info[Template.PlayStationLibCryptField]);
-                        break;
-                }
-                output.Add(Template.PVDField + ":"); output.Add("");
-                output.AddRange(info[Template.PVDField].Split('\n'));
-                switch (sys)
-                {
-                    case KnownSystem.AppleMacintosh:
-                    case KnownSystem.IBMPCCompatible:
-                        output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
-
-                        if (info.ContainsKey(Template.SubIntentionField))
-                        {
-                            output.Add(Template.SubIntentionField + ":"); output.Add("");
-                            output.AddRange(info[Template.SubIntentionField].Split('\n'));
-                        }
-                        break;
-                }
-                switch (type)
-                {
-                    case DiscType.CD:
-                    case DiscType.GDROM:
-                        output.Add(Template.CuesheetField + ":"); output.Add("");
-                        output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
-                        output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]); output.Add("");
-                        break;
-                }
-                output.Add(Template.DATField + ":"); output.Add("");
-                output.AddRange(info[Template.DATField].Split('\n'));
-
-                return output;
-            }
-            catch
-            {
-                // We don't care what the error is
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Write the data to the output folder
-        /// </summary>
-        /// <param name="outputDirectory">Base directory to use</param>
-        /// <param name="outputFilename">Base filename to use</param>
-        /// <param name="lines">Preformatted list of lines to write out to the file</param>
-        /// <returns>True on success, false on error</returns>
-        public static bool WriteOutputData(string outputDirectory, string outputFilename, List<string> lines)
-        {
-            // Check to see if the inputs are valid
-            if (lines == null)
-            {
-                return false;
-            }
-
-            // Then, sanitized the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
-            // Now write out to a generic file
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
-                {
-                    foreach (string line in lines)
-                    {
-                        sw.WriteLine(line);
-                    }
-                }
-            }
-            catch
-            {
-                // We don't care what the error is right now
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -1529,6 +914,28 @@ namespace DICUI
                             default:
                                 return false;
                         }
+                    }
+                    break;
+                case DICCommands.GDROMSwapCommand:
+                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    {
+                        return false;
+                    }
+                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    {
+                        return false;
+                    }
+                    else if (!Int32.TryParse(parts[3], out int cdspeed))
+                    {
+                        return false;
+                    }
+                    else if (cdspeed < 0 || cdspeed > 72)
+                    {
+                        return false;
+                    }
+                    else if (parts.Count > 4)
+                    {
+                        return false;
                     }
                     break;
                 case DICCommands.DataCommand:
@@ -1899,7 +1306,6 @@ namespace DICUI
                         return false;
                     }
                     break;
-                case DICCommands.GDROMSwapCommand: // TODO: How to validate this?
                 default:
                     return false;
             }

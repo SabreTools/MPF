@@ -16,6 +16,8 @@
 
         // Special Formats
         GameCubeGameDisc,
+        WiiOpticalDisc,
+        WiiUOpticalDisc,
         UMD,
         
         // Keeping this separate since it's currently unsupported in the UI
@@ -83,6 +85,8 @@
         SegaLindbergh,
         SegaNaomi,
         SegaNaomi2,
+        SegaNu,
+        SegaRingEdge2,
         TABAustriaQuizard,
         TandyMemorexVisualInformationSystem,
 
