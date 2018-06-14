@@ -1,57 +1,70 @@
 ﻿namespace DICUI
 {
+    /// <summary>
+    /// Text for UI elements
+    /// </summary>
     public static class UIElements
     {
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
     }
 
+    /// <summary>
+    /// Top-level commands for DiscImageCreator
+    /// </summary>
     public static class DICCommands
     {
-        // Commands
-
-        public const string CompactDiscCommand = "cd";
-        public const string DataCommand = "data";
-        public const string AudioCommand = "audio";
-        public const string GDROMCommand = "gd";
-        public const string GDROMSwapCommand = "swap";
-        public const string DVDCommand = "dvd";
-        public const string BDCommand = "bd";
-        public const string FloppyCommand = "fd";
-        public const string StopCommand = "stop";
-        public const string StartCommand = "start";
-        public const string EjectCommand = "eject";
-        public const string CloseCommand = "close";
-        public const string ResetCommand = "reset";
-        public const string SubCommand = "sub";
-        public const string MDSCommand = "mds";
-        public const string DriveSpeedCommand = "ls"; // Unlisted in help text
-
-        // DIC Flags
-
-        public const string ForceUnitAccessFlag = "/f";
-        public const string DisableBeepFlag = "/q";
-        public const string CDAddOffsetFlag = "/a";
-        public const string CDBEOpcodeFlag = "/be";
-        public const string CDD8OpcodeFlag = "/d8";
-        public const string CDC2OpcodeFlag = "/c2";
-        public const string CDMCNFlag = "/m";
-        public const string CDAMSFFlag = "/p";
-        public const string CDReverseFlag = "/r";
-        public const string CDMultiSessionFlag = "/ms";
-        public const string CDScanFileProtectFlag = "/sf";
-        public const string CDScanSectorProtectFlag = "/ss";
-        public const string CDScanAnitModFlag = "/am";
-        public const string CDNoFixSubPFlag = "/np";
-        public const string CDNoFixSubQFlag = "/nq";
-        public const string CDNoFixSubRtoWFlag = "/nr";
-        public const string CDNoFixSubQLibCryptFlag = "/nl";
-        public const string CDNoFixSubQSecuROMFlag = "/ns";
-        public const string CDSubchannelReadLevelFlag = "/s";
-        public const string DVDCMIFlag = "/c";
-        public const string DVDRawFlag = "/raw";
+        public const string Audio = "audio";
+        public const string BluRay = "bd";
+        public const string Close = "close";
+        public const string CompactDisc = "cd";
+        public const string Data = "data";
+        public const string DigitalVideoDisc = "dvd";
+        public const string DriveSpeed = "ls";
+        public const string Eject = "eject";
+        public const string Floppy = "fd";
+        public const string GDROM = "gd";
+        public const string MDS = "mds";
+        public const string Reset = "reset";
+        public const string Start = "start";
+        public const string Stop = "stop";
+        public const string Sub = "sub";
+        public const string Swap = "swap";
+        public const string XBOX = "xbox";
     }
 
+    /// <summary>
+    /// Dumping flags for DiscImageCreator
+    /// </summary>
+    public static class DICFlags
+    {
+        public const string AddOffset = "/a";
+        public const string AMSF = "/p";
+        public const string BEOpcode = "/be";
+        public const string C2Opcode = "/c2";
+        public const string CMI = "/c";
+        public const string D8Opcode = "/d8";
+        public const string DisableBeep = "/q";
+        public const string ForceUnitAccess = "/f";
+        public const string MCN = "/m";
+        public const string MultiSession = "/ms";
+        public const string NoFixSubP = "/np";
+        public const string NoFixSubQ = "/nq";
+        public const string NoFixSubQLibCrypt = "/nl";
+        public const string NoFixSubQSecuROM = "/ns";
+        public const string NoFixSubRtoW = "/nr";
+        public const string Raw = "/raw";
+        public const string Reverse = "/r";
+        public const string ScanAntiMod = "/am";
+        public const string ScanFileProtect = "/sf";
+        public const string ScanSectorProtect = "/ss";
+        public const string SeventyFour = "/74";
+        public const string SubchannelReadLevel = "/s";
+    }
+
+    /// <summary>
+    /// Template field values for submission info
+    /// </summary>
     public static class Template
     {
         // Manual information
@@ -91,6 +104,10 @@
         public const string PlayStationLibCryptField = "LibCrypt"; // TODO: Not automatic yet
         public const string SaturnHeaderField = "Header"; // TODO: Not automatic yet
         public const string SaturnBuildDateField = "Build Date"; // TODO: Not automatic yet
+        public const string XBOXDMICRC = "DMI.bin CRC32"; // TODO: Not automatic yet
+        public const string XBOXPFICRC = "PFI.bin CRC32"; // TODO: Not automatic yet
+        public const string XBOXSSCRC = "SS.bin CRC32"; // TODO: Not automatic yet
+        public const string XBOXSSRanges = "Security Sector Ranges"; // TODO: Not automatic yet
 
         // Default values
 

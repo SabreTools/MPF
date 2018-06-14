@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DICUI
+namespace DICUI.Utilities
 {
     public static class DumpInformation
     {
@@ -100,10 +100,12 @@ namespace DICUI
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case DiscType.Floppy:
-                    return File.Exists(combinedBase + "_cmd.txt")
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
                        && File.Exists(combinedBase + "_disc.txt");
                 default:
-                    return false;
+                    // Non-dumping commands will usually produce no output, so this is irrelevant
+                    return true;
             }
         }
 
@@ -143,7 +145,7 @@ namespace DICUI
                 { Template.ContentsField, Template.OptionalValue },
                 { Template.VersionField, Template.RequiredIfExistsValue },
                 { Template.EditionField, "Original (VERIFY THIS)" },
-                { Template.DATField, GetDatfile(combinedBase + ".dat") }, // TODO: Petition sarami to add .dat output for floppy images
+                { Template.DATField, GetDatfile(combinedBase + ".dat") },
             };
 
             // Now we want to do a check by DiscType and extract all required info
@@ -195,7 +197,7 @@ namespace DICUI
                     }
 
                     break;
-                case DiscType.DVD5:
+                case DiscType.DVD5: // TODO: Add XBOX360-specific outputs to this
                 case DiscType.HDDVD:
                 case DiscType.BD25:
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -221,13 +223,19 @@ namespace DICUI
                                 }
                             }
                             break;
+                        case KnownSystem.MicrosoftXBOX:
+                            mappings[Template.XBOXDMICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXPFICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSCRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSRanges] = Template.RequiredValue;
+                            break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
                             break;
                     }
 
                     break;
-                case DiscType.DVD9:
+                case DiscType.DVD9: // TODO: Add XBOX360-specific outputs to this
                 case DiscType.BD50:
                     mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -255,6 +263,12 @@ namespace DICUI
                                     mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
                                 }
                             }
+                            break;
+                        case KnownSystem.MicrosoftXBOX:
+                            mappings[Template.XBOXDMICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXPFICRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSCRC] = Template.RequiredValue;
+                            mappings[Template.XBOXSSRanges] = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
@@ -596,6 +610,13 @@ namespace DICUI
                         output.Add(Template.PlayStationLibCryptField + ": " + info[Template.PlayStationLibCryptField]);
                         break;
                 }
+                switch (type)
+                {
+                    case DiscType.DVD9:
+                    case DiscType.BD50:
+                        output.Add(Template.LayerbreakField + ": " + info[Template.LayerbreakField]);
+                        break;
+                }
                 output.Add(Template.PVDField + ":"); output.Add("");
                 output.AddRange(info[Template.PVDField].Split('\n'));
                 switch (sys)
@@ -609,6 +630,13 @@ namespace DICUI
                             output.Add(Template.SubIntentionField + ":"); output.Add("");
                             output.AddRange(info[Template.SubIntentionField].Split('\n'));
                         }
+                        break;
+                    case KnownSystem.MicrosoftXBOX:
+                        output.Add(Template.XBOXDMICRC + ": " + info[Template.XBOXDMICRC]);
+                        output.Add(Template.XBOXPFICRC + ": " + info[Template.XBOXPFICRC]);
+                        output.Add(Template.XBOXSSCRC + ": " + info[Template.XBOXSSCRC]); output.Add("");
+                        output.Add(Template.XBOXSSRanges + ":"); output.Add("");
+                        output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
                 }
                 switch (type)

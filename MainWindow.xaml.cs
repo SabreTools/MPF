@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
+using DICUI.Utilities;
 
 namespace DICUI
 {
@@ -133,7 +134,7 @@ namespace DICUI
         /// </summary>
         private void PopulateSystems()
         {
-            _systems = Utilities.CreateListOfSystems();
+            _systems = Utilities.Validation.CreateListOfSystems();
             cmb_DiscType.ItemsSource = _systems;
             cmb_DiscType.DisplayMemberPath = "Item1";
             cmb_DiscType.SelectedIndex = 0;
@@ -149,7 +150,7 @@ namespace DICUI
         private void PopulateDrives()
         {
             // Populate the list of drives and add it to the combo box
-            _drives = Utilities.CreateListOfDrives();
+            _drives = Utilities.Validation.CreateListOfDrives();
             cmb_DriveLetter.ItemsSource = _drives;
             cmb_DriveLetter.DisplayMemberPath = "Item1";
             cmb_DriveLetter.SelectedIndex = 0;
@@ -214,7 +215,7 @@ namespace DICUI
 
             // Validate that everything is good
             if (string.IsNullOrWhiteSpace(customParameters)
-                || !Utilities.ValidateParameters(customParameters)
+                || !Utilities.Validation.ValidateParameters(customParameters)
                 || (isFloppy ^ type == DiscType.Floppy))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
@@ -222,12 +223,10 @@ namespace DICUI
                 return;
             }
 
-            // If we have a known custom configuration, we need to extract the relevant information from it
+            // If we have a custom configuration, we need to extract the best possible information from it
             if (systemName == "Custom Input" && system == KnownSystem.NONE && type == DiscType.NONE)
             {
-                Utilities.DetermineFlags(customParameters, out string command, out string letter, out string path);
-                type = Utilities.GetDiscType(command);
-                system = Utilities.GetKnownSystem(type);
+                Utilities.Validation.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
                 driveLetter = letter[0];
                 outputDirectory = Path.GetDirectoryName(path);
                 outputFilename = Path.GetFileName(path);
@@ -278,6 +277,7 @@ namespace DICUI
             // Special cases
             switch (system)
             {
+                // TODO: May not be needed anymore? DIC claims to have this functionality now
                 case KnownSystem.MicrosoftXBOXOne:
                 case KnownSystem.SonyPlayStation4:
                     if (!File.Exists(sgRawPath))
@@ -432,7 +432,7 @@ namespace DICUI
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = dicPath,
-                        Arguments = DICCommands.EjectCommand + " " + driveTuple.Item1,
+                        Arguments = DICCommands.Eject + " " + driveTuple.Item1,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -465,18 +465,18 @@ namespace DICUI
                     break;
                 case DiscType.GameCubeGameDisc:
                 case DiscType.GDROM:
-                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Converters.DiscTypeToString(tuple.Item3));
                     btn_StartStop.IsEnabled = true;
                     break;
                 case DiscType.HDDVD:
                 case DiscType.UMD:
                 case DiscType.WiiOpticalDisc:
                 case DiscType.WiiUOpticalDisc:
-                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Utilities.DiscTypeToString(tuple.Item3));
+                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Converters.DiscTypeToString(tuple.Item3));
                     btn_StartStop.IsEnabled = false;
                     break;
                 default:
-                    lbl_Status.Content = string.Format("{0} ready to dump", Utilities.DiscTypeToString(tuple.Item3));
+                    lbl_Status.Content = string.Format("{0} ready to dump", Converters.DiscTypeToString(tuple.Item3));
                     btn_StartStop.IsEnabled = true;
                     break;
             }
@@ -520,12 +520,17 @@ namespace DICUI
                 {
                     var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
                     var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string, bool>;
-                    string discType = Utilities.GetBaseCommand(selected.Item3);
-                    List<string> defaultParams = Utilities.GetDefaultParameters(selected.Item2, selected.Item3);
+                    string discType = Converters.DiscTypeToBaseCommand(selected.Item3);
+                    List<string> defaultParams = Converters.KnownSystemAndDiscTypeToParameters(selected.Item2, selected.Item3);
                     txt_Parameters.Text = discType
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
-                        + (selected.Item3 != DiscType.Floppy && selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                        + (selected.Item3 != DiscType.Floppy
+                            && selected.Item3 != DiscType.BD25
+                            && selected.Item3 != DiscType.BD50
+                            && selected.Item2 != KnownSystem.MicrosoftXBOX
+                            && selected.Item2 != KnownSystem.MicrosoftXBOX360
+                                ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
             }
@@ -542,7 +547,7 @@ namespace DICUI
             if (driveTuple != null && discTuple != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(defaultOutputPath, driveTuple.Item2);
-                txt_OutputFilename.Text = driveTuple.Item2 + Utilities.GetDefaultExtension(discTuple.Item3);
+                txt_OutputFilename.Text = driveTuple.Item2 + Converters.DiscTypeToExtension(discTuple.Item3);
             }
             else
             {
@@ -575,7 +580,7 @@ namespace DICUI
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = dicPath,
-                    Arguments = DICCommands.DriveSpeedCommand + " " + driveLetter,
+                    Arguments = DICCommands.DriveSpeed + " " + driveLetter,
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,

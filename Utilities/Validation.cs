@@ -5,199 +5,10 @@ using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
 
-namespace DICUI
+namespace DICUI.Utilities
 {
-    public static class Utilities
+    public static class Validation
     {
-        /// <summary>
-        /// Get the string representation of the DiscType enum values
-        /// </summary>
-        /// <param name="type">DiscType value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string DiscTypeToString(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                    return "CD-ROM";
-                case DiscType.DVD5:
-                    return "DVD-5 [Single-Layer]";
-                case DiscType.DVD9:
-                    return "DVD-9 [Dual-Layer]";
-                case DiscType.GDROM:
-                    return "GD-ROM";
-                case DiscType.HDDVD:
-                    return "HD-DVD";
-                case DiscType.BD25:
-                    return "BluRay-25 [Single-Layer]";
-                case DiscType.BD50:
-                    return "BluRay-50 [Dual-Layer]";
-
-                case DiscType.GameCubeGameDisc:
-                    return "GameCube Game";
-                case DiscType.WiiOpticalDisc:
-                    return "Wii Optical";
-                case DiscType.WiiUOpticalDisc:
-                    return "Wii U Optical";
-                case DiscType.UMD:
-                    return "UMD";
-
-                case DiscType.Floppy:
-                    return "Floppy Disk";
-
-                case DiscType.NONE:
-                default:
-                    return "Unknown";
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the KnownSystem enum values
-        /// </summary>
-        /// <param name="sys">KnownSystem value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string KnownSystemToString(KnownSystem? sys)
-        {
-            switch (sys)
-            {
-                #region Consoles
-
-                case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    return "Bandai Playdia Quick Interactive System";
-                case KnownSystem.BandaiApplePippin:
-                    return "Bandai / Apple Pippin";
-                case KnownSystem.CommodoreAmigaCD32:
-                    return "Commodore Amiga CD32";
-                case KnownSystem.CommodoreAmigaCDTV:
-                    return "Commodore Amiga CDTV";
-                case KnownSystem.MattelHyperscan:
-                    return "Mattel HyperScan";
-                case KnownSystem.MicrosoftXBOX:
-                    return "Microsoft XBOX";
-                case KnownSystem.MicrosoftXBOX360:
-                    return "Microsoft XBOX 360";
-                case KnownSystem.MicrosoftXBOXOne:
-                    return "Microsoft XBOX One";
-                case KnownSystem.NECPCEngineTurboGrafxCD:
-                    return "NEC PC-Engine / TurboGrafx CD";
-                case KnownSystem.NECPCFX:
-                    return "NEC PC-FX / PC-FXGA";
-                case KnownSystem.NintendoGameCube:
-                    return "Nintendo GameCube";
-                case KnownSystem.NintendoWii:
-                    return "Nintendo Wii";
-                case KnownSystem.NintendoWiiU:
-                    return "Nintendo Wii U";
-                case KnownSystem.Panasonic3DOInteractiveMultiplayer:
-                    return "Panasonic 3DO Interactive Multiplayer";
-                case KnownSystem.PhilipsCDi:
-                    return "Philips CD-i";
-                case KnownSystem.SegaCDMegaCD:
-                    return "Sega CD / Mega CD";
-                case KnownSystem.SegaDreamcast:
-                    return "Sega Dreamcast";
-                case KnownSystem.SegaSaturn:
-                    return "Sega Saturn";
-                case KnownSystem.SNKNeoGeoCD:
-                    return "SNK Neo Geo CD";
-                case KnownSystem.SonyPlayStation:
-                    return "Sony PlayStation";
-                case KnownSystem.SonyPlayStation2:
-                    return "Sony PlayStation 2";
-                case KnownSystem.SonyPlayStation3:
-                    return "Sony PlayStation 3";
-                case KnownSystem.SonyPlayStation4:
-                    return "Sony PlayStation 4";
-                case KnownSystem.SonyPlayStationPortable:
-                    return "Sony PlayStation Portable";
-                case KnownSystem.VMLabsNuon:
-                    return "VM Labs NUON";
-                case KnownSystem.VTechVFlashVSmilePro:
-                    return "VTech V.Flash - V.Smile Pro";
-                case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    return "ZAPiT Games Game Wave Family Entertainment System";
-
-                #endregion
-
-                #region Computers
-
-                case KnownSystem.AcornArchimedes:
-                    return "Acorn Archimedes";
-                case KnownSystem.AppleMacintosh:
-                    return "Apple Macintosh";
-                case KnownSystem.CommodoreAmigaCD:
-                    return "Commodore Amiga CD";
-                case KnownSystem.FujitsuFMTowns:
-                    return "Fujitsu FM Towns series";
-                case KnownSystem.IBMPCCompatible:
-                    return "IBM PC Compatible";
-                case KnownSystem.NECPC88:
-                    return "NEC PC-88";
-                case KnownSystem.NECPC98:
-                    return "NEC PC-98";
-                case KnownSystem.SharpX68000:
-                    return "Sharp X68000";
-
-                #endregion
-
-                #region Arcade
-
-                case KnownSystem.NamcoSegaNintendoTriforce:
-                    return "Namco / Sega / Nintendo Triforce";
-                case KnownSystem.NamcoSystem246:
-                    return "Namco System 246";
-                case KnownSystem.SegaChihiro:
-                    return "Sega Chihiro";
-                case KnownSystem.SegaLindbergh:
-                    return "Sega Lindbergh";
-                case KnownSystem.SegaNaomi:
-                    return "Sega Naomi";
-                case KnownSystem.SegaNaomi2:
-                    return "Sega Naomi 2";
-                case KnownSystem.SegaNu:
-                    return "Sega Nu";
-                case KnownSystem.SegaRingEdge2:
-                    return "Sega RingEdge 2";
-                case KnownSystem.TABAustriaQuizard:
-                    return "TAB-Austria Quizard";
-                case KnownSystem.TandyMemorexVisualInformationSystem:
-                    return "Tandy / Memorex Visual Information System";
-
-                #endregion
-
-                #region Others
-
-                case KnownSystem.AudioCD:
-                    return "Audio CD";
-                case KnownSystem.BDVideo:
-                    return "BD-Video";
-                case KnownSystem.DVDVideo:
-                    return "DVD-Video";
-                case KnownSystem.EnhancedCD:
-                    return "Enhanced CD";
-                case KnownSystem.PalmOS:
-                    return "PalmOS";
-                case KnownSystem.PhilipsCDiDigitalVideo:
-                    return "Philips CD-i Digital Video";
-                case KnownSystem.PhotoCD:
-                    return "Photo CD";
-                case KnownSystem.PlayStationGameSharkUpdates:
-                    return "PlayStation GameShark Updates";
-                case KnownSystem.TaoiKTV:
-                    return "Tao iKTV";
-                case KnownSystem.TomyKissSite:
-                    return "Tomy Kiss-Site";
-                case KnownSystem.VideoCD:
-                    return "Video CD";
-
-                #endregion
-
-                case KnownSystem.NONE:
-                default:
-                    return "Unknown";
-            }
-        }
-
         /// <summary>
         /// Get a list of valid DiscTypes for a given system
         /// </summary>
@@ -341,11 +152,146 @@ namespace DICUI
 
                 #region Arcade
 
+                case KnownSystem.AmigaCUBOCD32:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.AmericanLaserGames3DO:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.Atari3DO:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.Atronic:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.AUSCOMSystem1:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.BallyGameMagic:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.CapcomCPSystemIII:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.GlobalVRVarious:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.GlobalVRVortek:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.GlobalVRVortekV3:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    break;
+                case KnownSystem.ICEPCHardware:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.IncredibleTechnologiesEagle:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.IncredibleTechnologiesVarious:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.KonamiFirebeat:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiGVSystem:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiM2:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiPython:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    break;
+                case KnownSystem.KonamiPython2:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    break;
+                case KnownSystem.KonamiSystem573:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiTwinkle:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.KonamiVarious:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesBoardwalk:
+                    types.Add(DiscType.CD); // TODO: Confirm
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchAurora:
+                    types.Add(DiscType.CD); // TODO: Confirm
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchForce:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchION:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchMaxx:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.MeritIndustriesMegaTouchXL:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NamcoCapcomSystem256:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.NamcoCapcomTaitoSystem246:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     types.Add(DiscType.GDROM);
                     break;
+                case KnownSystem.NamcoSystem12:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NamcoSystem357:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.BD25);
+                    types.Add(DiscType.BD50);
+                    break;
+                case KnownSystem.NewJatreCDi:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NichibutsuHighRateSystem:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NichibutsuSuperCD:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.NichibutsuXRateSystem:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.PhotoPlayVarious:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.RawThrillsVarious:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
                 case KnownSystem.SegaChihiro:
                     types.Add(DiscType.GDROM);
+                    break;
+                case KnownSystem.SegaEuropaR:
+                    types.Add(DiscType.DVD5); // TODO: Confirm
+                    types.Add(DiscType.DVD9); // TODO: Confirm
                     break;
                 case KnownSystem.SegaLindbergh:
                     types.Add(DiscType.DVD5);
@@ -358,10 +304,30 @@ namespace DICUI
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaNu:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     types.Add(DiscType.BD25);
                     types.Add(DiscType.BD50);
                     break;
+                case KnownSystem.SegaRingEdge:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
                 case KnownSystem.SegaRingEdge2:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.SegaRingWide:
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    break;
+                case KnownSystem.SegaSTV:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.SegaSystem32:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.SeibuCATSSystem:
                     types.Add(DiscType.DVD5);
                     types.Add(DiscType.DVD9);
                     break;
@@ -369,6 +335,9 @@ namespace DICUI
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.TandyMemorexVisualInformationSystem:
+                    types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
                     types.Add(DiscType.CD);
                     break;
 
@@ -424,221 +393,6 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Get the DIC command to be used for a given DiscType
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>String containing the command, null on error</returns>
-        public static string GetBaseCommand(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                    return DICCommands.CompactDiscCommand;
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                    return DICCommands.DVDCommand;
-                case DiscType.GDROM:
-                    return DICCommands.GDROMCommand;
-                case DiscType.HDDVD:
-                    return null;
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    return DICCommands.BDCommand;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    return DICCommands.DVDCommand;
-                case DiscType.WiiOpticalDisc:
-                    return null;
-                case DiscType.WiiUOpticalDisc:
-                    return null;
-                case DiscType.UMD:
-                    return null;
-
-                // Non-optical
-                case DiscType.Floppy:
-                    return DICCommands.FloppyCommand;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the DiscType associated with a given base command
-        /// </summary>
-        /// <param name="baseCommand">String value to check</param>
-        /// <returns>DiscType if possible, null on error</returns>
-        /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static DiscType? GetDiscType(string baseCommand)
-        {
-            switch (baseCommand)
-            {
-                case DICCommands.CompactDiscCommand:
-                    return DiscType.CD;
-                case DICCommands.GDROMCommand:
-                case DICCommands.GDROMSwapCommand:
-                    return DiscType.GDROM;
-                case DICCommands.DVDCommand:
-                    return DiscType.DVD9;
-                case DICCommands.BDCommand:
-                    return DiscType.BD50;
-
-                // Non-optical
-                case DICCommands.FloppyCommand:
-                    return DiscType.Floppy;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the most common known system for a given DiscType
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? GetKnownSystem(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.Floppy:
-                    return KnownSystem.IBMPCCompatible;
-                case DiscType.GDROM:
-                    return KnownSystem.SegaDreamcast;
-                case DiscType.HDDVD:
-                    return KnownSystem.MicrosoftXBOX360;
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    return KnownSystem.SonyPlayStation3;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    return KnownSystem.NintendoGameCube;
-                case DiscType.WiiOpticalDisc:
-                    return KnownSystem.NintendoWii;
-                case DiscType.WiiUOpticalDisc:
-                    return KnownSystem.NintendoWiiU;
-                case DiscType.UMD:
-                    return KnownSystem.SonyPlayStationPortable;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get list of default parameters for a given system and disc type
-        /// </summary>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>List of strings representing the parameters</returns>
-        public static List<string> GetDefaultParameters(KnownSystem? sys, DiscType? type)
-        {
-            // First check to see if the combination of system and disctype is valid
-            List<DiscType?> validTypes = GetValidDiscTypes(sys);
-            if (!validTypes.Contains(type))
-            {
-                return null;
-            }
-
-            // Now sort based on disc type
-            List<string> parameters = new List<string>();
-            switch (type)
-            {
-                case DiscType.CD:
-                    parameters.Add(DICCommands.CDC2OpcodeFlag); parameters.Add("20");
-
-                    switch (sys)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            parameters.Add(DICCommands.CDNoFixSubQSecuROMFlag);
-                            parameters.Add(DICCommands.CDScanFileProtectFlag);
-                            parameters.Add(DICCommands.CDScanSectorProtectFlag);
-                            break;
-                        case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(DICCommands.CDMCNFlag);
-                            break;
-                        case KnownSystem.SonyPlayStation:
-                            parameters.Add(DICCommands.CDScanAnitModFlag);
-                            break;
-                    }
-                    break;
-                case DiscType.DVD5:
-                    // Currently no defaults set
-                    break;
-                case DiscType.DVD9:
-                    // Currently no defaults set
-                    break;
-                case DiscType.GDROM:
-                    parameters.Add(DICCommands.CDC2OpcodeFlag); parameters.Add("20");
-                    break;
-                case DiscType.HDDVD:
-                    break;
-                case DiscType.BD25:
-                    // Currently no defaults set
-                    break;
-                case DiscType.BD50:
-                    // Currently no defaults set
-                    break;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    parameters.Add(DICCommands.DVDRawFlag);
-                    break;
-                case DiscType.WiiOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case DiscType.WiiUOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case DiscType.UMD:
-                    break;
-
-                // Non-optical
-                case DiscType.Floppy:
-                    // Currently no defaults set
-                    break;
-            }
-
-            return parameters;
-        }
-
-        /// <summary>
-        /// Get the default extension for a given disc type
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string GetDefaultExtension(DiscType? type)
-        {
-            switch(type)
-            {
-                case DiscType.CD:
-                case DiscType.GDROM:
-                    return ".bin";
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.HDDVD:
-                case DiscType.BD25:
-                case DiscType.BD50:
-                case DiscType.GameCubeGameDisc:
-                case DiscType.WiiOpticalDisc:
-                case DiscType.UMD:
-                    return ".iso";
-                case DiscType.WiiUOpticalDisc:
-                    return ".wud";
-                case DiscType.Floppy:
-                    return ".img";
-                case DiscType.NONE:
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Create a list of systems matched to their respective enums
         /// </summary>
         /// <returns>Systems matched to enums, if possible</returns>
@@ -669,7 +423,7 @@ namespace DICUI
                         break;
 
                     // Arcade section
-                    case KnownSystem.NamcoSegaNintendoTriforce:
+                    case KnownSystem.AmigaCUBOCD32:
                         mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Arcade ----------", null, null));
                         break;
 
@@ -685,14 +439,14 @@ namespace DICUI
                 // If we have a single type, we don't want to postfix the system name with it
                 if (types.Count == 1)
                 {
-                    mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system), system, types[0]));
+                    mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system), system, types[0]));
                 }
                 // Otherwise, postfix the system name properly
                 else
                 {
                     foreach (DiscType type in types)
                     {
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system) + " (" + DiscTypeToString(type) + ")", system, type));
+                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system) + " (" + Converters.DiscTypeToString(type) + ")", system, type));
                     }
                 }
             }
@@ -776,10 +530,10 @@ namespace DICUI
             int index = -1;
             switch (parts[0])
             {
-                case DICCommands.CompactDiscCommand:
-                case DICCommands.GDROMCommand:
-                case DICCommands.GDROMSwapCommand:
-                case DICCommands.DataCommand:
+                case DICCommands.CompactDisc:
+                case DICCommands.GDROM:
+                case DICCommands.Swap:
+                case DICCommands.Data:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -793,14 +547,14 @@ namespace DICUI
                         return false;
                     }
 
-                    if (parts[0] == DICCommands.GDROMSwapCommand)
+                    if (parts[0] == DICCommands.Swap)
                     {
-                        if (parts.Count > 4)
+                        if (parts.Count > 5)
                         {
                             return false;
                         }
                     }
-                    else if (parts[0] == DICCommands.DataCommand || parts[0] == DICCommands.AudioCommand)
+                    else if (parts[0] == DICCommands.Data || parts[0] == DICCommands.Audio)
                     {
                         if (!IsValidNumber(parts[4]) || !IsValidNumber(parts[5]))
                         {
@@ -815,7 +569,7 @@ namespace DICUI
                     }
 
                     break;
-                case DICCommands.DVDCommand:
+                case DICCommands.DigitalVideoDisc:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -834,12 +588,12 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case DICCommands.DisableBeepFlag:
-                            case DICCommands.DVDCMIFlag:
-                            case DICCommands.DVDRawFlag:
+                            case DICFlags.DisableBeep:
+                            case DICFlags.CMI:
+                            case DICFlags.Raw:
                                 // No-op, all of these are single flags
                                 break;
-                            case DICCommands.ForceUnitAccessFlag:
+                            case DICFlags.ForceUnitAccess:
                                 // If the next item doesn't exist, it's good
                                 if (!DoesNextExist(parts, i))
                                 {
@@ -862,7 +616,8 @@ namespace DICUI
                         }
                     }
                     break;
-                case DICCommands.BDCommand:
+                case DICCommands.BluRay:
+                case DICCommands.XBOX:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -877,10 +632,10 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case DICCommands.DisableBeepFlag:
+                            case DICFlags.DisableBeep:
                                 // No-op, this is a single flag
                                 break;
-                            case DICCommands.ForceUnitAccessFlag:
+                            case DICFlags.ForceUnitAccess:
                                 // If the next item doesn't exist, it's good
                                 if (!DoesNextExist(parts, i))
                                 {
@@ -903,7 +658,7 @@ namespace DICUI
                         }
                     }
                     break;
-                case DICCommands.FloppyCommand:
+                case DICCommands.Floppy:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -917,12 +672,12 @@ namespace DICUI
                         return false;
                     }
                     break;
-                case DICCommands.StopCommand:
-                case DICCommands.StartCommand:
-                case DICCommands.EjectCommand:
-                case DICCommands.CloseCommand:
-                case DICCommands.ResetCommand:
-                case DICCommands.DriveSpeedCommand:
+                case DICCommands.Stop:
+                case DICCommands.Start:
+                case DICCommands.Eject:
+                case DICCommands.Close:
+                case DICCommands.Reset:
+                case DICCommands.DriveSpeed:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -932,8 +687,8 @@ namespace DICUI
                         return false;
                     }
                     break;
-                case DICCommands.SubCommand:
-                case DICCommands.MDSCommand:
+                case DICCommands.Sub:
+                case DICCommands.MDS:
                     if (IsFlag(parts[1]))
                     {
                         return false;
@@ -954,107 +709,107 @@ namespace DICUI
                 {
                     switch(parts[i])
                     {
-                        case DICCommands.DisableBeepFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.DisableBeep:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDD8OpcodeFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.D8Opcode:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDMCNFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand)
+                        case DICFlags.MCN:
+                            if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDAMSFFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand)
+                        case DICFlags.AMSF:
+                            if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDReverseFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.DataCommand)
+                        case DICFlags.Reverse:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDMultiSessionFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand)
+                        case DICFlags.MultiSession:
+                            if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDScanSectorProtectFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.DataCommand)
+                        case DICFlags.ScanSectorProtect:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDScanAnitModFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand)
+                        case DICFlags.ScanAntiMod:
+                            if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubPFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.NoFixSubP:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubQFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.NoFixSubQ:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubRtoWFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.NoFixSubRtoW:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubQLibCryptFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand)
+                        case DICFlags.NoFixSubQLibCrypt:
+                            if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDNoFixSubQSecuROMFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.NoFixSubQSecuROM:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
                             break;
-                        case DICCommands.CDScanFileProtectFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.DataCommand)
+                        case DICFlags.ScanFileProtect:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data)
                             {
                                 return false;
                             }
@@ -1076,11 +831,11 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICCommands.ForceUnitAccessFlag: // CD, GDROM, Data, Audio
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.ForceUnitAccess: // CD, GDROM, Data, Audio
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
@@ -1102,9 +857,9 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICCommands.CDAddOffsetFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.AddOffset:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
@@ -1120,11 +875,11 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICCommands.CDBEOpcodeFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.BEOpcode:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
@@ -1146,11 +901,11 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICCommands.CDC2OpcodeFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.C2Opcode:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
@@ -1175,11 +930,11 @@ namespace DICUI
                                 }
                             }
                             break;
-                        case DICCommands.CDSubchannelReadLevelFlag:
-                            if (parts[0] != DICCommands.CompactDiscCommand
-                                && parts[0] != DICCommands.GDROMCommand
-                                && parts[0] != DICCommands.DataCommand
-                                && parts[0] != DICCommands.AudioCommand)
+                        case DICFlags.SubchannelReadLevel:
+                            if (parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.Audio)
                             {
                                 return false;
                             }
@@ -1196,6 +951,12 @@ namespace DICUI
                             }
                             // If the next item isn't a valid number
                             else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 2))
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICFlags.SeventyFour:
+                            if (parts[0] != DICCommands.Swap)
                             {
                                 return false;
                             }
@@ -1284,13 +1045,15 @@ namespace DICUI
         /// Determine the base flags to use for checking a commandline
         /// </summary>
         /// <param name="parameters">Parameters as a string to check</param>
-        /// <param name="command">Output string containing the found command</param>
+        /// <param name="type">Output nullable DiscType containing the found DiscType, if possible</param>
+        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
         /// <param name="letter">Output string containing the found drive letter</param>
         /// <param name="path">Output string containing the found path</param>
         /// <returns>False on error (and all outputs set to null), true otherwise</returns>
-        public static bool DetermineFlags(string parameters, out string command, out string letter, out string path)
+        public static bool DetermineFlags(string parameters, out DiscType? type, out KnownSystem? system, out string letter, out string path)
         {
-            command = null; letter = null; path = null;
+            // Populate all output variables with null
+            type = null; system = null; letter = null; path = null;
 
             // The string has to be valid by itself first
             if (String.IsNullOrWhiteSpace(parameters))
@@ -1306,19 +1069,21 @@ namespace DICUI
                 .Select(m => m.Value)
                 .ToList();
 
+            type = Converters.BaseCommmandToDiscType(parts[0]);
+            system = Converters.BaseCommandToKnownSystem(parts[0]);
+
             // Determine what the commandline should look like given the first item
             switch (parts[0])
             {
-                case DICCommands.CompactDiscCommand:
-                case DICCommands.GDROMCommand:
-                case DICCommands.GDROMSwapCommand:
-                case DICCommands.DataCommand:
-                case DICCommands.AudioCommand:
-                case DICCommands.DVDCommand:
-                case DICCommands.BDCommand:
-                case DICCommands.FloppyCommand:
-                    command = parts[0];
-
+                case DICCommands.CompactDisc:
+                case DICCommands.GDROM:
+                case DICCommands.Swap:
+                case DICCommands.Data:
+                case DICCommands.Audio:
+                case DICCommands.DigitalVideoDisc:
+                case DICCommands.BluRay:
+                case DICCommands.XBOX:
+                case DICCommands.Floppy:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -1331,15 +1096,33 @@ namespace DICUI
                     }
                     path = parts[2].Trim('\"');
 
-                    break;
-                case DICCommands.StopCommand:
-                case DICCommands.StartCommand:
-                case DICCommands.EjectCommand:
-                case DICCommands.CloseCommand:
-                case DICCommands.ResetCommand:
-                case DICCommands.DriveSpeedCommand:
-                    command = parts[0];
+                    // Special case for GameCube/Wii
+                    if (parts.Contains(DICFlags.Raw))
+                    {
+                        type = DiscType.GameCubeGameDisc;
+                        system = KnownSystem.NintendoGameCube;
+                    }
+                    // Special case for PlayStation
+                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
+                        || parts.Contains(DICFlags.ScanAntiMod))
+                    {
+                        type = DiscType.CD;
+                        system = KnownSystem.SonyPlayStation;
+                    }
+                    // Special case for Saturn
+                    else if (parts.Contains(DICFlags.SeventyFour))
+                    {
+                        type = DiscType.CD;
+                        system = KnownSystem.SegaSaturn;
+                    }
 
+                    break;
+                case DICCommands.Stop:
+                case DICCommands.Start:
+                case DICCommands.Eject:
+                case DICCommands.Close:
+                case DICCommands.Reset:
+                case DICCommands.DriveSpeed:
                     if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
@@ -1347,10 +1130,8 @@ namespace DICUI
                     letter = parts[1];
 
                     break;
-                case DICCommands.SubCommand:
-                case DICCommands.MDSCommand:
-                    command = parts[0];
-
+                case DICCommands.Sub:
+                case DICCommands.MDS:
                     if (IsFlag(parts[1]))
                     {
                         return false;
