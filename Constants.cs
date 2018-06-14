@@ -98,12 +98,12 @@
         public const string SubIntentionField = "SubIntention (SecuROM)";
         public const string WriteOffsetField = "WriteOffset";
         public const string LayerbreakField = "Layerbreak";
-        public const string PlaystationEXEDateField = "EXE Date"; // TODO: Not automatic yet
+        public const string PlaystationEXEDateField = "EXE Date";
         public const string PlayStationEDCField = "EDC"; // TODO: Not automatic yet
         public const string PlayStationAntiModchipField = "Anti-modchip"; // TODO: Not automatic yet
         public const string PlayStationLibCryptField = "LibCrypt"; // TODO: Not automatic yet
-        public const string SaturnHeaderField = "Header"; // TODO: Not automatic yet
-        public const string SaturnBuildDateField = "Build Date"; // TODO: Not automatic yet
+        public const string SaturnHeaderField = "Header";
+        public const string SaturnBuildDateField = "Build Date";
         public const string XBOXDMICRC = "DMI.bin CRC32"; // TODO: Not automatic yet
         public const string XBOXPFICRC = "PFI.bin CRC32"; // TODO: Not automatic yet
         public const string XBOXSSCRC = "SS.bin CRC32"; // TODO: Not automatic yet

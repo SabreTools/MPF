@@ -30,6 +30,11 @@ Download the latest release here:
 2018-06-14
 --------------------------------------------------------------------------
 
+Version 1.05a released:
+
+- Fixed some ordering and nullability issues
+- Added automatic fields for PS1, PS2, Saturn
+
 Version 1.05 released:
 
 - Miscellaneous fixes around custom parameter validation, dump information accuracy, settings window, and TODO cleanup
