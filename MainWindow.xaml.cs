@@ -386,7 +386,7 @@ namespace DICUI
                 EjectDisc();
             }
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type);
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type, driveLetter);
             List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, system, type);
             bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
 

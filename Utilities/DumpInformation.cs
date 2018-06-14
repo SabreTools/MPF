@@ -116,9 +116,10 @@ namespace DICUI.Utilities
         /// <param name="outputFilename">Base filename to use</param>
         /// <param name="sys">KnownSystem value to check</param>
         /// <param name="type">DiscType value to check</param>
+        /// <param name="driveLetter">Drive letter to check</param>
         /// <returns>Dictionary containing mapped output values, null on error</returns>
         /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
-        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
+        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type, char driveLetter)
         {
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -182,17 +183,18 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = Template.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
-                            mappings[Template.SaturnBuildDateField] = Template.RequiredValue; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
+                            mappings[Template.SaturnBuildDateField] = GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
                             mappings[Template.PlayStationEDCField] = Template.YesNoValue;
                             mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
                             mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
 
@@ -230,7 +232,8 @@ namespace DICUI.Utilities
                             mappings[Template.XBOXSSRanges] = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
 
@@ -271,7 +274,8 @@ namespace DICUI.Utilities
                             mappings[Template.XBOXSSRanges] = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
 
@@ -480,6 +484,50 @@ namespace DICUI.Utilities
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
+        private static string GetPlayStationEXEDate(char driveLetter)
+        {
+            // TODO: IMPLEMENT EXE DATE CHECKING
+            return null;
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 2 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        private static string GetPlayStation2Version(char driveLetter)
+        {
+            // TODO: IMPLEMENT VERSION CHECKING
+            return null;
+        }
+
+        /// <summary>
+        /// Get the header from a Saturn disc, if possible
+        /// </summary>
+        /// <param name="firstTrackPath">Path to the first track to check</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private static byte[] GetSaturnHeader(string firstTrackPath)
+        {
+            // TODO: IMPLEMENT HEADER RETRIEVAL
+            return null;
+        }
+
+        /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <<param name="firstTrackPath">Path to the first track to check</param>
+        /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
+        private static string GetSaturnBuildDate(string firstTrackPath)
+        {
+            // TODO: IMPLEMENT BULID DATE CHECKING
+            return null;
         }
 
         /// <summary>
