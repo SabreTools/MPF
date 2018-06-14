@@ -756,7 +756,6 @@ namespace DICUI
         /// </summary>
         /// <param name="parameters">String representing all parameters</param>
         /// <returns>True if it would be valid, false otherwise</returns>
-        /// <remarks>TODO: Refactor this to make it cleaner</remarks>
         public static bool ValidateParameters(string parameters)
         {
             // The string has to be valid by itself first
@@ -774,622 +773,58 @@ namespace DICUI
                 .ToList();
 
             // Determine what the commandline should look like given the first item
+            int index = -1;
             switch (parts[0])
             {
                 case DICCommands.CompactDiscCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
-                    {
-                        return false;
-                    }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
-                    {
-                        return false;
-                    }
-                    else if (!Int32.TryParse(parts[3], out int cdspeed))
-                    {
-                        return false;
-                    }
-                    else if (cdspeed < 0 || cdspeed > 72)
-                    {
-                        return false;
-                    }
-
-                    // Loop through all auxilary flags
-                    for (int i = 4; i < parts.Count; i++)
-                    {
-                        switch (parts[i])
-                        {
-                            case DICCommands.DisableBeepFlag:
-                            case DICCommands.CDD8OpcodeFlag:
-                            case DICCommands.CDMCNFlag:
-                            case DICCommands.CDAMSFFlag:
-                            case DICCommands.CDReverseFlag:
-                            case DICCommands.CDMultiSessionFlag:
-                            case DICCommands.CDScanSectorProtectFlag:
-                            case DICCommands.CDScanAnitModFlag:
-                            case DICCommands.CDNoFixSubPFlag:
-                            case DICCommands.CDNoFixSubQFlag:
-                            case DICCommands.CDNoFixSubRtoWFlag:
-                            case DICCommands.CDNoFixSubQLibCryptFlag:
-                            case DICCommands.CDNoFixSubQSecuROMFlag:
-                                // No-op, all of these are single flags
-                                break;
-                            case DICCommands.CDScanFileProtectFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int sfp1))
-                                {
-                                    return false;
-                                }
-                                else if (sfp1 < 0)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.ForceUnitAccessFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
-                                {
-                                    return false;
-                                }
-                                else if (fua1 < 0)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDAddOffsetFlag:
-                                // If the next item doesn't exist, it's not good
-                                if (parts.Count == i + 1)
-                                {
-                                    return false;
-                                }
-                                // If the next item isn't a valid number
-                                if (!Int32.TryParse(parts[i + 1], out int af1))
-                                {
-                                    return false;
-                                }
-                                break;
-                            case DICCommands.CDBEOpcodeFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                else if (parts[i + 1] != "raw"
-                                    && (parts[i + 1] != "pack"))
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDC2OpcodeFlag:
-                                for (int j = 1; j < 4; j++)
-                                {
-                                    // If the next item doesn't exist, it's good
-                                    if (parts.Count == i + j)
-                                    {
-                                        break;
-                                    }
-                                    // If the next item is a flag, it's good
-                                    if (parts[i + j].StartsWith("/"))
-                                    {
-                                        i += (j - 1);
-                                        break;
-                                    }
-                                    // If the next item isn't a valid number
-                                    else if (!Int32.TryParse(parts[i + j], out int c2))
-                                    {
-                                        return false;
-                                    }
-                                    else if (c2 < 0)
-                                    {
-                                        return false;
-                                    }
-                                }
-                                break;
-                            case DICCommands.CDSubchannelReadLevelFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int sub))
-                                {
-                                    return false;
-                                }
-                                else if (sub < 0 || sub > 2)
-                                {
-                                    return false;
-                                }
-                                break;
-                            default:
-                                return false;
-                        }
-                    }
-                    break;
                 case DICCommands.GDROMCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
-                    {
-                        return false;
-                    }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
-                    {
-                        return false;
-                    }
-                    else if (!Int32.TryParse(parts[3], out int cdspeed))
-                    {
-                        return false;
-                    }
-                    else if (cdspeed < 0 || cdspeed > 72)
-                    {
-                        return false;
-                    }
-
-                    // Loop through all auxilary flags
-                    for (int i = 4; i < parts.Count; i++)
-                    {
-                        switch (parts[i])
-                        {
-                            case DICCommands.DisableBeepFlag:
-                            case DICCommands.CDD8OpcodeFlag:
-                            case DICCommands.CDNoFixSubPFlag:
-                            case DICCommands.CDNoFixSubQFlag:
-                            case DICCommands.CDNoFixSubRtoWFlag:
-                            case DICCommands.CDNoFixSubQSecuROMFlag:
-                                // No-op, all of these are single flags
-                                break;
-                            case DICCommands.ForceUnitAccessFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
-                                {
-                                    return false;
-                                }
-                                else if (fua1 < 0)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDBEOpcodeFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                else if (parts[i + 1] != "raw"
-                                    && (parts[i + 1] != "pack"))
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDC2OpcodeFlag:
-                                for (int j = 1; j < 4; j++)
-                                {
-                                    // If the next item doesn't exist, it's good
-                                    if (parts.Count == i + j)
-                                    {
-                                        break;
-                                    }
-                                    // If the next item is a flag, it's good
-                                    if (parts[i + j].StartsWith("/"))
-                                    {
-                                        i += (j - 1);
-                                        break;
-                                    }
-                                    // If the next item isn't a valid number
-                                    else if (!Int32.TryParse(parts[i + j], out int c2))
-                                    {
-                                        return false;
-                                    }
-                                    else if (c2 < 0)
-                                    {
-                                        return false;
-                                    }
-                                }
-                                break;
-                            case DICCommands.CDSubchannelReadLevelFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int sub))
-                                {
-                                    return false;
-                                }
-                                else if (sub < 0 || sub > 2)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            default:
-                                return false;
-                        }
-                    }
-                    break;
                 case DICCommands.GDROMSwapCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
-                    {
-                        return false;
-                    }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
-                    {
-                        return false;
-                    }
-                    else if (!Int32.TryParse(parts[3], out int cdspeed))
-                    {
-                        return false;
-                    }
-                    else if (cdspeed < 0 || cdspeed > 72)
-                    {
-                        return false;
-                    }
-                    else if (parts.Count > 4)
-                    {
-                        return false;
-                    }
-                    break;
                 case DICCommands.DataCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    else if (IsFlag(parts[2]))
                     {
                         return false;
                     }
-                    else if (!Int32.TryParse(parts[3], out int cdspeed))
-                    {
-                        return false;
-                    }
-                    else if (cdspeed < 0 || cdspeed > 72)
-                    {
-                        return false;
-                    }
-                    else if (!Int32.TryParse(parts[4], out int startlba)
-                        || !Int32.TryParse(parts[5], out int endlba))
+                    else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
                     {
                         return false;
                     }
 
-                    // Loop through all auxilary flags
-                    for (int i = 6; i < parts.Count; i++)
+                    if (parts[0] == DICCommands.GDROMSwapCommand)
                     {
-                        switch (parts[i])
+                        if (parts.Count > 4)
                         {
-                            case DICCommands.DisableBeepFlag:
-                            case DICCommands.CDD8OpcodeFlag:
-                            case DICCommands.CDReverseFlag:
-                            case DICCommands.CDScanSectorProtectFlag:
-                            case DICCommands.CDNoFixSubPFlag:
-                            case DICCommands.CDNoFixSubQFlag:
-                            case DICCommands.CDNoFixSubRtoWFlag:
-                            case DICCommands.CDNoFixSubQSecuROMFlag:
-                                // No-op, all of these are single flags
-                                break;
-                            case DICCommands.ForceUnitAccessFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
-                                {
-                                    return false;
-                                }
-                                else if (fua1 < 0)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDScanFileProtectFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int sfp1))
-                                {
-                                    return false;
-                                }
-                                else if (sfp1 < 0)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDBEOpcodeFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                else if (parts[i + 1] != "raw"
-                                    && (parts[i + 1] != "pack"))
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDC2OpcodeFlag:
-                                for (int j = 1; j < 4; j++)
-                                {
-                                    // If the next item doesn't exist, it's good
-                                    if (parts.Count == i + j)
-                                    {
-                                        break;
-                                    }
-                                    // If the next item is a flag, it's good
-                                    if (parts[i + j].StartsWith("/"))
-                                    {
-                                        i += (j - 1);
-                                        break;
-                                    }
-                                    // If the next item isn't a valid number
-                                    else if (!Int32.TryParse(parts[i + j], out int c2))
-                                    {
-                                        return false;
-                                    }
-                                    else if (c2 < 0)
-                                    {
-                                        return false;
-                                    }
-                                }
-                                break;
-                            case DICCommands.CDSubchannelReadLevelFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int sub))
-                                {
-                                    return false;
-                                }
-                                else if (sub < 0 || sub > 2)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            default:
-                                return false;
+                            return false;
                         }
                     }
-                    break;
-                case DICCommands.AudioCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    else if (parts[0] == DICCommands.DataCommand || parts[0] == DICCommands.AudioCommand)
                     {
-                        return false;
+                        if (!IsValidNumber(parts[4]) || !IsValidNumber(parts[5]))
+                        {
+                            return false;
+                        }
+
+                        index = 6;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    else
                     {
-                        return false;
-                    }
-                    else if (!Int32.TryParse(parts[3], out int cdspeed))
-                    {
-                        return false;
-                    }
-                    else if (cdspeed < 0 || cdspeed > 72)
-                    {
-                        return false;
-                    }
-                    else if (!Int32.TryParse(parts[4], out int startlba)
-                        || !Int32.TryParse(parts[5], out int endlba))
-                    {
-                        return false;
+                        index = 4;
                     }
 
-                    // Loop through all auxilary flags
-                    for (int i = 6; i < parts.Count; i++)
-                    {
-                        switch (parts[i])
-                        {
-                            case DICCommands.DisableBeepFlag:
-                            case DICCommands.CDD8OpcodeFlag:
-                            case DICCommands.CDNoFixSubPFlag:
-                            case DICCommands.CDNoFixSubQFlag:
-                            case DICCommands.CDNoFixSubRtoWFlag:
-                            case DICCommands.CDNoFixSubQSecuROMFlag:
-                                // No-op, all of these are single flags
-                                break;
-                            case DICCommands.ForceUnitAccessFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
-                                {
-                                    return false;
-                                }
-                                else if (fua1 < 0)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDAddOffsetFlag:
-                                // If the next item doesn't exist, it's not good
-                                if (parts.Count == i + 1)
-                                {
-                                    return false;
-                                }
-                                // If the next item isn't a valid number
-                                if (!Int32.TryParse(parts[i + 1], out int af1))
-                                {
-                                    return false;
-                                }
-                                break;
-                            case DICCommands.CDBEOpcodeFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                else if (parts[i + 1] != "raw"
-                                    && (parts[i + 1] != "pack"))
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            case DICCommands.CDC2OpcodeFlag:
-                                for (int j = 1; j < 4; j++)
-                                {
-                                    // If the next item doesn't exist, it's good
-                                    if (parts.Count == i + j)
-                                    {
-                                        break;
-                                    }
-                                    // If the next item is a flag, it's good
-                                    if (parts[i + j].StartsWith("/"))
-                                    {
-                                        i += (j - 1);
-                                        break;
-                                    }
-                                    // If the next item isn't a valid number
-                                    else if (!Int32.TryParse(parts[i + j], out int c2))
-                                    {
-                                        return false;
-                                    }
-                                    else if (c2 < 0)
-                                    {
-                                        return false;
-                                    }
-                                }
-                                break;
-                            case DICCommands.CDSubchannelReadLevelFlag:
-                                // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int sub))
-                                {
-                                    return false;
-                                }
-                                else if (sub < 0 || sub > 2)
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            default:
-                                return false;
-                        }
-                    }
                     break;
                 case DICCommands.DVDCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    else if (IsFlag(parts[2]))
                     {
                         return false;
                     }
-                    else if (!Int32.TryParse(parts[3], out int dvdspeed))
-                    {
-                        return false;
-                    }
-                    else if (dvdspeed < 0 || dvdspeed > 72) // Officialy, 0-16
+                    else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 72)) // Officially 0-16
                     {
                         return false;
                     }
@@ -1406,21 +841,17 @@ namespace DICUI
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
                                 // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
+                                if (!DoesNextExist(parts, i))
                                 {
                                     break;
                                 }
                                 // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
+                                if (IsFlag(parts[i + 1]))
                                 {
                                     break;
                                 }
                                 // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
-                                {
-                                    return false;
-                                }
-                                else if (fua1 < 0)
+                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 {
                                     return false;
                                 }
@@ -1432,11 +863,11 @@ namespace DICUI
                     }
                     break;
                 case DICCommands.BDCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    else if (IsFlag(parts[2]))
                     {
                         return false;
                     }
@@ -1451,21 +882,17 @@ namespace DICUI
                                 break;
                             case DICCommands.ForceUnitAccessFlag:
                                 // If the next item doesn't exist, it's good
-                                if (parts.Count == i + 1)
+                                if (!DoesNextExist(parts, i))
                                 {
                                     break;
                                 }
                                 // If the next item is a flag, it's good
-                                if (parts[i + 1].StartsWith("/"))
+                                if (IsFlag(parts[i + 1]))
                                 {
                                     break;
                                 }
                                 // If the next item isn't a valid number
-                                else if (!Int32.TryParse(parts[i + 1], out int fua1))
-                                {
-                                    return false;
-                                }
-                                else if (fua1 < 0)
+                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 {
                                     return false;
                                 }
@@ -1477,11 +904,11 @@ namespace DICUI
                     }
                     break;
                 case DICCommands.FloppyCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (parts[2].Trim('\"').StartsWith("/"))
+                    else if (IsFlag(parts[2]))
                     {
                         return false;
                     }
@@ -1496,7 +923,7 @@ namespace DICUI
                 case DICCommands.CloseCommand:
                 case DICCommands.ResetCommand:
                 case DICCommands.DriveSpeedCommand:
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
@@ -1507,7 +934,7 @@ namespace DICUI
                     break;
                 case DICCommands.SubCommand:
                 case DICCommands.MDSCommand:
-                    if (parts[1].Trim('\"').StartsWith("/"))
+                    if (IsFlag(parts[1]))
                     {
                         return false;
                     }
@@ -1518,6 +945,336 @@ namespace DICUI
                     break;
                 default:
                     return false;
+            }
+
+            // Loop through all auxilary flags, if necessary
+            if (index > 0)
+            {
+                for (int i = index; i < parts.Count; i++)
+                {
+                    switch(parts[i])
+                    {
+                        case DICCommands.DisableBeepFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDD8OpcodeFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDMCNFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDAMSFFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDReverseFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.DataCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDMultiSessionFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDScanSectorProtectFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.DataCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDScanAnitModFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDNoFixSubPFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDNoFixSubQFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDNoFixSubRtoWFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDNoFixSubQLibCryptFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDNoFixSubQSecuROMFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDScanFileProtectFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.DataCommand)
+                            {
+                                return false;
+                            }
+                        
+                            // If the next item doesn't exist, it's good
+                            if (!DoesNextExist(parts, i))
+                            {
+                                break;
+                            }
+                            // If the next item is a flag, it's good
+                            if (IsFlag(parts[i + 1]))
+                            {
+                                break;
+                            }
+                            // If the next item isn't a valid number
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
+                            {
+                                return false;
+                            }
+                            i++;
+                            break;
+                        case DICCommands.ForceUnitAccessFlag: // CD, GDROM, Data, Audio
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+
+                            // If the next item doesn't exist, it's good
+                            if (!DoesNextExist(parts, i))
+                            {
+                                break;
+                            }
+                            // If the next item is a flag, it's good
+                            if (IsFlag(parts[i + 1]))
+                            {
+                                break;
+                            }
+                            // If the next item isn't a valid number
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
+                            {
+                                return false;
+                            }
+                            i++;
+                            break;
+                        case DICCommands.CDAddOffsetFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+
+                            // If the next item doesn't exist, it's not good
+                            if (parts.Count == i + 1)
+                            {
+                                return false;
+                            }
+                            // If the next item isn't a valid number
+                            else if (IsValidNumber(parts[i + 1]))
+                            {
+                                return false;
+                            }
+                            break;
+                        case DICCommands.CDBEOpcodeFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+
+                            // If the next item doesn't exist, it's good
+                            if (!DoesNextExist(parts, i))
+                            {
+                                break;
+                            }
+                            // If the next item is a flag, it's good
+                            if (IsFlag(parts[i + 1]))
+                            {
+                                break;
+                            }
+                            else if (parts[i + 1] != "raw"
+                                && (parts[i + 1] != "pack"))
+                            {
+                                return false;
+                            }
+                            i++;
+                            break;
+                        case DICCommands.CDC2OpcodeFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+
+                            for (int j = 1; j < 4; j++)
+                            {
+                                // If the next item doesn't exist, it's good
+                                if (!DoesNextExist(parts, i + j - 1))
+                                {
+                                    break;
+                                }
+                                // If the next item is a flag, it's good
+                                if (IsFlag(parts[i + j]))
+                                {
+                                    i += (j - 1);
+                                    break;
+                                }
+                                // If the next item isn't a valid number
+                                else if (!IsValidNumber(parts[i + j], lowerBound: 0))
+                                {
+                                    return false;
+                                }
+                            }
+                            break;
+                        case DICCommands.CDSubchannelReadLevelFlag:
+                            if (parts[0] != DICCommands.CompactDiscCommand
+                                && parts[0] != DICCommands.GDROMCommand
+                                && parts[0] != DICCommands.DataCommand
+                                && parts[0] != DICCommands.AudioCommand)
+                            {
+                                return false;
+                            }
+
+                            // If the next item doesn't exist, it's good
+                            if (!DoesNextExist(parts, i))
+                            {
+                                break;
+                            }
+                            // If the next item is a flag, it's good
+                            if (IsFlag(parts[i + 1]))
+                            {
+                                break;
+                            }
+                            // If the next item isn't a valid number
+                            else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 2))
+                            {
+                                return false;
+                            }
+                            break;
+                        default:
+                            return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns whether a string is a valid drive letter
+        /// </summary>
+        /// <param name="parameter">String value to check</param>
+        /// <returns>True if it's a valid drive letter, false otherwise</returns>
+        private static bool IsValidDriveLetter(string parameter)
+        {
+            if (!Regex.IsMatch(parameter, @"^[A-Z]:?\\?$"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns whether a string is a flag (starts with '/')
+        /// </summary>
+        /// <param name="parameter">String value to check</param>
+        /// <returns>True if it's a flag, false otherwise</returns>
+        private static bool IsFlag(string parameter)
+        {
+            if (parameter.Trim('\"').StartsWith("/"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns whether or not the next item exists
+        /// </summary>
+        /// <param name="parameters">List of parameters to check against</param>
+        /// <param name="index">Current index</param>
+        /// <returns>True if the next item exists, false otherwise</returns>
+        private static bool DoesNextExist(List<string> parameters, int index)
+        {
+            if (index >= parameters.Count - 1)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns whether a string is a valid number
+        /// </summary>
+        /// <param name="parameter">String value to check</param>
+        /// <param name="lowerBound">Lower bound (>=)</param>
+        /// <param name="upperBound">Upper bound (<=)</param>
+        /// <returns>True if it's a valid number, false otherwise</returns>
+        private static bool IsValidNumber(string parameter, int lowerBound = -1, int upperBound = -1)
+        {
+            if (!Int32.TryParse(parameter, out int temp))
+            {
+                return false;
+            }
+            else if (lowerBound != -1 && temp < lowerBound)
+            {
+                return false;
+            }
+            else if (upperBound != -1 && temp > upperBound)
+            {
+                return false;
             }
 
             return true;
@@ -1562,13 +1319,13 @@ namespace DICUI
                 case DICCommands.FloppyCommand:
                     command = parts[0];
 
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
                     letter = parts[1];
 
-                    if (parts[2].Trim('\"').StartsWith("/"))
+                    if (IsFlag(parts[2]))
                     {
                         return false;
                     }
@@ -1583,7 +1340,7 @@ namespace DICUI
                 case DICCommands.DriveSpeedCommand:
                     command = parts[0];
 
-                    if (!Regex.IsMatch(parts[1], @"[A-Z]:?\\?"))
+                    if (!IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
@@ -1594,7 +1351,7 @@ namespace DICUI
                 case DICCommands.MDSCommand:
                     command = parts[0];
 
-                    if (parts[1].Trim('\"').StartsWith("/"))
+                    if (IsFlag(parts[1]))
                     {
                         return false;
                     }
