@@ -35,28 +35,28 @@
     /// </summary>
     public static class DICFlags
     {
-        public const string CDAMSFFlag = "/p";
-        public const string CDAddOffsetFlag = "/a";
-        public const string CDBEOpcodeFlag = "/be";
-        public const string CDC2OpcodeFlag = "/c2";
-        public const string CDD8OpcodeFlag = "/d8";
-        public const string CDMCNFlag = "/m";
-        public const string CDMultiSessionFlag = "/ms";
-        public const string CDNoFixSubPFlag = "/np";
-        public const string CDNoFixSubQFlag = "/nq";
-        public const string CDNoFixSubQLibCryptFlag = "/nl";
-        public const string CDNoFixSubQSecuROMFlag = "/ns";
-        public const string CDNoFixSubRtoWFlag = "/nr";
-        public const string CDReverseFlag = "/r";
-        public const string CDScanAnitModFlag = "/am";
-        public const string CDScanFileProtectFlag = "/sf";
-        public const string CDScanSectorProtectFlag = "/ss";
-        public const string CDSubchannelReadLevelFlag = "/s";
-        public const string DisableBeepFlag = "/q";
-        public const string DVDCMIFlag = "/c";
-        public const string DVDRawFlag = "/raw";
-        public const string ForceUnitAccessFlag = "/f";
-        public const string SeventyFourFlag = "/74";
+        public const string AddOffset = "/a";
+        public const string AMSF = "/p";
+        public const string BEOpcode = "/be";
+        public const string C2Opcode = "/c2";
+        public const string CMI = "/c";
+        public const string D8Opcode = "/d8";
+        public const string DisableBeep = "/q";
+        public const string ForceUnitAccess = "/f";
+        public const string MCN = "/m";
+        public const string MultiSession = "/ms";
+        public const string NoFixSubP = "/np";
+        public const string NoFixSubQ = "/nq";
+        public const string NoFixSubQLibCrypt = "/nl";
+        public const string NoFixSubQSecuROM = "/ns";
+        public const string NoFixSubRtoW = "/nr";
+        public const string Raw = "/raw";
+        public const string Reverse = "/r";
+        public const string ScanAntiMod = "/am";
+        public const string ScanFileProtect = "/sf";
+        public const string ScanSectorProtect = "/ss";
+        public const string SeventyFour = "/74";
+        public const string SubchannelReadLevel = "/s";
     }
 
     public static class Template

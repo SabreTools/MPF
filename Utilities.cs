@@ -484,21 +484,21 @@ namespace DICUI
             switch (type)
             {
                 case DiscType.CD:
-                    parameters.Add(DICFlags.CDC2OpcodeFlag); parameters.Add("20");
+                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
 
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            parameters.Add(DICFlags.CDNoFixSubQSecuROMFlag);
-                            parameters.Add(DICFlags.CDScanFileProtectFlag);
-                            parameters.Add(DICFlags.CDScanSectorProtectFlag);
+                            parameters.Add(DICFlags.NoFixSubQSecuROM);
+                            parameters.Add(DICFlags.ScanFileProtect);
+                            parameters.Add(DICFlags.ScanSectorProtect);
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(DICFlags.CDMCNFlag);
+                            parameters.Add(DICFlags.MCN);
                             break;
                         case KnownSystem.SonyPlayStation:
-                            parameters.Add(DICFlags.CDScanAnitModFlag);
+                            parameters.Add(DICFlags.ScanAntiMod);
                             break;
                     }
                     break;
@@ -509,7 +509,7 @@ namespace DICUI
                     // Currently no defaults set
                     break;
                 case DiscType.GDROM:
-                    parameters.Add(DICFlags.CDC2OpcodeFlag); parameters.Add("20");
+                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
                     break;
                 case DiscType.HDDVD:
                     break;
@@ -522,7 +522,7 @@ namespace DICUI
 
                 // Special Formats
                 case DiscType.GameCubeGameDisc:
-                    parameters.Add(DICFlags.DVDRawFlag);
+                    parameters.Add(DICFlags.Raw);
                     break;
                 case DiscType.WiiOpticalDisc:
                     // Currently no defaults set
@@ -769,12 +769,12 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case DICFlags.DisableBeepFlag:
-                            case DICFlags.DVDCMIFlag:
-                            case DICFlags.DVDRawFlag:
+                            case DICFlags.DisableBeep:
+                            case DICFlags.CMI:
+                            case DICFlags.Raw:
                                 // No-op, all of these are single flags
                                 break;
-                            case DICFlags.ForceUnitAccessFlag:
+                            case DICFlags.ForceUnitAccess:
                                 // If the next item doesn't exist, it's good
                                 if (!DoesNextExist(parts, i))
                                 {
@@ -813,10 +813,10 @@ namespace DICUI
                     {
                         switch (parts[i])
                         {
-                            case DICFlags.DisableBeepFlag:
+                            case DICFlags.DisableBeep:
                                 // No-op, this is a single flag
                                 break;
-                            case DICFlags.ForceUnitAccessFlag:
+                            case DICFlags.ForceUnitAccess:
                                 // If the next item doesn't exist, it's good
                                 if (!DoesNextExist(parts, i))
                                 {
@@ -890,7 +890,7 @@ namespace DICUI
                 {
                     switch(parts[i])
                     {
-                        case DICFlags.DisableBeepFlag:
+                        case DICFlags.DisableBeep:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -899,7 +899,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDD8OpcodeFlag:
+                        case DICFlags.D8Opcode:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -908,45 +908,45 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDMCNFlag:
+                        case DICFlags.MCN:
                             if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDAMSFFlag:
+                        case DICFlags.AMSF:
                             if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDReverseFlag:
+                        case DICFlags.Reverse:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.Data)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDMultiSessionFlag:
+                        case DICFlags.MultiSession:
                             if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDScanSectorProtectFlag:
+                        case DICFlags.ScanSectorProtect:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.Data)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDScanAnitModFlag:
+                        case DICFlags.ScanAntiMod:
                             if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDNoFixSubPFlag:
+                        case DICFlags.NoFixSubP:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -955,7 +955,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDNoFixSubQFlag:
+                        case DICFlags.NoFixSubQ:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -964,7 +964,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDNoFixSubRtoWFlag:
+                        case DICFlags.NoFixSubRtoW:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -973,13 +973,13 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDNoFixSubQLibCryptFlag:
+                        case DICFlags.NoFixSubQLibCrypt:
                             if (parts[0] != DICCommands.CompactDisc)
                             {
                                 return false;
                             }
                             break;
-                        case DICFlags.CDNoFixSubQSecuROMFlag:
+                        case DICFlags.NoFixSubQSecuROM:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -988,7 +988,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDScanFileProtectFlag:
+                        case DICFlags.ScanFileProtect:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.Data)
                             {
@@ -1012,7 +1012,7 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICFlags.ForceUnitAccessFlag: // CD, GDROM, Data, Audio
+                        case DICFlags.ForceUnitAccess: // CD, GDROM, Data, Audio
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -1038,7 +1038,7 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICFlags.CDAddOffsetFlag:
+                        case DICFlags.AddOffset:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.Audio)
                             {
@@ -1056,7 +1056,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.CDBEOpcodeFlag:
+                        case DICFlags.BEOpcode:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -1082,7 +1082,7 @@ namespace DICUI
                             }
                             i++;
                             break;
-                        case DICFlags.CDC2OpcodeFlag:
+                        case DICFlags.C2Opcode:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -1111,7 +1111,7 @@ namespace DICUI
                                 }
                             }
                             break;
-                        case DICFlags.CDSubchannelReadLevelFlag:
+                        case DICFlags.SubchannelReadLevel:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -1136,7 +1136,7 @@ namespace DICUI
                                 return false;
                             }
                             break;
-                        case DICFlags.SeventyFourFlag:
+                        case DICFlags.SeventyFour:
                             if (parts[0] != DICCommands.Swap)
                             {
                                 return false;
@@ -1278,13 +1278,13 @@ namespace DICUI
                     path = parts[2].Trim('\"');
 
                     // Special case for GameCube/Wii
-                    if (parts.Contains(DICFlags.DVDRawFlag))
+                    if (parts.Contains(DICFlags.Raw))
                     {
                         type = DiscType.GameCubeGameDisc;
                         system = KnownSystem.NintendoGameCube;
                     }
                     // Special case for Saturn
-                    else if (parts.Contains(DICFlags.SeventyFourFlag))
+                    else if (parts.Contains(DICFlags.SeventyFour))
                     {
                         type = DiscType.CD;
                         system = KnownSystem.SegaSaturn;
