@@ -642,6 +642,9 @@ namespace DICUI
         /// </summary>
         /// <returns>Active drives, matched to labels, if possible</returns>
         /// <remarks>
+        /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
+        /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+        /// https://msdn.microsoft.com/en-us/library/system.io.driveinfo.drivetype(v=vs.110).aspx
         /// This returns a List of Tuples whose structure is as follows:
         ///		Item 1: Drive letter
         ///		Item 2: Volume label
