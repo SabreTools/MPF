@@ -269,11 +269,6 @@ namespace DICUI
                 childProcess.WaitForExit();
             });
 
-            if (chk_EjectWhenDone.IsChecked == true)
-            {
-                EjectDisc();
-            }
-
             // Special cases
             switch (system)
             {
@@ -380,17 +375,16 @@ namespace DICUI
                 return;
             }
 
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type, driveLetter);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, system, type);
+            bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
+
             lbl_Status.Content = "Dumping complete!";
+            btn_StartStop.Content = UIElements.StartDumping;
             if (chk_EjectWhenDone.IsChecked == true)
             {
                 EjectDisc();
             }
-
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, system, type);
-            bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
-
-            btn_StartStop.Content = UIElements.StartDumping;
         }
 
         /// <summary>
@@ -520,6 +514,13 @@ namespace DICUI
                 {
                     var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
                     var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string, bool>;
+
+                    // If either item is invalid, skip this
+                    if (selected == null || driveletter == null)
+                    {
+                        return;
+                    }
+
                     string discType = Converters.DiscTypeToBaseCommand(selected.Item3);
                     List<string> defaultParams = Converters.KnownSystemAndDiscTypeToParameters(selected.Item2, selected.Item3);
                     txt_Parameters.Text = discType

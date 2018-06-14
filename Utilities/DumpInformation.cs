@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DICUI.Utilities
 {
@@ -116,9 +118,10 @@ namespace DICUI.Utilities
         /// <param name="outputFilename">Base filename to use</param>
         /// <param name="sys">KnownSystem value to check</param>
         /// <param name="type">DiscType value to check</param>
+        /// <param name="driveLetter">Drive letter to check</param>
         /// <returns>Dictionary containing mapped output values, null on error</returns>
         /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
-        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type)
+        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type, char driveLetter)
         {
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -182,17 +185,23 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = Template.RequiredValue; // GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename));
-                            mappings[Template.SaturnBuildDateField] = Template.RequiredValue; //GetSaturnBuildDate(GetFirstTrack(outputDirectory, outputFilename));
+                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
+                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
+                            {
+                                mappings[Template.DiscSerialField] = serial;
+                                mappings[Template.VersionField] = version;
+                                mappings[Template.SaturnBuildDateField] = buildDate;
+                            }
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
                             mappings[Template.PlayStationEDCField] = Template.YesNoValue;
                             mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
                             mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
 
@@ -230,7 +239,8 @@ namespace DICUI.Utilities
                             mappings[Template.XBOXSSRanges] = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
 
@@ -271,7 +281,8 @@ namespace DICUI.Utilities
                             mappings[Template.XBOXSSRanges] = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = Template.RequiredValue; // GetPlaysStationEXEDate(combinedBase + "_mainInfo.txt");
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
 
@@ -483,6 +494,182 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
+        private static string GetPlayStationEXEDate(char driveLetter)
+        {
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+            {
+                return null;
+            }
+
+            // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+            {
+                return null;
+            }
+
+            // Let's try reading SYSTEM.CNF to find the "BOOT" value
+            string exeName = null;
+            try
+            {
+                using (StreamReader sr = File.OpenText(systemCnfPath))
+                {
+                    // Not assuming proper ordering, just in case
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("BOOT"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Once it finds the "BOOT" line, extract the name
+                    exeName = Regex.Match(line, @"BOOT.? = cdrom.?:\\(.*?);.*").Groups[1].Value;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+
+            // Now that we have the EXE name, try to get the fileinfo for it
+            string exePath = Path.Combine(drivePath, exeName);
+            if (!File.Exists(exePath))
+            {
+                return null;
+            }
+
+            FileInfo fi = new FileInfo(exePath);
+            return fi.LastWriteTimeUtc.ToString("yyyy-MM-dd");
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 2 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        private static string GetPlayStation2Version(char driveLetter)
+        {
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+            {
+                return null;
+            }
+
+            // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+            {
+                return null;
+            }
+
+            // Let's try reading SYSTEM.CNF to find the "VER" value
+            try
+            {
+                using (StreamReader sr = File.OpenText(systemCnfPath))
+                {
+                    // Not assuming proper ordering, just in case
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("VER"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Once it finds the "VER" line, extract the version
+                    return Regex.Match(line, @"VER = (.*)").Groups[1].Value;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the header from a Saturn disc, if possible
+        /// </summary>
+        /// <param name="firstTrackPath">Path to the first track to check</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private static string GetSaturnHeader(string firstTrackPath)
+        {
+            // If the file doesn't exist, we can't get the header
+            if (!File.Exists(firstTrackPath))
+            {
+                return null;
+            }
+
+            // Try to open the file and read the correct number of bytes
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(firstTrackPath)))
+                {
+                    br.ReadBytes(0x10);
+                    byte[] headerBytes = br.ReadBytes(0x100);
+
+                    // Now format the bytes in a way we like
+                    string headerString = "";
+                    int ptr = 0;
+                    while (ptr < headerBytes.Length)
+                    {
+                        byte[] sub = new byte[16];
+                        Array.Copy(headerBytes, ptr, sub, 0, 16);
+                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : " 
+                            + BitConverter.ToString(sub).Replace("-", " ") + "   "
+                            + Encoding.ASCII.GetString(sub) + "\n";
+                        ptr += 16;
+                    }
+
+                    return headerString.TrimEnd('\n');
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a Saturn disc, if possible
+        /// </summary>
+        /// <<param name="saturnHeader">String representing a formatter variant of the Saturn header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetSaturnBuildInfo(string saturnHeader, out string serial, out string version, out string date)
+        {
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (String.IsNullOrWhiteSpace(saturnHeader))
+            {
+                return false;
+            }
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = saturnHeader.Split('\n');
+                string serialVersionLine = header[2].Substring(57);
+                string dateLine = header[3].Substring(57);
+                serial = serialVersionLine.Substring(0, 8);
+                version = serialVersionLine.Substring(10, 6);
+                date = dateLine.Substring(0, 8);
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Get the write offset from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
@@ -586,7 +773,13 @@ namespace DICUI.Utilities
                         break;
                 }
                 output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
-                output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
+                switch(sys)
+                {
+                    case KnownSystem.AppleMacintosh:
+                    case KnownSystem.IBMPCCompatible:
+                        output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
+                        break;
+                }
                 switch (type)
                 {
                     case DiscType.CD:

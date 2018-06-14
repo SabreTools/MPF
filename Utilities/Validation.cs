@@ -831,7 +831,7 @@ namespace DICUI.Utilities
                             }
                             i++;
                             break;
-                        case DICFlags.ForceUnitAccess: // CD, GDROM, Data, Audio
+                        case DICFlags.ForceUnitAccess:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.GDROM
                                 && parts[0] != DICCommands.Data
@@ -913,21 +913,23 @@ namespace DICUI.Utilities
                             for (int j = 1; j < 4; j++)
                             {
                                 // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i + j - 1))
+                                if (!DoesNextExist(parts, i + 1))
                                 {
+                                    i++;
                                     break;
                                 }
                                 // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + j]))
+                                if (IsFlag(parts[i + 1]))
                                 {
-                                    i += (j - 1);
+                                    i++;
                                     break;
                                 }
                                 // If the next item isn't a valid number
-                                else if (!IsValidNumber(parts[i + j], lowerBound: 0))
+                                else if (!IsValidNumber(parts[i + i], lowerBound: 0))
                                 {
                                     return false;
                                 }
+                                i++;
                             }
                             break;
                         case DICFlags.SubchannelReadLevel:
