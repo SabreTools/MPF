@@ -143,7 +143,7 @@ namespace DICUI
                 { Template.ContentsField, Template.OptionalValue },
                 { Template.VersionField, Template.RequiredIfExistsValue },
                 { Template.EditionField, "Original (VERIFY THIS)" },
-                { Template.DATField, GetDatfile(combinedBase + ".dat") }, // TODO: Petition sarami to add .dat output for floppy images
+                { Template.DATField, GetDatfile(combinedBase + ".dat") },
             };
 
             // Now we want to do a check by DiscType and extract all required info
@@ -195,7 +195,7 @@ namespace DICUI
                     }
 
                     break;
-                case DiscType.DVD5:
+                case DiscType.DVD5: // TODO: Add XBOX-specific outputs to this
                 case DiscType.HDDVD:
                 case DiscType.BD25:
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -227,8 +227,8 @@ namespace DICUI
                     }
 
                     break;
-                case DiscType.DVD9:
-                case DiscType.BD50:
+                case DiscType.DVD9: // TODO: Add XBOX-specific outputs to this
+				case DiscType.BD50:
                     mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
