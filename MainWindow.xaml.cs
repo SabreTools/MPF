@@ -278,6 +278,7 @@ namespace DICUI
             // Special cases
             switch (system)
             {
+                // TODO: May not be needed anymore? DIC claims to have this functionality now
                 case KnownSystem.MicrosoftXBOXOne:
                 case KnownSystem.SonyPlayStation4:
                     if (!File.Exists(sgRawPath))
@@ -525,7 +526,12 @@ namespace DICUI
                     txt_Parameters.Text = discType
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
-                        + (selected.Item3 != DiscType.Floppy && selected.Item3 != DiscType.BD25 && selected.Item3 != DiscType.BD50 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                        + (selected.Item3 != DiscType.Floppy
+                            && selected.Item3 != DiscType.BD25
+                            && selected.Item3 != DiscType.BD50
+                            && selected.Item2 != KnownSystem.MicrosoftXBOX
+                            && selected.Item2 != KnownSystem.MicrosoftXBOX360
+                                ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
             }
