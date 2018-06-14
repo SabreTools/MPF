@@ -21,6 +21,28 @@ NHellFire - Contributer
 
 Dizzzy - Concept/Ideas/Beta tester
 
+## Changelist
+
+Download the latest release here:
+[https://github.com/reignstumble/DICUI/releases](https://github.com/reignstumble/DICUI/releases)
+
+--------------------------------------------------------------------------
+2018-06-14
+--------------------------------------------------------------------------
+
+Version 1.05 released:
+
+- Miscellaneous fixes around custom parameter validation, dump information accuracy, settings window, and TODO cleanup
+- Add many more supported platforms, mostly arcade (based on publicly available information)
+- Add floppy disk dumping support
+- Add optional disc eject on completion
+- Add subdump for Sega Saturn
+- Fully support newest version of DIC including all new flags and commands
+
+**Known Issues:**
+
+- PlayStation and Saturn discs still don't have all internal information automatically generated
+
 --------------------------------------------------------------------------
 2018-06-13
 --------------------------------------------------------------------------
@@ -32,18 +54,10 @@ Version 1.04b released:
 - Fixed internationalization error (number formatting)
 - Fixed "Custom Input" not working
 
---------------------------------------------------------------------------
-2018-06-13
---------------------------------------------------------------------------
-
 Version 1.04a released:
 
 - Fixed issue with empty trays
 - Added settings dialog
-
---------------------------------------------------------------------------
-2018-06-13
---------------------------------------------------------------------------
 
 Version 1.04 released:
 
@@ -65,7 +79,6 @@ Version 1.03 released:
 - Discs unsupported by Windows are now regonized
 - Extra \ when accepting default save has been removed.
  
- 
 --------------------------------------------------------------------------
 2018-05-18
 --------------------------------------------------------------------------
@@ -80,8 +93,5 @@ Version 1.02b released:
 --------------------------------------------------------------------------
 2018-05-14
 --------------------------------------------------------------------------
-Version 1.01d released:
 
-
-Download the latest release here:
-https://github.com/reignstumble/DICUI/releases
+Version 1.01d released
