@@ -111,6 +111,16 @@ namespace DICUI
             childWindow.Close();
         }
 
+        private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
+        private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
         #endregion
 
         #region Helpers

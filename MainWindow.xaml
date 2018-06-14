@@ -46,10 +46,10 @@
             <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" SelectionChanged="cmb_DiscType_SelectionChanged" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
-            <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22"></TextBox>
+            <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="txt_OutputFilename_TextChanged"/>
 
             <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
-            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" Text="ISO" />
+            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" TextChanged="txt_OutputDirectory_TextChanged"/>
             <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
 
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
