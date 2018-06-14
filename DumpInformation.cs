@@ -100,10 +100,12 @@ namespace DICUI
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case DiscType.Floppy:
-                    return File.Exists(combinedBase + "_cmd.txt")
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
                        && File.Exists(combinedBase + "_disc.txt");
                 default:
-                    return false;
+                    // Non-dumping commands will usually produce no output, so this is irrelevant
+                    return true;
             }
         }
 
@@ -228,7 +230,7 @@ namespace DICUI
 
                     break;
                 case DiscType.DVD9: // TODO: Add XBOX-specific outputs to this
-				case DiscType.BD50:
+                case DiscType.BD50:
                     mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
