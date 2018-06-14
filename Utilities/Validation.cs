@@ -5,199 +5,10 @@ using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
 
-namespace DICUI
+namespace DICUI.Utilities
 {
-    public static class Utilities
+    public static class Validation
     {
-        /// <summary>
-        /// Get the string representation of the DiscType enum values
-        /// </summary>
-        /// <param name="type">DiscType value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string DiscTypeToString(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                    return "CD-ROM";
-                case DiscType.DVD5:
-                    return "DVD-5 [Single-Layer]";
-                case DiscType.DVD9:
-                    return "DVD-9 [Dual-Layer]";
-                case DiscType.GDROM:
-                    return "GD-ROM";
-                case DiscType.HDDVD:
-                    return "HD-DVD";
-                case DiscType.BD25:
-                    return "BluRay-25 [Single-Layer]";
-                case DiscType.BD50:
-                    return "BluRay-50 [Dual-Layer]";
-
-                case DiscType.GameCubeGameDisc:
-                    return "GameCube Game";
-                case DiscType.WiiOpticalDisc:
-                    return "Wii Optical";
-                case DiscType.WiiUOpticalDisc:
-                    return "Wii U Optical";
-                case DiscType.UMD:
-                    return "UMD";
-
-                case DiscType.Floppy:
-                    return "Floppy Disk";
-
-                case DiscType.NONE:
-                default:
-                    return "Unknown";
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the KnownSystem enum values
-        /// </summary>
-        /// <param name="sys">KnownSystem value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string KnownSystemToString(KnownSystem? sys)
-        {
-            switch (sys)
-            {
-                #region Consoles
-
-                case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    return "Bandai Playdia Quick Interactive System";
-                case KnownSystem.BandaiApplePippin:
-                    return "Bandai / Apple Pippin";
-                case KnownSystem.CommodoreAmigaCD32:
-                    return "Commodore Amiga CD32";
-                case KnownSystem.CommodoreAmigaCDTV:
-                    return "Commodore Amiga CDTV";
-                case KnownSystem.MattelHyperscan:
-                    return "Mattel HyperScan";
-                case KnownSystem.MicrosoftXBOX:
-                    return "Microsoft XBOX";
-                case KnownSystem.MicrosoftXBOX360:
-                    return "Microsoft XBOX 360";
-                case KnownSystem.MicrosoftXBOXOne:
-                    return "Microsoft XBOX One";
-                case KnownSystem.NECPCEngineTurboGrafxCD:
-                    return "NEC PC-Engine / TurboGrafx CD";
-                case KnownSystem.NECPCFX:
-                    return "NEC PC-FX / PC-FXGA";
-                case KnownSystem.NintendoGameCube:
-                    return "Nintendo GameCube";
-                case KnownSystem.NintendoWii:
-                    return "Nintendo Wii";
-                case KnownSystem.NintendoWiiU:
-                    return "Nintendo Wii U";
-                case KnownSystem.Panasonic3DOInteractiveMultiplayer:
-                    return "Panasonic 3DO Interactive Multiplayer";
-                case KnownSystem.PhilipsCDi:
-                    return "Philips CD-i";
-                case KnownSystem.SegaCDMegaCD:
-                    return "Sega CD / Mega CD";
-                case KnownSystem.SegaDreamcast:
-                    return "Sega Dreamcast";
-                case KnownSystem.SegaSaturn:
-                    return "Sega Saturn";
-                case KnownSystem.SNKNeoGeoCD:
-                    return "SNK Neo Geo CD";
-                case KnownSystem.SonyPlayStation:
-                    return "Sony PlayStation";
-                case KnownSystem.SonyPlayStation2:
-                    return "Sony PlayStation 2";
-                case KnownSystem.SonyPlayStation3:
-                    return "Sony PlayStation 3";
-                case KnownSystem.SonyPlayStation4:
-                    return "Sony PlayStation 4";
-                case KnownSystem.SonyPlayStationPortable:
-                    return "Sony PlayStation Portable";
-                case KnownSystem.VMLabsNuon:
-                    return "VM Labs NUON";
-                case KnownSystem.VTechVFlashVSmilePro:
-                    return "VTech V.Flash - V.Smile Pro";
-                case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    return "ZAPiT Games Game Wave Family Entertainment System";
-
-                #endregion
-
-                #region Computers
-
-                case KnownSystem.AcornArchimedes:
-                    return "Acorn Archimedes";
-                case KnownSystem.AppleMacintosh:
-                    return "Apple Macintosh";
-                case KnownSystem.CommodoreAmigaCD:
-                    return "Commodore Amiga CD";
-                case KnownSystem.FujitsuFMTowns:
-                    return "Fujitsu FM Towns series";
-                case KnownSystem.IBMPCCompatible:
-                    return "IBM PC Compatible";
-                case KnownSystem.NECPC88:
-                    return "NEC PC-88";
-                case KnownSystem.NECPC98:
-                    return "NEC PC-98";
-                case KnownSystem.SharpX68000:
-                    return "Sharp X68000";
-
-                #endregion
-
-                #region Arcade
-
-                case KnownSystem.NamcoSegaNintendoTriforce:
-                    return "Namco / Sega / Nintendo Triforce";
-                case KnownSystem.NamcoSystem246:
-                    return "Namco System 246";
-                case KnownSystem.SegaChihiro:
-                    return "Sega Chihiro";
-                case KnownSystem.SegaLindbergh:
-                    return "Sega Lindbergh";
-                case KnownSystem.SegaNaomi:
-                    return "Sega Naomi";
-                case KnownSystem.SegaNaomi2:
-                    return "Sega Naomi 2";
-                case KnownSystem.SegaNu:
-                    return "Sega Nu";
-                case KnownSystem.SegaRingEdge2:
-                    return "Sega RingEdge 2";
-                case KnownSystem.TABAustriaQuizard:
-                    return "TAB-Austria Quizard";
-                case KnownSystem.TandyMemorexVisualInformationSystem:
-                    return "Tandy / Memorex Visual Information System";
-
-                #endregion
-
-                #region Others
-
-                case KnownSystem.AudioCD:
-                    return "Audio CD";
-                case KnownSystem.BDVideo:
-                    return "BD-Video";
-                case KnownSystem.DVDVideo:
-                    return "DVD-Video";
-                case KnownSystem.EnhancedCD:
-                    return "Enhanced CD";
-                case KnownSystem.PalmOS:
-                    return "PalmOS";
-                case KnownSystem.PhilipsCDiDigitalVideo:
-                    return "Philips CD-i Digital Video";
-                case KnownSystem.PhotoCD:
-                    return "Photo CD";
-                case KnownSystem.PlayStationGameSharkUpdates:
-                    return "PlayStation GameShark Updates";
-                case KnownSystem.TaoiKTV:
-                    return "Tao iKTV";
-                case KnownSystem.TomyKissSite:
-                    return "Tomy Kiss-Site";
-                case KnownSystem.VideoCD:
-                    return "Video CD";
-
-                #endregion
-
-                case KnownSystem.NONE:
-                default:
-                    return "Unknown";
-            }
-        }
-
         /// <summary>
         /// Get a list of valid DiscTypes for a given system
         /// </summary>
@@ -424,156 +235,6 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Get the DIC command to be used for a given DiscType
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>String containing the command, null on error</returns>
-        public static string GetBaseCommand(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                    return DICCommands.CompactDisc;
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                    return DICCommands.DigitalVideoDisc;
-                case DiscType.GDROM:
-                    return DICCommands.GDROM;
-                case DiscType.HDDVD:
-                    return null;
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    return DICCommands.BluRay;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    return DICCommands.DigitalVideoDisc;
-                case DiscType.WiiOpticalDisc:
-                    return null;
-                case DiscType.WiiUOpticalDisc:
-                    return null;
-                case DiscType.UMD:
-                    return null;
-
-                // Non-optical
-                case DiscType.Floppy:
-                    return DICCommands.Floppy;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get list of default parameters for a given system and disc type
-        /// </summary>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>List of strings representing the parameters</returns>
-        public static List<string> GetDefaultParameters(KnownSystem? sys, DiscType? type)
-        {
-            // First check to see if the combination of system and disctype is valid
-            List<DiscType?> validTypes = GetValidDiscTypes(sys);
-            if (!validTypes.Contains(type))
-            {
-                return null;
-            }
-
-            // Now sort based on disc type
-            List<string> parameters = new List<string>();
-            switch (type)
-            {
-                case DiscType.CD:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
-
-                    switch (sys)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            parameters.Add(DICFlags.NoFixSubQSecuROM);
-                            parameters.Add(DICFlags.ScanFileProtect);
-                            parameters.Add(DICFlags.ScanSectorProtect);
-                            break;
-                        case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(DICFlags.MCN);
-                            break;
-                        case KnownSystem.SonyPlayStation:
-                            parameters.Add(DICFlags.ScanAntiMod);
-                            break;
-                    }
-                    break;
-                case DiscType.DVD5:
-                    // Currently no defaults set
-                    break;
-                case DiscType.DVD9:
-                    // Currently no defaults set
-                    break;
-                case DiscType.GDROM:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
-                    break;
-                case DiscType.HDDVD:
-                    break;
-                case DiscType.BD25:
-                    // Currently no defaults set
-                    break;
-                case DiscType.BD50:
-                    // Currently no defaults set
-                    break;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    parameters.Add(DICFlags.Raw);
-                    break;
-                case DiscType.WiiOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case DiscType.WiiUOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case DiscType.UMD:
-                    break;
-
-                // Non-optical
-                case DiscType.Floppy:
-                    // Currently no defaults set
-                    break;
-            }
-
-            return parameters;
-        }
-
-        /// <summary>
-        /// Get the default extension for a given disc type
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string GetDefaultExtension(DiscType? type)
-        {
-            switch(type)
-            {
-                case DiscType.CD:
-                case DiscType.GDROM:
-                    return ".bin";
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.HDDVD:
-                case DiscType.BD25:
-                case DiscType.BD50:
-                case DiscType.GameCubeGameDisc:
-                case DiscType.WiiOpticalDisc:
-                case DiscType.UMD:
-                    return ".iso";
-                case DiscType.WiiUOpticalDisc:
-                    return ".wud";
-                case DiscType.Floppy:
-                    return ".img";
-                case DiscType.NONE:
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Create a list of systems matched to their respective enums
         /// </summary>
         /// <returns>Systems matched to enums, if possible</returns>
@@ -620,14 +281,14 @@ namespace DICUI
                 // If we have a single type, we don't want to postfix the system name with it
                 if (types.Count == 1)
                 {
-                    mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system), system, types[0]));
+                    mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system), system, types[0]));
                 }
                 // Otherwise, postfix the system name properly
                 else
                 {
                     foreach (DiscType type in types)
                     {
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(KnownSystemToString(system) + " (" + DiscTypeToString(type) + ")", system, type));
+                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system) + " (" + Converters.DiscTypeToString(type) + ")", system, type));
                     }
                 }
             }
@@ -1250,8 +911,8 @@ namespace DICUI
                 .Select(m => m.Value)
                 .ToList();
 
-            type = GetDiscType(parts[0]);
-            system = GetKnownSystem(parts[0]);
+            type = Converters.BaseCommmandToDiscType(parts[0]);
+            system = Converters.BaseCommandToKnownSystem(parts[0]);
 
             // Determine what the commandline should look like given the first item
             switch (parts[0])
@@ -1318,61 +979,6 @@ namespace DICUI
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Get the DiscType associated with a given base command
-        /// </summary>
-        /// <param name="baseCommand">String value to check</param>
-        /// <returns>DiscType if possible, null on error</returns>
-        /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        private static DiscType? GetDiscType(string baseCommand)
-        {
-            switch (baseCommand)
-            {
-                case DICCommands.CompactDisc:
-                    return DiscType.CD;
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
-                    return DiscType.GDROM;
-                case DICCommands.DigitalVideoDisc:
-                    return DiscType.DVD9;
-                case DICCommands.BluRay:
-                    return DiscType.BD50;
-                case DICCommands.XBOX:
-                    return DiscType.DVD5;
-
-                // Non-optical
-                case DICCommands.Floppy:
-                    return DiscType.Floppy;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the most common known system for a given DiscType
-        /// </summary>
-        /// <param name="baseCommand">String value to check</param>
-        /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? GetKnownSystem(string baseCommand)
-        {
-            switch (baseCommand)
-            {
-                case DICCommands.CompactDisc:
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.Floppy:
-                    return KnownSystem.IBMPCCompatible;
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
-                    return KnownSystem.SegaDreamcast;
-                case DICCommands.BluRay:
-                    return KnownSystem.SonyPlayStation3;
-                case DICCommands.XBOX:
-                    return KnownSystem.MicrosoftXBOX;
-                default:
-                    return null;
-            }
         }
     }
 }
