@@ -41,8 +41,15 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     types.Add(DiscType.DVD5);
                     break;
-                case KnownSystem.MicrosoftXBOX360:
+                case KnownSystem.MicrosoftXBOX360XDG2:
                     types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.HDDVD);
+                    break;
+                case KnownSystem.MicrosoftXBOX360XDG3:
+                    types.Add(DiscType.CD);
+                    types.Add(DiscType.DVD5);
                     types.Add(DiscType.DVD9);
                     types.Add(DiscType.HDDVD);
                     break;

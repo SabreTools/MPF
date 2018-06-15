@@ -150,14 +150,16 @@ namespace DICUI.Utilities
                     return DICCommands.CompactDisc;
                 case DiscType.DVD5:
                     if (sys == KnownSystem.MicrosoftXBOX
-                        || sys == KnownSystem.MicrosoftXBOX360)
+                        || sys == KnownSystem.MicrosoftXBOX360XDG2
+                        || sys == KnownSystem.MicrosoftXBOX360XDG3)
                     {
                         return DICCommands.XBOX;
                     }
                     return DICCommands.DigitalVideoDisc;
                 case DiscType.DVD9:
                     if (sys == KnownSystem.MicrosoftXBOX
-                        || sys == KnownSystem.MicrosoftXBOX360)
+                        || sys == KnownSystem.MicrosoftXBOX360XDG2
+                        || sys == KnownSystem.MicrosoftXBOX360XDG3)
                     {
                         return DICCommands.XBOX;
                     }
@@ -290,8 +292,10 @@ namespace DICUI.Utilities
                     return "Mattel HyperScan";
                 case KnownSystem.MicrosoftXBOX:
                     return "Microsoft XBOX";
-                case KnownSystem.MicrosoftXBOX360:
-                    return "Microsoft XBOX 360";
+                case KnownSystem.MicrosoftXBOX360XDG2:
+                    return "Microsoft XBOX 360 (XDG2)";
+                case KnownSystem.MicrosoftXBOX360XDG3:
+                    return "Microsoft XBOX 360 (XDG3)";
                 case KnownSystem.MicrosoftXBOXOne:
                     return "Microsoft XBOX One";
                 case KnownSystem.NECPCEngineTurboGrafxCD:
