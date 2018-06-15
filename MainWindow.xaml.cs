@@ -525,7 +525,7 @@ namespace DICUI
                         return;
                     }
 
-                    string discType = Converters.DiscTypeToBaseCommand(selected.Item3);
+                    string discType = Converters.KnownSystemAndDiscTypeToBaseCommand(selected.Item2, selected.Item3);
                     List<string> defaultParams = Converters.KnownSystemAndDiscTypeToParameters(selected.Item2, selected.Item3);
                     txt_Parameters.Text = discType
                         + " " + driveletter.Item1
