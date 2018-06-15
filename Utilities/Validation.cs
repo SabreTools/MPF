@@ -925,7 +925,7 @@ namespace DICUI.Utilities
                                     break;
                                 }
                                 // If the next item isn't a valid number
-                                else if (!IsValidNumber(parts[i + i], lowerBound: 0))
+                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 {
                                     return false;
                                 }
