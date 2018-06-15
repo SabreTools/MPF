@@ -533,7 +533,6 @@ namespace DICUI
                 txt_OutputDirectory.IsEnabled = true;
                 btn_OutputDirectoryBrowse.IsEnabled = true;
                 cmb_DriveLetter.IsEnabled = true;
-                cmb_DriveSpeed.IsEnabled = true;
 
                 // Populate with the correct params for inputs (if we're not on the default option)
                 if (cmb_DiscType.SelectedIndex > 0)
