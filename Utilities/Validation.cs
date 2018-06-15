@@ -39,17 +39,15 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.MicrosoftXBOX:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD9);
                     break;
                 case KnownSystem.MicrosoftXBOX360XDG2:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
                     types.Add(DiscType.DVD9);
                     types.Add(DiscType.HDDVD);
                     break;
                 case KnownSystem.MicrosoftXBOX360XDG3:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
                     types.Add(DiscType.DVD9);
                     types.Add(DiscType.HDDVD);
                     break;
@@ -486,7 +484,8 @@ namespace DICUI.Utilities
                     new ManagementObjectSearcher("root\\CIMV2",
                     "SELECT * FROM Win32_LogicalDisk");
 
-                foreach (ManagementObject queryObj in searcher.Get())
+                var collection = searcher.Get();
+                foreach (ManagementObject queryObj in collection)
                 {
                     uint? mediaType = (uint?)queryObj["MediaType"];
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
