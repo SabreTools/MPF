@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -159,7 +159,7 @@ namespace DICUI
             if (cmb_DriveLetter.Items.Count > 0)
             {
                 lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
-                btn_StartStop.IsEnabled = true;
+                btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
             }
             else
             {
@@ -460,7 +460,7 @@ namespace DICUI
                 case DiscType.GameCubeGameDisc:
                 case DiscType.GDROM:
                     lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Converters.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = true;
+                    btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                     break;
                 case DiscType.HDDVD:
                 case DiscType.UMD:
@@ -471,7 +471,7 @@ namespace DICUI
                     break;
                 default:
                     lbl_Status.Content = string.Format("{0} ready to dump", Converters.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = true;
+                    btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                     break;
             }
 
@@ -497,7 +497,7 @@ namespace DICUI
                 btn_OutputDirectoryBrowse.IsEnabled = false;
                 cmb_DriveLetter.IsEnabled = false;
                 cmb_DriveSpeed.IsEnabled = false;
-                btn_StartStop.IsEnabled = true;
+                btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                 lbl_Status.Content = "User input mode";
             }
             else
