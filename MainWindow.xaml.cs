@@ -58,7 +58,11 @@ namespace DICUI
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
                 CancelDumping();
-                EjectDisc();
+
+                if (chk_EjectWhenDone.IsChecked == true)
+                {
+                    EjectDisc();
+                }
             }
         }
 
