@@ -473,6 +473,19 @@ namespace DICUI
                     lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Converters.DiscTypeToString(tuple.Item3));
                     btn_StartStop.IsEnabled = false;
                     break;
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                    if (tuple.Item2 == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Converters.DiscTypeToString(tuple.Item3));
+                        btn_StartStop.IsEnabled = false;
+                    }
+                    else
+                    {
+                        lbl_Status.Content = string.Format("{0} ready to dump", Converters.DiscTypeToString(tuple.Item3));
+                        btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+                    }
+                    break;
                 default:
                     lbl_Status.Content = string.Format("{0} ready to dump", Converters.DiscTypeToString(tuple.Item3));
                     btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
@@ -488,7 +501,16 @@ namespace DICUI
                     cmb_DriveSpeed.IsEnabled = false;
                     break;
                 default:
-                    cmb_DriveSpeed.IsEnabled = true;
+                    if (tuple.Item2 == KnownSystem.MicrosoftXBOX
+                        || tuple.Item2 == KnownSystem.MicrosoftXBOX360XDG2
+                        || tuple.Item2 == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        cmb_DriveSpeed.IsEnabled = false;
+                    }
+                    else
+                    {
+                        cmb_DriveSpeed.IsEnabled = true;
+                    }
                     break;
             }
 
@@ -511,7 +533,6 @@ namespace DICUI
                 txt_OutputDirectory.IsEnabled = true;
                 btn_OutputDirectoryBrowse.IsEnabled = true;
                 cmb_DriveLetter.IsEnabled = true;
-                cmb_DriveSpeed.IsEnabled = true;
 
                 // Populate with the correct params for inputs (if we're not on the default option)
                 if (cmb_DiscType.SelectedIndex > 0)
@@ -525,7 +546,7 @@ namespace DICUI
                         return;
                     }
 
-                    string discType = Converters.DiscTypeToBaseCommand(selected.Item3);
+                    string discType = Converters.KnownSystemAndDiscTypeToBaseCommand(selected.Item2, selected.Item3);
                     List<string> defaultParams = Converters.KnownSystemAndDiscTypeToParameters(selected.Item2, selected.Item3);
                     txt_Parameters.Text = discType
                         + " " + driveletter.Item1
@@ -534,7 +555,8 @@ namespace DICUI
                             && selected.Item3 != DiscType.BD25
                             && selected.Item3 != DiscType.BD50
                             && selected.Item2 != KnownSystem.MicrosoftXBOX
-                            && selected.Item2 != KnownSystem.MicrosoftXBOX360
+                            && selected.Item2 != KnownSystem.MicrosoftXBOX360XDG2
+                            && selected.Item2 != KnownSystem.MicrosoftXBOX360XDG3
                                 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }

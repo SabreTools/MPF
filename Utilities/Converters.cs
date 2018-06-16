@@ -60,47 +60,6 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the DIC command to be used for a given DiscType
-        /// </summary>
-        /// <param name="type">DiscType value to check</param>
-        /// <returns>String containing the command, null on error</returns>
-        public static string DiscTypeToBaseCommand(DiscType? type)
-        {
-            switch (type)
-            {
-                case DiscType.CD:
-                    return DICCommands.CompactDisc;
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                    return DICCommands.DigitalVideoDisc;
-                case DiscType.GDROM:
-                    return DICCommands.GDROM;
-                case DiscType.HDDVD:
-                    return null;
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    return DICCommands.BluRay;
-
-                // Special Formats
-                case DiscType.GameCubeGameDisc:
-                    return DICCommands.DigitalVideoDisc;
-                case DiscType.WiiOpticalDisc:
-                    return null;
-                case DiscType.WiiUOpticalDisc:
-                    return null;
-                case DiscType.UMD:
-                    return null;
-
-                // Non-optical
-                case DiscType.Floppy:
-                    return DICCommands.Floppy;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get the default extension for a given disc type
         /// </summary>
         /// <param name="type">DiscType value to check</param>
@@ -171,6 +130,64 @@ namespace DICUI.Utilities
                 case DiscType.NONE:
                 default:
                     return "Unknown";
+            }
+        }
+
+        /// <summary>
+        /// Get the DIC command to be used for a given DiscType
+        /// </summary>
+        /// <param name="type">DiscType value to check</param>
+        /// <returns>String containing the command, null on error</returns>
+        public static string KnownSystemAndDiscTypeToBaseCommand(KnownSystem? sys, DiscType? type)
+        {
+            switch (type)
+            {
+                case DiscType.CD:
+                    if (sys == KnownSystem.MicrosoftXBOX)
+                    {
+                        return DICCommands.XBOX;
+                    }
+                    return DICCommands.CompactDisc;
+                case DiscType.DVD5:
+                    if (sys == KnownSystem.MicrosoftXBOX
+                        || sys == KnownSystem.MicrosoftXBOX360XDG2
+                        || sys == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        return DICCommands.XBOX;
+                    }
+                    return DICCommands.DigitalVideoDisc;
+                case DiscType.DVD9:
+                    if (sys == KnownSystem.MicrosoftXBOX
+                        || sys == KnownSystem.MicrosoftXBOX360XDG2
+                        || sys == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        return DICCommands.XBOX;
+                    }
+                    return DICCommands.DigitalVideoDisc;
+                case DiscType.GDROM:
+                    return DICCommands.GDROM;
+                case DiscType.HDDVD:
+                    return null;
+                case DiscType.BD25:
+                case DiscType.BD50:
+                    return DICCommands.BluRay;
+
+                // Special Formats
+                case DiscType.GameCubeGameDisc:
+                    return DICCommands.DigitalVideoDisc;
+                case DiscType.WiiOpticalDisc:
+                    return null;
+                case DiscType.WiiUOpticalDisc:
+                    return null;
+                case DiscType.UMD:
+                    return null;
+
+                // Non-optical
+                case DiscType.Floppy:
+                    return DICCommands.Floppy;
+
+                default:
+                    return null;
             }
         }
 
@@ -275,8 +292,10 @@ namespace DICUI.Utilities
                     return "Mattel HyperScan";
                 case KnownSystem.MicrosoftXBOX:
                     return "Microsoft XBOX";
-                case KnownSystem.MicrosoftXBOX360:
-                    return "Microsoft XBOX 360";
+                case KnownSystem.MicrosoftXBOX360XDG2:
+                    return "Microsoft XBOX 360 (XDG2)";
+                case KnownSystem.MicrosoftXBOX360XDG3:
+                    return "Microsoft XBOX 360 (XDG3)";
                 case KnownSystem.MicrosoftXBOXOne:
                     return "Microsoft XBOX One";
                 case KnownSystem.NECPCEngineTurboGrafxCD:

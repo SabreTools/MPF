@@ -104,10 +104,10 @@
         public const string PlayStationLibCryptField = "LibCrypt"; // TODO: Not automatic yet
         public const string SaturnHeaderField = "Header";
         public const string SaturnBuildDateField = "Build Date";
-        public const string XBOXDMICRC = "DMI.bin CRC32"; // TODO: Not automatic yet
-        public const string XBOXPFICRC = "PFI.bin CRC32"; // TODO: Not automatic yet
-        public const string XBOXSSCRC = "SS.bin CRC32"; // TODO: Not automatic yet
-        public const string XBOXSSRanges = "Security Sector Ranges"; // TODO: Not automatic yet
+        public const string XBOXDMIHash = "DMI.bin Hashes";
+        public const string XBOXPFIHash = "PFI.bin Hashes";
+        public const string XBOXSSHash = "SS.bin Hashes";
+        public const string XBOXSSRanges = "Security Sector Ranges";
 
         // Default values
 
