@@ -694,12 +694,12 @@ namespace DICUI.Utilities
                     }
 
                     // Fast forward to the Security Sector Ranges
-                    while (!sr.ReadLine().StartsWith("Number of security sector ranges:")) ;
+                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
 
                     // Now that we're at the ranges, read each line in and concatenate
                     // TODO: Make this output like the old method (startlba-endlba)
                     string line = sr.ReadLine();
-                    while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
+                    while (!line.Trim().StartsWith("========== Unlock 2 state(wxripper) =========="))
                     {
                         ss += line + "\n";
                         line = sr.ReadLine();
