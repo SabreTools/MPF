@@ -186,8 +186,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SegaSaturn:
                             mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
-                            string serial, version, buildDate;
-                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out serial, out version, out buildDate))
+                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
                             {
                                 mappings[Template.DiscSerialField] = serial;
                                 mappings[Template.VersionField] = version;
@@ -272,8 +271,7 @@ namespace DICUI.Utilities
                         case KnownSystem.MicrosoftXBOX:
                         case KnownSystem.MicrosoftXBOX360XDG2:
                         case KnownSystem.MicrosoftXBOX360XDG3:
-                            string dmihash, pfihash, sshash, ss;
-                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out dmihash, out pfihash, out sshash, out ss))
+                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss))
                             {
                                 mappings[Template.XBOXDMIHash] = dmihash;
                                 mappings[Template.XBOXPFIHash] = pfihash;

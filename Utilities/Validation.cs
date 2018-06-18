@@ -440,10 +440,22 @@ namespace DICUI.Utilities
                 mapping.Add(new Tuple<string, KnownSystem?>(Converters.KnownSystemToString(system), system));
             }
 
-            // Add final mapping for "Custom"
-            mapping.Add(new Tuple<string, KnownSystem?>("Custom Input", KnownSystem.NONE));
-
             return mapping;
+        }
+
+        /// <summary>
+        /// Create a list of all actually used DiskTypes for current Knownystem list
+        /// </summary>
+        public static List<Tuple<string, DiscType?>> CreateListOfDiscTypesForKnownSystems(List<KnownSystem?> systems)
+        {
+            return systems
+                .ConvertAll(s => GetValidDiscTypes(s))
+                .SelectMany(d => d)
+                .Distinct()
+                .Select(d => Tuple.Create(Converters.DiscTypeToString(d), d))
+                .OrderBy(t => t.Item1)
+                .ToList();
+
         }
 
         /// <summary>
@@ -1017,8 +1029,7 @@ namespace DICUI.Utilities
         /// <returns>True if it's a valid number, false otherwise</returns>
         private static bool IsValidNumber(string parameter, int lowerBound = -1, int upperBound = -1)
         {
-            int temp;
-            if (!Int32.TryParse(parameter, out temp))
+            if (!Int32.TryParse(parameter, out int temp))
             {
                 return false;
             }

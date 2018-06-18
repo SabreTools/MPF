@@ -498,6 +498,9 @@ namespace DICUI.Utilities
 
                 #endregion
 
+                case KnownSystem.Custom:
+                    return "Custom Input";
+
                 case KnownSystem.NONE:
                 default:
                     return "Unknown";
