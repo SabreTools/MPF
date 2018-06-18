@@ -619,7 +619,7 @@ namespace DICUI.Utilities
                     {
                         byte[] sub = new byte[16];
                         Array.Copy(headerBytes, ptr, sub, 0, 16);
-                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : " 
+                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : "
                             + BitConverter.ToString(sub).Replace("-", " ") + "   "
                             + Encoding.ASCII.GetString(sub) + "\n";
                         ptr += 16;
@@ -830,7 +830,7 @@ namespace DICUI.Utilities
                         break;
                 }
                 output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
-                switch(sys)
+                switch (sys)
                 {
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.IBMPCCompatible:

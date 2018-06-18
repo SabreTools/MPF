@@ -24,7 +24,8 @@ namespace DICUI
         // Private UI-related variables
         private List<Tuple<char, string, bool>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
-        private List<Tuple<string, KnownSystem?, DiscType?>> _systems { get; set; }
+        private List<Tuple<string, KnownSystem?>> _systems { get; set; }
+        private List<Tuple<string, DiscType?>> _discTypes { get; set; }
         private Process childProcess { get; set; }
         private Window childWindow { get; set; }
 
@@ -79,7 +80,14 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
-        private void cmb_DiscType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GetOutputNames();
+            PopulateDiscTypeAccordingToChosenSystem();
+            EnsureDiscInformation();
+        }
+
+        private void cmb_DiscType_SelectionChanged(object sencder, SelectionChangedEventArgs e)
         {
             GetOutputNames();
             EnsureDiscInformation();
@@ -134,15 +142,47 @@ namespace DICUI
         #region Helpers
 
         /// <summary>
+        /// Populate disc type according to system type
+        private void PopulateDiscTypeAccordingToChosenSystem()
+        {
+          cmb_DiscType.SelectedIndex = -1;
+
+          var currentSystem = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
+
+          if (currentSystem != null)
+          {
+            List<Tuple<string, DiscType?>> allowedDiscTypesForSystem = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2)
+              .ConvertAll(d => Tuple.Create(Utilities.Converters.DiscTypeToString(d), d));
+
+            cmb_DiscType.ItemsSource = allowedDiscTypesForSystem;
+            cmb_DiscType.DisplayMemberPath = "Item1";
+
+            cmb_DiscType.IsEnabled = allowedDiscTypesForSystem.Count > 1;
+
+            if (!cmb_DiscType.IsEnabled)
+              cmb_DiscType.SelectedIndex = 0;
+          }
+          else
+          {
+            cmb_DiscType.IsEnabled = false;
+            cmb_DiscType.ItemsSource = null;
+            cmb_DiscType.SelectedIndex = 0;
+          }
+        }
+        /// </summary>
+
+        /// <summary>
         /// Get a complete list of supported systems and fill the combo box
         /// </summary>
         private void PopulateSystems()
         {
             _systems = Utilities.Validation.CreateListOfSystems();
-            cmb_DiscType.ItemsSource = _systems;
-            cmb_DiscType.DisplayMemberPath = "Item1";
-            cmb_DiscType.SelectedIndex = 0;
-            cmb_DiscType_SelectionChanged(null, null);
+            _discTypes = Utilities.Validation.CreateListOfDiscTypesForKnownSystems(_systems.ConvertAll(s => s.Item2));
+
+            cmb_SystemType.ItemsSource = _systems;
+            cmb_SystemType.DisplayMemberPath = "Item1";
+            cmb_SystemType.SelectedIndex = 0;
+            cmb_SystemType_SelectionChanged(null, null);
 
             btn_StartStop.IsEnabled = false;
         }
@@ -210,7 +250,7 @@ namespace DICUI
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
 
-            var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
+            var selected = cmb_SystemType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
             string systemName = selected.Item1;
             KnownSystem? system = selected.Item2;
             DiscType? type = selected.Item3;
@@ -228,7 +268,7 @@ namespace DICUI
             }
 
             // If we have a custom configuration, we need to extract the best possible information from it
-            if (systemName == "Custom Input" && system == KnownSystem.NONE && type == DiscType.NONE)
+            if (system == KnownSystem.Custom)
             {
                 Utilities.Validation.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
                 driveLetter = letter[0];
@@ -446,54 +486,65 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            // If we're on a separator, go to the next item
-            var tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
-            if (tuple.Item2 == null && tuple.Item3 == null)
-            {
-                cmb_DiscType.SelectedIndex++;
-                tuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
-            }
+            var systemTuple = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
+            var discTypeTuple = cmb_DiscType.SelectedItem as Tuple<string, DiscType?>;
 
-            // If we're on an unsupported type, update the status accordingly
-            switch (tuple.Item3)
+            // If we're on a separator, go to the next item
+            if (systemTuple.Item2 == null)
+                systemTuple = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as Tuple<string, KnownSystem?>;
+
+            var selectedSystem = systemTuple.Item2;
+            var selectedDiscType = discTypeTuple != null ? discTypeTuple.Item2 : DiscType.NONE;
+
+            // No system chosen, update status
+            if (selectedSystem == KnownSystem.NONE)
             {
-                case DiscType.NONE:
-                    lbl_Status.Content = "Please select a valid disc type";
-                    btn_StartStop.IsEnabled = false;
-                    break;
-                case DiscType.GameCubeGameDisc:
-                case DiscType.GDROM:
-                    lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", Converters.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
-                    break;
-                case DiscType.HDDVD:
-                case DiscType.UMD:
-                case DiscType.WiiOpticalDisc:
-                case DiscType.WiiUOpticalDisc:
-                    lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Converters.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = false;
-                    break;
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                    if (tuple.Item2 == KnownSystem.MicrosoftXBOX360XDG3)
-                    {
-                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", Converters.DiscTypeToString(tuple.Item3));
+                lbl_Status.Content = "Please select a valid system";
+                btn_StartStop.IsEnabled = false;
+            }
+            else if (selectedSystem != KnownSystem.Custom)
+            {
+                // If we're on an unsupported type, update the status accordingly
+                switch (selectedDiscType)
+                {
+                    case DiscType.NONE:
+                        lbl_Status.Content = "Please select a valid disc type";
                         btn_StartStop.IsEnabled = false;
-                    }
-                    else
-                    {
-                        lbl_Status.Content = string.Format("{0} ready to dump", Converters.DiscTypeToString(tuple.Item3));
+                        break;
+                    case DiscType.GameCubeGameDisc:
+                    case DiscType.GDROM:
+                        lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", discTypeTuple.Item1);
                         btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
-                    }
-                    break;
-                default:
-                    lbl_Status.Content = string.Format("{0} ready to dump", Converters.DiscTypeToString(tuple.Item3));
-                    btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
-                    break;
+                        break;
+                    case DiscType.HDDVD:
+                    case DiscType.UMD:
+                    case DiscType.WiiOpticalDisc:
+                    case DiscType.WiiUOpticalDisc:
+                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", discTypeTuple.Item1);
+                        btn_StartStop.IsEnabled = false;
+                        break;
+                    case DiscType.DVD5:
+                    case DiscType.DVD9:
+                        if (selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
+                        {
+                            lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", discTypeTuple.Item1);
+                            btn_StartStop.IsEnabled = false;
+                        }
+                        else
+                        {
+                            lbl_Status.Content = string.Format("{0} ready to dump", discTypeTuple.Item1);
+                            btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+                        }
+                        break;
+                    default:
+                        lbl_Status.Content = string.Format("{0} ready to dump", discTypeTuple.Item1);
+                        btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+                        break;
+                }
             }
 
             // If we're in a type that doesn't support drive speeds
-            switch (tuple.Item3)
+            switch (selectedDiscType)
             {
                 case DiscType.Floppy:
                 case DiscType.BD25:
@@ -501,9 +552,9 @@ namespace DICUI
                     cmb_DriveSpeed.IsEnabled = false;
                     break;
                 default:
-                    if (tuple.Item2 == KnownSystem.MicrosoftXBOX
-                        || tuple.Item2 == KnownSystem.MicrosoftXBOX360XDG2
-                        || tuple.Item2 == KnownSystem.MicrosoftXBOX360XDG3)
+                    if (selectedSystem == KnownSystem.MicrosoftXBOX
+                        || selectedSystem == KnownSystem.MicrosoftXBOX360XDG2
+                        || selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
                     {
                         cmb_DriveSpeed.IsEnabled = false;
                     }
@@ -515,7 +566,7 @@ namespace DICUI
             }
 
             // Special case for Custom input
-            if (tuple.Item1 == "Custom Input" && tuple.Item2 == KnownSystem.NONE && tuple.Item3 == DiscType.NONE)
+            if (selectedSystem == KnownSystem.Custom)
             {
                 txt_Parameters.IsEnabled = true;
                 txt_OutputFilename.IsEnabled = false;
@@ -535,28 +586,25 @@ namespace DICUI
                 cmb_DriveLetter.IsEnabled = true;
 
                 // Populate with the correct params for inputs (if we're not on the default option)
-                if (cmb_DiscType.SelectedIndex > 0)
+                if (selectedSystem != KnownSystem.NONE && selectedDiscType != DiscType.NONE)
                 {
-                    var selected = cmb_DiscType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
                     var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string, bool>;
 
-                    // If either item is invalid, skip this
-                    if (selected == null || driveletter == null)
-                    {
+                    // If drive letter is invalid, skip this
+                    if (driveletter == null)
                         return;
-                    }
 
-                    string discType = Converters.KnownSystemAndDiscTypeToBaseCommand(selected.Item2, selected.Item3);
-                    List<string> defaultParams = Converters.KnownSystemAndDiscTypeToParameters(selected.Item2, selected.Item3);
+                    string discType = Converters.KnownSystemAndDiscTypeToBaseCommand(selectedSystem, selectedDiscType);
+                    List<string> defaultParams = Converters.KnownSystemAndDiscTypeToParameters(selectedSystem, selectedDiscType);
                     txt_Parameters.Text = discType
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
-                        + (selected.Item3 != DiscType.Floppy
-                            && selected.Item3 != DiscType.BD25
-                            && selected.Item3 != DiscType.BD50
-                            && selected.Item2 != KnownSystem.MicrosoftXBOX
-                            && selected.Item2 != KnownSystem.MicrosoftXBOX360XDG2
-                            && selected.Item2 != KnownSystem.MicrosoftXBOX360XDG3
+                        + (selectedDiscType != DiscType.Floppy
+                            && selectedDiscType != DiscType.BD25
+                            && selectedDiscType != DiscType.BD50
+                            && selectedSystem != KnownSystem.MicrosoftXBOX
+                            && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
+                            && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
                                 ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
@@ -569,12 +617,13 @@ namespace DICUI
         private void GetOutputNames()
         {
             var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            var discTuple = cmb_DiscType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            var systemTuple = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
+            var discTuple = cmb_DiscType.SelectedItem as Tuple<string, DiscType?>;
 
-            if (driveTuple != null && discTuple != null)
+            if (driveTuple != null && systemTuple != null && discTuple != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(defaultOutputPath, driveTuple.Item2);
-                txt_OutputFilename.Text = driveTuple.Item2 + Converters.DiscTypeToExtension(discTuple.Item3);
+                txt_OutputFilename.Text = driveTuple.Item2 + Converters.DiscTypeToExtension(discTuple.Item2);
             }
             else
             {

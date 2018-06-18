@@ -151,5 +151,7 @@
         VideoCD,
 
         #endregion
+
+        Custom = -1
     }
 }

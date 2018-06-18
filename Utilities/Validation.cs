@@ -17,7 +17,7 @@ namespace DICUI.Utilities
         public static List<DiscType?> GetValidDiscTypes(KnownSystem? sys)
         {
             List<DiscType?> types = new List<DiscType?>();
-            
+
             switch (sys)
             {
                 #region Consoles
@@ -405,12 +405,11 @@ namespace DICUI.Utilities
         /// This returns a List of Tuples whose structure is as follows:
         ///		Item 1: Printable name
         ///		Item 2: KnownSystem mapping
-        ///		Item 3: DiscType mapping
-        ///	If something has a "string, null, null" value, it should be assumed that it is a separator
+        ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
-        public static List<Tuple<string, KnownSystem?, DiscType?>> CreateListOfSystems()
+        public static List<Tuple<string, KnownSystem?>> CreateListOfSystems()
         {
-            List<Tuple<string, KnownSystem?, DiscType?>> mapping = new List<Tuple<string, KnownSystem?, DiscType?>>();
+            List<Tuple<string, KnownSystem?>> mapping = new List<Tuple<string, KnownSystem?>>();
 
             foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
             {
@@ -419,47 +418,43 @@ namespace DICUI.Utilities
                 {
                     // Consoles section
                     case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Consoles ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Consoles ----------", null));
                         break;
 
                     // Computers section
                     case KnownSystem.AcornArchimedes:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Computers ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Computers ----------", null));
                         break;
 
                     // Arcade section
                     case KnownSystem.AmigaCUBOCD32:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Arcade ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Arcade ----------", null));
                         break;
 
                     // Other section
                     case KnownSystem.AudioCD:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Others ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Others ----------", null));
                         break;
                 }
 
-                // First, get a list of all DiscTypes for a given KnownSystem
-                List<DiscType?> types = GetValidDiscTypes(system);
-
-                // If we have a single type, we don't want to postfix the system name with it
-                if (types.Count == 1)
-                {
-                    mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system), system, types[0]));
-                }
-                // Otherwise, postfix the system name properly
-                else
-                {
-                    foreach (DiscType type in types)
-                    {
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system) + " (" + Converters.DiscTypeToString(type) + ")", system, type));
-                    }
-                }
+                mapping.Add(new Tuple<string, KnownSystem?>(Converters.KnownSystemToString(system), system));
             }
 
-            // Add final mapping for "Custom"
-            mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("Custom Input", KnownSystem.NONE, DiscType.NONE));
-
             return mapping;
+        }
+
+        /// <summary>
+        /// Create a list of all actually used DiskTypes for current Knownystem list
+        /// </summary>
+        public static List<Tuple<string, DiscType?>> CreateListOfDiscTypesForKnownSystems(List<KnownSystem?> systems)
+        {
+            return systems
+                .ConvertAll(s => GetValidDiscTypes(s))
+                .SelectMany(d => d)
+                .Distinct()
+                .Select(d => Tuple.Create(Converters.DiscTypeToString(d), d))
+                .OrderBy(t => t.Item1)
+                .ToList();
         }
 
         /// <summary>
@@ -713,7 +708,7 @@ namespace DICUI.Utilities
             {
                 for (int i = index; i < parts.Count; i++)
                 {
-                    switch(parts[i])
+                    switch (parts[i])
                     {
                         case DICFlags.DisableBeep:
                             if (parts[0] != DICCommands.CompactDisc
@@ -819,7 +814,7 @@ namespace DICUI.Utilities
                             {
                                 return false;
                             }
-                        
+
                             // If the next item doesn't exist, it's good
                             if (!DoesNextExist(parts, i))
                             {

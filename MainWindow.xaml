@@ -42,8 +42,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Disc Type</Label>
-            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" SelectionChanged="cmb_DiscType_SelectionChanged" />
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Disc Type"/>
+            <ComboBox x:Name="cmb_SystemType" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="cmb_SystemType_SelectionChanged" />
+            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="cmb_DiscType_SelectionChanged" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
             <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="txt_OutputFilename_TextChanged"/>
@@ -53,7 +54,7 @@
             <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
 
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged"/>
+            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged" Margin="0,8,0,7"/>
 
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
             <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged"/>
