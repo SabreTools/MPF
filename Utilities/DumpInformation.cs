@@ -186,7 +186,8 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SegaSaturn:
                             mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
-                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
+                            string serial, version, buildDate;
+                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out serial, out version, out buildDate))
                             {
                                 mappings[Template.DiscSerialField] = serial;
                                 mappings[Template.VersionField] = version;

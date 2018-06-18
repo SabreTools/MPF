@@ -400,12 +400,11 @@ namespace DICUI.Utilities
         /// This returns a List of Tuples whose structure is as follows:
         ///		Item 1: Printable name
         ///		Item 2: KnownSystem mapping
-        ///		Item 3: DiscType mapping
-        ///	If something has a "string, null, null" value, it should be assumed that it is a separator
+        ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
-        public static List<Tuple<string, KnownSystem?, DiscType?>> CreateListOfSystems()
+        public static List<Tuple<string, KnownSystem?>> CreateListOfSystems()
         {
-            List<Tuple<string, KnownSystem?, DiscType?>> mapping = new List<Tuple<string, KnownSystem?, DiscType?>>();
+            List<Tuple<string, KnownSystem?>> mapping = new List<Tuple<string, KnownSystem?>>();
 
             foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
             {
@@ -414,45 +413,30 @@ namespace DICUI.Utilities
                 {
                     // Consoles section
                     case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Consoles ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Consoles ----------", null));
                         break;
 
                     // Computers section
                     case KnownSystem.AcornArchimedes:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Computers ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Computers ----------", null));
                         break;
 
                     // Arcade section
                     case KnownSystem.AmigaCUBOCD32:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Arcade ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Arcade ----------", null));
                         break;
 
                     // Other section
                     case KnownSystem.AudioCD:
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("---------- Others ----------", null, null));
+                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Others ----------", null));
                         break;
                 }
 
-                // First, get a list of all DiscTypes for a given KnownSystem
-                List<DiscType?> types = GetValidDiscTypes(system);
-
-                // If we have a single type, we don't want to postfix the system name with it
-                if (types.Count == 1)
-                {
-                    mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system), system, types[0]));
-                }
-                // Otherwise, postfix the system name properly
-                else
-                {
-                    foreach (DiscType type in types)
-                    {
-                        mapping.Add(new Tuple<string, KnownSystem?, DiscType?>(Converters.KnownSystemToString(system) + " (" + Converters.DiscTypeToString(type) + ")", system, type));
-                    }
-                }
+                mapping.Add(new Tuple<string, KnownSystem?>(Converters.KnownSystemToString(system), system));
             }
 
-            // Add final mapping for "Custom"
-            mapping.Add(new Tuple<string, KnownSystem?, DiscType?>("Custom Input", KnownSystem.NONE, DiscType.NONE));
+      // Add final mapping for "Custom"
+      mapping.Add(new Tuple<string, KnownSystem?>("Custom Input", KnownSystem.NONE));
 
             return mapping;
         }
@@ -1027,7 +1011,8 @@ namespace DICUI.Utilities
         /// <returns>True if it's a valid number, false otherwise</returns>
         private static bool IsValidNumber(string parameter, int lowerBound = -1, int upperBound = -1)
         {
-            if (!Int32.TryParse(parameter, out int temp))
+            int temp;
+            if (!Int32.TryParse(parameter, out temp))
             {
                 return false;
             }
