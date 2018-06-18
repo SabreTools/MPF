@@ -27,6 +27,16 @@ Download the latest release here:
 [https://github.com/reignstumble/DICUI/releases](https://github.com/reignstumble/DICUI/releases)
 
 --------------------------------------------------------------------------
+2018-06-15
+--------------------------------------------------------------------------
+
+Version 1.06 released:
+
+- Fixed not being able to use the `/c2` flag properly
+- Fixed times when the ability to start dumping was improperly allowed
+- Added full support for XBOX and XBOX360 (XDG1, XDG2) dumping through DIC (using a Kreon, or presumably a 0800)
+
+--------------------------------------------------------------------------
 2018-06-14
 --------------------------------------------------------------------------
 
