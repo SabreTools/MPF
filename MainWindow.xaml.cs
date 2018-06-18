@@ -617,12 +617,13 @@ namespace DICUI
         private void GetOutputNames()
         {
             var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            var discTuple = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?, DiscType?>;
+            var systemTuple = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
+            var discTuple = cmb_DiscType.SelectedItem as Tuple<string, DiscType?>;
 
-            if (driveTuple != null && discTuple != null)
+            if (driveTuple != null && systemTuple != null && discTuple != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(defaultOutputPath, driveTuple.Item2);
-                txt_OutputFilename.Text = driveTuple.Item2 + Converters.DiscTypeToExtension(discTuple.Item3);
+                txt_OutputFilename.Text = driveTuple.Item2 + Converters.DiscTypeToExtension(discTuple.Item2);
             }
             else
             {

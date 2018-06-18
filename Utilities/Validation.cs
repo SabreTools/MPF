@@ -455,7 +455,6 @@ namespace DICUI.Utilities
                 .Select(d => Tuple.Create(Converters.DiscTypeToString(d), d))
                 .OrderBy(t => t.Item1)
                 .ToList();
-
         }
 
         /// <summary>
