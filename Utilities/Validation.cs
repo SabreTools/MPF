@@ -17,7 +17,7 @@ namespace DICUI.Utilities
         public static List<DiscType?> GetValidDiscTypes(KnownSystem? sys)
         {
             List<DiscType?> types = new List<DiscType?>();
-            
+
             switch (sys)
             {
                 #region Consoles
@@ -440,8 +440,8 @@ namespace DICUI.Utilities
                 mapping.Add(new Tuple<string, KnownSystem?>(Converters.KnownSystemToString(system), system));
             }
 
-      // Add final mapping for "Custom"
-      mapping.Add(new Tuple<string, KnownSystem?>("Custom Input", KnownSystem.NONE));
+            // Add final mapping for "Custom"
+            mapping.Add(new Tuple<string, KnownSystem?>("Custom Input", KnownSystem.NONE));
 
             return mapping;
         }
@@ -697,7 +697,7 @@ namespace DICUI.Utilities
             {
                 for (int i = index; i < parts.Count; i++)
                 {
-                    switch(parts[i])
+                    switch (parts[i])
                     {
                         case DICFlags.DisableBeep:
                             if (parts[0] != DICCommands.CompactDisc
@@ -803,7 +803,7 @@ namespace DICUI.Utilities
                             {
                                 return false;
                             }
-                        
+
                             // If the next item doesn't exist, it's good
                             if (!DoesNextExist(parts, i))
                             {
