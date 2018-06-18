@@ -207,7 +207,7 @@ namespace DICUI.Utilities
                     }
 
                     break;
-                case DiscType.DVD5: // TODO: Add XBOX360-specific outputs to this
+                case DiscType.DVD5:
                 case DiscType.HDDVD:
                 case DiscType.BD25:
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -233,12 +233,6 @@ namespace DICUI.Utilities
                                 }
                             }
                             break;
-                        case KnownSystem.MicrosoftXBOX:
-                            mappings[Template.XBOXDMICRC] = Template.RequiredValue;
-                            mappings[Template.XBOXPFICRC] = Template.RequiredValue;
-                            mappings[Template.XBOXSSCRC] = Template.RequiredValue;
-                            mappings[Template.XBOXSSRanges] = Template.RequiredValue;
-                            break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
                             mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
@@ -246,7 +240,7 @@ namespace DICUI.Utilities
                     }
 
                     break;
-                case DiscType.DVD9: // TODO: Add XBOX360-specific outputs to this
+                case DiscType.DVD9:
                 case DiscType.BD50:
                     mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
@@ -276,10 +270,16 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.MicrosoftXBOX:
-                            mappings[Template.XBOXDMICRC] = Template.RequiredValue;
-                            mappings[Template.XBOXPFICRC] = Template.RequiredValue;
-                            mappings[Template.XBOXSSCRC] = Template.RequiredValue;
-                            mappings[Template.XBOXSSRanges] = Template.RequiredValue;
+                        case KnownSystem.MicrosoftXBOX360XDG2:
+                        case KnownSystem.MicrosoftXBOX360XDG3:
+                            string dmihash, pfihash, sshash, ss;
+                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out dmihash, out pfihash, out sshash, out ss))
+                            {
+                                mappings[Template.XBOXDMIHash] = dmihash;
+                                mappings[Template.XBOXPFIHash] = pfihash;
+                                mappings[Template.XBOXSSHash] = sshash;
+                                mappings[Template.XBOXSSRanges] = ss;
+                            }
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
@@ -621,7 +621,7 @@ namespace DICUI.Utilities
                     {
                         byte[] sub = new byte[16];
                         Array.Copy(headerBytes, ptr, sub, 0, 16);
-                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : " 
+                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : "
                             + BitConverter.ToString(sub).Replace("-", " ") + "   "
                             + Encoding.ASCII.GetString(sub) + "\n";
                         ptr += 16;
@@ -667,6 +667,64 @@ namespace DICUI.Utilities
             {
                 // We don't care what the error is
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the XBOX/360 auxiliary info from the outputted files, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss)
+        {
+            dmihash = null; pfihash = null; sshash = null; ss = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return false;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Make sure this file is a _disc.txt for XBOX
+                    if (sr.ReadLine() != "========== Lock state ==========")
+                    {
+                        return false;
+                    }
+
+                    // Fast forward to the Security Sector Ranges
+                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
+
+                    // Now that we're at the ranges, read each line in and concatenate
+                    // TODO: Make this output like the old method (startlba-endlba)
+                    string line = sr.ReadLine();
+                    while (!line.Trim().StartsWith("========== Unlock 2 state(wxripper) =========="))
+                    {
+                        ss += line + "\n";
+                        line = sr.ReadLine();
+                    }
+
+                    // Fast forward to the aux hashes
+                    while (!line.Trim().StartsWith("<rom"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    // Read in the hashes to the proper parts
+                    sshash = line.Trim();
+                    pfihash = sr.ReadLine().Trim();
+                    dmihash = sr.ReadLine().Trim();
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
             }
         }
 
@@ -774,7 +832,7 @@ namespace DICUI.Utilities
                         break;
                 }
                 output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
-                switch(sys)
+                switch (sys)
                 {
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.IBMPCCompatible:
@@ -826,9 +884,11 @@ namespace DICUI.Utilities
                         }
                         break;
                     case KnownSystem.MicrosoftXBOX:
-                        output.Add(Template.XBOXDMICRC + ": " + info[Template.XBOXDMICRC]);
-                        output.Add(Template.XBOXPFICRC + ": " + info[Template.XBOXPFICRC]);
-                        output.Add(Template.XBOXSSCRC + ": " + info[Template.XBOXSSCRC]); output.Add("");
+                    case KnownSystem.MicrosoftXBOX360XDG2:
+                    case KnownSystem.MicrosoftXBOX360XDG3:
+                        output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
+                        output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
+                        output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
                         output.Add(Template.XBOXSSRanges + ":"); output.Add("");
                         output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
