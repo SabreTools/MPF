@@ -145,29 +145,25 @@ namespace DICUI
         /// Populate disc type according to system type
         private void PopulateDiscTypeAccordingToChosenSystem()
         {
-          cmb_DiscType.SelectedIndex = -1;
+            var currentSystem = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
 
-          var currentSystem = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
+            if (currentSystem != null)
+            {
+                List<Tuple<string, DiscType?>> allowedDiscTypesForSystem = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2)
+                  .ConvertAll(d => Tuple.Create(Converters.DiscTypeToString(d), d));
 
-          if (currentSystem != null)
-          {
-            List<Tuple<string, DiscType?>> allowedDiscTypesForSystem = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2)
-              .ConvertAll(d => Tuple.Create(Utilities.Converters.DiscTypeToString(d), d));
+                cmb_DiscType.ItemsSource = allowedDiscTypesForSystem;
+                cmb_DiscType.DisplayMemberPath = "Item1";
 
-            cmb_DiscType.ItemsSource = allowedDiscTypesForSystem;
-            cmb_DiscType.DisplayMemberPath = "Item1";
-
-            cmb_DiscType.IsEnabled = allowedDiscTypesForSystem.Count > 1;
-
-            if (!cmb_DiscType.IsEnabled)
-              cmb_DiscType.SelectedIndex = 0;
-          }
-          else
-          {
-            cmb_DiscType.IsEnabled = false;
-            cmb_DiscType.ItemsSource = null;
-            cmb_DiscType.SelectedIndex = 0;
-          }
+                cmb_DiscType.IsEnabled = allowedDiscTypesForSystem.Count > 1;
+                cmb_DiscType.SelectedIndex = 0;
+            }
+            else
+            {
+                cmb_DiscType.IsEnabled = false;
+                cmb_DiscType.ItemsSource = null;
+                cmb_DiscType.SelectedIndex = -1;
+            }
         }
         /// </summary>
 
