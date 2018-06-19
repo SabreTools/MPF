@@ -20,11 +20,10 @@ namespace DICUI.Utilities
                 case DICCommands.Swap:
                     return DiscType.GDROM;
                 case DICCommands.DigitalVideoDisc:
-                    return DiscType.DVD9;
-                case DICCommands.BluRay:
-                    return DiscType.BD50;
                 case DICCommands.XBOX:
-                    return DiscType.DVD5;
+                    return DiscType.DVD;
+                case DICCommands.BluRay:
+                    return DiscType.BluRay;
 
                 // Non-optical
                 case DICCommands.Floppy:
@@ -71,11 +70,9 @@ namespace DICUI.Utilities
                 case DiscType.CD:
                 case DiscType.GDROM:
                     return ".bin";
-                case DiscType.DVD5:
-                case DiscType.DVD9:
+                case DiscType.DVD:
                 case DiscType.HDDVD:
-                case DiscType.BD25:
-                case DiscType.BD50:
+                case DiscType.BluRay:
                 case DiscType.WiiOpticalDisc:
                 case DiscType.UMD:
                     return ".iso";
@@ -102,18 +99,14 @@ namespace DICUI.Utilities
             {
                 case DiscType.CD:
                     return "CD-ROM";
-                case DiscType.DVD5:
-                    return "DVD-5 [Single-Layer]";
-                case DiscType.DVD9:
-                    return "DVD-9 [Dual-Layer]";
+                case DiscType.DVD:
+                    return "DVD";
                 case DiscType.GDROM:
                     return "GD-ROM";
                 case DiscType.HDDVD:
                     return "HD-DVD";
-                case DiscType.BD25:
-                    return "BluRay-25 [Single-Layer]";
-                case DiscType.BD50:
-                    return "BluRay-50 [Dual-Layer]";
+                case DiscType.BluRay:
+                    return "BluRay";
 
                 case DiscType.GameCubeGameDisc:
                     return "GameCube Game";
@@ -148,15 +141,7 @@ namespace DICUI.Utilities
                         return DICCommands.XBOX;
                     }
                     return DICCommands.CompactDisc;
-                case DiscType.DVD5:
-                    if (sys == KnownSystem.MicrosoftXBOX
-                        || sys == KnownSystem.MicrosoftXBOX360XDG2
-                        || sys == KnownSystem.MicrosoftXBOX360XDG3)
-                    {
-                        return DICCommands.XBOX;
-                    }
-                    return DICCommands.DigitalVideoDisc;
-                case DiscType.DVD9:
+                case DiscType.DVD:
                     if (sys == KnownSystem.MicrosoftXBOX
                         || sys == KnownSystem.MicrosoftXBOX360XDG2
                         || sys == KnownSystem.MicrosoftXBOX360XDG3)
@@ -168,8 +153,7 @@ namespace DICUI.Utilities
                     return DICCommands.GDROM;
                 case DiscType.HDDVD:
                     return null;
-                case DiscType.BD25:
-                case DiscType.BD50:
+                case DiscType.BluRay:
                     return DICCommands.BluRay;
 
                 // Special Formats
@@ -229,10 +213,7 @@ namespace DICUI.Utilities
                             break;
                     }
                     break;
-                case DiscType.DVD5:
-                    // Currently no defaults set
-                    break;
-                case DiscType.DVD9:
+                case DiscType.DVD:
                     // Currently no defaults set
                     break;
                 case DiscType.GDROM:
@@ -240,10 +221,7 @@ namespace DICUI.Utilities
                     break;
                 case DiscType.HDDVD:
                     break;
-                case DiscType.BD25:
-                    // Currently no defaults set
-                    break;
-                case DiscType.BD50:
+                case DiscType.BluRay:
                     // Currently no defaults set
                     break;
 
@@ -481,6 +459,8 @@ namespace DICUI.Utilities
                     return "DVD-Video";
                 case KnownSystem.EnhancedCD:
                     return "Enhanced CD";
+                case KnownSystem.HDDVDVideo:
+                    return "HD-DVD-Video";
                 case KnownSystem.PalmOS:
                     return "PalmOS";
                 case KnownSystem.PhilipsCDiDigitalVideo:

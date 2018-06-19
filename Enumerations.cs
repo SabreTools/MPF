@@ -7,12 +7,10 @@
     {
         NONE = 0,
         CD,
-        DVD5,
-        DVD9,
+        DVD,
         GDROM,
         HDDVD,
-        BD25,
-        BD50,
+        BluRay,
 
         // Special Formats
         GameCubeGameDisc,
@@ -142,6 +140,7 @@
         BDVideo,
         DVDVideo,
         EnhancedCD,
+        HDDVDVideo,
         PalmOS,
         PhilipsCDiDigitalVideo,
         PhotoCD,

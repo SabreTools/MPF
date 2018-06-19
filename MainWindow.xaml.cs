@@ -523,8 +523,7 @@ namespace DICUI
                         lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", discTypeTuple.Item1);
                         btn_StartStop.IsEnabled = false;
                         break;
-                    case DiscType.DVD5:
-                    case DiscType.DVD9:
+                    case DiscType.DVD:
                         if (selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
                         {
                             lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", discTypeTuple.Item1);
@@ -547,8 +546,7 @@ namespace DICUI
             switch (selectedDiscType)
             {
                 case DiscType.Floppy:
-                case DiscType.BD25:
-                case DiscType.BD50:
+                case DiscType.BluRay:
                     cmb_DriveSpeed.IsEnabled = false;
                     break;
                 default:
@@ -600,8 +598,7 @@ namespace DICUI
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selectedDiscType != DiscType.Floppy
-                            && selectedDiscType != DiscType.BD25
-                            && selectedDiscType != DiscType.BD50
+                            && selectedDiscType != DiscType.BluRay
                             && selectedSystem != KnownSystem.MicrosoftXBOX
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
