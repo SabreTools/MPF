@@ -69,6 +69,7 @@ namespace DICUI.Utilities
             {
                 case DiscType.CD:
                 case DiscType.GDROM:
+                case DiscType.Cartridge:
                     return ".bin";
                 case DiscType.DVD:
                 case DiscType.HDDVD:
@@ -76,13 +77,17 @@ namespace DICUI.Utilities
                 case DiscType.WiiOpticalDisc:
                 case DiscType.UMD:
                     return ".iso";
+                case DiscType.LaserDisc:
                 case DiscType.GameCubeGameDisc:
                     return ".raw";
                 case DiscType.WiiUOpticalDisc:
                     return ".wud";
                 case DiscType.Floppy:
                     return ".img";
+                case DiscType.Cassette:
+                    return ".wav";
                 case DiscType.NONE:
+                case DiscType.CED:
                 default:
                     return null;
             }
@@ -107,7 +112,11 @@ namespace DICUI.Utilities
                     return "HD-DVD";
                 case DiscType.BluRay:
                     return "BluRay";
+                case DiscType.LaserDisc:
+                    return "LaserDisc";
 
+                case DiscType.CED:
+                    return "CED";
                 case DiscType.GameCubeGameDisc:
                     return "GameCube Game";
                 case DiscType.WiiOpticalDisc:
@@ -117,6 +126,10 @@ namespace DICUI.Utilities
                 case DiscType.UMD:
                     return "UMD";
 
+                case DiscType.Cartridge:
+                    return "Cartridge";
+                case DiscType.Cassette:
+                    return "Cassette Tape";
                 case DiscType.Floppy:
                     return "Floppy Disk";
 

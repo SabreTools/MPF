@@ -517,9 +517,13 @@ namespace DICUI
                         btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         break;
                     case DiscType.HDDVD:
+                    case DiscType.LaserDisc:
+                    case DiscType.CED:
                     case DiscType.UMD:
                     case DiscType.WiiOpticalDisc:
                     case DiscType.WiiUOpticalDisc:
+                    case DiscType.Cartridge:
+                    case DiscType.Cassette:
                         lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", discTypeTuple.Item1);
                         btn_StartStop.IsEnabled = false;
                         break;

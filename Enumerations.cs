@@ -5,21 +5,26 @@
     /// </summary>
     public enum DiscType
     {
+        // Generic Optical Formats
         NONE = 0,
         CD,
         DVD,
         GDROM,
         HDDVD,
         BluRay,
+        LaserDisc,
 
-        // Special Formats
+        // Special Optical Formats
+        CED,
         GameCubeGameDisc,
         WiiOpticalDisc,
         WiiUOpticalDisc,
         UMD,
         
-        // Keeping this separate since it's currently unsupported in the UI
-        Floppy = 99,
+        // Non-Optical Formats
+        Floppy,
+        Cassette,
+        Cartridge,
     }
 
     /// <summary>
