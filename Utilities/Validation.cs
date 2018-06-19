@@ -9,22 +9,28 @@ namespace DICUI.Utilities
 {
     public static class Validation
     {
-        /// <summary>
-        /// Get a list of valid DiscTypes for a given system
-        /// </summary>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <returns>List of DiscTypes</returns>
-        public static List<DiscType?> GetValidDiscTypes(KnownSystem? sys)
+		/// <summary>
+		/// Get a list of valid DiscTypes for a given system matched to their respective names
+		/// </summary>
+		/// <param name="sys">KnownSystem value to check</param>
+		/// <returns>DiscTypes matched to enums, if possible</returns>
+		/// <remarks>
+		/// This returns a List of Tuples whose structure is as follows:
+		///		Item 1: Printable name
+		///		Item 2: DiscType mapping
+		///	If something has a "string, null" value, it should be assumed that it is a separator
+		/// </remarks>
+		public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
         {
-            List<DiscType?> types = new List<DiscType?>();
+			List<DiscType?> types = new List<DiscType?>();
 
             switch (sys)
             {
                 #region Consoles
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    types.Add(DiscType.CD);
-                    break;
+					types.Add(DiscType.CD);
+					break;
                 case KnownSystem.BandaiApplePippin:
                     types.Add(DiscType.CD);
                     break;
@@ -364,7 +370,7 @@ namespace DICUI.Utilities
                     break;
             }
 
-            return types;
+            return types.Select(i => new Tuple<string, DiscType?>(Converters.DiscTypeToString(i), i)).ToList();
         }
 
         /// <summary>
@@ -411,21 +417,6 @@ namespace DICUI.Utilities
             }
 
             return mapping;
-        }
-
-        /// <summary>
-        /// Create a list of all actually used DiskTypes for current Knownystem list
-        /// </summary>
-        /// TODO: Maybe wrap this in directly to GetValidDiscTypes?
-        public static List<Tuple<string, DiscType?>> CreateListOfDiscTypesForKnownSystems(List<KnownSystem?> systems)
-        {
-            return systems
-                .ConvertAll(s => GetValidDiscTypes(s))
-                .SelectMany(d => d)
-                .Distinct()
-                .Select(d => Tuple.Create(Converters.DiscTypeToString(d), d))
-                .OrderBy(t => t.Item1)
-                .ToList();
         }
 
         /// <summary>

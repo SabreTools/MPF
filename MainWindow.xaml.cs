@@ -137,25 +137,24 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
-        #endregion
+		#endregion
 
-        #region Helpers
+		#region Helpers
 
-        /// <summary>
-        /// Populate disc type according to system type
-        private void PopulateDiscTypeAccordingToChosenSystem()
+		/// <summary>
+		/// Populate disc type according to system type
+		/// </summary>
+		private void PopulateDiscTypeAccordingToChosenSystem()
         {
             var currentSystem = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
 
             if (currentSystem != null)
             {
-                List<Tuple<string, DiscType?>> allowedDiscTypesForSystem = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2)
-                  .ConvertAll(d => Tuple.Create(Converters.DiscTypeToString(d), d));
-
-                cmb_DiscType.ItemsSource = allowedDiscTypesForSystem;
+				_discTypes = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2);
+                cmb_DiscType.ItemsSource = _discTypes;
                 cmb_DiscType.DisplayMemberPath = "Item1";
 
-                cmb_DiscType.IsEnabled = allowedDiscTypesForSystem.Count > 1;
+                cmb_DiscType.IsEnabled = _discTypes.Count > 1;
                 cmb_DiscType.SelectedIndex = 0;
             }
             else
@@ -165,7 +164,6 @@ namespace DICUI
                 cmb_DiscType.SelectedIndex = -1;
             }
         }
-        /// </summary>
 
         /// <summary>
         /// Get a complete list of supported systems and fill the combo box
@@ -173,8 +171,6 @@ namespace DICUI
         private void PopulateSystems()
         {
             _systems = Utilities.Validation.CreateListOfSystems();
-            _discTypes = Utilities.Validation.CreateListOfDiscTypesForKnownSystems(_systems.ConvertAll(s => s.Item2));
-
             cmb_SystemType.ItemsSource = _systems;
             cmb_SystemType.DisplayMemberPath = "Item1";
             cmb_SystemType.SelectedIndex = 0;

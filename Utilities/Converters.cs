@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DICUI.Utilities
 {
@@ -197,8 +199,8 @@ namespace DICUI.Utilities
         public static List<string> KnownSystemAndDiscTypeToParameters(KnownSystem? sys, DiscType? type)
         {
             // First check to see if the combination of system and disctype is valid
-            List<DiscType?> validTypes = Validation.GetValidDiscTypes(sys);
-            if (!validTypes.Contains(type))
+            List<Tuple<string, DiscType?>> validTypes = Validation.GetValidDiscTypes(sys);
+            if (!validTypes.Select(i => i.Item2).Contains(type))
             {
                 return null;
             }
