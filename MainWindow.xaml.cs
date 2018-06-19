@@ -137,20 +137,20 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
-		#endregion
+        #endregion
 
-		#region Helpers
+        #region Helpers
 
-		/// <summary>
-		/// Populate disc type according to system type
-		/// </summary>
-		private void PopulateDiscTypeAccordingToChosenSystem()
+        /// <summary>
+        /// Populate disc type according to system type
+        /// </summary>
+        private void PopulateDiscTypeAccordingToChosenSystem()
         {
             var currentSystem = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
 
             if (currentSystem != null)
             {
-				_discTypes = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2);
+                _discTypes = Utilities.Validation.GetValidDiscTypes(currentSystem.Item2);
                 cmb_DiscType.ItemsSource = _discTypes;
                 cmb_DiscType.DisplayMemberPath = "Item1";
 
@@ -234,18 +234,19 @@ namespace DICUI
         {
             btn_StartStop.Content = UIElements.StopDumping;
 
-            // Get the currently selected options
+            // Populate all tuples
             var driveLetterTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
+            var systemTypeTuple = cmb_SystemType.SelectedValue as Tuple<string, KnownSystem?>;
+            var discTypeTuple = cmb_DiscType.SelectedValue as Tuple<string, DiscType?>;
+
+            // Get the currently selected options
             char driveLetter = driveLetterTuple.Item1;
             bool isFloppy = driveLetterTuple.Item3;
-
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
-
-            var selected = cmb_SystemType.SelectedValue as Tuple<string, KnownSystem?, DiscType?>;
-            string systemName = selected.Item1;
-            KnownSystem? system = selected.Item2;
-            DiscType? type = selected.Item3;
+            string systemName = systemTypeTuple.Item1;
+            KnownSystem? system = systemTypeTuple.Item2;
+            DiscType? type = discTypeTuple.Item2;
 
             string customParameters = txt_Parameters.Text;
 
