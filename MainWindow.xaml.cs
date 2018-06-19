@@ -45,6 +45,9 @@ namespace DICUI
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
             SetSupportedDriveSpeed();
+
+            OptionsWindow window = new OptionsWindow();
+            window.Show();
         }
 
         #region Events
