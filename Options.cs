@@ -13,7 +13,6 @@ namespace DICUI
         public string defaultOutputPath { get; private set; }
         public string dicPath { get; private set; }
         public string psxtPath { get; private set; }
-        public string sgRawPath { get; private set; }
         public string subdumpPath { get; private set; }
 
         public void Save()
@@ -37,7 +36,6 @@ namespace DICUI
             //TODO: hardcoded, we should find a better way
             dicPath = ConfigurationManager.AppSettings["dicPath"] ?? @"Programs\DiscImageCreator.exe";
             psxtPath = ConfigurationManager.AppSettings["psxt001zPath"] ?? "psxt001z.exe";
-            sgRawPath = ConfigurationManager.AppSettings["sgRawPath"] ?? "sg_raw.exe";
             subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
             defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
         }
