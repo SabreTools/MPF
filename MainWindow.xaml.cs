@@ -226,11 +226,6 @@ namespace DICUI
         /// </summary>
         private async void StartDumping()
         {
-            string dicPath = _options.dicPath;
-            string sgRawPath = _options.sgRawPath;
-            string psxtPath = _options.psxtPath;
-            string subdumpPath = _options.subdumpPath;
-
             btn_StartStop.Content = UIElements.StopDumping;
 
             // Populate all tuples
@@ -239,6 +234,9 @@ namespace DICUI
             var discTypeTuple = cmb_DiscType.SelectedValue as Tuple<string, DiscType?>;
 
             // Get the currently selected options
+            string dicPath = _options.dicPath;
+            string psxtPath = _options.psxtPath;
+            string subdumpPath = _options.subdumpPath;
             char driveLetter = driveLetterTuple.Item1;
             bool isFloppy = driveLetterTuple.Item3;
             string outputDirectory = txt_OutputDirectory.Text;
@@ -308,29 +306,6 @@ namespace DICUI
             // Special cases
             switch (system)
             {
-                // TODO: May not be needed anymore? DIC claims to have this functionality now
-                case KnownSystem.MicrosoftXBOXOne:
-                case KnownSystem.SonyPlayStation4:
-                    if (!File.Exists(sgRawPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find sg-raw!";
-                        break;
-                    }
-
-                    await Task.Run(() =>
-                    {
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = sgRawPath,
-                                Arguments = "-v -r 4100 -R " + driveLetter + ": " + "ad 01 00 00 00 00 00 00 10 04 00 00 -o \"PIC.bin\""
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
                 case KnownSystem.SegaSaturn:
                     if (!File.Exists(subdumpPath))
                     {
