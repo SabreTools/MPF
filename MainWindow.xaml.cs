@@ -105,10 +105,16 @@ namespace DICUI
         {
             // lazy initialization
             if (_optionsWindow == null)
+            {
                 _optionsWindow = new OptionsWindow(_options);
+                _optionsWindow.Closed += delegate
+                {
+                    _optionsWindow = null;
+                };
+            }
 
-            //_optionsWindow.Owner = this;
-            //_optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            _optionsWindow.Owner = this;
+            _optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             _optionsWindow.Refresh();
             _optionsWindow.Show();
 
@@ -642,7 +648,7 @@ namespace DICUI
                 return;
             }
 
-            // Validate that the required program exits and it's not DICUI itself
+            // Validate that the required program exists and it's not DICUI itself
             if (!File.Exists(_options.dicPath) || 
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {

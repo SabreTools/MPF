@@ -21,7 +21,7 @@
 
         <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" HorizontalAlignment="Stretch" IsLocked="True">
             <ToolBar>
-                <Button x:Name="tbr_Options" Content="Options" Click="tbr_Options_Click" CommandManager.CanExecute="tbr_Options_CanExecute"/>
+                <Button x:Name="tbr_Options" Content="Options" Command="Properties" Click="tbr_Options_Click" CommandManager.CanExecute="tbr_Options_CanExecute"/>
             </ToolBar>
         </ToolBarTray>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
