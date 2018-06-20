@@ -23,9 +23,12 @@ namespace DICUI
     /// </summary>
     public partial class OptionsWindow : Window
     {
-        public OptionsWindow()
+        private readonly Options _options;
+
+        public OptionsWindow(Options options)
         {
             InitializeComponent();
+            _options = options;
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -40,25 +43,52 @@ namespace DICUI
             return dialog;
         }
 
+        private FolderBrowserDialog CreateFolderBrowserDialog()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            return dialog;
+        }
+
+        private string[] PathSettings()
+        {
+            string[] pathSettings = { "defaultOutputPath", "dicPath", "psxtPath", "sgRawPath", "subdumpPath" };
+            return pathSettings;
+        }
+
         private TextBox TextBoxForPathSetting(string name)
         {
             return FindName("txt_" + name) as TextBox;
         }
 
-        private void btn_BrowseForPath_Click(object sender, RoutedEventArgs e)
+        private void btn_BrowseForPath_Click(object sender, EventArgs e)
         {
             Button button = sender as Button;
             // strips button prefix to obtain the setting name
             string pathSettingName = button.Name.Substring("btn_".Length);
 
-            using (OpenFileDialog dialog = CreateOpenFileDialog())
+            // TODO: hack for now, then we'll see
+            bool shouldBrowseForPath = pathSettingName == "defaultOutputPath";
+
+            CommonDialog dialog = shouldBrowseForPath ? (CommonDialog)CreateFolderBrowserDialog() : CreateOpenFileDialog();
+            using (dialog)
             {
                 DialogResult result = dialog.ShowDialog();
 
                 if (result == System.Windows.Forms.DialogResult.OK)
                 {
-                    string path = dialog.FileName;
-                    bool exists = File.Exists(path);
+                    string path;
+                    bool exists;
+
+                    if (shouldBrowseForPath)
+                    {
+                        path = (dialog as FolderBrowserDialog).SelectedPath;
+                        exists = Directory.Exists(path);
+                    }
+                    else
+                    {
+                        path = (dialog as OpenFileDialog).FileName;
+                        exists = File.Exists(path);
+                    }
 
                     if (exists)
                         TextBoxForPathSetting(pathSettingName).Text = path;
@@ -75,15 +105,27 @@ namespace DICUI
             }
         }
 
-        private void btn_Accept_Click(object sender, RoutedEventArgs e)
+        private void btn_Accept_Click(object sender, EventArgs e)
         {
-
+            Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
+            _options.Save();
+            Hide();
         }
 
-        private void btc_Cancel_Click(object sender, RoutedEventArgs e)
+        private void btn_Cancel_Click(object sender, EventArgs e)
         {
             // just hide the window and don't care
             Hide();
+        }
+
+        public void Refresh()
+        {
+            Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
+        }
+
+        private void btn_Accept_Click_1(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

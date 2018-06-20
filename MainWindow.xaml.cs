@@ -14,27 +14,23 @@ namespace DICUI
 {
     public partial class MainWindow : Window
     {
-        // Private paths
-        private string defaultOutputPath;
-        private string dicPath;
-        private string psxtPath;
-        private string sgRawPath;
-        private string subdumpPath;
-
         // Private UI-related variables
         private List<Tuple<char, string, bool>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?>> _systems { get; set; }
         private List<Tuple<string, DiscType?>> _discTypes { get; set; }
         private Process childProcess { get; set; }
-        private Window childWindow { get; set; }
+
+        private OptionsWindow _optionsWindow;
+        private Options _options;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            // Get all settings
-            GetSettings();
+            // Initializes and load Options object
+            _options = new Options();
+            _options.Load();
 
             // Populate the list of systems
             PopulateSystems();
@@ -45,9 +41,6 @@ namespace DICUI
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
             SetSupportedDriveSpeed();
-
-            OptionsWindow window = new OptionsWindow();
-            window.Show();
         }
 
         #region Events
@@ -108,26 +101,23 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
-        private void tbr_Properties_Click(object sender, RoutedEventArgs e)
+        private void tbr_Options_Click(object sender, RoutedEventArgs e)
         {
-            ShowSettings();
+            // lazy initialization
+            if (_optionsWindow == null)
+                _optionsWindow = new OptionsWindow(_options);
+
+            //_optionsWindow.Owner = this;
+            //_optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            _optionsWindow.Refresh();
+            _optionsWindow.Show();
+
+            
         }
 
-        private void tbr_Properties_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        private void tbr_Options_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
-        }
-
-        private void btn_Settings_Accept_Click(object sender, RoutedEventArgs e)
-        {
-            SaveSettings();
-            childWindow.Close();
-            GetSettings();
-        }
-
-        private void btn_Settings_Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            childWindow.Close();
         }
 
         private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
@@ -243,6 +233,11 @@ namespace DICUI
         /// </summary>
         private async void StartDumping()
         {
+            string dicPath = _options.dicPath;
+            string sgRawPath = _options.sgRawPath;
+            string psxtPath = _options.psxtPath;
+            string subdumpPath = _options.subdumpPath;
+
             btn_StartStop.Content = UIElements.StopDumping;
 
             // Get the currently selected options
@@ -453,7 +448,7 @@ namespace DICUI
         private async void EjectDisc()
         {
             // Validate that the required program exits
-            if (!File.Exists(dicPath))
+            if (!File.Exists(_options.dicPath))
             {
                 return;
             }
@@ -472,7 +467,7 @@ namespace DICUI
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = dicPath,
+                        FileName = _options.dicPath,
                         Arguments = DICCommands.Eject + " " + driveTuple.Item1,
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -625,12 +620,12 @@ namespace DICUI
 
             if (driveTuple != null && systemTuple != null && discTuple != null)
             {
-                txt_OutputDirectory.Text = Path.Combine(defaultOutputPath, driveTuple.Item2);
+                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveTuple.Item2);
                 txt_OutputFilename.Text = driveTuple.Item2 + Converters.DiscTypeToExtension(discTuple.Item2);
             }
             else
             {
-                txt_OutputDirectory.Text = defaultOutputPath;
+                txt_OutputDirectory.Text = _options.defaultOutputPath;
                 txt_OutputFilename.Text = "disc.bin";
             }
         }
@@ -647,8 +642,9 @@ namespace DICUI
                 return;
             }
 
-            // Validate that the required program exits
-            if (!File.Exists(dicPath))
+            // Validate that the required program exits and it's not DICUI itself
+            if (!File.Exists(_options.dicPath) || 
+                Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
                 return;
             }
@@ -658,7 +654,7 @@ namespace DICUI
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = dicPath,
+                    FileName = _options.dicPath,
                     Arguments = DICCommands.DriveSpeed + " " + driveLetter,
                     CreateNoWindow = true,
                     UseShellExecute = false,
@@ -677,204 +673,6 @@ namespace DICUI
             }
 
             cmb_DriveSpeed.SelectedValue = speed;
-        }
-
-        /// <summary>
-        /// Show all user-configurable settings in a new window
-        /// </summary>
-        private void ShowSettings()
-        {
-            // Create the child window for settings
-            childWindow = new Window()
-            {
-                ShowInTaskbar = false,
-                Owner = Application.Current.MainWindow,
-                Width = 500,
-                Height = 250,
-                ResizeMode = ResizeMode.NoResize,
-            };
-
-            // Create the new Grid-based window
-            var grid = new Grid
-            {
-                Margin = new Thickness(5),
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-            };
-
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString(String.Format("{0:n1}*", 1.2))) });
-            grid.ColumnDefinitions.Add(new ColumnDefinition { Width = (GridLength)(new GridLengthConverter().ConvertFromString(String.Format("{0:n1}*", 2.5))) });
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-            grid.RowDefinitions.Add(new RowDefinition());
-
-            // Create all of the individual items in the panel
-            Label dicPathLabel = new Label();
-            dicPathLabel.Content = "DiscImageCreator Path:";
-            dicPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
-            dicPathLabel.VerticalAlignment = VerticalAlignment.Center;
-            dicPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(dicPathLabel, 0);
-            Grid.SetColumn(dicPathLabel, 0);
-
-            TextBox dicPathSetting = new TextBox();
-            dicPathSetting.Text = ConfigurationManager.AppSettings["dicPath"];
-            dicPathSetting.VerticalAlignment = VerticalAlignment.Center;
-            dicPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(dicPathSetting, 0);
-            Grid.SetColumn(dicPathSetting, 1);
-
-            Label psxt001zPathLabel = new Label();
-            psxt001zPathLabel.Content = "psxt001z Path:";
-            psxt001zPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
-            psxt001zPathLabel.VerticalAlignment = VerticalAlignment.Center;
-            psxt001zPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(psxt001zPathLabel, 1);
-            Grid.SetColumn(psxt001zPathLabel, 0);
-
-            TextBox psxt001zPathSetting = new TextBox();
-            psxt001zPathSetting.Text = ConfigurationManager.AppSettings["psxt001zPath"];
-            psxt001zPathSetting.VerticalAlignment = VerticalAlignment.Center;
-            psxt001zPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(psxt001zPathSetting, 1);
-            Grid.SetColumn(psxt001zPathSetting, 1);
-
-            Label sgRawPathLabel = new Label();
-            sgRawPathLabel.Content = "sg-raw Path:";
-            sgRawPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
-            sgRawPathLabel.VerticalAlignment = VerticalAlignment.Center;
-            sgRawPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(sgRawPathLabel, 2);
-            Grid.SetColumn(sgRawPathLabel, 0);
-
-            TextBox sgRawPathSetting = new TextBox();
-            sgRawPathSetting.Text = ConfigurationManager.AppSettings["sgRawPath"];
-            sgRawPathSetting.VerticalAlignment = VerticalAlignment.Center;
-            sgRawPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(sgRawPathSetting, 2);
-            Grid.SetColumn(sgRawPathSetting, 1);
-
-            Label subdumpPathLabel = new Label();
-            subdumpPathLabel.Content = "subdump Path:";
-            subdumpPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
-            subdumpPathLabel.VerticalAlignment = VerticalAlignment.Center;
-            subdumpPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(subdumpPathLabel, 3);
-            Grid.SetColumn(subdumpPathLabel, 0);
-
-            TextBox subdumpPathSetting = new TextBox();
-            subdumpPathSetting.Text = ConfigurationManager.AppSettings["subdumpPath"];
-            subdumpPathSetting.VerticalAlignment = VerticalAlignment.Center;
-            subdumpPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(subdumpPathSetting, 3);
-            Grid.SetColumn(subdumpPathSetting, 1);
-
-            Label defaultOutputPathLabel = new Label();
-            defaultOutputPathLabel.Content = "Default Output Path:";
-            defaultOutputPathLabel.FontWeight = (FontWeight)(new FontWeightConverter().ConvertFromString("Bold"));
-            defaultOutputPathLabel.VerticalAlignment = VerticalAlignment.Center;
-            defaultOutputPathLabel.HorizontalAlignment = HorizontalAlignment.Right;
-            Grid.SetRow(defaultOutputPathLabel, 4);
-            Grid.SetColumn(defaultOutputPathLabel, 0);
-
-            TextBox defaultOutputPathSetting = new TextBox();
-            defaultOutputPathSetting.Text = ConfigurationManager.AppSettings["defaultOutputPath"];
-            defaultOutputPathSetting.VerticalAlignment = VerticalAlignment.Center;
-            defaultOutputPathSetting.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Grid.SetRow(defaultOutputPathSetting, 4);
-            Grid.SetColumn(defaultOutputPathSetting, 1);
-
-            var buttonGrid = new Grid
-            {
-                Margin = new Thickness(5),
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
-            };
-            buttonGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            buttonGrid.ColumnDefinitions.Add(new ColumnDefinition());
-            buttonGrid.RowDefinitions.Add(new RowDefinition());
-            Grid.SetRow(buttonGrid, 5);
-            Grid.SetColumn(buttonGrid, 0);
-            Grid.SetColumnSpan(buttonGrid, 2);
-
-            Button acceptButton = new Button();
-            acceptButton.Name = "btn_Settings_Accept";
-            acceptButton.Content = "Accept";
-            acceptButton.Click += btn_Settings_Accept_Click;
-            acceptButton.VerticalAlignment = VerticalAlignment.Center;
-            acceptButton.HorizontalAlignment = HorizontalAlignment.Center;
-            Grid.SetRow(acceptButton, 0);
-            Grid.SetColumn(acceptButton, 0);
-
-            Button cancelButton = new Button();
-            cancelButton.Name = "btn_Settings_Cancel";
-            cancelButton.Content = "Cancel";
-            cancelButton.Click += btn_Settings_Cancel_Click;
-            cancelButton.VerticalAlignment = VerticalAlignment.Center;
-            cancelButton.HorizontalAlignment = HorizontalAlignment.Center;
-            Grid.SetRow(cancelButton, 0);
-            Grid.SetColumn(cancelButton, 1);
-
-            buttonGrid.Children.Add(acceptButton);
-            buttonGrid.Children.Add(cancelButton);
-
-            // Add all of the UI elements
-            grid.Children.Add(dicPathLabel);
-            grid.Children.Add(dicPathSetting);
-            grid.Children.Add(psxt001zPathLabel);
-            grid.Children.Add(psxt001zPathSetting);
-            grid.Children.Add(sgRawPathLabel);
-            grid.Children.Add(sgRawPathSetting);
-            grid.Children.Add(subdumpPathLabel);
-            grid.Children.Add(subdumpPathSetting);
-            grid.Children.Add(defaultOutputPathLabel);
-            grid.Children.Add(defaultOutputPathSetting);
-            grid.Children.Add(buttonGrid);
-
-            // Now show the child window
-            childWindow.Content = grid;
-            childWindow.Show();
-        }
-
-        /// <summary>
-        /// Save settings from the child window, if possible
-        /// </summary>
-        private void SaveSettings()
-        {
-            // If the child window is disposed, we don't think about it
-            if (childWindow == null)
-            {
-                return;
-            }
-
-            // Clear the old settings and set new ones
-            var configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            configFile.AppSettings.Settings.Remove("dicPath");
-            configFile.AppSettings.Settings.Add("dicPath", ((TextBox)(((Grid)childWindow.Content).Children[1])).Text);
-            configFile.AppSettings.Settings.Remove("psxt001zPath");
-            configFile.AppSettings.Settings.Add("psxt001zPath", ((TextBox)(((Grid)childWindow.Content).Children[3])).Text);
-            configFile.AppSettings.Settings.Remove("sgRawPath");
-            configFile.AppSettings.Settings.Add("sgRawPath", ((TextBox)(((Grid)childWindow.Content).Children[5])).Text);
-            configFile.AppSettings.Settings.Remove("subdumpPath");
-            configFile.AppSettings.Settings.Add("subdumpPath", ((TextBox)(((Grid)childWindow.Content).Children[7])).Text);
-            configFile.AppSettings.Settings.Remove("defaultOutputPath");
-            configFile.AppSettings.Settings.Add("defaultOutputPath", ((TextBox)(((Grid)childWindow.Content).Children[9])).Text);
-            configFile.Save(ConfigurationSaveMode.Modified);
-        }
-
-        /// <summary>
-        /// Get settings from the configuration, if possible
-        /// </summary>
-        private void GetSettings()
-        {
-            dicPath = ConfigurationManager.AppSettings["dicPath"] ?? "Programs\\DiscImageCreator.exe";
-            psxtPath = ConfigurationManager.AppSettings["psxt001zPath"] ?? "psxt001z.exe";
-            sgRawPath = ConfigurationManager.AppSettings["sgRawPath"] ?? "sg_raw.exe";
-            subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
-            defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
         }
 
         #endregion

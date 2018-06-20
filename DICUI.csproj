@@ -91,6 +91,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Utilities\DumpInformation.cs" />
     <Compile Include="Utilities\Validation.cs" />
     <Compile Include="Utilities\Converters.cs" />
