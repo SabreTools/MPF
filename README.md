@@ -1,21 +1,20 @@
 # DICUI
-This is my current progress on my C# Disc Image Creator UI.
+Disc Image Creator UI in C#
 
-I am using Disc Image Creator, created by Sarami, and would like to thanks him for this great software.
+This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project :)
+
+We are using Disc Image Creator, created by Sarami, and we would like to thanks him for his great software.
 
 You can get the latest code and released on his github right here:
 https://github.com/saramibreak/DiscImageCreator
-
-I'm a hobbyist programmer, so this code might not be optimal, feel free to make your recommendation / Pull request.
-
-I would like this project to be a community project, so if you have some time and knowledge to give, I'll be glad to add you to the contributor of this project :)
-
 --------------------------------------------------------------------------
 Currently working on the project:
  
 ReignStumble - Co-Lead Programmer
 
 darksabre76 - Co-Lead Programmer
+
+Jakz - Contributer
 
 NHellFire - Contributer
 
