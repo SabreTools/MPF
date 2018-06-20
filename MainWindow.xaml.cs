@@ -24,6 +24,8 @@ namespace DICUI
         private OptionsWindow _optionsWindow;
         private Options _options;
 
+        private LogWindow _logWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -244,7 +246,7 @@ namespace DICUI
             string systemName = systemTypeTuple.Item1;
             KnownSystem? system = systemTypeTuple.Item2;
             DiscType? type = discTypeTuple.Item2;
-
+            
             string customParameters = txt_Parameters.Text;
 
             // Validate that everything is good
@@ -289,6 +291,16 @@ namespace DICUI
             lbl_Status.Content = "Beginning dumping process";
             string parameters = txt_Parameters.Text;
 
+            // Inizialize LogWindow
+            if (_logWindow == null)
+            {
+                _logWindow = new LogWindow();
+                _logWindow.Closed += delegate {
+                    _logWindow = null;
+                };
+            }
+            _logWindow.Show();
+
             await Task.Run(() =>
             {
                 childProcess = new Process()
@@ -297,9 +309,14 @@ namespace DICUI
                     {
                         FileName = dicPath,
                         Arguments = parameters,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
                     },
                 };
+                childProcess.OutputDataReceived += (process, text) => Dispatcher.Invoke(() => _logWindow.Append(text.Data));
                 childProcess.Start();
+                childProcess.BeginOutputReadLine();
                 childProcess.WaitForExit();
             });
 
