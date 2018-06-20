@@ -121,11 +121,6 @@ namespace DICUI
             
         }
 
-        private void tbr_Options_CanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
         private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
         {
             EnsureDiscInformation();
