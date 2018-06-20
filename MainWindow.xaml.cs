@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -117,8 +116,6 @@ namespace DICUI
             _optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             _optionsWindow.Refresh();
             _optionsWindow.Show();
-
-            
         }
 
         private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
