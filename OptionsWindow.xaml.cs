@@ -122,10 +122,5 @@ namespace DICUI
         {
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
         }
-
-        private void btn_Accept_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
