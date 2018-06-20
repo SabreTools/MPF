@@ -5,23 +5,26 @@
     /// </summary>
     public enum DiscType
     {
+        // Generic Optical Formats
         NONE = 0,
         CD,
-        DVD5,
-        DVD9,
+        DVD,
         GDROM,
         HDDVD,
-        BD25,
-        BD50,
+        BluRay,
+        LaserDisc,
 
-        // Special Formats
+        // Special Optical Formats
+        CED,
         GameCubeGameDisc,
         WiiOpticalDisc,
         WiiUOpticalDisc,
         UMD,
         
-        // Keeping this separate since it's currently unsupported in the UI
-        Floppy = 99,
+        // Non-Optical Formats
+        Floppy,
+        Cassette,
+        Cartridge,
     }
 
     /// <summary>
@@ -142,6 +145,7 @@
         BDVideo,
         DVDVideo,
         EnhancedCD,
+        HDDVDVideo,
         PalmOS,
         PhilipsCDiDigitalVideo,
         PhotoCD,

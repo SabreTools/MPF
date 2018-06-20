@@ -95,8 +95,8 @@
         public const string DATField = "DAT";
         public const string ErrorCountField = "Error Count";
         public const string CuesheetField = "Cuesheet";
-        public const string SubIntentionField = "SubIntention (SecuROM)";
-        public const string WriteOffsetField = "WriteOffset";
+        public const string SubIntentionField = "SubIntention Data (SecuROM)";
+        public const string WriteOffsetField = "Write Offset";
         public const string LayerbreakField = "Layerbreak";
         public const string PlaystationEXEDateField = "EXE Date";
         public const string PlayStationEDCField = "EDC"; // TODO: Not automatic yet
