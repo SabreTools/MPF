@@ -20,17 +20,17 @@ namespace DICUI.Utilities
         ///		Item 2: DiscType mapping
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
-	    public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
+        public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
         {
-		    List<DiscType?> types = new List<DiscType?>();
+            List<DiscType?> types = new List<DiscType?>();
 
             switch (sys)
             {
                 #region Consoles
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-					types.Add(DiscType.CD);
-					break;
+                    types.Add(DiscType.CD);
+                    break;
                 case KnownSystem.BandaiApplePippin:
                     types.Add(DiscType.CD);
                     break;
