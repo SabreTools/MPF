@@ -9,20 +9,20 @@ namespace DICUI.Utilities
 {
     public static class Validation
     {
-		/// <summary>
-		/// Get a list of valid DiscTypes for a given system matched to their respective names
-		/// </summary>
-		/// <param name="sys">KnownSystem value to check</param>
-		/// <returns>DiscTypes matched to enums, if possible</returns>
-		/// <remarks>
-		/// This returns a List of Tuples whose structure is as follows:
-		///		Item 1: Printable name
-		///		Item 2: DiscType mapping
-		///	If something has a "string, null" value, it should be assumed that it is a separator
-		/// </remarks>
-		public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
+        /// <summary>
+        /// Get a list of valid DiscTypes for a given system matched to their respective names
+        /// </summary>
+        /// <param name="sys">KnownSystem value to check</param>
+        /// <returns>DiscTypes matched to enums, if possible</returns>
+        /// <remarks>
+        /// This returns a List of Tuples whose structure is as follows:
+        ///		Item 1: Printable name
+        ///		Item 2: DiscType mapping
+        ///	If something has a "string, null" value, it should be assumed that it is a separator
+        /// </remarks>
+	    public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
         {
-			List<DiscType?> types = new List<DiscType?>();
+		    List<DiscType?> types = new List<DiscType?>();
 
             switch (sys)
             {
