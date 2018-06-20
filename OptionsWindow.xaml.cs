@@ -51,7 +51,7 @@ namespace DICUI
 
         private string[] PathSettings()
         {
-            string[] pathSettings = { "defaultOutputPath", "dicPath", "psxtPath", "sgRawPath", "subdumpPath" };
+            string[] pathSettings = { "defaultOutputPath", "dicPath", "psxtPath", "subdumpPath" };
             return pathSettings;
         }
 
