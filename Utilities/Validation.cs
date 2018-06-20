@@ -383,6 +383,7 @@ namespace DICUI.Utilities
         ///		Item 2: KnownSystem mapping
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
+        /// TODO: Figure out a way that the sections can be generated more automatically
         public static List<Tuple<string, KnownSystem?>> CreateListOfSystems()
         {
             List<Tuple<string, KnownSystem?>> mapping = new List<Tuple<string, KnownSystem?>>();
