@@ -21,7 +21,7 @@
 
         <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" HorizontalAlignment="Stretch" IsLocked="True">
             <ToolBar>
-                <Button x:Name="tbr_Properties" Content="Properties" Command="Properties" Click="tbr_Properties_Click" CommandManager.CanExecute="tbr_Properties_CanExecute"/>
+                <Button x:Name="tbr_Options" Content="Options" Click="tbr_Options_Click" />
             </ToolBar>
         </ToolBarTray>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
@@ -42,25 +42,25 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Disc Type"/>
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Disc Type" />
             <ComboBox x:Name="cmb_SystemType" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="cmb_SystemType_SelectionChanged" />
             <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="cmb_DiscType_SelectionChanged" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
-            <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="txt_OutputFilename_TextChanged"/>
+            <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="txt_OutputFilename_TextChanged" />
 
             <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
-            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" TextChanged="txt_OutputDirectory_TextChanged"/>
+            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" TextChanged="txt_OutputDirectory_TextChanged" />
             <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
 
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged" Margin="0,8,0,7"/>
+            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged" />
 
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
-            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged"/>
+            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged" />
 
             <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Parameters</Label>
-            <TextBox x:Name="txt_Parameters" Grid.Row="5" Grid.Column="1" Height="22" Width="397" HorizontalAlignment="left" IsEnabled="False" />
+            <TextBox x:Name="txt_Parameters" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" IsEnabled="False" />
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
