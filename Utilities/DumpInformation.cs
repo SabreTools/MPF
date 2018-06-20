@@ -85,11 +85,9 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_subIntention.txt")
                         && File.Exists(combinedBase + "_subReadable.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
-                case DiscType.DVD5:
-                case DiscType.DVD9:
+                case DiscType.DVD:
                 case DiscType.HDDVD:
-                case DiscType.BD25:
-                case DiscType.BD50:
+                case DiscType.BluRay:
                 case DiscType.GameCubeGameDisc:
                 case DiscType.WiiOpticalDisc:
                 case DiscType.WiiUOpticalDisc:
@@ -206,51 +204,35 @@ namespace DICUI.Utilities
                     }
 
                     break;
-                case DiscType.DVD5:
+                case DiscType.DVD:
                 case DiscType.HDDVD:
-                case DiscType.BD25:
-                    mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
-                    mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
-
-                    // System-specific options
-                    switch (sys)
+                case DiscType.BluRay:
+                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt");
+                    
+                    // If we have a single-layer disc
+                    if (layerbreak == null)
                     {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
-                            if (File.Exists(combinedBase + "_subIntention.txt"))
-                            {
-                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
-                                if (fi.Length > 0)
-                                {
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
-                                }
-                            }
-                            break;
-                        case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
-                            break;
+                        mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                        mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                        mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                        mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
+                        mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
+                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
                     }
-
-                    break;
-                case DiscType.DVD9:
-                case DiscType.BD50:
-                    mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
-                    mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings["Inner " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
-                    mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
-                    mappings[Template.LayerbreakField] = GetLayerbreak(combinedBase + "_disc.txt");
+                    // If we have a dual-layer disc
+                    else
+                    {
+                        mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                        mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
+                        mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                        mappings["Inner " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
+                        mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                        mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
+                        mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
+                        mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
+                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                        mappings[Template.LayerbreakField] = layerbreak;
+                    }
 
                     // System-specific options
                     switch (sys)
@@ -284,7 +266,6 @@ namespace DICUI.Utilities
                             mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
                             break;
                     }
-
                     break;
             }
 
@@ -808,25 +789,30 @@ namespace DICUI.Utilities
                 {
                     case DiscType.CD:
                     case DiscType.GDROM:
-                    case DiscType.DVD5:
+                    case DiscType.DVD:
                     case DiscType.HDDVD:
-                    case DiscType.BD25:
-                        output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
-                        output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
-                        output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
-                        output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
-                        output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
-                        break;
-                    case DiscType.DVD9:
-                    case DiscType.BD50:
-                        output.Add("\tOuter " + Template.MasteringRingField + ": " + info["Outer " + Template.MasteringRingField]);
-                        output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
-                        output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
-                        output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
-                        output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
-                        output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
-                        output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
-                        output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
+                    case DiscType.BluRay:
+                        // If we have a dual-layer disc
+                        if (info.ContainsKey(Template.LayerbreakField))
+                        {
+                            output.Add("\tOuter " + Template.MasteringRingField + ": " + info["Outer " + Template.MasteringRingField]);
+                            output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
+                            output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
+                            output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
+                            output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
+                            output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
+                            output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
+                            output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
+                        }
+                        // If we have a single-layer disc
+                        else
+                        {
+                            output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
+                            output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
+                            output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
+                            output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
+                            output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
+                        }
                         break;
                 }
                 output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
@@ -862,9 +848,13 @@ namespace DICUI.Utilities
                 }
                 switch (type)
                 {
-                    case DiscType.DVD9:
-                    case DiscType.BD50:
-                        output.Add(Template.LayerbreakField + ": " + info[Template.LayerbreakField]);
+                    case DiscType.DVD:
+                    case DiscType.BluRay:
+                        // If we have a dual-layer disc
+                        if (info.ContainsKey(Template.LayerbreakField))
+                        {
+                            output.Add(Template.LayerbreakField + ": " + info[Template.LayerbreakField]);
+                        }
                         break;
                 }
                 output.Add(Template.PVDField + ":"); output.Add("");

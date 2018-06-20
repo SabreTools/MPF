@@ -9,22 +9,28 @@ namespace DICUI.Utilities
 {
     public static class Validation
     {
-        /// <summary>
-        /// Get a list of valid DiscTypes for a given system
-        /// </summary>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <returns>List of DiscTypes</returns>
-        public static List<DiscType?> GetValidDiscTypes(KnownSystem? sys)
+		/// <summary>
+		/// Get a list of valid DiscTypes for a given system matched to their respective names
+		/// </summary>
+		/// <param name="sys">KnownSystem value to check</param>
+		/// <returns>DiscTypes matched to enums, if possible</returns>
+		/// <remarks>
+		/// This returns a List of Tuples whose structure is as follows:
+		///		Item 1: Printable name
+		///		Item 2: DiscType mapping
+		///	If something has a "string, null" value, it should be assumed that it is a separator
+		/// </remarks>
+		public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
         {
-            List<DiscType?> types = new List<DiscType?>();
+			List<DiscType?> types = new List<DiscType?>();
 
             switch (sys)
             {
                 #region Consoles
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    types.Add(DiscType.CD);
-                    break;
+					types.Add(DiscType.CD);
+					break;
                 case KnownSystem.BandaiApplePippin:
                     types.Add(DiscType.CD);
                     break;
@@ -39,21 +45,19 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.MicrosoftXBOX:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.MicrosoftXBOX360XDG2:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD9);
-                    types.Add(DiscType.HDDVD);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.MicrosoftXBOX360XDG3:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     types.Add(DiscType.HDDVD);
                     break;
                 case KnownSystem.MicrosoftXBOXOne:
-                    types.Add(DiscType.BD25);
-                    types.Add(DiscType.BD50);
+                    types.Add(DiscType.BluRay);
                     break;
                 case KnownSystem.NECPCEngineTurboGrafxCD:
                     types.Add(DiscType.CD);
@@ -93,29 +97,25 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.SonyPlayStation2:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.SonyPlayStation3:
-                    types.Add(DiscType.BD25);
-                    types.Add(DiscType.BD50);
+                    types.Add(DiscType.BluRay);
                     break;
                 case KnownSystem.SonyPlayStation4:
-                    types.Add(DiscType.BD25);
-                    types.Add(DiscType.BD50);
+                    types.Add(DiscType.BluRay);
                     break;
                 case KnownSystem.SonyPlayStationPortable:
                     types.Add(DiscType.UMD);
                     break;
                 case KnownSystem.VMLabsNuon:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.VTechVFlashVSmilePro:
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    types.Add(DiscType.DVD5);
+                    types.Add(DiscType.DVD);
                     break;
 
                 #endregion
@@ -127,8 +127,7 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.AppleMacintosh:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     types.Add(DiscType.Floppy);
                     break;
                 case KnownSystem.CommodoreAmigaCD:
@@ -139,8 +138,7 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.IBMPCCompatible:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     types.Add(DiscType.Floppy);
                     break;
                 case KnownSystem.NECPC88:
@@ -185,20 +183,17 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.GlobalVRVortekV3:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
-                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    types.Add(DiscType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.ICEPCHardware:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.IncredibleTechnologiesEagle:
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.IncredibleTechnologiesVarious:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.KonamiFirebeat:
                     types.Add(DiscType.CD);
@@ -210,12 +205,10 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.KonamiPython:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
-                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    types.Add(DiscType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.KonamiPython2:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
-                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    types.Add(DiscType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.KonamiSystem573:
                     types.Add(DiscType.CD);
@@ -225,8 +218,7 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.KonamiVarious:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesBoardwalk:
                     types.Add(DiscType.CD); // TODO: Confirm
@@ -236,28 +228,23 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchForce:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchION:
                     types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchMaxx:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchXL:
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.NamcoCapcomSystem256:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.NamcoCapcomTaitoSystem246:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     types.Add(DiscType.GDROM);
@@ -266,10 +253,8 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.NamcoSystem357:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
-                    types.Add(DiscType.BD25);
-                    types.Add(DiscType.BD50);
+                    types.Add(DiscType.DVD);
+                    types.Add(DiscType.BluRay);
                     break;
                 case KnownSystem.NewJatreCDi:
                     types.Add(DiscType.CD);
@@ -281,26 +266,22 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.NichibutsuXRateSystem:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.PhotoPlayVarious:
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.RawThrillsVarious:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.SegaChihiro:
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaEuropaR:
-                    types.Add(DiscType.DVD5); // TODO: Confirm
-                    types.Add(DiscType.DVD9); // TODO: Confirm
+                    types.Add(DiscType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.SegaLindbergh:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.SegaNaomi:
                     types.Add(DiscType.GDROM);
@@ -309,22 +290,17 @@ namespace DICUI.Utilities
                     types.Add(DiscType.GDROM);
                     break;
                 case KnownSystem.SegaNu:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
-                    types.Add(DiscType.BD25);
-                    types.Add(DiscType.BD50);
+                    types.Add(DiscType.DVD);
+                    types.Add(DiscType.BluRay);
                     break;
                 case KnownSystem.SegaRingEdge:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.SegaRingEdge2:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.SegaRingWide:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.SegaSTV:
                     types.Add(DiscType.CD);
@@ -333,8 +309,7 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.SeibuCATSSystem:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.TABAustriaQuizard:
                     types.Add(DiscType.CD);
@@ -354,15 +329,16 @@ namespace DICUI.Utilities
                     types.Add(DiscType.CD);
                     break;
                 case KnownSystem.BDVideo:
-                    types.Add(DiscType.BD25);
-                    types.Add(DiscType.BD50);
+                    types.Add(DiscType.BluRay);
                     break;
                 case KnownSystem.DVDVideo:
-                    types.Add(DiscType.DVD5);
-                    types.Add(DiscType.DVD9);
+                    types.Add(DiscType.DVD);
                     break;
                 case KnownSystem.EnhancedCD:
                     types.Add(DiscType.CD);
+                    break;
+                case KnownSystem.HDDVDVideo:
+                    types.Add(DiscType.HDDVD);
                     break;
                 case KnownSystem.PalmOS:
                     types.Add(DiscType.CD);
@@ -394,7 +370,7 @@ namespace DICUI.Utilities
                     break;
             }
 
-            return types;
+            return types.Select(i => new Tuple<string, DiscType?>(Converters.DiscTypeToString(i), i)).ToList();
         }
 
         /// <summary>
@@ -441,20 +417,6 @@ namespace DICUI.Utilities
             }
 
             return mapping;
-        }
-
-        /// <summary>
-        /// Create a list of all actually used DiskTypes for current Knownystem list
-        /// </summary>
-        public static List<Tuple<string, DiscType?>> CreateListOfDiscTypesForKnownSystems(List<KnownSystem?> systems)
-        {
-            return systems
-                .ConvertAll(s => GetValidDiscTypes(s))
-                .SelectMany(d => d)
-                .Distinct()
-                .Select(d => Tuple.Create(Converters.DiscTypeToString(d), d))
-                .OrderBy(t => t.Item1)
-                .ToList();
         }
 
         /// <summary>
