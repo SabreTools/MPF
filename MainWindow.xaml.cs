@@ -560,9 +560,9 @@ namespace DICUI
                     if (driveletter == null)
                         return;
 
-                    string MediaType = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
+                    string command = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
                     List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(selectedSystem, selectedMediaType);
-                    txt_Parameters.Text = MediaType
+                    txt_Parameters.Text = command
                         + " " + driveletter.Item1
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selectedMediaType != MediaType.Floppy
