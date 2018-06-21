@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DICUI.External;
 
 namespace DICUI.Utilities
 {
@@ -199,8 +200,8 @@ namespace DICUI.Utilities
         public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type)
         {
             // First check to see if the combination of system and MediaType is valid
-            List<Tuple<string, MediaType?>> validTypes = Validation.GetValidMediaTypes(sys);
-            if (!validTypes.Select(i => i.Item2).Contains(type))
+            var validTypes = Validation.GetValidMediaTypes(sys);
+            if (!validTypes.ContainsKey(MediaTypeToString(type)))
             {
                 return null;
             }

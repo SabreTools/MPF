@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,7 +18,7 @@ namespace DICUI
         private List<Tuple<char, string, bool>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<Tuple<string, KnownSystem?>> _systems { get; set; }
-        private List<Tuple<string, MediaType?>> _MediaTypes { get; set; }
+        private List<Tuple<string, MediaType?>> _mediaTypes { get; set; }
         private Process childProcess { get; set; }
 
         private OptionsWindow _optionsWindow;
@@ -141,11 +142,13 @@ namespace DICUI
 
             if (currentSystem != null)
             {
-                _MediaTypes = Utilities.Validation.GetValidMediaTypes(currentSystem.Item2);
-                cmb_MediaType.ItemsSource = _MediaTypes;
+                _mediaTypes = Utilities.Validation.GetValidMediaTypes(currentSystem.Item2)
+                    .Select(i => new Tuple<string, MediaType?>(i.Key, i.Value))
+                    .ToList();
+                cmb_MediaType.ItemsSource = _mediaTypes;
                 cmb_MediaType.DisplayMemberPath = "Item1";
 
-                cmb_MediaType.IsEnabled = _MediaTypes.Count > 1;
+                cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
                 cmb_MediaType.SelectedIndex = 0;
             }
             else
@@ -161,7 +164,9 @@ namespace DICUI
         /// </summary>
         private void PopulateSystems()
         {
-            _systems = Utilities.Validation.CreateListOfSystems();
+            _systems = Utilities.Validation.CreateListOfSystems()
+                .Select(i => new Tuple<string, KnownSystem?>(i.Key, i.Value))
+                .ToList();
             cmb_SystemType.ItemsSource = _systems;
             cmb_SystemType.DisplayMemberPath = "Item1";
             cmb_SystemType.SelectedIndex = 0;
@@ -227,8 +232,8 @@ namespace DICUI
 
             // Populate all tuples
             var driveLetterTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            var systemTypeTuple = cmb_SystemType.SelectedValue as Tuple<string, KnownSystem?>;
-            var MediaTypeTuple = cmb_MediaType.SelectedValue as Tuple<string, MediaType?>;
+            var systemTypeTuple = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
+            var MediaTypeTuple = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
 
             // Get the currently selected options
             string dicPath = _options.dicPath;
@@ -238,9 +243,9 @@ namespace DICUI
             bool isFloppy = driveLetterTuple.Item3;
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
-            string systemName = systemTypeTuple.Item1;
-            KnownSystem? system = systemTypeTuple.Item2;
-            MediaType? type = MediaTypeTuple.Item2;
+            string systemName = systemTypeTuple?.Key;
+            KnownSystem? system = systemTypeTuple?.Value;
+            MediaType? type = MediaTypeTuple?.Value;
 
             string customParameters = txt_Parameters.Text;
 

@@ -5,308 +5,322 @@ using System.Collections.Specialized;
 
 namespace DICUI.External
 {
-	// Adapted from https://www.codeproject.com/Articles/18615/OrderedDictionary-T-A-generic-implementation-of-IO
-	public class OrderedDictionary<TKey, TValue> : IOrderedDictionary<TKey, TValue>
-	{
-		private List<KeyValuePair<TKey, TValue>> _list;
-		private Dictionary<TKey, TValue> _dictionary;
-		private int _count;
+    // Adapted from https://www.codeproject.com/Articles/18615/OrderedDictionary-T-A-generic-implementation-of-IO
+    public class OrderedDictionary<TKey, TValue> : IOrderedDictionary<TKey, TValue>
+    {
+        private List<KeyValuePair<TKey, TValue>> _list;
+        private Dictionary<TKey, TValue> _dictionary;
 
-		int ICollection.Count => _count;
-		int ICollection<KeyValuePair<TKey, TValue>>.Count => _count;
+		#region Interface properties
 
-		ICollection IDictionary.Keys => _dictionary.Keys;
-		ICollection<TKey> IDictionary<TKey, TValue>.Keys => _dictionary.Keys;
+		public int Count { get; }
 
-		ICollection IDictionary.Values => _dictionary.Values;
-		ICollection<TValue> IDictionary<TKey, TValue>.Values => _dictionary.Values;
+		int ICollection.Count => Count;
+        int ICollection<KeyValuePair<TKey, TValue>>.Count => Count;
 
-		bool IDictionary.IsReadOnly => false;
-		bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+        ICollection IDictionary.Keys => _dictionary.Keys;
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => _dictionary.Keys;
 
-		bool IDictionary.IsFixedSize => false;
+        ICollection IDictionary.Values => _dictionary.Values;
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => _dictionary.Values;
 
-		object ICollection.SyncRoot => new object();
+        bool IDictionary.IsReadOnly => false;
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
 
-		bool ICollection.IsSynchronized => true;
+        bool IDictionary.IsFixedSize => false;
 
-		public TValue this[int index]
-		{
-			get
-			{
-				return _list[index].Value;
-			}
-			set
-			{
-				if (index >= _count || index < 0)
-					throw new ArgumentOutOfRangeException("index",
-						  "'index' must be non-negative and less than" +
-						  " the size of the collection");
+        object ICollection.SyncRoot => new object();
 
-				TKey key = _list[index].Key;
+        bool ICollection.IsSynchronized => true;
 
-				_list[index] = new KeyValuePair<TKey, TValue>(key, value);
-				_dictionary[key] = value;
-			}
-		}
+        public TValue this[int index]
+        {
+            get
+            {
+                return _list[index].Value;
+            }
+            set
+            {
+                if (index >= Count || index < 0)
+                    throw new ArgumentOutOfRangeException("index",
+                          "'index' must be non-negative and less than" +
+                          " the size of the collection");
 
-		object IOrderedDictionary.this[int index]
-		{
-			get
-			{
-				return _list[index].Value;
-			}
-			set
-			{
-				if (index >= _count || index < 0)
-					throw new ArgumentOutOfRangeException("index",
-						  "'index' must be non-negative and less than" +
-						  " the size of the collection");
+                TKey key = _list[index].Key;
 
-				var valueObj = (TValue)value;
-				if (valueObj == null)
-					throw new ArgumentException($"Value must be of type {typeof(TValue)}");
+                _list[index] = new KeyValuePair<TKey, TValue>(key, value);
+                _dictionary[key] = value;
+            }
+        }
 
-				TKey key = _list[index].Key;
+        object IOrderedDictionary.this[int index]
+        {
+            get
+            {
+                return _list[index].Value;
+            }
+            set
+            {
+                if (index >= Count || index < 0)
+                    throw new ArgumentOutOfRangeException("index",
+                          "'index' must be non-negative and less than" +
+                          " the size of the collection");
 
-				_list[index] = new KeyValuePair<TKey, TValue>(key, valueObj);
-				_dictionary[key] = valueObj;
-			}
-		}
+                var valueObj = (TValue)value;
+                if (valueObj == null)
+                    throw new ArgumentException($"Value must be of type {typeof(TValue)}");
 
-		object IDictionary.this[object key]
-		{
-			get
-			{
-				var keyObj = (TKey)key;
-				if (keyObj == null)
-					throw new ArgumentException($"Key must be of type {typeof(TKey)}");
+                TKey key = _list[index].Key;
 
-				return _dictionary[keyObj];
-			}
-			set
-			{
-				var keyObj = (TKey)key;
-				if (keyObj == null)
-					throw new ArgumentException($"Key must be of type {typeof(TKey)}");
+                _list[index] = new KeyValuePair<TKey, TValue>(key, valueObj);
+                _dictionary[key] = valueObj;
+            }
+        }
 
-				var valueObj = (TValue)value;
-				if (valueObj == null)
-					throw new ArgumentException($"Value must be of type {typeof(TValue)}");
+        object IDictionary.this[object key]
+        {
+            get
+            {
+                var keyObj = (TKey)key;
+                if (keyObj == null)
+                    throw new ArgumentException($"Key must be of type {typeof(TKey)}");
 
-				if (_dictionary.ContainsKey(keyObj))
-				{
-					_dictionary[keyObj] = valueObj;
-					_list[IndexOfKey(keyObj)] = new KeyValuePair<TKey, TValue>(keyObj, valueObj);
-				}
-				else
-				{
-					Add(keyObj, valueObj);
-				}
-			}
-		}
+                return _dictionary[keyObj];
+            }
+            set
+            {
+                var keyObj = (TKey)key;
+                if (keyObj == null)
+                    throw new ArgumentException($"Key must be of type {typeof(TKey)}");
 
-		TValue IDictionary<TKey, TValue>.this[TKey key]
-		{
-			get
-			{
-				return _dictionary[key];
-			}
-			set
-			{
-				if (_dictionary.ContainsKey(key))
-				{
-					_dictionary[key] = value;
-					_list[IndexOfKey(key)] = new KeyValuePair<TKey, TValue>(key, value);
-				}
-				else
-				{
-					Add(key, value);
-				}
-			}
-		}
+                var valueObj = (TValue)value;
+                if (valueObj == null)
+                    throw new ArgumentException($"Value must be of type {typeof(TValue)}");
 
-		public OrderedDictionary()
-		{
-			_list = new List<KeyValuePair<TKey, TValue>>();
-			_dictionary = new Dictionary<TKey, TValue>();
-			_count = 0;
-		}
+                if (_dictionary.ContainsKey(keyObj))
+                {
+                    _dictionary[keyObj] = valueObj;
+                    _list[IndexOfKey(keyObj)] = new KeyValuePair<TKey, TValue>(keyObj, valueObj);
+                }
+                else
+                {
+                    Add(keyObj, valueObj);
+                }
+            }
+        }
 
-		public int Add(TKey key, TValue value)
-		{
-			_dictionary.Add(key, value);
-			_list.Add(new KeyValuePair<TKey, TValue>(key, value));
-			return _count - 1;
-		}
+        TValue IDictionary<TKey, TValue>.this[TKey key]
+        {
+            get
+            {
+                return _dictionary[key];
+            }
+            set
+            {
+                if (_dictionary.ContainsKey(key))
+                {
+                    _dictionary[key] = value;
+                    _list[IndexOfKey(key)] = new KeyValuePair<TKey, TValue>(key, value);
+                }
+                else
+                {
+                    Add(key, value);
+                }
+            }
+        }
 
-		public void Insert(int index, TKey key, TValue value)
-		{
-			if (index > _count || index < 0)
-				throw new ArgumentOutOfRangeException("index");
+        #endregion
 
-			_dictionary.Add(key, value);
-			_list.Insert(index, new KeyValuePair<TKey, TValue>(key, value));
-		}
+        public OrderedDictionary()
+        {
+            _list = new List<KeyValuePair<TKey, TValue>>();
+            _dictionary = new Dictionary<TKey, TValue>();
+            Count = 0;
+        }
 
-		void IOrderedDictionary.RemoveAt(int index)
-		{
-			if (index >= _count || index < 0)
-				throw new ArgumentOutOfRangeException("index",
-					  "'index' must be non-negative and less than " +
-					  "the size of the collection");
+        public int Add(TKey key, TValue value)
+        {
+            _dictionary.Add(key, value);
+            _list.Add(new KeyValuePair<TKey, TValue>(key, value));
+            return Count - 1;
+        }
 
-			TKey key = _list[index].Key;
+        public void Insert(int index, TKey key, TValue value)
+        {
+            if (index > Count || index < 0)
+                throw new ArgumentOutOfRangeException("index");
 
-			_list.RemoveAt(index);
-			_dictionary.Remove(key);
-		}
+            _dictionary.Add(key, value);
+            _list.Insert(index, new KeyValuePair<TKey, TValue>(key, value));
+        }
 
-		public bool Remove(TKey key)
-		{
-			if (null == key)
-				throw new ArgumentNullException("key");
+        void IOrderedDictionary.RemoveAt(int index)
+        {
+            if (index >= Count || index < 0)
+                throw new ArgumentOutOfRangeException("index",
+                      "'index' must be non-negative and less than " +
+                      "the size of the collection");
 
-			int index = IndexOfKey(key);
-			if (index >= 0)
-			{
-				if (_dictionary.Remove(key))
-				{
-					_list.RemoveAt(index);
-					return true;
-				}
-			}
-			return false;
-		}
+            TKey key = _list[index].Key;
 
-		private int IndexOfKey(TKey key)
-		{
-			return _list.FindIndex(kvp => kvp.Key.Equals(key));
-		}
+            _list.RemoveAt(index);
+            _dictionary.Remove(key);
+        }
 
-		IDictionaryEnumerator IOrderedDictionary.GetEnumerator()
-		{
-			return _dictionary.GetEnumerator();
-		}
+        public bool Remove(TKey key)
+        {
+            if (null == key)
+                throw new ArgumentNullException("key");
 
-		void IOrderedDictionary.Insert(int index, object key, object value)
-		{
-			var keyObj = (TKey)key;
-			if (keyObj == null)
-				throw new ArgumentException($"Key must be of type {typeof(TKey)}");
+            int index = IndexOfKey(key);
+            if (index >= 0)
+            {
+                if (_dictionary.Remove(key))
+                {
+                    _list.RemoveAt(index);
+                    return true;
+                }
+            }
+            return false;
+        }
 
-			var valueObj = (TValue)value;
-			if (valueObj == null)
-				throw new ArgumentException($"Value must be of type {typeof(TValue)}");
+        public bool ContainsKey(TKey key)
+        {
+            return _dictionary.ContainsKey(key);
+        }
 
-			Insert(index, keyObj, valueObj);
-		}
+        private int IndexOfKey(TKey key)
+        {
+            return _list.FindIndex(kvp => kvp.Key.Equals(key));
+        }
 
-		bool IDictionary.Contains(object key)
-		{
-			var keyObj = (TKey)key;
-			if (keyObj == null)
-				throw new ArgumentException($"Key must be of type {typeof(TKey)}");
+        #region Interface methods
 
-			return _dictionary.ContainsKey(keyObj);
-		}
+        IDictionaryEnumerator IOrderedDictionary.GetEnumerator()
+        {
+            return _dictionary.GetEnumerator();
+        }
 
-		void IDictionary.Add(object key, object value)
-		{
-			var keyObj = (TKey)key;
-			if (keyObj == null)
-				throw new ArgumentException($"Key must be of type {typeof(TKey)}");
+        void IOrderedDictionary.Insert(int index, object key, object value)
+        {
+            var keyObj = (TKey)key;
+            if (keyObj == null)
+                throw new ArgumentException($"Key must be of type {typeof(TKey)}");
 
-			var valueObj = (TValue)value;
-			if (valueObj == null)
-				throw new ArgumentException($"Value must be of type {typeof(TValue)}");
+            var valueObj = (TValue)value;
+            if (valueObj == null)
+                throw new ArgumentException($"Value must be of type {typeof(TValue)}");
 
-			Add(keyObj, valueObj);
-		}
+            Insert(index, keyObj, valueObj);
+        }
 
-		void IDictionary.Clear()
-		{
-			_dictionary.Clear();
-			_list.Clear();
-		}
+        bool IDictionary.Contains(object key)
+        {
+            var keyObj = (TKey)key;
+            if (keyObj == null)
+                throw new ArgumentException($"Key must be of type {typeof(TKey)}");
 
-		IDictionaryEnumerator IDictionary.GetEnumerator()
-		{
-			return _dictionary.GetEnumerator();
-		}
+            return _dictionary.ContainsKey(keyObj);
+        }
 
-		void IDictionary.Remove(object key)
-		{
-			var keyObj = (TKey)key;
-			if (keyObj == null)
-				throw new ArgumentException($"Key must be of type {typeof(TKey)}");
+        void IDictionary.Add(object key, object value)
+        {
+            var keyObj = (TKey)key;
+            if (keyObj == null)
+                throw new ArgumentException($"Key must be of type {typeof(TKey)}");
 
-			Remove(keyObj);
-		}
+            var valueObj = (TValue)value;
+            if (valueObj == null)
+                throw new ArgumentException($"Value must be of type {typeof(TValue)}");
 
-		void ICollection.CopyTo(Array array, int index)
-		{
-			var arrayObj = array as KeyValuePair<TKey, TValue>[];
-			if (arrayObj == null)
-				throw new ArgumentException($"Key must be of type {typeof(KeyValuePair<TKey, TValue>[])}");
+            Add(keyObj, valueObj);
+        }
 
-			_list.CopyTo(arrayObj, index);
-		}
+        void IDictionary.Clear()
+        {
+            _dictionary.Clear();
+            _list.Clear();
+        }
 
-		bool IDictionary<TKey, TValue>.ContainsKey(TKey key)
-		{
-			return _dictionary.ContainsKey(key);
-		}
+        IDictionaryEnumerator IDictionary.GetEnumerator()
+        {
+            return _dictionary.GetEnumerator();
+        }
 
-		void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
-		{
-			Add(key, value);
-		}
+        void IDictionary.Remove(object key)
+        {
+            var keyObj = (TKey)key;
+            if (keyObj == null)
+                throw new ArgumentException($"Key must be of type {typeof(TKey)}");
 
-		bool IDictionary<TKey, TValue>.Remove(TKey key)
-		{
-			return Remove(key);
-		}
+            Remove(keyObj);
+        }
 
-		bool IDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value)
-		{
-			return _dictionary.TryGetValue(key, out value);
-		}
+        void ICollection.CopyTo(Array array, int index)
+        {
+            var arrayObj = array as KeyValuePair<TKey, TValue>[];
+            if (arrayObj == null)
+                throw new ArgumentException($"Key must be of type {typeof(KeyValuePair<TKey, TValue>[])}");
 
-		void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
-		{
-			Add(item.Key, item.Value);
-		}
+            _list.CopyTo(arrayObj, index);
+        }
 
-		void ICollection<KeyValuePair<TKey, TValue>>.Clear()
-		{
-			_dictionary.Clear();
-			_list.Clear();
-		}
+        bool IDictionary<TKey, TValue>.ContainsKey(TKey key)
+        {
+            return ContainsKey(key);
+        }
 
-		bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
-		{
-			return _list.Contains(item);
-		}
+        void IDictionary<TKey, TValue>.Add(TKey key, TValue value)
+        {
+            Add(key, value);
+        }
 
-		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-		{
-			_list.CopyTo(array, arrayIndex);
-		}
+        bool IDictionary<TKey, TValue>.Remove(TKey key)
+        {
+            return Remove(key);
+        }
 
-		bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
-		{
-			return Remove(item.Key);
-		}
+        bool IDictionary<TKey, TValue>.TryGetValue(TKey key, out TValue value)
+        {
+            return _dictionary.TryGetValue(key, out value);
+        }
 
-		IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
-		{
-			return _list.GetEnumerator();
-		}
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
+        {
+            Add(item.Key, item.Value);
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return _list.GetEnumerator();
-		}
-	}
+        void ICollection<KeyValuePair<TKey, TValue>>.Clear()
+        {
+            _dictionary.Clear();
+            _list.Clear();
+        }
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+        {
+            return _list.Contains(item);
+        }
+
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            _list.CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
+        {
+            return Remove(item.Key);
+        }
+
+        IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _list.GetEnumerator();
+        }
+
+        #endregion
+    }
 }

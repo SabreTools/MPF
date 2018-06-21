@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
+using DICUI.External;
 
 namespace DICUI.Utilities
 {
@@ -15,14 +16,12 @@ namespace DICUI.Utilities
         /// <param name="sys">KnownSystem value to check</param>
         /// <returns>MediaTypes matched to enums, if possible</returns>
         /// <remarks>
-        /// This returns a List of Tuples whose structure is as follows:
-        ///		Item 1: Printable name
-        ///		Item 2: MediaType mapping
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
-        public static List<Tuple<string, MediaType?>> GetValidMediaTypes(KnownSystem? sys)
+        public static OrderedDictionary<string, MediaType?> GetValidMediaTypes(KnownSystem? sys)
         {
-            List<MediaType?> types = new List<MediaType?>();
+            var types = new List<MediaType?>();
+            var typesDict = new OrderedDictionary<string, MediaType?>();
 
             switch (sys)
             {
@@ -370,7 +369,13 @@ namespace DICUI.Utilities
                     break;
             }
 
-            return types.Select(i => new Tuple<string, MediaType?>(Converters.MediaTypeToString(i), i)).ToList();
+            // Populate the dictionary
+            foreach (var type in types)
+            {
+                typesDict.Add(Converters.MediaTypeToString(type), type);
+            }
+
+            return typesDict;
         }
 
         /// <summary>
@@ -378,15 +383,12 @@ namespace DICUI.Utilities
         /// </summary>
         /// <returns>Systems matched to enums, if possible</returns>
         /// <remarks>
-        /// This returns a List of Tuples whose structure is as follows:
-        ///		Item 1: Printable name
-        ///		Item 2: KnownSystem mapping
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
         /// TODO: Figure out a way that the sections can be generated more automatically
-        public static List<Tuple<string, KnownSystem?>> CreateListOfSystems()
+        public static OrderedDictionary<string, KnownSystem?> CreateListOfSystems()
         {
-            List<Tuple<string, KnownSystem?>> mapping = new List<Tuple<string, KnownSystem?>>();
+            var systemsDict = new OrderedDictionary<string, KnownSystem?>();
 
             foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
             {
@@ -395,29 +397,29 @@ namespace DICUI.Utilities
                 {
                     // Consoles section
                     case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Consoles ----------", null));
+                        systemsDict.Add("---------- Consoles ----------", null);
                         break;
 
                     // Computers section
                     case KnownSystem.AcornArchimedes:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Computers ----------", null));
+                        systemsDict.Add("---------- Computers ----------", null);
                         break;
 
                     // Arcade section
                     case KnownSystem.AmigaCUBOCD32:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Arcade ----------", null));
+                        systemsDict.Add("---------- Arcade ----------", null);
                         break;
 
                     // Other section
                     case KnownSystem.AudioCD:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Others ----------", null));
+                        systemsDict.Add("---------- Others ----------", null);
                         break;
                 }
 
-                mapping.Add(new Tuple<string, KnownSystem?>(Converters.KnownSystemToString(system), system));
+                systemsDict.Add(Converters.KnownSystemToString(system), system);
             }
 
-            return mapping;
+            return systemsDict;
         }
 
         /// <summary>
