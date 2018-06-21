@@ -1,0 +1,62 @@
+### 1.06 (2018-06-15)
+
+- Fixed not being able to use the `/c2` flag properly
+- Fixed times when the ability to start dumping was improperly allowed
+- Added full support for XBOX and XBOX360 (XDG1, XDG2) dumping through DIC (using a Kreon, or presumably a 0800)
+
+### 1.05a (2018-06-14)
+
+- Fixed some ordering and nullability issues
+- Added automatic fields for PS1, PS2, Saturn
+
+### 1.05 (2018-06-14)
+
+- Miscellaneous fixes around custom parameter validation, dump information accuracy, settings window, and TODO cleanup
+- Add many more supported platforms, mostly arcade (based on publicly available information)
+- Add floppy disk dumping support
+- Add optional disc eject on completion
+- Add subdump for Sega Saturn
+- Fully support newest version of DIC including all new flags and commands
+- PlayStation and Saturn discs still don't have all internal information automatically generated
+
+### 1.04b (2018-06-13)
+
+- Added subIntention reading
+- Fixed extra extensions being appended
+- Fixed internationalization error (number formatting)
+- Fixed "Custom Input" not working
+
+### 1.04a (2018-06-13)
+
+- Fixed issue with empty trays
+- Added settings dialog
+
+### 1.04 (2018-06-13)
+
+- Behind-the-scenes fixes and formatting
+- Better checks for external programs
+- Automatically changing disc information
+- Custom parameters (and parameter validation)
+- Automatic drive speed selection
+- Automatic submission information creation
+- Add ability to stop a dump from the UI
+
+### 1.03 (2018-06-08)
+
+- edccchk now run on all CD-Roms
+- Discs unsupported by Windows are now regonized
+- Extra \ when accepting default save has been removed.
+ 
+### 1.02b (2018-05-18)
+
+- Added missing DLL
+
+### 1.02 (2018-05-18)
+
+- Fixed XBOX One and PS4 Drive Speed issue.
+- Started implementing DiscImageCreator Path selection.
+- Conforming my naming for objects and variable
+
+### 1.01d (2018-05-18)
+
+-Combine IBM PC-CD options, misc fixes.
