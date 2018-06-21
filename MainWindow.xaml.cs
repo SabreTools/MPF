@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -267,6 +268,11 @@ namespace DICUI
                 outputDirectory = Path.GetDirectoryName(path);
                 outputFilename = Path.GetFileName(path);
             }
+
+            // Replace characters where needed
+            // TODO: Investigate why the `&` replacement is needed
+            outputDirectory = outputDirectory.Replace('.', '_').Replace('&', '_');
+            outputFilename = new StringBuilder(outputFilename.Replace('&', '_')).Replace('.', '_', 0, outputFilename.LastIndexOf('.')).ToString();
 
             // Validate that the required program exits
             if (!File.Exists(dicPath))
