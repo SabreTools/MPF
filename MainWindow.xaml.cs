@@ -17,8 +17,8 @@ namespace DICUI
         // Private UI-related variables
         private List<Tuple<char, string, bool>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
-        private List<Tuple<string, KnownSystem?>> _systems { get; set; }
-        private List<Tuple<string, MediaType?>> _mediaTypes { get; set; }
+        private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
+        private List<KeyValuePair<string, MediaType?>> _mediaTypes { get; set; }
         private Process childProcess { get; set; }
 
         private OptionsWindow _optionsWindow;
@@ -138,15 +138,15 @@ namespace DICUI
         /// </summary>
         private void PopulateMediaTypeAccordingToChosenSystem()
         {
-            var currentSystem = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
+            var currentSystem = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
 
             if (currentSystem != null)
             {
-                _mediaTypes = Utilities.Validation.GetValidMediaTypes(currentSystem.Item2)
-                    .Select(i => new Tuple<string, MediaType?>(i.Key, i.Value))
+                _mediaTypes = Utilities.Validation.GetValidMediaTypes(currentSystem?.Value)
+                    .Select(i => new KeyValuePair<string, MediaType?>(i.Key, i.Value))
                     .ToList();
                 cmb_MediaType.ItemsSource = _mediaTypes;
-                cmb_MediaType.DisplayMemberPath = "Item1";
+                cmb_MediaType.DisplayMemberPath = "Key";
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
                 cmb_MediaType.SelectedIndex = 0;
@@ -165,10 +165,10 @@ namespace DICUI
         private void PopulateSystems()
         {
             _systems = Utilities.Validation.CreateListOfSystems()
-                .Select(i => new Tuple<string, KnownSystem?>(i.Key, i.Value))
+                .Select(i => new KeyValuePair<string, KnownSystem?>(i.Key, i.Value))
                 .ToList();
             cmb_SystemType.ItemsSource = _systems;
-            cmb_SystemType.DisplayMemberPath = "Item1";
+            cmb_SystemType.DisplayMemberPath = "Key";
             cmb_SystemType.SelectedIndex = 0;
             cmb_SystemType_SelectionChanged(null, null);
 
@@ -233,7 +233,7 @@ namespace DICUI
             // Populate all tuples
             var driveLetterTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
             var systemTypeTuple = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
-            var MediaTypeTuple = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
+            var mediaTypeTuple = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
 
             // Get the currently selected options
             string dicPath = _options.dicPath;
@@ -245,7 +245,7 @@ namespace DICUI
             string outputFilename = txt_OutputFilename.Text;
             string systemName = systemTypeTuple?.Key;
             KnownSystem? system = systemTypeTuple?.Value;
-            MediaType? type = MediaTypeTuple?.Value;
+            MediaType? type = mediaTypeTuple?.Value;
 
             string customParameters = txt_Parameters.Text;
 
@@ -455,15 +455,15 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            var systemTuple = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
-            var MediaTypeTuple = cmb_MediaType.SelectedItem as Tuple<string, MediaType?>;
+            var systemTuple = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            var mediaTypeTuple = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
 
             // If we're on a separator, go to the next item
-            if (systemTuple.Item2 == null)
-                systemTuple = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as Tuple<string, KnownSystem?>;
+            if (systemTuple?.Value == null)
+                systemTuple = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
 
-            var selectedSystem = systemTuple.Item2;
-            var selectedMediaType = MediaTypeTuple != null ? MediaTypeTuple.Item2 : MediaType.NONE;
+            var selectedSystem = systemTuple?.Value;
+            var selectedMediaType = mediaTypeTuple != null ? mediaTypeTuple?.Value : MediaType.NONE;
 
             // No system chosen, update status
             if (selectedSystem == KnownSystem.NONE)
@@ -482,7 +482,7 @@ namespace DICUI
                         break;
                     case MediaType.GameCubeGameDisc:
                     case MediaType.GDROM:
-                        lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", MediaTypeTuple.Item1);
+                        lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", mediaTypeTuple?.Key);
                         btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         break;
                     case MediaType.HDDVD:
@@ -493,23 +493,23 @@ namespace DICUI
                     case MediaType.WiiUOpticalDisc:
                     case MediaType.Cartridge:
                     case MediaType.Cassette:
-                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", MediaTypeTuple.Item1);
+                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaTypeTuple?.Key);
                         btn_StartStop.IsEnabled = false;
                         break;
                     case MediaType.DVD:
                         if (selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
                         {
-                            lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", MediaTypeTuple.Item1);
+                            lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaTypeTuple?.Key);
                             btn_StartStop.IsEnabled = false;
                         }
                         else
                         {
-                            lbl_Status.Content = string.Format("{0} ready to dump", MediaTypeTuple.Item1);
+                            lbl_Status.Content = string.Format("{0} ready to dump", mediaTypeTuple?.Key);
                             btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         }
                         break;
                     default:
-                        lbl_Status.Content = string.Format("{0} ready to dump", MediaTypeTuple.Item1);
+                        lbl_Status.Content = string.Format("{0} ready to dump", mediaTypeTuple?.Key);
                         btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         break;
                 }
@@ -587,13 +587,13 @@ namespace DICUI
         private void GetOutputNames()
         {
             var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            var systemTuple = cmb_SystemType.SelectedItem as Tuple<string, KnownSystem?>;
-            var discTuple = cmb_MediaType.SelectedItem as Tuple<string, MediaType?>;
+            var systemTuple = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            var discTuple = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
 
             if (driveTuple != null && systemTuple != null && discTuple != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveTuple.Item2);
-                txt_OutputFilename.Text = driveTuple.Item2 + Converters.MediaTypeToExtension(discTuple.Item2);
+                txt_OutputFilename.Text = driveTuple.Item2 + Converters.MediaTypeToExtension(discTuple?.Value);
             }
             else
             {
