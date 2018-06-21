@@ -429,15 +429,11 @@ namespace DICUI.Utilities
         /// <remarks>
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
-        /// This returns a List of Tuples whose structure is as follows:
-        ///		Item 1: Drive letter
-        ///		Item 2: Volume label
-        ///		Item 3: (True for floppy drive, false otherwise)
         /// </remarks>
-        public static List<Tuple<char, string, bool>> CreateListOfDrives()
+        public static OrderedDictionary<char, string> CreateListOfDrives()
         {
             // Get the floppy drives
-            List<Tuple<char, string, bool>> floppyDrives = new List<Tuple<char, string, bool>>();
+            var floppyDrives = new List<KeyValuePair<char, string>>();
             try
             {
                 ManagementObjectSearcher searcher =
@@ -451,7 +447,7 @@ namespace DICUI.Utilities
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = queryObj["DeviceID"].ToString()[0];
-                        floppyDrives.Add(new Tuple<char, string, bool>(devId, "FLOPPY", true));
+                        floppyDrives.Add(new KeyValuePair<char, string>(devId, UIElements.FloppyDriveString));
                     }
                 }
             }
@@ -461,14 +457,23 @@ namespace DICUI.Utilities
             }
 
             // Get the optical disc drives
-            List<Tuple<char, string, bool>> discDrives = DriveInfo.GetDrives()
+            List<KeyValuePair<char, string>> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
-                .Select(d => new Tuple<char, string, bool>(d.Name[0], d.VolumeLabel, false))
+                .Select(d => new KeyValuePair<char, string>(d.Name[0], d.VolumeLabel))
                 .ToList();
 
-            // Add the two lists together, order, and return
+            // Add the two lists together and order
             floppyDrives.AddRange(discDrives);
-            return floppyDrives.OrderBy(i => i.Item1).ToList();
+            floppyDrives = floppyDrives.OrderBy(i => i.Key).ToList();
+
+            // Add to the ordered dictionary and return
+            var drivesDict = new OrderedDictionary<char, string>();
+            foreach (var drive in floppyDrives)
+            {
+                drivesDict.Add(drive.Key, drive.Value);
+            }
+
+            return drivesDict;
         }
 
         /// <summary>

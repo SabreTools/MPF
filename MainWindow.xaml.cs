@@ -16,7 +16,7 @@ namespace DICUI
     public partial class MainWindow : Window
     {
         // Private UI-related variables
-        private List<Tuple<char, string, bool>> _drives { get; set; }
+        private List<KeyValuePair<char, string>> _drives { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<KeyValuePair<string, MediaType?>> _mediaTypes { get; set; }
@@ -183,9 +183,11 @@ namespace DICUI
         private void PopulateDrives()
         {
             // Populate the list of drives and add it to the combo box
-            _drives = Utilities.Validation.CreateListOfDrives();
+            _drives = Utilities.Validation.CreateListOfDrives()
+                .Select(i => new KeyValuePair<char, string>(i.Key, i.Value))
+                .ToList();
             cmb_DriveLetter.ItemsSource = _drives;
-            cmb_DriveLetter.DisplayMemberPath = "Item1";
+            cmb_DriveLetter.DisplayMemberPath = "Key";
             cmb_DriveLetter.SelectedIndex = 0;
             cmb_DriveLetter_SelectionChanged(null, null);
 
@@ -231,22 +233,22 @@ namespace DICUI
         {
             btn_StartStop.Content = UIElements.StopDumping;
 
-            // Populate all tuples
-            var driveLetterTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            var systemTypeTuple = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
-            var mediaTypeTuple = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
+            // Populate all KVPs
+            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
+            var mediaKvp = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
 
             // Get the currently selected options
             string dicPath = _options.dicPath;
             string psxtPath = _options.psxtPath;
             string subdumpPath = _options.subdumpPath;
-            char driveLetter = driveLetterTuple.Item1;
-            bool isFloppy = driveLetterTuple.Item3;
+            char driveLetter = (char)driveKvp?.Key;
+            bool isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
             string outputDirectory = txt_OutputDirectory.Text;
             string outputFilename = txt_OutputFilename.Text;
-            string systemName = systemTypeTuple?.Key;
-            KnownSystem? system = systemTypeTuple?.Value;
-            MediaType? type = mediaTypeTuple?.Value;
+            string systemName = systemKvp?.Key;
+            KnownSystem? system = systemKvp?.Value;
+            MediaType? type = mediaKvp?.Value;
 
             string customParameters = txt_Parameters.Text;
 
@@ -432,8 +434,8 @@ namespace DICUI
 
             CancelDumping();
 
-            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            if (driveTuple.Item3)
+            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            if (driveKvp?.Value == UIElements.FloppyDriveString)
             {
                 return;
             }
@@ -445,7 +447,7 @@ namespace DICUI
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = _options.dicPath,
-                        Arguments = DICCommands.Eject + " " + driveTuple.Item1,
+                        Arguments = DICCommands.Eject + " " + driveKvp?.Key,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -461,15 +463,15 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            var systemTuple = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
-            var mediaTypeTuple = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
+            var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            var mediaKvp = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
 
             // If we're on a separator, go to the next item
-            if (systemTuple?.Value == null)
-                systemTuple = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
+            if (systemKvp?.Value == null)
+                systemKvp = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
 
-            var selectedSystem = systemTuple?.Value;
-            var selectedMediaType = mediaTypeTuple != null ? mediaTypeTuple?.Value : MediaType.NONE;
+            var selectedSystem = systemKvp?.Value;
+            var selectedMediaType = mediaKvp != null ? mediaKvp?.Value : MediaType.NONE;
 
             // No system chosen, update status
             if (selectedSystem == KnownSystem.NONE)
@@ -488,7 +490,7 @@ namespace DICUI
                         break;
                     case MediaType.GameCubeGameDisc:
                     case MediaType.GDROM:
-                        lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", mediaTypeTuple?.Key);
+                        lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", mediaKvp?.Key);
                         btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         break;
                     case MediaType.HDDVD:
@@ -499,23 +501,23 @@ namespace DICUI
                     case MediaType.WiiUOpticalDisc:
                     case MediaType.Cartridge:
                     case MediaType.Cassette:
-                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaTypeTuple?.Key);
+                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaKvp?.Key);
                         btn_StartStop.IsEnabled = false;
                         break;
                     case MediaType.DVD:
                         if (selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
                         {
-                            lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaTypeTuple?.Key);
+                            lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaKvp?.Key);
                             btn_StartStop.IsEnabled = false;
                         }
                         else
                         {
-                            lbl_Status.Content = string.Format("{0} ready to dump", mediaTypeTuple?.Key);
+                            lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
                             btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         }
                         break;
                     default:
-                        lbl_Status.Content = string.Format("{0} ready to dump", mediaTypeTuple?.Key);
+                        lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
                         btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         break;
                 }
@@ -565,7 +567,7 @@ namespace DICUI
                 // Populate with the correct params for inputs (if we're not on the default option)
                 if (selectedSystem != KnownSystem.NONE && selectedMediaType != MediaType.NONE)
                 {
-                    var driveletter = cmb_DriveLetter.SelectedValue as Tuple<char, string, bool>;
+                    var driveletter = cmb_DriveLetter.SelectedValue as KeyValuePair<char, string>?;
 
                     // If drive letter is invalid, skip this
                     if (driveletter == null)
@@ -574,7 +576,7 @@ namespace DICUI
                     string command = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
                     List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(selectedSystem, selectedMediaType);
                     txt_Parameters.Text = command
-                        + " " + driveletter.Item1
+                        + " " + driveletter?.Key
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selectedMediaType != MediaType.Floppy
                             && selectedMediaType != MediaType.BluRay
@@ -592,14 +594,14 @@ namespace DICUI
         /// </summary>
         private void GetOutputNames()
         {
-            var driveTuple = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            var systemTuple = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
-            var discTuple = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
+            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            var mediaKvp = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
 
-            if (driveTuple != null && systemTuple != null && discTuple != null)
+            if (driveKvp != null && (driveKvp?.Value != UIElements.FloppyDriveString) && systemKvp != null && mediaKvp != null)
             {
-                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveTuple.Item2);
-                txt_OutputFilename.Text = driveTuple.Item2 + Converters.MediaTypeToExtension(discTuple?.Value);
+                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
+                txt_OutputFilename.Text = driveKvp?.Value + Converters.MediaTypeToExtension(mediaKvp?.Value);
             }
             else
             {
@@ -614,8 +616,8 @@ namespace DICUI
         private void SetSupportedDriveSpeed()
         {
             // Get the drive letter from the selected item
-            var selected = cmb_DriveLetter.SelectedItem as Tuple<char, string, bool>;
-            if (selected == null || selected.Item3)
+            var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
             {
                 return;
             }
@@ -627,7 +629,7 @@ namespace DICUI
                 return;
             }
 
-            char driveLetter = selected.Item1;
+            char driveLetter = (char)selected?.Key;
             childProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
