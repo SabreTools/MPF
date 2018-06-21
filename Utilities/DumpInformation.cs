@@ -137,6 +137,8 @@ namespace DICUI.Utilities
                 { Template.TitleField, Template.RequiredValue },
                 { Template.DiscNumberField, Template.OptionalValue },
                 { Template.DiscTitleField, Template.OptionalValue },
+                { Template.SystemField, Converters.KnownSystemToString(sys) },
+                { Template.MediaTypeField, Converters.DiscTypeToString(type) },
                 { Template.CategoryField, "Games" },
                 { Template.RegionField, "World (CHANGE THIS)" },
                 { Template.LanguagesField, "Klingon (CHANGE THIS)" },
@@ -212,6 +214,15 @@ namespace DICUI.Utilities
                     // If we have a single-layer disc
                     if (layerbreak == null)
                     {
+                        switch (type)
+                        {
+                            case DiscType.DVD:
+                                mappings[Template.MediaTypeField] += "-5";
+                                break;
+                            case DiscType.BluRay:
+                                mappings[Template.MediaTypeField] += "-25";
+                                break;
+                        }
                         mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                         mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
                         mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
@@ -222,6 +233,15 @@ namespace DICUI.Utilities
                     // If we have a dual-layer disc
                     else
                     {
+                        switch (type)
+                        {
+                            case DiscType.DVD:
+                                mappings[Template.MediaTypeField] += "-9";
+                                break;
+                            case DiscType.BluRay:
+                                mappings[Template.MediaTypeField] += "-50";
+                                break;
+                        }
                         mappings["Outer " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                         mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                         mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
@@ -770,6 +790,8 @@ namespace DICUI.Utilities
                 output.Add(Template.TitleField + ": " + info[Template.TitleField]);
                 output.Add(Template.DiscNumberField + ": " + info[Template.DiscNumberField]);
                 output.Add(Template.DiscTitleField + ": " + info[Template.DiscTitleField]);
+                output.Add(Template.SystemField + ": " + info[Template.SystemField]);
+                output.Add(Template.MediaTypeField + ": " + info[Template.MediaTypeField]);
                 output.Add(Template.CategoryField + ": " + info[Template.CategoryField]);
                 output.Add(Template.RegionField + ": " + info[Template.RegionField]);
                 output.Add(Template.LanguagesField + ": " + info[Template.LanguagesField]);

@@ -72,6 +72,8 @@
         public const string TitleField = "Title";
         public const string DiscNumberField = "Disc Number / Letter";
         public const string DiscTitleField = "Disc Title";
+        public const string SystemField = "System";
+        public const string MediaTypeField = "Media Type";
         public const string CategoryField = "Category";
         public const string RegionField = "Region";
         public const string LanguagesField = "Languages";
