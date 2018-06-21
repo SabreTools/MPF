@@ -1,9 +1,9 @@
 ﻿namespace DICUI
 {
     /// <summary>
-    /// Known disc types
+    /// Known media types
     /// </summary>
-    public enum DiscType
+    public enum MediaType
     {
         // Generic Optical Formats
         NONE = 0,
