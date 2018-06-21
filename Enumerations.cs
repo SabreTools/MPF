@@ -15,16 +15,16 @@
         LaserDisc,
 
         // Special Optical Formats
-        CED,
         GameCubeGameDisc,
         WiiOpticalDisc,
         WiiUOpticalDisc,
         UMD,
-        
+
         // Non-Optical Formats
         Floppy,
-        Cassette,
         Cartridge,
+        Cassette,
+        CED,
     }
 
     /// <summary>
