@@ -30,6 +30,10 @@ namespace DICUI
         {
             InitializeComponent();
 
+            _logWindow = new LogWindow();
+            _logWindow.Show();
+            return;
+
             // Initializes and load Options object
             _options = new Options();
             _options.Load();
@@ -291,16 +295,6 @@ namespace DICUI
             lbl_Status.Content = "Beginning dumping process";
             string parameters = txt_Parameters.Text;
 
-            // Inizialize LogWindow
-            if (_logWindow == null)
-            {
-                _logWindow = new LogWindow();
-                _logWindow.Closed += delegate {
-                    _logWindow = null;
-                };
-            }
-            _logWindow.Show();
-
             await Task.Run(() =>
             {
                 childProcess = new Process()
@@ -309,14 +303,9 @@ namespace DICUI
                     {
                         FileName = dicPath,
                         Arguments = parameters,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
                     },
                 };
-                childProcess.OutputDataReceived += (process, text) => Dispatcher.Invoke(() => _logWindow.Append(text.Data));
                 childProcess.Start();
-                childProcess.BeginOutputReadLine();
                 childProcess.WaitForExit();
             });
 

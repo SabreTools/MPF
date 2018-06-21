@@ -1,14 +1,28 @@
 ﻿<Window x:Class="DICUI.LogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DICUI"
-        mc:Ignorable="d"
-        Title="LogWindow" Height="450" Width="800">
+        Title="MainWindow" Height="350" Width="800" Loaded="Window_Loaded" Closed="OnWindowClose"
+        Background="GhostWhite"
+        >
     <Grid>
-        <RichTextBox x:Name="rxt_Log" Margin="10">
-            
-        </RichTextBox>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Height="22" Margin="10 10 10 0">
+            <ProgressBar x:Name="progressBar" />
+            <TextBlock x:Name="progressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
+        </Grid>
+        <Border Grid.Row="1" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
+            <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
+                <RichTextBox Name="output" FontFamily="Consolas" Background="Black"/>
+            </ScrollViewer>
+        </Border>
+        <Button Name="btnAbort" Margin="0 0 10 0" Grid.Row="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton">
+
+        </Button>
+
+
     </Grid>
 </Window>
