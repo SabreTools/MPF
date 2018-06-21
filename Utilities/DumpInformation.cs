@@ -52,9 +52,9 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="outputDirectory">Base directory to use</param>
         /// <param name="outputFilename">Base filename to use</param>
-        /// <param name="type">DiscType value to check</param>
+        /// <param name="type">MediaType value to check</param>
         /// <returns></returns>
-        public static bool FoundAllFiles(string outputDirectory, string outputFilename, DiscType? type)
+        public static bool FoundAllFiles(string outputDirectory, string outputFilename, MediaType? type)
         {
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -63,8 +63,8 @@ namespace DICUI.Utilities
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
             switch (type)
             {
-                case DiscType.CD:
-                case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
+                case MediaType.CD:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     return File.Exists(combinedBase + ".c2")
                         && File.Exists(combinedBase + ".ccd")
                         && File.Exists(combinedBase + ".cue")
@@ -85,13 +85,13 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_subIntention.txt")
                         && File.Exists(combinedBase + "_subReadable.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
-                case DiscType.DVD:
-                case DiscType.HDDVD:
-                case DiscType.BluRay:
-                case DiscType.GameCubeGameDisc:
-                case DiscType.WiiOpticalDisc:
-                case DiscType.WiiUOpticalDisc:
-                case DiscType.UMD:
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
+                case MediaType.UMD:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                         && File.Exists(combinedBase + "_disc.txt")
@@ -99,7 +99,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_mainError.txt")
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
-                case DiscType.Floppy:
+                case MediaType.Floppy:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                        && File.Exists(combinedBase + "_disc.txt");
@@ -115,11 +115,11 @@ namespace DICUI.Utilities
         /// <param name="outputDirectory">Base directory to use</param>
         /// <param name="outputFilename">Base filename to use</param>
         /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
+        /// <param name="type">MediaType value to check</param>
         /// <param name="driveLetter">Drive letter to check</param>
         /// <returns>Dictionary containing mapped output values, null on error</returns>
         /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
-        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, DiscType? type, char driveLetter)
+        public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, MediaType? type, char driveLetter)
         {
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -138,7 +138,7 @@ namespace DICUI.Utilities
                 { Template.DiscNumberField, Template.OptionalValue },
                 { Template.DiscTitleField, Template.OptionalValue },
                 { Template.SystemField, Converters.KnownSystemToString(sys) },
-                { Template.MediaTypeField, Converters.DiscTypeToString(type) },
+                { Template.MediaTypeField, Converters.MediaTypeToString(type) },
                 { Template.CategoryField, "Games" },
                 { Template.RegionField, "World (CHANGE THIS)" },
                 { Template.LanguagesField, "Klingon (CHANGE THIS)" },
@@ -151,11 +151,11 @@ namespace DICUI.Utilities
                 { Template.DATField, GetDatfile(combinedBase + ".dat") },
             };
 
-            // Now we want to do a check by DiscType and extract all required info
+            // Now we want to do a check by MediaType and extract all required info
             switch (type)
             {
-                case DiscType.CD:
-                case DiscType.GDROM: // TODO: Verify GD-ROM outputs this
+                case MediaType.CD:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
                     mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
@@ -206,9 +206,9 @@ namespace DICUI.Utilities
                     }
 
                     break;
-                case DiscType.DVD:
-                case DiscType.HDDVD:
-                case DiscType.BluRay:
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
                     string layerbreak = GetLayerbreak(combinedBase + "_disc.txt");
                     
                     // If we have a single-layer disc
@@ -216,10 +216,10 @@ namespace DICUI.Utilities
                     {
                         switch (type)
                         {
-                            case DiscType.DVD:
+                            case MediaType.DVD:
                                 mappings[Template.MediaTypeField] += "-5";
                                 break;
-                            case DiscType.BluRay:
+                            case MediaType.BluRay:
                                 mappings[Template.MediaTypeField] += "-25";
                                 break;
                         }
@@ -235,10 +235,10 @@ namespace DICUI.Utilities
                     {
                         switch (type)
                         {
-                            case DiscType.DVD:
+                            case MediaType.DVD:
                                 mappings[Template.MediaTypeField] += "-9";
                                 break;
-                            case DiscType.BluRay:
+                            case MediaType.BluRay:
                                 mappings[Template.MediaTypeField] += "-50";
                                 break;
                         }
@@ -772,10 +772,10 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="info">Information dictionary that should contain normalized values</param>
         /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
+        /// <param name="type">MediaType value to check</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
         /// <remarks>TODO: Get full list of customizable stuff for other systems</remarks>
-        public static List<string> FormatOutputData(Dictionary<string, string> info, KnownSystem? sys, DiscType? type)
+        public static List<string> FormatOutputData(Dictionary<string, string> info, KnownSystem? sys, MediaType? type)
         {
             // Check to see if the inputs are valid
             if (info == null)
@@ -809,11 +809,11 @@ namespace DICUI.Utilities
                 output.Add("Ringcode Information:");
                 switch (type)
                 {
-                    case DiscType.CD:
-                    case DiscType.GDROM:
-                    case DiscType.DVD:
-                    case DiscType.HDDVD:
-                    case DiscType.BluRay:
+                    case MediaType.CD:
+                    case MediaType.GDROM:
+                    case MediaType.DVD:
+                    case MediaType.HDDVD:
+                    case MediaType.BluRay:
                         // If we have a dual-layer disc
                         if (info.ContainsKey(Template.LayerbreakField))
                         {
@@ -847,8 +847,8 @@ namespace DICUI.Utilities
                 }
                 switch (type)
                 {
-                    case DiscType.CD:
-                    case DiscType.GDROM:
+                    case MediaType.CD:
+                    case MediaType.GDROM:
                         output.Add(Template.ErrorCountField + ": " + info[Template.ErrorCountField]);
                         break;
                 }
@@ -870,8 +870,8 @@ namespace DICUI.Utilities
                 }
                 switch (type)
                 {
-                    case DiscType.DVD:
-                    case DiscType.BluRay:
+                    case MediaType.DVD:
+                    case MediaType.BluRay:
                         // If we have a dual-layer disc
                         if (info.ContainsKey(Template.LayerbreakField))
                         {
@@ -905,8 +905,8 @@ namespace DICUI.Utilities
                 }
                 switch (type)
                 {
-                    case DiscType.CD:
-                    case DiscType.GDROM:
+                    case MediaType.CD:
+                    case MediaType.GDROM:
                         output.Add(Template.CuesheetField + ":"); output.Add("");
                         output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
                         output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]); output.Add("");
