@@ -19,9 +19,8 @@
                 <RichTextBox Name="output" FontFamily="Consolas" Background="Black"/>
             </ScrollViewer>
         </Border>
-        <Button Name="btnAbort" Margin="0 0 10 0" Grid.Row="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton">
-
-        </Button>
+        <Button Name="btnAbort" Margin="0 0 10 0" Grid.Row="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton" />
+        <Button Name="btnStart" Margin="0 0 100 0" Grid.Row="2" Height="22" Width="80" Content="Start" HorizontalAlignment="Right" Click="OnStartButton" />
 
 
     </Grid>

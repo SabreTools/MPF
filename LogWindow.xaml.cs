@@ -21,6 +21,9 @@ namespace DICUI
     {
         private FlowDocument _document;
         private Paragraph _paragraph;
+        private List<Matcher> _matchers;
+
+        volatile Process _cmd;
 
         public LogWindow()
         {
@@ -30,10 +33,54 @@ namespace DICUI
             _paragraph = new Paragraph();
             _document.Blocks.Add(_paragraph);
             output.Document = _document;
+
+            _matchers = new List<Matcher>();
+
+            _matchers.Add(new Matcher(
+                "Descrambling data sector of img (LBA)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        progressBar.Value = percentProgress;
+                        progressLabel.Text = string.Format("Descrambling image.. ({0:##.##}%)", percentProgress);
+                    }
+            }));
+
+            _matchers.Add(new Matcher(
+                @"Creating .scm (LBA)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        progressBar.Value = percentProgress;
+                        progressLabel.Text = string.Format("Creating scrambled image.. ({0:##.##}%)", percentProgress);
+                    }
+            }));
+
+            _matchers.Add(new Matcher(
+                "Checking sectors (LBA)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        progressBar.Value = percentProgress;
+                        progressLabel.Text = string.Format("Checking for errors.. ({0:##.##}%)", percentProgress);
+                    }
+            }));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+        }
+
+        public void StartDump(string args)
+        {
+            AppendToTextBox(string.Format("Launching DIC with args: {0}\r\n", args), Brushes.Orange);
+
             Task.Run(() =>
             {
                 _cmd = new Process()
@@ -41,7 +88,7 @@ namespace DICUI
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = @"Programs/DiscImageCreator.exe",
-                        Arguments = "cd e Gam.iso 16",
+                        Arguments = args,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -67,16 +114,32 @@ namespace DICUI
         {
             if (_cmd != null)
             {
-                if (!_cmd.HasExited)
+                _cmd.Exited -= OnProcessExit;
+                bool isForced = !_cmd.HasExited;
+
+                if (isForced)
                 {
                     AppendToTextBox("\r\nForcefully Killing the process\r\n", Brushes.Red);
                     _cmd.Kill();
+                    _cmd.WaitForExit();
                 }
 
-                AppendToTextBox(string.Format("\r\nExit Code: {0}\r\n", _cmd.ExitCode), Brushes.Red);
-                _cmd.Exited -= OnProcessExit;
-                _cmd.Close();
+                AppendToTextBox(string.Format("\r\nExit Code: {0}\r\n", _cmd.ExitCode), _cmd.ExitCode == 0 ? Brushes.Green : Brushes.Red);
 
+                if (_cmd.ExitCode == 0)
+                {
+                    progressLabel.Text = "Done!";
+                    progressBar.Value = 100;
+                    progressBar.Foreground = Brushes.Green;
+                }
+                else
+                {
+                    progressLabel.Text = isForced ? "Aborted by user" : "Error, please check log!";
+                    progressBar.Value = 100;
+                    progressBar.Foreground = Brushes.Red;
+                }
+
+                _cmd.Close();
             }
 
             _cmd = null;
@@ -98,18 +161,42 @@ namespace DICUI
             }
         }
 
+        // this is used to optimize the work since we need to process A LOT of text
+        struct Matcher
+        {
+            private readonly String prefix;
+            private readonly Regex regex;
+            private readonly int start;
+            private readonly Action<Match> lambda;
+
+            public Matcher(String prefix, String regex, Action<Match> lambda)
+            {
+                this.prefix = prefix;
+                this.regex = new Regex(regex);
+                this.start = prefix.Length;
+                this.lambda = lambda;
+            }
+
+            public bool Matches(ref string text) => text.StartsWith(prefix);
+
+            public void Apply(ref string text)
+            {
+                Match match = regex.Match(text, start);
+                lambda.Invoke(match);
+            }
+        }
+
         private Regex createdImgRegex = new Regex(@"^Created\ img\ \(LBA\)\s+(\d+)\/(\d+)$");
+        private Regex creatingScmRegex = new Regex(@"^Creating\ \.scm\ \(LBA\)\s+(\d+)\/(\d+)$");
+
         private void ProcessStringForProgressBar(string text)
         {
-            if (text.StartsWith("Created img"))
+            foreach (Matcher matcher in _matchers)
             {
-                var match = createdImgRegex.Match(text);
-
-                if (match.Success && UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                if (matcher.Matches(ref text))
                 {
-                    float percentProgress = (current / (float)total) * 100;
-                    progressBar.Value = percentProgress;
-                    progressLabel.Text = string.Format("Creating IMG ({0:##.##}%)", percentProgress);
+                    matcher.Apply(ref text);
+                    return;
                 }
             }
         }
@@ -229,20 +316,7 @@ namespace DICUI
 
         void OnProcessExit(object sender, EventArgs e)
         {
-            if (_cmd.ExitCode != 0)
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    progressLabel.Foreground = Brushes.White;
-                    progressLabel.Text = "Error occurred! Please check log.";
-
-                    progressBar.Value = 100;
-                    progressBar.Foreground = Brushes.Red;
-                });
-            }
-
             Dispatcher.Invoke(() => btnAbort.IsEnabled = false);
-
             GracefullyTerminateProcess();
         }
 
@@ -251,8 +325,11 @@ namespace DICUI
             GracefullyTerminateProcess();
         }
 
-        #endregion
+        private void OnStartButton(object sender, EventArgs args)
+        {
+            StartDump("cd e Gam.iso 16");
+        }
 
-        Process _cmd;
+        #endregion
     }
 }
