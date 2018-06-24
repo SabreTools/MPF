@@ -200,7 +200,7 @@ namespace DICUI.Utilities
         public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type)
         {
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validation.GetValidMediaTypes(sys);
+            var validTypes = Validators.GetValidMediaTypes(sys);
             if (!validTypes.ContainsKey(MediaTypeToString(type)))
             {
                 return null;

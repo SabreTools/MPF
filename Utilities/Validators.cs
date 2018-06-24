@@ -8,7 +8,7 @@ using DICUI.External;
 
 namespace DICUI.Utilities
 {
-    public static class Validation
+    public static class Validators
     {
         /// <summary>
         /// Get a list of valid MediaTypes for a given system matched to their respective names

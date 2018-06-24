@@ -143,7 +143,7 @@ namespace DICUI
 
             if (currentSystem != null)
             {
-                _mediaTypes = Utilities.Validation.GetValidMediaTypes(currentSystem?.Value)
+                _mediaTypes = Validators.GetValidMediaTypes(currentSystem?.Value)
                     .Select(i => new KeyValuePair<string, MediaType?>(i.Key, i.Value))
                     .ToList();
                 cmb_MediaType.ItemsSource = _mediaTypes;
@@ -165,7 +165,7 @@ namespace DICUI
         /// </summary>
         private void PopulateSystems()
         {
-            _systems = Utilities.Validation.CreateListOfSystems()
+            _systems = Validators.CreateListOfSystems()
                 .Select(i => new KeyValuePair<string, KnownSystem?>(i.Key, i.Value))
                 .ToList();
             cmb_SystemType.ItemsSource = _systems;
@@ -183,7 +183,7 @@ namespace DICUI
         private void PopulateDrives()
         {
             // Populate the list of drives and add it to the combo box
-            _drives = Utilities.Validation.CreateListOfDrives()
+            _drives = Validators.CreateListOfDrives()
                 .Select(i => new KeyValuePair<char, string>(i.Key, i.Value))
                 .ToList();
             cmb_DriveLetter.ItemsSource = _drives;
@@ -254,7 +254,7 @@ namespace DICUI
 
             // Validate that everything is good
             if (string.IsNullOrWhiteSpace(customParameters)
-                || !Utilities.Validation.ValidateParameters(customParameters)
+                || !Validators.ValidateParameters(customParameters)
                 || (isFloppy ^ type == MediaType.Floppy))
             {
                 lbl_Status.Content = "Error! Current configuration is not supported!";
@@ -265,7 +265,7 @@ namespace DICUI
             // If we have a custom configuration, we need to extract the best possible information from it
             if (system == KnownSystem.Custom)
             {
-                Utilities.Validation.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
+                Validators.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
                 driveLetter = letter[0];
                 outputDirectory = Path.GetDirectoryName(path);
                 outputFilename = Path.GetFileName(path);
@@ -622,7 +622,7 @@ namespace DICUI
                 return;
             }
 
-			Utilities.Validation.GetDriveSpeed((char)selected?.Key);
+			Validators.GetDriveSpeed((char)selected?.Key);
 
 			// Validate that the required program exists and it's not DICUI itself
 			if (!File.Exists(_options.dicPath) || 
