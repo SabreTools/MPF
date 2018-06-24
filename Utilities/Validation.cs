@@ -480,6 +480,12 @@ namespace DICUI.Utilities
 		/// Get the drive speed of the currently selected drive
 		/// </summary>
 		/// <returns>Speed of the drive converted from kbps</returns>
+		/// <remarks>
+		/// DIC uses the SCSI_MODE_SENSE command to check this, so does QPXTool (a different one, but still)
+		/// See if SCSI_MODE_SENSE can be used here
+		/// Currently, the calculations get something that is technically accurate, but is different than the advertisised
+		/// capabilities of the drives (according to QPXTool)
+		/// </remarks>
 		public static int GetDriveSpeed(char driveLetter)
 		{
 			ManagementObjectSearcher searcher =
