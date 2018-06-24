@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
+using DICUI.Data;
 using DICUI.External;
 
 namespace DICUI.Utilities

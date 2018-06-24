@@ -1,4 +1,4 @@
-﻿namespace DICUI
+﻿namespace DICUI.Data
 {
     /// <summary>
     /// Known media types

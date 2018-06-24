@@ -91,7 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Constants.cs" />
+    <Compile Include="Data\Constants.cs" />
     <Compile Include="External\OrderedDictionary.cs" />
     <Compile Include="External\IOrderedDictionary.cs" />
     <Compile Include="Options.cs" />
@@ -109,7 +109,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Enumerations.cs" />
+    <Compile Include="Data\Enumerations.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

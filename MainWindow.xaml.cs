@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
+using DICUI.Data;
 using DICUI.Utilities;
 
 namespace DICUI
