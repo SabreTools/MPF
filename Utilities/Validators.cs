@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Text.RegularExpressions;
+using IMAPI2;
 using DICUI.Data;
 using DICUI.External;
 
@@ -477,38 +478,105 @@ namespace DICUI.Utilities
             return drivesDict;
         }
 
-		/// <summary>
-		/// Get the drive speed of the currently selected drive
-		/// </summary>
-		/// <returns>Speed of the drive converted from kbps</returns>
-		/// <remarks>
-		/// DIC uses the SCSI_MODE_SENSE command to check this, so does QPXTool (a different one, but still)
-		/// See if SCSI_MODE_SENSE can be used here
-		/// Currently, the calculations get something that is technically accurate, but is different than the advertisised
-		/// capabilities of the drives (according to QPXTool)
-		/// </remarks>
-		public static int GetDriveSpeed(char driveLetter)
-		{
-			ManagementObjectSearcher searcher =
-					new ManagementObjectSearcher("root\\CIMV2",
-					"SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+        /// <summary>
+        /// Get the current disc type from drive letter
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
+        /// </remarks>
+        public static MediaType? GetDiscType(char driveLetter)
+        {
+            // Get the DeviceID from the current drive letter
+            string deviceId = null;
+            try
+            {
+                ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
 
-			var collection = searcher.Get();
-			double? transferRate = -1;
-			foreach (ManagementObject queryObj in collection)
-			{
-				transferRate = (double?)queryObj["TransferRate"];
-			}
+                var collection = searcher.Get();
+                foreach (ManagementObject queryObj in collection)
+                {
+                    deviceId = (string)queryObj["DeviceID"];
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
 
-			// Transfer Rates (bps)
-			double cdTransfer = 150 * 1024;
-			double dvdTransfer = 1353 * 1024;
+            // If we got no valid device, we don't care and just return
+            if (deviceId == null)
+            {
+                return null;
+            }
 
-			double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
-			double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
+            // Get all relevant disc information
+            MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+            deviceId = deviceId.ToLower().Replace('\\', '#');
+            string id = null;
+            foreach (var disc in discMaster)
+            {
+                if (disc.ToString().Contains(deviceId))
+                {
+                    id = disc.ToString();
+                }
+            }
 
-			return 0;
-		}
+            // If we couldn't find the drive, we don't care and return
+            if (id == null)
+            {
+                return null;
+            }
+
+            // Otherwise, we get the media type, if any
+            MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+            recorder.InitializeDiscRecorder(id);
+            MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+            var media = dataWriter.CurrentPhysicalMediaType;
+            if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+            {
+                return Converters.IMAPIDiskTypeToMediaType(media);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the drive speed of the currently selected drive
+        /// </summary>
+        /// <returns>Speed of the drive converted from kbps</returns>
+        /// <remarks>
+        /// DIC uses the SCSI_MODE_SENSE command to check this, so does QPXTool (a different one, but still)
+        /// See if SCSI_MODE_SENSE can be used here
+        /// Currently, the calculations get something that is technically accurate, but is different than the advertisised
+        /// capabilities of the drives (according to QPXTool)
+        /// </remarks>
+        public static int GetDriveSpeed(char driveLetter)
+        {
+            ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+
+            var collection = searcher.Get();
+            double? transferRate = -1;
+            foreach (ManagementObject queryObj in collection)
+            {
+                transferRate = (double?)queryObj["TransferRate"];
+            }
+
+            // Transfer Rates (bps)
+            double cdTransfer = 150 * 1024;
+            double dvdTransfer = 1353 * 1024;
+
+            double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
+            double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
+
+            return 0;
+        }
 
         /// <summary>
         /// Validate that at string would be valid as input to DiscImageCreator

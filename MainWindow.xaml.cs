@@ -623,10 +623,10 @@ namespace DICUI
                 return;
             }
 
-			Validators.GetDriveSpeed((char)selected?.Key);
+            Validators.GetDriveSpeed((char)selected?.Key);
 
-			// Validate that the required program exists and it's not DICUI itself
-			if (!File.Exists(_options.dicPath) || 
+            // Validate that the required program exists and it's not DICUI itself
+            if (!File.Exists(_options.dicPath) || 
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
                 return;

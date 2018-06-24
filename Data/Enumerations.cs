@@ -1,33 +1,6 @@
 ﻿namespace DICUI.Data
 {
     /// <summary>
-    /// Known media types
-    /// </summary>
-    public enum MediaType
-    {
-        // Generic Optical Formats
-        NONE = 0,
-        CD,
-        DVD,
-        GDROM,
-        HDDVD,
-        BluRay,
-        LaserDisc,
-
-        // Special Optical Formats
-        GameCubeGameDisc,
-        WiiOpticalDisc,
-        WiiUOpticalDisc,
-        UMD,
-
-        // Non-Optical Formats
-        Floppy,
-        Cartridge,
-        Cassette,
-        CED,
-    }
-
-    /// <summary>
     /// Known systems
     /// </summary>
     /// <remarks>Ensure that Utilities methods are updated as well</remarks>
@@ -157,5 +130,32 @@
         #endregion
 
         Custom = -1
+    }
+
+    /// <summary>
+    /// Known media types
+    /// </summary>
+    public enum MediaType
+    {
+        // Generic Optical Formats
+        NONE = 0,
+        CD,
+        DVD,
+        GDROM,
+        HDDVD,
+        BluRay,
+        LaserDisc,
+
+        // Special Optical Formats
+        GameCubeGameDisc,
+        WiiOpticalDisc,
+        WiiUOpticalDisc,
+        UMD,
+
+        // Non-Optical Formats
+        Floppy,
+        Cartridge,
+        Cassette,
+        CED,
     }
 }
