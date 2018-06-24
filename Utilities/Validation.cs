@@ -476,6 +476,33 @@ namespace DICUI.Utilities
             return drivesDict;
         }
 
+		/// <summary>
+		/// Get the drive speed of the currently selected drive
+		/// </summary>
+		/// <returns>Speed of the drive converted from kbps</returns>
+		public static int GetDriveSpeed(char driveLetter)
+		{
+			ManagementObjectSearcher searcher =
+					new ManagementObjectSearcher("root\\CIMV2",
+					"SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+
+			var collection = searcher.Get();
+			double? transferRate = -1;
+			foreach (ManagementObject queryObj in collection)
+			{
+				transferRate = (double?)queryObj["TransferRate"];
+			}
+
+			// Transfer Rates (bps)
+			double cdTransfer = 150 * 1024;
+			double dvdTransfer = 1353 * 1024;
+
+			double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
+			double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
+
+			return 0;
+		}
+
         /// <summary>
         /// Validate that at string would be valid as input to DiscImageCreator
         /// </summary>
