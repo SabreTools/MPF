@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using IMAPI2;
 using DICUI.Data;
@@ -566,6 +567,7 @@ namespace DICUI.Utilities
             double? transferRate = -1;
             foreach (ManagementObject queryObj in collection)
             {
+                var obj = queryObj["TransferRate"];
                 transferRate = (double?)queryObj["TransferRate"];
             }
 
@@ -574,9 +576,107 @@ namespace DICUI.Utilities
             double dvdTransfer = 1353 * 1024;
 
             double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
+            double cdTransferTestKilo = ((transferRate ?? -1) * 1000) / cdTransfer;
             double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
+            double dvdTransferTestKilo = ((transferRate ?? -1) * 1000) / dvdTransfer;
 
             return 0;
+        }
+
+        public static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
+        {
+            // Get the DeviceID from the current drive letter
+            string deviceId = null;
+            try
+            {
+                ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+
+                var collection = searcher.Get();
+                foreach (ManagementObject queryObj in collection)
+                {
+                    deviceId = (string)queryObj["DeviceID"];
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return -1;
+            }
+
+            // If we got no valid device, we don't care and just return
+            if (deviceId == null)
+            {
+                return -1;
+            }
+
+            // Get all relevant disc information
+            MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+            deviceId = deviceId.ToLower().Replace('\\', '#');
+            string id = null;
+            foreach (var disc in discMaster)
+            {
+                if (disc.ToString().Contains(deviceId))
+                {
+                    id = disc.ToString();
+                }
+            }
+
+            // If we couldn't find the drive, we don't care and return
+            if (id == null)
+            {
+                return -1;
+            }
+
+            // Now we initialize the recorder to get disc info
+            MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+            recorder.InitializeDiscRecorder(id);
+            IDiscRecorder2Ex recorderEx = recorder as IDiscRecorder2Ex;
+            IMAPI_FEATURE_PAGE_TYPE ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_PROFILE_LIST;
+            switch(mediaType)
+            {
+                case MediaType.CD:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_CD_READ;
+                    break;
+                case MediaType.DVD:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_DVD_READ;
+                    break;
+                case MediaType.HDDVD:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_HD_DVD_READ;
+                    break;
+                case MediaType.BluRay:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_BD_READ;
+                    break;
+            }
+
+            // If we couldn't determine the media type properly, we don't care and return
+            if (ifpt == IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_PROFILE_LIST)
+            {
+                return -1;
+            }
+
+            // Now we get the requested mode data
+            IntPtr modeData = Marshal.AllocHGlobal(256 * sizeof(byte));
+            recorderEx.GetModePage(
+                IMAPI_MODE_PAGE_TYPE.IMAPI_MODE_PAGE_TYPE_LEGACY_CAPABILITIES,
+                IMAPI_MODE_PAGE_REQUEST_TYPE.IMAPI_MODE_PAGE_REQUEST_TYPE_CURRENT_VALUES,
+                modeData,
+                out uint modeDataSize);
+            byte[] outModeArray = new byte[modeDataSize];
+            Marshal.Copy(modeData, outModeArray, 0, (int)modeDataSize);
+
+            // Now we get the requested feature page
+            IntPtr featureData = Marshal.AllocHGlobal(32 * sizeof(byte));
+            recorderEx.GetFeaturePage(
+                ifpt,
+                (sbyte)1,
+                featureData,
+                out uint byteSize);
+            byte[] outArray = new byte[byteSize];
+            Marshal.Copy(featureData, outArray, 0, (int)byteSize);
+
+            return -1;
         }
 
         /// <summary>

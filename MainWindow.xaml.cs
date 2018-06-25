@@ -90,6 +90,8 @@ namespace DICUI
 
         private void cmb_MediaType_SelectionChanged(object sencder, SelectionChangedEventArgs e)
         {
+            // TODO: This is giving people the benefit of the doubt that their change is valid
+            _currentMediaType = (cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?)?.Value;
             GetOutputNames();
             EnsureDiscInformation();
         }
@@ -644,6 +646,7 @@ namespace DICUI
             }
 
             //Validators.GetDriveSpeed((char)selected?.Key);
+            //Validators.GetDriveSpeedEx((char)selected?.Key, MediaType.CD);
 
             // Validate that the required program exists and it's not DICUI itself
             if (!File.Exists(_options.dicPath) || 
