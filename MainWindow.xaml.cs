@@ -272,39 +272,14 @@ namespace DICUI
             btn_StartStop.Content = UIElements.StopDumping;
             lbl_Status.Content = "Beginning dumping process";
 
-            Tuple<bool, string> result = Tasks.ValidateEnvironment(_env);
-
-            // is something is wrong in environment report and return
+            var task = Tasks.StartDumping(_env);
+            var result = await task;
+            
             if (!result.Item1)
             {
                 lbl_Status.Content = result.Item2;
                 btn_StartStop.Content = UIElements.StartDumping;
                 return;
-            }
-
-            // execute DIC
-            await Task.Run(() => Tasks.ExecuteDiskImageCreator(_env));
-
-            // execute additional tools
-            result = Tasks.ExecuteAdditionalToolsAfterDIC(_env);
-
-            // is something is wrong with additional tools report and return
-            // TODO: don't return, just keep generating output from DIC
-            /*if (!result.Item1)
-            {
-                lbl_Status.Content = result.Item2;
-                btn_StartStop.Content = UIElements.StartDumping;
-                return;
-            }*/
-
-            // verify dump output and save it
-            result = Tasks.VerifyAndSaveDumpOutput(_env);
-
-            // is something is wrong with finializing report and return
-            if (!result.Item1)
-            {
-                lbl_Status.Content = result.Item2;
-                btn_StartStop.Content = UIElements.StartDumping;
             }
             else
             {

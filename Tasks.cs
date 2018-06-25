@@ -188,6 +188,19 @@ namespace DICUI
             return Tuple.Create(true, "");
         }
 
+        public static DumpResult VerifyAndSaveDumpOutput(DumpEnvironment env)
+        {
+            // Check to make sure that the output had all the correct files
+            if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
+                return Tuple.Create(false, "Error! Please check output directory as dump may be incomplete!");
+
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
+            bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
+
+            return Tuple.Create(true, "");
+        }
+
         /// <summary>
         /// Eject the disc using DIC
         /// </summary>
@@ -195,7 +208,7 @@ namespace DICUI
         {
             // Validate that the required program exists
             if (!File.Exists(env.dicPath))
-               return;
+                return;
 
             CancelDumping(env);
 
@@ -235,15 +248,38 @@ namespace DICUI
             { }
         }
 
-        public static DumpResult VerifyAndSaveDumpOutput(DumpEnvironment env)
+        /// <summary>
+        /// This executes the complete dump workflow on a DumpEnvironment
+        /// </summary>
+        public static async Task<DumpResult> StartDumping(DumpEnvironment env)
         {
-            // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
-                return Tuple.Create(false, "Error! Please check output directory as dump may be incomplete!");
+            Tuple<bool, string> result = Tasks.ValidateEnvironment(env);
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
-            bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
+            // is something is wrong in environment return
+            if (!result.Item1)
+                return result;
+
+            // execute DIC
+            await Task.Run(() => Tasks.ExecuteDiskImageCreator(env));
+
+            // execute additional tools
+            result = Tasks.ExecuteAdditionalToolsAfterDIC(env);
+
+            // is something is wrong with additional tools report and return
+            // TODO: don't return, just keep generating output from DIC
+            /*if (!result.Item1)
+            {
+                lbl_Status.Content = result.Item2;
+                btn_StartStop.Content = UIElements.StartDumping;
+                return;
+            }*/
+
+            // verify dump output and save it
+            result = Tasks.VerifyAndSaveDumpOutput(env);
+
+            // is something is wrong with finalizing dump then report and return
+            if (!result.Item1)
+                return result;
 
             return Tuple.Create(true, "");
         }
