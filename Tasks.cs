@@ -11,7 +11,22 @@ using System.Windows;
 
 namespace DICUI
 {
-    using DumpResult = Tuple<bool, string>;
+    class DumpResult
+    {
+        private bool success;
+        public string message { get; private set; }
+
+        private DumpResult(bool success, string message)
+        {
+            this.success = success;
+            this.message = message;
+        }
+
+        public static DumpResult Success() => new DumpResult(true, "");
+        public static DumpResult Failure(string message) => new DumpResult(false, message);
+
+        public static implicit operator bool(DumpResult result) => result.success;
+    }
 
     struct DumpEnvironment
     {
@@ -66,14 +81,14 @@ namespace DICUI
         {
             // Validate that everything is good
             if (!env.IsConfigurationValid())
-                return Tuple.Create(false, "Error! Current configuration is not supported!");
+                return DumpResult.Failure("Error! Current configuration is not supported!");
 
             env.AdjustForCustomConfiguration();
             env.FixOutputPaths();
 
             // Validate that the required program exists
             if (!File.Exists(env.dicPath))
-                return Tuple.Create(false, "Error! Could not find DiscImageCreator!");
+                return DumpResult.Failure("Error! Could not find DiscImageCreator!");
 
             // If a complete dump already exists
             if (DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
@@ -81,11 +96,11 @@ namespace DICUI
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
                 {
-                    return Tuple.Create(false, "Dumping aborted!");
+                    return DumpResult.Failure("Dumping aborted!");
                 }
             }
 
-            return Tuple.Create(true, "");
+            return DumpResult.Success();
         }
 
         public static void ExecuteDiskImageCreator(DumpEnvironment env)
@@ -173,32 +188,32 @@ namespace DICUI
             {
                 case KnownSystem.SegaSaturn:
                     if (!File.Exists(env.subdumpPath))
-                        return Tuple.Create(false, "Error! Could not find subdump!");
+                        return DumpResult.Failure("Error! Could not find subdump!");
 
                     ExecuteSubdump(env);
                     break;
                 case KnownSystem.SonyPlayStation:
                     if (!File.Exists(env.psxtPath))
-                        return Tuple.Create(false, "Error! Could not find psxt001z!");
+                        return DumpResult.Failure("Error! Could not find psxt001z!");
 
                     ExecutePSXT001Z(env);
                     break;
             }
 
-            return Tuple.Create(true, "");
+            return DumpResult.Success();
         }
 
         public static DumpResult VerifyAndSaveDumpOutput(DumpEnvironment env)
         {
             // Check to make sure that the output had all the correct files
             if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
-                return Tuple.Create(false, "Error! Please check output directory as dump may be incomplete!");
+                return DumpResult.Failure("Error! Please check output directory as dump may be incomplete!");
 
             Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
             List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
             bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
 
-            return Tuple.Create(true, "");
+            return DumpResult.Success();
         }
 
         /// <summary>
@@ -253,10 +268,10 @@ namespace DICUI
         /// </summary>
         public static async Task<DumpResult> StartDumping(DumpEnvironment env)
         {
-            Tuple<bool, string> result = Tasks.ValidateEnvironment(env);
+            DumpResult result = Tasks.ValidateEnvironment(env);
 
             // is something is wrong in environment return
-            if (!result.Item1)
+            if (!result)
                 return result;
 
             // execute DIC
@@ -277,11 +292,7 @@ namespace DICUI
             // verify dump output and save it
             result = Tasks.VerifyAndSaveDumpOutput(env);
 
-            // is something is wrong with finalizing dump then report and return
-            if (!result.Item1)
-                return result;
-
-            return Tuple.Create(true, "");
+            return result;
         }
     }
 }

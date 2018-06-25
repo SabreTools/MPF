@@ -273,19 +273,10 @@ namespace DICUI
             lbl_Status.Content = "Beginning dumping process";
 
             var task = Tasks.StartDumping(_env);
-            var result = await task;
-            
-            if (!result.Item1)
-            {
-                lbl_Status.Content = result.Item2;
-                btn_StartStop.Content = UIElements.StartDumping;
-                return;
-            }
-            else
-            {
-                lbl_Status.Content = "Dumping complete!";
-                btn_StartStop.Content = UIElements.StartDumping;
-            }
+            DumpResult result = await task;
+
+            lbl_Status.Content = result ? "Dumping complete!" : result.message;
+            btn_StartStop.Content = UIElements.StartDumping;
 
             if (chk_EjectWhenDone.IsChecked == true)
                 Tasks.EjectDisc(_env);
