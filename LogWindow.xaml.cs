@@ -23,7 +23,7 @@ namespace DICUI
         private Paragraph _paragraph;
         private List<Matcher> _matchers;
 
-        volatile Process _cmd;
+        volatile Process _process;
 
         public LogWindow()
         {
@@ -83,7 +83,7 @@ namespace DICUI
 
             Task.Run(() =>
             {
-                _cmd = new Process()
+                _process = new Process()
                 {
                     StartInfo = new ProcessStartInfo()
                     {
@@ -100,33 +100,33 @@ namespace DICUI
                 StreamState stderrState = new StreamState(true);
 
                 //_cmd.ErrorDataReceived += (process, text) => Dispatcher.Invoke(() => UpdateConsole(text.Data, Brushes.Red));
-                _cmd.Start();
+                _process.Start();
 
-                var _1 = ConsumeOutput(_cmd.StandardOutput, s => Dispatcher.Invoke(() => UpdateConsole(s, stdoutState)));
-                var _2 = ConsumeOutput(_cmd.StandardError, s => Dispatcher.Invoke(() => UpdateConsole(s, stderrState)));
+                var _1 = ConsumeOutput(_process.StandardOutput, s => Dispatcher.Invoke(() => UpdateConsole(s, stdoutState)));
+                var _2 = ConsumeOutput(_process.StandardError, s => Dispatcher.Invoke(() => UpdateConsole(s, stderrState)));
 
-                _cmd.EnableRaisingEvents = true;
-                _cmd.Exited += OnProcessExit;
+                _process.EnableRaisingEvents = true;
+                _process.Exited += OnProcessExit;
             });
         }
 
         private void GracefullyTerminateProcess()
         {
-            if (_cmd != null)
+            if (_process != null)
             {
-                _cmd.Exited -= OnProcessExit;
-                bool isForced = !_cmd.HasExited;
+                _process.Exited -= OnProcessExit;
+                bool isForced = !_process.HasExited;
 
                 if (isForced)
                 {
                     AppendToTextBox("\r\nForcefully Killing the process\r\n", Brushes.Red);
-                    _cmd.Kill();
-                    _cmd.WaitForExit();
+                    _process.Kill();
+                    _process.WaitForExit();
                 }
 
-                AppendToTextBox(string.Format("\r\nExit Code: {0}\r\n", _cmd.ExitCode), _cmd.ExitCode == 0 ? Brushes.Green : Brushes.Red);
+                AppendToTextBox(string.Format("\r\nExit Code: {0}\r\n", _process.ExitCode), _process.ExitCode == 0 ? Brushes.Green : Brushes.Red);
 
-                if (_cmd.ExitCode == 0)
+                if (_process.ExitCode == 0)
                 {
                     progressLabel.Text = "Done!";
                     progressBar.Value = 100;
@@ -139,10 +139,10 @@ namespace DICUI
                     progressBar.Foreground = Brushes.Red;
                 }
 
-                _cmd.Close();
+                _process.Close();
             }
 
-            _cmd = null;
+            _process = null;
         }
 
         private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -185,9 +185,6 @@ namespace DICUI
                 lambda.Invoke(match);
             }
         }
-
-        private Regex createdImgRegex = new Regex(@"^Created\ img\ \(LBA\)\s+(\d+)\/(\d+)$");
-        private Regex creatingScmRegex = new Regex(@"^Creating\ \.scm\ \(LBA\)\s+(\d+)\/(\d+)$");
 
         private void ProcessStringForProgressBar(string text)
         {

@@ -1,42 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using IMAPI2;
+using DICUI.Data;
 
 namespace DICUI.Utilities
 {
     public static class Converters
     {
         /// <summary>
-        /// Get the DiscType associated with a given base command
+        /// Get the MediaType associated with a given base command
         /// </summary>
         /// <param name="baseCommand">String value to check</param>
-        /// <returns>DiscType if possible, null on error</returns>
+        /// <returns>MediaType if possible, null on error</returns>
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static DiscType? BaseCommmandToDiscType(string baseCommand)
+        public static MediaType? BaseCommmandToMediaType(string baseCommand)
         {
             switch (baseCommand)
             {
                 case DICCommands.CompactDisc:
-                    return DiscType.CD;
+                    return MediaType.CD;
                 case DICCommands.GDROM:
                 case DICCommands.Swap:
-                    return DiscType.GDROM;
+                    return MediaType.GDROM;
                 case DICCommands.DigitalVideoDisc:
                 case DICCommands.XBOX:
-                    return DiscType.DVD;
+                    return MediaType.DVD;
                 case DICCommands.BluRay:
-                    return DiscType.BluRay;
+                    return MediaType.BluRay;
 
                 // Non-optical
                 case DICCommands.Floppy:
-                    return DiscType.Floppy;
+                    return MediaType.Floppy;
                 default:
                     return null;
             }
         }
 
         /// <summary>
-        /// Get the most common known system for a given DiscType
+        /// Get the most common known system for a given MediaType
         /// </summary>
         /// <param name="baseCommand">String value to check</param>
         /// <returns>KnownSystem if possible, null on error</returns>
@@ -60,103 +60,142 @@ namespace DICUI.Utilities
             }
         }
 
+		/// <summary>
+		/// Convert IMAPI physical media type to a MediaType
+		/// </summary>
+		/// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
+		/// <returns>MediaType if possible, null on error</returns>
+		public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
+		{
+			switch (type)
+			{
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+					return MediaType.NONE;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+					return MediaType.CD;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+					return MediaType.DVD;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+					return MediaType.HDDVD;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+					return MediaType.BluRay;
+				default:
+					return null;
+			}
+		}
+
         /// <summary>
         /// Get the default extension for a given disc type
         /// </summary>
-        /// <param name="type">DiscType value to check</param>
+        /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string DiscTypeToExtension(DiscType? type)
+        public static string MediaTypeToExtension(MediaType? type)
         {
             switch (type)
             {
-                case DiscType.CD:
-                case DiscType.GDROM:
-                case DiscType.Cartridge:
+                case MediaType.CD:
+                case MediaType.GDROM:
+                case MediaType.Cartridge:
                     return ".bin";
-                case DiscType.DVD:
-                case DiscType.HDDVD:
-                case DiscType.BluRay:
-                case DiscType.WiiOpticalDisc:
-                case DiscType.UMD:
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.UMD:
                     return ".iso";
-                case DiscType.LaserDisc:
-                case DiscType.GameCubeGameDisc:
+                case MediaType.LaserDisc:
+                case MediaType.GameCubeGameDisc:
                     return ".raw";
-                case DiscType.WiiUOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
                     return ".wud";
-                case DiscType.Floppy:
+                case MediaType.Floppy:
                     return ".img";
-                case DiscType.Cassette:
+                case MediaType.Cassette:
                     return ".wav";
-                case DiscType.NONE:
-                case DiscType.CED:
+                case MediaType.NONE:
+                case MediaType.CED:
                 default:
                     return null;
             }
         }
 
         /// <summary>
-        /// Get the string representation of the DiscType enum values
+        /// Get the string representation of the MediaType enum values
         /// </summary>
-        /// <param name="type">DiscType value to convert</param>
+        /// <param name="type">MediaType value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string DiscTypeToString(DiscType? type)
+        public static string MediaTypeToString(MediaType? type)
         {
             switch (type)
             {
-                case DiscType.CD:
+                case MediaType.CD:
                     return "CD-ROM";
-                case DiscType.DVD:
+                case MediaType.DVD:
                     return "DVD";
-                case DiscType.GDROM:
+                case MediaType.GDROM:
                     return "GD-ROM";
-                case DiscType.HDDVD:
+                case MediaType.HDDVD:
                     return "HD-DVD";
-                case DiscType.BluRay:
+                case MediaType.BluRay:
                     return "BluRay";
-                case DiscType.LaserDisc:
+                case MediaType.LaserDisc:
                     return "LaserDisc";
 
-                case DiscType.CED:
+                case MediaType.CED:
                     return "CED";
-                case DiscType.GameCubeGameDisc:
+                case MediaType.GameCubeGameDisc:
                     return "GameCube Game";
-                case DiscType.WiiOpticalDisc:
+                case MediaType.WiiOpticalDisc:
                     return "Wii Optical";
-                case DiscType.WiiUOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
                     return "Wii U Optical";
-                case DiscType.UMD:
+                case MediaType.UMD:
                     return "UMD";
 
-                case DiscType.Cartridge:
+                case MediaType.Cartridge:
                     return "Cartridge";
-                case DiscType.Cassette:
+                case MediaType.Cassette:
                     return "Cassette Tape";
-                case DiscType.Floppy:
+                case MediaType.Floppy:
                     return "Floppy Disk";
 
-                case DiscType.NONE:
+                case MediaType.NONE:
                 default:
                     return "Unknown";
             }
         }
 
         /// <summary>
-        /// Get the DIC command to be used for a given DiscType
+        /// Get the DIC command to be used for a given MediaType
         /// </summary>
-        /// <param name="type">DiscType value to check</param>
+        /// <param name="type">MediaType value to check</param>
         /// <returns>String containing the command, null on error</returns>
-        public static string KnownSystemAndDiscTypeToBaseCommand(KnownSystem? sys, DiscType? type)
+        public static string KnownSystemAndMediaTypeToBaseCommand(KnownSystem? sys, MediaType? type)
         {
             switch (type)
             {
-                case DiscType.CD:
+                case MediaType.CD:
                     if (sys == KnownSystem.MicrosoftXBOX)
                     {
                         return DICCommands.XBOX;
                     }
                     return DICCommands.CompactDisc;
-                case DiscType.DVD:
+                case MediaType.DVD:
                     if (sys == KnownSystem.MicrosoftXBOX
                         || sys == KnownSystem.MicrosoftXBOX360XDG2
                         || sys == KnownSystem.MicrosoftXBOX360XDG3)
@@ -164,25 +203,25 @@ namespace DICUI.Utilities
                         return DICCommands.XBOX;
                     }
                     return DICCommands.DigitalVideoDisc;
-                case DiscType.GDROM:
+                case MediaType.GDROM:
                     return DICCommands.GDROM;
-                case DiscType.HDDVD:
+                case MediaType.HDDVD:
                     return null;
-                case DiscType.BluRay:
+                case MediaType.BluRay:
                     return DICCommands.BluRay;
 
                 // Special Formats
-                case DiscType.GameCubeGameDisc:
+                case MediaType.GameCubeGameDisc:
                     return DICCommands.DigitalVideoDisc;
-                case DiscType.WiiOpticalDisc:
+                case MediaType.WiiOpticalDisc:
                     return null;
-                case DiscType.WiiUOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
                     return null;
-                case DiscType.UMD:
+                case MediaType.UMD:
                     return null;
 
                 // Non-optical
-                case DiscType.Floppy:
+                case MediaType.Floppy:
                     return DICCommands.Floppy;
 
                 default:
@@ -194,13 +233,13 @@ namespace DICUI.Utilities
         /// Get list of default parameters for a given system and disc type
         /// </summary>
         /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">DiscType value to check</param>
+        /// <param name="type">MediaType value to check</param>
         /// <returns>List of strings representing the parameters</returns>
-        public static List<string> KnownSystemAndDiscTypeToParameters(KnownSystem? sys, DiscType? type)
+        public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type)
         {
-            // First check to see if the combination of system and disctype is valid
-            List<Tuple<string, DiscType?>> validTypes = Validation.GetValidDiscTypes(sys);
-            if (!validTypes.Select(i => i.Item2).Contains(type))
+            // First check to see if the combination of system and MediaType is valid
+            var validTypes = Validators.GetValidMediaTypes(sys);
+            if (!validTypes.ContainsKey(MediaTypeToString(type)))
             {
                 return null;
             }
@@ -209,7 +248,7 @@ namespace DICUI.Utilities
             List<string> parameters = new List<string>();
             switch (type)
             {
-                case DiscType.CD:
+                case MediaType.CD:
                     parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
 
                     switch (sys)
@@ -228,33 +267,33 @@ namespace DICUI.Utilities
                             break;
                     }
                     break;
-                case DiscType.DVD:
+                case MediaType.DVD:
                     // Currently no defaults set
                     break;
-                case DiscType.GDROM:
+                case MediaType.GDROM:
                     parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
                     break;
-                case DiscType.HDDVD:
+                case MediaType.HDDVD:
                     break;
-                case DiscType.BluRay:
+                case MediaType.BluRay:
                     // Currently no defaults set
                     break;
 
                 // Special Formats
-                case DiscType.GameCubeGameDisc:
+                case MediaType.GameCubeGameDisc:
                     parameters.Add(DICFlags.Raw);
                     break;
-                case DiscType.WiiOpticalDisc:
+                case MediaType.WiiOpticalDisc:
                     // Currently no defaults set
                     break;
-                case DiscType.WiiUOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
                     // Currently no defaults set
                     break;
-                case DiscType.UMD:
+                case MediaType.UMD:
                     break;
 
                 // Non-optical
-                case DiscType.Floppy:
+                case MediaType.Floppy:
                     // Currently no defaults set
                     break;
             }

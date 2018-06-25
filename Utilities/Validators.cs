@@ -3,119 +3,121 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using IMAPI2;
+using DICUI.Data;
+using DICUI.External;
 
 namespace DICUI.Utilities
 {
-    public static class Validation
+    public static class Validators
     {
-		/// <summary>
-		/// Get a list of valid DiscTypes for a given system matched to their respective names
-		/// </summary>
-		/// <param name="sys">KnownSystem value to check</param>
-		/// <returns>DiscTypes matched to enums, if possible</returns>
-		/// <remarks>
-		/// This returns a List of Tuples whose structure is as follows:
-		///		Item 1: Printable name
-		///		Item 2: DiscType mapping
-		///	If something has a "string, null" value, it should be assumed that it is a separator
-		/// </remarks>
-		public static List<Tuple<string, DiscType?>> GetValidDiscTypes(KnownSystem? sys)
+        /// <summary>
+        /// Get a list of valid MediaTypes for a given system matched to their respective names
+        /// </summary>
+        /// <param name="sys">KnownSystem value to check</param>
+        /// <returns>MediaTypes matched to enums, if possible</returns>
+        /// <remarks>
+        ///	If something has a "string, null" value, it should be assumed that it is a separator
+        /// </remarks>
+        public static OrderedDictionary<string, MediaType?> GetValidMediaTypes(KnownSystem? sys)
         {
-			List<DiscType?> types = new List<DiscType?>();
+            var types = new List<MediaType?>();
+            var typesDict = new OrderedDictionary<string, MediaType?>();
 
             switch (sys)
             {
                 #region Consoles
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-					types.Add(DiscType.CD);
-					break;
+                    types.Add(MediaType.CD);
+                    break;
                 case KnownSystem.BandaiApplePippin:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.CommodoreAmigaCD32:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.CommodoreAmigaCDTV:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.MattelHyperscan:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.MicrosoftXBOX:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MicrosoftXBOX360XDG2:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MicrosoftXBOX360XDG3:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
-                    types.Add(DiscType.HDDVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
+                    types.Add(MediaType.HDDVD);
                     break;
                 case KnownSystem.MicrosoftXBOXOne:
-                    types.Add(DiscType.BluRay);
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.NECPCEngineTurboGrafxCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NECPCFX:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NintendoGameCube:
-                    types.Add(DiscType.GameCubeGameDisc);
+                    types.Add(MediaType.GameCubeGameDisc);
                     break;
                 case KnownSystem.NintendoWii:
-                    types.Add(DiscType.WiiOpticalDisc);
+                    types.Add(MediaType.WiiOpticalDisc);
                     break;
                 case KnownSystem.NintendoWiiU:
-                    types.Add(DiscType.WiiUOpticalDisc);
+                    types.Add(MediaType.WiiUOpticalDisc);
                     break;
                 case KnownSystem.Panasonic3DOInteractiveMultiplayer:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.PhilipsCDi:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SegaCDMegaCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SegaDreamcast:
-                    types.Add(DiscType.GDROM);
+                    types.Add(MediaType.GDROM);
                     break;
                 case KnownSystem.SegaSaturn:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SNKNeoGeoCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SonyPlayStation:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SonyPlayStation2:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SonyPlayStation3:
-                    types.Add(DiscType.BluRay);
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.SonyPlayStation4:
-                    types.Add(DiscType.BluRay);
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.SonyPlayStationPortable:
-                    types.Add(DiscType.UMD);
+                    types.Add(MediaType.UMD);
                     break;
                 case KnownSystem.VMLabsNuon:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.VTechVFlashVSmilePro:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
 
                 #endregion
@@ -123,32 +125,32 @@ namespace DICUI.Utilities
                 #region Computers
 
                 case KnownSystem.AcornArchimedes:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.AppleMacintosh:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
-                    types.Add(DiscType.Floppy);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
+                    types.Add(MediaType.Floppy);
                     break;
                 case KnownSystem.CommodoreAmigaCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.FujitsuFMTowns:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.IBMPCCompatible:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
-                    types.Add(DiscType.Floppy);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
+                    types.Add(MediaType.Floppy);
                     break;
                 case KnownSystem.NECPC88:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NECPC98:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SharpX68000:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
 
                 #endregion
@@ -156,169 +158,169 @@ namespace DICUI.Utilities
                 #region Arcade
 
                 case KnownSystem.AmigaCUBOCD32:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.AmericanLaserGames3DO:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.Atari3DO:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.Atronic:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.AUSCOMSystem1:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.BallyGameMagic:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.CapcomCPSystemIII:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.GlobalVRVarious:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.GlobalVRVortek:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.GlobalVRVortekV3:
-                    types.Add(DiscType.DVD); // TODO: Confirm
+                    types.Add(MediaType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.ICEPCHardware:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.IncredibleTechnologiesEagle:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.IncredibleTechnologiesVarious:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.KonamiFirebeat:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.KonamiGVSystem:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.KonamiM2:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.KonamiPython:
-                    types.Add(DiscType.DVD); // TODO: Confirm
+                    types.Add(MediaType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.KonamiPython2:
-                    types.Add(DiscType.DVD); // TODO: Confirm
+                    types.Add(MediaType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.KonamiSystem573:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.KonamiTwinkle:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.KonamiVarious:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesBoardwalk:
-                    types.Add(DiscType.CD); // TODO: Confirm
+                    types.Add(MediaType.CD); // TODO: Confirm
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchAurora:
-                    types.Add(DiscType.CD); // TODO: Confirm
+                    types.Add(MediaType.CD); // TODO: Confirm
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchForce:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchION:
-                    types.Add(DiscType.CD);
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.CD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchMaxx:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchXL:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NamcoCapcomSystem256:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoCapcomTaitoSystem246:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
-                    types.Add(DiscType.GDROM);
+                    types.Add(MediaType.GDROM);
                     break;
                 case KnownSystem.NamcoSystem12:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NamcoSystem357:
-                    types.Add(DiscType.DVD);
-                    types.Add(DiscType.BluRay);
+                    types.Add(MediaType.DVD);
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.NewJatreCDi:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NichibutsuHighRateSystem:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NichibutsuSuperCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.NichibutsuXRateSystem:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.PhotoPlayVarious:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.RawThrillsVarious:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaChihiro:
-                    types.Add(DiscType.GDROM);
+                    types.Add(MediaType.GDROM);
                     break;
                 case KnownSystem.SegaEuropaR:
-                    types.Add(DiscType.DVD); // TODO: Confirm
+                    types.Add(MediaType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.SegaLindbergh:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaNaomi:
-                    types.Add(DiscType.GDROM);
+                    types.Add(MediaType.GDROM);
                     break;
                 case KnownSystem.SegaNaomi2:
-                    types.Add(DiscType.GDROM);
+                    types.Add(MediaType.GDROM);
                     break;
                 case KnownSystem.SegaNu:
-                    types.Add(DiscType.DVD);
-                    types.Add(DiscType.BluRay);
+                    types.Add(MediaType.DVD);
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.SegaRingEdge:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaRingEdge2:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaRingWide:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaSTV:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SegaSystem32:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SeibuCATSSystem:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.TABAustriaQuizard:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.TandyMemorexVisualInformationSystem:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
 
                 #endregion
@@ -326,51 +328,57 @@ namespace DICUI.Utilities
                 #region Others
 
                 case KnownSystem.AudioCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.BDVideo:
-                    types.Add(DiscType.BluRay);
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.DVDVideo:
-                    types.Add(DiscType.DVD);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.EnhancedCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.HDDVDVideo:
-                    types.Add(DiscType.HDDVD);
+                    types.Add(MediaType.HDDVD);
                     break;
                 case KnownSystem.PalmOS:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.PhilipsCDiDigitalVideo:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.PhotoCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.PlayStationGameSharkUpdates:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.TaoiKTV:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.TomyKissSite:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
                 case KnownSystem.VideoCD:
-                    types.Add(DiscType.CD);
+                    types.Add(MediaType.CD);
                     break;
 
                 #endregion
 
                 case KnownSystem.NONE:
                 default:
-                    types.Add(DiscType.NONE);
+                    types.Add(MediaType.NONE);
                     break;
             }
 
-            return types.Select(i => new Tuple<string, DiscType?>(Converters.DiscTypeToString(i), i)).ToList();
+            // Populate the dictionary
+            foreach (var type in types)
+            {
+                typesDict.Add(Converters.MediaTypeToString(type), type);
+            }
+
+            return typesDict;
         }
 
         /// <summary>
@@ -378,14 +386,12 @@ namespace DICUI.Utilities
         /// </summary>
         /// <returns>Systems matched to enums, if possible</returns>
         /// <remarks>
-        /// This returns a List of Tuples whose structure is as follows:
-        ///		Item 1: Printable name
-        ///		Item 2: KnownSystem mapping
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
-        public static List<Tuple<string, KnownSystem?>> CreateListOfSystems()
+        /// TODO: Figure out a way that the sections can be generated more automatically
+        public static OrderedDictionary<string, KnownSystem?> CreateListOfSystems()
         {
-            List<Tuple<string, KnownSystem?>> mapping = new List<Tuple<string, KnownSystem?>>();
+            var systemsDict = new OrderedDictionary<string, KnownSystem?>();
 
             foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
             {
@@ -394,29 +400,29 @@ namespace DICUI.Utilities
                 {
                     // Consoles section
                     case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Consoles ----------", null));
+                        systemsDict.Add("---------- Consoles ----------", null);
                         break;
 
                     // Computers section
                     case KnownSystem.AcornArchimedes:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Computers ----------", null));
+                        systemsDict.Add("---------- Computers ----------", null);
                         break;
 
                     // Arcade section
                     case KnownSystem.AmigaCUBOCD32:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Arcade ----------", null));
+                        systemsDict.Add("---------- Arcade ----------", null);
                         break;
 
                     // Other section
                     case KnownSystem.AudioCD:
-                        mapping.Add(new Tuple<string, KnownSystem?>("---------- Others ----------", null));
+                        systemsDict.Add("---------- Others ----------", null);
                         break;
                 }
 
-                mapping.Add(new Tuple<string, KnownSystem?>(Converters.KnownSystemToString(system), system));
+                systemsDict.Add(Converters.KnownSystemToString(system), system);
             }
 
-            return mapping;
+            return systemsDict;
         }
 
         /// <summary>
@@ -426,15 +432,11 @@ namespace DICUI.Utilities
         /// <remarks>
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
-        /// This returns a List of Tuples whose structure is as follows:
-        ///		Item 1: Drive letter
-        ///		Item 2: Volume label
-        ///		Item 3: (True for floppy drive, false otherwise)
         /// </remarks>
-        public static List<Tuple<char, string, bool>> CreateListOfDrives()
+        public static OrderedDictionary<char, string> CreateListOfDrives()
         {
             // Get the floppy drives
-            List<Tuple<char, string, bool>> floppyDrives = new List<Tuple<char, string, bool>>();
+            var floppyDrives = new List<KeyValuePair<char, string>>();
             try
             {
                 ManagementObjectSearcher searcher =
@@ -448,7 +450,7 @@ namespace DICUI.Utilities
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = queryObj["DeviceID"].ToString()[0];
-                        floppyDrives.Add(new Tuple<char, string, bool>(devId, "FLOPPY", true));
+                        floppyDrives.Add(new KeyValuePair<char, string>(devId, UIElements.FloppyDriveString));
                     }
                 }
             }
@@ -458,14 +460,223 @@ namespace DICUI.Utilities
             }
 
             // Get the optical disc drives
-            List<Tuple<char, string, bool>> discDrives = DriveInfo.GetDrives()
+            List<KeyValuePair<char, string>> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
-                .Select(d => new Tuple<char, string, bool>(d.Name[0], d.VolumeLabel, false))
+                .Select(d => new KeyValuePair<char, string>(d.Name[0], d.VolumeLabel))
                 .ToList();
 
-            // Add the two lists together, order, and return
+            // Add the two lists together and order
             floppyDrives.AddRange(discDrives);
-            return floppyDrives.OrderBy(i => i.Item1).ToList();
+            floppyDrives = floppyDrives.OrderBy(i => i.Key).ToList();
+
+            // Add to the ordered dictionary and return
+            var drivesDict = new OrderedDictionary<char, string>();
+            foreach (var drive in floppyDrives)
+            {
+                drivesDict.Add(drive.Key, drive.Value);
+            }
+
+            return drivesDict;
+        }
+
+        /// <summary>
+        /// Get the current disc type from drive letter
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
+        /// </remarks>
+        public static MediaType? GetDiscType(char? driveLetter)
+        {
+            // Get the DeviceID from the current drive letter
+            string deviceId = null;
+            try
+            {
+                ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+
+                var collection = searcher.Get();
+                foreach (ManagementObject queryObj in collection)
+                {
+                    deviceId = (string)queryObj["DeviceID"];
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+
+            // If we got no valid device, we don't care and just return
+            if (deviceId == null)
+            {
+                return null;
+            }
+
+            // Get all relevant disc information
+            MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+            deviceId = deviceId.ToLower().Replace('\\', '#');
+            string id = null;
+            foreach (var disc in discMaster)
+            {
+                if (disc.ToString().Contains(deviceId))
+                {
+                    id = disc.ToString();
+                }
+            }
+
+            // If we couldn't find the drive, we don't care and return
+            if (id == null)
+            {
+                return null;
+            }
+
+            // Otherwise, we get the media type, if any
+            MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+            recorder.InitializeDiscRecorder(id);
+            MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+            dataWriter.Recorder = recorder;
+            var media = dataWriter.CurrentPhysicalMediaType;
+            if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+            {
+                return Converters.IMAPIDiskTypeToMediaType(media);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the drive speed of the currently selected drive
+        /// </summary>
+        /// <returns>Speed of the drive converted from kbps</returns>
+        /// <remarks>
+        /// DIC uses the SCSI_MODE_SENSE command to check this, so does QPXTool (a different one, but still)
+        /// See if SCSI_MODE_SENSE can be used here
+        /// Currently, the calculations get something that is technically accurate, but is different than the advertisised
+        /// capabilities of the drives (according to QPXTool)
+        /// </remarks>
+        public static int GetDriveSpeed(char driveLetter)
+        {
+            ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+
+            var collection = searcher.Get();
+            double? transferRate = -1;
+            foreach (ManagementObject queryObj in collection)
+            {
+                var obj = queryObj["TransferRate"];
+                transferRate = (double?)queryObj["TransferRate"];
+            }
+
+            // Transfer Rates (bps)
+            double cdTransfer = 150 * 1024;
+            double dvdTransfer = 1353 * 1024;
+
+            double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
+            double cdTransferTestKilo = ((transferRate ?? -1) * 1000) / cdTransfer;
+            double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
+            double dvdTransferTestKilo = ((transferRate ?? -1) * 1000) / dvdTransfer;
+
+            return 0;
+        }
+
+        public static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
+        {
+            // Get the DeviceID from the current drive letter
+            string deviceId = null;
+            try
+            {
+                ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+
+                var collection = searcher.Get();
+                foreach (ManagementObject queryObj in collection)
+                {
+                    deviceId = (string)queryObj["DeviceID"];
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return -1;
+            }
+
+            // If we got no valid device, we don't care and just return
+            if (deviceId == null)
+            {
+                return -1;
+            }
+
+            // Get all relevant disc information
+            MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+            deviceId = deviceId.ToLower().Replace('\\', '#');
+            string id = null;
+            foreach (var disc in discMaster)
+            {
+                if (disc.ToString().Contains(deviceId))
+                {
+                    id = disc.ToString();
+                }
+            }
+
+            // If we couldn't find the drive, we don't care and return
+            if (id == null)
+            {
+                return -1;
+            }
+
+            // Now we initialize the recorder to get disc info
+            MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+            recorder.InitializeDiscRecorder(id);
+            IDiscRecorder2Ex recorderEx = recorder as IDiscRecorder2Ex;
+            IMAPI_FEATURE_PAGE_TYPE ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_PROFILE_LIST;
+            switch(mediaType)
+            {
+                case MediaType.CD:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_CD_READ;
+                    break;
+                case MediaType.DVD:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_DVD_READ;
+                    break;
+                case MediaType.HDDVD:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_HD_DVD_READ;
+                    break;
+                case MediaType.BluRay:
+                    ifpt = IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_BD_READ;
+                    break;
+            }
+
+            // If we couldn't determine the media type properly, we don't care and return
+            if (ifpt == IMAPI_FEATURE_PAGE_TYPE.IMAPI_FEATURE_PAGE_TYPE_PROFILE_LIST)
+            {
+                return -1;
+            }
+
+            // Now we get the requested mode data
+            IntPtr modeData = Marshal.AllocHGlobal(256 * sizeof(byte));
+            recorderEx.GetModePage(
+                IMAPI_MODE_PAGE_TYPE.IMAPI_MODE_PAGE_TYPE_LEGACY_CAPABILITIES,
+                IMAPI_MODE_PAGE_REQUEST_TYPE.IMAPI_MODE_PAGE_REQUEST_TYPE_CURRENT_VALUES,
+                modeData,
+                out uint modeDataSize);
+            byte[] outModeArray = new byte[modeDataSize];
+            Marshal.Copy(modeData, outModeArray, 0, (int)modeDataSize);
+
+            // Now we get the requested feature page
+            IntPtr featureData = Marshal.AllocHGlobal(32 * sizeof(byte));
+            recorderEx.GetFeaturePage(
+                ifpt,
+                (sbyte)1,
+                featureData,
+                out uint byteSize);
+            byte[] outArray = new byte[byteSize];
+            Marshal.Copy(featureData, outArray, 0, (int)byteSize);
+
+            return -1;
         }
 
         /// <summary>
@@ -1010,12 +1221,12 @@ namespace DICUI.Utilities
         /// Determine the base flags to use for checking a commandline
         /// </summary>
         /// <param name="parameters">Parameters as a string to check</param>
-        /// <param name="type">Output nullable DiscType containing the found DiscType, if possible</param>
+        /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
         /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
         /// <param name="letter">Output string containing the found drive letter</param>
         /// <param name="path">Output string containing the found path</param>
         /// <returns>False on error (and all outputs set to null), true otherwise</returns>
-        public static bool DetermineFlags(string parameters, out DiscType? type, out KnownSystem? system, out string letter, out string path)
+        public static bool DetermineFlags(string parameters, out MediaType? type, out KnownSystem? system, out string letter, out string path)
         {
             // Populate all output variables with null
             type = null; system = null; letter = null; path = null;
@@ -1034,7 +1245,7 @@ namespace DICUI.Utilities
                 .Select(m => m.Value)
                 .ToList();
 
-            type = Converters.BaseCommmandToDiscType(parts[0]);
+            type = Converters.BaseCommmandToMediaType(parts[0]);
             system = Converters.BaseCommandToKnownSystem(parts[0]);
 
             // Determine what the commandline should look like given the first item
@@ -1064,20 +1275,20 @@ namespace DICUI.Utilities
                     // Special case for GameCube/Wii
                     if (parts.Contains(DICFlags.Raw))
                     {
-                        type = DiscType.GameCubeGameDisc;
+                        type = MediaType.GameCubeGameDisc;
                         system = KnownSystem.NintendoGameCube;
                     }
                     // Special case for PlayStation
                     else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
                         || parts.Contains(DICFlags.ScanAntiMod))
                     {
-                        type = DiscType.CD;
+                        type = MediaType.CD;
                         system = KnownSystem.SonyPlayStation;
                     }
                     // Special case for Saturn
                     else if (parts.Contains(DICFlags.SeventyFour))
                     {
-                        type = DiscType.CD;
+                        type = MediaType.CD;
                         system = KnownSystem.SegaSaturn;
                     }
 

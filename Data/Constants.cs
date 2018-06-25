@@ -1,4 +1,4 @@
-﻿namespace DICUI
+﻿namespace DICUI.Data
 {
     /// <summary>
     /// Text for UI elements
@@ -7,6 +7,7 @@
     {
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
+        public const string FloppyDriveString = "<<FLOPPY>>";
     }
 
     /// <summary>
@@ -72,6 +73,8 @@
         public const string TitleField = "Title";
         public const string DiscNumberField = "Disc Number / Letter";
         public const string DiscTitleField = "Disc Title";
+        public const string SystemField = "System";
+        public const string MediaTypeField = "Media Type";
         public const string CategoryField = "Category";
         public const string RegionField = "Region";
         public const string LanguagesField = "Languages";
