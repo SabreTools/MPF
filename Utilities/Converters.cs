@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DICUI.External;
+﻿using System.Collections.Generic;
+using IMAPI2;
+using DICUI.Data;
 
 namespace DICUI.Utilities
 {
@@ -60,6 +59,45 @@ namespace DICUI.Utilities
                     return null;
             }
         }
+
+		/// <summary>
+		/// Convert IMAPI physical media type to a MediaType
+		/// </summary>
+		/// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
+		/// <returns>MediaType if possible, null on error</returns>
+		public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
+		{
+			switch (type)
+			{
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+					return MediaType.NONE;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+					return MediaType.CD;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+					return MediaType.DVD;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+					return MediaType.HDDVD;
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+					return MediaType.BluRay;
+				default:
+					return null;
+			}
+		}
 
         /// <summary>
         /// Get the default extension for a given disc type
@@ -200,7 +238,7 @@ namespace DICUI.Utilities
         public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type)
         {
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validation.GetValidMediaTypes(sys);
+            var validTypes = Validators.GetValidMediaTypes(sys);
             if (!validTypes.ContainsKey(MediaTypeToString(type)))
             {
                 return null;
