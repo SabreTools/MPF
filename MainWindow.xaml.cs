@@ -22,10 +22,13 @@ namespace DICUI
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<KeyValuePair<string, MediaType?>> _mediaTypes { get; set; }
-        private Process childProcess { get; set; }
+        //private Process childProcess { get; set; }
 
         private OptionsWindow _optionsWindow;
         private Options _options;
+
+        private DumpEnvironment _env;
+
 
         public MainWindow()
         {
@@ -58,11 +61,11 @@ namespace DICUI
             }
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
-                CancelDumping();
+                Tasks.CancelDumping(_env);
 
                 if (chk_EjectWhenDone.IsChecked == true)
                 {
-                    EjectDisc();
+                    Tasks.EjectDisc(_env);
                 }
             }
         }
@@ -233,12 +236,14 @@ namespace DICUI
             }
         }
 
-        /// <summary>
-        /// Begin the dumping process using the given inputs
-        /// </summary>
-        private async void StartDumping()
+        private DumpEnvironment DetermineEnvironment()
         {
-            btn_StartStop.Content = UIElements.StopDumping;
+            DumpEnvironment env = new DumpEnvironment();
+
+            // Paths to tools
+            env.subdumpPath = _options.subdumpPath;
+            env.psxtPath = _options.psxtPath;
+            env.dicPath = _options.dicPath;
 
             // Populate all KVPs
             var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
@@ -246,61 +251,34 @@ namespace DICUI
             var mediaKvp = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
 
             // Get the currently selected options
-            string dicPath = _options.dicPath;
-            string psxtPath = _options.psxtPath;
-            string subdumpPath = _options.subdumpPath;
-            char driveLetter = (char)driveKvp?.Key;
-            bool isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
-            string outputDirectory = txt_OutputDirectory.Text;
-            string outputFilename = txt_OutputFilename.Text;
-            string systemName = systemKvp?.Key;
-            KnownSystem? system = systemKvp?.Value;
-            MediaType? type = mediaKvp?.Value;
+            env.driveLetter = (char)driveKvp?.Key;
+            env.isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
 
-            string customParameters = txt_Parameters.Text;
+            env.customParameters = txt_Parameters.Text;
 
-            // Validate that everything is good
-            if (string.IsNullOrWhiteSpace(customParameters)
-                || !Validators.ValidateParameters(customParameters)
-                || (isFloppy ^ type == MediaType.Floppy))
+            env.system = systemKvp?.Value;
+            env.type = mediaKvp?.Value;
+
+            return env;
+        }
+
+        /// <summary>
+        /// Begin the dumping process using the given inputs
+        /// </summary>
+        private async void StartDumping()
+        {
+            _env = DetermineEnvironment();
+
+            btn_StartStop.Content = UIElements.StopDumping;
+
+            Tuple<bool, string> result = Tasks.ValidateEnvironment(_env);
+
+            // is something is wrong in environment report and return
+            if (!result.Item1)
             {
-                lbl_Status.Content = "Error! Current configuration is not supported!";
+                lbl_Status.Content = result.Item2;
                 btn_StartStop.Content = UIElements.StartDumping;
                 return;
-            }
-
-            // If we have a custom configuration, we need to extract the best possible information from it
-            if (system == KnownSystem.Custom)
-            {
-                Validators.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
-                driveLetter = letter[0];
-                outputDirectory = Path.GetDirectoryName(path);
-                outputFilename = Path.GetFileName(path);
-            }
-
-            // Replace characters where needed
-            // TODO: Investigate why the `&` replacement is needed
-            outputDirectory = outputDirectory.Replace('.', '_').Replace('&', '_');
-            outputFilename = new StringBuilder(outputFilename.Replace('&', '_')).Replace('.', '_', 0, outputFilename.LastIndexOf('.')).ToString();
-
-            // Validate that the required program exits
-            if (!File.Exists(dicPath))
-            {
-                lbl_Status.Content = "Error! Could not find DiscImageCreator!";
-                btn_StartStop.Content = UIElements.StartDumping;
-                return;
-            }
-
-            // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(outputDirectory, outputFilename, type))
-            {
-                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-                {
-                    lbl_Status.Content = "Dumping aborted!";
-                    btn_StartStop.Content = UIElements.StartDumping;
-                    return;
-                }
             }
 
             lbl_Status.Content = "Beginning dumping process";
@@ -308,23 +286,28 @@ namespace DICUI
 
             await Task.Run(() =>
             {
-                childProcess = new Process()
+                _env.dicProcess = new Process()
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = dicPath,
+                        FileName = _env.dicPath,
                         Arguments = parameters,
                     },
                 };
-                childProcess.Start();
-                childProcess.WaitForExit();
+                _env.dicProcess.Start();
+                _env.dicProcess.WaitForExit();
             });
 
+            ExecuteAdditionalToolsAfterDIC(_env);
+        }
+
+        private async void ExecuteAdditionalToolsAfterDIC(DumpEnvironment env)
+        {
             // Special cases
-            switch (system)
+            switch (env.system)
             {
                 case KnownSystem.SegaSaturn:
-                    if (!File.Exists(subdumpPath))
+                    if (!File.Exists(env.subdumpPath))
                     {
                         lbl_Status.Content = "Error! Could not find subdump!";
                         break;
@@ -332,12 +315,12 @@ namespace DICUI
 
                     await Task.Run(() =>
                     {
-                        childProcess = new Process()
+                        Process childProcess = new Process()
                         {
                             StartInfo = new ProcessStartInfo()
                             {
-                                FileName = subdumpPath,
-                                Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                                FileName = env.subdumpPath,
+                                Arguments = "-i " + env.driveLetter + ": -f " + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
                             },
                         };
                         childProcess.Start();
@@ -345,7 +328,7 @@ namespace DICUI
                     });
                     break;
                 case KnownSystem.SonyPlayStation:
-                    if (!File.Exists(psxtPath))
+                    if (!File.Exists(env.psxtPath))
                     {
                         lbl_Status.Content = "Error! Could not find psxt001z!";
                         break;
@@ -355,12 +338,12 @@ namespace DICUI
                     // TODO: Use these outputs for PSX information
                     await Task.Run(() =>
                     {
-                        childProcess = new Process()
+                        Process childProcess = new Process()
                         {
                             StartInfo = new ProcessStartInfo()
                             {
-                                FileName = psxtPath,
-                                Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
+                                FileName = env.psxtPath,
+                                Arguments = "\"" + DumpInformation.GetFirstTrack(env.outputDirectory, env.outputFilename) + "\" > " + "\"" + Path.Combine(env.outputDirectory, "psxt001z.txt"),
                             },
                         };
                         childProcess.Start();
@@ -370,8 +353,8 @@ namespace DICUI
                         {
                             StartInfo = new ProcessStartInfo()
                             {
-                                FileName = psxtPath,
-                                Arguments = "--libcrypt \"" + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + ".sub") + "\" > \"" + Path.Combine(outputDirectory, "libcrypt.txt"),
+                                FileName = env.psxtPath,
+                                Arguments = "--libcrypt \"" + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + ".sub") + "\" > \"" + Path.Combine(env.outputDirectory, "libcrypt.txt"),
                             },
                         };
                         childProcess.Start();
@@ -381,8 +364,8 @@ namespace DICUI
                         {
                             StartInfo = new ProcessStartInfo()
                             {
-                                FileName = psxtPath,
-                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
+                                FileName = env.psxtPath,
+                                Arguments = "--libcryptdrvfast " + env.driveLetter + " > " + "\"" + Path.Combine(env.outputDirectory, "libcryptdrv.log"),
                             },
                         };
                         childProcess.Start();
@@ -392,77 +375,27 @@ namespace DICUI
             }
 
             // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(outputDirectory, outputFilename, type))
+            if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
             {
                 lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
                 btn_StartStop.Content = UIElements.StartDumping;
                 if (chk_EjectWhenDone.IsChecked == true)
                 {
-                    EjectDisc();
+                    Tasks.EjectDisc(env);
                 }
                 return;
             }
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type, driveLetter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, system, type);
-            bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
+            bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
 
             lbl_Status.Content = "Dumping complete!";
             btn_StartStop.Content = UIElements.StartDumping;
             if (chk_EjectWhenDone.IsChecked == true)
             {
-                EjectDisc();
+                Tasks.EjectDisc(env);
             }
-        }
-
-        /// <summary>
-        /// Cancel an in-progress dumping process
-        /// </summary>
-        private void CancelDumping()
-        {
-            try
-            {
-                childProcess.Kill();
-            }
-            catch
-            { }
-        }
-
-        /// <summary>
-        /// Eject the disc using DIC
-        /// </summary>
-        private async void EjectDisc()
-        {
-            // Validate that the required program exits
-            if (!File.Exists(_options.dicPath))
-            {
-                return;
-            }
-
-            CancelDumping();
-
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            if (driveKvp?.Value == UIElements.FloppyDriveString)
-            {
-                return;
-            }
-
-            await Task.Run(() =>
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = _options.dicPath,
-                        Arguments = DICCommands.Eject + " " + driveKvp?.Key,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-            });
         }
 
         /// <summary>
@@ -539,7 +472,7 @@ namespace DICUI
                                     lbl_Status.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
                                 }
                             }
-                            
+
                             btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         }
                         break;
@@ -649,14 +582,14 @@ namespace DICUI
             //Validators.GetDriveSpeedEx((char)selected?.Key, MediaType.CD);
 
             // Validate that the required program exists and it's not DICUI itself
-            if (!File.Exists(_options.dicPath) || 
+            if (!File.Exists(_options.dicPath) ||
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
                 return;
             }
 
             char driveLetter = (char)selected?.Key;
-            childProcess = new Process()
+            Process childProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
