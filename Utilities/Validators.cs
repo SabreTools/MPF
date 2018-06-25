@@ -486,7 +486,7 @@ namespace DICUI.Utilities
         /// <remarks>
         /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
         /// </remarks>
-        public static MediaType? GetDiscType(char driveLetter)
+        public static MediaType? GetDiscType(char? driveLetter)
         {
             // Get the DeviceID from the current drive letter
             string deviceId = null;
@@ -536,6 +536,7 @@ namespace DICUI.Utilities
             MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
             recorder.InitializeDiscRecorder(id);
             MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+            dataWriter.Recorder = recorder;
             var media = dataWriter.CurrentPhysicalMediaType;
             if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
             {

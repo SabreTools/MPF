@@ -18,6 +18,7 @@ namespace DICUI
     {
         // Private UI-related variables
         private List<KeyValuePair<char, string>> _drives { get; set; }
+        private MediaType? _currentMediaType { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<KeyValuePair<string, MediaType?>> _mediaTypes { get; set; }
@@ -39,6 +40,7 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
+            SetCurrentDiscType();
 
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
@@ -74,14 +76,15 @@ namespace DICUI
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             PopulateDrives();
+            SetCurrentDiscType();
             SetSupportedDriveSpeed();
             EnsureDiscInformation();
         }
 
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            GetOutputNames();
             PopulateMediaTypeAccordingToChosenSystem();
+            GetOutputNames();
             EnsureDiscInformation();
         }
 
@@ -93,6 +96,7 @@ namespace DICUI
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            SetCurrentDiscType();
             SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
@@ -469,7 +473,9 @@ namespace DICUI
 
             // If we're on a separator, go to the next item
             if (systemKvp?.Value == null)
+            {
                 systemKvp = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
+            }
 
             var selectedSystem = systemKvp?.Value;
             var selectedMediaType = mediaKvp != null ? mediaKvp?.Value : MediaType.NONE;
@@ -505,7 +511,7 @@ namespace DICUI
                         lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaKvp?.Key);
                         btn_StartStop.IsEnabled = false;
                         break;
-                    case MediaType.DVD:
+                    default:
                         if (selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
                         {
                             lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaKvp?.Key);
@@ -513,13 +519,27 @@ namespace DICUI
                         }
                         else
                         {
-                            lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
+                            // Take care of the selected item
+                            if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
+                            {
+                                int index = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
+                                if (index != -1)
+                                {
+                                    if (cmb_MediaType.SelectedIndex != index)
+                                    {
+                                        cmb_MediaType.SelectedIndex = index;
+                                    }
+
+                                    lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
+                                }
+                                else
+                                {
+                                    lbl_Status.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
+                                }
+                            }
+                            
                             btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         }
-                        break;
-                    default:
-                        lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
-                        btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
                         break;
                 }
             }
@@ -656,6 +676,39 @@ namespace DICUI
             }
 
             cmb_DriveSpeed.SelectedValue = speed;
+        }
+
+        /// <summary>
+        /// Set the current disc type in the combo box
+        /// </summary>
+        private void SetCurrentDiscType()
+        {
+            // Get the drive letter from the selected item
+            var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
+            {
+                return;
+            }
+
+            // Get the current optical disc type
+            _currentMediaType = Validators.GetDiscType(selected?.Key);
+
+            // If we have an invalid current type, we don't care and return
+            if (_currentMediaType == null || _currentMediaType == MediaType.NONE)
+            {
+                return;
+            }
+
+            // Now set the selected item, if possible
+            int index = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
+            if (index != -1)
+            {
+                cmb_MediaType.SelectedIndex = index;
+            }
+            else
+            {
+                lbl_Status.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
+            }
         }
 
         #endregion
