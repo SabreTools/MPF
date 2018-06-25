@@ -196,7 +196,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.PlayStationEDCField] = Template.YesNoValue;
+                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes";
                             mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
                             mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
                             break;
@@ -400,7 +400,7 @@ namespace DICUI.Utilities
                     }
                     else if (line.StartsWith("Total errors:"))
                     {
-                        return Int64.Parse(line.Remove(0, 14));
+                        return Int64.Parse(line.Remove(0, "Total errors:".Length).Trim());
                     }
 
                     return -1;
@@ -451,6 +451,41 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the detected missing EDC count from the input files, if possible
+        /// </summary>
+        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <returns>Error count if possible, -1 on error</returns>
+        private static long GetMissingEDCCount(string edcecc)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(edcecc))
+            {
+                return -1;
+            }
+
+            // First line of defense is the EdcEcc error file
+            using (StreamReader sr = File.OpenText(edcecc))
+            {
+                try
+                {
+                    // Fast forward to the PVD
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("[INFO]"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    return Int64.Parse(line.Remove(0, "[INFO] Number of sector(s) where EDC doesn't exist: ".Length).Trim());
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return -1;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the PVD from the input file, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
@@ -477,12 +512,11 @@ namespace DICUI.Utilities
                     while (!sr.ReadLine().StartsWith("0310")) ;
 
                     // Now that we're at the PVD, read each line in and concatenate
-                    string pvd = sr.ReadLine() + "\n"; // 0320
-                    pvd += sr.ReadLine() + "\n"; // 0330
-                    pvd += sr.ReadLine() + "\n"; // 0340
-                    pvd += sr.ReadLine() + "\n"; // 0350
-                    pvd += sr.ReadLine() + "\n"; // 0360
-                    pvd += sr.ReadLine() + "\n"; // 0370
+                    string pvd = "";
+                    for (int i = 0; i < 6; i++)
+                    {
+                        pvd += sr.ReadLine() + "\n"; // 320-370
+                    }
 
                     return pvd;
                 }
