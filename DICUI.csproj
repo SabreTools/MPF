@@ -98,6 +98,7 @@
     <Compile Include="External\OrderedDictionary.cs" />
     <Compile Include="External\IOrderedDictionary.cs" />
     <Compile Include="Options.cs" />
+    <Compile Include="Tasks.cs" />
     <Compile Include="Utilities\DumpInformation.cs" />
     <Compile Include="Utilities\Validators.cs" />
     <Compile Include="Utilities\Converters.cs" />
