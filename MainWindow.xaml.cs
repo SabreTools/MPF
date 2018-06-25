@@ -254,7 +254,7 @@ namespace DICUI
             env.driveLetter = (char)driveKvp?.Key;
             env.isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
 
-            env.customParameters = txt_Parameters.Text;
+            env.dicParameters = txt_Parameters.Text;
 
             env.system = systemKvp?.Value;
             env.type = mediaKvp?.Value;
@@ -270,6 +270,7 @@ namespace DICUI
             _env = DetermineEnvironment();
 
             btn_StartStop.Content = UIElements.StopDumping;
+            lbl_Status.Content = "Beginning dumping process";
 
             Tuple<bool, string> result = Tasks.ValidateEnvironment(_env);
 
@@ -281,121 +282,37 @@ namespace DICUI
                 return;
             }
 
-            lbl_Status.Content = "Beginning dumping process";
-            string parameters = txt_Parameters.Text;
+            // execute DIC
+            await Task.Run(() => Tasks.ExecuteDiskImageCreator(_env));
 
-            await Task.Run(() =>
+            // execute additional tools
+            result = Tasks.ExecuteAdditionalToolsAfterDIC(_env);
+
+            // is something is wrong with additional tools report and return
+            if (!result.Item1)
             {
-                _env.dicProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = _env.dicPath,
-                        Arguments = parameters,
-                    },
-                };
-                _env.dicProcess.Start();
-                _env.dicProcess.WaitForExit();
-            });
-
-            ExecuteAdditionalToolsAfterDIC(_env);
-        }
-
-        private async void ExecuteAdditionalToolsAfterDIC(DumpEnvironment env)
-        {
-            // Special cases
-            switch (env.system)
-            {
-                case KnownSystem.SegaSaturn:
-                    if (!File.Exists(env.subdumpPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find subdump!";
-                        break;
-                    }
-
-                    await Task.Run(() =>
-                    {
-                        Process childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = env.subdumpPath,
-                                Arguments = "-i " + env.driveLetter + ": -f " + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
-                case KnownSystem.SonyPlayStation:
-                    if (!File.Exists(env.psxtPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find psxt001z!";
-                        break;
-                    }
-
-                    // Invoke the program with all 3 configurations
-                    // TODO: Use these outputs for PSX information
-                    await Task.Run(() =>
-                    {
-                        Process childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = env.psxtPath,
-                                Arguments = "\"" + DumpInformation.GetFirstTrack(env.outputDirectory, env.outputFilename) + "\" > " + "\"" + Path.Combine(env.outputDirectory, "psxt001z.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = env.psxtPath,
-                                Arguments = "--libcrypt \"" + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + ".sub") + "\" > \"" + Path.Combine(env.outputDirectory, "libcrypt.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = env.psxtPath,
-                                Arguments = "--libcryptdrvfast " + env.driveLetter + " > " + "\"" + Path.Combine(env.outputDirectory, "libcryptdrv.log"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
-            }
-
-            // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
-            {
-                lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
+                lbl_Status.Content = result.Item2;
                 btn_StartStop.Content = UIElements.StartDumping;
-                if (chk_EjectWhenDone.IsChecked == true)
-                {
-                    Tasks.EjectDisc(env);
-                }
                 return;
             }
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
-            bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
+            // verify dump output and save it
+            result = Tasks.VerifyAndSaveDumpOutput(_env);
 
-            lbl_Status.Content = "Dumping complete!";
-            btn_StartStop.Content = UIElements.StartDumping;
-            if (chk_EjectWhenDone.IsChecked == true)
+            // is something is wrong with finializing report and return
+            if (!result.Item1)
             {
-                Tasks.EjectDisc(env);
+                lbl_Status.Content = result.Item2;
+                btn_StartStop.Content = UIElements.StartDumping;
             }
+            else
+            {
+                lbl_Status.Content = "Dumping complete!";
+                btn_StartStop.Content = UIElements.StartDumping;
+            }
+
+            if (chk_EjectWhenDone.IsChecked == true)
+                Tasks.EjectDisc(_env);
         }
 
         /// <summary>

@@ -28,7 +28,7 @@ namespace DICUI
         public MediaType? type;
         public bool isFloppy;
 
-        public string customParameters;
+        public string dicParameters;
 
         public Process dicProcess;
 
@@ -88,16 +88,114 @@ namespace DICUI
             return Tuple.Create(true, "");
         }
 
+        public static void ExecuteDiskImageCreator(DumpEnvironment env)
+        {
+            env.dicProcess = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = env.dicPath,
+                    Arguments = env.dicParameters,
+                },
+            };
+            env.dicProcess.Start();
+            env.dicProcess.WaitForExit();
+        }
+
+        /// <summary>
+        /// Execute subdump for a Sega Saturn dump
+        /// </summary>
+        public static async void ExecuteSubdump(DumpEnvironment env)
+        {
+            await Task.Run(() =>
+            {
+                Process childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = env.subdumpPath,
+                        Arguments = "-i " + env.driveLetter + ": -f " + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+            });
+        }
+
+        /// <summary>
+        /// Execute psxt001z for a PSX dump
+        /// </summary>
+        public static async void ExecutePSXT001Z(DumpEnvironment env)
+        {
+            // Invoke the program with all 3 configurations
+            // TODO: Use these outputs for PSX information
+            await Task.Run(() =>
+            {
+                Process childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = env.psxtPath,
+                        Arguments = "\"" + DumpInformation.GetFirstTrack(env.outputDirectory, env.outputFilename) + "\" > " + "\"" + Path.Combine(env.outputDirectory, "psxt001z.txt"),
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = env.psxtPath,
+                        Arguments = "--libcrypt \"" + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + ".sub") + "\" > \"" + Path.Combine(env.outputDirectory, "libcrypt.txt"),
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = env.psxtPath,
+                        Arguments = "--libcryptdrvfast " + env.driveLetter + " > " + "\"" + Path.Combine(env.outputDirectory, "libcryptdrv.log"),
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+            });
+        }
+
+        public static DumpResult ExecuteAdditionalToolsAfterDIC(DumpEnvironment env)
+        {
+            // Special cases
+            switch (env.system)
+            {
+                case KnownSystem.SegaSaturn:
+                    if (!File.Exists(env.subdumpPath))
+                        return Tuple.Create(false, "Error! Could not find subdump!");
+
+                    ExecuteSubdump(env);
+                    break;
+                case KnownSystem.SonyPlayStation:
+                    if (!File.Exists(env.psxtPath))
+                        return Tuple.Create(false, "Error! Could not find psxt001z!");
+
+                    ExecutePSXT001Z(env);
+                    break;
+            }
+
+            return Tuple.Create(true, "");
+        }
+
         /// <summary>
         /// Eject the disc using DIC
         /// </summary>
         public static async void EjectDisc(DumpEnvironment env)
         {
-            // Validate that the required program exits
+            // Validate that the required program exists
             if (!File.Exists(env.dicPath))
-            {
-                return;
-            }
+               return;
 
             CancelDumping(env);
 
@@ -135,6 +233,19 @@ namespace DICUI
             }
             catch
             { }
+        }
+
+        public static DumpResult VerifyAndSaveDumpOutput(DumpEnvironment env)
+        {
+            // Check to make sure that the output had all the correct files
+            if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
+                return Tuple.Create(false, "Error! Please check output directory as dump may be incomplete!");
+
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
+            bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
+
+            return Tuple.Create(true, "");
         }
     }
 }
