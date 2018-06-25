@@ -28,7 +28,7 @@ namespace DICUI
         public static implicit operator bool(DumpResult result) => result.success;
     }
 
-    struct DumpEnvironment
+    class DumpEnvironment
     {
         public string dicPath;
         public string subdumpPath;

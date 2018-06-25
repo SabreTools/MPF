@@ -250,6 +250,9 @@ namespace DICUI
             var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
             var mediaKvp = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
 
+            env.outputDirectory = txt_OutputDirectory.Text;
+            env.outputFilename = txt_OutputFilename.Text;
+
             // Get the currently selected options
             env.driveLetter = (char)driveKvp?.Key;
             env.isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
