@@ -42,9 +42,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Disc Type" />
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
             <ComboBox x:Name="cmb_SystemType" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="cmb_SystemType_SelectionChanged" />
-            <ComboBox x:Name="cmb_DiscType" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="cmb_DiscType_SelectionChanged" />
+            <ComboBox x:Name="cmb_MediaType" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="cmb_MediaType_SelectionChanged" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
             <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="txt_OutputFilename_TextChanged" />
