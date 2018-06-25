@@ -71,6 +71,18 @@ namespace DICUI
                         progressLabel.Text = string.Format("Checking for errors.. ({0:##.##}%)", percentProgress);
                     }
             }));
+
+            _matchers.Add(new Matcher(
+                "Scanning sector (LBA)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        progressBar.Value = percentProgress;
+                        progressLabel.Text = string.Format("Scanning sectors for protection.. ({0:##.##}%)", percentProgress);
+                    }
+                }));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -128,15 +140,21 @@ namespace DICUI
 
                 if (_process.ExitCode == 0)
                 {
-                    progressLabel.Text = "Done!";
-                    progressBar.Value = 100;
-                    progressBar.Foreground = Brushes.Green;
+                    Dispatcher.Invoke(() =>
+                    {
+                        progressLabel.Text = "Done!";
+                        progressBar.Value = 100;
+                        progressBar.Foreground = Brushes.Green;
+                    });
                 }
                 else
                 {
-                    progressLabel.Text = isForced ? "Aborted by user" : "Error, please check log!";
-                    progressBar.Value = 100;
-                    progressBar.Foreground = Brushes.Red;
+                    Dispatcher.Invoke(() =>
+                    {
+                        progressLabel.Text = isForced ? "Aborted by user" : "Error, please check log!";
+                        progressBar.Value = 100;
+                        progressBar.Foreground = Brushes.Red;
+                    });
                 }
 
                 _process.Close();

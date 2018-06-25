@@ -277,6 +277,10 @@ namespace DICUI
             btn_StartStop.Content = UIElements.StopDumping;
             lbl_Status.Content = "Beginning dumping process";
 
+            _logWindow.StartDump(_env.dicParameters);
+            _logWindow.Show();
+            return;
+
             var task = Tasks.StartDumping(_env);
             DumpResult result = await task;
 
