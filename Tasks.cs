@@ -34,8 +34,8 @@ namespace DICUI
 
         public bool IsConfigurationValid()
         {
-            return !((string.IsNullOrWhiteSpace(customParameters)
-            || !Validators.ValidateParameters(customParameters)
+            return !((string.IsNullOrWhiteSpace(dicParameters)
+            || !Validators.ValidateParameters(dicParameters)
             || (isFloppy ^ type == MediaType.Floppy)));
         }
 
@@ -44,7 +44,7 @@ namespace DICUI
             // If we have a custom configuration, we need to extract the best possible information from it
             if (system == KnownSystem.Custom)
             {
-                Validators.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
+                Validators.DetermineFlags(dicParameters, out type, out system, out string letter, out string path);
                 driveLetter = letter[0];
                 outputDirectory = Path.GetDirectoryName(path);
                 outputFilename = Path.GetFileName(path);
@@ -71,7 +71,7 @@ namespace DICUI
             env.AdjustForCustomConfiguration();
             env.FixOutputPaths();
 
-            // Validate that the required program exits
+            // Validate that the required program exists
             if (!File.Exists(env.dicPath))
                 return Tuple.Create(false, "Error! Could not find DiscImageCreator!");
 

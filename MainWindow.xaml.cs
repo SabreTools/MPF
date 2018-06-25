@@ -289,12 +289,13 @@ namespace DICUI
             result = Tasks.ExecuteAdditionalToolsAfterDIC(_env);
 
             // is something is wrong with additional tools report and return
-            if (!result.Item1)
+            // TODO: don't return, just keep generating output from DIC
+            /*if (!result.Item1)
             {
                 lbl_Status.Content = result.Item2;
                 btn_StartStop.Content = UIElements.StartDumping;
                 return;
-            }
+            }*/
 
             // verify dump output and save it
             result = Tasks.VerifyAndSaveDumpOutput(_env);
