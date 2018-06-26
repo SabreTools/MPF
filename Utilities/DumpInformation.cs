@@ -220,10 +220,10 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt");
+                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt") ?? "";
                     
                     // If we have a single-layer disc
-                    if (layerbreak == null)
+                    if (String.IsNullOrWhiteSpace(layerbreak))
                     {
                         switch (type)
                         {
