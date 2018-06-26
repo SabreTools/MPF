@@ -22,13 +22,12 @@ namespace DICUI
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
-        //private Process childProcess { get; set; }
-
-        private OptionsWindow _optionsWindow;
-        private Options _options;
 
         private DumpEnvironment _env;
 
+        // Option related
+        private Options _options;
+        private OptionsWindow _optionsWindow;
 
         public MainWindow()
         {
@@ -297,7 +296,7 @@ namespace DICUI
             var selectedSystem = systemKvp?.Value;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
-            Result result = EnsureCorrectInformationForSystemAndMediaType(selectedSystem, selectedMediaType);
+            Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
             lbl_Status.Content = result.message;
             btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
@@ -351,9 +350,9 @@ namespace DICUI
         }
 
         /// <summary>
-        /// 
+        /// Verify that, given a system and a media type, they are correct
         /// </summary>
-        private Result EnsureCorrectInformationForSystemAndMediaType(KnownSystem? system, MediaType? type)
+        private Result GetSupportStatus(KnownSystem? system, MediaType? type)
         {
             // No system chosen, update status
             if (system == KnownSystem.NONE)
@@ -386,6 +385,7 @@ namespace DICUI
                     }
                     else
                     {
+                        // TODO: this code should adjust things in a method which is meant to verify values so maybe we can find a better fit 
                         // Take care of the selected item
                         if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
                         {

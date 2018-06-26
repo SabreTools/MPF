@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Windows.Data;
 using IMAPI2;
 using DICUI.Data;
-using System.Windows.Data;
-using System;
-using System.ComponentModel;
-using System.Reflection;
-using System.Globalization;
 
 namespace DICUI.Utilities
 {

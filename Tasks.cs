@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace DICUI
 {
-    class Result
+    public class Result
     {
         private bool success;
         public string message { get; private set; }
@@ -32,7 +32,7 @@ namespace DICUI
         public static implicit operator bool(Result result) => result.success;
     }
 
-    class DumpEnvironment
+    public class DumpEnvironment
     {
         public string dicPath;
         public string subdumpPath;
@@ -79,7 +79,7 @@ namespace DICUI
         }
     }
 
-    class Tasks
+    public class Tasks
     {
         public static Result ValidateEnvironment(DumpEnvironment env)
         {
