@@ -162,12 +162,12 @@ namespace DICUI.Utilities
                     mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
                     mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                     mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
-                    mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue");
-                    mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
+                    mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue") ?? "";
+                    mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
 
                     // System-specific options
                     switch (sys)
@@ -181,21 +181,21 @@ namespace DICUI.Utilities
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                                 if (fi.Length > 0)
                                 {
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
+                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)) ?? "";
                             if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
                             {
-                                mappings[Template.DiscSerialField] = serial;
-                                mappings[Template.VersionField] = version;
-                                mappings[Template.SaturnBuildDateField] = buildDate;
+                                mappings[Template.DiscSerialField] = serial ?? "";
+                                mappings[Template.VersionField] = version ?? "";
+                                mappings[Template.SaturnBuildDateField] = buildDate ?? "";
                             }
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter) ?? "";
                             mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes";
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = "No";
@@ -205,14 +205,14 @@ namespace DICUI.Utilities
                                 if (fi.Length > 0)
                                 {
                                     mappings[Template.PlayStationLibCryptField] = "Yes";
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
                             
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter) ?? "";
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter) ?? "";
                             break;
                     }
 
@@ -239,7 +239,7 @@ namespace DICUI.Utilities
                         mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
                         mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                         mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                     }
                     // If we have a dual-layer disc
                     else
@@ -261,7 +261,7 @@ namespace DICUI.Utilities
                         mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                         mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
                         mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
-                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                         mappings[Template.LayerbreakField] = layerbreak;
                     }
 
@@ -277,7 +277,7 @@ namespace DICUI.Utilities
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                                 if (fi.Length > 0)
                                 {
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
                             break;
@@ -286,15 +286,15 @@ namespace DICUI.Utilities
                         case KnownSystem.MicrosoftXBOX360XDG3:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss))
                             {
-                                mappings[Template.XBOXDMIHash] = dmihash;
-                                mappings[Template.XBOXPFIHash] = pfihash;
-                                mappings[Template.XBOXSSHash] = sshash;
-                                mappings[Template.XBOXSSRanges] = ss;
+                                mappings[Template.XBOXDMIHash] = dmihash ?? "";
+                                mappings[Template.XBOXPFIHash] = pfihash ?? "";
+                                mappings[Template.XBOXSSHash] = sshash ?? "";
+                                mappings[Template.XBOXSSRanges] = ss ?? "";
                             }
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter) ?? "";
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter) ?? "";
                             break;
                     }
                     break;
