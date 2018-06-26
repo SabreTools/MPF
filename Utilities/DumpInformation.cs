@@ -964,7 +964,7 @@ namespace DICUI.Utilities
                 if (info.ContainsKey(Template.SubIntentionField))
                 {
                     output.Add(Template.SubIntentionField + ":"); output.Add("");
-                    output.AddRange(info[Template.SubIntentionField].Split('\n'));
+                    output.AddRange(info[Template.SubIntentionField].Split('\n')); output.Add("");
                 }
                 switch (type)
                 {
