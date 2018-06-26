@@ -481,9 +481,7 @@ namespace DICUI.Utilities
         /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
         /// </remarks>
         public static MediaType? GetDiscType(char? driveLetter)
-        {
-            return null;
-            
+        {            
             // Get the DeviceID from the current drive letter
             string deviceId = null;
             try
