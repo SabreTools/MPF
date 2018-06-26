@@ -950,12 +950,6 @@ namespace DICUI.Utilities
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.IBMPCCompatible:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
-
-                        if (info.ContainsKey(Template.SubIntentionField))
-                        {
-                            output.Add(Template.SubIntentionField + ":"); output.Add("");
-                            output.AddRange(info[Template.SubIntentionField].Split('\n'));
-                        }
                         break;
                     case KnownSystem.MicrosoftXBOX:
                     case KnownSystem.MicrosoftXBOX360XDG2:
@@ -966,6 +960,11 @@ namespace DICUI.Utilities
                         output.Add(Template.XBOXSSRanges + ":"); output.Add("");
                         output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
+                }
+                if (info.ContainsKey(Template.SubIntentionField))
+                {
+                    output.Add(Template.SubIntentionField + ":"); output.Add("");
+                    output.AddRange(info[Template.SubIntentionField].Split('\n'));
                 }
                 switch (type)
                 {
