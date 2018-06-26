@@ -98,7 +98,7 @@
         public const string DATField = "DAT";
         public const string ErrorCountField = "Error Count";
         public const string CuesheetField = "Cuesheet";
-        public const string SubIntentionField = "SubIntention Data (SecuROM)";
+        public const string SubIntentionField = "SubIntention Data (SecuROM/LibCrypt)";
         public const string WriteOffsetField = "Write Offset";
         public const string LayerbreakField = "Layerbreak";
         public const string PlaystationEXEDateField = "EXE Date";

@@ -198,21 +198,15 @@ namespace DICUI.Utilities
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
                             mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes";
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
+                            mappings[Template.PlayStationLibCryptField] = "No";
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                                 if (fi.Length > 0)
                                 {
                                     mappings[Template.PlayStationLibCryptField] = "Yes";
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
                                 }
-                                else
-                                {
-                                    mappings[Template.PlayStationLibCryptField] = "No";
-                                }
-                            }
-                            else
-                            {
-                                mappings[Template.PlayStationLibCryptField] = "No";
                             }
                             
                             break;
