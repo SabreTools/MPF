@@ -264,6 +264,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             parameters.Add(DICFlags.ScanAntiMod);
+                            parameters.Add(DICFlags.NoFixSubQLibCrypt);
                             break;
                     }
                     break;
