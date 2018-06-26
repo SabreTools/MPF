@@ -26,24 +26,19 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DicImageCreator Path:" FontWeight="Bold"/>
                 <TextBox x:Name="txt_dicPath" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
                 <Button x:Name="btn_dicPath" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click" />
 
-                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="psxt001z Path:" FontWeight="Bold"/>
-                <TextBox x:Name="txt_psxtPath" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-                <Button x:Name="btn_psxtPath" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click" />
+                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="subdump Path:" FontWeight="Bold"/>
+                <TextBox x:Name="txt_subdumpPath" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Button x:Name="btn_subdumpPath" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click"/>
 
-                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="subdump Path:" FontWeight="Bold"/>
-                <TextBox x:Name="txt_subdumpPath" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-                <Button x:Name="btn_subdumpPath" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click"/>
-
-                <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path:" FontWeight="Bold"/>
-                <TextBox x:Name="txt_defaultOutputPath" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-                <Button x:Name="btn_defaultOutputPath" Grid.Row="3" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click" />
+                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path:" FontWeight="Bold"/>
+                <TextBox x:Name="txt_defaultOutputPath" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Button x:Name="btn_defaultOutputPath" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click" />
 
             </Grid>
 

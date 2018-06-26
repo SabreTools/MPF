@@ -245,7 +245,6 @@ namespace DICUI
 
             // Get the currently selected options
             string dicPath = _options.dicPath;
-            string psxtPath = _options.psxtPath;
             string subdumpPath = _options.subdumpPath;
             char driveLetter = (char)driveKvp?.Key;
             bool isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
@@ -336,51 +335,6 @@ namespace DICUI
                             {
                                 FileName = subdumpPath,
                                 Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
-                case KnownSystem.SonyPlayStation:
-                    if (!File.Exists(psxtPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find psxt001z!";
-                        break;
-                    }
-
-                    // Invoke the program with all 3 configurations
-                    // TODO: Use these outputs for PSX information
-                    await Task.Run(() =>
-                    {
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "--libcrypt \"" + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + ".sub") + "\" > \"" + Path.Combine(outputDirectory, "libcrypt.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
                             },
                         };
                         childProcess.Start();
