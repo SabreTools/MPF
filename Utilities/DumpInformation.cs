@@ -440,12 +440,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== DiscStructure ==========")
-                    {
-                        return false;
-                    }
-
                     // Check for either antimod string
                     string line = sr.ReadLine().Trim();
                     while (!sr.EndOfStream)
@@ -489,12 +483,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== DiscStructure ==========")
-                    {
-                        return null;
-                    }
-
                     // Fast forward to the layerbreak
                     while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
 
@@ -561,12 +549,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _mainInfo.txt
-                    if (sr.ReadLine() != "========== LBA[000016, 0x00010]: Main Channel ==========")
-                    {
-                        return null;
-                    }
-
                     // Fast forward to the PVD
                     while (!sr.ReadLine().StartsWith("0310")) ;
 
@@ -782,12 +764,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt for XBOX
-                    if (sr.ReadLine() != "========== Lock state ==========")
-                    {
-                        return false;
-                    }
-
                     // Fast forward to the Security Sector Ranges
                     while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
 
@@ -838,12 +814,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== TOC ==========")
-                    {
-                        return null;
-                    }
-
                     // Fast forward to the offsets
                     while (!sr.ReadLine().Trim().StartsWith("========== Offset")) ;
                     sr.ReadLine(); // Combined Offset
