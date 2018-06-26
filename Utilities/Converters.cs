@@ -32,11 +32,14 @@ namespace DICUI.Utilities
         public static bool DoesSupportDriveSpeed(this KnownSystem? system)
         {
             return system != KnownSystem.MicrosoftXBOX
-                        && system != KnownSystem.MicrosoftXBOX360XDG2
-                        && system != KnownSystem.MicrosoftXBOX360XDG3;
+                && system != KnownSystem.MicrosoftXBOX360XDG2
+                && system != KnownSystem.MicrosoftXBOX360XDG3;
         }
     }
 
+    /// <summary>
+    /// Used to provide a converter to XAML files to render comboboxes with enum values
+    /// </summary>
     public class EnumDescriptionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
