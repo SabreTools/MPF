@@ -162,12 +162,12 @@ namespace DICUI.Utilities
                     mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
                     mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                     mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
                         combinedBase + "_c2Error.txt",
                         combinedBase + "_mainError.txt").ToString();
-                    mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue");
-                    mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt");
+                    mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue") ?? "";
+                    mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
 
                     // System-specific options
                     switch (sys)
@@ -181,28 +181,38 @@ namespace DICUI.Utilities
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                                 if (fi.Length > 0)
                                 {
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)).ToString();
+                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack(outputDirectory, outputFilename)) ?? "";
                             if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
                             {
-                                mappings[Template.DiscSerialField] = serial;
-                                mappings[Template.VersionField] = version;
-                                mappings[Template.SaturnBuildDateField] = buildDate;
+                                mappings[Template.DiscSerialField] = serial ?? "";
+                                mappings[Template.VersionField] = version ?? "";
+                                mappings[Template.SaturnBuildDateField] = buildDate ?? "";
                             }
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.PlayStationEDCField] = Template.YesNoValue;
-                            mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
-                            mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter) ?? "";
+                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes";
+                            mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
+                            mappings[Template.PlayStationLibCryptField] = "No";
+                            if (File.Exists(combinedBase + "_subIntention.txt"))
+                            {
+                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
+                                if (fi.Length > 0)
+                                {
+                                    mappings[Template.PlayStationLibCryptField] = "Yes";
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
+                                }
+                            }
+                            
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter) ?? "";
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter) ?? "";
                             break;
                     }
 
@@ -210,10 +220,10 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt");
+                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt") ?? "";
                     
                     // If we have a single-layer disc
-                    if (layerbreak == null)
+                    if (String.IsNullOrWhiteSpace(layerbreak))
                     {
                         switch (type)
                         {
@@ -229,7 +239,7 @@ namespace DICUI.Utilities
                         mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
                         mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                         mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                     }
                     // If we have a dual-layer disc
                     else
@@ -251,7 +261,7 @@ namespace DICUI.Utilities
                         mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                         mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
                         mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
-                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt");
+                        mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                         mappings[Template.LayerbreakField] = layerbreak;
                     }
 
@@ -267,7 +277,7 @@ namespace DICUI.Utilities
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                                 if (fi.Length > 0)
                                 {
-                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt");
+                                    mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
                             break;
@@ -276,15 +286,15 @@ namespace DICUI.Utilities
                         case KnownSystem.MicrosoftXBOX360XDG3:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss))
                             {
-                                mappings[Template.XBOXDMIHash] = dmihash;
-                                mappings[Template.XBOXPFIHash] = pfihash;
-                                mappings[Template.XBOXSSHash] = sshash;
-                                mappings[Template.XBOXSSRanges] = ss;
+                                mappings[Template.XBOXDMIHash] = dmihash ?? "";
+                                mappings[Template.XBOXPFIHash] = pfihash ?? "";
+                                mappings[Template.XBOXSSHash] = sshash ?? "";
+                                mappings[Template.XBOXSSRanges] = ss ?? "";
                             }
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
-                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter);
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter) ?? "";
+                            mappings[Template.VersionField] = GetPlayStation2Version(driveLetter) ?? "";
                             break;
                     }
                     break;
@@ -400,7 +410,7 @@ namespace DICUI.Utilities
                     }
                     else if (line.StartsWith("Total errors:"))
                     {
-                        return Int64.Parse(line.Remove(0, 14));
+                        return Int64.Parse(line.Remove(0, "Total errors:".Length).Trim());
                     }
 
                     return -1;
@@ -409,6 +419,49 @@ namespace DICUI.Utilities
                 {
                     // We don't care what the exception is right now
                     return -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the existance of an anti-modchip string from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Antimodchip existance if possible, false on error</returns>
+        private static bool GetAntiModchipDetected(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return false;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Check for either antimod string
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line.StartsWith("Detected anti-mod string"))
+                        {
+                            return true;
+                        }
+                        else if (line.StartsWith("No anti-mod string"))
+                        {
+                            return false;
+                        }
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
                 }
             }
         }
@@ -430,12 +483,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== DiscStructure ==========")
-                    {
-                        return null;
-                    }
-
                     // Fast forward to the layerbreak
                     while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
 
@@ -446,6 +493,41 @@ namespace DICUI.Utilities
                 {
                     // We don't care what the exception is right now
                     return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the detected missing EDC count from the input files, if possible
+        /// </summary>
+        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <returns>Missing EDC count if possible, -1 on error</returns>
+        private static long GetMissingEDCCount(string edcecc)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(edcecc))
+            {
+                return -1;
+            }
+
+            // First line of defense is the EdcEcc error file
+            using (StreamReader sr = File.OpenText(edcecc))
+            {
+                try
+                {
+                    // Fast forward to the PVD
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("[INFO]"))
+                    {
+                        line = sr.ReadLine();
+                    }
+
+                    return Int64.Parse(line.Remove(0, "[INFO] Number of sector(s) where EDC doesn't exist: ".Length).Trim());
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return -1;
                 }
             }
         }
@@ -467,22 +549,15 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _mainInfo.txt
-                    if (sr.ReadLine() != "========== LBA[000016, 0x00010]: Main Channel ==========")
-                    {
-                        return null;
-                    }
-
                     // Fast forward to the PVD
                     while (!sr.ReadLine().StartsWith("0310")) ;
 
                     // Now that we're at the PVD, read each line in and concatenate
-                    string pvd = sr.ReadLine() + "\n"; // 0320
-                    pvd += sr.ReadLine() + "\n"; // 0330
-                    pvd += sr.ReadLine() + "\n"; // 0340
-                    pvd += sr.ReadLine() + "\n"; // 0350
-                    pvd += sr.ReadLine() + "\n"; // 0360
-                    pvd += sr.ReadLine() + "\n"; // 0370
+                    string pvd = "";
+                    for (int i = 0; i < 6; i++)
+                    {
+                        pvd += sr.ReadLine() + "\n"; // 320-370
+                    }
 
                     return pvd;
                 }
@@ -689,12 +764,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt for XBOX
-                    if (sr.ReadLine() != "========== Lock state ==========")
-                    {
-                        return false;
-                    }
-
                     // Fast forward to the Security Sector Ranges
                     while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
 
@@ -745,12 +814,6 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Make sure this file is a _disc.txt
-                    if (sr.ReadLine() != "========== TOC ==========")
-                    {
-                        return null;
-                    }
-
                     // Fast forward to the offsets
                     while (!sr.ReadLine().Trim().StartsWith("========== Offset")) ;
                     sr.ReadLine(); // Combined Offset
@@ -887,12 +950,6 @@ namespace DICUI.Utilities
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.IBMPCCompatible:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
-
-                        if (info.ContainsKey(Template.SubIntentionField))
-                        {
-                            output.Add(Template.SubIntentionField + ":"); output.Add("");
-                            output.AddRange(info[Template.SubIntentionField].Split('\n'));
-                        }
                         break;
                     case KnownSystem.MicrosoftXBOX:
                     case KnownSystem.MicrosoftXBOX360XDG2:
@@ -903,6 +960,11 @@ namespace DICUI.Utilities
                         output.Add(Template.XBOXSSRanges + ":"); output.Add("");
                         output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
+                }
+                if (info.ContainsKey(Template.SubIntentionField))
+                {
+                    output.Add(Template.SubIntentionField + ":"); output.Add("");
+                    output.AddRange(info[Template.SubIntentionField].Split('\n')); output.Add("");
                 }
                 switch (type)
                 {

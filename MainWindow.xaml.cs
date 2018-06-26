@@ -40,7 +40,6 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
-            SetCurrentDiscType();
 
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
@@ -178,7 +177,6 @@ namespace DICUI
             cmb_SystemType.ItemsSource = _systems;
             cmb_SystemType.DisplayMemberPath = "Key";
             cmb_SystemType.SelectedIndex = 0;
-            cmb_SystemType_SelectionChanged(null, null);
 
             btn_StartStop.IsEnabled = false;
         }
@@ -195,16 +193,16 @@ namespace DICUI
                 .ToList();
             cmb_DriveLetter.ItemsSource = _drives;
             cmb_DriveLetter.DisplayMemberPath = "Key";
-            cmb_DriveLetter.SelectedIndex = 0;
-            cmb_DriveLetter_SelectionChanged(null, null);
 
             if (cmb_DriveLetter.Items.Count > 0)
             {
+                cmb_DriveLetter.SelectedIndex = 0;
                 lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
-                btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+                btn_StartStop.IsEnabled = true;
             }
             else
             {
+                cmb_DriveLetter.SelectedIndex = -1;
                 lbl_Status.Content = "No valid optical disc found!";
                 btn_StartStop.IsEnabled = false;
             }
@@ -247,7 +245,6 @@ namespace DICUI
 
             // Get the currently selected options
             string dicPath = _options.dicPath;
-            string psxtPath = _options.psxtPath;
             string subdumpPath = _options.subdumpPath;
             char driveLetter = (char)driveKvp?.Key;
             bool isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
@@ -344,51 +341,6 @@ namespace DICUI
                         childProcess.WaitForExit();
                     });
                     break;
-                case KnownSystem.SonyPlayStation:
-                    if (!File.Exists(psxtPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find psxt001z!";
-                        break;
-                    }
-
-                    // Invoke the program with all 3 configurations
-                    // TODO: Use these outputs for PSX information
-                    await Task.Run(() =>
-                    {
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "--libcrypt \"" + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + ".sub") + "\" > \"" + Path.Combine(outputDirectory, "libcrypt.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
             }
 
             // Check to make sure that the output had all the correct files
@@ -473,14 +425,27 @@ namespace DICUI
             var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
             var mediaKvp = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
 
-            // If we're on a separator, go to the next item
+            // If we're on a separator, go to the next item and return
             if (systemKvp?.Value == null)
             {
-                systemKvp = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
+                cmb_SystemType.SelectedIndex++;
+                return;
             }
 
+            // Get the selected system info
             var selectedSystem = systemKvp?.Value;
             var selectedMediaType = mediaKvp != null ? mediaKvp?.Value : MediaType.NONE;
+            int currentMediaTypeIndex = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
+
+            // If the current system contains the media type, switch to it and return
+            if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
+            {
+                if (currentMediaTypeIndex != -1 && cmb_MediaType.SelectedIndex != currentMediaTypeIndex)
+                {
+                    cmb_MediaType.SelectedIndex = currentMediaTypeIndex;
+                    return;
+                }
+            }
 
             // No system chosen, update status
             if (selectedSystem == KnownSystem.NONE)
@@ -524,14 +489,8 @@ namespace DICUI
                             // Take care of the selected item
                             if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
                             {
-                                int index = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
-                                if (index != -1)
+                                if (currentMediaTypeIndex != -1)
                                 {
-                                    if (cmb_MediaType.SelectedIndex != index)
-                                    {
-                                        cmb_MediaType.SelectedIndex = index;
-                                    }
-
                                     lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
                                 }
                                 else
@@ -638,6 +597,9 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
+            // Set generic drive speed just in case
+            cmb_DriveSpeed.SelectedItem = 8;
+
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))

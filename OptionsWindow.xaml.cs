@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using Button = System.Windows.Controls.Button;
 using TextBox = System.Windows.Controls.TextBox;
@@ -51,7 +40,7 @@ namespace DICUI
 
         private string[] PathSettings()
         {
-            string[] pathSettings = { "defaultOutputPath", "dicPath", "psxtPath", "subdumpPath" };
+            string[] pathSettings = { "defaultOutputPath", "dicPath", "subdumpPath" };
             return pathSettings;
         }
 
