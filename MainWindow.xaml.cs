@@ -597,6 +597,9 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
+            // Set generic drive speed just in case
+            cmb_DriveSpeed.SelectedItem = 8;
+
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
