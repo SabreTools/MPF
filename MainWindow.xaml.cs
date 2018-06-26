@@ -300,7 +300,7 @@ namespace DICUI
             Result result = EnsureCorrectInformationForSystemAndMediaType(selectedSystem, selectedMediaType);
 
             lbl_Status.Content = result.message;
-            btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+            btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
             cmb_DriveSpeed.IsEnabled = selectedMediaType.DoesSupportDriveSpeed() && selectedSystem.DoesSupportDriveSpeed();
