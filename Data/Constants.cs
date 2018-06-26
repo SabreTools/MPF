@@ -103,7 +103,7 @@
         public const string LayerbreakField = "Layerbreak";
         public const string PlaystationEXEDateField = "EXE Date";
         public const string PlayStationEDCField = "EDC";
-        public const string PlayStationAntiModchipField = "Anti-modchip"; // TODO: Not automatic yet
+        public const string PlayStationAntiModchipField = "Anti-modchip";
         public const string PlayStationLibCryptField = "LibCrypt"; // TODO: Not automatic yet
         public const string SaturnHeaderField = "Header";
         public const string SaturnBuildDateField = "Build Date";

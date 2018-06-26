@@ -197,7 +197,7 @@ namespace DICUI.Utilities
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(driveLetter);
                             mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes";
-                            mappings[Template.PlayStationAntiModchipField] = Template.YesNoValue;
+                            mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = Template.YesNoValue;
                             break;
                         case KnownSystem.SonyPlayStation2:
@@ -414,6 +414,55 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the existance of an anti-modchip string from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Antimodchip existance if possible, false on error</returns>
+        private static bool GetAntiModchipDetected(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return false;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Make sure this file is a _disc.txt
+                    if (sr.ReadLine() != "========== DiscStructure ==========")
+                    {
+                        return false;
+                    }
+
+                    // Check for either antimod string
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line.StartsWith("Detected anti-mod string"))
+                        {
+                            return true;
+                        }
+                        else if (line.StartsWith("No anti-mod string"))
+                        {
+                            return false;
+                        }
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the layerbreak from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
@@ -454,7 +503,7 @@ namespace DICUI.Utilities
         /// Get the detected missing EDC count from the input files, if possible
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt file location</param>
-        /// <returns>Error count if possible, -1 on error</returns>
+        /// <returns>Missing EDC count if possible, -1 on error</returns>
         private static long GetMissingEDCCount(string edcecc)
         {
             // If one of the files doesn't exist, we can't get info from them
