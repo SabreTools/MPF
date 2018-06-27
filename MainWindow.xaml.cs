@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
@@ -22,10 +20,12 @@ namespace DICUI
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
-        //private Process childProcess { get; set; }
 
-        private OptionsWindow _optionsWindow;
+        private DumpEnvironment _env;
+
+        // Option related
         private Options _options;
+        private OptionsWindow _optionsWindow;
 
         private LogWindow _logWindow;
         private DumpEnvironment _env;
@@ -45,7 +45,6 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
-            SetCurrentDiscType();
 
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
@@ -180,7 +179,6 @@ namespace DICUI
             cmb_SystemType.ItemsSource = _systems;
             cmb_SystemType.DisplayMemberPath = "Key";
             cmb_SystemType.SelectedIndex = 0;
-            cmb_SystemType_SelectionChanged(null, null);
 
             btn_StartStop.IsEnabled = false;
         }
@@ -197,16 +195,16 @@ namespace DICUI
                 .ToList();
             cmb_DriveLetter.ItemsSource = _drives;
             cmb_DriveLetter.DisplayMemberPath = "Key";
-            cmb_DriveLetter.SelectedIndex = 0;
-            cmb_DriveLetter_SelectionChanged(null, null);
 
             if (cmb_DriveLetter.Items.Count > 0)
             {
+                cmb_DriveLetter.SelectedIndex = 0;
                 lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
-                btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+                btn_StartStop.IsEnabled = true;
             }
             else
             {
+                cmb_DriveLetter.SelectedIndex = -1;
                 lbl_Status.Content = "No valid optical disc found!";
                 btn_StartStop.IsEnabled = false;
             }
@@ -235,6 +233,7 @@ namespace DICUI
             }
         }
 
+<<<<<<< HEAD
         private DumpEnvironment DetermineEnvironment()
         {
             DumpEnvironment env = new DumpEnvironment();
@@ -244,23 +243,35 @@ namespace DICUI
             env.psxtPath = _options.psxtPath;
             env.dicPath = _options.dicPath;
 
+=======
+        /// <summary>
+        /// Create a DumpEnvironment with all current settings
+        /// </summary>
+        /// <returns>Filled DumpEnvironment instance</returns>
+        private DumpEnvironment DetermineEnvironment()
+        {
             // Populate all KVPs
             var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
 
-            env.outputDirectory = txt_OutputDirectory.Text;
-            env.outputFilename = txt_OutputFilename.Text;
+            return new DumpEnvironment()
+            {
+                // Paths to tools
+                SubdumpPath = _options.subdumpPath,
+                DICPath = _options.dicPath,
 
-            // Get the currently selected options
-            env.driveLetter = (char)driveKvp?.Key;
-            env.isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
+                OutputDirectory = txt_OutputDirectory.Text,
+                OutputFilename = txt_OutputFilename.Text,
 
-            env.dicParameters = txt_Parameters.Text;
+                // Get the currently selected options
+                DriveLetter = (char)driveKvp?.Key,
+                IsFloppy = (driveKvp?.Value == UIElements.FloppyDriveString),
 
-            env.system = systemKvp?.Value;
-            env.type = cmb_MediaType.SelectedItem as MediaType?;
+                DICParameters = txt_Parameters.Text,
 
-            return env;
+                System = systemKvp?.Value,
+                Type = cmb_MediaType.SelectedItem as MediaType?
+            };
         }
 
         /// <summary>
@@ -294,16 +305,18 @@ namespace DICUI
         {
             var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
 
-            // If we're on a separator, go to the next item
+            // If we're on a separator, go to the next item and return
             if (systemKvp?.Value == null)
             {
-                systemKvp = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
+                cmb_SystemType.SelectedIndex++;
+                return;
             }
 
+            // Get the selected system info
             var selectedSystem = systemKvp?.Value;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
-            Result result = EnsureCorrectInformationForSystemAndMediaType(selectedSystem, selectedMediaType);
+            Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
             lbl_Status.Content = result.message;
             btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
@@ -357,9 +370,9 @@ namespace DICUI
         }
 
         /// <summary>
-        /// 
+        /// Verify that, given a system and a media type, they are correct
         /// </summary>
-        private Result EnsureCorrectInformationForSystemAndMediaType(KnownSystem? system, MediaType? type)
+        private Result GetSupportStatus(KnownSystem? system, MediaType? type)
         {
             // No system chosen, update status
             if (system == KnownSystem.NONE)
@@ -392,6 +405,7 @@ namespace DICUI
                     }
                     else
                     {
+                        // TODO: this code should adjust things in a method which is meant to verify values so maybe we can find a better fit 
                         // Take care of the selected item
                         if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
                         {
@@ -425,7 +439,11 @@ namespace DICUI
             var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
-            if (driveKvp != null && (driveKvp?.Value != UIElements.FloppyDriveString) && systemKvp != null && mediaType != null)
+            if (driveKvp != null
+                && !String.IsNullOrWhiteSpace(driveKvp?.Value)
+                && driveKvp?.Value != UIElements.FloppyDriveString
+                && systemKvp != null
+                && mediaType != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
                 txt_OutputFilename.Text = driveKvp?.Value + mediaType.Extension();
@@ -442,6 +460,9 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
+            // Set generic drive speed just in case
+            cmb_DriveSpeed.SelectedItem = 8;
+
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
@@ -482,7 +503,12 @@ namespace DICUI
                 return;
             }
 
-            cmb_DriveSpeed.SelectedValue = speed;
+            // If the value is in the list, we can set it immediately
+            if (_driveSpeeds.Contains(speed))
+                cmb_DriveSpeed.SelectedValue = speed;
+            // Otherwise, we need to set the next lowest value
+            else
+                cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
         }
 
         /// <summary>

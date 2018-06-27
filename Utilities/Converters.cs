@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Windows.Data;
 using IMAPI2;
 using DICUI.Data;
 using System.Windows.Data;
@@ -9,6 +12,9 @@ using System.Globalization;
 
 namespace DICUI.Utilities
 {
+    /// <summary>
+    /// Extensions for MediaType? for easier calling
+    /// </summary>
     public static class MediaTypeExtensions
     {
         public static string Name(this MediaType? type)
@@ -27,6 +33,9 @@ namespace DICUI.Utilities
         }
     }
 
+    /// <summary>
+    /// Extensions for KnownSystem? for easier calling
+    /// </summary>
     public static class KnownSystemExtensions
     {
         public static bool DoesSupportDriveSpeed(this KnownSystem? system)
@@ -316,6 +325,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             parameters.Add(DICFlags.ScanAntiMod);
+                            parameters.Add(DICFlags.NoFixSubQLibCrypt);
                             break;
                     }
                     break;
