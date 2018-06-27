@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 
 namespace DICUI.Data
 {
     /// <summary>
-    /// Text for UI elements
+    /// Variables for UI elements
     /// </summary>
     public static class UIElements
     {
@@ -13,10 +14,32 @@ namespace DICUI.Data
         public const string StopDumping = "Stop Dumping";
         public const string FloppyDriveString = "<<FLOPPY>>";
 
-        public static IReadOnlyList<int> AllowedDriveSpeeds { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
-        public static DoubleCollection AllowedDriveSpeedsAsDouble { get; } = new DoubleCollection { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+        private static IReadOnlyList<int> AllowedDriveSpeedsForCD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+        private static IReadOnlyList<int> AllowedDriveSpeedsForDVD { get; } = AllowedDriveSpeedsForCD.Where(s => s <= 24).ToList();
+        private static IReadOnlyList<int> AllowedDriveSpeedsForBD { get; } = AllowedDriveSpeedsForCD.Where(s => s <= 16).ToList();
+        private static IReadOnlyList<int> AllowedDriveSpeedsForUnknownType { get; } = new List<int> { 1 };
 
+        public static IReadOnlyList<int> GetAllowedDriveSpeedsForMediaType(MediaType? type)
+        {
+            switch (type)
+            {
+                case MediaType.CD:
+                    return AllowedDriveSpeedsForCD;
+                case MediaType.DVD:
+                    return AllowedDriveSpeedsForDVD;
+                //TODO: we return them all since DIC doens't support them in any case
+                case MediaType.BluRay:
+                    return AllowedDriveSpeedsForCD;
+                default:
+                    return AllowedDriveSpeedsForCD;             
+            }
+        }
 
+        public static DoubleCollection GetDoubleCollectionFromIntList(IReadOnlyList<int> list) 
+            => new DoubleCollection(list.Select(i => Convert.ToDouble(i)).ToList());
+
+        public static DoubleCollection AllowedDriveSpeedsForCDAsCollection { get; } = GetDoubleCollectionFromIntList(AllowedDriveSpeedsForCD);
+        public static DoubleCollection AllowedDriveSpeedsForDVDAsCollection { get; } = GetDoubleCollectionFromIntList(AllowedDriveSpeedsForDVD);
     }
 
     /// <summary>

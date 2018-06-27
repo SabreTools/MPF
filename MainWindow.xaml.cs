@@ -17,7 +17,6 @@ namespace DICUI
         // Private UI-related variables
         private List<KeyValuePair<char, string>> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
-        //private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
 
@@ -113,7 +112,7 @@ namespace DICUI
             // lazy initialization
             if (_optionsWindow == null)
             {
-                _optionsWindow = new OptionsWindow(_options);
+                _optionsWindow = new OptionsWindow(this, _options);
                 _optionsWindow.Closed += delegate
                 {
                     _optionsWindow = null;
@@ -134,6 +133,12 @@ namespace DICUI
         private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
         {
             EnsureDiscInformation();
+        }
+
+        public void OnOptionsUpdated()
+        {
+            GetOutputNames();
+            //TODO: here we should adjust maximum speed if it changed in options
         }
 
         #endregion
@@ -210,8 +215,9 @@ namespace DICUI
         /// </summary>
         private void PopulateDriveSpeeds()
         {
-            cmb_DriveSpeed.ItemsSource = UIElements.AllowedDriveSpeeds;
-            cmb_DriveSpeed.SelectedItem = 8;
+            var values = UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType);
+            cmb_DriveSpeed.ItemsSource = values;
+            cmb_DriveSpeed.SelectedIndex = values.Count / 2;
         }
 
         /// <summary>
@@ -486,7 +492,7 @@ namespace DICUI
             // choose speed value according to maximum value reported by DIC adjusted to a precise speed from list
             // and the one choosen in options
             int chosenSpeed = Math.Min(
-                UIElements.AllowedDriveSpeeds.Where(s => s <= speed).Last(),
+                UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
                 _options.maxDumpSpeedCD
             );
 

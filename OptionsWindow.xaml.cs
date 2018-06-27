@@ -12,12 +12,14 @@ namespace DICUI
     /// </summary>
     public partial class OptionsWindow : Window
     {
+        private readonly MainWindow _mainWindow;
         private readonly Options _options;
 
-        public OptionsWindow(Options options)
+        public OptionsWindow(MainWindow mainWindow, Options options)
         {
             InitializeComponent();
-            _options = options;
+            _mainWindow = mainWindow;
+            _options = options;      
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -99,6 +101,7 @@ namespace DICUI
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
 
             slider_DumpSpeedCD.Value = _options.maxDumpSpeedCD;
+            slider_DumpSpeedDVD.Value = _options.maxDumpSpeedDVD;
         }
 
         #region Event Handlers
@@ -108,9 +111,12 @@ namespace DICUI
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
 
             _options.maxDumpSpeedCD = Convert.ToInt32(slider_DumpSpeedCD.Value);
+            _options.maxDumpSpeedDVD = Convert.ToInt32(slider_DumpSpeedDVD.Value);
 
             _options.Save();
             Hide();
+
+            _mainWindow.OnOptionsUpdated();
         }
 
         private void OnCancelClick(object sender, EventArgs e)
