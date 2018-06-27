@@ -483,7 +483,12 @@ namespace DICUI
                 return;
             }
 
-            cmb_DriveSpeed.SelectedValue = speed;
+            // If the value is in the list, we can set it immediately
+            if (_driveSpeeds.Contains(speed))
+                cmb_DriveSpeed.SelectedValue = speed;
+            // Otherwise, we need to set the next lowest value
+            else
+                cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
         }
 
         /// <summary>
