@@ -17,7 +17,7 @@ namespace DICUI
         // Private UI-related variables
         private List<KeyValuePair<char, string>> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
-        private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
+        //private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
 
@@ -210,7 +210,7 @@ namespace DICUI
         /// </summary>
         private void PopulateDriveSpeeds()
         {
-            cmb_DriveSpeed.ItemsSource = _driveSpeeds;
+            cmb_DriveSpeed.ItemsSource = UIElements.AllowedDriveSpeeds;
             cmb_DriveSpeed.SelectedItem = 8;
         }
 
@@ -483,12 +483,14 @@ namespace DICUI
                 return;
             }
 
-            // If the value is in the list, we can set it immediately
-            if (_driveSpeeds.Contains(speed))
-                cmb_DriveSpeed.SelectedValue = speed;
-            // Otherwise, we need to set the next lowest value
-            else
-                cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
+            // choose speed value according to maximum value reported by DIC adjusted to a precise speed from list
+            // and the one choosen in options
+            int chosenSpeed = Math.Min(
+                UIElements.AllowedDriveSpeeds.Where(s => s <= speed).Last(),
+                _options.maxDumpSpeedCD
+            );
+
+            cmb_DriveSpeed.SelectedValue = chosenSpeed;
         }
 
         /// <summary>
@@ -504,7 +506,7 @@ namespace DICUI
             }
 
             // Get the current optical disc type
-            _currentMediaType = Validators.GetDiscType(selected?.Key);
+            _currentMediaType = null;// Validators.GetDiscType(selected?.Key);
 
             // If we have an invalid current type, we don't care and return
             if (_currentMediaType == null || _currentMediaType == MediaType.NONE)

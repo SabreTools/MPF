@@ -1,4 +1,8 @@
-﻿namespace DICUI.Data
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Media;
+
+namespace DICUI.Data
 {
     /// <summary>
     /// Text for UI elements
@@ -8,6 +12,11 @@
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
         public const string FloppyDriveString = "<<FLOPPY>>";
+
+        public static IReadOnlyList<int> AllowedDriveSpeeds { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+        public static DoubleCollection AllowedDriveSpeedsAsDouble { get; } = new DoubleCollection { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+
+
     }
 
     /// <summary>

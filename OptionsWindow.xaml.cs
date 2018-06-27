@@ -94,22 +94,31 @@ namespace DICUI
             }
         }
 
-        private void btn_Accept_Click(object sender, EventArgs e)
+        public void Refresh()
+        {
+            Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
+
+            slider_DumpSpeedCD.Value = _options.maxDumpSpeedCD;
+        }
+
+        #region Event Handlers
+
+        private void OnAcceptClick(object sender, EventArgs e)
         {
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
+
+            _options.maxDumpSpeedCD = Convert.ToInt32(slider_DumpSpeedCD.Value);
+
             _options.Save();
             Hide();
         }
 
-        private void btn_Cancel_Click(object sender, EventArgs e)
+        private void OnCancelClick(object sender, EventArgs e)
         {
             // just hide the window and don't care
             Hide();
         }
 
-        public void Refresh()
-        {
-            Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
-        }
+        #endregion
     }
 }

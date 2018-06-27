@@ -10,6 +10,10 @@ namespace DICUI
         public string dicPath { get; private set; }
         public string subdumpPath { get; private set; }
 
+        public int maxDumpSpeedCD { get; set; }
+        public int maxDumpSpeedDVD { get; set; }
+
+
         public void Save()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -23,6 +27,13 @@ namespace DICUI
                 }
             );
 
+            //TODO: is remove needed, doesn't the value get directly overridden?
+            configFile.AppSettings.Settings.Remove("maxDumpSpeedCD");
+            configFile.AppSettings.Settings.Add("maxDumpSpeedCD", Convert.ToString(maxDumpSpeedCD));
+
+            configFile.AppSettings.Settings.Remove("maxDumpSpeedDVD");
+            configFile.AppSettings.Settings.Add("maxDumpSpeedDVD", Convert.ToString(maxDumpSpeedDVD));
+
             configFile.Save(ConfigurationSaveMode.Modified);
         }
 
@@ -32,6 +43,9 @@ namespace DICUI
             dicPath = ConfigurationManager.AppSettings["dicPath"] ?? @"Programs\DiscImageCreator.exe";
             subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
             defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
+
+            this.maxDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["maxDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
+            this.maxDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["maxDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 72;
         }
 
 
