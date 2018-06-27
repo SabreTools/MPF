@@ -7,6 +7,9 @@ using DICUI.Data;
 
 namespace DICUI.Utilities
 {
+    /// <summary>
+    /// Extensions for MediaType? for easier calling
+    /// </summary>
     public static class MediaTypeExtensions
     {
         public static string Name(this MediaType? type)
@@ -25,6 +28,9 @@ namespace DICUI.Utilities
         }
     }
 
+    /// <summary>
+    /// Extensions for KnownSystem? for easier calling
+    /// </summary>
     public static class KnownSystemExtensions
     {
         public static bool DoesSupportDriveSpeed(this KnownSystem? system)

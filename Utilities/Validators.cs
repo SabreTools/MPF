@@ -14,13 +14,10 @@ namespace DICUI.Utilities
     public static class Validators
     {
         /// <summary>
-        /// Get a list of valid MediaTypes for a given system matched to their respective names
+        /// Get a list of valid MediaTypes for a given KnownSystem
         /// </summary>
         /// <param name="sys">KnownSystem value to check</param>
-        /// <returns>MediaTypes matched to enums, if possible</returns>
-        /// <remarks>
-        ///	If something has a "string, null" value, it should be assumed that it is a separator
-        /// </remarks>
+        /// <returns>MediaTypes, if possible</returns>
         public static List<MediaType?> GetValidMediaTypes(KnownSystem? sys)
         {
             var types = new List<MediaType?>();

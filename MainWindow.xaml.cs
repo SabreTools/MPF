@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
@@ -230,32 +228,34 @@ namespace DICUI
             }
         }
 
+        /// <summary>
+        /// Create a DumpEnvironment with all current settings
+        /// </summary>
+        /// <returns>Filled DumpEnvironment instance</returns>
         private DumpEnvironment DetermineEnvironment()
         {
-            DumpEnvironment env = new DumpEnvironment();
-
-            // Paths to tools
-            env.subdumpPath = _options.subdumpPath;
-            env.psxtPath = _options.psxtPath;
-            env.dicPath = _options.dicPath;
-
             // Populate all KVPs
             var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
 
-            env.outputDirectory = txt_OutputDirectory.Text;
-            env.outputFilename = txt_OutputFilename.Text;
+            return new DumpEnvironment()
+            {
+                // Paths to tools
+                SubdumpPath = _options.subdumpPath,
+                DICPath = _options.dicPath,
 
-            // Get the currently selected options
-            env.driveLetter = (char)driveKvp?.Key;
-            env.isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
+                OutputDirectory = txt_OutputDirectory.Text,
+                OutputFilename = txt_OutputFilename.Text,
 
-            env.dicParameters = txt_Parameters.Text;
+                // Get the currently selected options
+                DriveLetter = (char)driveKvp?.Key,
+                IsFloppy = (driveKvp?.Value == UIElements.FloppyDriveString),
 
-            env.system = systemKvp?.Value;
-            env.type = cmb_MediaType.SelectedItem as MediaType?;
+                DICParameters = txt_Parameters.Text,
 
-            return env;
+                System = systemKvp?.Value,
+                Type = cmb_MediaType.SelectedItem as MediaType?
+            };
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace DICUI
 
             // Get the selected system info
             var selectedSystem = systemKvp?.Value;
-            var selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
+            MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
@@ -419,7 +419,11 @@ namespace DICUI
             var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
-            if (driveKvp != null && (driveKvp?.Value != UIElements.FloppyDriveString) && systemKvp != null && mediaType != null)
+            if (driveKvp != null
+                && !String.IsNullOrWhiteSpace(driveKvp?.Value)
+                && driveKvp?.Value != UIElements.FloppyDriveString
+                && systemKvp != null
+                && mediaType != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
                 txt_OutputFilename.Text = driveKvp?.Value + mediaType.Extension();
