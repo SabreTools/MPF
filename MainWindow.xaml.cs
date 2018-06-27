@@ -17,7 +17,9 @@ namespace DICUI
         // Private UI-related variables
         private List<KeyValuePair<char, string>> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
-        private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
+        private List<int> _cdDriveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
+        private List<int> _dvdDriveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24 }; } }
+        private List<int> _bdDriveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
 
@@ -83,14 +85,22 @@ namespace DICUI
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PopulateMediaTypeAccordingToChosenSystem();
+            SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
         }
 
-        private void cmb_MediaType_SelectionChanged(object sencder, SelectionChangedEventArgs e)
+        private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Only change the media type if the selection and not the list has changed
+            if (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
+            {
+                _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
+            }
+
             // TODO: This is giving people the benefit of the doubt that their change is valid
-            _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
+            PopulateDriveSpeeds();
+            SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
         }
@@ -153,7 +163,7 @@ namespace DICUI
                 cmb_MediaType.ItemsSource = _mediaTypes;
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
-                cmb_MediaType.SelectedIndex = 0;
+                cmb_MediaType.SelectedIndex = (_mediaTypes.IndexOf(_currentMediaType) >= 0 ? _mediaTypes.IndexOf(_currentMediaType) : 0);
             }
             else
             {
@@ -210,8 +220,33 @@ namespace DICUI
         /// </summary>
         private void PopulateDriveSpeeds()
         {
-            cmb_DriveSpeed.ItemsSource = _driveSpeeds;
-            cmb_DriveSpeed.SelectedItem = 8;
+            switch (cmb_MediaType.SelectedItem as MediaType?)
+            {
+                case MediaType.CD:
+                case MediaType.GDROM:
+                    cmb_DriveSpeed.ItemsSource = _cdDriveSpeeds;
+                    cmb_DriveSpeed.SelectedItem = 8;
+                    cmb_DriveSpeed.IsEnabled = true;
+                    break;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
+                    cmb_DriveSpeed.ItemsSource = _dvdDriveSpeeds;
+                    cmb_DriveSpeed.SelectedItem = 8;
+                    cmb_DriveSpeed.IsEnabled = true;
+                    break;
+                case MediaType.BluRay:
+                    cmb_DriveSpeed.ItemsSource = _bdDriveSpeeds;
+                    cmb_DriveSpeed.SelectedItem = 8;
+                    cmb_DriveSpeed.IsEnabled = true;
+                    break;
+                default:
+                    cmb_DriveSpeed.ItemsSource = null;
+                    cmb_DriveSpeed.IsEnabled = false;
+                    break;
+            }
         }
 
         /// <summary>
@@ -343,7 +378,7 @@ namespace DICUI
                             && selectedSystem != KnownSystem.MicrosoftXBOX
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
-                                ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                                ? (int?)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
             }
@@ -399,7 +434,7 @@ namespace DICUI
                             }
                             else
                             {
-                                return Result.Success("Disc of type {0} found, but the current system does not support it!", type.Name());
+                                return Result.Success("Disc of type {0} found, but the current system does not support it!", _currentMediaType.Name());
                             }
                         }
 
@@ -440,6 +475,13 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
+            // If there are no items, set the drive speeds and try again
+            if (cmb_DriveSpeed.Items == null || cmb_DriveSpeed.Items.Count == 0)
+            {
+                PopulateDriveSpeeds();
+                return;
+            }
+
             // Set generic drive speed just in case
             cmb_DriveSpeed.SelectedItem = 8;
 
@@ -483,12 +525,35 @@ namespace DICUI
                 return;
             }
 
+            // We need to get what list we're comparing against
+            List<int> driveSpeeds = null;
+            switch (cmb_MediaType.SelectedItem as MediaType?)
+            {
+                case MediaType.CD:
+                case MediaType.GDROM:
+                    driveSpeeds = _cdDriveSpeeds;
+                    break;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
+                    driveSpeeds = _dvdDriveSpeeds;
+                    break;
+                case MediaType.BluRay:
+                    driveSpeeds = _bdDriveSpeeds;
+                    break;
+            }
+
+            // If we have a null list, we just return
+            if (driveSpeeds == null)
+                return;
             // If the value is in the list, we can set it immediately
-            if (_driveSpeeds.Contains(speed))
+            else if (driveSpeeds.Contains(speed))
                 cmb_DriveSpeed.SelectedValue = speed;
             // Otherwise, we need to set the next lowest value
             else
-                cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
+                cmb_DriveSpeed.SelectedValue = driveSpeeds.Where(s => s < speed).Last();
         }
 
         /// <summary>
