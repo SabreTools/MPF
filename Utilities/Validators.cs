@@ -546,6 +546,7 @@ namespace DICUI.Utilities
         /// See if SCSI_MODE_SENSE can be used here
         /// Currently, the calculations get something that is technically accurate, but is different than the advertisised
         /// capabilities of the drives (according to QPXTool)
+        /// TransferRate appears to be the CURRENT transfer rate, not the maximum... basically making that flag useless
         /// </remarks>
         public static int GetDriveSpeed(char driveLetter)
         {
@@ -561,19 +562,17 @@ namespace DICUI.Utilities
                 transferRate = (double?)queryObj["TransferRate"];
             }
 
-            // Transfer Rates (bps)
-            double cdTransfer = 150 * 1024;
-            double dvdTransfer = 1353 * 1024;
+            // Transfer Rates (kBps)
+            double cdTransfer = 153.6;
+            double dvdTransfer = 1385;
 
-            double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
-            double cdTransferTestKilo = ((transferRate ?? -1) * 1000) / cdTransfer;
-            double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
-            double dvdTransferTestKilo = ((transferRate ?? -1) * 1000) / dvdTransfer;
+            double cdTransferTest = ((transferRate ?? -1)) / cdTransfer;
+            double dvdTransferTest = ((transferRate ?? -1)) / dvdTransfer;
 
             return 0;
         }
 
-        public static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
+        public unsafe static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
         {
             // Get the DeviceID from the current drive letter
             string deviceId = null;
@@ -646,25 +645,49 @@ namespace DICUI.Utilities
                 return -1;
             }
 
+            // Ones that haven't worked:
+            // recorderEx.GetAdapterDescriptor
+            // recorderEx.GetDeviceDescriptor
+            // recorderEx.GetDiscInformation
+            // recorderEx.GetTrackInformation
+
+            // Now we get the requested feature page
+            // TODO: Figure out structure of returned data
+            IntPtr featureData = Marshal.AllocHGlobal(32 * sizeof(byte));
+            recorderEx.GetFeaturePage(
+                ifpt,
+                (sbyte)0,
+                featureData,
+                out uint byteSize);
+            byte[] outFeatureArray = new byte[byteSize];
+            Marshal.Copy(featureData, outFeatureArray, 0, (int)byteSize);
+
             // Now we get the requested mode data
+            // TODO: Figure out structure of returned data
             IntPtr modeData = Marshal.AllocHGlobal(256 * sizeof(byte));
             recorderEx.GetModePage(
-                IMAPI_MODE_PAGE_TYPE.IMAPI_MODE_PAGE_TYPE_LEGACY_CAPABILITIES,
+                (IMAPI_MODE_PAGE_TYPE)0x2A,
                 IMAPI_MODE_PAGE_REQUEST_TYPE.IMAPI_MODE_PAGE_REQUEST_TYPE_CURRENT_VALUES,
                 modeData,
                 out uint modeDataSize);
             byte[] outModeArray = new byte[modeDataSize];
             Marshal.Copy(modeData, outModeArray, 0, (int)modeDataSize);
 
-            // Now we get the requested feature page
-            IntPtr featureData = Marshal.AllocHGlobal(32 * sizeof(byte));
-            recorderEx.GetFeaturePage(
-                ifpt,
-                (sbyte)1,
-                featureData,
-                out uint byteSize);
-            byte[] outArray = new byte[byteSize];
-            Marshal.Copy(featureData, outArray, 0, (int)byteSize);
+            // Now we send the command to get sense data from the device
+            // TODO: This seems like the best option, but how is this data structured properly?
+            byte[] cdbArray = new byte[] { 0x5a, 0x0, 0x2a, 0x00, 0xff, 0x0 };
+            byte[] senseBuffer = new byte[256];
+            byte[] buffer = new byte[256];
+            uint bufferSize = 256;
+
+            recorderEx.SendCommandGetDataFromDevice(
+                ref cdbArray[0],
+                (uint)6,
+                senseBuffer,
+                (uint)60,
+                out buffer[0],
+                bufferSize,
+                out uint BufferFetched);
 
             return -1;
         }

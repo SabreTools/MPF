@@ -493,7 +493,7 @@ namespace DICUI
             }
 
             //Validators.GetDriveSpeed((char)selected?.Key);
-            //Validators.GetDriveSpeedEx((char)selected?.Key, MediaType.CD);
+            //Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
 
             // Validate that the required program exists and it's not DICUI itself
             if (!File.Exists(_options.dicPath) ||
