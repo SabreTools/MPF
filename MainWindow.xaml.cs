@@ -207,13 +207,13 @@ namespace DICUI
             if (cmb_DriveLetter.Items.Count > 0)
             {
                 cmb_DriveLetter.SelectedIndex = 0;
-                lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
+                lbl_Status.Content = "Valid media found! Choose your Media Type";
                 btn_StartStop.IsEnabled = true;
             }
             else
             {
                 cmb_DriveLetter.SelectedIndex = -1;
-                lbl_Status.Content = "No valid optical disc found!";
+                lbl_Status.Content = "No valid media found!";
                 btn_StartStop.IsEnabled = false;
             }
         }
