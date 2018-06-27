@@ -82,14 +82,22 @@ namespace DICUI
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PopulateMediaTypeAccordingToChosenSystem();
+            SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
         }
 
-        private void cmb_MediaType_SelectionChanged(object sencder, SelectionChangedEventArgs e)
+        private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Only change the media type if the selection and not the list has changed
+            if (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
+            {
+                _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
+            }
+
             // TODO: This is giving people the benefit of the doubt that their change is valid
-            _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
+            PopulateDriveSpeeds();
+            SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
         }
@@ -158,7 +166,7 @@ namespace DICUI
                 cmb_MediaType.ItemsSource = _mediaTypes;
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
-                cmb_MediaType.SelectedIndex = 0;
+                cmb_MediaType.SelectedIndex = (_mediaTypes.IndexOf(_currentMediaType) >= 0 ? _mediaTypes.IndexOf(_currentMediaType) : 0);
             }
             else
             {
@@ -349,7 +357,7 @@ namespace DICUI
                             && selectedSystem != KnownSystem.MicrosoftXBOX
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
-                                ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                                ? (int?)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
             }
@@ -405,7 +413,7 @@ namespace DICUI
                             }
                             else
                             {
-                                return Result.Success("Disc of type {0} found, but the current system does not support it!", type.Name());
+                                return Result.Success("Disc of type {0} found, but the current system does not support it!", _currentMediaType.Name());
                             }
                         }
 
@@ -446,6 +454,13 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
+            // If there are no items, set the drive speeds and try again
+            if (cmb_DriveSpeed.Items == null || cmb_DriveSpeed.Items.Count == 0)
+            {
+                PopulateDriveSpeeds();
+                return;
+            }
+
             // Set generic drive speed just in case
             cmb_DriveSpeed.SelectedItem = 8;
 
@@ -496,7 +511,7 @@ namespace DICUI
                 _options.preferredDumpSpeedCD
             );
 
-            cmb_DriveSpeed.SelectedValue = chosenSpeed;
+            cmb_DriveSpeed.SelectedValue = chosenSpeed; cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
         }
 
         /// <summary>
