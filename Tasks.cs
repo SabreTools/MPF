@@ -1,16 +1,17 @@
-﻿using DICUI.Data;
-using DICUI.Utilities;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using DICUI.Data;
+using DICUI.Utilities;
 
 namespace DICUI
 {
+    /// <summary>
+    /// Generic success/failure result object, with optional message
+    /// </summary>
     public class Result
     {
         private bool success;
@@ -32,55 +33,78 @@ namespace DICUI
         public static implicit operator bool(Result result) => result.success;
     }
 
+    /// <summary>
+    /// Represents the state of all settings to be used during dumping
+    /// </summary>
     public class DumpEnvironment
     {
-        public string dicPath;
-        public string subdumpPath;
-        public string psxtPath;
+        // Tool paths
+        public string DICPath;
+        public string SubdumpPath;
 
-        public string outputDirectory;
-        public string outputFilename;
+        // Output paths
+        public string OutputDirectory;
+        public string OutputFilename;
 
-        public char driveLetter;
+        // UI information
+        public char DriveLetter;
+        public KnownSystem? System;
+        public MediaType? Type;
+        public bool IsFloppy;
+        public string DICParameters;
 
-        public KnownSystem? system;
-        public MediaType? type;
-        public bool isFloppy;
-
-        public string dicParameters;
-
+        // External process information
         public Process dicProcess;
 
+        /// <summary>
+        /// Checks if the configuration is valid
+        /// </summary>
+        /// <returns>True if the configuration is valid, false otherwise</returns>
         public bool IsConfigurationValid()
         {
-            return !((string.IsNullOrWhiteSpace(dicParameters)
-            || !Validators.ValidateParameters(dicParameters)
-            || (isFloppy ^ type == MediaType.Floppy)));
+            return !((string.IsNullOrWhiteSpace(DICParameters)
+            || !Validators.ValidateParameters(DICParameters)
+            || (IsFloppy ^ Type == Data.MediaType.Floppy)));
         }
 
+        /// <summary>
+        /// Adjust the current environment if we are given custom parameters
+        /// </summary>
         public void AdjustForCustomConfiguration()
         {
             // If we have a custom configuration, we need to extract the best possible information from it
-            if (system == KnownSystem.Custom)
+            if (System == KnownSystem.Custom)
             {
-                Validators.DetermineFlags(dicParameters, out type, out system, out string letter, out string path);
-                driveLetter = letter[0];
-                outputDirectory = Path.GetDirectoryName(path);
-                outputFilename = Path.GetFileName(path);
+                Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
+                DriveLetter = letter[0];
+                OutputDirectory = Path.GetDirectoryName(path);
+                OutputFilename = Path.GetFileName(path);
             }
         }
 
+        /// <summary>
+        /// Fix the output paths to remove characters that DiscImageCreator can't handle
+        /// </summary>
+        /// <remarks>
+        /// TODO: Investigate why the `&` replacement is needed
+        /// </remarks>
         public void FixOutputPaths()
         {
-            // Replace characters where needed
-            // TODO: Investigate why the `&` replacement is needed
-            outputDirectory = outputDirectory.Replace('.', '_').Replace('&', '_');
-            outputFilename = new StringBuilder(outputFilename.Replace('&', '_')).Replace('.', '_', 0, outputFilename.LastIndexOf('.')).ToString();
+            OutputDirectory = OutputDirectory.Replace('.', '_').Replace('&', '_');
+            OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
         }
     }
 
+    /// <summary>
+    /// Class containing dumping tasks
+    /// </summary>
     public class Tasks
     {
+        /// <summary>
+        /// Validate the current DumpEnvironment
+        /// </summary>
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Result instance with the outcome</returns>
         public static Result ValidateEnvironment(DumpEnvironment env)
         {
             // Validate that everything is good
@@ -91,11 +115,11 @@ namespace DICUI
             env.FixOutputPaths();
 
             // Validate that the required program exists
-            if (!File.Exists(env.dicPath))
+            if (!File.Exists(env.DICPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
             // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
+            if (DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
             {
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -107,14 +131,18 @@ namespace DICUI
             return Result.Success();
         }
 
+        /// <summary>
+        /// Run DiscImageCreator with the given DumpEnvironment
+        /// </summary>
+        /// <param name="env">DumpEnvirionment containing all required information</param>
         public static void ExecuteDiskImageCreator(DumpEnvironment env)
         {
             env.dicProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = env.dicPath,
-                    Arguments = env.dicParameters,
+                    FileName = env.DICPath,
+                    Arguments = env.DICParameters,
                 },
             };
             env.dicProcess.Start();
@@ -122,8 +150,9 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Execute subdump for a Sega Saturn dump
+        /// Execute subdump for a (potential) Sega Saturn dump
         /// </summary>
+        /// <param name="env">DumpEnvirionment containing all required information</param>
         public static async void ExecuteSubdump(DumpEnvironment env)
         {
             await Task.Run(() =>
@@ -132,8 +161,8 @@ namespace DICUI
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = env.subdumpPath,
-                        Arguments = "-i " + env.driveLetter + ": -f " + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                        FileName = env.SubdumpPath,
+                        Arguments = "-i " + env.DriveLetter + ": -f " + Path.Combine(env.OutputDirectory, Path.GetFileNameWithoutExtension(env.OutputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
                     },
                 };
                 childProcess.Start();
@@ -142,80 +171,40 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Execute psxt001z for a PSX dump
+        /// Run any additional tools given a DumpEnvironment
         /// </summary>
-        public static async void ExecutePSXT001Z(DumpEnvironment env)
-        {
-            // Invoke the program with all 3 configurations
-            // TODO: Use these outputs for PSX information
-            await Task.Run(() =>
-            {
-                Process childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = env.psxtPath,
-                        Arguments = "\"" + DumpInformation.GetFirstTrack(env.outputDirectory, env.outputFilename) + "\" > " + "\"" + Path.Combine(env.outputDirectory, "psxt001z.txt"),
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = env.psxtPath,
-                        Arguments = "--libcrypt \"" + Path.Combine(env.outputDirectory, Path.GetFileNameWithoutExtension(env.outputFilename) + ".sub") + "\" > \"" + Path.Combine(env.outputDirectory, "libcrypt.txt"),
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = env.psxtPath,
-                        Arguments = "--libcryptdrvfast " + env.driveLetter + " > " + "\"" + Path.Combine(env.outputDirectory, "libcryptdrv.log"),
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-            });
-        }
-
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Result instance with the outcome</returns>
         public static Result ExecuteAdditionalToolsAfterDIC(DumpEnvironment env)
         {
             // Special cases
-            switch (env.system)
+            switch (env.System)
             {
                 case KnownSystem.SegaSaturn:
-                    if (!File.Exists(env.subdumpPath))
+                    if (!File.Exists(env.SubdumpPath))
                         return Result.Failure("Error! Could not find subdump!");
 
                     ExecuteSubdump(env);
-                    break;
-                case KnownSystem.SonyPlayStation:
-                    if (!File.Exists(env.psxtPath))
-                        return Result.Failure("Error! Could not find psxt001z!");
-
-                    ExecutePSXT001Z(env);
                     break;
             }
 
             return Result.Success();
         }
 
+        /// <summary>
+        /// Verify that the current environment has a complete dump and create submission info is possible
+        /// </summary>
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Result instance with the outcome</returns>
         public static Result VerifyAndSaveDumpOutput(DumpEnvironment env)
         {
             // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(env.outputDirectory, env.outputFilename, env.type))
+            if (!DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.outputDirectory, env.outputFilename, env.system, env.type, env.driveLetter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.system, env.type);
-            bool success = DumpInformation.WriteOutputData(env.outputDirectory, env.outputFilename, formattedValues);
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.OutputDirectory, env.OutputFilename, env.System, env.Type, env.DriveLetter);
+            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.System, env.Type);
+            bool success = DumpInformation.WriteOutputData(env.OutputDirectory, env.OutputFilename, formattedValues);
 
             return Result.Success();
         }
@@ -226,12 +215,12 @@ namespace DICUI
         public static async void EjectDisc(DumpEnvironment env)
         {
             // Validate that the required program exists
-            if (!File.Exists(env.dicPath))
+            if (!File.Exists(env.DICPath))
                 return;
 
             CancelDumping(env);
 
-            if (env.isFloppy)
+            if (env.IsFloppy)
                 return;
 
             Process childProcess;
@@ -241,8 +230,8 @@ namespace DICUI
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = env.dicPath,
-                        Arguments = DICCommands.Eject + " " + env.driveLetter,
+                        FileName = env.DICPath,
+                        Arguments = DICCommands.Eject + " " + env.DriveLetter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
