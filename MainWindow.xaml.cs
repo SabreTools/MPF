@@ -21,11 +21,13 @@ namespace DICUI
         private MediaType? _currentMediaType { get; set; }
         private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
-        private List<KeyValuePair<string, MediaType?>> _mediaTypes { get; set; }
-        private Process childProcess { get; set; }
+        private List<MediaType?> _mediaTypes { get; set; }
 
-        private OptionsWindow _optionsWindow;
+        private DumpEnvironment _env;
+
+        // Option related
         private Options _options;
+        private OptionsWindow _optionsWindow;
 
         public MainWindow()
         {
@@ -40,7 +42,6 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
-            SetCurrentDiscType();
 
             // Populate the list of drive speeds
             PopulateDriveSpeeds();
@@ -58,11 +59,11 @@ namespace DICUI
             }
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
-                CancelDumping();
+                Tasks.CancelDumping(_env);
 
                 if (chk_EjectWhenDone.IsChecked == true)
                 {
-                    EjectDisc();
+                    Tasks.EjectDisc(_env);
                 }
             }
         }
@@ -91,7 +92,7 @@ namespace DICUI
         private void cmb_MediaType_SelectionChanged(object sencder, SelectionChangedEventArgs e)
         {
             // TODO: This is giving people the benefit of the doubt that their change is valid
-            _currentMediaType = (cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?)?.Value;
+            _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
             GetOutputNames();
             EnsureDiscInformation();
         }
@@ -150,11 +151,8 @@ namespace DICUI
 
             if (currentSystem != null)
             {
-                _mediaTypes = Validators.GetValidMediaTypes(currentSystem?.Value)
-                    .Select(i => new KeyValuePair<string, MediaType?>(i.Key, i.Value))
-                    .ToList();
+                _mediaTypes = Validators.GetValidMediaTypes(currentSystem?.Value).ToList();
                 cmb_MediaType.ItemsSource = _mediaTypes;
-                cmb_MediaType.DisplayMemberPath = "Key";
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
                 cmb_MediaType.SelectedIndex = 0;
@@ -178,7 +176,6 @@ namespace DICUI
             cmb_SystemType.ItemsSource = _systems;
             cmb_SystemType.DisplayMemberPath = "Key";
             cmb_SystemType.SelectedIndex = 0;
-            cmb_SystemType_SelectionChanged(null, null);
 
             btn_StartStop.IsEnabled = false;
         }
@@ -195,16 +192,16 @@ namespace DICUI
                 .ToList();
             cmb_DriveLetter.ItemsSource = _drives;
             cmb_DriveLetter.DisplayMemberPath = "Key";
-            cmb_DriveLetter.SelectedIndex = 0;
-            cmb_DriveLetter_SelectionChanged(null, null);
 
             if (cmb_DriveLetter.Items.Count > 0)
             {
+                cmb_DriveLetter.SelectedIndex = 0;
                 lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
-                btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
+                btn_StartStop.IsEnabled = true;
             }
             else
             {
+                cmb_DriveLetter.SelectedIndex = -1;
                 lbl_Status.Content = "No valid optical disc found!";
                 btn_StartStop.IsEnabled = false;
             }
@@ -233,236 +230,52 @@ namespace DICUI
             }
         }
 
+        private DumpEnvironment DetermineEnvironment()
+        {
+            DumpEnvironment env = new DumpEnvironment();
+
+            // Paths to tools
+            env.subdumpPath = _options.subdumpPath;
+            env.psxtPath = _options.psxtPath;
+            env.dicPath = _options.dicPath;
+
+            // Populate all KVPs
+            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
+
+            env.outputDirectory = txt_OutputDirectory.Text;
+            env.outputFilename = txt_OutputFilename.Text;
+
+            // Get the currently selected options
+            env.driveLetter = (char)driveKvp?.Key;
+            env.isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
+
+            env.dicParameters = txt_Parameters.Text;
+
+            env.system = systemKvp?.Value;
+            env.type = cmb_MediaType.SelectedItem as MediaType?;
+
+            return env;
+        }
+
         /// <summary>
         /// Begin the dumping process using the given inputs
         /// </summary>
         private async void StartDumping()
         {
+            _env = DetermineEnvironment();
+
             btn_StartStop.Content = UIElements.StopDumping;
-
-            // Populate all KVPs
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
-            var mediaKvp = cmb_MediaType.SelectedValue as KeyValuePair<string, MediaType?>?;
-
-            // Get the currently selected options
-            string dicPath = _options.dicPath;
-            string psxtPath = _options.psxtPath;
-            string subdumpPath = _options.subdumpPath;
-            char driveLetter = (char)driveKvp?.Key;
-            bool isFloppy = (driveKvp?.Value == UIElements.FloppyDriveString);
-            string outputDirectory = txt_OutputDirectory.Text;
-            string outputFilename = txt_OutputFilename.Text;
-            string systemName = systemKvp?.Key;
-            KnownSystem? system = systemKvp?.Value;
-            MediaType? type = mediaKvp?.Value;
-
-            string customParameters = txt_Parameters.Text;
-
-            // Validate that everything is good
-            if (string.IsNullOrWhiteSpace(customParameters)
-                || !Validators.ValidateParameters(customParameters)
-                || (isFloppy ^ type == MediaType.Floppy))
-            {
-                lbl_Status.Content = "Error! Current configuration is not supported!";
-                btn_StartStop.Content = UIElements.StartDumping;
-                return;
-            }
-
-            // If we have a custom configuration, we need to extract the best possible information from it
-            if (system == KnownSystem.Custom)
-            {
-                Validators.DetermineFlags(customParameters, out type, out system, out string letter, out string path);
-                driveLetter = letter[0];
-                outputDirectory = Path.GetDirectoryName(path);
-                outputFilename = Path.GetFileName(path);
-            }
-
-            // Replace characters where needed
-            // TODO: Investigate why the `&` replacement is needed
-            outputDirectory = outputDirectory.Replace('.', '_').Replace('&', '_');
-            outputFilename = new StringBuilder(outputFilename.Replace('&', '_')).Replace('.', '_', 0, outputFilename.LastIndexOf('.')).ToString();
-
-            // Validate that the required program exits
-            if (!File.Exists(dicPath))
-            {
-                lbl_Status.Content = "Error! Could not find DiscImageCreator!";
-                btn_StartStop.Content = UIElements.StartDumping;
-                return;
-            }
-
-            // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(outputDirectory, outputFilename, type))
-            {
-                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-                {
-                    lbl_Status.Content = "Dumping aborted!";
-                    btn_StartStop.Content = UIElements.StartDumping;
-                    return;
-                }
-            }
-
             lbl_Status.Content = "Beginning dumping process";
-            string parameters = txt_Parameters.Text;
 
-            await Task.Run(() =>
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = dicPath,
-                        Arguments = parameters,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-            });
+            var task = Tasks.StartDumping(_env);
+            Result result = await task;
 
-            // Special cases
-            switch (system)
-            {
-                case KnownSystem.SegaSaturn:
-                    if (!File.Exists(subdumpPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find subdump!";
-                        break;
-                    }
-
-                    await Task.Run(() =>
-                    {
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = subdumpPath,
-                                Arguments = "-i " + driveLetter + ": -f " + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
-                case KnownSystem.SonyPlayStation:
-                    if (!File.Exists(psxtPath))
-                    {
-                        lbl_Status.Content = "Error! Could not find psxt001z!";
-                        break;
-                    }
-
-                    // Invoke the program with all 3 configurations
-                    // TODO: Use these outputs for PSX information
-                    await Task.Run(() =>
-                    {
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "\"" + DumpInformation.GetFirstTrack(outputDirectory, outputFilename) + "\" > " + "\"" + Path.Combine(outputDirectory, "psxt001z.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "--libcrypt \"" + Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(outputFilename) + ".sub") + "\" > \"" + Path.Combine(outputDirectory, "libcrypt.txt"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-
-                        childProcess = new Process()
-                        {
-                            StartInfo = new ProcessStartInfo()
-                            {
-                                FileName = psxtPath,
-                                Arguments = "--libcryptdrvfast " + driveLetter + " > " + "\"" + Path.Combine(outputDirectory, "libcryptdrv.log"),
-                            },
-                        };
-                        childProcess.Start();
-                        childProcess.WaitForExit();
-                    });
-                    break;
-            }
-
-            // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(outputDirectory, outputFilename, type))
-            {
-                lbl_Status.Content = "Error! Please check output directory as dump may be incomplete!";
-                btn_StartStop.Content = UIElements.StartDumping;
-                if (chk_EjectWhenDone.IsChecked == true)
-                {
-                    EjectDisc();
-                }
-                return;
-            }
-
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(outputDirectory, outputFilename, system, type, driveLetter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, system, type);
-            bool success = DumpInformation.WriteOutputData(outputDirectory, outputFilename, formattedValues);
-
-            lbl_Status.Content = "Dumping complete!";
+            lbl_Status.Content = result ? "Dumping complete!" : result.message;
             btn_StartStop.Content = UIElements.StartDumping;
+
             if (chk_EjectWhenDone.IsChecked == true)
-            {
-                EjectDisc();
-            }
-        }
-
-        /// <summary>
-        /// Cancel an in-progress dumping process
-        /// </summary>
-        private void CancelDumping()
-        {
-            try
-            {
-                childProcess.Kill();
-            }
-            catch
-            { }
-        }
-
-        /// <summary>
-        /// Eject the disc using DIC
-        /// </summary>
-        private async void EjectDisc()
-        {
-            // Validate that the required program exits
-            if (!File.Exists(_options.dicPath))
-            {
-                return;
-            }
-
-            CancelDumping();
-
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            if (driveKvp?.Value == UIElements.FloppyDriveString)
-            {
-                return;
-            }
-
-            await Task.Run(() =>
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = _options.dicPath,
-                        Arguments = DICCommands.Eject + " " + driveKvp?.Key,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-            });
+                Tasks.EjectDisc(_env);
         }
 
         /// <summary>
@@ -471,101 +284,25 @@ namespace DICUI
         private void EnsureDiscInformation()
         {
             var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
-            var mediaKvp = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
 
-            // If we're on a separator, go to the next item
+            // If we're on a separator, go to the next item and return
             if (systemKvp?.Value == null)
             {
-                systemKvp = cmb_SystemType.Items[++cmb_SystemType.SelectedIndex] as KeyValuePair<string, KnownSystem?>?;
+                cmb_SystemType.SelectedIndex++;
+                return;
             }
 
+            // Get the selected system info
             var selectedSystem = systemKvp?.Value;
-            var selectedMediaType = mediaKvp != null ? mediaKvp?.Value : MediaType.NONE;
+            var selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
-            // No system chosen, update status
-            if (selectedSystem == KnownSystem.NONE)
-            {
-                lbl_Status.Content = "Please select a valid system";
-                btn_StartStop.IsEnabled = false;
-            }
-            else if (selectedSystem != KnownSystem.Custom)
-            {
-                // If we're on an unsupported type, update the status accordingly
-                switch (selectedMediaType)
-                {
-                    case MediaType.NONE:
-                        lbl_Status.Content = "Please select a valid disc type";
-                        btn_StartStop.IsEnabled = false;
-                        break;
-                    case MediaType.GameCubeGameDisc:
-                    case MediaType.GDROM:
-                        lbl_Status.Content = string.Format("{0} discs are partially supported by DIC", mediaKvp?.Key);
-                        btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
-                        break;
-                    case MediaType.HDDVD:
-                    case MediaType.LaserDisc:
-                    case MediaType.CED:
-                    case MediaType.UMD:
-                    case MediaType.WiiOpticalDisc:
-                    case MediaType.WiiUOpticalDisc:
-                    case MediaType.Cartridge:
-                    case MediaType.Cassette:
-                        lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaKvp?.Key);
-                        btn_StartStop.IsEnabled = false;
-                        break;
-                    default:
-                        if (selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
-                        {
-                            lbl_Status.Content = string.Format("{0} discs are not currently supported by DIC", mediaKvp?.Key);
-                            btn_StartStop.IsEnabled = false;
-                        }
-                        else
-                        {
-                            // Take care of the selected item
-                            if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
-                            {
-                                int index = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
-                                if (index != -1)
-                                {
-                                    if (cmb_MediaType.SelectedIndex != index)
-                                    {
-                                        cmb_MediaType.SelectedIndex = index;
-                                    }
+            Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
-                                    lbl_Status.Content = string.Format("{0} ready to dump", mediaKvp?.Key);
-                                }
-                                else
-                                {
-                                    lbl_Status.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
-                                }
-                            }
-                            
-                            btn_StartStop.IsEnabled = (_drives.Count > 0 ? true : false);
-                        }
-                        break;
-                }
-            }
+            lbl_Status.Content = result.message;
+            btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
-            switch (selectedMediaType)
-            {
-                case MediaType.Floppy:
-                case MediaType.BluRay:
-                    cmb_DriveSpeed.IsEnabled = false;
-                    break;
-                default:
-                    if (selectedSystem == KnownSystem.MicrosoftXBOX
-                        || selectedSystem == KnownSystem.MicrosoftXBOX360XDG2
-                        || selectedSystem == KnownSystem.MicrosoftXBOX360XDG3)
-                    {
-                        cmb_DriveSpeed.IsEnabled = false;
-                    }
-                    else
-                    {
-                        cmb_DriveSpeed.IsEnabled = true;
-                    }
-                    break;
-            }
+            cmb_DriveSpeed.IsEnabled = selectedMediaType.DoesSupportDriveSpeed() && selectedSystem.DoesSupportDriveSpeed();
 
             // Special case for Custom input
             if (selectedSystem == KnownSystem.Custom)
@@ -613,18 +350,79 @@ namespace DICUI
         }
 
         /// <summary>
+        /// Verify that, given a system and a media type, they are correct
+        /// </summary>
+        private Result GetSupportStatus(KnownSystem? system, MediaType? type)
+        {
+            // No system chosen, update status
+            if (system == KnownSystem.NONE)
+                return Result.Failure("Please select a valid system");
+            // custom system chosen, then don't check anything
+            else if (system == KnownSystem.Custom)
+                return Result.Success("{0} ready to dump", type.Name());
+
+            // If we're on an unsupported type, update the status accordingly
+            switch (type)
+            {
+                case MediaType.NONE:
+                    return Result.Failure("Please select a valid disc type");
+                case MediaType.GameCubeGameDisc:
+                case MediaType.GDROM:
+                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+                case MediaType.HDDVD:
+                case MediaType.LaserDisc:
+                case MediaType.CED:
+                case MediaType.UMD:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
+                case MediaType.Cartridge:
+                case MediaType.Cassette:
+                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+                default:
+                    if (system == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+                    }
+                    else
+                    {
+                        // TODO: this code should adjust things in a method which is meant to verify values so maybe we can find a better fit 
+                        // Take care of the selected item
+                        if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
+                        {
+                            int index = _mediaTypes.IndexOf(_currentMediaType);
+                            if (index != -1)
+                            {
+                                if (cmb_MediaType.SelectedIndex != index)
+                                {
+                                    cmb_MediaType.SelectedIndex = index;
+                                }
+                            }
+                            else
+                            {
+                                return Result.Success("Disc of type {0} found, but the current system does not support it!", type.Name());
+                            }
+                        }
+
+                    }
+                    break;
+            }
+
+            return Result.Success("{0} ready to dump", type.Name());
+        }
+
+        /// <summary>
         /// Get the default output directory name from the currently selected drive
         /// </summary>
         private void GetOutputNames()
         {
             var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
-            var mediaKvp = cmb_MediaType.SelectedItem as KeyValuePair<string, MediaType?>?;
+            MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
-            if (driveKvp != null && (driveKvp?.Value != UIElements.FloppyDriveString) && systemKvp != null && mediaKvp != null)
+            if (driveKvp != null && (driveKvp?.Value != UIElements.FloppyDriveString) && systemKvp != null && mediaType != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
-                txt_OutputFilename.Text = driveKvp?.Value + Converters.MediaTypeToExtension(mediaKvp?.Value);
+                txt_OutputFilename.Text = driveKvp?.Value + mediaType.Extension();
             }
             else
             {
@@ -638,6 +436,9 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
+            // Set generic drive speed just in case
+            cmb_DriveSpeed.SelectedItem = 8;
+
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
@@ -649,14 +450,14 @@ namespace DICUI
             //Validators.GetDriveSpeedEx((char)selected?.Key, MediaType.CD);
 
             // Validate that the required program exists and it's not DICUI itself
-            if (!File.Exists(_options.dicPath) || 
+            if (!File.Exists(_options.dicPath) ||
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
                 return;
             }
 
             char driveLetter = (char)selected?.Key;
-            childProcess = new Process()
+            Process childProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {

@@ -1,9 +1,59 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Windows.Data;
 using IMAPI2;
 using DICUI.Data;
 
 namespace DICUI.Utilities
 {
+    public static class MediaTypeExtensions
+    {
+        public static string Name(this MediaType? type)
+        {
+            return Converters.MediaTypeToString(type);
+        }
+
+        public static string Extension(this MediaType? type)
+        {
+            return Converters.MediaTypeToExtension(type);
+        }
+
+        public static bool DoesSupportDriveSpeed(this MediaType? type)
+        {
+            return type != MediaType.BluRay && type != MediaType.Floppy;
+        }
+    }
+
+    public static class KnownSystemExtensions
+    {
+        public static bool DoesSupportDriveSpeed(this KnownSystem? system)
+        {
+            return system != KnownSystem.MicrosoftXBOX
+                && system != KnownSystem.MicrosoftXBOX360XDG2
+                && system != KnownSystem.MicrosoftXBOX360XDG3;
+        }
+    }
+
+    /// <summary>
+    /// Used to provide a converter to XAML files to render comboboxes with enum values
+    /// </summary>
+    public class EnumDescriptionConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is MediaType?)
+                return ((MediaType?)value).Name();
+            else
+                return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return string.Empty;
+        }
+    }
+
     public static class Converters
     {
         /// <summary>
@@ -239,7 +289,7 @@ namespace DICUI.Utilities
         {
             // First check to see if the combination of system and MediaType is valid
             var validTypes = Validators.GetValidMediaTypes(sys);
-            if (!validTypes.ContainsKey(MediaTypeToString(type)))
+            if (!validTypes.Contains(type))
             {
                 return null;
             }
@@ -264,6 +314,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             parameters.Add(DICFlags.ScanAntiMod);
+                            parameters.Add(DICFlags.NoFixSubQLibCrypt);
                             break;
                     }
                     break;

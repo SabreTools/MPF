@@ -21,10 +21,9 @@ namespace DICUI.Utilities
         /// <remarks>
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
-        public static OrderedDictionary<string, MediaType?> GetValidMediaTypes(KnownSystem? sys)
+        public static List<MediaType?> GetValidMediaTypes(KnownSystem? sys)
         {
             var types = new List<MediaType?>();
-            var typesDict = new OrderedDictionary<string, MediaType?>();
 
             switch (sys)
             {
@@ -372,13 +371,7 @@ namespace DICUI.Utilities
                     break;
             }
 
-            // Populate the dictionary
-            foreach (var type in types)
-            {
-                typesDict.Add(Converters.MediaTypeToString(type), type);
-            }
-
-            return typesDict;
+            return types;
         }
 
         /// <summary>

@@ -1,0 +1,36 @@
+# version format
+version: 1.06_{build}
+
+# vm template
+image: Visual Studio 2017
+
+# environment variables
+environment:
+  EnableNuGetPackageRestore: true
+
+# msbuild configuration
+platform:
+- AnyCPU
+configuration:
+- Debug
+
+# install dependencies
+install:
+- ps: appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
+
+# pre-build script
+before_build:
+- nuget restore
+
+# build step
+build:
+  verbosity: minimal
+
+# post-build step
+after_build:
+- 7z a dicui_%APPVEYOR_BUILD_VERSION%.zip bin\Debug
+
+# artifact linking
+artifacts:
+- path: dicui_$(version).zip
+  name: DICUI
