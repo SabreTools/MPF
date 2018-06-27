@@ -28,7 +28,6 @@ namespace DICUI
         private OptionsWindow _optionsWindow;
 
         private LogWindow _logWindow;
-        private DumpEnvironment _env;
 
         public MainWindow()
         {
@@ -233,17 +232,7 @@ namespace DICUI
             }
         }
 
-<<<<<<< HEAD
-        private DumpEnvironment DetermineEnvironment()
-        {
-            DumpEnvironment env = new DumpEnvironment();
 
-            // Paths to tools
-            env.subdumpPath = _options.subdumpPath;
-            env.psxtPath = _options.psxtPath;
-            env.dicPath = _options.dicPath;
-
-=======
         /// <summary>
         /// Create a DumpEnvironment with all current settings
         /// </summary>
@@ -284,7 +273,7 @@ namespace DICUI
             btn_StartStop.Content = UIElements.StopDumping;
             lbl_Status.Content = "Beginning dumping process";
 
-            _logWindow.StartDump(_env.dicParameters);
+            _logWindow.StartDump(_env.DICParameters);
             _logWindow.Show();
             return;
 
