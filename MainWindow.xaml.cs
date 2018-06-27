@@ -478,7 +478,7 @@ namespace DICUI
 
             int index = output.IndexOf("ReadSpeedMaximum:");
             string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
-            if (!Int32.TryParse(readspeed, out int speed))
+            if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
             {
                 return;
             }
