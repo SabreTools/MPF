@@ -18,9 +18,10 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.DVD)]
         [InlineData(MediaType.Floppy)]
         [InlineData(MediaType.LaserDisc)]
-        public void FoundAllFilesTest(MediaType? mediaTyp)
+        public void FoundAllFilesTest(MediaType? mediaType)
         {
             // TODO: Implement
+            // TODO: Get sample output data for each of the major types
             Assert.True(true);
         }
 
@@ -39,6 +40,7 @@ namespace DICUI.Test.Utilities
         public void ExtractOutputInformation(KnownSystem? knownSystem, MediaType? mediaType)
         {
             // TODO: Implement
+            // TODO: Get sample output data for each of the major types
             Assert.True(true);
         }
 
