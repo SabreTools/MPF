@@ -42,10 +42,6 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
-
-            // Populate the list of drive speeds
-            PopulateDriveSpeeds();
-            SetSupportedDriveSpeed();
         }
 
         #region Events
@@ -77,17 +73,11 @@ namespace DICUI
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             PopulateDrives();
-            SetCurrentDiscType();
-            SetSupportedDriveSpeed();
-            EnsureDiscInformation();
         }
 
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PopulateMediaTypeAccordingToChosenSystem();
-            SetSupportedDriveSpeed();
-            GetOutputNames();
-            EnsureDiscInformation();
         }
 
         private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -99,18 +89,14 @@ namespace DICUI
             }
 
             // TODO: This is giving people the benefit of the doubt that their change is valid
-            PopulateDriveSpeeds();
             SetSupportedDriveSpeed();
-            GetOutputNames();
-            EnsureDiscInformation();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentDiscType();
-            SetSupportedDriveSpeed();
             GetOutputNames();
-            EnsureDiscInformation();
+            SetSupportedDriveSpeed();
         }
 
         private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -225,8 +211,6 @@ namespace DICUI
                 case MediaType.CD:
                 case MediaType.GDROM:
                     cmb_DriveSpeed.ItemsSource = _cdDriveSpeeds;
-                    cmb_DriveSpeed.SelectedItem = 8;
-                    cmb_DriveSpeed.IsEnabled = true;
                     break;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
@@ -234,17 +218,12 @@ namespace DICUI
                 case MediaType.WiiOpticalDisc:
                 case MediaType.WiiUOpticalDisc:
                     cmb_DriveSpeed.ItemsSource = _dvdDriveSpeeds;
-                    cmb_DriveSpeed.SelectedItem = 8;
-                    cmb_DriveSpeed.IsEnabled = true;
                     break;
                 case MediaType.BluRay:
                     cmb_DriveSpeed.ItemsSource = _bdDriveSpeeds;
-                    cmb_DriveSpeed.SelectedItem = 8;
-                    cmb_DriveSpeed.IsEnabled = true;
                     break;
                 default:
-                    cmb_DriveSpeed.ItemsSource = null;
-                    cmb_DriveSpeed.IsEnabled = false;
+                    cmb_DriveSpeed.ItemsSource = _cdDriveSpeeds;
                     break;
             }
         }
@@ -479,16 +458,13 @@ namespace DICUI
             if (cmb_DriveSpeed.Items == null || cmb_DriveSpeed.Items.Count == 0)
             {
                 PopulateDriveSpeeds();
-                return;
             }
-
-            // Set generic drive speed just in case
-            cmb_DriveSpeed.SelectedItem = 8;
 
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
             {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -499,6 +475,7 @@ namespace DICUI
             if (!File.Exists(_options.dicPath) ||
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -522,6 +499,7 @@ namespace DICUI
             string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
             if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
             {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -547,13 +525,20 @@ namespace DICUI
 
             // If we have a null list, we just return
             if (driveSpeeds == null)
+            {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
+            }
             // If the value is in the list, we can set it immediately
             else if (driveSpeeds.Contains(speed))
+            {
                 cmb_DriveSpeed.SelectedValue = speed;
+            }
             // Otherwise, we need to set the next lowest value
             else
+            {
                 cmb_DriveSpeed.SelectedValue = driveSpeeds.Where(s => s < speed).Last();
+            }
         }
 
         /// <summary>
