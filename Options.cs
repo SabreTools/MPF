@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DICUI.Data;
+using System;
 using System.Configuration;
 using System.Reflection;
 
@@ -12,7 +13,6 @@ namespace DICUI
 
         public int maxDumpSpeedCD { get; set; }
         public int maxDumpSpeedDVD { get; set; }
-
 
         public void Save()
         {
@@ -59,6 +59,16 @@ namespace DICUI
         public string Get(string key)
         {
             return GetType().GetProperty(key, BindingFlags.Public | BindingFlags.Instance).GetValue(this) as string;
+        }
+
+        public int GetPreferredDumpSpeedForMediaType(MediaType? type)
+        {
+            switch (type)
+            {
+                case MediaType.CD: return maxDumpSpeedCD;
+                case MediaType.DVD: return maxDumpSpeedDVD;
+                default: return 1; //TODO: think what we want here
+            }
         }
     }
 }
