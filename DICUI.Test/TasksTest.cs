@@ -4,7 +4,8 @@ using Xunit;
 
 namespace DICUI.Test
 {
-    public class MainWindowTest
+    public class TasksTest
     {
+
     }
 }
