@@ -724,8 +724,9 @@ namespace DICUI.Utilities
                         return false;
                     else if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
-                    else if (!DoesExist(parts, 4) || !IsValidNumber(parts[4])
-                            || !DoesExist(parts, 5) || !IsValidNumber(parts[5]))
+                    else if (!DoesExist(parts, 4) || !IsValidNumber(parts[4], lowerBound: 0))
+                        return false;
+                    else if (!DoesExist(parts, 5) || !IsValidNumber(parts[5], lowerBound: 0))
                         return false;
 
                     index = 6;
