@@ -24,7 +24,18 @@ namespace DICUI.Utilities
 
         public static bool DoesSupportDriveSpeed(this MediaType? type)
         {
-            return type != MediaType.BluRay && type != MediaType.Floppy;
+            switch(type)
+            {
+                case MediaType.CD:
+                case MediaType.DVD:
+                case MediaType.GDROM:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 
@@ -72,7 +83,9 @@ namespace DICUI.Utilities
         {
             switch (baseCommand)
             {
+                case DICCommands.Audio:
                 case DICCommands.CompactDisc:
+                case DICCommands.Data:
                     return MediaType.CD;
                 case DICCommands.GDROM:
                 case DICCommands.Swap:
@@ -100,7 +113,10 @@ namespace DICUI.Utilities
         {
             switch (baseCommand)
             {
+                case DICCommands.Audio:
+                    return KnownSystem.AudioCD;
                 case DICCommands.CompactDisc:
+                case DICCommands.Data:
                 case DICCommands.DigitalVideoDisc:
                 case DICCommands.Floppy:
                     return KnownSystem.IBMPCCompatible;

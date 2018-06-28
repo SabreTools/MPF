@@ -30,7 +30,6 @@ namespace DICUI.Test.Utilities
             string expected = Converters.MediaTypeToExtension(mediaType);
             string actual = mediaType.Extension();
 
-            Assert.NotNull(actual);
             Assert.Equal(expected, actual);
         }
 
