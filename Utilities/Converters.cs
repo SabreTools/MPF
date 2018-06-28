@@ -262,7 +262,7 @@ namespace DICUI.Utilities
                 case MediaType.GDROM:
                     return DICCommands.GDROM;
                 case MediaType.HDDVD:
-                    return null;
+                    return DICCommands.DigitalVideoDisc;
                 case MediaType.BluRay:
                     return DICCommands.BluRay;
 
@@ -331,6 +331,7 @@ namespace DICUI.Utilities
                     parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
                     break;
                 case MediaType.HDDVD:
+                    // Currently no defaults set
                     break;
                 case MediaType.BluRay:
                     // Currently no defaults set

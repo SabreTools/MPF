@@ -355,21 +355,11 @@ namespace DICUI
             // If we're on an unsupported type, update the status accordingly
             switch (type)
             {
-                case MediaType.NONE:
-                    return Result.Failure("Please select a valid disc type");
-                case MediaType.GameCubeGameDisc:
-                case MediaType.GDROM:
-                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+                // Fully supported types
+                case MediaType.CD:
+                case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.LaserDisc:
-                case MediaType.CED:
-                case MediaType.UMD:
-                case MediaType.WiiOpticalDisc:
-                case MediaType.WiiUOpticalDisc:
-                case MediaType.Cartridge:
-                case MediaType.Cassette:
-                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
-                default:
+                case MediaType.BluRay:
                     if (system == KnownSystem.MicrosoftXBOX360XDG3)
                     {
                         return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
@@ -393,12 +383,29 @@ namespace DICUI
                                 return Result.Success("Disc of type {0} found, but the current system does not support it!", _currentMediaType.Name());
                             }
                         }
-
                     }
-                    break;
-            }
+                    return Result.Success("{0} ready to dump", type.Name());
 
-            return Result.Success("{0} ready to dump", type.Name());
+                // Partially supported types
+                case MediaType.GDROM:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
+                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+
+                // Undumpable but recognized types
+                case MediaType.LaserDisc:
+                case MediaType.CED:
+                case MediaType.UMD:
+                case MediaType.Cartridge:
+                case MediaType.Cassette:
+                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+
+                // Invalid or unknown types
+                case MediaType.NONE:
+                default:
+                    return Result.Failure("Please select a valid disc type");
+            }
         }
 
         /// <summary>

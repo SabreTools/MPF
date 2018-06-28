@@ -52,7 +52,6 @@ namespace DICUI.Utilities
                 case KnownSystem.MicrosoftXBOX360XDG3:
                     types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
-                    types.Add(MediaType.HDDVD);
                     break;
                 case KnownSystem.MicrosoftXBOXOne:
                     types.Add(MediaType.BluRay);
