@@ -13,7 +13,7 @@ namespace DICUI.External
 
 		#region Interface properties
 
-		public int Count { get; }
+		public int Count { get; private set; }
 
 		int ICollection.Count => Count;
         int ICollection<KeyValuePair<TKey, TValue>>.Count => Count;
@@ -142,6 +142,7 @@ namespace DICUI.External
         {
             _dictionary.Add(key, value);
             _list.Add(new KeyValuePair<TKey, TValue>(key, value));
+            Count++;
             return Count - 1;
         }
 
@@ -152,6 +153,7 @@ namespace DICUI.External
 
             _dictionary.Add(key, value);
             _list.Insert(index, new KeyValuePair<TKey, TValue>(key, value));
+            Count++;
         }
 
         void IOrderedDictionary.RemoveAt(int index)
@@ -165,6 +167,7 @@ namespace DICUI.External
 
             _list.RemoveAt(index);
             _dictionary.Remove(key);
+            Count--;
         }
 
         public bool Remove(TKey key)
@@ -178,6 +181,7 @@ namespace DICUI.External
                 if (_dictionary.Remove(key))
                 {
                     _list.RemoveAt(index);
+                    Count--;
                     return true;
                 }
             }
