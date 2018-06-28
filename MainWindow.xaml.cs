@@ -87,6 +87,7 @@ namespace DICUI
 
             // TODO: This is giving people the benefit of the doubt that their change is valid
             SetSupportedDriveSpeed();
+            GetOutputNames();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -202,16 +203,6 @@ namespace DICUI
                 lbl_Status.Content = "No valid media found!";
                 btn_StartStop.IsEnabled = false;
             }
-        }
-
-        /// <summary>
-        /// Get a complete list of (possible) disc drive speeds, and fill the combo box
-        /// </summary>
-        private void PopulateDriveSpeeds()
-        {
-            var values = UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType);
-            cmb_DriveSpeed.ItemsSource = values;
-            cmb_DriveSpeed.SelectedIndex = values.Count / 2;
         }
 
         /// <summary>
@@ -440,17 +431,15 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
-            // If there are no items, set the drive speeds and try again
-            if (cmb_DriveSpeed.Items == null || cmb_DriveSpeed.Items.Count == 0)
-            {
-                PopulateDriveSpeeds();
-            }
+            // Set the drive speed list that's appropriate
+            var values = UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType);
+            cmb_DriveSpeed.ItemsSource = values;
+            cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
             {
-                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -461,7 +450,6 @@ namespace DICUI
             if (!File.Exists(_options.dicPath) ||
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
-                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -485,7 +473,6 @@ namespace DICUI
             string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
             if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
             {
-                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
