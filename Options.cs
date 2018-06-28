@@ -11,8 +11,8 @@ namespace DICUI
         public string dicPath { get; private set; }
         public string subdumpPath { get; private set; }
 
-        public int maxDumpSpeedCD { get; set; }
-        public int maxDumpSpeedDVD { get; set; }
+        public int preferredDumpSpeedCD { get; set; }
+        public int preferredDumpSpeedDVD { get; set; }
 
         public void Save()
         {
@@ -28,11 +28,11 @@ namespace DICUI
             );
 
             //TODO: is remove needed, doesn't the value get directly overridden?
-            configFile.AppSettings.Settings.Remove("maxDumpSpeedCD");
-            configFile.AppSettings.Settings.Add("maxDumpSpeedCD", Convert.ToString(maxDumpSpeedCD));
+            configFile.AppSettings.Settings.Remove("preferredDumpSpeedCD");
+            configFile.AppSettings.Settings.Add("preferredDumpSpeedCD", Convert.ToString(preferredDumpSpeedCD));
 
-            configFile.AppSettings.Settings.Remove("maxDumpSpeedDVD");
-            configFile.AppSettings.Settings.Add("maxDumpSpeedDVD", Convert.ToString(maxDumpSpeedDVD));
+            configFile.AppSettings.Settings.Remove("preferredDumpSpeedDVD");
+            configFile.AppSettings.Settings.Add("preferredDumpSpeedDVD", Convert.ToString(preferredDumpSpeedDVD));
 
             configFile.Save(ConfigurationSaveMode.Modified);
         }
@@ -44,8 +44,8 @@ namespace DICUI
             subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
             defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
 
-            this.maxDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["maxDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
-            this.maxDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["maxDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 72;
+            this.preferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
+            this.preferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 72;
         }
 
 
@@ -65,8 +65,8 @@ namespace DICUI
         {
             switch (type)
             {
-                case MediaType.CD: return maxDumpSpeedCD;
-                case MediaType.DVD: return maxDumpSpeedDVD;
+                case MediaType.CD: return preferredDumpSpeedCD;
+                case MediaType.DVD: return preferredDumpSpeedDVD;
                 default: return 1; //TODO: think what we want here
             }
         }

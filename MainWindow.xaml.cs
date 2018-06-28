@@ -493,7 +493,7 @@ namespace DICUI
             // and the one choosen in options
             int chosenSpeed = Math.Min(
                 UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
-                _options.maxDumpSpeedCD
+                _options.preferredDumpSpeedCD
             );
 
             cmb_DriveSpeed.SelectedValue = chosenSpeed;

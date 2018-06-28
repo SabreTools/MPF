@@ -46,7 +46,7 @@
 
 
 
-        <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Maximum Dump Speed">
+        <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Preferred Dump Speed">
             <Grid Height="60">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
@@ -61,11 +61,11 @@
 
                 <Label Grid.Row="0" Grid.Column="0" Content="CD-ROM" />
                 <Slider x:Name="slider_DumpSpeedCD" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static ldata:UIElements.AllowedDriveSpeedsForCDAsCollection}}" />
-                <TextBox x:Name="txt_DumpSpeedCD" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=slider_DumpSpeedCD, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="txt_DumpSpeedCD" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=slider_DumpSpeedCD, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                 <Label Grid.Row="1" Grid.Column="0" Content="DVD-ROM" />
                 <Slider x:Name="slider_DumpSpeedDVD" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static ldata:UIElements.AllowedDriveSpeedsForDVDAsCollection}}" />
-                <TextBox x:Name="txt_DumpSpeedDVD" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=slider_DumpSpeedDVD, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="txt_DumpSpeedDVD" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=slider_DumpSpeedDVD, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
             </Grid>
             

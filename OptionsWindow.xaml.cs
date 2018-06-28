@@ -100,8 +100,8 @@ namespace DICUI
         {
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
 
-            slider_DumpSpeedCD.Value = _options.maxDumpSpeedCD;
-            slider_DumpSpeedDVD.Value = _options.maxDumpSpeedDVD;
+            slider_DumpSpeedCD.Value = _options.preferredDumpSpeedCD;
+            slider_DumpSpeedDVD.Value = _options.preferredDumpSpeedDVD;
         }
 
         #region Event Handlers
@@ -110,8 +110,8 @@ namespace DICUI
         {
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
 
-            _options.maxDumpSpeedCD = Convert.ToInt32(slider_DumpSpeedCD.Value);
-            _options.maxDumpSpeedDVD = Convert.ToInt32(slider_DumpSpeedDVD.Value);
+            _options.preferredDumpSpeedCD = Convert.ToInt32(slider_DumpSpeedCD.Value);
+            _options.preferredDumpSpeedDVD = Convert.ToInt32(slider_DumpSpeedDVD.Value);
 
             _options.Save();
             Hide();
