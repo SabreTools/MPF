@@ -2,7 +2,7 @@
 using DICUI.Utilities;
 using Xunit;
 
-namespace DICUI.Test
+namespace DICUI.Test.Utilities
 {
     public class KnownSystemExtensionsTest
     {
