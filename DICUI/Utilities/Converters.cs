@@ -259,6 +259,12 @@ namespace DICUI.Utilities
         /// <returns>String containing the command, null on error</returns>
         public static string KnownSystemAndMediaTypeToBaseCommand(KnownSystem? sys, MediaType? type)
         {
+            // If we have an invalid combination, we should return null
+            if (!Validators.GetValidMediaTypes(sys).Contains(type))
+            {
+                return null;
+            }
+
             switch (type)
             {
                 case MediaType.CD:
@@ -281,18 +287,10 @@ namespace DICUI.Utilities
                     return DICCommands.DigitalVideoDisc;
                 case MediaType.BluRay:
                     return DICCommands.BluRay;
-
-                // Special Formats
                 case MediaType.GameCubeGameDisc:
                     return DICCommands.DigitalVideoDisc;
                 case MediaType.WiiOpticalDisc:
-                    return null;
-                case MediaType.WiiUOpticalDisc:
-                    return null;
-                case MediaType.UMD:
-                    return null;
-
-                // Non-optical
+                    return DICCommands.DigitalVideoDisc;
                 case MediaType.Floppy:
                     return DICCommands.Floppy;
 

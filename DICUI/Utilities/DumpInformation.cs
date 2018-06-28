@@ -91,8 +91,6 @@ namespace DICUI.Utilities
                 case MediaType.BluRay:
                 case MediaType.GameCubeGameDisc:
                 case MediaType.WiiOpticalDisc:
-                case MediaType.WiiUOpticalDisc:
-                case MediaType.UMD:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                         && File.Exists(combinedBase + "_disc.txt")
@@ -122,10 +120,16 @@ namespace DICUI.Utilities
         /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
         public static Dictionary<string, string> ExtractOutputInformation(string outputDirectory, string outputFilename, KnownSystem? sys, MediaType? type, char driveLetter)
         {
-            // First, sanitized the output filename to strip off any potential extension
+            // Ensure the current disc combination should exist
+            if (!Validators.GetValidMediaTypes(sys).Contains(type))
+            {
+                return null;
+            }
+
+            // Sanitize the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
-            // First, we want to check that all of the relevant files are there
+            // Check that all of the relevant files are there
             if (!FoundAllFiles(outputDirectory, outputFilename, type))
             {
                 return null;

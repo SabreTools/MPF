@@ -1,4 +1,5 @@
-﻿using DICUI.Data;
+﻿using System.Collections.Generic;
+using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
 
@@ -63,6 +64,59 @@ namespace DICUI.Test.Utilities
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
             string actual = Converters.MediaTypeToExtension(mediaType);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(MediaType.CD, "CD-ROM")]
+        [InlineData(MediaType.LaserDisc, "LaserDisc")]
+        [InlineData(MediaType.NONE, "Unknown")]
+        public void MediaTypeToStringTest(MediaType? mediaType, string expected)
+        {
+            string actual = Converters.MediaTypeToString(mediaType);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CD, DICCommands.XBOX)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, DICCommands.XBOX)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, null)]
+        [InlineData(KnownSystem.SegaNu, MediaType.BluRay, DICCommands.BluRay)]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.Floppy, DICCommands.Floppy)]
+        [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, null)]
+        public void KnownSystemAndMediaTypeToBaseCommandTest(KnownSystem? knownSystem, MediaType? mediaType, string expected)
+        {
+            string actual = Converters.KnownSystemAndMediaTypeToBaseCommand(knownSystem, mediaType);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, new string[] { DICFlags.C2Opcode, "20", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect })]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, null)]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, new string[] { DICFlags.Raw })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, new string[] { })]
+        public void KnownSystemAndMediaTypeToParametersTest(KnownSystem? knownSystem, MediaType? mediaType, string[] expected)
+        {
+            List<string> actual = Converters.KnownSystemAndMediaTypeToParameters(knownSystem, mediaType);
+
+            if (expected == null)
+                Assert.Null(actual);
+
+            else
+                foreach (string param in expected)
+                    Assert.Contains(param, actual);
+        }
+
+        [Theory]
+        [InlineData(KnownSystem.MicrosoftXBOX, "Microsoft XBOX")]
+        [InlineData(KnownSystem.NECPC88, "NEC PC-88")]
+        [InlineData(KnownSystem.KonamiPython, "Konami Python")]
+        [InlineData(KnownSystem.HDDVDVideo, "HD-DVD-Video")]
+        [InlineData(KnownSystem.Custom, "Custom Input")]
+        [InlineData(KnownSystem.NONE, "Unknown")]
+        public void KnownSystemToStringTest(KnownSystem? knownSystem, string expected)
+        {
+            string actual = Converters.KnownSystemToString(knownSystem);
             Assert.Equal(expected, actual);
         }
     }
