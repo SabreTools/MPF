@@ -720,15 +720,15 @@ namespace DICUI.Utilities
                 case DICCommands.GDROM:
                 case DICCommands.Swap:
                 case DICCommands.Data:
-                    if (!IsValidDriveLetter(parts[1]))
+                    if (DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (IsFlag(parts[2]))
+                    else if (DoesExist(parts, 2) || IsFlag(parts[2]))
                     {
                         return false;
                     }
-                    else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
+                    else if (DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
                     {
                         return false;
                     }
@@ -742,7 +742,8 @@ namespace DICUI.Utilities
                     }
                     else if (parts[0] == DICCommands.Data || parts[0] == DICCommands.Audio)
                     {
-                        if (!IsValidNumber(parts[4]) || !IsValidNumber(parts[5]))
+                        if (DoesExist(parts, 4) || !IsValidNumber(parts[4]) ||
+                            DoesExist(parts, 5) || !IsValidNumber(parts[5]))
                         {
                             return false;
                         }
@@ -756,15 +757,15 @@ namespace DICUI.Utilities
 
                     break;
                 case DICCommands.DigitalVideoDisc:
-                    if (!IsValidDriveLetter(parts[1]))
+                    if (DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (IsFlag(parts[2]))
+                    else if (DoesExist(parts, 2) || IsFlag(parts[2]))
                     {
                         return false;
                     }
-                    else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 72)) // Officially 0-16
+                    else if (DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 24)) // Officially 0-16
                     {
                         return false;
                     }
@@ -780,17 +781,10 @@ namespace DICUI.Utilities
                                 // No-op, all of these are single flags
                                 break;
                             case DICFlags.ForceUnitAccess:
-                                // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i))
+                                if (!DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                                 {
                                     break;
                                 }
-                                // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + 1]))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
                                 else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 {
                                     return false;
@@ -804,11 +798,11 @@ namespace DICUI.Utilities
                     break;
                 case DICCommands.BluRay:
                 case DICCommands.XBOX:
-                    if (!IsValidDriveLetter(parts[1]))
+                    if (DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (IsFlag(parts[2]))
+                    else if (DoesExist(parts, 2) || IsFlag(parts[2]))
                     {
                         return false;
                     }
@@ -822,17 +816,10 @@ namespace DICUI.Utilities
                                 // No-op, this is a single flag
                                 break;
                             case DICFlags.ForceUnitAccess:
-                                // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i))
+                                if (!DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                                 {
                                     break;
                                 }
-                                // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + 1]))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
                                 else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 {
                                     return false;
@@ -845,11 +832,11 @@ namespace DICUI.Utilities
                     }
                     break;
                 case DICCommands.Floppy:
-                    if (!IsValidDriveLetter(parts[1]))
+                    if (DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
-                    else if (IsFlag(parts[2]))
+                    else if (DoesExist(parts, 2) || IsFlag(parts[2]))
                     {
                         return false;
                     }
@@ -864,7 +851,7 @@ namespace DICUI.Utilities
                 case DICCommands.Close:
                 case DICCommands.Reset:
                 case DICCommands.DriveSpeed:
-                    if (!IsValidDriveLetter(parts[1]))
+                    if (DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                     {
                         return false;
                     }
@@ -875,7 +862,7 @@ namespace DICUI.Utilities
                     break;
                 case DICCommands.Sub:
                 case DICCommands.MDS:
-                    if (IsFlag(parts[1]))
+                    if (DoesExist(parts, 1) || IsFlag(parts[1]))
                     {
                         return false;
                     }
@@ -1000,17 +987,10 @@ namespace DICUI.Utilities
                                 return false;
                             }
 
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
+                            if (DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                             {
                                 break;
                             }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
-                                break;
-                            }
-                            // If the next item isn't a valid number
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                             {
                                 return false;
@@ -1026,17 +1006,10 @@ namespace DICUI.Utilities
                                 return false;
                             }
 
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
+                            if (DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                             {
                                 break;
                             }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
-                                break;
-                            }
-                            // If the next item isn't a valid number
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                             {
                                 return false;
@@ -1050,13 +1023,7 @@ namespace DICUI.Utilities
                                 return false;
                             }
 
-                            // If the next item doesn't exist, it's not good
-                            if (parts.Count == i + 1)
-                            {
-                                return false;
-                            }
-                            // If the next item isn't a valid number
-                            else if (IsValidNumber(parts[i + 1]))
+                            if (DoesExist(parts, i + 1) || !IsValidNumber(parts[i + 1]))
                             {
                                 return false;
                             }
@@ -1070,13 +1037,7 @@ namespace DICUI.Utilities
                                 return false;
                             }
 
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
-                            {
-                                break;
-                            }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
+                            if (DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                             {
                                 break;
                             }
@@ -1098,19 +1059,11 @@ namespace DICUI.Utilities
 
                             for (int j = 1; j < 4; j++)
                             {
-                                // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i + 1))
+                                if (DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                                 {
                                     i++;
                                     break;
                                 }
-                                // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + 1]))
-                                {
-                                    i++;
-                                    break;
-                                }
-                                // If the next item isn't a valid number
                                 else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 {
                                     return false;
@@ -1127,18 +1080,11 @@ namespace DICUI.Utilities
                                 return false;
                             }
 
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
+                            if (DoesExist(parts, i + 1) || IsFlag(parts[i + 1]))
                             {
                                 break;
                             }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
-                                break;
-                            }
-                            // If the next item isn't a valid number
-                            else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 2))
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0, upperBound: 2))
                             {
                                 return false;
                             }
@@ -1194,14 +1140,14 @@ namespace DICUI.Utilities
         /// <param name="parameters">List of parameters to check against</param>
         /// <param name="index">Current index</param>
         /// <returns>True if the next item exists, false otherwise</returns>
-        private static bool DoesNextExist(List<string> parameters, int index)
+        private static bool DoesExist(List<string> parameters, int index)
         {
-            if (index >= parameters.Count - 1)
+            if (index >= parameters.Count)
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         /// <summary>

@@ -16,8 +16,8 @@ namespace DICUI.Test.Utilities
         [InlineData(KnownSystem.SonyPlayStationPortable, MediaType.UMD)]
         public void GetValidMediaTypesTest(KnownSystem? knownSystem, MediaType? expected)
         {
-            // TODO: Implement
-            Assert.True(true);
+            var actual = Validators.GetValidMediaTypes(knownSystem);
+            Assert.Contains(expected, actual);
         }
 
         [Fact]
@@ -41,11 +41,19 @@ namespace DICUI.Test.Utilities
             Assert.True(true);
         }
 
-        [Fact]
-        public void ValidateParametersTest()
+        [Theory]
+        [InlineData(null, false)]
+        [InlineData("", false)]
+        [InlineData("cd F test.bin 8 /c2 20", true)]
+        [InlineData("fd A test.img", true)]
+        [InlineData("dvd X super\\test.iso 8 /raw", true)]
+        [InlineData("bd D longer\\path_test.iso 16", false)]
+        [InlineData("stop D", true)]
+        [InlineData("ls", false)]
+        public void ValidateParametersTest(string parameters, bool expected)
         {
-            // TODO: Implement, maybe make Theory?
-            Assert.True(true);
+            bool actual = Validators.ValidateParameters(parameters);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]
