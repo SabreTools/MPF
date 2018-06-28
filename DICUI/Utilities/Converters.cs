@@ -356,12 +356,7 @@ namespace DICUI.Utilities
                     parameters.Add(DICFlags.Raw);
                     break;
                 case MediaType.WiiOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case MediaType.WiiUOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case MediaType.UMD:
+                    parameters.Add(DICFlags.Raw);
                     break;
 
                 // Non-optical

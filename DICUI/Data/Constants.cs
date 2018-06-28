@@ -36,7 +36,6 @@ namespace DICUI.Data
                 case MediaType.HDDVD:
                 case MediaType.GameCubeGameDisc:
                 case MediaType.WiiOpticalDisc:
-                case MediaType.WiiUOpticalDisc:
                     return AllowedDriveSpeedsForDVD;
                 case MediaType.BluRay:
                     return AllowedDriveSpeedsForBD;

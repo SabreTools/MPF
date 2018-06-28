@@ -390,11 +390,11 @@ namespace DICUI
                 case MediaType.GDROM:
                 case MediaType.GameCubeGameDisc:
                 case MediaType.WiiOpticalDisc:
-                case MediaType.WiiUOpticalDisc:
                     return Result.Success("{0} discs are partially supported by DIC", type.Name());
 
                 // Undumpable but recognized types
                 case MediaType.LaserDisc:
+                case MediaType.WiiUOpticalDisc:
                 case MediaType.CED:
                 case MediaType.UMD:
                 case MediaType.Cartridge:
