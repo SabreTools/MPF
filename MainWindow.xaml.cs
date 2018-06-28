@@ -39,10 +39,6 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
-
-            // Populate the list of drive speeds
-            PopulateDriveSpeeds();
-            SetSupportedDriveSpeed();
         }
 
         #region Events
@@ -74,17 +70,11 @@ namespace DICUI
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             PopulateDrives();
-            SetCurrentDiscType();
-            SetSupportedDriveSpeed();
-            EnsureDiscInformation();
         }
 
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PopulateMediaTypeAccordingToChosenSystem();
-            SetSupportedDriveSpeed();
-            GetOutputNames();
-            EnsureDiscInformation();
         }
 
         private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -96,18 +86,14 @@ namespace DICUI
             }
 
             // TODO: This is giving people the benefit of the doubt that their change is valid
-            PopulateDriveSpeeds();
             SetSupportedDriveSpeed();
-            GetOutputNames();
-            EnsureDiscInformation();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentDiscType();
-            SetSupportedDriveSpeed();
             GetOutputNames();
-            EnsureDiscInformation();
+            SetSupportedDriveSpeed();
         }
 
         private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -458,16 +444,13 @@ namespace DICUI
             if (cmb_DriveSpeed.Items == null || cmb_DriveSpeed.Items.Count == 0)
             {
                 PopulateDriveSpeeds();
-                return;
             }
-
-            // Set generic drive speed just in case
-            cmb_DriveSpeed.SelectedItem = 8;
 
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
             if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
             {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -478,6 +461,7 @@ namespace DICUI
             if (!File.Exists(_options.dicPath) ||
                 Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
             {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -501,6 +485,7 @@ namespace DICUI
             string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
             if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
             {
+                cmb_DriveSpeed.SelectedItem = 8;
                 return;
             }
 
@@ -511,7 +496,7 @@ namespace DICUI
                 _options.preferredDumpSpeedCD
             );
 
-            cmb_DriveSpeed.SelectedValue = chosenSpeed; cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
+            cmb_DriveSpeed.SelectedValue = chosenSpeed;
         }
 
         /// <summary>
