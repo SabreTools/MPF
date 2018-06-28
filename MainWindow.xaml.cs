@@ -512,7 +512,7 @@ namespace DICUI
             }
 
             // Get the current optical disc type
-            _currentMediaType = null;// Validators.GetDiscType(selected?.Key);
+            _currentMediaType = Validators.GetDiscType(selected?.Key);
 
             // If we have an invalid current type, we don't care and return
             if (_currentMediaType == null || _currentMediaType == MediaType.NONE)
