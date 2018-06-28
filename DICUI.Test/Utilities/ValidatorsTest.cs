@@ -23,8 +23,9 @@ namespace DICUI.Test.Utilities
         [Fact]
         public void CreateListOfSystemsTest()
         {
+            int expected = Enum.GetValues(typeof(KnownSystem)).Length + 4; // + 4 for the separators
             var actual = Validators.CreateListOfSystems();
-            Assert.Equal(Enum.GetValues(typeof(KnownSystem)).Length + 4, actual.Count);
+            Assert.Equal(expected, actual.Count);
         }
 
         [Fact]
