@@ -17,21 +17,26 @@ namespace DICUI.Data
         private static IReadOnlyList<int> AllowedDriveSpeedsForCD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
         private static IReadOnlyList<int> AllowedDriveSpeedsForDVD { get; } = AllowedDriveSpeedsForCD.Where(s => s <= 24).ToList();
         private static IReadOnlyList<int> AllowedDriveSpeedsForBD { get; } = AllowedDriveSpeedsForCD.Where(s => s <= 16).ToList();
-        private static IReadOnlyList<int> AllowedDriveSpeedsForUnknownType { get; } = new List<int> { 1 };
+        private static IReadOnlyList<int> AllowedDriveSpeedsForUnknownType { get; } = AllowedDriveSpeedsForCD; /*TODO: all or maybe just 1? eg new List<int> { 1 };*/
 
         public static IReadOnlyList<int> GetAllowedDriveSpeedsForMediaType(MediaType? type)
         {
             switch (type)
             {
                 case MediaType.CD:
+                case MediaType.GDROM:
                     return AllowedDriveSpeedsForCD;
                 case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                case MediaType.WiiUOpticalDisc:
                     return AllowedDriveSpeedsForDVD;
-                //TODO: we return them all since DIC doens't support them in any case
+                //TODO: we should return them all since DIC doens't support them in any case
                 case MediaType.BluRay:
-                    return AllowedDriveSpeedsForCD;
+                    return AllowedDriveSpeedsForBD;
                 default:
-                    return AllowedDriveSpeedsForCD;             
+                    return AllowedDriveSpeedsForUnknownType;             
             }
         }
 

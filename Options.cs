@@ -67,7 +67,7 @@ namespace DICUI
             {
                 case MediaType.CD: return preferredDumpSpeedCD;
                 case MediaType.DVD: return preferredDumpSpeedDVD;
-                default: return 1; //TODO: think what we want here
+                default: return 8;
             }
         }
     }
