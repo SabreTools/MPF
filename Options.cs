@@ -1,7 +1,7 @@
-﻿using DICUI.Data;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Reflection;
+using DICUI.Data;
 
 namespace DICUI
 {
