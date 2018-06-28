@@ -8,6 +8,7 @@ using DICUI.Data;
 
 namespace DICUI.Utilities
 {
+    // TODO: Should this be made into a non-static class?
     public static class DumpInformation
     {
         /// <summary>
