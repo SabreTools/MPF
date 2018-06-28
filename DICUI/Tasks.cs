@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -65,7 +66,7 @@ namespace DICUI
         {
             return !((string.IsNullOrWhiteSpace(DICParameters)
             || !Validators.ValidateParameters(DICParameters)
-            || (IsFloppy ^ Type == Data.MediaType.Floppy)));
+            || (IsFloppy ^ Type == MediaType.Floppy)));
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace DICUI
             if (System == KnownSystem.Custom)
             {
                 Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
-                DriveLetter = letter[0];
+                DriveLetter = (String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
                 OutputDirectory = Path.GetDirectoryName(path);
                 OutputFilename = Path.GetFileName(path);
             }
@@ -91,8 +92,13 @@ namespace DICUI
         /// </remarks>
         public void FixOutputPaths()
         {
-            OutputDirectory = OutputDirectory.Replace('.', '_').Replace('&', '_');
-            OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
+            // Only fix OutputDirectory if it's not blank or null
+            if (!String.IsNullOrWhiteSpace(OutputDirectory))
+                OutputDirectory = OutputDirectory.Replace('.', '_').Replace('&', '_');
+
+            // Only fix OutputFilename if it's not blank or null
+            if (!String.IsNullOrWhiteSpace(OutputFilename))
+                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
         }
     }
 
