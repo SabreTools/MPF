@@ -49,15 +49,14 @@ namespace DICUI
         public string OutputFilename;
 
         // UI information
-        public Drive Drive;
+        public char DriveLetter;
         public KnownSystem? System;
         public MediaType? Type;
+        public bool IsFloppy;
         public string DICParameters;
 
         // External process information
         public Process dicProcess;
-
-        public bool IsFloppy { get => Drive.IsFloppy; }
 
         /// <summary>
         /// Checks if the configuration is valid
@@ -67,7 +66,7 @@ namespace DICUI
         {
             return !((string.IsNullOrWhiteSpace(DICParameters)
             || !Validators.ValidateParameters(DICParameters)
-            || (Drive.IsFloppy ^ Type == MediaType.Floppy)));
+            || (IsFloppy ^ Type == MediaType.Floppy)));
         }
 
         /// <summary>
@@ -79,7 +78,7 @@ namespace DICUI
             if (System == KnownSystem.Custom)
             {
                 Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
-                Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
+                DriveLetter = (String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
                 OutputDirectory = Path.GetDirectoryName(path);
                 OutputFilename = Path.GetFileName(path);
             }
@@ -206,7 +205,7 @@ namespace DICUI
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
             // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
+            if (env.FoundAllFiles())
             {
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -286,12 +285,12 @@ namespace DICUI
         private static Result VerifyAndSaveDumpOutput(DumpEnvironment env)
         {
             // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
+            if (!env.FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.OutputDirectory, env.OutputFilename, env.System, env.Type, env.Drive.Letter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.System, env.Type);
-            bool success = DumpInformation.WriteOutputData(env.OutputDirectory, env.OutputFilename, formattedValues);
+            Dictionary<string, string> templateValues = env.ExtractOutputInformation();
+            List<string> formattedValues = env.FormatOutputData(templateValues);
+            bool success = env.WriteOutputData(formattedValues);
 
             return Result.Success();
         }
