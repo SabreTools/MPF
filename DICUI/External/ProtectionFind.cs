@@ -162,6 +162,8 @@ namespace DICUI.External
                 return "MediaCloQ";
             if (MediaMaxCD3(files))
                 return "MediaMax CD-3";
+            if (Origin(files))
+                return "Origin";
             if (ProtectDVDVideo(path))
                 return "Protect DVD-Video";
             if (PSX(path, files))
@@ -194,8 +196,12 @@ namespace DICUI.External
                 return "Softlock";
             if (StarForce(out version, files))
                 return "StarForce " + version;
+            if (Steam(files))
+                return "Steam";
             if (Tages(files))
                 return "TAGES";
+            if (UPlay(files))
+                return "UPlay";
             if (VOBProtectCDDVD(files))
                 return "VOB ProtectCD/DVD";
             if (WinLock(files))
@@ -914,6 +920,14 @@ namespace DICUI.External
             return false;
         }
 
+        // TODO: Properly fill out
+        private bool Origin(FileInfo[] files)
+        {
+            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("OriginInstall.exe"))
+                return true;
+            return false;
+        }
+
         private bool ProtectDVDVideo(string path)
         {
             if (Directory.Exists(Path.Combine(path, "VIDEO_TS")))
@@ -1333,6 +1347,14 @@ namespace DICUI.External
             return false;
         }
 
+        // TODO: Properly fill out
+        private bool Steam(FileInfo[] files)
+        {
+            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SteamInstall.exe"))
+                return true;
+            return false;
+        }
+
         private bool Tages(FileInfo[] files)
         {
             if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Tages.dll"))
@@ -1351,6 +1373,14 @@ namespace DICUI.External
         private bool TZCopyProtector(FileInfo[] files)
         {
             if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("_742893.016"))
+                return true;
+            return false;
+        }
+
+        // TODO: Properly fill out
+        private bool UPlay(FileInfo[] files)
+        {
+            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("UPlayInstall.exe"))
                 return true;
             return false;
         }
