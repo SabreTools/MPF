@@ -16,6 +16,7 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -36,23 +37,6 @@ namespace DICUI.External
 
         public ProtectionFind()
         {
-        }
-
-        public int SuffixInStr(string String1, string String2, string Suffix1, string Suffix2)
-        {
-            int rtn = 1;
-            while (rtn > 0)
-            {
-                String1.IndexOf(String2, rtn + 1);
-                if (rtn > -1)
-                {
-                    if (String1.Substring(rtn - 1 + String2.Length, Suffix1.Length) == Suffix1
-                        || String1.Substring(rtn - 1 + String2.Length, Suffix2.Length) == Suffix2)
-                        return rtn;
-                }
-            }
-
-            return -1;
         }
 
         public string Scan(string path, bool advancedscan, bool sizelimit = true)
@@ -158,7 +142,7 @@ namespace DICUI.External
             if (ByteShield(path, files))
                 return "ByteShield";
             if (Cactus(out version, files))
-                return "Cactus Data Shield " + version
+                return "Cactus Data Shield " + version;
             if (CDCops(path, files))
                 return "CD-Cops";
             if (CDProtector(path, files))
@@ -236,7 +220,7 @@ namespace DICUI.External
             return "";
         }
 
-        public string ScanInFile(string file, bool advancedscan)
+        private string ScanInFile(string file, bool advancedscan)
         {
             string FileContent = "";
             StreamReader sr;
@@ -410,7 +394,7 @@ namespace DICUI.External
                 position--;
                 if (advancedscan)
                 {
-                    string version = EVORE.SearchProtectDiscversion(file);
+                    string version = EVORE.SearchProtectDiscVersion(file);
                     if (version.Length > 0)
                     {
                         string[] astrVersionArray = version.Split('.');
@@ -432,7 +416,7 @@ namespace DICUI.External
             {
                 if (advancedscan)
                 {
-                    string verion = EVORE.SearchSafeDiscversion(file);
+                    string version = EVORE.SearchSafeDiscVersion(file);
                     if (version.Length > 0)
                         return "SafeDisc " + version;
                 }
@@ -448,7 +432,7 @@ namespace DICUI.External
                 if (advancedscan)
                 {
                     string version;
-                    version = EVORE.SearchProtectDiscversion(file);
+                    version = EVORE.SearchProtectDiscVersion(file);
                     if (version.Length > 0)
                     {
                         string[] astrVersionArray = version.Split('.');
@@ -470,12 +454,12 @@ namespace DICUI.External
                 }
                 if (advancedscan)
                 {
-                    version = EVORE.SearchProtectDiscversion(file);
+                    version = EVORE.SearchProtectDiscVersion(file);
                     if (version.Length > 0)
                     {
                         if (version.StartsWith("2"))
                         {
-                            version = "6" + version.Substring(1)
+                            version = "6" + version.Substring(1);
                         }
                         return "VOB ProtectCD/DVD " + version;
                     }
@@ -632,9 +616,9 @@ namespace DICUI.External
                 else if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                     && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00)
                 {
-                    position = FileContent.IndexOf("T" + (char)0x0 + "a" + (char)0x0 + "g" + (char)0x0 + "e" + (char)0x0 + "s" + (char)0x0 + "S" + (char)0x0 + "e" + (char)0x0 + "t" + (char)0x0 + "u" + (char)0x0 + "p" _
-                        + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x30 + (char)0x0 + (char)0x8 + (char)0x0 + (char)0x1 + (char)0x0 _
-                        + "F" + (char)0x0 + "i" + (char)0x0 + "l" + (char)0x0 + "e" + (char)0x0 + "V" + (char)0x0 + "e" + (char)0x0 + "r" + (char)0x0 + "s" + (char)0x0 + "i" + (char)0x0 + "o" + (char)0x0 + "n" _
+                    position = FileContent.IndexOf("T" + (char)0x0 + "a" + (char)0x0 + "g" + (char)0x0 + "e" + (char)0x0 + "s" + (char)0x0 + "S" + (char)0x0 + "e" + (char)0x0 + "t" + (char)0x0 + "u" + (char)0x0 + "p"
+                        + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x30 + (char)0x0 + (char)0x8 + (char)0x0 + (char)0x1 + (char)0x0
+                        + "F" + (char)0x0 + "i" + (char)0x0 + "l" + (char)0x0 + "e" + (char)0x0 + "V" + (char)0x0 + "e" + (char)0x0 + "r" + (char)0x0 + "s" + (char)0x0 + "i" + (char)0x0 + "o" + (char)0x0 + "n"
                         + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0);
                     if (position > -1)
                     {
@@ -1416,7 +1400,7 @@ namespace DICUI.External
                     {
                         if (Char.IsNumber(br.ReadChar()))
                             break;
-                        br.BaseStream.Seek(-2, SeekOrigin.Current) //search upwards
+                        br.BaseStream.Seek(-2, SeekOrigin.Current); //search upwards
                     }
 
                     br.BaseStream.Seek(-5, SeekOrigin.Current);
@@ -1444,223 +1428,268 @@ namespace DICUI.External
         private string GetProtectDiscVersionBuild76till10(string file, int position, out int irefBuild)
         {
             irefBuild = 0;
-        }
+            byte version, subversion, versionindicatorPD9, subsubversionPD9x, subversionPD9x1, subversionPD9x2;
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
+            br.BaseStream.Seek(position + 37, SeekOrigin.Begin);
+            subversion = br.ReadByte();
+            br.ReadByte();
+            version = br.ReadByte();
+            br.BaseStream.Seek(position + 49, SeekOrigin.Begin);
+            irefBuild = br.ReadInt32();
+            br.BaseStream.Seek(position + 53, SeekOrigin.Begin);
+            versionindicatorPD9 = br.ReadByte();
+            br.BaseStream.Seek(position + 0x40, SeekOrigin.Begin);
+            subsubversionPD9x = br.ReadByte();
+            subversionPD9x2 = br.ReadByte();
+            subversionPD9x1 = br.ReadByte();
+            br.Close();
 
-    Private Function GetProtectDiscVersionBuild76till10(ByVal file As String, ByVal position As Integer, Optional ByRef irefBuild As Integer = 0) As String
-        Dim version, subversion, versionindicatorPD9, subsubversionPD9x, subversionPD9x1, subversionPD9x2 As Byte
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream)
-        br.BaseStream.Seek(position + 37, IO.SeekOrigin.Begin)
-        subversion = br.ReadByte
-        br.ReadByte()
-        version = br.ReadByte
-        br.BaseStream.Seek(position + 49, IO.SeekOrigin.Begin)
-        irefBuild = br.ReadInt32
-        br.BaseStream.Seek(position + 53, IO.SeekOrigin.Begin)
-        versionindicatorPD9 = br.ReadByte
-        br.BaseStream.Seek(position + 0x40, IO.SeekOrigin.Begin)
-        subsubversionPD9x = br.ReadByte
-        subversionPD9x2 = br.ReadByte
-        subversionPD9x1 = br.ReadByte
-        br.Close()
-
-        if version = 0xAC { ' version 7
-            return "7." & (subversion Xor 0x43) & " (Build " & irefBuild & ")"
-        Elseif version = 0xA2 { 'version 8
-            If(subversion = 0x46) {
-               If((irefBuild && 0x3A00) = 0x3A00) {
-                  return "8.2" & " (Build " & irefBuild & ")"
-                Else
-                    return "8.1" & " (Build " & irefBuild & ")"
+            // version 7
+            if (version == 0xAC)
+                return "7." + (subversion ^ 0x43) + " (Build " + irefBuild + ")";
+            // version 8
+            else if (version == 0xA2)
+            {
+                if (subversion == 0x46)
+                {
+                    if ((irefBuild & 0x3A00) == 0x3A00)
+                        return "8.2" + " (Build " + irefBuild + ")";
+                    else
+                        return "8.1" + " (Build " + irefBuild + ")";
                 }
+                return "8." + (subversion ^ 0x47) + " (Build " + irefBuild + ")";
             }
-            return "8." & (subversion Xor 0x47) & " (Build " & irefBuild & ")"
-        Elseif version = 0xA3 { 'version 9
-            If(subversionPD9x2 = 0x5F && subversionPD9x1 = 0x61) Or(subversionPD9x1 = 0 && subversionPD9x2 = 0) { 'version removed or not given
-                if versionindicatorPD9 = 0xB {
-                    return "9.0-9.4" & " (Build " & irefBuild & ")"
-                Elseif versionindicatorPD9 = 0xC {
-                    If(subversionPD9x2 = 0x5F && subversionPD9x1 = 0x61) {
-                       return "9.5-9.11" & " (Build " & irefBuild & ")"
-                    ElseIf(subversionPD9x1 = 0 && subversionPD9x2 = 0) {
-                       return "9.11-9.20" & " (Build " & irefBuild & ")"
+            // version 9
+            else if (version == 0xA3)
+            {
+                // version removed or not given
+                if ((subversionPD9x2 == 0x5F && subversionPD9x1 == 0x61) || (subversionPD9x1 == 0 && subversionPD9x2 == 0))
+                {
+                    if (versionindicatorPD9 == 0xB)
+                        return "9.0-9.4" + " (Build " + irefBuild + ")";
+                    else if (versionindicatorPD9 == 0xC)
+                    {
+                        if (subversionPD9x2 == 0x5F && subversionPD9x1 == 0x61)
+                            return "9.5-9.11" + " (Build " + irefBuild + ")";
+                        else if (subversionPD9x1 == 0 && subversionPD9x2 == 0)
+                            return "9.11-9.20" + " (Build " + irefBuild + ")";
                     }
+                    else
+                        return "9." + subversionPD9x1 + subversionPD9x2 + "." + subsubversionPD9x + " (Build " + irefBuild + ")";
                 }
-            Else
-                return "9." & subversionPD9x1 & subversionPD9x2 & "." & subsubversionPD9x & " (Build " & irefBuild & ")"
             }
-        Elseif version = 0xA0 {
-            If(subversionPD9x1<> 0 || subversionPD9x2 <> 0) { 'version removed
-                return "10." & subversionPD9x1 & "." & subsubversionPD9x & " (Build " & irefBuild & ")"
-            Else
-                return "10.x (Build " & irefBuild & ")"
+            else if (version == 0xA0)
+            {
+                // version removed
+                if (subversionPD9x1 != 0 || subversionPD9x2 != 0)
+                    return "10." + subversionPD9x1 + "." + subsubversionPD9x + " (Build " + irefBuild + ")";
+                else
+                    return "10.x (Build " + irefBuild + ")";
             }
-        Else : return "7.6-10.x (Build " & irefBuild & ")"
+            else
+                return "7.6-10.x (Build " + irefBuild + ")";
+
+            return "";
         }
-    End Function
 
-    Private Function GetSafeDiscVersion(ByVal file As String, ByVal position As Integer) As String
-        Dim Version As Integer
-        Dim subVersion As Integer
-        Dim subsubVersion As Integer
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream)
-        br.BaseStream.Seek(position + 20, IO.SeekOrigin.Begin) ' Begin reading after "BoG_ *90.0&!!  Yy>" for old SafeDisc
-        Version = br.ReadInt32
-        subVersion = br.ReadInt32
-        subsubVersion = br.ReadInt32
-        if Version<> 0 { return Version & "." & subVersion.ToString("00") & "." & subsubVersion.ToString("000")
-        br.BaseStream.Seek(position + 18 + 14, IO.SeekOrigin.Begin) ' Begin reading after "BoG_ *90.0&!!  Yy>" for newer SafeDisc
-        Version = br.ReadInt32
-        subVersion = br.ReadInt32
-        subsubVersion = br.ReadInt32
-        br.Close()
-        if Version = 0 { return ""
-        return Version & "." & subVersion.ToString("00") & "." & subsubVersion.ToString("000")
-    End Function
-
-    Private Function GetSecuROM4Version(ByVal file As String, ByVal position As Integer) As String
-        Dim Version As Char
-        Dim subVersion1 As Char
-        Dim subVersion2 As Char
-        Dim subsubVersion1 As Char
-        Dim subsubVersion2 As Char
-        Dim subsubsubVersion1 As Char
-        Dim subsubsubVersion2 As Char
-        Dim subsubsubVersion3 As Char
-        Dim subsubsubVersion4 As Char
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream, System.Text.Encoding.Default)
-        br.BaseStream.Seek(position + 8, IO.SeekOrigin.Begin) ' Begin reading after "AddD"
-        Version = br.ReadChar
-        br.ReadByte()
-        subVersion1 = br.ReadChar
-        subVersion2 = br.ReadChar
-        br.ReadByte()
-        subsubVersion1 = br.ReadChar
-        subsubVersion2 = br.ReadChar
-        br.ReadByte()
-        subsubsubVersion1 = br.ReadChar
-        subsubsubVersion2 = br.ReadChar
-        subsubsubVersion3 = br.ReadChar
-        subsubsubVersion4 = br.ReadChar
-        br.Close()
-        return Version & "." & subVersion1.ToString & subVersion2.ToString & "." & subsubVersion1.ToString & subsubVersion2.ToString & "." & subsubsubVersion1 & subsubsubVersion2 & subsubsubVersion3 & subsubsubVersion4
-    End Function
-
-    Private Function GetSecuROM4and5Version(ByVal file As String, ByVal position As Integer) As String
-        Dim Version As Byte
-        Dim subVersion1 As Byte
-        Dim subVersion2 As Byte
-        Dim subsubVersion1 As Byte
-        Dim subsubVersion2 As Byte
-        Dim subsubsubVersion1 As Byte
-        Dim subsubsubVersion2 As Byte
-        Dim subsubsubVersion3 As Byte
-        Dim subsubsubVersion4 As Byte
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream)
-        br.BaseStream.Seek(position + 8, IO.SeekOrigin.Begin) ' Begin reading after "ÊÝÝ¬"
-        Version = br.ReadByte && 0xF
-        br.ReadByte()
-        subVersion1 = br.ReadByte Xor 36
-        subVersion2 = br.ReadByte Xor 28
-        br.ReadByte()
-        subsubVersion1 = br.ReadByte Xor 42
-        subsubVersion2 = br.ReadByte Xor 8
-        br.ReadByte()
-        subsubsubVersion1 = br.ReadByte Xor 16
-        subsubsubVersion2 = br.ReadByte Xor 116
-        subsubsubVersion3 = br.ReadByte Xor 34
-        subsubsubVersion4 = br.ReadByte Xor 22
-        br.Close()
-        if Version = 0 || Version > 9 { return ""
-        return Version & "." & subVersion1.ToString & subVersion2.ToString & "." & subsubVersion1.ToString & subsubVersion2.ToString & "." & subsubsubVersion1 & subsubsubVersion2 & subsubsubVersion3 & subsubsubVersion4
-    End Function
-
-    Private Function GetSecuROM7Version(ByVal file As String) As String
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream)
-        Dim bytes() As Byte
-        br.BaseStream.Seek(236, IO.SeekOrigin.Begin)
-        bytes = br.ReadBytes(4)
-        'if bytes(0) = 0xED && bytes(3) = 0x5C {
-        if bytes(3) = 0x5C { 'SecuROM 7 new and 8
-            br.Close()
-            Return(bytes(0) Xor 0xEA).ToString & "." & (bytes(1) Xor 0x2C).ToString("00") & "." & (bytes(2) Xor 0x8).ToString("0000")
-        Else 'SecuROM 7 old
-            br.BaseStream.Seek(122, IO.SeekOrigin.Begin)
-            bytes = br.ReadBytes(2)
-            br.Close()
-            return "7." & (bytes(0) Xor 0x10).ToString("00") & "." & (bytes(1) Xor 0x10).ToString("0000")
-            'return "7.01-7.10"
+        private string GetSafeDiscVersion(string file, int position)
+        {
+            int version;
+            int subVersion;
+            int subsubVersion;
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
+            br.BaseStream.Seek(position + 20, SeekOrigin.Begin); // Begin reading after "BoG_ *90.0&!!  Yy>" for old SafeDisc
+            version = br.ReadInt32();
+            subVersion = br.ReadInt32();
+            subsubVersion = br.ReadInt32();
+            if (version != 0)
+                return version + "." + subVersion.ToString("00") + "." + subsubVersion.ToString("000");
+            br.BaseStream.Seek(position + 18 + 14, SeekOrigin.Begin); // Begin reading after "BoG_ *90.0&!!  Yy>" for newer SafeDisc
+            version = br.ReadInt32();
+            subVersion = br.ReadInt32();
+            subsubVersion = br.ReadInt32();
+            br.Close();
+            if (version == 0)
+                return "";
+            return version + "." + subVersion.ToString("00") + "." + subsubVersion.ToString("000");
         }
-    End Function
 
-    Private Function GetSysiphusVersion(ByVal file As String, ByVal position As Integer) As String
-        Dim Version As Char
-        Dim subVersion As Char
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream, System.Text.Encoding.Default)
-        br.BaseStream.Seek(position - 3, IO.SeekOrigin.Begin)
-        subVersion = br.ReadChar
-        br.ReadChar()
-        Version = br.ReadChar
-        br.Close()
-        if IsNumeric(Version) && IsNumeric(subVersion) {
-            return Version & "." & subVersion
-        Else : return ""
+        private string GetSecuROM4Version(string file, int position)
+        {
+            char version;
+            char subVersion1;
+            char subVersion2;
+            char subsubVersion1;
+            char subsubVersion2;
+            char subsubsubVersion1;
+            char subsubsubVersion2;
+            char subsubsubVersion3;
+            char subsubsubVersion4;
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream, Encoding.Default);
+            br.BaseStream.Seek(position + 8, SeekOrigin.Begin); // Begin reading after "AddD"
+            version = br.ReadChar();
+            br.ReadByte();
+            subVersion1 = br.ReadChar();
+            subVersion2 = br.ReadChar();
+            br.ReadByte();
+            subsubVersion1 = br.ReadChar();
+            subsubVersion2 = br.ReadChar();
+            br.ReadByte();
+            subsubsubVersion1 = br.ReadChar();
+            subsubsubVersion2 = br.ReadChar();
+            subsubsubVersion3 = br.ReadChar();
+            subsubsubVersion4 = br.ReadChar();
+            br.Close();
+            return version + "." + subVersion1 + subVersion2 + "." + subsubVersion1 + subsubVersion2 + "." + subsubsubVersion1 + subsubsubVersion2 + subsubsubVersion3 + subsubsubVersion4;
         }
-    End Function
 
-    Private Function GetTagesVersion(ByVal file As String, ByVal position As Integer) As String
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream)
-        Dim bVersion As Byte
-        br.BaseStream.Seek(position + 7, IO.SeekOrigin.Begin)
-        bVersion = br.ReadByte
-        br.Close()
-        Select Case bVersion
-            Case 0x1B
-                return "5.3-5.4"
-            Case 0x14
-                return "5.5.0"
-            Case 0x4
-                return "5.5.2"
-        End Select
-        return ""
-    End Function
-
-    Private Function GetVOBProtectCDDVDBuild(ByVal file As String, ByVal position As Integer) As String
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream)
-        br.BaseStream.Seek(position - 13, IO.SeekOrigin.Begin)
-        if Not IsNumeric(br.ReadChar) { return "" 'Build info removed
-        br.BaseStream.Seek(position - 4, IO.SeekOrigin.Begin)
-        Dim Build As Integer = br.ReadInt16
-        br.Close()
-        return " (Build " & Build & ")"
-    End Function
-
-    Private Function GetVOBProtectCDDVDVersion(ByVal file As String, ByVal position As Integer) As String
-        Dim Version As Byte
-        Dim subVersion As Byte
-        Dim subsubVersion As Byte
-        Dim br As New System.IO.BinaryReader(New System.IO.StreamReader(file).BaseStream, System.Text.Encoding.Default)
-        br.BaseStream.Seek(position - 2, IO.SeekOrigin.Begin)
-        Version = br.ReadByte
-        if Version = 5 {
-            br.BaseStream.Seek(position - 4, IO.SeekOrigin.Begin)
-            subsubVersion = (br.ReadByte && 0xF0) >> 4
-            subVersion = (br.ReadByte && 0xF0) >> 4
-            br.Close()
-            return Version & "." & subVersion & "." & subsubVersion
-        Else : return ""
+        private string GetSecuROM4and5Version(string file, int position)
+        {
+            byte version;
+            byte subVersion1;
+            byte subVersion2;
+            byte subsubVersion1;
+            byte subsubVersion2;
+            byte subsubsubVersion1;
+            byte subsubsubVersion2;
+            byte subsubsubVersion3;
+            byte subsubsubVersion4;
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
+            br.BaseStream.Seek(position + 8, SeekOrigin.Begin); // Begin reading after "ÊÝÝ¬"
+            version = (byte)(br.ReadByte() & 0xF);
+            br.ReadByte();
+            subVersion1 = (byte)(br.ReadByte() ^ 36);
+            subVersion2 = (byte)(br.ReadByte() ^ 28);
+            br.ReadByte();
+            subsubVersion1 = (byte)(br.ReadByte() ^ 42);
+            subsubVersion2 = (byte)(br.ReadByte() ^ 8);
+            br.ReadByte();
+            subsubsubVersion1 = (byte)(br.ReadByte() ^ 16);
+            subsubsubVersion2 = (byte)(br.ReadByte() ^ 116);
+            subsubsubVersion3 = (byte)(br.ReadByte() ^ 34);
+            subsubsubVersion4 = (byte)(br.ReadByte() ^ 22);
+            br.Close();
+            if (version == 0 || version > 9)
+                return "";
+            return version + "." + subVersion1 + subVersion2 + "." + subsubVersion1 + subsubVersion2 + "." + subsubsubVersion1 + subsubsubVersion2 + subsubsubVersion3 + subsubsubVersion4;
         }
-    End Function
+
+        private string GetSecuROM7Version(string file)
+        {
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
+            br.BaseStream.Seek(236, SeekOrigin.Begin);
+            byte[] bytes = br.ReadBytes(4);
+            // if bytes(0) = 0xED && bytes(3) = 0x5C {
+            if (bytes[3] == 0x5C)
+            {
+                //SecuROM 7 new and 8
+                br.Close();
+                return (bytes[0] ^ 0xEA).ToString() + "." + (bytes[1] ^ 0x2C).ToString("00") + "." + (bytes[2] ^ 0x8).ToString("0000");
+            }
+            else // SecuROM 7 old
+            {
+                br.BaseStream.Seek(122, SeekOrigin.Begin);
+                bytes = br.ReadBytes(2);
+                br.Close();
+                return "7." + (bytes[0] ^ 0x10).ToString("00") + "." + (bytes[1] ^ 0x10).ToString("0000");
+                //return "7.01-7.10"
+            }
+        }
+
+        private string GetSysiphusVersion(string file, int position)
+        {
+            char version;
+            char subVersion;
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream, Encoding.Default);
+            br.BaseStream.Seek(position - 3, SeekOrigin.Begin);
+            subVersion = br.ReadChar();
+            br.ReadChar();
+            version = br.ReadChar();
+            br.Close();
+            if (Char.IsNumber(version) && Char.IsNumber(subVersion))
+                return version + "." + subVersion;
+            else
+                return "";
+        }
+
+        private string GetTagesVersion(string file, int position)
+        {
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
+            br.BaseStream.Seek(position + 7, SeekOrigin.Begin);
+            byte bVersion = br.ReadByte();
+            br.Close();
+            switch(bVersion)
+            {
+                case 0x1B:
+                    return "5.3-5.4";
+                case 0x14:
+                    return "5.5.0";
+                case 0x4:
+                    return "5.5.2";
+            }
+            return "";
+        }
+
+        private string GetVOBProtectCDDVDBuild(string file, int position)
+        {
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
+            br.BaseStream.Seek(position - 13, SeekOrigin.Begin);
+            if (!Char.IsNumber(br.ReadChar()))
+                return ""; //Build info removed
+            br.BaseStream.Seek(position - 4, SeekOrigin.Begin);
+            int build = br.ReadInt16();
+            br.Close();
+            return " (Build " + build + ")";
+        }
+
+        private string GetVOBProtectCDDVDVersion(string file, int position)
+        {
+            byte version;
+            byte subVersion;
+            byte subsubVersion;
+            BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream, Encoding.Default);
+            br.BaseStream.Seek(position - 2, SeekOrigin.Begin);
+            version = br.ReadByte();
+            if (version == 5)
+            {
+                br.BaseStream.Seek(position - 4, SeekOrigin.Begin);
+                subsubVersion = (byte)((br.ReadByte() & 0xF0) >> 4);
+                subVersion = (byte)((br.ReadByte() & 0xF0) >> 4);
+                br.Close();
+                return version + "." + subVersion + "." + subsubVersion;
+            }
+            else
+                return "";
+        }
 
 #endregion
 
-        Private Function GetFileVersion(ByVal file As String) As String
-        Dim fvinfo As System.Diagnostics.FileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(file)
-        if fvinfo.FileVersion Is Nothing { return ""
-        if fvinfo.FileVersion<> "" {
-            return fvinfo.FileVersion.Replace(", ", ".")
-        Else
-            return fvinfo.ProductVersion.Replace(", ", ".")
+        private string GetFileVersion(string file)
+        {
+            FileVersionInfo fvinfo = FileVersionInfo.GetVersionInfo(file);
+            if (fvinfo.FileVersion == null)
+                return "";
+            if (fvinfo.FileVersion != "")
+                return fvinfo.FileVersion.Replace(", ", ".");
+            else
+                return fvinfo.ProductVersion.Replace(", ", ".");
         }
-    End Function
+
+        private int SuffixInStr(string String1, string String2, string Suffix1, string Suffix2)
+        {
+            int rtn = 1;
+            while (rtn > 0)
+            {
+                String1.IndexOf(String2, rtn + 1);
+                if (rtn > -1)
+                {
+                    if (String1.Substring(rtn - 1 + String2.Length, Suffix1.Length) == Suffix1
+                        || String1.Substring(rtn - 1 + String2.Length, Suffix2.Length) == Suffix2)
+                        return rtn;
+                }
+            }
+
+            return -1;
+        }
     }
 }
