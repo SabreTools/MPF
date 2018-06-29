@@ -1100,68 +1100,6 @@ namespace DICUI.External
         private bool SafeDisc3(out string version, string path, FileInfo[] files)
         {
             version = "";
-            bool found = false;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
-                found = true;
-            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
-            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("secdrv.sys");
-            if (fileindexsecdrv > -1)
-            {
-                if (files[fileindexsecdrv].Length == 18768)
-                {
-                    found = true;
-                    version = "2.50";
-                }
-            }
-            if (fileindexsecdrv > -1 && fileindexdrvmgt > -1)
-            {
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 20128)
-                    version = "2.10";
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 27440)
-                    version = "2.30";
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 28624)
-                    version = "2.40";
-                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 28400)
-                    version = "2.51";
-                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 29392)
-                    version = "2.60";
-                if (files[fileindexdrvmgt].Length == 40960 && files[fileindexsecdrv].Length == 11376)
-                    version = "2.70";
-                if (files[fileindexdrvmgt].Length == 23552 && files[fileindexsecdrv].Length == 12464)
-                    version = "2.80";
-                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12400)
-                    version = "2.90";
-                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12528)
-                    version = "3.10";
-                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 12528)
-                    version = "3.15";
-                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 11973)
-                    version = "3.20";
-                if (version != "")
-                    found = true;
-            }
-            if (fileindexdrvmgt > -1 && version == "")
-            {
-                if (files[fileindexdrvmgt].Length == 34304)
-                    version = "2.0x";
-                if (files[fileindexdrvmgt].Length == 35840)
-                    version = "2.6x";
-                if (files[fileindexdrvmgt].Length == 40960)
-                    version = "2.7x";
-                if (files[fileindexdrvmgt].Length == 23552)
-                    version = "2.8x";
-                if (files[fileindexdrvmgt].Length == 41472)
-                    version = "2.9x";
-                if (version != "")
-                    found = true;
-            }
-            if (found == true)
-            {
-                if (version == "")
-                    version = "2-4";
-                return true;
-            }
-
             return false;
         }
 
@@ -1169,68 +1107,6 @@ namespace DICUI.External
         private bool SafeDisc4(out string version, string path, FileInfo[] files)
         {
             version = "";
-            bool found = false;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
-                found = true;
-            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
-            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("secdrv.sys");
-            if (fileindexsecdrv > -1)
-            {
-                if (files[fileindexsecdrv].Length == 18768)
-                {
-                    found = true;
-                    version = "2.50";
-                }
-            }
-            if (fileindexsecdrv > -1 && fileindexdrvmgt > -1)
-            {
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 20128)
-                    version = "2.10";
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 27440)
-                    version = "2.30";
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 28624)
-                    version = "2.40";
-                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 28400)
-                    version = "2.51";
-                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 29392)
-                    version = "2.60";
-                if (files[fileindexdrvmgt].Length == 40960 && files[fileindexsecdrv].Length == 11376)
-                    version = "2.70";
-                if (files[fileindexdrvmgt].Length == 23552 && files[fileindexsecdrv].Length == 12464)
-                    version = "2.80";
-                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12400)
-                    version = "2.90";
-                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12528)
-                    version = "3.10";
-                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 12528)
-                    version = "3.15";
-                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 11973)
-                    version = "3.20";
-                if (version != "")
-                    found = true;
-            }
-            if (fileindexdrvmgt > -1 && version == "")
-            {
-                if (files[fileindexdrvmgt].Length == 34304)
-                    version = "2.0x";
-                if (files[fileindexdrvmgt].Length == 35840)
-                    version = "2.6x";
-                if (files[fileindexdrvmgt].Length == 40960)
-                    version = "2.7x";
-                if (files[fileindexdrvmgt].Length == 23552)
-                    version = "2.8x";
-                if (files[fileindexdrvmgt].Length == 41472)
-                    version = "2.9x";
-                if (version != "")
-                    found = true;
-            }
-            if (found == true)
-            {
-                if (version == "")
-                    version = "2-4";
-                return true;
-            }
-
             return false;
         }
 
