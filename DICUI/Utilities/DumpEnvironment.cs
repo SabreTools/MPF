@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
 using DICUI.Data;
 using DICUI.External;
 
@@ -724,6 +725,12 @@ namespace DICUI.Utilities
         /// <returns>Copy protection scheme if possible, null on error</returns>
         private string GetCopyProtection(char driveLetter)
         {
+            MessageBoxResult result = MessageBox.Show("Would you like to scan for copy protection? Warning: This may take a long time depending on the size of the disc!", "Copy Protection Scan", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+            {
+                return "(CHECK WITH PROTECTIONID)";
+            }
+
             ProtectionFind pf = new ProtectionFind();
             return pf.Scan(driveLetter + ":\\", true, false);
         }
