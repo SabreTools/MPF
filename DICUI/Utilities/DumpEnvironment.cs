@@ -558,7 +558,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="filename">file location</param>
         /// <returns>Full text of the file, null on error</returns>
-        private static string GetFullFile(string filename)
+        private string GetFullFile(string filename)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -574,7 +574,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="dat">.dat file location</param>
         /// <returns>Relevant pieces of the datfile, null on error</returns>
-        private static string GetDatfile(string dat)
+        private string GetDatfile(string dat)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dat))
@@ -626,7 +626,7 @@ namespace DICUI.Utilities
         /// <param name="c2Error">_c2Error.txt file location</param>
         /// <param name="mainError">_mainError.txt file location</param>
         /// <returns>Error count if possible, -1 on error</returns>
-        private static long GetErrorCount(string edcecc, string c2Error, string mainError)
+        private long GetErrorCount(string edcecc, string c2Error, string mainError)
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(edcecc) || !File.Exists(c2Error) || !File.Exists(mainError))
@@ -678,7 +678,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Antimodchip existance if possible, false on error</returns>
-        private static bool GetAntiModchipDetected(string disc)
+        private bool GetAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -721,7 +721,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Layerbreak if possible, null on error</returns>
-        private static string GetLayerbreak(string disc)
+        private string GetLayerbreak(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -752,7 +752,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt file location</param>
         /// <returns>Missing EDC count if possible, -1 on error</returns>
-        private static long GetMissingEDCCount(string edcecc)
+        private long GetMissingEDCCount(string edcecc)
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(edcecc))
@@ -787,7 +787,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Newline-deliminated PVD if possible, null on error</returns>
-        private static string GetPVD(string mainInfo)
+        private string GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -824,7 +824,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
-        private static string GetPlayStationEXEDate(char driveLetter)
+        private string GetPlayStationEXEDate(char driveLetter)
         {
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
@@ -879,7 +879,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        private static string GetPlayStation2Version(char driveLetter)
+        private string GetPlayStation2Version(char driveLetter)
         {
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
@@ -923,7 +923,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="firstTrackPath">Path to the first track to check</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private static string GetSaturnHeader(string firstTrackPath)
+        private string GetSaturnHeader(string firstTrackPath)
         {
             // If the file doesn't exist, we can't get the header
             if (!File.Exists(firstTrackPath))
@@ -967,7 +967,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <<param name="saturnHeader">String representing a formatter variant of the Saturn header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetSaturnBuildInfo(string saturnHeader, out string serial, out string version, out string date)
+        private bool GetSaturnBuildInfo(string saturnHeader, out string serial, out string version, out string date)
         {
             serial = null; version = null; date = null;
 
@@ -1000,7 +1000,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss)
+        private bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss)
         {
             dmihash = null; pfihash = null; sshash = null; ss = null;
 
@@ -1052,7 +1052,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Sample write offset if possible, null on error</returns>
-        private static string GetWriteOffset(string disc)
+        private string GetWriteOffset(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
