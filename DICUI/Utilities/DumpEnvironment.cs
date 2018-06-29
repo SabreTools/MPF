@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using DICUI.Data;
+using DICUI.External;
 
 namespace DICUI.Utilities
 {
@@ -235,7 +236,7 @@ namespace DICUI.Utilities
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            mappings[Template.CopyProtectionField] = GetCopyProtection(DriveLetter) ?? Template.RequiredIfExistsValue;
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -331,7 +332,7 @@ namespace DICUI.Utilities
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            mappings[Template.CopyProtectionField] = GetCopyProtection(DriveLetter) ?? Template.RequiredIfExistsValue;
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -714,6 +715,17 @@ namespace DICUI.Utilities
                     return false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the current copy protection scheme, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Copy protection scheme if possible, null on error</returns>
+        private string GetCopyProtection(char driveLetter)
+        {
+            ProtectionFind pf = new ProtectionFind();
+            return pf.Scan(driveLetter + ":\\", true, false);
         }
 
         /// <summary>
