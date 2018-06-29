@@ -144,7 +144,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_subError.txt")
                         && File.Exists(combinedBase + "_subInfo.txt")
-                        && File.Exists(combinedBase + "_subIntention.txt")
+                        // && File.Exists(combinedBase + "_subIntention.txt")
                         && File.Exists(combinedBase + "_subReadable.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case MediaType.DVD:
