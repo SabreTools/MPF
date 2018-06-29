@@ -505,32 +505,39 @@ namespace DICUI.Utilities
             }
 
             // Get all relevant disc information
-            MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-            deviceId = deviceId.ToLower().Replace('\\', '#');
-            string id = null;
-            foreach (var disc in discMaster)
+            try
             {
-                if (disc.ToString().Contains(deviceId))
+                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+                deviceId = deviceId.ToLower().Replace('\\', '#');
+                string id = null;
+                foreach (var disc in discMaster)
                 {
-                    id = disc.ToString();
+                    if (disc.ToString().Contains(deviceId))
+                    {
+                        id = disc.ToString();
+                    }
+                }
+
+                // If we couldn't find the drive, we don't care and return
+                if (id == null)
+                {
+                    return null;
+                }
+
+                // Otherwise, we get the media type, if any
+                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                recorder.InitializeDiscRecorder(id);
+                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+                dataWriter.Recorder = recorder;
+                var media = dataWriter.CurrentPhysicalMediaType;
+                if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+                {
+                    return Converters.IMAPIDiskTypeToMediaType(media);
                 }
             }
-
-            // If we couldn't find the drive, we don't care and return
-            if (id == null)
+            catch
             {
-                return null;
-            }
-
-            // Otherwise, we get the media type, if any
-            MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-            recorder.InitializeDiscRecorder(id);
-            MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-            dataWriter.Recorder = recorder;
-            var media = dataWriter.CurrentPhysicalMediaType;
-            if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-            {
-                return Converters.IMAPIDiskTypeToMediaType(media);
+                // We don't care what the error is
             }
 
             return null;
