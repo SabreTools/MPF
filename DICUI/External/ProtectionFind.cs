@@ -60,7 +60,7 @@ namespace DICUI.External
             }
             filesstr = null;
 
-            string[] EXEFiles = Directory.GetFiles(path, "*.icd|*.dat|*.exe|*.dll", SearchOption.AllDirectories);
+            string[] EXEFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".icd") || s.EndsWith(".dat") || s.EndsWith(".exe") || s.EndsWith(".dll")).ToArray();
 
             if (EXEFiles.Length != 0)
             {
@@ -982,7 +982,7 @@ namespace DICUI.External
                 if (files[fileindex].Length == 138752)
                     version = "1.5x";
             }
-            fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DrvMgt.dll");
+            fileindex = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
             if (fileindex > -1)
             {
                 found = true;
@@ -1020,8 +1020,8 @@ namespace DICUI.External
             bool found = false;
             if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
                 found = true;
-            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DrvMgt.dll");
-            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("secdrv.sys");
+            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
+            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("secdrv.sys");
             if (fileindexsecdrv > -1)
             {
                 if (files[fileindexsecdrv].Length == 18768)
@@ -1089,8 +1089,8 @@ namespace DICUI.External
             bool found = false;
             if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
                 found = true;
-            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DrvMgt.dll");
-            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("secdrv.sys");
+            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
+            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("secdrv.sys");
             if (fileindexsecdrv > -1)
             {
                 if (files[fileindexsecdrv].Length == 18768)
@@ -1158,8 +1158,8 @@ namespace DICUI.External
             bool found = false;
             if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
                 found = true;
-            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DrvMgt.dll");
-            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("secdrv.sys");
+            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
+            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("secdrv.sys");
             if (fileindexsecdrv > -1)
             {
                 if (files[fileindexsecdrv].Length == 18768)
@@ -1812,7 +1812,7 @@ namespace DICUI.External
             int rtn = 1;
             while (rtn > 0)
             {
-                String1.IndexOf(String2, rtn + 1);
+                rtn = String1.IndexOf(String2, rtn + 1);
                 if (rtn > -1)
                 {
                     if (String1.Substring(rtn - 1 + String2.Length, Suffix1.Length) == Suffix1
