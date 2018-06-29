@@ -92,6 +92,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Constants.cs" />
+    <Compile Include="External\EVORE.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Tasks.cs" />
     <Compile Include="External\ProtectionFind.cs" />
