@@ -61,12 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\UIElementsTest.cs" />
-    <Compile Include="DumpEnvironmentTest.cs" />
+    <Compile Include="Utilities\DumpEnvironmentTest.cs" />
     <Compile Include="ResultTest.cs" />
     <Compile Include="TasksTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ConvertersTest.cs" />
-    <Compile Include="Utilities\DumpInformationTest.cs" />
     <Compile Include="Utilities\KnownSystemExtensionsTest.cs" />
     <Compile Include="Utilities\MediaTypeExtensionsTest.cs" />
     <Compile Include="Utilities\ValidatorsTest.cs" />

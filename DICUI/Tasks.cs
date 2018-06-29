@@ -36,73 +36,6 @@ namespace DICUI
     }
 
     /// <summary>
-    /// Represents the state of all settings to be used during dumping
-    /// </summary>
-    public class DumpEnvironment
-    {
-        // Tool paths
-        public string DICPath;
-        public string SubdumpPath;
-
-        // Output paths
-        public string OutputDirectory;
-        public string OutputFilename;
-
-        // UI information
-        public char DriveLetter;
-        public KnownSystem? System;
-        public MediaType? Type;
-        public bool IsFloppy;
-        public string DICParameters;
-
-        // External process information
-        public Process dicProcess;
-
-        /// <summary>
-        /// Checks if the configuration is valid
-        /// </summary>
-        /// <returns>True if the configuration is valid, false otherwise</returns>
-        public bool IsConfigurationValid()
-        {
-            return !((string.IsNullOrWhiteSpace(DICParameters)
-            || !Validators.ValidateParameters(DICParameters)
-            || (IsFloppy ^ Type == MediaType.Floppy)));
-        }
-
-        /// <summary>
-        /// Adjust the current environment if we are given custom parameters
-        /// </summary>
-        public void AdjustForCustomConfiguration()
-        {
-            // If we have a custom configuration, we need to extract the best possible information from it
-            if (System == KnownSystem.Custom)
-            {
-                Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
-                DriveLetter = (String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
-                OutputDirectory = Path.GetDirectoryName(path);
-                OutputFilename = Path.GetFileName(path);
-            }
-        }
-
-        /// <summary>
-        /// Fix the output paths to remove characters that DiscImageCreator can't handle
-        /// </summary>
-        /// <remarks>
-        /// TODO: Investigate why the `&` replacement is needed
-        /// </remarks>
-        public void FixOutputPaths()
-        {
-            // Only fix OutputDirectory if it's not blank or null
-            if (!String.IsNullOrWhiteSpace(OutputDirectory))
-                OutputDirectory = OutputDirectory.Replace('.', '_').Replace('&', '_');
-
-            // Only fix OutputFilename if it's not blank or null
-            if (!String.IsNullOrWhiteSpace(OutputFilename))
-                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
-        }
-    }
-
-    /// <summary>
     /// Class containing dumping tasks
     /// </summary>
     public class Tasks
@@ -205,7 +138,7 @@ namespace DICUI
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
             // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
+            if (env.FoundAllFiles())
             {
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -285,12 +218,12 @@ namespace DICUI
         private static Result VerifyAndSaveDumpOutput(DumpEnvironment env)
         {
             // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
+            if (!env.FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.OutputDirectory, env.OutputFilename, env.System, env.Type, env.DriveLetter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.System, env.Type);
-            bool success = DumpInformation.WriteOutputData(env.OutputDirectory, env.OutputFilename, formattedValues);
+            Dictionary<string, string> templateValues = env.ExtractOutputInformation();
+            List<string> formattedValues = env.FormatOutputData(templateValues);
+            bool success = env.WriteOutputData(formattedValues);
 
             return Result.Success();
         }

@@ -1,4 +1,5 @@
 ﻿using DICUI.Data;
+using DICUI.Utilities;
 using Xunit;
 
 namespace DICUI.Test
@@ -48,7 +49,7 @@ namespace DICUI.Test
             Assert.Equal(expectedOutputDirectory, env.OutputDirectory);
             Assert.Equal(expectedOutputFilename, env.OutputFilename);
         }
-        
+
         [Theory]
         [InlineData(null, null, null, null)]
         [InlineData(" ", "", " ", "")]
@@ -69,6 +70,58 @@ namespace DICUI.Test
             env.FixOutputPaths();
             Assert.Equal(expectedOutputDirectory, env.OutputDirectory);
             Assert.Equal(expectedOutputFilename, env.OutputFilename);
+        }
+
+        [Fact]
+        public void GetFirstTrackTest()
+        {
+            // TODO: Implement
+            Assert.True(true);
+        }
+
+        [Theory]
+        [InlineData(MediaType.CD)]
+        [InlineData(MediaType.DVD)]
+        [InlineData(MediaType.Floppy)]
+        [InlineData(MediaType.LaserDisc)]
+        public void FoundAllFilesTest(MediaType? mediaType)
+        {
+            // TODO: Implement
+            // TODO: Get sample output data for each of the major types
+            Assert.True(true);
+        }
+
+        [Theory]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD)]
+        [InlineData(KnownSystem.PhilipsCDi, MediaType.CD)]
+        [InlineData(KnownSystem.SegaSaturn, MediaType.CD)]
+        [InlineData(KnownSystem.SonyPlayStation, MediaType.CD)]
+        [InlineData(KnownSystem.SonyPlayStation2, MediaType.CD)]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.DVD)]
+        [InlineData(KnownSystem.DVDVideo, MediaType.DVD)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD)]
+        [InlineData(KnownSystem.SonyPlayStation2, MediaType.DVD)]
+        [InlineData(KnownSystem.BDVideo, MediaType.BluRay)]
+        [InlineData(KnownSystem.AUSCOMSystem1, MediaType.Cassette)]
+        public void ExtractOutputInformation(KnownSystem? knownSystem, MediaType? mediaType)
+        {
+            // TODO: Implement
+            // TODO: Get sample output data for each of the major types
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void FormatOutputDataTest()
+        {
+            // TODO: Implement
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void WriteOutputDataTest()
+        {
+            // TODO: Implement
+            Assert.True(true);
         }
     }
 }
