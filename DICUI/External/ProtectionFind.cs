@@ -23,6 +23,7 @@ using System.Text;
 
 namespace DICUI.External
 {
+    // TODO: Add any missing protection schemes
     public class ProtectionFind
     {
         public bool IsCDCheck;
@@ -41,8 +42,6 @@ namespace DICUI.External
 
         public string Scan(string path, bool advancedscan, bool sizelimit = true)
         {
-            string[] EXEFiles;
-            string protectionname;
             string version = "";
 
             IsImpulseReactorWithoutVersion = false;
@@ -61,7 +60,7 @@ namespace DICUI.External
             }
             filesstr = null;
 
-            EXEFiles = Directory.GetFiles(path, "*.icd|*.dat|*.exe|*.dll", SearchOption.AllDirectories);
+            string[] EXEFiles = Directory.GetFiles(path, "*.icd|*.dat|*.exe|*.dll", SearchOption.AllDirectories);
 
             if (EXEFiles.Length != 0)
             {
@@ -71,61 +70,51 @@ namespace DICUI.External
                     if (filei.Length > 352 && !(sizelimit && filei.Length > 20971520))
                     {
                         Console.WriteLine("scanning file Nr." + i + "(" + EXEFiles[i] + ")");
-                        protectionname = ScanInFile(EXEFiles[i], advancedscan);
+                        string protectionname = ScanInFile(EXEFiles[i], advancedscan);
                         if (!String.IsNullOrEmpty(protectionname))
                         {
                             if (IsImpulseReactorWithoutVersion)
                             {
                                 IsImpulseReactorWithoutVersion = false;
                                 if (ImpulseReactor(out version, files))
-                                {
                                     return "Impulse Reactor " + version;
-                                }
                             }
                             else if (IsLaserLockWithoutVersion)
                             {
                                 IsLaserLockWithoutVersion = false;
                                 if (LaserLock(out version, path, files) && version.Length > 0)
-                                {
                                     return "LaserLock " + version;
-                                }
                             }
                             else if (IsSafeDiscRemovedVersion)
                             {
                                 IsSafeDiscRemovedVersion = false;
                                 if (SafeDisc2(out version, path, files) && version != "2-4")
-                                {
                                     return "SafeDisc " + version;
-                                }
+                                if (SafeDisc3(out version, path, files) && version != "2-4")
+                                    return "SafeDisc " + version;
+                                if (SafeDisc4(out version, path, files) && version != "2-4")
+                                    return "SafeDisc " + version;
                             }
                             else if (IsSolidShieldWithoutVersion)
                             {
                                 IsSolidShieldWithoutVersion = false;
                                 if (SolidShield(out version, files) && version.Length > 0)
-                                {
                                     return "SolidShield " + version;
-                                }
                             }
                             else if (IsStarForceWithoutVersion)
                             {
                                 IsStarForceWithoutVersion = false;
                                 if (StarForce(out version, files) && version.Length > 0)
-                                {
                                     return "StarForce " + version;
-                                }
                             }
 
                             if (SecuROMpaulversion.Length > 0)
                             {
                                 if (!protectionname.StartsWith("SecuROM Product Activation"))
-                                {
                                     return protectionname + " + SecuROM Product Activation" + SecuROMpaulversion;
-                                }
                             }
                             else
-                            {
                                 return protectionname;
-                            }
                         }
                     }
                 }
@@ -181,6 +170,10 @@ namespace DICUI.External
                 return "SafeCast";
             if (SafeDiscLite(files))
                 return "SafeDisc Lite";
+            if (SafeDisc4(out version, path, files))
+                return "SafeDisc " + version;
+            if (SafeDisc3(out version, path, files))
+                return "SafeDisc " + version;
             if (SafeDisc2(out version, path, files))
                 return "SafeDisc " + version;
             if (TZCopyProtector(files))
@@ -229,7 +222,7 @@ namespace DICUI.External
             {
                 sr = new StreamReader(file, Encoding.Default);
             }
-            catch (Exception)
+            catch
             {
                 return "";
             }
@@ -680,7 +673,7 @@ namespace DICUI.External
             return "";
         }
 
-        #region "Protections"
+        #region Protections
 
         private bool AACS(string path)
         {
@@ -937,6 +930,7 @@ namespace DICUI.External
             return false;
         }
 
+        // TODO: Fix
         private bool PSX(string path, FileInfo[] files)
         {
             if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SLES_016.83"))
@@ -1021,6 +1015,144 @@ namespace DICUI.External
         }
 
         private bool SafeDisc2(out string version, string path, FileInfo[] files)
+        {
+            version = "";
+            bool found = false;
+            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
+                found = true;
+            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DrvMgt.dll");
+            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("secdrv.sys");
+            if (fileindexsecdrv > -1)
+            {
+                if (files[fileindexsecdrv].Length == 18768)
+                {
+                    found = true;
+                    version = "2.50";
+                }
+            }
+            if (fileindexsecdrv > -1 && fileindexdrvmgt > -1)
+            {
+                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 20128)
+                    version = "2.10";
+                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 27440)
+                    version = "2.30";
+                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 28624)
+                    version = "2.40";
+                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 28400)
+                    version = "2.51";
+                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 29392)
+                    version = "2.60";
+                if (files[fileindexdrvmgt].Length == 40960 && files[fileindexsecdrv].Length == 11376)
+                    version = "2.70";
+                if (files[fileindexdrvmgt].Length == 23552 && files[fileindexsecdrv].Length == 12464)
+                    version = "2.80";
+                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12400)
+                    version = "2.90";
+                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12528)
+                    version = "3.10";
+                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 12528)
+                    version = "3.15";
+                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 11973)
+                    version = "3.20";
+                if (version != "")
+                    found = true;
+            }
+            if (fileindexdrvmgt > -1 && version == "")
+            {
+                if (files[fileindexdrvmgt].Length == 34304)
+                    version = "2.0x";
+                if (files[fileindexdrvmgt].Length == 35840)
+                    version = "2.6x";
+                if (files[fileindexdrvmgt].Length == 40960)
+                    version = "2.7x";
+                if (files[fileindexdrvmgt].Length == 23552)
+                    version = "2.8x";
+                if (files[fileindexdrvmgt].Length == 41472)
+                    version = "2.9x";
+                if (version != "")
+                    found = true;
+            }
+            if (found == true)
+            {
+                if (version == "")
+                    version = "2-4";
+                return true;
+            }
+
+            return false;
+        }
+
+        // TODO: Populate properly
+        private bool SafeDisc3(out string version, string path, FileInfo[] files)
+        {
+            version = "";
+            bool found = false;
+            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
+                found = true;
+            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DrvMgt.dll");
+            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("secdrv.sys");
+            if (fileindexsecdrv > -1)
+            {
+                if (files[fileindexsecdrv].Length == 18768)
+                {
+                    found = true;
+                    version = "2.50";
+                }
+            }
+            if (fileindexsecdrv > -1 && fileindexdrvmgt > -1)
+            {
+                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 20128)
+                    version = "2.10";
+                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 27440)
+                    version = "2.30";
+                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 28624)
+                    version = "2.40";
+                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 28400)
+                    version = "2.51";
+                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 29392)
+                    version = "2.60";
+                if (files[fileindexdrvmgt].Length == 40960 && files[fileindexsecdrv].Length == 11376)
+                    version = "2.70";
+                if (files[fileindexdrvmgt].Length == 23552 && files[fileindexsecdrv].Length == 12464)
+                    version = "2.80";
+                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12400)
+                    version = "2.90";
+                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12528)
+                    version = "3.10";
+                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 12528)
+                    version = "3.15";
+                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 11973)
+                    version = "3.20";
+                if (version != "")
+                    found = true;
+            }
+            if (fileindexdrvmgt > -1 && version == "")
+            {
+                if (files[fileindexdrvmgt].Length == 34304)
+                    version = "2.0x";
+                if (files[fileindexdrvmgt].Length == 35840)
+                    version = "2.6x";
+                if (files[fileindexdrvmgt].Length == 40960)
+                    version = "2.7x";
+                if (files[fileindexdrvmgt].Length == 23552)
+                    version = "2.8x";
+                if (files[fileindexdrvmgt].Length == 41472)
+                    version = "2.9x";
+                if (version != "")
+                    found = true;
+            }
+            if (found == true)
+            {
+                if (version == "")
+                    version = "2-4";
+                return true;
+            }
+
+            return false;
+        }
+
+        // TODO: Populate properly
+        private bool SafeDisc4(out string version, string path, FileInfo[] files)
         {
             version = "";
             bool found = false;
@@ -1288,7 +1420,7 @@ namespace DICUI.External
 
         #endregion
 
-        #region "Version detections"
+        #region Version detections
 
         private string GetCDDVDCopsVersion(string file, int position)
         {
