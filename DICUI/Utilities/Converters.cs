@@ -24,7 +24,18 @@ namespace DICUI.Utilities
 
         public static bool DoesSupportDriveSpeed(this MediaType? type)
         {
-            return type != MediaType.BluRay && type != MediaType.Floppy;
+            switch(type)
+            {
+                case MediaType.CD:
+                case MediaType.DVD:
+                case MediaType.GDROM:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 
@@ -72,7 +83,9 @@ namespace DICUI.Utilities
         {
             switch (baseCommand)
             {
+                case DICCommands.Audio:
                 case DICCommands.CompactDisc:
+                case DICCommands.Data:
                     return MediaType.CD;
                 case DICCommands.GDROM:
                 case DICCommands.Swap:
@@ -100,7 +113,10 @@ namespace DICUI.Utilities
         {
             switch (baseCommand)
             {
+                case DICCommands.Audio:
+                    return KnownSystem.AudioCD;
                 case DICCommands.CompactDisc:
+                case DICCommands.Data:
                 case DICCommands.DigitalVideoDisc:
                 case DICCommands.Floppy:
                     return KnownSystem.IBMPCCompatible;
@@ -243,6 +259,12 @@ namespace DICUI.Utilities
         /// <returns>String containing the command, null on error</returns>
         public static string KnownSystemAndMediaTypeToBaseCommand(KnownSystem? sys, MediaType? type)
         {
+            // If we have an invalid combination, we should return null
+            if (!Validators.GetValidMediaTypes(sys).Contains(type))
+            {
+                return null;
+            }
+
             switch (type)
             {
                 case MediaType.CD:
@@ -265,18 +287,10 @@ namespace DICUI.Utilities
                     return DICCommands.DigitalVideoDisc;
                 case MediaType.BluRay:
                     return DICCommands.BluRay;
-
-                // Special Formats
                 case MediaType.GameCubeGameDisc:
                     return DICCommands.DigitalVideoDisc;
                 case MediaType.WiiOpticalDisc:
-                    return null;
-                case MediaType.WiiUOpticalDisc:
-                    return null;
-                case MediaType.UMD:
-                    return null;
-
-                // Non-optical
+                    return DICCommands.DigitalVideoDisc;
                 case MediaType.Floppy:
                     return DICCommands.Floppy;
 
@@ -342,12 +356,7 @@ namespace DICUI.Utilities
                     parameters.Add(DICFlags.Raw);
                     break;
                 case MediaType.WiiOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case MediaType.WiiUOpticalDisc:
-                    // Currently no defaults set
-                    break;
-                case MediaType.UMD:
+                    parameters.Add(DICFlags.Raw);
                     break;
 
                 // Non-optical

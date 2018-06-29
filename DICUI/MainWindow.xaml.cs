@@ -262,7 +262,7 @@ namespace DICUI
             var task = Tasks.StartDumping(_env);
             Result result = await task;
 
-            lbl_Status.Content = result ? "Dumping complete!" : result.message;
+            lbl_Status.Content = result ? "Dumping complete!" : result.Message;
             btn_StartStop.Content = UIElements.StartDumping;
 
             if (chk_EjectWhenDone.IsChecked == true)
@@ -289,7 +289,7 @@ namespace DICUI
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
-            lbl_Status.Content = result.message;
+            lbl_Status.Content = result.Message;
             btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
@@ -390,11 +390,11 @@ namespace DICUI
                 case MediaType.GDROM:
                 case MediaType.GameCubeGameDisc:
                 case MediaType.WiiOpticalDisc:
-                case MediaType.WiiUOpticalDisc:
                     return Result.Success("{0} discs are partially supported by DIC", type.Name());
 
                 // Undumpable but recognized types
                 case MediaType.LaserDisc:
+                case MediaType.WiiUOpticalDisc:
                 case MediaType.CED:
                 case MediaType.UMD:
                 case MediaType.Cartridge:
