@@ -12,12 +12,14 @@ namespace DICUI
     /// </summary>
     public partial class OptionsWindow : Window
     {
+        private readonly MainWindow _mainWindow;
         private readonly Options _options;
 
-        public OptionsWindow(Options options)
+        public OptionsWindow(MainWindow mainWindow, Options options)
         {
             InitializeComponent();
-            _options = options;
+            _mainWindow = mainWindow;
+            _options = options;      
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -94,22 +96,35 @@ namespace DICUI
             }
         }
 
-        private void btn_Accept_Click(object sender, EventArgs e)
+        public void Refresh()
         {
-            Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
-            _options.Save();
-            Hide();
+            Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
+
+            slider_DumpSpeedCD.Value = _options.preferredDumpSpeedCD;
+            slider_DumpSpeedDVD.Value = _options.preferredDumpSpeedDVD;
         }
 
-        private void btn_Cancel_Click(object sender, EventArgs e)
+        #region Event Handlers
+
+        private void OnAcceptClick(object sender, EventArgs e)
+        {
+            Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
+
+            _options.preferredDumpSpeedCD = Convert.ToInt32(slider_DumpSpeedCD.Value);
+            _options.preferredDumpSpeedDVD = Convert.ToInt32(slider_DumpSpeedDVD.Value);
+
+            _options.Save();
+            Hide();
+
+            _mainWindow.OnOptionsUpdated();
+        }
+
+        private void OnCancelClick(object sender, EventArgs e)
         {
             // just hide the window and don't care
             Hide();
         }
 
-        public void Refresh()
-        {
-            Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
-        }
+        #endregion
     }
 }

@@ -52,7 +52,6 @@ namespace DICUI.Utilities
                 case KnownSystem.MicrosoftXBOX360XDG3:
                     types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
-                    types.Add(MediaType.HDDVD);
                     break;
                 case KnownSystem.MicrosoftXBOXOne:
                     types.Add(MediaType.BluRay);
@@ -546,6 +545,7 @@ namespace DICUI.Utilities
         /// See if SCSI_MODE_SENSE can be used here
         /// Currently, the calculations get something that is technically accurate, but is different than the advertisised
         /// capabilities of the drives (according to QPXTool)
+        /// TransferRate appears to be the CURRENT transfer rate, not the maximum... basically making that flag useless
         /// </remarks>
         public static int GetDriveSpeed(char driveLetter)
         {
@@ -561,19 +561,17 @@ namespace DICUI.Utilities
                 transferRate = (double?)queryObj["TransferRate"];
             }
 
-            // Transfer Rates (bps)
-            double cdTransfer = 150 * 1024;
-            double dvdTransfer = 1353 * 1024;
+            // Transfer Rates (kBps)
+            double cdTransfer = 153.6;
+            double dvdTransfer = 1385;
 
-            double cdTransferTest = ((transferRate ?? -1) * 1024) / cdTransfer;
-            double cdTransferTestKilo = ((transferRate ?? -1) * 1000) / cdTransfer;
-            double dvdTransferTest = ((transferRate ?? -1) * 1024) / dvdTransfer;
-            double dvdTransferTestKilo = ((transferRate ?? -1) * 1000) / dvdTransfer;
+            double cdTransferTest = ((transferRate ?? -1)) / cdTransfer;
+            double dvdTransferTest = ((transferRate ?? -1)) / dvdTransfer;
 
             return 0;
         }
 
-        public static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
+        public unsafe static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
         {
             // Get the DeviceID from the current drive letter
             string deviceId = null;
@@ -646,25 +644,49 @@ namespace DICUI.Utilities
                 return -1;
             }
 
+            // Ones that haven't worked:
+            // recorderEx.GetAdapterDescriptor
+            // recorderEx.GetDeviceDescriptor
+            // recorderEx.GetDiscInformation
+            // recorderEx.GetTrackInformation
+
+            // Now we get the requested feature page
+            // TODO: Figure out structure of returned data
+            IntPtr featureData = Marshal.AllocHGlobal(32 * sizeof(byte));
+            recorderEx.GetFeaturePage(
+                ifpt,
+                (sbyte)0,
+                featureData,
+                out uint byteSize);
+            byte[] outFeatureArray = new byte[byteSize];
+            Marshal.Copy(featureData, outFeatureArray, 0, (int)byteSize);
+
             // Now we get the requested mode data
+            // TODO: Figure out structure of returned data
             IntPtr modeData = Marshal.AllocHGlobal(256 * sizeof(byte));
             recorderEx.GetModePage(
-                IMAPI_MODE_PAGE_TYPE.IMAPI_MODE_PAGE_TYPE_LEGACY_CAPABILITIES,
+                (IMAPI_MODE_PAGE_TYPE)0x2A,
                 IMAPI_MODE_PAGE_REQUEST_TYPE.IMAPI_MODE_PAGE_REQUEST_TYPE_CURRENT_VALUES,
                 modeData,
                 out uint modeDataSize);
             byte[] outModeArray = new byte[modeDataSize];
             Marshal.Copy(modeData, outModeArray, 0, (int)modeDataSize);
 
-            // Now we get the requested feature page
-            IntPtr featureData = Marshal.AllocHGlobal(32 * sizeof(byte));
-            recorderEx.GetFeaturePage(
-                ifpt,
-                (sbyte)1,
-                featureData,
-                out uint byteSize);
-            byte[] outArray = new byte[byteSize];
-            Marshal.Copy(featureData, outArray, 0, (int)byteSize);
+            // Now we send the command to get sense data from the device
+            // TODO: This seems like the best option, but how is this data structured properly?
+            byte[] cdbArray = new byte[] { 0x5a, 0x0, 0x2a, 0x00, 0xff, 0x0 };
+            byte[] senseBuffer = new byte[256];
+            byte[] buffer = new byte[256];
+            uint bufferSize = 256;
+
+            recorderEx.SendCommandGetDataFromDevice(
+                ref cdbArray[0],
+                (uint)6,
+                senseBuffer,
+                (uint)60,
+                out buffer[0],
+                bufferSize,
+                out uint BufferFetched);
 
             return -1;
         }
@@ -694,174 +716,97 @@ namespace DICUI.Utilities
             int index = -1;
             switch (parts[0])
             {
-                case DICCommands.CompactDisc:
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
+                case DICCommands.Audio:
                 case DICCommands.Data:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
-                    }
-                    else if (IsFlag(parts[2]))
-                    {
+                    else if (!DoesExist(parts, 2) || IsFlag(parts[2]))
                         return false;
-                    }
-                    else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
-                    {
+                    else if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
-                    }
+                    else if (!DoesExist(parts, 4) || !IsValidNumber(parts[4], lowerBound: 0))
+                        return false;
+                    else if (!DoesExist(parts, 5) || !IsValidNumber(parts[5], lowerBound: 0))
+                        return false;
 
-                    if (parts[0] == DICCommands.Swap)
-                    {
-                        if (parts.Count > 5)
-                        {
-                            return false;
-                        }
-                    }
-                    else if (parts[0] == DICCommands.Data || parts[0] == DICCommands.Audio)
-                    {
-                        if (!IsValidNumber(parts[4]) || !IsValidNumber(parts[5]))
-                        {
-                            return false;
-                        }
-
-                        index = 6;
-                    }
-                    else
-                    {
-                        index = 4;
-                    }
-
+                    index = 6;
                     break;
-                case DICCommands.DigitalVideoDisc:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
-                        return false;
-                    }
-                    else if (IsFlag(parts[2]))
-                    {
-                        return false;
-                    }
-                    else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 72)) // Officially 0-16
-                    {
-                        return false;
-                    }
 
-                    // Loop through all auxilary flags
-                    for (int i = 4; i < parts.Count; i++)
-                    {
-                        switch (parts[i])
-                        {
-                            case DICFlags.DisableBeep:
-                            case DICFlags.CMI:
-                            case DICFlags.Raw:
-                                // No-op, all of these are single flags
-                                break;
-                            case DICFlags.ForceUnitAccess:
-                                // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i))
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + 1]))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            default:
-                                return false;
-                        }
-                    }
-                    break;
                 case DICCommands.BluRay:
                 case DICCommands.XBOX:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
-                    }
-                    else if (IsFlag(parts[2]))
-                    {
+                    else if (!DoesExist(parts, 2) || IsFlag(parts[2]))
                         return false;
-                    }
 
-                    // Loop through all auxilary flags
-                    for (int i = 3; i < parts.Count; i++)
-                    {
-                        switch (parts[i])
-                        {
-                            case DICFlags.DisableBeep:
-                                // No-op, this is a single flag
-                                break;
-                            case DICFlags.ForceUnitAccess:
-                                // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i))
-                                {
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + 1]))
-                                {
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                                {
-                                    return false;
-                                }
-                                i++;
-                                break;
-                            default:
-                                return false;
-                        }
-                    }
+                    index = 3;
                     break;
+
+                case DICCommands.CompactDisc:
+                case DICCommands.GDROM:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
+                        return false;
+
+                    index = 4;
+                    break;
+
+                case DICCommands.DigitalVideoDisc:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 24)) // Officially 0-16
+                        return false;
+
+                    index = 4;
+                    break;
+
+                case DICCommands.Swap:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
+                        return false;
+                    else if (parts.Count > 5)
+                        return false;
+
+                    index = 4;
+                    break;
+
                 case DICCommands.Floppy:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
-                    }
-                    else if (IsFlag(parts[2]))
-                    {
+                    else if (!DoesExist(parts, 2) || IsFlag(parts[2]))
                         return false;
-                    }
                     else if (parts.Count > 3)
-                    {
                         return false;
-                    }
                     break;
+
                 case DICCommands.Stop:
                 case DICCommands.Start:
                 case DICCommands.Eject:
                 case DICCommands.Close:
                 case DICCommands.Reset:
                 case DICCommands.DriveSpeed:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
-                    }
                     else if (parts.Count > 2)
-                    {
                         return false;
-                    }
                     break;
+
                 case DICCommands.Sub:
                 case DICCommands.MDS:
-                    if (IsFlag(parts[1]))
-                    {
+                    if (!DoesExist(parts, 1) || IsFlag(parts[1]))
                         return false;
-                    }
                     else if (parts.Count > 2)
-                    {
                         return false;
-                    }
                     break;
+
                 default:
                     return false;
             }
@@ -873,260 +818,206 @@ namespace DICUI.Utilities
                 {
                     switch (parts[i])
                     {
-                        case DICFlags.DisableBeep:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
+                        case DICFlags.AddOffset:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc)
                                 return false;
-                            }
-                            break;
-                        case DICFlags.D8Opcode:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
+                            else if (!DoesExist(parts, i + 1))
                                 return false;
-                            }
-                            break;
-                        case DICFlags.MCN:
-                            if (parts[0] != DICCommands.CompactDisc)
-                            {
+                            else if (!IsValidNumber(parts[i + 1]))
                                 return false;
-                            }
                             break;
+
                         case DICFlags.AMSF:
                             if (parts[0] != DICCommands.CompactDisc)
-                            {
                                 return false;
-                            }
                             break;
+
+                        case DICFlags.BEOpcode:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            else if (!DoesExist(parts, i + 1))
+                                break;
+                            else if (IsFlag(parts[i + 1]))
+                                break;
+                            else if (parts[i + 1] != "raw"
+                                && (parts[i + 1] != "pack"))
+                                return false;
+
+                            i++;
+                            break;
+
+                        case DICFlags.C2Opcode:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if (!DoesExist(parts, i + 1))
+                                    break;
+                                else if (IsFlag(parts[i + 1]))
+                                    break;
+                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
+                                    return false;
+                                else
+                                    i++;
+                            }
+
+                            break;
+
+                        case DICFlags.CMI:
+                            if (parts[0] != DICCommands.DigitalVideoDisc)
+                                return false;
+                            break;
+
+                        case DICFlags.D8Opcode:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            break;
+
+                        case DICFlags.DisableBeep:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.BluRay
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.DigitalVideoDisc
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.XBOX)
+                                return false;
+                            break;
+
+                        case DICFlags.ForceUnitAccess:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.BluRay
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.DigitalVideoDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM
+                                && parts[0] != DICCommands.XBOX)
+                                return false;
+                            else if (!DoesExist(parts, i + 1))
+                                break;
+                            else if (IsFlag(parts[i + 1]))
+                                break;
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
+                                return false;
+
+                            i++;
+                            break;
+
+                        case DICFlags.MCN:
+                            if (parts[0] != DICCommands.CompactDisc)
+                                return false;
+                            break;
+
+                        case DICFlags.MultiSession:
+                            if (parts[0] != DICCommands.CompactDisc)
+                                return false;
+                            break;
+
+                        case DICFlags.NoFixSubP:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            break;
+
+                        case DICFlags.NoFixSubQ:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            break;
+
+                        case DICFlags.NoFixSubQLibCrypt:
+                            if (parts[0] != DICCommands.CompactDisc)
+                                return false;
+                            break;
+
+                        case DICFlags.NoFixSubQSecuROM:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            break;
+
+                        case DICFlags.NoFixSubRtoW:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            break;
+
+                        case DICFlags.Raw:
+                            if (parts[0] != DICCommands.DigitalVideoDisc)
+                                return false;
+                            break;
+
                         case DICFlags.Reverse:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.Data)
-                            {
                                 return false;
-                            }
                             break;
-                        case DICFlags.MultiSession:
-                            if (parts[0] != DICCommands.CompactDisc)
-                            {
-                                return false;
-                            }
-                            break;
-                        case DICFlags.ScanSectorProtect:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.Data)
-                            {
-                                return false;
-                            }
-                            break;
+
                         case DICFlags.ScanAntiMod:
                             if (parts[0] != DICCommands.CompactDisc)
-                            {
                                 return false;
-                            }
                             break;
-                        case DICFlags.NoFixSubP:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
-                            break;
-                        case DICFlags.NoFixSubQ:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
-                            break;
-                        case DICFlags.NoFixSubRtoW:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
-                            break;
-                        case DICFlags.NoFixSubQLibCrypt:
-                            if (parts[0] != DICCommands.CompactDisc)
-                            {
-                                return false;
-                            }
-                            break;
-                        case DICFlags.NoFixSubQSecuROM:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
-                            break;
+
                         case DICFlags.ScanFileProtect:
                             if (parts[0] != DICCommands.CompactDisc
                                 && parts[0] != DICCommands.Data)
-                            {
                                 return false;
-                            }
-
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
-                            {
+                            else if (!DoesExist(parts, i + 1))
                                 break;
-                            }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
+                            else if (IsFlag(parts[i + 1]))
                                 break;
-                            }
-                            // If the next item isn't a valid number
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                            {
                                 return false;
-                            }
+
                             i++;
                             break;
-                        case DICFlags.ForceUnitAccess:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
 
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
-                            {
-                                break;
-                            }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
-                                break;
-                            }
-                            // If the next item isn't a valid number
-                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                            {
-                                return false;
-                            }
-                            i++;
-                            break;
-                        case DICFlags.AddOffset:
+                        case DICFlags.ScanSectorProtect:
                             if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.Audio)
-                            {
+                                && parts[0] != DICCommands.Data)
                                 return false;
-                            }
-
-                            // If the next item doesn't exist, it's not good
-                            if (parts.Count == i + 1)
-                            {
-                                return false;
-                            }
-                            // If the next item isn't a valid number
-                            else if (IsValidNumber(parts[i + 1]))
-                            {
-                                return false;
-                            }
                             break;
-                        case DICFlags.BEOpcode:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
 
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
-                            {
-                                break;
-                            }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
-                                break;
-                            }
-                            else if (parts[i + 1] != "raw"
-                                && (parts[i + 1] != "pack"))
-                            {
-                                return false;
-                            }
-                            i++;
-                            break;
-                        case DICFlags.C2Opcode:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
-
-                            for (int j = 1; j < 4; j++)
-                            {
-                                // If the next item doesn't exist, it's good
-                                if (!DoesNextExist(parts, i + 1))
-                                {
-                                    i++;
-                                    break;
-                                }
-                                // If the next item is a flag, it's good
-                                if (IsFlag(parts[i + 1]))
-                                {
-                                    i++;
-                                    break;
-                                }
-                                // If the next item isn't a valid number
-                                else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                                {
-                                    return false;
-                                }
-                                i++;
-                            }
-                            break;
-                        case DICFlags.SubchannelReadLevel:
-                            if (parts[0] != DICCommands.CompactDisc
-                                && parts[0] != DICCommands.GDROM
-                                && parts[0] != DICCommands.Data
-                                && parts[0] != DICCommands.Audio)
-                            {
-                                return false;
-                            }
-
-                            // If the next item doesn't exist, it's good
-                            if (!DoesNextExist(parts, i))
-                            {
-                                break;
-                            }
-                            // If the next item is a flag, it's good
-                            if (IsFlag(parts[i + 1]))
-                            {
-                                break;
-                            }
-                            // If the next item isn't a valid number
-                            else if (!IsValidNumber(parts[3], lowerBound: 0, upperBound: 2))
-                            {
-                                return false;
-                            }
-                            break;
                         case DICFlags.SeventyFour:
                             if (parts[0] != DICCommands.Swap)
-                            {
                                 return false;
-                            }
                             break;
+
+                        case DICFlags.SubchannelReadLevel:
+                            if (parts[0] != DICCommands.Audio
+                                && parts[0] != DICCommands.CompactDisc
+                                && parts[0] != DICCommands.Data
+                                && parts[0] != DICCommands.GDROM)
+                                return false;
+                            else if (DoesExist(parts, i + 1))
+                                break;
+                            else if (IsFlag(parts[i + 1]))
+                                break;
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0, upperBound: 2))
+                                return false;
+
+                            i++;
+                            break;
+
                         default:
                             return false;
                     }
@@ -1167,14 +1058,14 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Returns whether or not the next item exists
+        /// Returns whether or not the selected item exists
         /// </summary>
         /// <param name="parameters">List of parameters to check against</param>
         /// <param name="index">Current index</param>
         /// <returns>True if the next item exists, false otherwise</returns>
-        private static bool DoesNextExist(List<string> parameters, int index)
+        private static bool DoesExist(List<string> parameters, int index)
         {
-            if (index >= parameters.Count - 1)
+            if (index >= parameters.Count)
             {
                 return false;
             }

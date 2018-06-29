@@ -17,7 +17,6 @@ namespace DICUI
         // Private UI-related variables
         private List<KeyValuePair<char, string>> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
-        private List<int> _driveSpeeds { get { return new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 }; } }
         private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
 
@@ -40,10 +39,6 @@ namespace DICUI
 
             // Populate the list of drives
             PopulateDrives();
-
-            // Populate the list of drive speeds
-            PopulateDriveSpeeds();
-            SetSupportedDriveSpeed();
         }
 
         #region Events
@@ -75,32 +70,31 @@ namespace DICUI
         private void btn_Search_Click(object sender, RoutedEventArgs e)
         {
             PopulateDrives();
-            SetCurrentDiscType();
-            SetSupportedDriveSpeed();
-            EnsureDiscInformation();
         }
 
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PopulateMediaTypeAccordingToChosenSystem();
-            GetOutputNames();
-            EnsureDiscInformation();
         }
 
-        private void cmb_MediaType_SelectionChanged(object sencder, SelectionChangedEventArgs e)
+        private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Only change the media type if the selection and not the list has changed
+            if (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
+            {
+                _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
+            }
+
             // TODO: This is giving people the benefit of the doubt that their change is valid
-            _currentMediaType = cmb_MediaType.SelectedItem as MediaType?;
+            SetSupportedDriveSpeed();
             GetOutputNames();
-            EnsureDiscInformation();
         }
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SetCurrentDiscType();
-            SetSupportedDriveSpeed();
             GetOutputNames();
-            EnsureDiscInformation();
+            SetSupportedDriveSpeed();
         }
 
         private void cmb_DriveSpeed_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -113,7 +107,7 @@ namespace DICUI
             // lazy initialization
             if (_optionsWindow == null)
             {
-                _optionsWindow = new OptionsWindow(_options);
+                _optionsWindow = new OptionsWindow(this, _options);
                 _optionsWindow.Closed += delegate
                 {
                     _optionsWindow = null;
@@ -136,6 +130,12 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
+        public void OnOptionsUpdated()
+        {
+            GetOutputNames();
+            //TODO: here we should adjust maximum speed if it changed in options
+        }
+
         #endregion
 
         #region Helpers
@@ -153,7 +153,7 @@ namespace DICUI
                 cmb_MediaType.ItemsSource = _mediaTypes;
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
-                cmb_MediaType.SelectedIndex = 0;
+                cmb_MediaType.SelectedIndex = (_mediaTypes.IndexOf(_currentMediaType) >= 0 ? _mediaTypes.IndexOf(_currentMediaType) : 0);
             }
             else
             {
@@ -194,24 +194,15 @@ namespace DICUI
             if (cmb_DriveLetter.Items.Count > 0)
             {
                 cmb_DriveLetter.SelectedIndex = 0;
-                lbl_Status.Content = "Valid optical disc found! Choose your Disc Type";
+                lbl_Status.Content = "Valid media found! Choose your Media Type";
                 btn_StartStop.IsEnabled = true;
             }
             else
             {
                 cmb_DriveLetter.SelectedIndex = -1;
-                lbl_Status.Content = "No valid optical disc found!";
+                lbl_Status.Content = "No valid media found!";
                 btn_StartStop.IsEnabled = false;
             }
-        }
-
-        /// <summary>
-        /// Get a complete list of (possible) disc drive speeds, and fill the combo box
-        /// </summary>
-        private void PopulateDriveSpeeds()
-        {
-            cmb_DriveSpeed.ItemsSource = _driveSpeeds;
-            cmb_DriveSpeed.SelectedItem = 8;
         }
 
         /// <summary>
@@ -271,7 +262,7 @@ namespace DICUI
             var task = Tasks.StartDumping(_env);
             Result result = await task;
 
-            lbl_Status.Content = result ? "Dumping complete!" : result.message;
+            lbl_Status.Content = result ? "Dumping complete!" : result.Message;
             btn_StartStop.Content = UIElements.StartDumping;
 
             if (chk_EjectWhenDone.IsChecked == true)
@@ -298,7 +289,7 @@ namespace DICUI
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
-            lbl_Status.Content = result.message;
+            lbl_Status.Content = result.Message;
             btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
@@ -343,7 +334,7 @@ namespace DICUI
                             && selectedSystem != KnownSystem.MicrosoftXBOX
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
                             && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
-                                ? (int)cmb_DriveSpeed.SelectedItem + " " : "")
+                                ? (int?)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
             }
@@ -364,21 +355,11 @@ namespace DICUI
             // If we're on an unsupported type, update the status accordingly
             switch (type)
             {
-                case MediaType.NONE:
-                    return Result.Failure("Please select a valid disc type");
-                case MediaType.GameCubeGameDisc:
-                case MediaType.GDROM:
-                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+                // Fully supported types
+                case MediaType.CD:
+                case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.LaserDisc:
-                case MediaType.CED:
-                case MediaType.UMD:
-                case MediaType.WiiOpticalDisc:
-                case MediaType.WiiUOpticalDisc:
-                case MediaType.Cartridge:
-                case MediaType.Cassette:
-                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
-                default:
+                case MediaType.BluRay:
                     if (system == KnownSystem.MicrosoftXBOX360XDG3)
                     {
                         return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
@@ -399,15 +380,32 @@ namespace DICUI
                             }
                             else
                             {
-                                return Result.Success("Disc of type {0} found, but the current system does not support it!", type.Name());
+                                return Result.Success("Disc of type {0} found, but the current system does not support it!", _currentMediaType.Name());
                             }
                         }
-
                     }
-                    break;
-            }
+                    return Result.Success("{0} ready to dump", type.Name());
 
-            return Result.Success("{0} ready to dump", type.Name());
+                // Partially supported types
+                case MediaType.GDROM:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+
+                // Undumpable but recognized types
+                case MediaType.LaserDisc:
+                case MediaType.WiiUOpticalDisc:
+                case MediaType.CED:
+                case MediaType.UMD:
+                case MediaType.Cartridge:
+                case MediaType.Cassette:
+                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+
+                // Invalid or unknown types
+                case MediaType.NONE:
+                default:
+                    return Result.Failure("Please select a valid disc type");
+            }
         }
 
         /// <summary>
@@ -440,8 +438,10 @@ namespace DICUI
         /// </summary>
         private void SetSupportedDriveSpeed()
         {
-            // Set generic drive speed just in case
-            cmb_DriveSpeed.SelectedItem = 8;
+            // Set the drive speed list that's appropriate
+            var values = UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType);
+            cmb_DriveSpeed.ItemsSource = values;
+            cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
             // Get the drive letter from the selected item
             var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
@@ -451,7 +451,7 @@ namespace DICUI
             }
 
             //Validators.GetDriveSpeed((char)selected?.Key);
-            //Validators.GetDriveSpeedEx((char)selected?.Key, MediaType.CD);
+            //Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
 
             // Validate that the required program exists and it's not DICUI itself
             if (!File.Exists(_options.dicPath) ||
@@ -478,17 +478,19 @@ namespace DICUI
 
             int index = output.IndexOf("ReadSpeedMaximum:");
             string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
-            if (!Int32.TryParse(readspeed, out int speed))
+            if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
             {
                 return;
             }
 
-            // If the value is in the list, we can set it immediately
-            if (_driveSpeeds.Contains(speed))
-                cmb_DriveSpeed.SelectedValue = speed;
-            // Otherwise, we need to set the next lowest value
-            else
-                cmb_DriveSpeed.SelectedValue = _driveSpeeds.Where(s => s < speed).Last();
+            // choose speed value according to maximum value reported by DIC adjusted to a precise speed from list
+            // and the one choosen in options
+            int chosenSpeed = Math.Min(
+                UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
+                _options.preferredDumpSpeedCD
+            );
+
+            cmb_DriveSpeed.SelectedValue = chosenSpeed;
         }
 
         /// <summary>
