@@ -1270,6 +1270,10 @@ namespace DICUI.External
         {
             if (files.Count(s => s.EndsWith("SteamInstall.exe")) > 0)
                 return true;
+            if (files.Count(s => s.EndsWith("SteamInstall.ini")) > 0)
+                return true;
+            if (files.Count(s => s.EndsWith("SteamInstall.msi")) > 0)
+                return true;
             return false;
         }
 
