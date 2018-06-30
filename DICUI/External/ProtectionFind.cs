@@ -234,7 +234,7 @@ namespace DICUI.External
                 return "TZCopyProtector";
             if (SafeDisc1(out version, files))
                 return "SafeDisc " + version;
-            if (Safe_Lock(files))
+            if (SafeLock(files))
                 return "SafeLock";
             if (SecuROM(files))
                 return "SecuROM";
@@ -1160,7 +1160,7 @@ namespace DICUI.External
         }
 
         //for BurnOut not detecting itself as SafeLock protected
-        private bool Safe_Lock(string[] files)
+        private bool SafeLock(string[] files)
         {
             if (files.Count(s => s.EndsWith("SafeLock.dat")) > 0)
                 return true;
