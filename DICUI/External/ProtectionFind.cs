@@ -118,6 +118,7 @@ namespace DICUI.External
             // If we have cabinet files to scan
             if (cabFiles.Length != 0)
             {
+                /*
                 for (int i = 0; i < cabFiles.Length; i++)
                 {
                     // TODO: Figure out how to extract files from a CAB...
@@ -173,6 +174,7 @@ namespace DICUI.External
                         }
                     }
                 }
+                */
             }
 
             // Otherwise, try to figure out the protection from file lists
