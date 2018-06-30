@@ -204,6 +204,8 @@ namespace DICUI.External
                 return "DVD-Movie-PROTECT";
             if (FreeLock(files))
                 return "FreeLock";
+            if (GamesForWindowsLive(files))
+                return "Games for Windows Live";
             if (HexalockAutoLock(files))
                 return "Hexalock AutoLock";
             if (ImpulseReactor(out version, files))
@@ -881,6 +883,14 @@ namespace DICUI.External
         private bool FreeLock(string[] files)
         {
             if (files.Count(s => s.EndsWith("FREELOCK.IMG")) > 0)
+                return true;
+            return false;
+        }
+
+        // TODO: Properly fill out
+        private bool GamesForWindowsLive(string[] files)
+        {
+            if (files.Count(s => s.EndsWith("gfwl.exe")) > 0)
                 return true;
             return false;
         }
