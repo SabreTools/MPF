@@ -1302,7 +1302,7 @@ namespace DICUI.External
         // TODO: Properly fill out
         private bool UPlay(string[] files)
         {
-            if (files.Count(s => s.EndsWith("UPlayInstall.exe")) > 0)
+            if (files.Count(s => s.EndsWith("UplayInstaller.exe")) > 0)
                 return true;
             return false;
         }
