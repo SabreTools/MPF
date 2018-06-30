@@ -887,7 +887,7 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Properly fill out
+        // TODO: Properly fill out, might be in the EXEs
         private bool GamesForWindowsLive(string[] files)
         {
             if (files.Count(s => s.EndsWith("gfwl.exe")) > 0)
@@ -1283,6 +1283,10 @@ namespace DICUI.External
             if (files.Count(s => s.EndsWith("SteamInstall.ini")) > 0)
                 return true;
             if (files.Count(s => s.EndsWith("SteamInstall.msi")) > 0)
+                return true;
+            if (files.Count(s => s.EndsWith("SteamRetailInstaller.dmg")) > 0)
+                return true;
+            if (files.Count(s => s.EndsWith("SteamSetup.exe")) > 0)
                 return true;
             return false;
         }
