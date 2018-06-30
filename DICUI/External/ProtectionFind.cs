@@ -51,26 +51,18 @@ namespace DICUI.External
             IsStarForceWithoutVersion = false;
             SecuROMpaulversion = "";
 
-            string[] filesstr = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+            string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+            string[] exeFiles = files.Where(s => s.EndsWith(".icd") || s.EndsWith(".dat") || s.EndsWith(".exe") || s.EndsWith(".dll")).ToArray();
 
-            FileInfo[] files = new FileInfo[filesstr.Length];
-            for (int i = 0; i < filesstr.Length; i++)
+            if (exeFiles.Length != 0)
             {
-                files[i] = new FileInfo(filesstr[i]);
-            }
-            filesstr = null;
-
-            string[] EXEFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".icd") || s.EndsWith(".dat") || s.EndsWith(".exe") || s.EndsWith(".dll")).ToArray();
-
-            if (EXEFiles.Length != 0)
-            {
-                for (int i = 0; i < EXEFiles.Length; i++)
+                for (int i = 0; i < exeFiles.Length; i++)
                 {
-                    FileInfo filei = new FileInfo(EXEFiles[i]);
+                    FileInfo filei = new FileInfo(exeFiles[i]);
                     if (filei.Length > 352 && !(sizelimit && filei.Length > 20971520))
                     {
-                        Console.WriteLine("scanning file Nr." + i + "(" + EXEFiles[i] + ")");
-                        string protectionname = ScanInFile(EXEFiles[i], advancedscan);
+                        Console.WriteLine("scanning file Nr." + i + "(" + exeFiles[i] + ")");
+                        string protectionname = ScanInFile(exeFiles[i], advancedscan);
                         if (!String.IsNullOrEmpty(protectionname))
                         {
                             if (IsImpulseReactorWithoutVersion)
@@ -120,7 +112,7 @@ namespace DICUI.External
                 }
             }
 
-            EXEFiles = null;
+            exeFiles = null;
 
             if (AACS(path))
                 return "AACS";
@@ -690,46 +682,46 @@ namespace DICUI.External
             return false;
         }
 
-        private bool AlphaDVD(FileInfo[] files)
+        private bool AlphaDVD(string[] files)
         {
-            return files.Select(fi => Path.GetFileName(fi.FullName)).Contains("PlayDVD.exe");
+            return files.Contains("PlayDVD.exe");
         }
 
-        private bool Bitpool(FileInfo[] files)
+        private bool Bitpool(string[] files)
         {
-            return files.Select(fi => Path.GetFileName(fi.FullName)).Contains("bitpool.rsc");
+            return files.Contains("bitpool.rsc");
         }
 
-        private bool ByteShield(string path, FileInfo[] files)
+        private bool ByteShield(string path, string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Byteshield.dll"))
+            if (files.Contains("Byteshield.dll"))
                 return true;
             if (Directory.GetFiles(path, "*.bbz", SearchOption.AllDirectories).Length > 0)
                 return true;
             return false;
         }
 
-        private bool Cactus(out string version, FileInfo[] files)
+        private bool Cactus(out string version, string[] files)
         {
             bool found = false;
             int fileindex;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("yucca.cds"))
+            if (files.Contains("yucca.cds"))
                 found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("wmmp.exe"))
+            if (files.Contains("wmmp.exe"))
                 found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("PJSTREAM.DLL"))
+            if (files.Contains("PJSTREAM.DLL"))
                 found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CACTUSPJ.exe"))
+            if (files.Contains("CACTUSPJ.exe"))
                 found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CDSPlayer.app"))
+            if (files.Contains("CDSPlayer.app"))
                 found = true;
             if (found)
             {
                 //get the exact version
-                fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("CDSPlayer.app");
+                fileindex = files.ToList().IndexOf("CDSPlayer.app");
                 if (fileindex > -1)
                 {
-                    StreamReader sr = new StreamReader(files[fileindex].FullName);
+                    StreamReader sr = new StreamReader(files[fileindex]);
                     version = sr.ReadLine().Substring(3) + " (" + sr.ReadLine() + ")";
                 }
                 else
@@ -741,9 +733,9 @@ namespace DICUI.External
             return false;
         }
 
-        private bool CDCops(string path, FileInfo[] files)
+        private bool CDCops(string path, string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CDCOPS.DLL"))
+            if (files.Contains("CDCOPS.DLL"))
                 return true;
             if (Directory.GetFiles(path, "*.GZ_", SearchOption.AllDirectories).Length > 0)
                 return true;
@@ -763,52 +755,52 @@ namespace DICUI.External
             return false;
         }
 
-        private bool CDProtector(string path, FileInfo[] files)
+        private bool CDProtector(string path, string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("_cdp16.dat"))
+            if (files.Contains("_cdp16.dat"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("_cdp16.dll"))
+            if (files.Contains("_cdp16.dll"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("_cdp32.dat"))
+            if (files.Contains("_cdp32.dat"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("_cdp32.dll"))
+            if (files.Contains("_cdp32.dll"))
                 return true;
             return false;
         }
 
         //for BurnOut not detecting itself as SafeLock protected
-        private bool CDX(FileInfo[] files)
+        private bool CDX(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CHKCDX16.DLL"))
+            if (files.Contains("CHKCDX16.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CHKCDX32.DLL"))
+            if (files.Contains("CHKCDX32.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CHKCDXNT.DLL"))
+            if (files.Contains("CHKCDXNT.DLL"))
                 return true;
             return false;
         }
 
-        private bool CopyKiller(FileInfo[] files)
+        private bool CopyKiller(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Autorun.dat"))
+            if (files.Contains("Autorun.dat"))
                 return true;
             return false;
         }
 
-        private bool DiskGuard(FileInfo[] files)
+        private bool DiskGuard(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("IOSLINK.VXD"))
+            if (files.Contains("IOSLINK.VXD"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("IOSLINK.DLL"))
+            if (files.Contains("IOSLINK.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("IOSLINK.SYS"))
+            if (files.Contains("IOSLINK.SYS"))
                 return true;
             return false;
         }
 
-        private bool DVDCrypt(FileInfo[] files)
+        private bool DVDCrypt(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("DvdCrypt.pdb"))
+            if (files.Contains("DvdCrypt.pdb"))
                 return true;
             return false;
         }
@@ -830,75 +822,75 @@ namespace DICUI.External
             return false;
         }
 
-        private bool FreeLock(FileInfo[] files)
+        private bool FreeLock(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("FREELOCK.IMG"))
+            if (files.Contains("FREELOCK.IMG"))
                 return true;
             return false;
         }
 
-        private bool HexalockAutoLock(FileInfo[] files)
+        private bool HexalockAutoLock(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Start_Here.exe"))
+            if (files.Contains("Start_Here.exe"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("HCPSMng.exe"))
+            if (files.Contains("HCPSMng.exe"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("MFINT.DLL"))
+            if (files.Contains("MFINT.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("MFIMP.DLL"))
+            if (files.Contains("MFIMP.DLL"))
                 return true;
             return false;
         }
 
-        private bool ImpulseReactor(out string version, FileInfo[] files)
+        private bool ImpulseReactor(out string version, string[] files)
         {
             version = "";
-            int i = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("ImpulseReactor.dll");
+            int i = files.ToList().IndexOf("ImpulseReactor.dll");
             if (i > -1)
             {
-                version = GetFileVersion(files[i].FullName);
+                version = GetFileVersion(files[i]);
             }
 
             return false;
         }
 
-        private bool IndyVCD(FileInfo[] files)
+        private bool IndyVCD(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("INDYVCD.AX"))
+            if (files.Contains("INDYVCD.AX"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("INDYMP3.idt"))
+            if (files.Contains("INDYMP3.idt"))
                 return true;
             return false;
         }
 
-        private bool Key2AudioXS(FileInfo[] files)
+        private bool Key2AudioXS(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SDKHM.EXE"))
+            if (files.Contains("SDKHM.EXE"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SDKHM.DLL"))
+            if (files.Contains("SDKHM.DLL"))
                 return true;
             return false;
         }
 
-        private bool LaserLock(out string version, string path, FileInfo[] files)
+        private bool LaserLock(out string version, string path, string[] files)
         {
             version = "";
-            int nomouseindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("NOMOUSE.SP");
+            int nomouseindex = files.ToList().IndexOf("NOMOUSE.SP");
             if (nomouseindex > -1)
             {
-                version = GetLaserLockVersion16Bit(files[nomouseindex].FullName);
+                version = GetLaserLockVersion16Bit(files[nomouseindex]);
                 return true;
             }
 
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("NOMOUSE.COM"))
+            if (files.Contains("NOMOUSE.COM"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("l16dll.dll"))
+            if (files.Contains("l16dll.dll"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("laserlok.in"))
+            if (files.Contains("laserlok.in"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("laserlok.o10"))
+            if (files.Contains("laserlok.o10"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("laserlok.011"))
+            if (files.Contains("laserlok.011"))
                 return true;
             if (Directory.Exists(Path.Combine(path, "LASERLOK")))
                 return true;
@@ -906,24 +898,24 @@ namespace DICUI.External
             return false;
         }
 
-        private bool MediaCloQ(FileInfo[] files)
+        private bool MediaCloQ(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("sunncomm.ico"))
+            if (files.Contains("sunncomm.ico"))
                 return true;
             return false;
         }
 
-        private bool MediaMaxCD3(FileInfo[] files)
+        private bool MediaMaxCD3(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("LaunchCd.exe"))
+            if (files.Contains("LaunchCd.exe"))
                 return true;
             return false;
         }
 
         // TODO: Properly fill out
-        private bool Origin(FileInfo[] files)
+        private bool Origin(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("OriginInstall.exe"))
+            if (files.Contains("OriginInstall.exe"))
                 return true;
             return false;
         }
@@ -945,35 +937,35 @@ namespace DICUI.External
         }
 
         // TODO: Fix
-        private bool PSX(string path, FileInfo[] files)
+        private bool PSX(string path, string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SLES_016.83"))
+            if (files.Contains("SLES_016.83"))
                 return true;
             if (Directory.GetFiles(path, "*.cnf", SearchOption.AllDirectories).Length > 0)
                 return true;
             return false;
         }
 
-        private bool SafeCast(FileInfo[] files)
+        private bool SafeCast(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("cdac11ba.exe"))
+            if (files.Contains("cdac11ba.exe"))
                 return true;
             return false;
         }
 
-        private bool SafeDisc1(out string version, string path, FileInfo[] files)
+        private bool SafeDisc1(out string version, string path, string[] files)
         {
             version = "";
-            bool found = false;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000001.TMP"))
-                found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CLCD16.DLL"))
-                found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CLCD32.DLL"))
-                found = true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CLOKSPL.EXE"))
-                found = true;
-            int fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("DPLAYERX.DLL");
+            bool found = true;
+            if (!files.Contains("00000001.TMP"))
+                found = false;
+            if (!files.Contains("CLCD16.DLL"))
+                found = false;
+            if (!files.Contains("CLCD32.DLL"))
+                found = false;
+            if (!files.Contains("CLOKSPL.EXE"))
+                found = false;
+            int fileindex = files.ToList().IndexOf("DPLAYERX.DLL");
             if (fileindex > -1)
             {
                 found = true;
@@ -996,7 +988,7 @@ namespace DICUI.External
                 if (files[fileindex].Length == 138752)
                     version = "1.5x";
             }
-            fileindex = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
+            fileindex = files.Select(f => f.ToLower()).ToList().IndexOf("drvmgt.dll");
             if (fileindex > -1)
             {
                 found = true;
@@ -1028,14 +1020,14 @@ namespace DICUI.External
             return false;
         }
 
-        private bool SafeDisc2(out string version, string path, FileInfo[] files)
+        private bool SafeDisc2(out string version, string path, string[] files)
         {
             version = "";
             bool found = false;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000002.TMP"))
+            if (files.Contains("00000002.TMP"))
                 found = true;
-            int fileindexdrvmgt = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("drvmgt.dll");
-            int fileindexsecdrv = files.Select(fi => Path.GetFileName(fi.FullName).ToLower()).ToList().IndexOf("secdrv.sys");
+            int fileindexdrvmgt = files.Select(f => f.ToLower()).ToList().IndexOf("drvmgt.dll");
+            int fileindexsecdrv = files.Select(f => f.ToLower()).ToList().IndexOf("secdrv.sys");
             if (fileindexsecdrv > -1)
             {
                 if (files[fileindexsecdrv].Length == 18768)
@@ -1097,126 +1089,126 @@ namespace DICUI.External
         }
 
         // TODO: Populate properly
-        private bool SafeDisc3(out string version, string path, FileInfo[] files)
+        private bool SafeDisc3(out string version, string path, string[] files)
         {
             version = "";
             return false;
         }
 
         // TODO: Populate properly
-        private bool SafeDisc4(out string version, string path, FileInfo[] files)
+        private bool SafeDisc4(out string version, string path, string[] files)
         {
             version = "";
             return false;
         }
 
-        private bool SafeDiscLite(FileInfo[] files)
+        private bool SafeDiscLite(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00000001.LT1"))
+            if (files.Contains("00000001.LT1"))
                 return true;
             return false;
         }
 
         //for BurnOut not detecting itself as SafeLock protected
-        private bool Safe_Lock(FileInfo[] files)
+        private bool Safe_Lock(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SafeLock.dat"))
+            if (files.Contains("SafeLock.dat"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SafeLock.001"))
+            if (files.Contains("SafeLock.001"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SafeLock.128"))
+            if (files.Contains("SafeLock.128"))
                 return true;
             return false;
         }
 
-        private bool SecuROM(FileInfo[] files)
+        private bool SecuROM(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CMS16.DLL"))
+            if (files.Contains("CMS16.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CMS_95.DLL"))
+            if (files.Contains("CMS_95.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CMS_NT.DLL"))
+            if (files.Contains("CMS_NT.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CMS32_95.DLL"))
+            if (files.Contains("CMS32_95.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("CMS32_NT.DLL"))
+            if (files.Contains("CMS32_NT.DLL"))
                 return true;
             return false;
         }
 
-        private bool SecuROMnew(FileInfo[] files)
+        private bool SecuROMnew(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SINTF32.DLL"))
+            if (files.Contains("SINTF32.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SINTF16.DLL"))
+            if (files.Contains("SINTF16.DLL"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SINTFNT.DLL"))
+            if (files.Contains("SINTFNT.DLL"))
                 return true;
             return false;
         }
 
-        private bool SmartE(FileInfo[] files)
+        private bool SmartE(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00001.TMP"))
+            if (files.Contains("00001.TMP"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("00002.TMP"))
+            if (files.Contains("00002.TMP"))
                 return true;
             return false;
         }
 
-        private bool SolidShield(out string version, FileInfo[] files)
+        private bool SolidShield(out string version, string[] files)
         {
             version = "";
-            int fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("dvm.dll");
+            int fileindex = files.ToList().IndexOf("dvm.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex].FullName, false);
+                version = ScanInFile(files[fileindex], false);
                 return true;
             }
-            fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("hc.dll");
+            fileindex = files.ToList().IndexOf("hc.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex].FullName, false);
+                version = ScanInFile(files[fileindex], false);
                 return true;
             }
-            fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("solidshield-cd.dll");
+            fileindex = files.ToList().IndexOf("solidshield-cd.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex].FullName, false);
+                version = ScanInFile(files[fileindex], false);
                 return true;
             }
-            fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("c11prot.dll");
+            fileindex = files.ToList().IndexOf("c11prot.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex].FullName, false);
+                version = ScanInFile(files[fileindex], false);
                 return true;
             }
 
             return false;
         }
 
-        private bool Softlock(FileInfo[] files)
+        private bool Softlock(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SOFTLOCKI.dat"))
+            if (files.Contains("SOFTLOCKI.dat"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SOFTLOCKC.dat"))
+            if (files.Contains("SOFTLOCKC.dat"))
                 return true;
             return false;
         }
 
-        private bool StarForce(out string version, FileInfo[] files)
+        private bool StarForce(out string version, string[] files)
         {
             version = "";
-            int fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("protect.dll");
+            int fileindex = files.ToList().IndexOf("protect.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex].FullName, false);
+                version = ScanInFile(files[fileindex], false);
                 return true;
             }
-            fileindex = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("protect.exe");
+            fileindex = files.ToList().IndexOf("protect.exe");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex].FullName, false);
+                version = ScanInFile(files[fileindex], false);
                 return true;
             }
 
@@ -1224,53 +1216,53 @@ namespace DICUI.External
         }
 
         // TODO: Properly fill out
-        private bool Steam(FileInfo[] files)
+        private bool Steam(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("SteamInstall.exe"))
+            if (files.Contains("SteamInstall.exe"))
                 return true;
             return false;
         }
 
-        private bool Tages(FileInfo[] files)
+        private bool Tages(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Tages.dll"))
+            if (files.Contains("Tages.dll"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("tagesclient.exe"))
+            if (files.Contains("tagesclient.exe"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("TagesSetup.exe"))
+            if (files.Contains("TagesSetup.exe"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("TagesSetup_x64.exe"))
+            if (files.Contains("TagesSetup_x64.exe"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Wave.aif"))
+            if (files.Contains("Wave.aif"))
                 return true;
             return false;
         }
 
-        private bool TZCopyProtector(FileInfo[] files)
+        private bool TZCopyProtector(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("_742893.016"))
+            if (files.Contains("_742893.016"))
                 return true;
             return false;
         }
 
         // TODO: Properly fill out
-        private bool UPlay(FileInfo[] files)
+        private bool UPlay(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("UPlayInstall.exe"))
+            if (files.Contains("UPlayInstall.exe"))
                 return true;
             return false;
         }
 
-        private bool VOBProtectCDDVD(FileInfo[] files)
+        private bool VOBProtectCDDVD(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("VOB-PCD.KEY"))
+            if (files.Contains("VOB-PCD.KEY"))
                 return true;
             return false;
         }
 
-        private bool WinLock(FileInfo[] files)
+        private bool WinLock(string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("WinLock.PSX"))
+            if (files.Contains("WinLock.PSX"))
                 return true;
             return false;
         }
@@ -1282,34 +1274,34 @@ namespace DICUI.External
             return false;
         }
 
-        private bool WTMCopyProtection(out string version, FileInfo[] files)
+        private bool WTMCopyProtection(out string version, string[] files)
         {
             version = "";
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("imp.dat")
-                || files.Select(fi => Path.GetFileName(fi.FullName)).Contains("wtmfiles.dat"))
+            if (files.Contains("imp.dat")
+                || files.Contains("wtmfiles.dat"))
             {
-                if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("Viewer.exe"))
+                if (files.Contains("Viewer.exe"))
                 {
-                    int index = files.Select(fi => Path.GetFileName(fi.FullName)).ToList().IndexOf("Viewer.exe");
-                    version = GetFileVersion(files[index].FullName);
+                    int index = files.ToList().IndexOf("Viewer.exe");
+                    version = GetFileVersion(files[index]);
                 }
             }
 
             return false;
         }
 
-        private bool XCP(string path, FileInfo[] files)
+        private bool XCP(string path, string[] files)
         {
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("XCP.DAT"))
+            if (files.Contains("XCP.DAT"))
                 return true;
-            if (files.Select(fi => Path.GetFileName(fi.FullName)).Contains("ECDPlayerControl.ocx"))
+            if (files.Contains("ECDPlayerControl.ocx"))
                 return true;
             if (File.Exists(Path.Combine(path, "contents", "go.exe")))
                 return true;
             return false;
         }
 
-        private bool DummyFiles(FileInfo[] files)
+        private bool DummyFiles(string[] files)
         {
             for (int i = 0; i < files.Length; i++)
             {
