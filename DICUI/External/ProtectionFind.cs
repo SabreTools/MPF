@@ -44,6 +44,7 @@ namespace DICUI.External
         {
             string version = "";
 
+            // Set all of the output variables
             IsImpulseReactorWithoutVersion = false;
             IsLaserLockWithoutVersion = false;
             IsSafeDiscRemovedVersion = false;
@@ -51,9 +52,15 @@ namespace DICUI.External
             IsStarForceWithoutVersion = false;
             SecuROMpaulversion = "";
 
+            // Get the lists of files to be used
             string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
-            string[] exeFiles = files.Where(s => s.EndsWith(".icd") || s.EndsWith(".dat") || s.EndsWith(".exe") || s.EndsWith(".dll")).ToArray();
+            string[] exeFiles = files.Where(s => s.ToLower().EndsWith(".icd")
+                || s.ToLower().EndsWith(".dat")
+                || s.ToLower().EndsWith(".exe")
+                || s.ToLower().EndsWith(".dll")).ToArray();
+            string[] cabFiles = files.Where(s => s.ToLower().EndsWith(".cab")).ToArray();
 
+            // If we have executables to scan
             if (exeFiles.Length != 0)
             {
                 for (int i = 0; i < exeFiles.Length; i++)
@@ -80,11 +87,7 @@ namespace DICUI.External
                             else if (IsSafeDiscRemovedVersion)
                             {
                                 IsSafeDiscRemovedVersion = false;
-                                if (SafeDisc2(out version, files) && version != "2-4")
-                                    return "SafeDisc " + version;
-                                if (SafeDisc3(out version, path, files) && version != "2-4")
-                                    return "SafeDisc " + version;
-                                if (SafeDisc4(out version, path, files) && version != "2-4")
+                                if (SafeDisc2Plus(out version, files) && version != "2-4")
                                     return "SafeDisc " + version;
                             }
                             else if (IsSolidShieldWithoutVersion)
@@ -112,23 +115,82 @@ namespace DICUI.External
                 }
             }
 
-            exeFiles = null;
+            // If we have cabinet files to scan
+            if (cabFiles.Length != 0)
+            {
+                for (int i = 0; i < cabFiles.Length; i++)
+                {
+                    // TODO: Figure out how to extract files from a CAB...
+                    string[] extractedFiles = new string[0];
+                    for (int j = 0; j < extractedFiles.Length; j++)
+                    {
+                        FileInfo filei = new FileInfo(extractedFiles[i]);
+                        if (filei.Length > 352 && !(sizelimit && filei.Length > 20971520))
+                        {
+                            Console.WriteLine("scanning file Nr." + j + "(" + extractedFiles[j] + ")");
+                            string protectionname = ScanInFile(extractedFiles[j], advancedscan);
+                            if (!String.IsNullOrEmpty(protectionname))
+                            {
+                                if (IsImpulseReactorWithoutVersion)
+                                {
+                                    IsImpulseReactorWithoutVersion = false;
+                                    if (ImpulseReactor(out version, files))
+                                        return "Impulse Reactor " + version;
+                                }
+                                else if (IsLaserLockWithoutVersion)
+                                {
+                                    IsLaserLockWithoutVersion = false;
+                                    if (LaserLock(out version, path, files) && version.Length > 0)
+                                        return "LaserLock " + version;
+                                }
+                                else if (IsSafeDiscRemovedVersion)
+                                {
+                                    IsSafeDiscRemovedVersion = false;
+                                    if (SafeDisc2Plus(out version, files) && version != "2-4")
+                                        return "SafeDisc " + version;
+                                }
+                                else if (IsSolidShieldWithoutVersion)
+                                {
+                                    IsSolidShieldWithoutVersion = false;
+                                    if (SolidShield(out version, files) && version.Length > 0)
+                                        return "SolidShield " + version;
+                                }
+                                else if (IsStarForceWithoutVersion)
+                                {
+                                    IsStarForceWithoutVersion = false;
+                                    if (StarForce(out version, files) && version.Length > 0)
+                                        return "StarForce " + version;
+                                }
 
+                                if (SecuROMpaulversion.Length > 0)
+                                {
+                                    if (!protectionname.StartsWith("SecuROM Product Activation"))
+                                        return protectionname + " + SecuROM Product Activation" + SecuROMpaulversion;
+                                }
+                                else
+                                    return protectionname;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Otherwise, try to figure out the protection from file lists
             if (AACS(path))
                 return "AACS";
             if (AlphaDVD(files))
                 return "Alpha-DVD";
             if (Bitpool(files))
                 return "Bitpool";
-            if (ByteShield(path, files))
+            if (ByteShield(files))
                 return "ByteShield";
             if (Cactus(out version, files))
                 return "Cactus Data Shield " + version;
-            if (CDCops(path, files))
+            if (CDCops(files))
                 return "CD-Cops";
-            if (CDProtector(path, files))
+            if (CDProtector(files))
                 return "CD-Protector";
-            if (CDLock(path))
+            if (CDLock(files))
                 return "CD-Lock";
             if (CDX(files))
                 return "CD-X";
@@ -136,7 +198,7 @@ namespace DICUI.External
                 return "Diskguard";
             if (DVDCrypt(files))
                 return "DVD Crypt";
-            if (DVDMoviePROTECT(path))
+            if (DVDMoviePROTECT(path, files))
                 return "DVD-Movie-PROTECT";
             if (FreeLock(files))
                 return "FreeLock";
@@ -156,19 +218,15 @@ namespace DICUI.External
                 return "MediaMax CD-3";
             if (Origin(files))
                 return "Origin";
-            if (ProtectDVDVideo(path))
+            if (ProtectDVDVideo(path, files))
                 return "Protect DVD-Video";
-            if (PSX(path, files))
+            if (PSX(files))
                 return "PSX Libcrypt";
             if (SafeCast(files))
                 return "SafeCast";
             if (SafeDiscLite(files))
                 return "SafeDisc Lite";
-            if (SafeDisc4(out version, path, files))
-                return "SafeDisc " + version;
-            if (SafeDisc3(out version, path, files))
-                return "SafeDisc " + version;
-            if (SafeDisc2(out version, files))
+            if (SafeDisc2Plus(out version, files))
                 return "SafeDisc " + version;
             if (TZCopyProtector(files))
                 return "TZCopyProtector";
@@ -198,7 +256,7 @@ namespace DICUI.External
                 return "VOB ProtectCD/DVD";
             if (WinLock(files))
                 return "Winlock";
-            if (WTMCDProtect(path))
+            if (WTMCDProtect(files))
                 return "WTM CD Protect";
             if (WTMCopyProtection(out version, files))
                 return "WTM Copy Protection " + version;
@@ -684,19 +742,19 @@ namespace DICUI.External
 
         private bool AlphaDVD(string[] files)
         {
-            return files.Contains("PlayDVD.exe");
+            return files.Count(s => s.EndsWith("PlayDVD.exe")) > 0;
         }
 
         private bool Bitpool(string[] files)
         {
-            return files.Contains("bitpool.rsc");
+            return files.Count(s => s.EndsWith("bitpool.rsc")) > 0;
         }
 
-        private bool ByteShield(string path, string[] files)
+        private bool ByteShield(string[] files)
         {
-            if (files.Contains("Byteshield.dll"))
+            if (files.Count(s => s.EndsWith("Byteshield.dll")) > 0)
                 return true;
-            if (Directory.GetFiles(path, "*.bbz", SearchOption.AllDirectories).Length > 0)
+            else if (files.Count(s => s.EndsWith(".bbz")) > 0)
                 return true;
             return false;
         }
@@ -705,20 +763,16 @@ namespace DICUI.External
         {
             bool found = false;
             int fileindex;
-            if (files.Contains("yucca.cds"))
-                found = true;
-            if (files.Contains("wmmp.exe"))
-                found = true;
-            if (files.Contains("PJSTREAM.DLL"))
-                found = true;
-            if (files.Contains("CACTUSPJ.exe"))
-                found = true;
-            if (files.Contains("CDSPlayer.app"))
+            if (files.Count(s => s.EndsWith("yucca.cds")) > 0
+                && files.Count(s => s.EndsWith("wmmp.exe")) > 0
+                && files.Count(s => s.EndsWith("PJSTREAM.DLL")) > 0
+                && files.Count(s => s.EndsWith("CACTUSPJ.exe")) > 0
+                && files.Count(s => s.EndsWith("CDSPlayer.app")) > 0)
                 found = true;
             if (found)
             {
                 //get the exact version
-                fileindex = files.ToList().IndexOf("CDSPlayer.app");
+                fileindex = Array.FindIndex(files, s => s.EndsWith("CDSPlayer.app"));
                 if (fileindex > -1)
                 {
                     StreamReader sr = new StreamReader(files[fileindex]);
@@ -733,37 +787,37 @@ namespace DICUI.External
             return false;
         }
 
-        private bool CDCops(string path, string[] files)
+        private bool CDCops(string[] files)
         {
-            if (files.Contains("CDCOPS.DLL"))
+            if (files.Count(s => s.EndsWith("CDCOPS.DLL")) > 0)
                 return true;
-            if (Directory.GetFiles(path, "*.GZ_", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith(".GZ_")) > 0)
                 return true;
-            if (Directory.GetFiles(path, "*.W_X", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith(".W_X")) > 0)
                 return true;
-            if (Directory.GetFiles(path, "*.Qz", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith(".Qz")) > 0)
                 return true;
-            if (Directory.GetFiles(path, "*.QZ_", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith("QZ_")) > 0)
                 return true;
             return false;
         }
 
-        private bool CDLock(string path)
+        private bool CDLock(string[] files)
         {
-            if (Directory.GetFiles(path, "*.AFP", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith(".AFP")) > 0)
                 return true;
             return false;
         }
 
-        private bool CDProtector(string path, string[] files)
+        private bool CDProtector(string[] files)
         {
-            if (files.Contains("_cdp16.dat"))
+            if (files.Count(s => s.EndsWith("_cdp16.dat")) > 0)
                 return true;
-            if (files.Contains("_cdp16.dll"))
+            if (files.Count(s => s.EndsWith("_cdp16.dll")) > 0)
                 return true;
-            if (files.Contains("_cdp32.dat"))
+            if (files.Count(s => s.EndsWith("_cdp32.dat")) > 0)
                 return true;
-            if (files.Contains("_cdp32.dll"))
+            if (files.Count(s => s.EndsWith("_cdp32.dll")) > 0)
                 return true;
             return false;
         }
@@ -771,45 +825,45 @@ namespace DICUI.External
         //for BurnOut not detecting itself as SafeLock protected
         private bool CDX(string[] files)
         {
-            if (files.Contains("CHKCDX16.DLL"))
+            if (files.Count(s => s.EndsWith("CHKCDX16.DLL")) > 0)
                 return true;
-            if (files.Contains("CHKCDX32.DLL"))
+            if (files.Count(s => s.EndsWith("CHKCDX32.DLL")) > 0)
                 return true;
-            if (files.Contains("CHKCDXNT.DLL"))
+            if (files.Count(s => s.EndsWith("CHKCDXNT.DLL")) > 0)
                 return true;
             return false;
         }
 
         private bool CopyKiller(string[] files)
         {
-            if (files.Contains("Autorun.dat"))
+            if (files.Count(s => s.EndsWith("Autorun.dat")) > 0)
                 return true;
             return false;
         }
 
         private bool DiskGuard(string[] files)
         {
-            if (files.Contains("IOSLINK.VXD"))
+            if (files.Count(s => s.EndsWith("IOSLINK.VXD")) > 0)
                 return true;
-            if (files.Contains("IOSLINK.DLL"))
+            if (files.Count(s => s.EndsWith("IOSLINK.DLL")) > 0)
                 return true;
-            if (files.Contains("IOSLINK.SYS"))
+            if (files.Count(s => s.EndsWith("IOSLINK.SYS")) > 0)
                 return true;
             return false;
         }
 
         private bool DVDCrypt(string[] files)
         {
-            if (files.Contains("DvdCrypt.pdb"))
+            if (files.Count(s => s.EndsWith("DvdCrypt.pdb")) > 0)
                 return true;
             return false;
         }
 
-        private bool DVDMoviePROTECT(string path)
+        private bool DVDMoviePROTECT(string path, string[] files)
         {
             if (Directory.Exists(Path.Combine(path, "VIDEO_TS")))
             {
-                string[] bupfiles = Directory.GetFiles(path, "*.bup", SearchOption.AllDirectories);
+                string[] bupfiles = files.Where(s => s.EndsWith(".bup")).ToArray();
                 for (int i = 0; i < bupfiles.Length; i++)
                 {
                     FileInfo bupfile = new FileInfo(bupfiles[i]);
@@ -824,20 +878,20 @@ namespace DICUI.External
 
         private bool FreeLock(string[] files)
         {
-            if (files.Contains("FREELOCK.IMG"))
+            if (files.Count(s => s.EndsWith("FREELOCK.IMG")) > 0)
                 return true;
             return false;
         }
 
         private bool HexalockAutoLock(string[] files)
         {
-            if (files.Contains("Start_Here.exe"))
+            if (files.Count(s => s.EndsWith("Start_Here.exe")) > 0)
                 return true;
-            if (files.Contains("HCPSMng.exe"))
+            if (files.Count(s => s.EndsWith("HCPSMng.exe")) > 0)
                 return true;
-            if (files.Contains("MFINT.DLL"))
+            if (files.Count(s => s.EndsWith("MFINT.DLL")) > 0)
                 return true;
-            if (files.Contains("MFIMP.DLL"))
+            if (files.Count(s => s.EndsWith("MFIMP.DLL")) > 0)
                 return true;
             return false;
         }
@@ -856,18 +910,18 @@ namespace DICUI.External
 
         private bool IndyVCD(string[] files)
         {
-            if (files.Contains("INDYVCD.AX"))
+            if (files.Count(s => s.EndsWith("INDYVCD.AX")) > 0)
                 return true;
-            if (files.Contains("INDYMP3.idt"))
+            if (files.Count(s => s.EndsWith("INDYMP3.idt")) > 0)
                 return true;
             return false;
         }
 
         private bool Key2AudioXS(string[] files)
         {
-            if (files.Contains("SDKHM.EXE"))
+            if (files.Count(s => s.EndsWith("SDKHM.EXE")) > 0)
                 return true;
-            if (files.Contains("SDKHM.DLL"))
+            if (files.Count(s => s.EndsWith("SDKHM.DLL")) > 0)
                 return true;
             return false;
         }
@@ -882,15 +936,15 @@ namespace DICUI.External
                 return true;
             }
 
-            if (files.Contains("NOMOUSE.COM"))
+            if (files.Count(s => s.EndsWith("NOMOUSE.COM")) > 0)
                 return true;
-            if (files.Contains("l16dll.dll"))
+            if (files.Count(s => s.EndsWith("l16dll.dll")) > 0)
                 return true;
-            if (files.Contains("laserlok.in"))
+            if (files.Count(s => s.EndsWith("laserlok.in")) > 0)
                 return true;
-            if (files.Contains("laserlok.o10"))
+            if (files.Count(s => s.EndsWith("laserlok.o10")) > 0)
                 return true;
-            if (files.Contains("laserlok.011"))
+            if (files.Count(s => s.EndsWith("laserlok.011")) > 0)
                 return true;
             if (Directory.Exists(Path.Combine(path, "LASERLOK")))
                 return true;
@@ -900,14 +954,14 @@ namespace DICUI.External
 
         private bool MediaCloQ(string[] files)
         {
-            if (files.Contains("sunncomm.ico"))
+            if (files.Count(s => s.EndsWith("sunncomm.ico")) > 0)
                 return true;
             return false;
         }
 
         private bool MediaMaxCD3(string[] files)
         {
-            if (files.Contains("LaunchCd.exe"))
+            if (files.Count(s => s.EndsWith("LaunchCd.exe")) > 0)
                 return true;
             return false;
         }
@@ -915,16 +969,16 @@ namespace DICUI.External
         // TODO: Properly fill out
         private bool Origin(string[] files)
         {
-            if (files.Contains("OriginInstall.exe"))
+            if (files.Count(s => s.EndsWith("OriginInstall.exe")) > 0)
                 return true;
             return false;
         }
 
-        private bool ProtectDVDVideo(string path)
+        private bool ProtectDVDVideo(string path, string[] files)
         {
             if (Directory.Exists(Path.Combine(path, "VIDEO_TS")))
             {
-                string[] ifofiles = Directory.GetFiles(path, "*.ifo", SearchOption.AllDirectories);
+                string[] ifofiles = files.Where(s => s.EndsWith(".ifo")).ToArray();
                 for (int i = 0; i < ifofiles.Length; i++)
                 {
                     FileInfo ifofile = new FileInfo(ifofiles[i]);
@@ -936,19 +990,19 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Fix
-        private bool PSX(string path, string[] files)
+        private bool PSX(string[] files)
         {
-            if (files.Contains("SLES_016.83"))
+            // TODO: This is a really bad check...
+            if (files.Count(s => s.EndsWith("SLES_016.83")) > 0)
                 return true;
-            if (Directory.GetFiles(path, "*.cnf", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith(".cnf")) > 0)
                 return true;
             return false;
         }
 
         private bool SafeCast(string[] files)
         {
-            if (files.Contains("cdac11ba.exe"))
+            if (files.Count(s => s.EndsWith("cdac11ba.exe")) > 0)
                 return true;
             return false;
         }
@@ -1026,7 +1080,7 @@ namespace DICUI.External
             return false;
         }
 
-        private bool SafeDisc2(out string version, string[] files)
+        private bool SafeDisc2Plus(out string version, string[] files)
         {
             version = "";
             bool found = false;
@@ -1096,23 +1150,9 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Populate properly
-        private bool SafeDisc3(out string version, string path, string[] files)
-        {
-            version = "";
-            return false;
-        }
-
-        // TODO: Populate properly
-        private bool SafeDisc4(out string version, string path, string[] files)
-        {
-            version = "";
-            return false;
-        }
-
         private bool SafeDiscLite(string[] files)
         {
-            if (files.Contains("00000001.LT1"))
+            if (files.Count(s => s.EndsWith("00000001.LT1")) > 0)
                 return true;
             return false;
         }
@@ -1120,46 +1160,46 @@ namespace DICUI.External
         //for BurnOut not detecting itself as SafeLock protected
         private bool Safe_Lock(string[] files)
         {
-            if (files.Contains("SafeLock.dat"))
+            if (files.Count(s => s.EndsWith("SafeLock.dat")) > 0)
                 return true;
-            if (files.Contains("SafeLock.001"))
+            if (files.Count(s => s.EndsWith("SafeLock.001")) > 0)
                 return true;
-            if (files.Contains("SafeLock.128"))
+            if (files.Count(s => s.EndsWith("SafeLock.128")) > 0)
                 return true;
             return false;
         }
 
         private bool SecuROM(string[] files)
         {
-            if (files.Contains("CMS16.DLL"))
+            if (files.Count(s => s.EndsWith("CMS16.DLL")) > 0)
                 return true;
-            if (files.Contains("CMS_95.DLL"))
+            if (files.Count(s => s.EndsWith("CMS_95.DLL")) > 0)
                 return true;
-            if (files.Contains("CMS_NT.DLL"))
+            if (files.Count(s => s.EndsWith("CMS_NT.DLL")) > 0)
                 return true;
-            if (files.Contains("CMS32_95.DLL"))
+            if (files.Count(s => s.EndsWith("CMS32_95.DLL")) > 0)
                 return true;
-            if (files.Contains("CMS32_NT.DLL"))
+            if (files.Count(s => s.EndsWith("CMS32_NT.DLL")) > 0)
                 return true;
             return false;
         }
 
         private bool SecuROMnew(string[] files)
         {
-            if (files.Contains("SINTF32.DLL"))
+            if (files.Count(s => s.EndsWith("SINTF32.DLL")) > 0)
                 return true;
-            if (files.Contains("SINTF16.DLL"))
+            if (files.Count(s => s.EndsWith("SINTF16.DLL")) > 0)
                 return true;
-            if (files.Contains("SINTFNT.DLL"))
+            if (files.Count(s => s.EndsWith("SINTFNT.DLL")) > 0)
                 return true;
             return false;
         }
 
         private bool SmartE(string[] files)
         {
-            if (files.Contains("00001.TMP"))
+            if (files.Count(s => s.EndsWith("00001.TMP")) > 0)
                 return true;
-            if (files.Contains("00002.TMP"))
+            if (files.Count(s => s.EndsWith("00002.TMP")) > 0)
                 return true;
             return false;
         }
@@ -1197,9 +1237,9 @@ namespace DICUI.External
 
         private bool Softlock(string[] files)
         {
-            if (files.Contains("SOFTLOCKI.dat"))
+            if (files.Count(s => s.EndsWith("SOFTLOCKI.dat")) > 0)
                 return true;
-            if (files.Contains("SOFTLOCKC.dat"))
+            if (files.Count(s => s.EndsWith("SOFTLOCKC.dat")) > 0)
                 return true;
             return false;
         }
@@ -1226,29 +1266,29 @@ namespace DICUI.External
         // TODO: Properly fill out
         private bool Steam(string[] files)
         {
-            if (files.Contains("SteamInstall.exe"))
+            if (files.Count(s => s.EndsWith("SteamInstall.exe")) > 0)
                 return true;
             return false;
         }
 
         private bool Tages(string[] files)
         {
-            if (files.Contains("Tages.dll"))
+            if (files.Count(s => s.EndsWith("Tages.dll")) > 0)
                 return true;
-            if (files.Contains("tagesclient.exe"))
+            if (files.Count(s => s.EndsWith("tagesclient.exe")) > 0)
                 return true;
-            if (files.Contains("TagesSetup.exe"))
+            if (files.Count(s => s.EndsWith("TagesSetup.exe")) > 0)
                 return true;
-            if (files.Contains("TagesSetup_x64.exe"))
+            if (files.Count(s => s.EndsWith("TagesSetup_x64.exe")) > 0)
                 return true;
-            if (files.Contains("Wave.aif"))
+            if (files.Count(s => s.EndsWith("Wave.aif")) > 0)
                 return true;
             return false;
         }
 
         private bool TZCopyProtector(string[] files)
         {
-            if (files.Contains("_742893.016"))
+            if (files.Count(s => s.EndsWith("_742893.016")) > 0)
                 return true;
             return false;
         }
@@ -1256,28 +1296,28 @@ namespace DICUI.External
         // TODO: Properly fill out
         private bool UPlay(string[] files)
         {
-            if (files.Contains("UPlayInstall.exe"))
+            if (files.Count(s => s.EndsWith("UPlayInstall.exe")) > 0)
                 return true;
             return false;
         }
 
         private bool VOBProtectCDDVD(string[] files)
         {
-            if (files.Contains("VOB-PCD.KEY"))
+            if (files.Count(s => s.EndsWith("VOB-PCD.KEY")) > 0)
                 return true;
             return false;
         }
 
         private bool WinLock(string[] files)
         {
-            if (files.Contains("WinLock.PSX"))
+            if (files.Count(s => s.EndsWith("WinLock.PSX")) > 0)
                 return true;
             return false;
         }
 
-        private bool WTMCDProtect(string path)
+        private bool WTMCDProtect(string[] files)
         {
-            if (Directory.GetFiles(path, "*.IMP", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.EndsWith(".IMP")) > 0)
                 return true;
             return false;
         }
@@ -1285,10 +1325,10 @@ namespace DICUI.External
         private bool WTMCopyProtection(out string version, string[] files)
         {
             version = "";
-            if (files.Contains("imp.dat")
-                || files.Contains("wtmfiles.dat"))
+            if (files.Count(s => s.EndsWith("imp.dat")) > 0
+                || files.Count(s => s.EndsWith("wtmfiles.dat")) > 0)
             {
-                if (files.Contains("Viewer.exe"))
+                if (files.Count(s => s.EndsWith("Viewer.exe")) > 0)
                 {
                     int index = files.ToList().IndexOf("Viewer.exe");
                     version = GetFileVersion(files[index]);
@@ -1300,9 +1340,9 @@ namespace DICUI.External
 
         private bool XCP(string path, string[] files)
         {
-            if (files.Contains("XCP.DAT"))
+            if (files.Count(s => s.EndsWith("XCP.DAT")) > 0)
                 return true;
-            if (files.Contains("ECDPlayerControl.ocx"))
+            if (files.Count(s => s.EndsWith("ECDPlayerControl.ocx")) > 0)
                 return true;
             if (File.Exists(Path.Combine(path, "contents", "go.exe")))
                 return true;
