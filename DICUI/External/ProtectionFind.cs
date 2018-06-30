@@ -80,7 +80,7 @@ namespace DICUI.External
                             else if (IsSafeDiscRemovedVersion)
                             {
                                 IsSafeDiscRemovedVersion = false;
-                                if (SafeDisc2(out version, path, files) && version != "2-4")
+                                if (SafeDisc2(out version, files) && version != "2-4")
                                     return "SafeDisc " + version;
                                 if (SafeDisc3(out version, path, files) && version != "2-4")
                                     return "SafeDisc " + version;
@@ -168,11 +168,11 @@ namespace DICUI.External
                 return "SafeDisc " + version;
             if (SafeDisc3(out version, path, files))
                 return "SafeDisc " + version;
-            if (SafeDisc2(out version, path, files))
+            if (SafeDisc2(out version, files))
                 return "SafeDisc " + version;
             if (TZCopyProtector(files))
                 return "TZCopyProtector";
-            if (SafeDisc1(out version, path, files))
+            if (SafeDisc1(out version, files))
                 return "SafeDisc " + version;
             if (Safe_Lock(files))
                 return "SafeLock";
@@ -953,63 +953,69 @@ namespace DICUI.External
             return false;
         }
 
-        private bool SafeDisc1(out string version, string path, string[] files)
+        private bool SafeDisc1(out string version, string[] files)
         {
             version = "";
             bool found = true;
-            if (!files.Contains("00000001.TMP"))
-                found = false;
-            if (!files.Contains("CLCD16.DLL"))
-                found = false;
-            if (!files.Contains("CLCD32.DLL"))
-                found = false;
-            if (!files.Contains("CLOKSPL.EXE"))
-                found = false;
-            int fileindex = files.ToList().IndexOf("DPLAYERX.DLL");
-            if (fileindex > -1)
+
+            // Check to make sure all 5 files exist
+            if (files.Count(s => s.EndsWith("00000001.TMP")) > 0
+                && files.Count(s => s.EndsWith("CLCD16.DLL")) > 0
+                && files.Count(s => s.EndsWith("CLCD32.DLL")) > 0
+                && files.Count(s => s.EndsWith("CLOKSPL.EXE")) > 0
+                && files.Count(s => s.EndsWith("DPLAYERX.DLL")) > 0)
             {
-                found = true;
-                if (files[fileindex].Length == 81408)
-                    version = "1.0x";
-                if (files[fileindex].Length == 155648)
-                    version = "1.1x";
-                if (files[fileindex].Length == 156160)
-                    version = "1.1x-1.2x";
-                if (files[fileindex].Length == 163328)
-                    version = "1.3x";
-                if (files[fileindex].Length == 165888)
-                    version = "1.35";
-                if (files[fileindex].Length == 172544)
-                    version = "1.40";
-                if (files[fileindex].Length == 173568)
-                    version = "1.4x";
-                if (files[fileindex].Length == 136704)
-                    version = "1.4x";
-                if (files[fileindex].Length == 138752)
-                    version = "1.5x";
+                int dplayerIndex = Array.FindIndex(files, s => s.EndsWith("DPLAYERX.DLL"));
+                if (dplayerIndex > -1)
+                {
+                    if (files[dplayerIndex].Length == 81408)
+                        version = "1.0x";
+                    else if (files[dplayerIndex].Length == 155648)
+                        version = "1.1x";
+                    else if (files[dplayerIndex].Length == 156160)
+                        version = "1.1x-1.2x";
+                    else if (files[dplayerIndex].Length == 163328)
+                        version = "1.3x";
+                    else if (files[dplayerIndex].Length == 165888)
+                        version = "1.35";
+                    else if (files[dplayerIndex].Length == 172544)
+                        version = "1.40";
+                    else if (files[dplayerIndex].Length == 173568)
+                        version = "1.4x";
+                    else if (files[dplayerIndex].Length == 136704)
+                        version = "1.4x";
+                    else if (files[dplayerIndex].Length == 138752)
+                        version = "1.5x";
+                }
             }
-            fileindex = files.Select(f => f.ToLower()).ToList().IndexOf("drvmgt.dll");
-            if (fileindex > -1)
+
+            // Check if the management dll exists
+            int drvmgtIndex = Array.FindIndex(files, s => s.ToLower().EndsWith("drvmgt.dll"));
+            if (drvmgtIndex > -1)
             {
                 found = true;
                 if (version.Length == 0)
                 {
-                    if (files[fileindex].Length == 34816)
+                    if (files[drvmgtIndex].Length == 34816)
                         version = "1.0x";
-                    if (files[fileindex].Length == 32256)
+                    else if (files[drvmgtIndex].Length == 32256)
                         version = "1.1x-1.3x";
-                    if (files[fileindex].Length == 31744)
+                    else if (files[drvmgtIndex].Length == 31744)
                         version = "1.4x";
-                    if (files[fileindex].Length == 34304)
+                    else if (files[drvmgtIndex].Length == 34304)
                         version = "1.5x";
                 }
             }
-            if (Directory.GetFiles(path, "*.ICD", SearchOption.AllDirectories).Length > 0)
+
+            // Finally, check to see if any telltale files are found
+            if (files.Count(s => s.ToLower().EndsWith(".icd")) > 0)
                 found = true;
-            if (Directory.GetFiles(path, "*.016", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.ToLower().EndsWith(".016")) > 0)
                 found = true;
-            if (Directory.GetFiles(path, "*.256", SearchOption.AllDirectories).Length > 0)
+            if (files.Count(s => s.ToLower().EndsWith(".256")) > 0)
                 found = true;
+
+            // If anything is found, set the version if it wasn't already
             if (found == true)
             {
                 if (version.Length == 0)
@@ -1020,14 +1026,14 @@ namespace DICUI.External
             return false;
         }
 
-        private bool SafeDisc2(out string version, string path, string[] files)
+        private bool SafeDisc2(out string version, string[] files)
         {
             version = "";
             bool found = false;
-            if (files.Contains("00000002.TMP"))
+            if (files.Count(s => s.EndsWith("00000002.TMP")) > 0)
                 found = true;
-            int fileindexdrvmgt = files.Select(f => f.ToLower()).ToList().IndexOf("drvmgt.dll");
-            int fileindexsecdrv = files.Select(f => f.ToLower()).ToList().IndexOf("secdrv.sys");
+            int fileindexdrvmgt = Array.FindIndex(files, s => s.ToLower().EndsWith("drvmgt.dll"));
+            int fileindexsecdrv = Array.FindIndex(files, s => s.ToLower().EndsWith("secdrv.sys"));
             if (fileindexsecdrv > -1)
             {
                 if (files[fileindexsecdrv].Length == 18768)
@@ -1040,26 +1046,27 @@ namespace DICUI.External
             {
                 if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 20128)
                     version = "2.10";
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 27440)
+                else if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 27440)
                     version = "2.30";
-                if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 28624)
+                else if (files[fileindexdrvmgt].Length == 34304 && files[fileindexsecdrv].Length == 28624)
                     version = "2.40";
-                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 28400)
+                else if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 28400)
                     version = "2.51";
-                if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 29392)
+                else if (files[fileindexdrvmgt].Length == 35840 && files[fileindexsecdrv].Length == 29392)
                     version = "2.60";
-                if (files[fileindexdrvmgt].Length == 40960 && files[fileindexsecdrv].Length == 11376)
+                else if (files[fileindexdrvmgt].Length == 40960 && files[fileindexsecdrv].Length == 11376)
                     version = "2.70";
-                if (files[fileindexdrvmgt].Length == 23552 && files[fileindexsecdrv].Length == 12464)
+                else if (files[fileindexdrvmgt].Length == 23552 && files[fileindexsecdrv].Length == 12464)
                     version = "2.80";
-                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12400)
+                else if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12400)
                     version = "2.90";
-                if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12528)
+                else if (files[fileindexdrvmgt].Length == 41472 && files[fileindexsecdrv].Length == 12528)
                     version = "3.10";
-                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 12528)
+                else if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 12528)
                     version = "3.15";
-                if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 11973)
+                else if (files[fileindexdrvmgt].Length == 24064 && files[fileindexsecdrv].Length == 11973)
                     version = "3.20";
+
                 if (version != "")
                     found = true;
             }
@@ -1067,14 +1074,15 @@ namespace DICUI.External
             {
                 if (files[fileindexdrvmgt].Length == 34304)
                     version = "2.0x";
-                if (files[fileindexdrvmgt].Length == 35840)
+                else if (files[fileindexdrvmgt].Length == 35840)
                     version = "2.6x";
-                if (files[fileindexdrvmgt].Length == 40960)
+                else if (files[fileindexdrvmgt].Length == 40960)
                     version = "2.7x";
-                if (files[fileindexdrvmgt].Length == 23552)
+                else if (files[fileindexdrvmgt].Length == 23552)
                     version = "2.8x";
-                if (files[fileindexdrvmgt].Length == 41472)
+                else if (files[fileindexdrvmgt].Length == 41472)
                     version = "2.9x";
+
                 if (version != "")
                     found = true;
             }
