@@ -593,6 +593,8 @@ namespace DICUI.External
 
         private string ScanInFile(string file, bool advancedscan)
         {
+            #region Content Checks
+
             try
             {
                 StreamReader sr = new StreamReader(file, Encoding.Default);
@@ -685,6 +687,36 @@ namespace DICUI.External
                     return "DVD-Cops " + GetCDDVDCopsVersion(file, position);
                 }
 
+                // EXE Stealth
+                if (FileContent.Contains("" + (char)0x3F + (char)0x3F + (char)0x5B + (char)0x5B + (char)0x5F + (char)0x5F
+                    + (char)0x5B + (char)0x5B + (char)0x5F + (char)0x0 + (char)0x7B + (char)0x7B + (char)0x0
+                    + (char)0x0 + (char)0x7B + (char)0x7B + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0
+                    + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x3F + (char)0x3B + (char)0x3B + (char)0x3F
+                    + (char)0x3F + (char)0x3B + (char)0x3B + (char)0x3F + (char)0x3F))
+                {
+                    return "EXE Stealth";
+                }
+
+                // Games for Windows - Live
+                if (FileContent.Contains("xlive.dll"))
+                {
+                    return "Games for Windows - Live";
+                }
+
+                // Impulse Reactor
+                if (FileContent.Contains("CVPInitializeClient"))
+                {
+                    if (FileContent.Contains("A" + (char)0x0 + "T" + (char)0x0 + "T" + (char)0x0 + "L" + (char)0x0 + "I" + (char)0x0 + "S" + (char)0x0 + "T" + (char)0x0 + (char)0x0 + (char)0x0 + "E" + (char)0x0 + "L" + (char)0x0 + "E" + (char)0x0 + "M" + (char)0x0 + "E" + (char)0x0 + "N" + (char)0x0 + "T" + (char)0x0 + (char)0x0 + (char)0x0 + "N" + (char)0x0 + "O" + (char)0x0 + "T" + (char)0x0 + "A" + (char)0x0 + "T" + (char)0x0 + "I" + (char)0x0 + "O" + (char)0x0 + "N"))
+                    {
+                        return "Impulse Reactor " + GetFileVersion(file);
+                    }
+                    else
+                    {
+                        IsImpulseReactorWithoutVersion = true;
+                        return "Impulse Reactor";
+                    }
+                }
+
                 // JoWooD X-Prot
                 if (FileContent.Contains(".ext    "))
                 {
@@ -696,6 +728,17 @@ namespace DICUI.External
                     }
                     else
                         return "JoWooD X-Prot v1";
+                }
+
+                if (FileContent.Contains("@HC09    "))
+                {
+                    return "JoWooD X-Prot v2";
+                }
+
+                // Key-Lock (Dongle)
+                if (FileContent.Contains("KEY-LOCK COMMAND"))
+                {
+                    return "Key-Lock (Dongle)";
                 }
 
                 // LaserLock
@@ -771,6 +814,12 @@ namespace DICUI.External
                     return "ProtectDisc " + GetProtectDiscVersionBuild6till8(file, position);
                 }
 
+                // Ring-Protech
+                if (FileContent.Contains((char)0x00 + "Allocator" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00))
+                {
+                    return "Ring-Protech";
+                }
+
                 // SafeDisc / SafeCast
                 position = FileContent.IndexOf("BoG_ *90.0&!!  Yy>");
                 if (position > -1)
@@ -796,6 +845,12 @@ namespace DICUI.External
                     return "SafeDisc 3.20-4.xx (version removed)";
                 }
 
+                // SafeLock
+                if (FileContent.Contains("SafeLock"))
+                {
+                    return "SafeLock";
+                }
+
                 // SecuROM
                 position = FileContent.IndexOf("AddD" + (char)0x03 + (char)0x00 + (char)0x00 + (char)0x00);
                 if (position > -1)
@@ -819,136 +874,21 @@ namespace DICUI.External
                     return "SecuROM Product Activation " + SecuROMpaulversion;
                 }
 
-                // SolidShield
-                if (FileContent.Contains("D" + (char)0x00 + "V" + (char)0x00 + "M" + (char)0x00 + " " + (char)0x00 + "L" + (char)0x00 + "i" + (char)0x00 + "b" + (char)0x00 + "r" + (char)0x00 + "a" + (char)0x00 + "r" + (char)0x00 + "y"))
-                {
-                    return "SolidShield " + GetFileVersion(file);
-                }
-
-                // StarForce
-                if (FileContent.Contains(".sforce") || FileContent.Contains(".brick"))
-                {
-                    IsStarForceWithoutVersion = true;
-                    return "StarForce 3-5";
-                }
-
-                if (FileContent.Contains("P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "d" + (char)0x00 + " " + (char)0x00 + "M" + (char)0x00 + "o" + (char)0x00 + "d" + (char)0x00 + "u" + (char)0x00 + "l" + (char)0x00 + "e"))
-                {
-                    IsStarForceWithoutVersion = true;
-                    return "StarForce 5";
-                }
-
-                if (FileContent.Contains("(" + (char)0x00 + "c" + (char)0x00 + ")" + (char)0x00 + " " + (char)0x00 + "P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00 + "i" + (char)0x00 + "o" + (char)0x00 + "n"
-                    + (char)0x00 + " " + (char)0x00 + "T" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "h" + (char)0x00 + "n" + (char)0x00 + "o" + (char)0x00 + "l" + (char)0x00 + "o" + (char)0x00 + "g" + (char)0x00 + "y" + (char)0x00)
-                || FileContent.Contains("Protection Technology, Ltd."))
-                {
-                    //if (FileContent.Contains("PSA_GetDiscLabel")
-                    //if (FileContent.Contains("(c) Protection Technology")
-                    position = FileContent.IndexOf("TradeName") - 1;
-                    if (position != -1 && position != -2)
-                        return "StarForce " + GetFileVersion(file) + " (" + FileContent.Substring(position + 22, 30).Split((char)0x00)[0] + ")";
-                    else
-                        return "StarForce " + GetFileVersion(file);
-                }
-
-                // Sysiphus / Sysiphus DVD
-                position = FileContent.IndexOf("V SUHPISYS");
-                if (position > -1)
-                {
-                    if (FileContent.Substring(position + 10, 3) == "DVD")
-                        return "Sysiphus DVD " + GetSysiphusVersion(file, position);
-                    else
-                        return "Sysiphus " + GetSysiphusVersion(file, position);
-                }
-
-                // VOB ProtectCD/DVD
-                position = FileContent.IndexOf("VOB ProtectCD");
-                if (position > -1)
-                {
-                    position--;
-                    return "VOB ProtectCD/DVD " + GetProtectCDoldVersion(file, position);
-                }
-
-                position = FileContent.IndexOf("DCP-BOV" + (char)0x00 + (char)0x00);
-                if (position > -1)
-                {
-                    position--;
-                    string version;
-                    version = GetVOBProtectCDDVDVersion(file, position);
-                    if (version.Length > 0)
-                    {
-                        return "VOB ProtectCD/DVD " + version;
-                    }
-                    if (advancedscan)
-                    {
-                        version = EVORE.SearchProtectDiscVersion(file);
-                        if (version.Length > 0)
-                        {
-                            if (version.StartsWith("2"))
-                            {
-                                version = "6" + version.Substring(1);
-                            }
-                            return "VOB ProtectCD/DVD " + version;
-                        }
-                    }
-                    return "VOB ProtectCD/DVD 5.9-6.0" + GetVOBProtectCDDVDBuild(file, position);
-                }
-
-                if (FileContent.Contains("" + (char)0x3F + (char)0x3F + (char)0x5B + (char)0x5B + (char)0x5F + (char)0x5F
-                    + (char)0x5B + (char)0x5B + (char)0x5F + (char)0x0 + (char)0x7B + (char)0x7B + (char)0x0
-                    + (char)0x0 + (char)0x7B + (char)0x7B + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0
-                    + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x3F + (char)0x3B + (char)0x3B + (char)0x3F
-                    + (char)0x3F + (char)0x3B + (char)0x3B + (char)0x3F + (char)0x3F))
-                {
-                    return "EXE Stealth";
-                }
-
-                if (FileContent.Contains("xlive.dll"))
-                {
-                    return "Games for Windows - Live";
-                }
-
-                if (FileContent.Contains("CVPInitializeClient"))
-                {
-                    if (FileContent.Contains("A" + (char)0x0 + "T" + (char)0x0 + "T" + (char)0x0 + "L" + (char)0x0 + "I" + (char)0x0 + "S" + (char)0x0 + "T" + (char)0x0 + (char)0x0 + (char)0x0 + "E" + (char)0x0 + "L" + (char)0x0 + "E" + (char)0x0 + "M" + (char)0x0 + "E" + (char)0x0 + "N" + (char)0x0 + "T" + (char)0x0 + (char)0x0 + (char)0x0 + "N" + (char)0x0 + "O" + (char)0x0 + "T" + (char)0x0 + "A" + (char)0x0 + "T" + (char)0x0 + "I" + (char)0x0 + "O" + (char)0x0 + "N"))
-                    {
-                        return "Impulse Reactor " + GetFileVersion(file);
-                    }
-                    else
-                    {
-                        IsImpulseReactorWithoutVersion = true;
-                        return "Impulse Reactor";
-                    }
-                }
-
-                if (FileContent.Contains("@HC09    "))
-                {
-                    return "JoWooD X-Prot v2";
-                }
-
-                if (FileContent.Contains("KEY-LOCK COMMAND"))
-                {
-                    return "Key-Lock (Dongle)";
-                }
-
-                if (FileContent.Contains((char)0x00 + "Allocator" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00))
-                {
-                    return "Ring-Protech";
-                }
-
-                if (FileContent.Contains("SafeLock"))
-                {
-                    return "SafeLock";
-                }
-
                 if (SuffixInStr(FileContent, ".cms_", "t" + (char)0x00, "d" + (char)0x00) > -1)
                 {
                     return "SecuROM 1-3";
                 }
 
+                // SmartE
                 if (FileContent.Contains("BITARTS"))
                 {
                     return "SmartE";
+                }
+
+                // SolidShield
+                if (FileContent.Contains("D" + (char)0x00 + "V" + (char)0x00 + "M" + (char)0x00 + " " + (char)0x00 + "L" + (char)0x00 + "i" + (char)0x00 + "b" + (char)0x00 + "r" + (char)0x00 + "a" + (char)0x00 + "r" + (char)0x00 + "y"))
+                {
+                    return "SolidShield " + GetFileVersion(file);
                 }
 
                 if (FileContent.Contains("" + (char)0x42 + (char)0x0 + (char)0x49 + (char)0x0 + (char)0x4E + (char)0x0 + (char)0x7 + (char)0x0 +
@@ -999,11 +939,49 @@ namespace DICUI.External
                     }
                 }
 
+                // StarForce
+                if (FileContent.Contains(".sforce") || FileContent.Contains(".brick"))
+                {
+                    IsStarForceWithoutVersion = true;
+                    return "StarForce 3-5";
+                }
+
+                if (FileContent.Contains("P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "d" + (char)0x00 + " " + (char)0x00 + "M" + (char)0x00 + "o" + (char)0x00 + "d" + (char)0x00 + "u" + (char)0x00 + "l" + (char)0x00 + "e"))
+                {
+                    IsStarForceWithoutVersion = true;
+                    return "StarForce 5";
+                }
+
+                if (FileContent.Contains("(" + (char)0x00 + "c" + (char)0x00 + ")" + (char)0x00 + " " + (char)0x00 + "P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00 + "i" + (char)0x00 + "o" + (char)0x00 + "n"
+                    + (char)0x00 + " " + (char)0x00 + "T" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "h" + (char)0x00 + "n" + (char)0x00 + "o" + (char)0x00 + "l" + (char)0x00 + "o" + (char)0x00 + "g" + (char)0x00 + "y" + (char)0x00)
+                || FileContent.Contains("Protection Technology, Ltd."))
+                {
+                    //if (FileContent.Contains("PSA_GetDiscLabel")
+                    //if (FileContent.Contains("(c) Protection Technology")
+                    position = FileContent.IndexOf("TradeName") - 1;
+                    if (position != -1 && position != -2)
+                        return "StarForce " + GetFileVersion(file) + " (" + FileContent.Substring(position + 22, 30).Split((char)0x00)[0] + ")";
+                    else
+                        return "StarForce " + GetFileVersion(file);
+                }
+
+                // SVK Protector
                 if (FileContent.Contains("?SVKP" + (char)0x00 + (char)0x00))
                 {
                     return "SVK Protector";
                 }
 
+                // Sysiphus / Sysiphus DVD
+                position = FileContent.IndexOf("V SUHPISYS");
+                if (position > -1)
+                {
+                    if (FileContent.Substring(position + 10, 3) == "DVD")
+                        return "Sysiphus DVD " + GetSysiphusVersion(file, position);
+                    else
+                        return "Sysiphus " + GetSysiphusVersion(file, position);
+                }
+
+                // TAGES
                 if (FileContent.Contains("protected-tages-runtime.exe") ||
                     FileContent.Contains("tagesprotection.com"))
                 {
@@ -1020,16 +998,51 @@ namespace DICUI.External
                     }
                 }
 
+                // VOB ProtectCD/DVD
+                position = FileContent.IndexOf("VOB ProtectCD");
+                if (position > -1)
+                {
+                    position--;
+                    return "VOB ProtectCD/DVD " + GetProtectCDoldVersion(file, position);
+                }
+
+                position = FileContent.IndexOf("DCP-BOV" + (char)0x00 + (char)0x00);
+                if (position > -1)
+                {
+                    position--;
+                    string version;
+                    version = GetVOBProtectCDDVDVersion(file, position);
+                    if (version.Length > 0)
+                    {
+                        return "VOB ProtectCD/DVD " + version;
+                    }
+                    if (advancedscan)
+                    {
+                        version = EVORE.SearchProtectDiscVersion(file);
+                        if (version.Length > 0)
+                        {
+                            if (version.StartsWith("2"))
+                            {
+                                version = "6" + version.Substring(1);
+                            }
+                            return "VOB ProtectCD/DVD " + version;
+                        }
+                    }
+                    return "VOB ProtectCD/DVD 5.9-6.0" + GetVOBProtectCDDVDBuild(file, position);
+                }
+
                 if (FileContent.Contains(".vob.pcd"))
                 {
                     return "VOB ProtectCD";
                 }
 
+                // WTM CD Protect
                 if (FileContent.Contains("WTM76545"))
                 {
                     return "WTM CD Protect";
                 }
 
+                // Xtreme-Protector
                 if (FileContent.Contains("XPROT   "))
                 {
                     return "Xtreme-Protector";
@@ -1045,7 +1058,9 @@ namespace DICUI.External
             }
             catch { }
 
-            #region External Checks
+            #endregion
+
+            #region Name Checks
 
             FileInfo fi = new FileInfo(file);
 
