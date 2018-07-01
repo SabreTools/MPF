@@ -205,8 +205,6 @@ namespace DICUI.External
                 return "DVD-Movie-PROTECT";
             if (FreeLock(files))
                 return "FreeLock";
-            if (GamesForWindowsLive(files))
-                return "Games for Windows Live";
             if (HexalockAutoLock(files))
                 return "Hexalock AutoLock";
             if (ImpulseReactor(out version, files))
@@ -221,8 +219,6 @@ namespace DICUI.External
                 return "MediaCloQ";
             if (MediaMaxCD3(files))
                 return "MediaMax CD-3";
-            if (Origin(files))
-                return "Origin";
             if (ProtectDVDVideo(path, files))
                 return "Protect DVD-Video";
             if (PSX(files))
@@ -251,12 +247,8 @@ namespace DICUI.External
                 return "Softlock";
             if (StarForce(out version, files))
                 return "StarForce " + version;
-            if (Steam(files))
-                return "Steam";
             if (Tages(files))
                 return "TAGES";
-            if (UPlay(files))
-                return "UPlay";
             if (VOBProtectCDDVD(files))
                 return "VOB ProtectCD/DVD";
             if (WinLock(files))
@@ -267,6 +259,17 @@ namespace DICUI.External
                 return "WTM Copy Protection " + version;
             if (XCP(path, files))
                 return "XCP";
+
+            // Online Services
+            if (GamesForWindowsLive(files))
+                return "Games for Windows Live";
+            if (Origin(files))
+                return "Origin";
+            if (Steam(files))
+                return "Steam";
+            if (UPlay(files))
+                return "UPlay";
+
             if (CopyKiller(files))
                 return "Could be CopyKiller / SecuROM";
             if (DummyFiles(files))
