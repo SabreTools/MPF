@@ -40,51 +40,51 @@ namespace DICUI.External
 
         #region Known file and extension lists
 
-        private readonly List<string> AACSPaths = new List<string> { Path.Combine("aacs", "VTKF000.AACS"), Path.Combine("AACS", "CPSUnit00001.cci") };
-        private readonly List<string> AlphaDVDPaths = new List<string> { "PlayDVD.exe" };
-        private readonly List<string> BitpoolPaths = new List<string> { "bitpool.rsc" };
-        private readonly List<string> ByteShieldPaths = new List<string> { "Byteshield.dll", ".bbz" };
-        private readonly List<string> CactusPaths = new List<string> { "yucca.cds", "wmmp.exe", "PJSTREAM.DLL", "CACTUSPJ.exe", "CDSPlayer.app" };
-        private readonly List<string> CDCopsPaths = new List<string> { "CDCOPS.DLL", ".GZ_", ".W_X", ".Qz", ".QZ_" };
-        private readonly List<string> CDLockPaths = new List<string> { ".AFP" };
-        private readonly List<string> CDProtectorPaths = new List<string> { "_cdp16.dat", "_cdp16.dll", "_cdp32.dat", "_cdp32.dll" };
-        private readonly List<string> CDXPaths = new List<string> { "CHKCDX16.DLL", "CHKCDX32.DLL", "CHKCDXNT.DLL" };
-        private readonly List<string> CopyKillerPaths = new List<string> { "Autorun.dat" };
-        private readonly List<string> DiskGuardPaths = new List<string> { "IOSLINK.VXD", "IOSLINK.DLL", "IOSLINK.SYS" };
-        private readonly List<string> DVDCryptPaths = new List<string> { "DvdCrypt.pdb" };
-        // private readonly List<string> DVDMoviePROTECTPaths = new List<string> { "VIDEO_TS", ".bup", ".ifo" };
-        private readonly List<string> FreeLockPaths = new List<string> { "FREELOCK.IMG" };
-        private readonly List<string> GamesForWindowsLivePaths = new List<string> { "XLiveRedist.msi" };
-        private readonly List<string> HexalockAutoLockPaths = new List<string> { "Start_Here.exe", "HCPSMng.exe", "MFINT.DLL", "MFIMP.DLL" };
-        private readonly List<string> ImpulseReactorPaths = new List<string> { "ImpulseReactor.dll" };
-        private readonly List<string> IndyVCDPaths = new List<string> { "INDYVCD.AX", "INDYMP3.idt" };
-        private readonly List<string> Key2AudioXSPaths = new List<string> { "SDKHM.EXE", "SDKHM.DLL" };
-        private readonly List<string> LaserLockPaths = new List<string> { "NOMOUSE.SP", "NOMOUSE.COM", "l16dll.dll", "laserlok.in", "laserlok.o10", "laserlok.011", /* "LASERLOK" */ };
-        private readonly List<string> MediaCloQPaths = new List<string> { "sunncomm.ico" };
-        private readonly List<string> MediaMaxCD3Paths = new List<string> { "LaunchCd.exe" };
-        private readonly List<string> OriginPaths = new List<string> { "OriginSetup.exe" };
-        // private readonly List<string> ProtectDVDVideoPaths = new List<string> { "VIDEO_TS", ".ifo" };
-        private readonly List<string> PSXPaths = new List<string> { ".cnf" };
-        private readonly List<string> SafeCastPaths = new List<string> { "cdac11ba.exe" };
-        private readonly List<string> SafeDisc1Paths = new List<string> { "00000001.TMP", "CLCD16.DLL", "CLCD32.DLL", "CLOKSPL.EXE", "DPLAYERX.DLL", "drvmgt.dll", ".icd", ".016", ".256" };
-        private readonly List<string> SafeDisc2PlusPaths = new List<string> { "00000002.TMP", "drvmgt.dll", "secdrv.sys" };
-        private readonly List<string> SafeDiscLitePaths = new List<string> { "00000001.LT1" };
-        private readonly List<string> SafeLockPaths = new List<string> { "SafeLock.dat", "SafeLock.001", "SafeLock.128" };
-        private readonly List<string> SecuROMPaths = new List<string> { "CMS16.DLL", "CMS_95.DLL", "CMS_NT.DLL", "CMS32_95.DLL", "CMS32_NT.DLL" };
-        private readonly List<string> SecuROMNewPaths = new List<string> { "SINTF32.DLL", "SINTF16.DLL", "SINTFNT.DLL" };
-        private readonly List<string> SmartEPaths = new List<string> { "00001.TMP", "00002.TMP" };
-        private readonly List<string> SolidShieldPaths = new List<string> { "dvm.dll", "hc.dll", "solidshield-cd.dll", "c11prot.dll" };
-        private readonly List<string> SoftlockPaths = new List<string> { "SOFTLOCKI.dat", "SOFTLOCKC.dat" };
-        private readonly List<string> StarForcePaths = new List<string> { "protect.dll", "protect.exe" };
-        private readonly List<string> SteamPaths = new List<string> { "SteamInstall.exe", "SteamInstall.ini", "SteamInstall.msi", "SteamRetailInstaller.dmg", "SteamSetup.exe" };
-        private readonly List<string> TagesPaths = new List<string> { "Tages.dll", "tagesclient.exe", "TagesSetup.exe", "TagesSetup_x64.exe", "Wave.aif" };
-        private readonly List<string> TZCopyProtectorPaths = new List<string> { "_742893.016" };
-        private readonly List<string> UplayPaths = new List<string> { "UplayInstaller.exe" };
-        private readonly List<string> VOBProtectCDDVDPaths = new List<string> { "VOB-PCD.KEY" };
-        private readonly List<string> WinLockPaths = new List<string> { "WinLock.PSX" };
-        private readonly List<string> WTMCDProtectPaths = new List<string> { ".IMP" };
-        private readonly List<string> WTMCopyProtectionPaths = new List<string> { "imp.dat", "wtmfiles.dat", "Viewer.exe" };
-        private readonly List<string> XCPPaths = new List<string> { "XCP.DAT", "ECDPlayerControl.ocx", Path.Combine("contents", "go.exe") };
+        private static List<string> AACSPaths = new List<string> { Path.Combine("aacs", "VTKF000.AACS"), Path.Combine("AACS", "CPSUnit00001.cci") };
+        private static List<string> AlphaDVDPaths = new List<string> { "PlayDVD.exe" };
+        private static List<string> BitpoolPaths = new List<string> { "bitpool.rsc" };
+        private static List<string> ByteShieldPaths = new List<string> { "Byteshield.dll", ".bbz" };
+        private static List<string> CactusPaths = new List<string> { "yucca.cds", "wmmp.exe", "PJSTREAM.DLL", "CACTUSPJ.exe", "CDSPlayer.app" };
+        private static List<string> CDCopsPaths = new List<string> { "CDCOPS.DLL", ".GZ_", ".W_X", ".Qz", ".QZ_" };
+        private static List<string> CDLockPaths = new List<string> { ".AFP" };
+        private static List<string> CDProtectorPaths = new List<string> { "_cdp16.dat", "_cdp16.dll", "_cdp32.dat", "_cdp32.dll" };
+        private static List<string> CDXPaths = new List<string> { "CHKCDX16.DLL", "CHKCDX32.DLL", "CHKCDXNT.DLL" };
+        private static List<string> CopyKillerPaths = new List<string> { "Autorun.dat" };
+        private static List<string> DiskGuardPaths = new List<string> { "IOSLINK.VXD", "IOSLINK.DLL", "IOSLINK.SYS" };
+        private static List<string> DVDCryptPaths = new List<string> { "DvdCrypt.pdb" };
+        // private static List<string> DVDMoviePROTECTPaths = new List<string> { "VIDEO_TS", ".bup", ".ifo" };
+        private static List<string> FreeLockPaths = new List<string> { "FREELOCK.IMG" };
+        private static List<string> GamesForWindowsLivePaths = new List<string> { "XLiveRedist.msi" };
+        private static List<string> HexalockAutoLockPaths = new List<string> { "Start_Here.exe", "HCPSMng.exe", "MFINT.DLL", "MFIMP.DLL" };
+        private static List<string> ImpulseReactorPaths = new List<string> { "ImpulseReactor.dll" };
+        private static List<string> IndyVCDPaths = new List<string> { "INDYVCD.AX", "INDYMP3.idt" };
+        private static List<string> Key2AudioXSPaths = new List<string> { "SDKHM.EXE", "SDKHM.DLL" };
+        private static List<string> LaserLockPaths = new List<string> { "NOMOUSE.SP", "NOMOUSE.COM", "l16dll.dll", "laserlok.in", "laserlok.o10", "laserlok.011", /* "LASERLOK" */ };
+        private static List<string> MediaCloQPaths = new List<string> { "sunncomm.ico" };
+        private static List<string> MediaMaxCD3Paths = new List<string> { "LaunchCd.exe" };
+        private static List<string> OriginPaths = new List<string> { "OriginSetup.exe" };
+        // private static List<string> ProtectDVDVideoPaths = new List<string> { "VIDEO_TS", ".ifo" };
+        private static List<string> PSXPaths = new List<string> { ".cnf" };
+        private static List<string> SafeCastPaths = new List<string> { "cdac11ba.exe" };
+        private static List<string> SafeDisc1Paths = new List<string> { "00000001.TMP", "CLCD16.DLL", "CLCD32.DLL", "CLOKSPL.EXE", "DPLAYERX.DLL", "drvmgt.dll", ".icd", ".016", ".256" };
+        private static List<string> SafeDisc2PlusPaths = new List<string> { "00000002.TMP", "drvmgt.dll", "secdrv.sys" };
+        private static List<string> SafeDiscLitePaths = new List<string> { "00000001.LT1" };
+        private static List<string> SafeLockPaths = new List<string> { "SafeLock.dat", "SafeLock.001", "SafeLock.128" };
+        private static List<string> SecuROMPaths = new List<string> { "CMS16.DLL", "CMS_95.DLL", "CMS_NT.DLL", "CMS32_95.DLL", "CMS32_NT.DLL" };
+        private static List<string> SecuROMNewPaths = new List<string> { "SINTF32.DLL", "SINTF16.DLL", "SINTFNT.DLL" };
+        private static List<string> SmartEPaths = new List<string> { "00001.TMP", "00002.TMP" };
+        private static List<string> SolidShieldPaths = new List<string> { "dvm.dll", "hc.dll", "solidshield-cd.dll", "c11prot.dll" };
+        private static List<string> SoftlockPaths = new List<string> { "SOFTLOCKI.dat", "SOFTLOCKC.dat" };
+        private static List<string> StarForcePaths = new List<string> { "protect.dll", "protect.exe" };
+        private static List<string> SteamPaths = new List<string> { "SteamInstall.exe", "SteamInstall.ini", "SteamInstall.msi", "SteamRetailInstaller.dmg", "SteamSetup.exe" };
+        private static List<string> TagesPaths = new List<string> { "Tages.dll", "tagesclient.exe", "TagesSetup.exe", "TagesSetup_x64.exe", "Wave.aif" };
+        private static List<string> TZCopyProtectorPaths = new List<string> { "_742893.016" };
+        private static List<string> UplayPaths = new List<string> { "UplayInstaller.exe" };
+        private static List<string> VOBProtectCDDVDPaths = new List<string> { "VOB-PCD.KEY" };
+        private static List<string> WinLockPaths = new List<string> { "WinLock.PSX" };
+        private static List<string> WTMCDProtectPaths = new List<string> { ".IMP" };
+        private static List<string> WTMCopyProtectionPaths = new List<string> { "imp.dat", "wtmfiles.dat", "Viewer.exe" };
+        private static List<string> XCPPaths = new List<string> { "XCP.DAT", "ECDPlayerControl.ocx", Path.Combine("contents", "go.exe") };
 
         #endregion
 
@@ -333,6 +333,195 @@ namespace DICUI.External
             if (DummyFiles(files))
                 IsDummyFiles = true;
             return "";
+        }
+
+        // This is a placeholder for the scan-all-files model
+        public string ScanEx(string path, bool advancedscan, bool sizelimit = true)
+        {
+            string version = "";
+
+            // Set all of the output variables
+            IsImpulseReactorWithoutVersion = false;
+            IsLaserLockWithoutVersion = false;
+            IsSafeDiscRemovedVersion = false;
+            IsSolidShieldWithoutVersion = false;
+            IsStarForceWithoutVersion = false;
+            SecuROMpaulversion = "";
+
+            // Get the lists of files to be used
+            string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
+
+            // Loop through all files and scan them
+            foreach (string file in files)
+            {
+
+            }
+
+            return version;
+        }
+
+        /// <summary>
+        /// Create a filename/extension to protection mapping
+        /// </summary>
+        /// <returns></returns>
+        private static Dictionary<string, string> CreateProtectionMapping()
+        {
+            var mapping = new Dictionary<string, string>();
+
+            // AACS
+            mapping.Add(Path.Combine("aacs", "VTKF000.AACS"), "AACS");
+            mapping.Add(Path.Combine("AACS", "CPSUnit00001.cci"), "AACS");
+
+            // Alpha-DVD
+            mapping.Add("PlayDVD.exe", "Alpha-DVD");
+
+            // Bitpool
+            mapping.Add("bitpool.rsc", "Bitpool");
+
+            // ByteShield
+            mapping.Add("Byteshield.dll", "ByteShield");
+            mapping.Add(".bbz", "ByteShield");
+
+            // Cactus Data Shield
+            mapping.Add("yucca.cds", "Cactus Data Shield");
+            mapping.Add("wmmp.exe", "Cactus Data Shield");
+            mapping.Add("PJSTREAM.DLL", "Cactus Data Shield");
+            mapping.Add("CACTUSPJ.exe", "Cactus Data Shield");
+            mapping.Add("CDSPlayer.app", "Cactus Data Shield");
+
+            // CD-Cops
+            mapping.Add("CDCOPS.DLL", "CD-Cops");
+            mapping.Add(".GZ_", "CD-Cops");
+            mapping.Add(".W_X", "CD-Cops");
+            mapping.Add(".Qz", "CD-Cops");
+            mapping.Add(".QZ_", "CD-Cops");
+
+            // CD-Lock
+            mapping.Add(".AFP", "CD-Lock");
+
+            // CD-Protector
+            mapping.Add("_cdp16.dat", "CD-Protector");
+            mapping.Add("_cdp16.dll", "CD-Protector");
+            mapping.Add("_cdp32.dat", "CD-Protector");
+            mapping.Add("_cdp32.dll", "CD-Protector");
+
+            // CD-X
+
+            // CopyKiller
+
+            // DiskGuard
+
+            // DVD Crypt
+
+            // DVD-Movie-PROTECT
+
+            // FreeLock
+
+            // Games for Windows - Live
+
+            // Hexalock AutoLock
+
+            // Impulse Reactor
+
+            // IndyVCD
+
+            // Key2Audio XS
+
+            // LaserLock
+
+            // MediaCloQ
+
+            // MediaMax CD-3
+
+            // Origin
+
+            // Protect DVD-Video
+
+            // PSX LibCrypt - TODO: That's... not right
+
+            // SafeCast
+
+            // SafeDisc 1
+
+            // SafeDisc 2+
+
+            // SafeDisc Lite
+
+            // SafeLock
+
+            // SecuROM
+
+            // SecuROM New
+
+            // SmartE
+
+            // SolidShield
+
+            // Softlock
+
+            // StarForce
+
+            // Steam
+
+            // TAGES
+
+            // TZCopyProtector
+
+            // Uplay
+
+            // VOB ProtectCD/DVD
+
+            // Winlock
+
+            // WTM CD Protect
+
+            // WTM Copy Protection
+
+            // XCP
+
+            /*
+             * 
+        List<string> CDXPaths = new List<string> { "CHKCDX16.DLL", "CHKCDX32.DLL", "CHKCDXNT.DLL" };
+        List<string> CopyKillerPaths = new List<string> { "Autorun.dat" };
+        List<string> DiskGuardPaths = new List<string> { "IOSLINK.VXD", "IOSLINK.DLL", "IOSLINK.SYS" };
+        List<string> DVDCryptPaths = new List<string> { "DvdCrypt.pdb" };
+        // List<string> DVDMoviePROTECTPaths = new List<string> { "VIDEO_TS", ".bup", ".ifo" };
+        List<string> FreeLockPaths = new List<string> { "FREELOCK.IMG" };
+        List<string> GamesForWindowsLivePaths = new List<string> { "XLiveRedist.msi" };
+        List<string> HexalockAutoLockPaths = new List<string> { "Start_Here.exe", "HCPSMng.exe", "MFINT.DLL", "MFIMP.DLL" };
+        List<string> ImpulseReactorPaths = new List<string> { "ImpulseReactor.dll" };
+        List<string> IndyVCDPaths = new List<string> { "INDYVCD.AX", "INDYMP3.idt" };
+        List<string> Key2AudioXSPaths = new List<string> { "SDKHM.EXE", "SDKHM.DLL" };
+        List<string> LaserLockPaths = new List<string> { "NOMOUSE.SP", "NOMOUSE.COM", "l16dll.dll", "laserlok.in", "laserlok.o10", "laserlok.011", /* "LASERLOK" };
+        List<string> MediaCloQPaths = new List<string> { "sunncomm.ico" };
+        List<string> MediaMaxCD3Paths = new List<string> { "LaunchCd.exe" };
+        List<string> OriginPaths = new List<string> { "OriginSetup.exe" };
+        // List<string> ProtectDVDVideoPaths = new List<string> { "VIDEO_TS", ".ifo" };
+        List<string> PSXPaths = new List<string> { ".cnf" };
+        List<string> SafeCastPaths = new List<string> { "cdac11ba.exe" };
+        List<string> SafeDisc1Paths = new List<string> { "00000001.TMP", "CLCD16.DLL", "CLCD32.DLL", "CLOKSPL.EXE", "DPLAYERX.DLL", "drvmgt.dll", ".icd", ".016", ".256" };
+        List<string> SafeDisc2PlusPaths = new List<string> { "00000002.TMP", "drvmgt.dll", "secdrv.sys" };
+        List<string> SafeDiscLitePaths = new List<string> { "00000001.LT1" };
+        List<string> SafeLockPaths = new List<string> { "SafeLock.dat", "SafeLock.001", "SafeLock.128" };
+        List<string> SecuROMPaths = new List<string> { "CMS16.DLL", "CMS_95.DLL", "CMS_NT.DLL", "CMS32_95.DLL", "CMS32_NT.DLL" };
+        List<string> SecuROMNewPaths = new List<string> { "SINTF32.DLL", "SINTF16.DLL", "SINTFNT.DLL" };
+        List<string> SmartEPaths = new List<string> { "00001.TMP", "00002.TMP" };
+        List<string> SolidShieldPaths = new List<string> { "dvm.dll", "hc.dll", "solidshield-cd.dll", "c11prot.dll" };
+        List<string> SoftlockPaths = new List<string> { "SOFTLOCKI.dat", "SOFTLOCKC.dat" };
+        List<string> StarForcePaths = new List<string> { "protect.dll", "protect.exe" };
+        List<string> SteamPaths = new List<string> { "SteamInstall.exe", "SteamInstall.ini", "SteamInstall.msi", "SteamRetailInstaller.dmg", "SteamSetup.exe" };
+        List<string> TagesPaths = new List<string> { "Tages.dll", "tagesclient.exe", "TagesSetup.exe", "TagesSetup_x64.exe", "Wave.aif" };
+        List<string> TZCopyProtectorPaths = new List<string> { "_742893.016" };
+        List<string> UplayPaths = new List<string> { "UplayInstaller.exe" };
+        List<string> VOBProtectCDDVDPaths = new List<string> { "VOB-PCD.KEY" };
+        List<string> WinLockPaths = new List<string> { "WinLock.PSX" };
+        List<string> WTMCDProtectPaths = new List<string> { ".IMP" };
+        List<string> WTMCopyProtectionPaths = new List<string> { "imp.dat", "wtmfiles.dat", "Viewer.exe" };
+        List<string> XCPPaths = new List<string> { "XCP.DAT", "ECDPlayerControl.ocx", Path.Combine("contents", "go.exe") };
+
+    */
+
+            return mapping;
         }
 
         private string ScanInFile(string file, bool advancedscan)
@@ -964,7 +1153,6 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Might have strings in EXEs
         private bool GamesForWindowsLive(string[] files)
         {
             if (files.Count(s => s.EndsWith("XLiveRedist.msi")) > 0)
