@@ -41,6 +41,7 @@ namespace DICUI.External
         }
 
         // TODO: Add textfile scanning for possible key requirements, etc
+        // TODO: Scan every file, not just executables?
         public string Scan(string path, bool advancedscan, bool sizelimit = true)
         {
             string version = "";
