@@ -981,7 +981,7 @@ namespace DICUI.External
         // TODO: Properly fill out
         private bool Origin(string[] files)
         {
-            if (files.Count(s => s.EndsWith("ORIGIN.EXE")) > 0)
+            if (files.Count(s => s.EndsWith("OriginSetup.exe")) > 0)
                 return true;
             return false;
         }
