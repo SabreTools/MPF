@@ -38,7 +38,8 @@ namespace DICUI.External
 
         private string SecuROMpaulversion;
 
-        // Known path and extension lists
+        #region Known file and extension lists
+
         private readonly List<string> AACSPaths = new List<string> { Path.Combine("aacs", "VTKF000.AACS"), Path.Combine("AACS", "CPSUnit00001.cci") };
         private readonly List<string> AlphaDVDPaths = new List<string> { "PlayDVD.exe" };
         private readonly List<string> BitpoolPaths = new List<string> { "bitpool.rsc" };
@@ -51,12 +52,31 @@ namespace DICUI.External
         private readonly List<string> CopyKillerPaths = new List<string> { "Autorun.dat" };
         private readonly List<string> DiskGuardPaths = new List<string> { "IOSLINK.VXD", "IOSLINK.DLL", "IOSLINK.SYS" };
         private readonly List<string> DVDCryptPaths = new List<string> { "DvdCrypt.pdb" };
-        // private readonly List<string> DVDMoviePROTECTPaths = new List<string> { };
+        // private readonly List<string> DVDMoviePROTECTPaths = new List<string> { "VIDEO_TS", ".bup", ".ifo" };
         private readonly List<string> FreeLockPaths = new List<string> { "FREELOCK.IMG" };
         private readonly List<string> GamesForWindowsLivePaths = new List<string> { "XLiveRedist.msi" };
         private readonly List<string> HexalockAutoLockPaths = new List<string> { "Start_Here.exe", "HCPSMng.exe", "MFINT.DLL", "MFIMP.DLL" };
         private readonly List<string> ImpulseReactorPaths = new List<string> { "ImpulseReactor.dll" };
         private readonly List<string> IndyVCDPaths = new List<string> { "INDYVCD.AX", "INDYMP3.idt" };
+        private readonly List<string> Key2AudioXSPaths = new List<string> { "SDKHM.EXE", "SDKHM.DLL" };
+        private readonly List<string> LaserLockPaths = new List<string> { "NOMOUSE.SP", "NOMOUSE.COM", "l16dll.dll", "laserlok.in", "laserlok.o10", "laserlok.011", /* "LASERLOK" */ };
+        private readonly List<string> MediaCloQPaths = new List<string> { "sunncomm.ico" };
+        private readonly List<string> MediaMaxCD3Paths = new List<string> { "LaunchCd.exe" };
+        private readonly List<string> OriginPaths = new List<string> { "OriginSetup.exe" };
+        // private readonly List<string> ProtectDVDVideoPaths = new List<string> { "VIDEO_TS", ".ifo" };
+        private readonly List<string> PSXPaths = new List<string> { ".cnf" };
+        private readonly List<string> SafeCastPaths = new List<string> { "cdac11ba.exe" };
+        private readonly List<string> SafeDisc1Paths = new List<string> { "00000001.TMP", "CLCD16.DLL", "CLCD32.DLL", "CLOKSPL.EXE", "DPLAYERX.DLL", "drvmgt.dll", ".icd", ".016", ".256" };
+        private readonly List<string> SafeDisc2PlusPaths = new List<string> { "00000002.TMP", "drvmgt.dll", "secdrv.sys" };
+        private readonly List<string> SafeDiscLitePaths = new List<string> { "00000001.LT1" };
+        private readonly List<string> SafeLockPaths = new List<string> { "SafeLock.dat", "SafeLock.001", "SafeLock.128" };
+        private readonly List<string> SecuROMPaths = new List<string> { "CMS16.DLL", "CMS_95.DLL", "CMS_NT.DLL", "CMS32_95.DLL", "CMS32_NT.DLL" };
+        private readonly List<string> SecuROMNewPaths = new List<string> { "SINTF32.DLL", "SINTF16.DLL", "SINTFNT.DLL" };
+        private readonly List<string> SmartEPaths = new List<string> { "00001.TMP", "00002.TMP" };
+        private readonly List<string> SolidShieldPaths = new List<string> { "dvm.dll", "hc.dll", "solidshield-cd.dll", "c11prot.dll" };
+        private readonly List<string> SoftlockPaths = new List<string> { "SOFTLOCKI.dat", "SOFTLOCKC.dat" };
+
+        #endregion
 
         public ProtectionFind()
         {
@@ -1035,7 +1055,7 @@ namespace DICUI.External
 
         private bool PSX(string[] files)
         {
-            // TODO: This is a really bad check...
+            // TODO: This is a really bad check... maybe do "SLES, SLUS..." check?
             if (files.Count(s => s.EndsWith("SLES_016.83")) > 0)
                 return true;
             if (files.Count(s => s.EndsWith(".cnf")) > 0)
