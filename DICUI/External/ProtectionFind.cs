@@ -16,6 +16,7 @@
 //Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace DICUI.External
     // TODO: Add any missing protection schemes
     public class ProtectionFind
     {
+        // Special protections
         public bool IsCDCheck;
         public bool IsDummyFiles;
         private bool IsImpulseReactorWithoutVersion;
@@ -35,6 +37,14 @@ namespace DICUI.External
         private bool IsLaserLockWithoutVersion;
 
         private string SecuROMpaulversion;
+
+        // Known path and extension lists
+        private readonly List<string> AACSPaths = new List<string> { Path.Combine("aacs", "VTKF000.AACS"), Path.Combine("AACS", "CPSUnit00001.cci") };
+        private readonly List<string> AlphaDVDPaths = new List<string> { "PlayDVD.exe" };
+        private readonly List<string> BitpoolPaths = new List<string> { "bitpool.rsc" };
+        private readonly List<string> ByteShieldPaths = new List<string> { "Byteshield.dll", ".bbz" };
+        private readonly List<string> CactusPaths = new List<string> { "yucca.cds", "wmmp.exe", "PJSTREAM.DLL", "CACTUSPJ.exe", "CDSPlayer.app" };
+        private readonly List<string> CDCopsPaths = new List<string> { "CDCOPS.DLL", ".GZ_", ".W_X", ".Qz", ".QZ_" };
 
         public ProtectionFind()
         {
@@ -185,7 +195,7 @@ namespace DICUI.External
             }
 
             // Otherwise, try to figure out the protection from file lists
-            if (AACS(path))
+            if (AACS(files))
                 return "AACS";
             if (AlphaDVD(files))
                 return "Alpha-DVD";
@@ -745,11 +755,11 @@ namespace DICUI.External
 
         #region Protections
 
-        private bool AACS(string path)
+        private bool AACS(string[] files)
         {
-            if (File.Exists(Path.Combine(path, "aacs", "VTKF000.AACS")))
+            if (files.Count(s => s.EndsWith(Path.Combine("aacs", "VTKF000.AACS"))) > 0)
                 return true;
-            if (File.Exists(Path.Combine(path, "AACS", "CPSUnit00001.cci")))
+            if (files.Count(s => s.EndsWith(Path.Combine("AACS", "CPSUnit00001.cci"))) > 0)
                 return true;
             return false;
         }
@@ -811,7 +821,7 @@ namespace DICUI.External
                 return true;
             if (files.Count(s => s.EndsWith(".Qz")) > 0)
                 return true;
-            if (files.Count(s => s.EndsWith("QZ_")) > 0)
+            if (files.Count(s => s.EndsWith(".QZ_")) > 0)
                 return true;
             return false;
         }
