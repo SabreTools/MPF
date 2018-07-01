@@ -286,9 +286,9 @@ namespace DICUI.External
         }
 
         // This is a placeholder for the scan-all-files model
-        public string ScanEx(string path, bool advancedscan, bool sizelimit = true)
+        public Dictionary<string, string> ScanEx(string path, bool advancedscan, bool sizelimit = true)
         {
-            string version = "";
+            var protections = new Dictionary<string, string>();
 
             // Set all of the output variables
             IsImpulseReactorWithoutVersion = false;
@@ -298,22 +298,37 @@ namespace DICUI.External
             IsStarForceWithoutVersion = false;
             SecuROMpaulversion = "";
 
+            // Create mappings for checking against
+            var mappings = CreateProtectionMapping();
+
             // Get the lists of files to be used
             string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
 
             // Loop through all files and scan them
             foreach (string file in files)
             {
+                // If the file is in the list of known files, add that to the protections found
+                if (mappings.ContainsKey(Path.GetFileName(file)))
+                    protections[file] = mappings[Path.GetFileName(file)];
 
+                // If the extension matches one of the known extension, add that to the protections found
+                if (mappings.ContainsKey(Path.GetExtension(file)))
+                    protections[file] = mappings[Path.GetExtension(file)];
+
+                // Now check to see if the file contains any additional information
+                // TODO: Use the ScanFile code here
+                // TODO: Add any version-based checks here
             }
 
-            return version;
+            return protections;
         }
 
         /// <summary>
         /// Create a filename/extension to protection mapping
         /// </summary>
-        /// <returns></returns>
+        /// <remarks>
+        /// TODO: Create a case-insenstive dictioanry for this... Windows case-insensitivity doesn't fare well here
+        /// </remarks>
         private static Dictionary<string, string> CreateProtectionMapping()
         {
             var mapping = new Dictionary<string, string>();
@@ -372,7 +387,7 @@ namespace DICUI.External
             mapping.Add("DvdCrypt.pdb", "DVD Crypt");
 
             // DVD-Movie-PROTECT
-            //mapping.Add("VIDEO_TS", "DVD-Movie-PROTECT");
+            //mapping.Add("VIDEO_TS", "DVD-Movie-PROTECT"); // Directory name
             //mapping.Add(".bup", "DVD-Movie-PROTECT");
             //mapping.Add(".ifo", "DVD-Movie-PROTECT");
 
@@ -396,85 +411,128 @@ namespace DICUI.External
             mapping.Add("INDYMP3.idt", "IndyVCD");
 
             // Key2Audio XS
-            List<string> Key2AudioXSPaths = new List<string> { "SDKHM.EXE", "SDKHM.DLL" };
+            mapping.Add("SDKHM.EXE", "Key2Audio XS");
+            mapping.Add("SDKHM.DLL", "Key2Audio XS");
 
             // LaserLock
-            List<string> LaserLockPaths = new List<string> { "NOMOUSE.SP", "NOMOUSE.COM", "l16dll.dll", "laserlok.in", "laserlok.o10", "laserlok.011", /* "LASERLOK" */ };
+            mapping.Add("NOMOUSE.SP", "LaserLock");
+            mapping.Add("NOMOUSE.COM", "LaserLock");
+            mapping.Add("l16dll.dll", "LaserLock");
+            mapping.Add("laserlok.in", "LaserLock");
+            mapping.Add("laserlok.o10", "LaserLock");
+            mapping.Add("laserlok.011", "LaserLock");
+            //mapping.Add("LASERLOK", "LaserLock"); // Directory name
 
             // MediaCloQ
-            List<string> MediaCloQPaths = new List<string> { "sunncomm.ico" };
+            mapping.Add("sunncomm.ico", "MediaCloQ");
 
             // MediaMax CD-3
-            List<string> MediaMaxCD3Paths = new List<string> { "LaunchCd.exe" };
+            mapping.Add("LaunchCd.exe", "MediaMax CD-3");
 
             // Origin
-            List<string> OriginPaths = new List<string> { "OriginSetup.exe" };
+            mapping.Add("OriginSetup.exe", "Origin");
 
             // Protect DVD-Video
-            // List<string> ProtectDVDVideoPaths = new List<string> { "VIDEO_TS", ".ifo" };
+            //mapping.Add("VIDEO_TS", "Protect DVD-Video"); // Directory name
+            // mapping.Add(".ifo", "Protect DVD-Video");
 
-            // PSX LibCrypt - TODO: That's... not right
-            List<string> PSXPaths = new List<string> { ".cnf" };
+            // PSX LibCrypt - TODO: That's... not accurate
+            mapping.Add(".cnf", "PSX LibCrypt");
 
             // SafeCast
-            List<string> SafeCastPaths = new List<string> { "cdac11ba.exe" };
+            mapping.Add("cdac11ba.exe", "SafeCast");
 
-            // SafeDisc 1
-            List<string> SafeDisc1Paths = new List<string> { "00000001.TMP", "CLCD16.DLL", "CLCD32.DLL", "CLOKSPL.EXE", "DPLAYERX.DLL", "drvmgt.dll", ".icd", ".016", ".256" };
+            // SafeDisc
+            mapping.Add("00000001.TMP", "SafeDisc");
+            mapping.Add("CLCD16.DLL", "SafeDisc");
+            mapping.Add("CLCD32.DLL", "SafeDisc");
+            mapping.Add("CLOKSPL.EXE", "SafeDisc");
+            mapping.Add("DPLAYERX.DLL", "SafeDisc");
+            mapping.Add("drvmgt.dll", "SafeDisc");
+            mapping.Add(".icd", "SafeDisc");
+            mapping.Add(".016", "SafeDisc");
+            mapping.Add(".256", "SafeDisc");
 
-            // SafeDisc 2+
-            List<string> SafeDisc2PlusPaths = new List<string> { "00000002.TMP", "drvmgt.dll", "secdrv.sys" };
+            // SafeDisc 2-4
+            mapping.Add("00000002.TMP", "SafeDisc 2-4");
+            mapping.Add("secdrv.sys", "SafeDisc 2-4");
 
             // SafeDisc Lite
-            List<string> SafeDiscLitePaths = new List<string> { "00000001.LT1" };
+            mapping.Add("00000001.LT1", "SafeDisc Lite");
 
             // SafeLock
-            List<string> SafeLockPaths = new List<string> { "SafeLock.dat", "SafeLock.001", "SafeLock.128" };
+            mapping.Add("SafeLock.dat", "SafeLock");
+            mapping.Add("SafeLock.001", "SafeLock");
+            mapping.Add("SafeLock.128", "SafeLock");
 
             // SecuROM
-            List<string> SecuROMPaths = new List<string> { "CMS16.DLL", "CMS_95.DLL", "CMS_NT.DLL", "CMS32_95.DLL", "CMS32_NT.DLL" };
+            mapping.Add("CMS16.DLL", "SecuROM");
+            mapping.Add("CMS_95.DLL", "SecuROM");
+            mapping.Add("CMS_NT.DLL", "SecuROM");
+            mapping.Add("CMS32_95.DLL", "SecuROM");
+            mapping.Add("CMS32_NT.DLL", "SecuROM");
 
             // SecuROM New
-            List<string> SecuROMNewPaths = new List<string> { "SINTF32.DLL", "SINTF16.DLL", "SINTFNT.DLL" };
+            mapping.Add("SINTF32.DLL", "SecuROM New");
+            mapping.Add("SINTF16.DLL", "SecuROM New");
+            mapping.Add("SINTFNT.DLL", "SecuROM New");
 
             // SmartE
-            List<string> SmartEPaths = new List<string> { "00001.TMP", "00002.TMP" };
+            mapping.Add("00001.TMP", "SmartE");
+            mapping.Add("00002.TMP", "SmartE");
 
             // SolidShield
-            List<string> SolidShieldPaths = new List<string> { "dvm.dll", "hc.dll", "solidshield-cd.dll", "c11prot.dll" };
+            mapping.Add("dvm.dll", "SolidShield");
+            mapping.Add("hc.dll", "SolidShield");
+            mapping.Add("solidshield-cd.dll", "SolidShield");
+            mapping.Add("c11prot.dll", "SolidShield");
 
             // Softlock
-            List<string> SoftlockPaths = new List<string> { "SOFTLOCKI.dat", "SOFTLOCKC.dat" };
+            mapping.Add("SOFTLOCKI.dat", "Softlock");
+            mapping.Add("SOFTLOCKC.dat", "Softlock");
 
             // StarForce
-            List<string> StarForcePaths = new List<string> { "protect.dll", "protect.exe" };
+            mapping.Add("protect.dll", "StarForce");
+            mapping.Add("protect.exe", "StarForce");
 
             // Steam
-            List<string> SteamPaths = new List<string> { "SteamInstall.exe", "SteamInstall.ini", "SteamInstall.msi", "SteamRetailInstaller.dmg", "SteamSetup.exe" };
+            mapping.Add("SteamInstall.exe", "Steam");
+            mapping.Add("SteamInstall.ini", "Steam");
+            mapping.Add("SteamInstall.msi", "Steam");
+            mapping.Add("SteamRetailInstaller.dmg", "Steam");
+            mapping.Add("SteamSetup.exe", "Steam");
 
             // TAGES
-            List<string> TagesPaths = new List<string> { "Tages.dll", "tagesclient.exe", "TagesSetup.exe", "TagesSetup_x64.exe", "Wave.aif" };
+            mapping.Add("Tages.dll", "TAGES");
+            mapping.Add("tagesclient.exe", "TAGES");
+            mapping.Add("TagesSetup.exe", "TAGES");
+            mapping.Add("TagesSetup_x64.exe", "TAGES");
+            mapping.Add("Wave.aif", "TAGES");
 
             // TZCopyProtector
-            List<string> TZCopyProtectorPaths = new List<string> { "_742893.016" };
+            mapping.Add("_742893.016", "TZCopyProtector");
 
             // Uplay
-            List<string> UplayPaths = new List<string> { "UplayInstaller.exe" };
+            mapping.Add("UplayInstaller.exe", "Uplay");
 
             // VOB ProtectCD/DVD
-            List<string> VOBProtectCDDVDPaths = new List<string> { "VOB-PCD.KEY" };
+            mapping.Add("VOB-PCD.KEY", "VOB ProtectCD/DVD");
 
             // Winlock
-            List<string> WinLockPaths = new List<string> { "WinLock.PSX" };
+            mapping.Add("WinLock.PSX", "Winlock");
 
             // WTM CD Protect
-            List<string> WTMCDProtectPaths = new List<string> { ".IMP" };
+            mapping.Add(".IMP", "WTM CD Protect");
 
             // WTM Copy Protection
-            List<string> WTMCopyProtectionPaths = new List<string> { "imp.dat", "wtmfiles.dat", "Viewer.exe" };
+            mapping.Add("imp.dat", "WTM Copy Protection");
+            mapping.Add("wtmfiles.dat", "WTM Copy Protection");
+            mapping.Add("Viewer.exe", "WTM Copy Protection");
 
             // XCP
-            List<string> XCPPaths = new List<string> { "XCP.DAT", "ECDPlayerControl.ocx", Path.Combine("contents", "go.exe") };
+            mapping.Add("XCP.DAT", "XCP");
+            mapping.Add("ECDPlayerControl.ocx", "XCP");
+            mapping.Add("go.exe", "XCP"); // Path.Combine("contents", "go.exe")
 
             return mapping;
         }
