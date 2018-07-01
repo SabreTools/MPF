@@ -43,12 +43,6 @@ namespace DICUI.External
         }
 
         // TODO: Add textfile scanning for possible key requirements, etc
-        // TODO: Scan every file, not just executables?
-        //      If this model comes about, then the individual "scan for filename" checks might
-        //      end up being just wrapped into the main scan method. e.g. "DPLAYERX.DLL" means
-        //      that it's SafeDisc, so automatically, it will say "oh, this is AT LEAST SafeDisc".
-        //      Might end up needing to return a LIST of protections found, in order to make sure
-        //      that everything is captured.
         public string Scan(string path, bool advancedscan, bool sizelimit = true)
         {
             string version = "";
