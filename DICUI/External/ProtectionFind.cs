@@ -45,6 +45,18 @@ namespace DICUI.External
         private readonly List<string> ByteShieldPaths = new List<string> { "Byteshield.dll", ".bbz" };
         private readonly List<string> CactusPaths = new List<string> { "yucca.cds", "wmmp.exe", "PJSTREAM.DLL", "CACTUSPJ.exe", "CDSPlayer.app" };
         private readonly List<string> CDCopsPaths = new List<string> { "CDCOPS.DLL", ".GZ_", ".W_X", ".Qz", ".QZ_" };
+        private readonly List<string> CDLockPaths = new List<string> { ".AFP" };
+        private readonly List<string> CDProtectorPaths = new List<string> { "_cdp16.dat", "_cdp16.dll", "_cdp32.dat", "_cdp32.dll" };
+        private readonly List<string> CDXPaths = new List<string> { "CHKCDX16.DLL", "CHKCDX32.DLL", "CHKCDXNT.DLL" };
+        private readonly List<string> CopyKillerPaths = new List<string> { "Autorun.dat" };
+        private readonly List<string> DiskGuardPaths = new List<string> { "IOSLINK.VXD", "IOSLINK.DLL", "IOSLINK.SYS" };
+        private readonly List<string> DVDCryptPaths = new List<string> { "DvdCrypt.pdb" };
+        // private readonly List<string> DVDMoviePROTECTPaths = new List<string> { };
+        private readonly List<string> FreeLockPaths = new List<string> { "FREELOCK.IMG" };
+        private readonly List<string> GamesForWindowsLivePaths = new List<string> { "XLiveRedist.msi" };
+        private readonly List<string> HexalockAutoLockPaths = new List<string> { "Start_Here.exe", "HCPSMng.exe", "MFINT.DLL", "MFIMP.DLL" };
+        private readonly List<string> ImpulseReactorPaths = new List<string> { "ImpulseReactor.dll" };
+        private readonly List<string> IndyVCDPaths = new List<string> { "INDYVCD.AX", "INDYMP3.idt" };
 
         public ProtectionFind()
         {
