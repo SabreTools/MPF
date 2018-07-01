@@ -364,8 +364,6 @@ namespace DICUI.External
                     else
                         protections[file] = protectionname;
                 }
-
-                // TODO: Add any version-based checks here
             }
 
             return protections;
@@ -1163,9 +1161,9 @@ namespace DICUI.External
             if (Path.GetFileName(file) == "Viewer.exe")
                 return "WTM Copy Protection " + GetFileVersion(file);
 
-            // Dummy Files
-            if (fi.Length > 681574400)
-                return "Possibly Dummy Files";
+            // Dummy Files - False positive on DVDs
+            //if (fi.Length > 681574400)
+            //    return "Possibly Dummy Files";
 
             #endregion
 
