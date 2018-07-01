@@ -40,6 +40,7 @@ namespace DICUI.External
         {
         }
 
+        // TODO: Add textfile scanning for possible key requirements, etc
         public string Scan(string path, bool advancedscan, bool sizelimit = true)
         {
             string version = "";
@@ -887,10 +888,10 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Properly fill out, might be in the EXEs
+        // TODO: Might have strings in EXEs
         private bool GamesForWindowsLive(string[] files)
         {
-            if (files.Count(s => s.EndsWith("gfwl.exe")) > 0)
+            if (files.Count(s => s.EndsWith("XLiveRedist.msi")) > 0)
                 return true;
             return false;
         }
