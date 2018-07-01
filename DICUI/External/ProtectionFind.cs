@@ -591,6 +591,7 @@ namespace DICUI.External
             return mapping;
         }
 
+        // TODO: Handle archives (zip, arc, cab[ms], cab[is])
         private string ScanInFile(string file, bool advancedscan)
         {
             #region Content Checks
