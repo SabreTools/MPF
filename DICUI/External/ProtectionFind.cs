@@ -978,7 +978,6 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Properly fill out
         private bool Origin(string[] files)
         {
             if (files.Count(s => s.EndsWith("OriginSetup.exe")) > 0)
@@ -1275,7 +1274,6 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Properly fill out
         private bool Steam(string[] files)
         {
             if (files.Count(s => s.EndsWith("SteamInstall.exe")) > 0)
@@ -1313,7 +1311,6 @@ namespace DICUI.External
             return false;
         }
 
-        // TODO: Properly fill out, might be in the EXEs too
         private bool UPlay(string[] files)
         {
             if (files.Count(s => s.EndsWith("UplayInstaller.exe")) > 0)
