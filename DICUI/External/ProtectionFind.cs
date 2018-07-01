@@ -75,6 +75,16 @@ namespace DICUI.External
         private readonly List<string> SmartEPaths = new List<string> { "00001.TMP", "00002.TMP" };
         private readonly List<string> SolidShieldPaths = new List<string> { "dvm.dll", "hc.dll", "solidshield-cd.dll", "c11prot.dll" };
         private readonly List<string> SoftlockPaths = new List<string> { "SOFTLOCKI.dat", "SOFTLOCKC.dat" };
+        private readonly List<string> StarForcePaths = new List<string> { "protect.dll", "protect.exe" };
+        private readonly List<string> SteamPaths = new List<string> { "SteamInstall.exe", "SteamInstall.ini", "SteamInstall.msi", "SteamRetailInstaller.dmg", "SteamSetup.exe" };
+        private readonly List<string> TagesPaths = new List<string> { "Tages.dll", "tagesclient.exe", "TagesSetup.exe", "TagesSetup_x64.exe", "Wave.aif" };
+        private readonly List<string> TZCopyProtectorPaths = new List<string> { "_742893.016" };
+        private readonly List<string> UplayPaths = new List<string> { "UplayInstaller.exe" };
+        private readonly List<string> VOBProtectCDDVDPaths = new List<string> { "VOB-PCD.KEY" };
+        private readonly List<string> WinLockPaths = new List<string> { "WinLock.PSX" };
+        private readonly List<string> WTMCDProtectPaths = new List<string> { ".IMP" };
+        private readonly List<string> WTMCopyProtectionPaths = new List<string> { "imp.dat", "wtmfiles.dat", "Viewer.exe" };
+        private readonly List<string> XCPPaths = new List<string> { "XCP.DAT", "ECDPlayerControl.ocx", Path.Combine("contents", "go.exe") };
 
         #endregion
 
@@ -315,7 +325,7 @@ namespace DICUI.External
                 return "Origin";
             if (Steam(files))
                 return "Steam";
-            if (UPlay(files))
+            if (Uplay(files))
                 return "UPlay";
 
             if (CopyKiller(files))
@@ -908,6 +918,21 @@ namespace DICUI.External
             return false;
         }
 
+        private bool DummyFiles(string[] files)
+        {
+            for (int i = 0; i < files.Length; i++)
+            {
+                try
+                {
+                    if (new FileInfo(files[i]).Length > 681574400) // 681574400 Bytes = 650 Mb
+                        return true;
+                }
+                catch { }
+            }
+
+            return false;
+        }
+
         private bool DVDCrypt(string[] files)
         {
             if (files.Count(s => s.EndsWith("DvdCrypt.pdb")) > 0)
@@ -1363,7 +1388,7 @@ namespace DICUI.External
             return false;
         }
 
-        private bool UPlay(string[] files)
+        private bool Uplay(string[] files)
         {
             if (files.Count(s => s.EndsWith("UplayInstaller.exe")) > 0)
                 return true;
@@ -1415,21 +1440,6 @@ namespace DICUI.External
                 return true;
             if (File.Exists(Path.Combine(path, "contents", "go.exe")))
                 return true;
-            return false;
-        }
-
-        private bool DummyFiles(string[] files)
-        {
-            for (int i = 0; i < files.Length; i++)
-            {
-                try
-                {
-                    if (files[i].Length > 681574400) // 681574400 Bytes = 650 Mb
-                        return true;
-                }
-                catch { }
-            }
-
             return false;
         }
 
