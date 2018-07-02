@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using DICUI.Data;
-using DICUI.External;
 
 namespace DICUI.Utilities
 {
@@ -237,7 +237,7 @@ namespace DICUI.Utilities
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = GetCopyProtection(DriveLetter) ?? Template.RequiredIfExistsValue;
+                            mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -333,7 +333,7 @@ namespace DICUI.Utilities
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = GetCopyProtection(DriveLetter) ?? Template.RequiredIfExistsValue;
+                            mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -721,9 +721,8 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the current copy protection scheme, if possible
         /// </summary>
-        /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Copy protection scheme if possible, null on error</returns>
-        private string GetCopyProtection(char driveLetter)
+        private string GetCopyProtection()
         {
             MessageBoxResult result = MessageBox.Show("Would you like to scan for copy protection? Warning: This may take a long time depending on the size of the disc!", "Copy Protection Scan", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -731,14 +730,7 @@ namespace DICUI.Utilities
                 return "(CHECK WITH PROTECTIONID)";
             }
 
-            ProtectionFind pf = new ProtectionFind();
-            //return pf.Scan(driveLetter + ":\\", true, false);
-            var found = pf.ScanEx(driveLetter + ":\\", true, false);
-            if (found == null)
-            {
-                return "None found";
-            }
-            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+            return Task.Run(() => Tasks.RunProtectionScan(DriveLetter + ":\\")).Result;
         }
 
         /// <summary>
