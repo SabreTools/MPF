@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using DICUI.Data;
+using DICUI.External;
 using DICUI.Utilities;
 
 namespace DICUI
@@ -206,6 +208,28 @@ namespace DICUI
                 childProcess.Start();
                 childProcess.WaitForExit();
             });
+        }
+
+        /// <summary>
+        /// Run protection scan on a given dump environment
+        /// </summary>
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Copy protection detected in the envirionment, if any</returns>
+        public static async Task<string> RunProtectionScan(string path)
+        {
+            ProtectionFind pf = new ProtectionFind();
+            var found = await Task.Run(() =>
+            {
+                //return pf.Scan(path, true, false);
+                return pf.ScanEx(path, true);
+            });
+
+            // return found; // Scan() path
+            if (found == null)
+            {
+                return "None found";
+            }
+            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
         }
 
         /// <summary>

@@ -280,7 +280,7 @@ namespace DICUI.External
         }
 
         // This is a placeholder for the scan-all-files model
-        public Dictionary<string, string> ScanEx(string path, bool advancedscan, bool sizelimit = true)
+        public Dictionary<string, string> ScanEx(string path, bool advancedscan)
         {
             var protections = new Dictionary<string, string>();
 
