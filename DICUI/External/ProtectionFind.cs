@@ -42,245 +42,7 @@ namespace DICUI.External
         {
         }
 
-        // TODO: Add textfile scanning for possible key requirements, etc
-        public string Scan(string path, bool advancedscan, bool sizelimit = true)
-        {
-            string version = "";
-
-            // Set all of the output variables
-            IsImpulseReactorWithoutVersion = false;
-            IsLaserLockWithoutVersion = false;
-            IsSafeDiscRemovedVersion = false;
-            IsSolidShieldWithoutVersion = false;
-            IsStarForceWithoutVersion = false;
-            SecuROMpaulversion = "";
-
-            // Get the lists of files to be used
-            string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
-            string[] exeFiles = files.Where(s => s.ToLower().EndsWith(".icd")
-                || s.ToLower().EndsWith(".dat")
-                || s.ToLower().EndsWith(".exe")
-                || s.ToLower().EndsWith(".dll")).ToArray();
-            string[] cabFiles = files.Where(s => s.ToLower().EndsWith(".cab")).ToArray();
-
-            // If we have executables to scan
-            if (exeFiles.Length != 0)
-            {
-                for (int i = 0; i < exeFiles.Length; i++)
-                {
-                    FileInfo filei = new FileInfo(exeFiles[i]);
-                    if (filei.Length > 352 && !(sizelimit && filei.Length > 20971520))
-                    {
-                        Console.WriteLine("scanning file Nr." + i + "(" + exeFiles[i] + ")");
-                        string protectionname = ScanInFile(exeFiles[i], advancedscan);
-                        if (!String.IsNullOrEmpty(protectionname))
-                        {
-                            if (IsImpulseReactorWithoutVersion)
-                            {
-                                IsImpulseReactorWithoutVersion = false;
-                                if (ImpulseReactor(out version, files))
-                                    return "Impulse Reactor " + version;
-                            }
-                            else if (IsLaserLockWithoutVersion)
-                            {
-                                IsLaserLockWithoutVersion = false;
-                                if (LaserLock(out version, path, files) && version.Length > 0)
-                                    return "LaserLock " + version;
-                            }
-                            else if (IsSafeDiscRemovedVersion)
-                            {
-                                IsSafeDiscRemovedVersion = false;
-                                if (SafeDisc2Plus(out version, files) && version != "2-4")
-                                    return "SafeDisc " + version;
-                            }
-                            else if (IsSolidShieldWithoutVersion)
-                            {
-                                IsSolidShieldWithoutVersion = false;
-                                if (SolidShield(out version, files) && version.Length > 0)
-                                    return "SolidShield " + version;
-                            }
-                            else if (IsStarForceWithoutVersion)
-                            {
-                                IsStarForceWithoutVersion = false;
-                                if (StarForce(out version, files) && version.Length > 0)
-                                    return "StarForce " + version;
-                            }
-
-                            if (SecuROMpaulversion.Length > 0)
-                            {
-                                if (!protectionname.StartsWith("SecuROM Product Activation"))
-                                    return protectionname + " + SecuROM Product Activation" + SecuROMpaulversion;
-                            }
-                            else
-                                return protectionname;
-                        }
-                    }
-                }
-            }
-
-            // If we have cabinet files to scan
-            if (cabFiles.Length != 0)
-            {
-                /*
-                for (int i = 0; i < cabFiles.Length; i++)
-                {
-                    // TODO: Figure out how to extract files from a CAB...
-                    string[] extractedFiles = new string[0];
-                    for (int j = 0; j < extractedFiles.Length; j++)
-                    {
-                        FileInfo filei = new FileInfo(extractedFiles[i]);
-                        if (filei.Length > 352 && !(sizelimit && filei.Length > 20971520))
-                        {
-                            Console.WriteLine("scanning file Nr." + j + "(" + extractedFiles[j] + ")");
-                            string protectionname = ScanInFile(extractedFiles[j], advancedscan);
-                            if (!String.IsNullOrEmpty(protectionname))
-                            {
-                                if (IsImpulseReactorWithoutVersion)
-                                {
-                                    IsImpulseReactorWithoutVersion = false;
-                                    if (ImpulseReactor(out version, files))
-                                        return "Impulse Reactor " + version;
-                                }
-                                else if (IsLaserLockWithoutVersion)
-                                {
-                                    IsLaserLockWithoutVersion = false;
-                                    if (LaserLock(out version, path, files) && version.Length > 0)
-                                        return "LaserLock " + version;
-                                }
-                                else if (IsSafeDiscRemovedVersion)
-                                {
-                                    IsSafeDiscRemovedVersion = false;
-                                    if (SafeDisc2Plus(out version, files) && version != "2-4")
-                                        return "SafeDisc " + version;
-                                }
-                                else if (IsSolidShieldWithoutVersion)
-                                {
-                                    IsSolidShieldWithoutVersion = false;
-                                    if (SolidShield(out version, files) && version.Length > 0)
-                                        return "SolidShield " + version;
-                                }
-                                else if (IsStarForceWithoutVersion)
-                                {
-                                    IsStarForceWithoutVersion = false;
-                                    if (StarForce(out version, files) && version.Length > 0)
-                                        return "StarForce " + version;
-                                }
-
-                                if (SecuROMpaulversion.Length > 0)
-                                {
-                                    if (!protectionname.StartsWith("SecuROM Product Activation"))
-                                        return protectionname + " + SecuROM Product Activation" + SecuROMpaulversion;
-                                }
-                                else
-                                    return protectionname;
-                            }
-                        }
-                    }
-                }
-                */
-            }
-
-            // Otherwise, try to figure out the protection from file lists
-            if (AACS(files))
-                return "AACS";
-            if (AlphaDVD(files))
-                return "Alpha-DVD";
-            if (Bitpool(files))
-                return "Bitpool";
-            if (ByteShield(files))
-                return "ByteShield";
-            if (Cactus(out version, files))
-                return "Cactus Data Shield " + version;
-            if (CDCops(files))
-                return "CD-Cops";
-            if (CDProtector(files))
-                return "CD-Protector";
-            if (CDLock(files))
-                return "CD-Lock";
-            if (CDX(files))
-                return "CD-X";
-            if (DiskGuard(files))
-                return "Diskguard";
-            if (DVDCrypt(files))
-                return "DVD Crypt";
-            if (DVDMoviePROTECT(path, files))
-                return "DVD-Movie-PROTECT";
-            if (FreeLock(files))
-                return "FreeLock";
-            if (HexalockAutoLock(files))
-                return "Hexalock AutoLock";
-            if (ImpulseReactor(out version, files))
-                return "Impulse Reactor " + version;
-            if (IndyVCD(files))
-                return "IndyVCD";
-            if (Key2AudioXS(files))
-                return "Key2Audio XS";
-            if (LaserLock(out version, path, files))
-                return "LaserLock " + version;
-            if (MediaCloQ(files))
-                return "MediaCloQ";
-            if (MediaMaxCD3(files))
-                return "MediaMax CD-3";
-            if (ProtectDVDVideo(path, files))
-                return "Protect DVD-Video";
-            if (PSX(files))
-                return "PSX Libcrypt";
-            if (SafeCast(files))
-                return "SafeCast";
-            if (SafeDiscLite(files))
-                return "SafeDisc Lite";
-            if (SafeDisc2Plus(out version, files))
-                return "SafeDisc " + version;
-            if (TZCopyProtector(files))
-                return "TZCopyProtector";
-            if (SafeDisc1(out version, files))
-                return "SafeDisc " + version;
-            if (SafeLock(files))
-                return "SafeLock";
-            if (SecuROM(files))
-                return "SecuROM";
-            if (SecuROMnew(files))
-                return "SecuROM new";
-            if (SmartE(files))
-                return "SmartE";
-            if (SolidShield(out version, files))
-                return "SolidShield " + version;
-            if (Softlock(files))
-                return "Softlock";
-            if (StarForce(out version, files))
-                return "StarForce " + version;
-            if (Tages(files))
-                return "TAGES";
-            if (VOBProtectCDDVD(files))
-                return "VOB ProtectCD/DVD";
-            if (WinLock(files))
-                return "Winlock";
-            if (WTMCDProtect(files))
-                return "WTM CD Protect";
-            if (WTMCopyProtection(out version, files))
-                return "WTM Copy Protection " + version;
-            if (XCP(path, files))
-                return "XCP";
-
-            // Online Services
-            if (GamesForWindowsLive(files))
-                return "Games for Windows Live";
-            if (Origin(files))
-                return "Origin";
-            if (Steam(files))
-                return "Steam";
-            if (Uplay(files))
-                return "UPlay";
-
-            if (CopyKiller(files))
-                return "Could be CopyKiller / SecuROM";
-            if (DummyFiles(files))
-                IsDummyFiles = true;
-            return "";
-        }
-
-        // This is a placeholder for the scan-all-files model
-        public Dictionary<string, string> ScanEx(string path, bool advancedscan)
+        public Dictionary<string, string> Scan(string path, bool advancedscan)
         {
             var protections = new Dictionary<string, string>();
 
@@ -375,221 +137,8 @@ namespace DICUI.External
             return protections;
         }
 
-        /// <summary>
-        /// Create a filename/extension to protection mapping
-        /// </summary>
-        /// <remarks>
-        /// TODO: Create a case-insenstive dictioanry for this... Windows case-insensitivity doesn't fare well here
-        /// </remarks>
-        private static Dictionary<string, string> CreateProtectionMapping()
-        {
-            var mapping = new Dictionary<string, string>();
-
-            // AACS
-            mapping.Add("VTKF000.AACS", "AACS"); // Path.Combine("aacs", "VTKF000.AACS")
-            mapping.Add("CPSUnit00001.cci", "AACS"); // Path.Combine("AACS", "CPSUnit00001.cci")
-
-            // Alpha-DVD
-            mapping.Add("PlayDVD.exe", "Alpha-DVD");
-
-            // Bitpool
-            mapping.Add("bitpool.rsc", "Bitpool");
-
-            // ByteShield
-            mapping.Add("Byteshield.dll", "ByteShield");
-            mapping.Add(".bbz", "ByteShield");
-
-            // Cactus Data Shield
-            mapping.Add("yucca.cds", "Cactus Data Shield 200");
-            mapping.Add("wmmp.exe", "Cactus Data Shield 200");
-            mapping.Add("PJSTREAM.DLL", "Cactus Data Shield 200");
-            mapping.Add("CACTUSPJ.exe", "Cactus Data Shield 200");
-            mapping.Add("CDSPlayer.app", "Cactus Data Shield 200");
-
-            // CD-Cops
-            mapping.Add("CDCOPS.DLL", "CD-Cops");
-            mapping.Add(".GZ_", "CD-Cops");
-            mapping.Add(".W_X", "CD-Cops");
-            mapping.Add(".Qz", "CD-Cops");
-            mapping.Add(".QZ_", "CD-Cops");
-
-            // CD-Lock
-            mapping.Add(".AFP", "CD-Lock");
-
-            // CD-Protector
-            mapping.Add("_cdp16.dat", "CD-Protector");
-            mapping.Add("_cdp16.dll", "CD-Protector");
-            mapping.Add("_cdp32.dat", "CD-Protector");
-            mapping.Add("_cdp32.dll", "CD-Protector");
-
-            // CD-X
-            mapping.Add("CHKCDX16.DLL", "CD-X");
-            mapping.Add("CHKCDX32.DLL", "CD-X");
-            mapping.Add("CHKCDXNT.DLL", "CD-X");
-
-            // CopyKiller
-            mapping.Add("Autorun.dat", "CopyKiller");
-
-            // DiskGuard
-            mapping.Add("IOSLINK.VXD", "DiskGuard");
-            mapping.Add("IOSLINK.DLL", "DiskGuard");
-            mapping.Add("IOSLINK.SYS", "DiskGuard");
-
-            // DVD Crypt
-            mapping.Add("DvdCrypt.pdb", "DVD Crypt");
-
-            // DVD-Movie-PROTECT
-            //mapping.Add("VIDEO_TS", "DVD-Movie-PROTECT"); // Directory name
-            //mapping.Add(".bup", "DVD-Movie-PROTECT");
-            //mapping.Add(".ifo", "DVD-Movie-PROTECT");
-
-            // FreeLock
-            mapping.Add("FREELOCK.IMG", "FreeLock");
-
-            // Games for Windows - Live
-            mapping.Add("XLiveRedist.msi", "Games for Windows - Live");
-
-            // Hexalock AutoLock
-            mapping.Add("Start_Here.exe", "Hexalock AutoLock");
-            mapping.Add("HCPSMng.exe", "Hexalock AutoLock");
-            mapping.Add("MFINT.DLL", "Hexalock AutoLock");
-            mapping.Add("MFIMP.DLL", "Hexalock AutoLock");
-
-            // Impulse Reactor
-            mapping.Add("ImpulseReactor.dll", "Impulse Reactor");
-
-            // IndyVCD
-            mapping.Add("INDYVCD.AX", "IndyVCD");
-            mapping.Add("INDYMP3.idt", "IndyVCD");
-
-            // Key2Audio XS
-            mapping.Add("SDKHM.EXE", "Key2Audio XS");
-            mapping.Add("SDKHM.DLL", "Key2Audio XS");
-
-            // LaserLock
-            mapping.Add("NOMOUSE.SP", "LaserLock");
-            mapping.Add("NOMOUSE.COM", "LaserLock");
-            mapping.Add("l16dll.dll", "LaserLock");
-            mapping.Add("laserlok.in", "LaserLock");
-            mapping.Add("laserlok.o10", "LaserLock");
-            mapping.Add("laserlok.011", "LaserLock");
-            //mapping.Add("LASERLOK", "LaserLock"); // Directory name
-
-            // MediaCloQ
-            mapping.Add("sunncomm.ico", "MediaCloQ");
-
-            // MediaMax CD-3
-            mapping.Add("LaunchCd.exe", "MediaMax CD-3");
-
-            // Origin
-            mapping.Add("OriginSetup.exe", "Origin");
-
-            // Protect DVD-Video
-            //mapping.Add("VIDEO_TS", "Protect DVD-Video"); // Directory name
-            // mapping.Add(".ifo", "Protect DVD-Video");
-
-            // PSX LibCrypt - TODO: That's... not accurate
-            mapping.Add(".cnf", "PSX LibCrypt");
-
-            // SafeCast
-            mapping.Add("cdac11ba.exe", "SafeCast");
-
-            // SafeDisc
-            mapping.Add("00000001.TMP", "SafeDisc 1-4");
-            mapping.Add("CLCD16.DLL", "SafeDisc");
-            mapping.Add("CLCD32.DLL", "SafeDisc");
-            mapping.Add("CLOKSPL.EXE", "SafeDisc");
-            mapping.Add("DPLAYERX.DLL", "SafeDisc");
-            mapping.Add("drvmgt.dll", "SafeDisc 1-4");
-            mapping.Add(".icd", "SafeDisc 1");
-            mapping.Add(".016", "SafeDisc 1");
-            mapping.Add(".256", "SafeDisc 1");
-
-            // SafeDisc 2-4
-            mapping.Add("00000002.TMP", "SafeDisc 2-4");
-            mapping.Add("secdrv.sys", "SafeDisc 2-4");
-
-            // SafeDisc Lite
-            mapping.Add("00000001.LT1", "SafeDisc Lite");
-
-            // SafeLock
-            mapping.Add("SafeLock.dat", "SafeLock");
-            mapping.Add("SafeLock.001", "SafeLock");
-            mapping.Add("SafeLock.128", "SafeLock");
-
-            // SecuROM
-            mapping.Add("CMS16.DLL", "SecuROM");
-            mapping.Add("CMS_95.DLL", "SecuROM");
-            mapping.Add("CMS_NT.DLL", "SecuROM");
-            mapping.Add("CMS32_95.DLL", "SecuROM");
-            mapping.Add("CMS32_NT.DLL", "SecuROM");
-
-            // SecuROM New
-            mapping.Add("SINTF32.DLL", "SecuROM New");
-            mapping.Add("SINTF16.DLL", "SecuROM New");
-            mapping.Add("SINTFNT.DLL", "SecuROM New");
-
-            // SmartE
-            mapping.Add("00001.TMP", "SmartE");
-            mapping.Add("00002.TMP", "SmartE");
-
-            // SolidShield
-            mapping.Add("dvm.dll", "SolidShield");
-            mapping.Add("hc.dll", "SolidShield");
-            mapping.Add("solidshield-cd.dll", "SolidShield");
-            mapping.Add("c11prot.dll", "SolidShield");
-
-            // Softlock
-            mapping.Add("SOFTLOCKI.dat", "Softlock");
-            mapping.Add("SOFTLOCKC.dat", "Softlock");
-
-            // StarForce
-            mapping.Add("protect.dll", "StarForce");
-            mapping.Add("protect.exe", "StarForce");
-
-            // Steam
-            mapping.Add("SteamInstall.exe", "Steam");
-            mapping.Add("SteamInstall.ini", "Steam");
-            mapping.Add("SteamInstall.msi", "Steam");
-            mapping.Add("SteamRetailInstaller.dmg", "Steam");
-            mapping.Add("SteamSetup.exe", "Steam");
-
-            // TAGES
-            mapping.Add("Tages.dll", "TAGES");
-            mapping.Add("tagesclient.exe", "TAGES");
-            mapping.Add("TagesSetup.exe", "TAGES");
-            mapping.Add("TagesSetup_x64.exe", "TAGES");
-            mapping.Add("Wave.aif", "TAGES");
-
-            // TZCopyProtector
-            mapping.Add("_742893.016", "TZCopyProtector");
-
-            // Uplay
-            mapping.Add("UplayInstaller.exe", "Uplay");
-
-            // VOB ProtectCD/DVD
-            mapping.Add("VOB-PCD.KEY", "VOB ProtectCD/DVD");
-
-            // Winlock
-            mapping.Add("WinLock.PSX", "Winlock");
-
-            // WTM CD Protect
-            mapping.Add(".IMP", "WTM CD Protect");
-
-            // WTM Copy Protection
-            mapping.Add("imp.dat", "WTM Copy Protection");
-            mapping.Add("wtmfiles.dat", "WTM Copy Protection");
-            mapping.Add("Viewer.exe", "WTM Copy Protection");
-
-            // XCP
-            mapping.Add("XCP.DAT", "XCP");
-            mapping.Add("ECDPlayerControl.ocx", "XCP");
-            mapping.Add("go.exe", "XCP"); // Path.Combine("contents", "go.exe")
-
-            return mapping;
-        }
-
         // TODO: Handle archives (zip, arc, cab[ms], cab[is])
+        // TODO: Find protection mentions in text files
         private string ScanInFile(string file, bool advancedscan)
         {
             #region Content Checks
@@ -2209,7 +1758,216 @@ namespace DICUI.External
                 return "";
         }
 
-#endregion
+        #endregion
+
+        // TODO: Create a case-insenstive dictioanry for this... Windows case-insensitivity doesn't fare well here
+        private static Dictionary<string, string> CreateProtectionMapping()
+        {
+            var mapping = new Dictionary<string, string>();
+
+            // AACS
+            mapping.Add("VTKF000.AACS", "AACS"); // Path.Combine("aacs", "VTKF000.AACS")
+            mapping.Add("CPSUnit00001.cci", "AACS"); // Path.Combine("AACS", "CPSUnit00001.cci")
+
+            // Alpha-DVD
+            mapping.Add("PlayDVD.exe", "Alpha-DVD");
+
+            // Bitpool
+            mapping.Add("bitpool.rsc", "Bitpool");
+
+            // ByteShield
+            mapping.Add("Byteshield.dll", "ByteShield");
+            mapping.Add(".bbz", "ByteShield");
+
+            // Cactus Data Shield
+            mapping.Add("yucca.cds", "Cactus Data Shield 200");
+            mapping.Add("wmmp.exe", "Cactus Data Shield 200");
+            mapping.Add("PJSTREAM.DLL", "Cactus Data Shield 200");
+            mapping.Add("CACTUSPJ.exe", "Cactus Data Shield 200");
+            mapping.Add("CDSPlayer.app", "Cactus Data Shield 200");
+
+            // CD-Cops
+            mapping.Add("CDCOPS.DLL", "CD-Cops");
+            mapping.Add(".GZ_", "CD-Cops");
+            mapping.Add(".W_X", "CD-Cops");
+            mapping.Add(".Qz", "CD-Cops");
+            mapping.Add(".QZ_", "CD-Cops");
+
+            // CD-Lock
+            mapping.Add(".AFP", "CD-Lock");
+
+            // CD-Protector
+            mapping.Add("_cdp16.dat", "CD-Protector");
+            mapping.Add("_cdp16.dll", "CD-Protector");
+            mapping.Add("_cdp32.dat", "CD-Protector");
+            mapping.Add("_cdp32.dll", "CD-Protector");
+
+            // CD-X
+            mapping.Add("CHKCDX16.DLL", "CD-X");
+            mapping.Add("CHKCDX32.DLL", "CD-X");
+            mapping.Add("CHKCDXNT.DLL", "CD-X");
+
+            // CopyKiller
+            mapping.Add("Autorun.dat", "CopyKiller");
+
+            // DiskGuard
+            mapping.Add("IOSLINK.VXD", "DiskGuard");
+            mapping.Add("IOSLINK.DLL", "DiskGuard");
+            mapping.Add("IOSLINK.SYS", "DiskGuard");
+
+            // DVD Crypt
+            mapping.Add("DvdCrypt.pdb", "DVD Crypt");
+
+            // DVD-Movie-PROTECT
+            //mapping.Add("VIDEO_TS", "DVD-Movie-PROTECT"); // Directory name
+            //mapping.Add(".bup", "DVD-Movie-PROTECT");
+            //mapping.Add(".ifo", "DVD-Movie-PROTECT");
+
+            // FreeLock
+            mapping.Add("FREELOCK.IMG", "FreeLock");
+
+            // Games for Windows - Live
+            mapping.Add("XLiveRedist.msi", "Games for Windows - Live");
+
+            // Hexalock AutoLock
+            mapping.Add("Start_Here.exe", "Hexalock AutoLock");
+            mapping.Add("HCPSMng.exe", "Hexalock AutoLock");
+            mapping.Add("MFINT.DLL", "Hexalock AutoLock");
+            mapping.Add("MFIMP.DLL", "Hexalock AutoLock");
+
+            // Impulse Reactor
+            mapping.Add("ImpulseReactor.dll", "Impulse Reactor");
+
+            // IndyVCD
+            mapping.Add("INDYVCD.AX", "IndyVCD");
+            mapping.Add("INDYMP3.idt", "IndyVCD");
+
+            // Key2Audio XS
+            mapping.Add("SDKHM.EXE", "Key2Audio XS");
+            mapping.Add("SDKHM.DLL", "Key2Audio XS");
+
+            // LaserLock
+            mapping.Add("NOMOUSE.SP", "LaserLock");
+            mapping.Add("NOMOUSE.COM", "LaserLock");
+            mapping.Add("l16dll.dll", "LaserLock");
+            mapping.Add("laserlok.in", "LaserLock");
+            mapping.Add("laserlok.o10", "LaserLock");
+            mapping.Add("laserlok.011", "LaserLock");
+            //mapping.Add("LASERLOK", "LaserLock"); // Directory name
+
+            // MediaCloQ
+            mapping.Add("sunncomm.ico", "MediaCloQ");
+
+            // MediaMax CD-3
+            mapping.Add("LaunchCd.exe", "MediaMax CD-3");
+
+            // Origin
+            mapping.Add("OriginSetup.exe", "Origin");
+
+            // Protect DVD-Video
+            //mapping.Add("VIDEO_TS", "Protect DVD-Video"); // Directory name
+            // mapping.Add(".ifo", "Protect DVD-Video");
+
+            // PSX LibCrypt - TODO: That's... not accurate
+            mapping.Add(".cnf", "PSX LibCrypt");
+
+            // SafeCast
+            mapping.Add("cdac11ba.exe", "SafeCast");
+
+            // SafeDisc
+            mapping.Add("00000001.TMP", "SafeDisc 1-4");
+            mapping.Add("CLCD16.DLL", "SafeDisc");
+            mapping.Add("CLCD32.DLL", "SafeDisc");
+            mapping.Add("CLOKSPL.EXE", "SafeDisc");
+            mapping.Add("DPLAYERX.DLL", "SafeDisc");
+            mapping.Add("drvmgt.dll", "SafeDisc 1-4");
+            mapping.Add(".icd", "SafeDisc 1");
+            mapping.Add(".016", "SafeDisc 1");
+            mapping.Add(".256", "SafeDisc 1");
+
+            // SafeDisc 2-4
+            mapping.Add("00000002.TMP", "SafeDisc 2-4");
+            mapping.Add("secdrv.sys", "SafeDisc 2-4");
+
+            // SafeDisc Lite
+            mapping.Add("00000001.LT1", "SafeDisc Lite");
+
+            // SafeLock
+            mapping.Add("SafeLock.dat", "SafeLock");
+            mapping.Add("SafeLock.001", "SafeLock");
+            mapping.Add("SafeLock.128", "SafeLock");
+
+            // SecuROM
+            mapping.Add("CMS16.DLL", "SecuROM");
+            mapping.Add("CMS_95.DLL", "SecuROM");
+            mapping.Add("CMS_NT.DLL", "SecuROM");
+            mapping.Add("CMS32_95.DLL", "SecuROM");
+            mapping.Add("CMS32_NT.DLL", "SecuROM");
+
+            // SecuROM New
+            mapping.Add("SINTF32.DLL", "SecuROM New");
+            mapping.Add("SINTF16.DLL", "SecuROM New");
+            mapping.Add("SINTFNT.DLL", "SecuROM New");
+
+            // SmartE
+            mapping.Add("00001.TMP", "SmartE");
+            mapping.Add("00002.TMP", "SmartE");
+
+            // SolidShield
+            mapping.Add("dvm.dll", "SolidShield");
+            mapping.Add("hc.dll", "SolidShield");
+            mapping.Add("solidshield-cd.dll", "SolidShield");
+            mapping.Add("c11prot.dll", "SolidShield");
+
+            // Softlock
+            mapping.Add("SOFTLOCKI.dat", "Softlock");
+            mapping.Add("SOFTLOCKC.dat", "Softlock");
+
+            // StarForce
+            mapping.Add("protect.dll", "StarForce");
+            mapping.Add("protect.exe", "StarForce");
+
+            // Steam
+            mapping.Add("SteamInstall.exe", "Steam");
+            mapping.Add("SteamInstall.ini", "Steam");
+            mapping.Add("SteamInstall.msi", "Steam");
+            mapping.Add("SteamRetailInstaller.dmg", "Steam");
+            mapping.Add("SteamSetup.exe", "Steam");
+
+            // TAGES
+            mapping.Add("Tages.dll", "TAGES");
+            mapping.Add("tagesclient.exe", "TAGES");
+            mapping.Add("TagesSetup.exe", "TAGES");
+            mapping.Add("TagesSetup_x64.exe", "TAGES");
+            mapping.Add("Wave.aif", "TAGES");
+
+            // TZCopyProtector
+            mapping.Add("_742893.016", "TZCopyProtector");
+
+            // Uplay
+            mapping.Add("UplayInstaller.exe", "Uplay");
+
+            // VOB ProtectCD/DVD
+            mapping.Add("VOB-PCD.KEY", "VOB ProtectCD/DVD");
+
+            // Winlock
+            mapping.Add("WinLock.PSX", "Winlock");
+
+            // WTM CD Protect
+            mapping.Add(".IMP", "WTM CD Protect");
+
+            // WTM Copy Protection
+            mapping.Add("imp.dat", "WTM Copy Protection");
+            mapping.Add("wtmfiles.dat", "WTM Copy Protection");
+            mapping.Add("Viewer.exe", "WTM Copy Protection");
+
+            // XCP
+            mapping.Add("XCP.DAT", "XCP");
+            mapping.Add("ECDPlayerControl.ocx", "XCP");
+            mapping.Add("go.exe", "XCP"); // Path.Combine("contents", "go.exe")
+
+            return mapping;
+        }
 
         private string GetFileVersion(string file)
         {
