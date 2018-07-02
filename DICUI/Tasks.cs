@@ -287,8 +287,7 @@ namespace DICUI
             ProtectionFind pf = new ProtectionFind();
             var found = await Task.Run(() =>
             {
-                //return pf.Scan(path, true, false);
-                return pf.ScanEx(path, true);
+                return pf.Scan(path, true);
             });
 
             // return found; // Scan() path
