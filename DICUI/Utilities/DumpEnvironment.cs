@@ -732,8 +732,13 @@ namespace DICUI.Utilities
             }
 
             ProtectionFind pf = new ProtectionFind();
-            return pf.Scan(driveLetter + ":\\", true, false);
-            return string.Join("\n", pf.ScanEx(driveLetter + ":\\", true, false).Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+            //return pf.Scan(driveLetter + ":\\", true, false);
+            var found = pf.ScanEx(driveLetter + ":\\", true, false);
+            if (found == null)
+            {
+                return "None found";
+            }
+            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
         }
 
         /// <summary>

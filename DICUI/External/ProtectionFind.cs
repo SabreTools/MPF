@@ -366,6 +366,12 @@ namespace DICUI.External
                 }
             }
 
+            // If we have an empty list, we need to take care of that
+            if (protections.Count(p => !String.IsNullOrWhiteSpace(p.Value)) == 0)
+            {
+                protections = null;
+            }
+
             return protections;
         }
 
