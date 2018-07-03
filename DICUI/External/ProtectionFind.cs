@@ -217,7 +217,7 @@ namespace DICUI.External
                 }
 
                 // Code Lock
-                if (SuffixInStr(FileContent, "icd", "1" + (char)0x00, "2" + (char)0x00) > -1 || FileContent.Contains("CODE-LOCK.OCX"))
+                if (FileContent.Contains("icd1" + (char)0x00) || FileContent.Contains("icd2" + (char)0x00) || FileContent.Contains("CODE-LOCK.OCX"))
                 {
                     return "Code Lock";
                 }
@@ -380,7 +380,8 @@ namespace DICUI.External
                 }
 
                 if (FileContent.Contains((char)0x00 + (char)0x00 + "BoG_")
-                    || SuffixInStr(FileContent, "stxt", "774", "371") > -1)
+                    || FileContent.Contains("stxt774")
+                    || FileContent.Contains("stxt371"))
                 {
                     if (advancedscan)
                     {
@@ -422,7 +423,7 @@ namespace DICUI.External
                     return "SecuROM Product Activation " + SecuROMpaulversion;
                 }
 
-                if (SuffixInStr(FileContent, ".cms_", "t" + (char)0x00, "d" + (char)0x00) > -1)
+                if (FileContent.Contains(".cms_t" + (char)0x00) || FileContent.Contains(".cms_d" + (char)0x00))
                 {
                     return "SecuROM 1-3";
                 }
@@ -458,7 +459,8 @@ namespace DICUI.External
                     }
                 }
 
-                position = SuffixInStr(FileContent, "" + (char)0xAD + (char)0xDE + (char)0xFE + (char)0xCA, "" + (char)0x5, "" + (char)0x4);
+                position = FileContent.IndexOf("" + (char)0xAD + (char)0xDE + (char)0xFE + (char)0xCA + (char)0x4);
+                position = position == -1 ? FileContent.IndexOf("" + (char)0xAD + (char)0xDE + (char)0xFE + (char)0xCA + (char)0x5) : position;
                 if (position > -1)
                 {
                     position--;
@@ -1612,23 +1614,6 @@ namespace DICUI.External
                 return fvinfo.FileVersion.Replace(", ", ".");
             else
                 return fvinfo.ProductVersion.Replace(", ", ".");
-        }
-
-        private int SuffixInStr(string String1, string String2, string Suffix1, string Suffix2)
-        {
-            int rtn = 1;
-            while (rtn > 0)
-            {
-                rtn = String1.IndexOf(String2, rtn + 1);
-                if (rtn > -1)
-                {
-                    if (String1.Substring(rtn - 1 + String2.Length, Suffix1.Length) == Suffix1
-                        || String1.Substring(rtn - 1 + String2.Length, Suffix2.Length) == Suffix2)
-                        return rtn;
-                }
-            }
-
-            return -1;
         }
     }
 }
