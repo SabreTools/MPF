@@ -84,6 +84,7 @@ namespace DICUI.External
         /// <remarks>
         /// TODO: Handle archives (zip, arc, cab[ms], cab[is])
         /// TODO: Find protection mentions in text files
+        /// TODO: Might have to work on Streams instead to later support archives
         /// </remarks>
         private static string ScanInFile(string file)
         {
