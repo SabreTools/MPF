@@ -64,7 +64,7 @@ namespace DICUI.External
                     protections[file] = mappings[Path.GetExtension(file)];
 
                 // Now check to see if the file contains any additional information
-                string protectionname = ScanInFile(file);
+                string protectionname = ScanInFile(file).Replace("" + (char)0x00, "");
                 if (!String.IsNullOrEmpty(protectionname))
                     protections[file] = protectionname;
             }
@@ -92,7 +92,7 @@ namespace DICUI.External
 
             #region EXE/DLL/ICD/DAT Content Checks
 
-            if (extension == ".exe" || extension == "dll" || extension == "dat" || extension == "icd")
+            if (extension == "exe" || extension == "dll" || extension == "dat" || extension == "icd")
             {
                 try
                 {
@@ -172,15 +172,6 @@ namespace DICUI.External
                     }
 
                     // SafeDisc / SafeCast
-                    if ((FileContent.IndexOf("BoG_ *90.0&!!  Yy>")) > -1)
-                    {
-                        position--;
-                        if (FileContent.IndexOf("product activation library") > 0)
-                            return "SafeCast " + GetSafeDiscVersion(file, position);
-                        else
-                            return "SafeDisc " + GetSafeDiscVersion(file, position);
-                    }
-
                     if (FileContent.Contains((char)0x00 + (char)0x00 + "BoG_")
                         || FileContent.Contains("stxt774")
                         || FileContent.Contains("stxt371"))
@@ -190,6 +181,15 @@ namespace DICUI.External
                             return "SafeDisc " + version;
 
                         return "SafeDisc 3.20-4.xx (version removed)";
+                    }
+
+                    if ((FileContent.IndexOf("BoG_ *90.0&!!  Yy>")) > -1)
+                    {
+                        position--;
+                        if (FileContent.IndexOf("product activation library") > 0)
+                            return "SafeCast " + GetSafeDiscVersion(file, position);
+                        else
+                            return "SafeDisc " + GetSafeDiscVersion(file, position);
                     }
 
                     // SecuROM
