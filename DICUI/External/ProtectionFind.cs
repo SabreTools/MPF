@@ -323,14 +323,6 @@ namespace DICUI.External
                         return mappings[key];
                     }
                 }
-
-                if (!IsCDCheck)
-                {
-                    if (FileContent.Contains("GetDriveType") || FileContent.Contains("GetVolumeInformation"))
-                    {
-                        IsCDCheck = true;
-                    }
-                }
             }
             catch { }
 
@@ -1128,6 +1120,10 @@ namespace DICUI.External
             // CDSHiELD SE
             mapping["~0017.tmp"] = "CDSHiELD SE";
 
+            // CD Check
+            //mapping["GetDriveType"] = "CD Check";
+            //mapping["GetVolumeInformation"] = "CD Check";
+
             // Cenega ProtectDVD
             mapping[".cenega"] = "Cenega ProtectDVD";
 
@@ -1198,10 +1194,6 @@ namespace DICUI.External
 
             // Xtreme-Protector
             mapping["XPROT   "] = "Xtreme-Protector";
-
-            // CD Check
-            //mapping["GetDriveType"] = "CD Check";
-            //mapping["GetVolumeInformation"] = "CD Check";
 
             return mapping;
         }
