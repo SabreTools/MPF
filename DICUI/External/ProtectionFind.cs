@@ -271,6 +271,13 @@ namespace DICUI.External
                         return "StarForce " + GetFileVersion(file);
                 }
 
+                // Sysiphus / Sysiphus DVD
+                if ((position = FileContent.IndexOf("V SUHPISYSDVD")) > -1)
+                    return "Sysiphus DVD " + GetSysiphusVersion(file, position);
+
+                if ((position = FileContent.IndexOf("V SUHPISYS")) > -1)
+                    return "Sysiphus " + GetSysiphusVersion(file, position);
+
                 // TAGES
                 if (FileContent.Contains("protected-tages-runtime.exe") ||
                     FileContent.Contains("tagesprotection.com"))
@@ -1182,10 +1189,6 @@ namespace DICUI.External
 
             // SVK Protector
             mapping["?SVKP" + (char)0x00 + (char)0x00] = "SVK Protector";
-
-            // Sysiphus / Sysiphus DVD
-            mapping["V SUHPISYS"] = "Sysiphus"; // + Version
-            mapping["V SUHPISYSDVD"] = "Sysiphus DVD"; // + Version
 
             // VOB ProtectCD/DVD
             mapping[".vob.pcd"] = "VOB ProtectCD";
