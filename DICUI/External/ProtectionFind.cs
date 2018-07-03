@@ -400,7 +400,7 @@ namespace DICUI.External
                 else if (fi.Length == 24064)
                     return "SafeDisc 3.15-3.20";
                 else
-                    return "SafeDisc 2-4";
+                    return "SafeDisc v2 or greater";
             }
             else if (Path.GetFileName(file).ToLower() == "secdrv.sys")
             {
@@ -429,7 +429,7 @@ namespace DICUI.External
                 else if (fi.Length == 11973)
                     return "SafeDisc 3.20";
                 else
-                    return "SafeDisc 2-4";
+                    return "SafeDisc v2 or greater";
             }
 
             // SolidShield
@@ -977,19 +977,19 @@ namespace DICUI.External
             mapping.Add("cdac11ba.exe", "SafeCast");
 
             // SafeDisc
-            mapping.Add("00000001.TMP", "SafeDisc 1-4");
+            mapping.Add("00000001.TMP", "SafeDisc v1 or greater");
             mapping.Add("CLCD16.DLL", "SafeDisc");
             mapping.Add("CLCD32.DLL", "SafeDisc");
             mapping.Add("CLOKSPL.EXE", "SafeDisc");
             mapping.Add("DPLAYERX.DLL", "SafeDisc");
-            mapping.Add("drvmgt.dll", "SafeDisc 1-4");
+            mapping.Add("drvmgt.dll", "SafeDisc v1 or greater");
             mapping.Add(".icd", "SafeDisc 1");
             mapping.Add(".016", "SafeDisc 1");
             mapping.Add(".256", "SafeDisc 1");
 
-            // SafeDisc 2-4
-            mapping.Add("00000002.TMP", "SafeDisc 2-4");
-            mapping.Add("secdrv.sys", "SafeDisc 2-4");
+            // SafeDisc v2 or greater
+            mapping.Add("00000002.TMP", "SafeDisc v2 or greater");
+            mapping.Add("secdrv.sys", "SafeDisc v2 or greater");
 
             // SafeDisc Lite
             mapping.Add("00000001.LT1", "SafeDisc Lite");
