@@ -865,6 +865,8 @@ namespace DICUI.External
 
         #endregion
 
+        #region Helper methods
+
         /// <summary>
         /// Create a list of filenames and extensions mapped to protections for when only file existence matters
         /// </summary>
@@ -1202,5 +1204,7 @@ namespace DICUI.External
             else
                 return fvinfo.ProductVersion.Replace(", ", ".");
         }
+
+        #endregion
     }
 }
