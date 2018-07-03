@@ -25,20 +25,12 @@ using System.Text;
 namespace DICUI.External
 {
     // TODO: Add any missing protection schemes
-    public class ProtectionFind
+    public static class ProtectionFind
     {
-        // Generic Protections
-        private bool IsCDCheck;
-        private bool IsDummyFiles;
-
-        public ProtectionFind()
-        {
-        }
-
         /// <summary>
         /// Scan a path to find any known copy protection(s)
         /// </summary>
-        public Dictionary<string, string> Scan(string path)
+        public static Dictionary<string, string> Scan(string path)
         {
             var protections = new Dictionary<string, string>();
 
@@ -93,7 +85,7 @@ namespace DICUI.External
         /// TODO: Handle archives (zip, arc, cab[ms], cab[is])
         /// TODO: Find protection mentions in text files
         /// </remarks>
-        private string ScanInFile(string file)
+        private static string ScanInFile(string file)
         {
             #region Content Checks
 
@@ -445,10 +437,9 @@ namespace DICUI.External
             return "";
         }
 
-        // TODO: Do any of these trigger an infinite loop when called? (Especially `out string version` ones
         #region Path-Based Protections
 
-        private bool DummyFiles(string[] files)
+        private static bool DummyFiles(string[] files)
         {
             for (int i = 0; i < files.Length; i++)
             {
@@ -463,7 +454,7 @@ namespace DICUI.External
             return false;
         }
 
-        private bool DVDMoviePROTECT(string path, string[] files)
+        private static bool DVDMoviePROTECT(string path, string[] files)
         {
             if (Directory.Exists(Path.Combine(path, "VIDEO_TS")))
             {
@@ -480,7 +471,7 @@ namespace DICUI.External
             return false;
         }
 
-        private bool ProtectDVDVideo(string path, string[] files)
+        private static bool ProtectDVDVideo(string path, string[] files)
         {
             if (Directory.Exists(Path.Combine(path, "VIDEO_TS")))
             {
@@ -500,7 +491,7 @@ namespace DICUI.External
 
         #region Version detections
 
-        private string GetCDDVDCopsVersion(string file, int position)
+        private static string GetCDDVDCopsVersion(string file, int position)
         {
             char[] version;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
@@ -511,7 +502,7 @@ namespace DICUI.External
             return new string(version);
         }
         
-        private string GetJoWooDXProt1Version(string file, int position)
+        private static string GetJoWooDXProt1Version(string file, int position)
         {
             char[] version = new char[5];
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
@@ -529,7 +520,7 @@ namespace DICUI.External
             return version[0] + "." + version[1] + "." + version[2] + "." + version[3] + version[4];
         }
 
-        private string GetLaserLockBuild(string FileContent, bool Version2)
+        private static string GetLaserLockBuild(string FileContent, bool Version2)
         {
             int position = FileContent.IndexOf("Unkown" + (char)0 + "Unkown");
             string Year;
@@ -551,12 +542,12 @@ namespace DICUI.External
             return "(Build " + Year + "-" + Month + "-" + Day + ")";
         }
 
-        private string GetLaserLockVersion(string FileContent, int position)
+        private static string GetLaserLockVersion(string FileContent, int position)
         {
             return FileContent.Substring(position + 76, 4);
         }
 
-        private string GetLaserLockVersion16Bit(string file)
+        private static string GetLaserLockVersion16Bit(string file)
         {
             char[] version = new char[3];
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
@@ -572,7 +563,7 @@ namespace DICUI.External
             return "";
         }
 
-        private string GetProtectCDoldVersion(string file, int position)
+        private static string GetProtectCDoldVersion(string file, int position)
         {
             char[] version = new char[3];
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
@@ -587,7 +578,7 @@ namespace DICUI.External
             return "old";
         }
 
-        private string GetProtectDiscVersionBuild6till8(string file, int position)
+        private static string GetProtectDiscVersionBuild6till8(string file, int position)
         {
             string version;
             string strBuild;
@@ -635,7 +626,7 @@ namespace DICUI.External
             return version + " (Build " + strBuild + ")";
         }
 
-        private string GetProtectDiscVersionBuild76till10(string file, int position, out int irefBuild)
+        private static string GetProtectDiscVersionBuild76till10(string file, int position, out int irefBuild)
         {
             irefBuild = 0;
             byte version, subversion, versionindicatorPD9, subsubversionPD9x, subversionPD9x1, subversionPD9x2;
@@ -702,7 +693,7 @@ namespace DICUI.External
             return "";
         }
 
-        private string GetSafeDiscVersion(string file, int position)
+        private static string GetSafeDiscVersion(string file, int position)
         {
             int version;
             int subVersion;
@@ -724,7 +715,7 @@ namespace DICUI.External
             return version + "." + subVersion.ToString("00") + "." + subsubVersion.ToString("000");
         }
 
-        private string GetSecuROM4Version(string file, int position)
+        private static string GetSecuROM4Version(string file, int position)
         {
             char version;
             char subVersion1;
@@ -753,7 +744,7 @@ namespace DICUI.External
             return version + "." + subVersion1 + subVersion2 + "." + subsubVersion1 + subsubVersion2 + "." + subsubsubVersion1 + subsubsubVersion2 + subsubsubVersion3 + subsubsubVersion4;
         }
 
-        private string GetSecuROM4and5Version(string file, int position)
+        private static string GetSecuROM4and5Version(string file, int position)
         {
             byte version;
             byte subVersion1;
@@ -784,7 +775,7 @@ namespace DICUI.External
             return version + "." + subVersion1 + subVersion2 + "." + subsubVersion1 + subsubVersion2 + "." + subsubsubVersion1 + subsubsubVersion2 + subsubsubVersion3 + subsubsubVersion4;
         }
 
-        private string GetSecuROM7Version(string file)
+        private static string GetSecuROM7Version(string file)
         {
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(236, SeekOrigin.Begin);
@@ -806,7 +797,7 @@ namespace DICUI.External
             }
         }
 
-        private string GetSysiphusVersion(string file, int position)
+        private static string GetSysiphusVersion(string file, int position)
         {
             char version;
             char subVersion;
@@ -822,7 +813,7 @@ namespace DICUI.External
                 return "";
         }
 
-        private string GetTagesVersion(string file, int position)
+        private static string GetTagesVersion(string file, int position)
         {
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(position + 7, SeekOrigin.Begin);
@@ -840,7 +831,7 @@ namespace DICUI.External
             return "";
         }
 
-        private string GetVOBProtectCDDVDBuild(string file, int position)
+        private static string GetVOBProtectCDDVDBuild(string file, int position)
         {
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(position - 13, SeekOrigin.Begin);
@@ -852,7 +843,7 @@ namespace DICUI.External
             return " (Build " + build + ")";
         }
 
-        private string GetVOBProtectCDDVDVersion(string file, int position)
+        private static string GetVOBProtectCDDVDVersion(string file, int position)
         {
             byte version;
             byte subVersion;
@@ -1198,7 +1189,10 @@ namespace DICUI.External
             return mapping;
         }
 
-        private string GetFileVersion(string file)
+        /// <summary>
+        /// Get the file version as reported by the filesystem
+        /// </summary>
+        private static string GetFileVersion(string file)
         {
             FileVersionInfo fvinfo = FileVersionInfo.GetVersionInfo(file);
             if (fvinfo.FileVersion == null)

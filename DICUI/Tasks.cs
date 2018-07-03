@@ -217,10 +217,9 @@ namespace DICUI
         /// <returns>Copy protection detected in the envirionment, if any</returns>
         public static async Task<string> RunProtectionScan(string path)
         {
-            ProtectionFind pf = new ProtectionFind();
             var found = await Task.Run(() =>
             {
-                return pf.Scan(path);
+                return ProtectionFind.Scan(path);
             });
 
             // return found; // Scan() path
