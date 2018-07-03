@@ -461,7 +461,7 @@ namespace DICUI
                 btn_Scan.IsEnabled = false;
 
                 string protections = await Tasks.RunProtectionScan(env.DriveLetter + ":\\");
-                MessageBox.Show(protections);
+                MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 lbl_Status.Content = tempContent;
                 btn_StartStop.IsEnabled = true;
