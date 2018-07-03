@@ -428,31 +428,12 @@ namespace DICUI.External
             if (Path.GetFileName(file) == "Viewer.exe")
                 return "WTM Copy Protection " + GetFileVersion(file);
 
-            // Dummy Files - False positive on DVDs
-            //if (fi.Length > 681574400)
-            //    return "Possibly Dummy Files";
-
             #endregion
 
             return "";
         }
 
         #region Path-Based Protections
-
-        private static bool DummyFiles(string[] files)
-        {
-            for (int i = 0; i < files.Length; i++)
-            {
-                try
-                {
-                    if (new FileInfo(files[i]).Length > 681574400) // 681574400 Bytes = 650 Mb
-                        return true;
-                }
-                catch { }
-            }
-
-            return false;
-        }
 
         private static bool DVDMoviePROTECT(string path, string[] files)
         {
