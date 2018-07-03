@@ -55,7 +55,7 @@ namespace DICUI.External
             SecuROMpaulversion = "";
 
             // Create mappings for checking against
-            var mappings = CreateProtectionMapping();
+            var mappings = CreateFilenameProtectionMapping();
 
             // Get the lists of files to be used
             string[] files = Directory.GetFiles(path, "*", SearchOption.AllDirectories);
@@ -153,8 +153,8 @@ namespace DICUI.External
                 // 3PLock
                 if (FileContent.Contains(".ldr") && FileContent.Contains(".ldt"))
                 {
-                    //|| FileContent.IndexOf((char)89 + (char)195 + (char)85 + (char)139 + (char)236 + (char)131 _
-                    // & (char)236 + (char)48 + (char)83 + (char)86 + (char)87) ' = YÃU‹ìƒì0SVW
+                    //|| FileContent.Contains("Y" + (char)0xC3 + "U" + (char)0x8B + (char)0xEC + (char)0x83
+                    // + (char)0xEC + "0SVW") // YÃU‹ìƒì0SVW
                     return "3PLock";
                 }
 
@@ -165,9 +165,9 @@ namespace DICUI.External
                 }
 
                 // ActiveMARK 5
-                if (FileContent.Contains("" + (char)0x20 + (char)0xC2 + (char)0x16 + (char)0x0 + (char)0xA8 + (char)0xC1 + (char)0x16
-                    + (char)0x0 + (char)0xB8 + (char)0xC1 + (char)0x16 + (char)0x0 + (char)0x86 + (char)0xC8 + (char)0x16 + (char)0x0
-                    + (char)0x9A + (char)0xC1 + (char)0x16 + (char)0x0 + (char)0x10 + (char)0xC2 + (char)0x16 + (char)0x0))
+                if (FileContent.Contains(" " + (char)0xC2 + (char)0x16 + (char)0x00 + (char)0xA8 + (char)0xC1 + (char)0x16
+                    + (char)0x00 + (char)0xB8 + (char)0xC1 + (char)0x16 + (char)0x00 + (char)0x86 + (char)0xC8 + (char)0x16 + (char)0x0
+                    + (char)0x9A + (char)0xC1 + (char)0x16 + (char)0x00 + (char)0x10 + (char)0xC2 + (char)0x16 + (char)0x00))
                 {
                     return "ActiveMARK 5";
                 }
@@ -197,9 +197,9 @@ namespace DICUI.External
                 }
 
                 // CD-Lock
-                if (FileContent.Contains("" + (char)50 + (char)242 + (char)0x02 + (char)130 + (char)195 + (char)188 + (char)11
-                    + (char)36 + (char)153 + (char)173 + (char)39 + (char)67 + (char)228 + (char)157 + (char)115 + (char)116
-                    + (char)153 + (char)250 + (char)50 + (char)36 + (char)157 + (char)41 + (char)52 + (char)255 + (char)116))
+                if (FileContent.Contains("2" + (char)0xF2 + (char)0x02 + (char)0x82 + (char)0xC3 + (char)0xBC + (char)0x0B
+                    + "$" + (char)0x99 + (char)0xAD + "'C" + (char)0xE4 + (char)0x9D + "st"
+                    + (char)0x99 + (char)0xFA + "2$" + (char)0x9D + ")4" + (char)0xFF + "t"))
                 {
                     return "CD-Lock";
                 }
@@ -236,11 +236,9 @@ namespace DICUI.External
                 }
 
                 // EXE Stealth
-                if (FileContent.Contains("" + (char)0x3F + (char)0x3F + (char)0x5B + (char)0x5B + (char)0x5F + (char)0x5F
-                    + (char)0x5B + (char)0x5B + (char)0x5F + (char)0x0 + (char)0x7B + (char)0x7B + (char)0x0
-                    + (char)0x0 + (char)0x7B + (char)0x7B + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0
-                    + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x3F + (char)0x3B + (char)0x3B + (char)0x3F
-                    + (char)0x3F + (char)0x3B + (char)0x3B + (char)0x3F + (char)0x3F))
+                if (FileContent.Contains("??[[__[[_" + (char)0x00 + "{{" + (char)0x0
+                    + (char)0x00 + "{{" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x0
+                    + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "?;;??;;??"))
                 {
                     return "EXE Stealth";
                 }
@@ -254,7 +252,7 @@ namespace DICUI.External
                 // Impulse Reactor
                 if (FileContent.Contains("CVPInitializeClient"))
                 {
-                    if (FileContent.Contains("A" + (char)0x0 + "T" + (char)0x0 + "T" + (char)0x0 + "L" + (char)0x0 + "I" + (char)0x0 + "S" + (char)0x0 + "T" + (char)0x0 + (char)0x0 + (char)0x0 + "E" + (char)0x0 + "L" + (char)0x0 + "E" + (char)0x0 + "M" + (char)0x0 + "E" + (char)0x0 + "N" + (char)0x0 + "T" + (char)0x0 + (char)0x0 + (char)0x0 + "N" + (char)0x0 + "O" + (char)0x0 + "T" + (char)0x0 + "A" + (char)0x0 + "T" + (char)0x0 + "I" + (char)0x0 + "O" + (char)0x0 + "N"))
+                    if (FileContent.Contains("A" + (char)0x00 + "T" + (char)0x00 + "T" + (char)0x00 + "L" + (char)0x00 + "I" + (char)0x00 + "S" + (char)0x00 + "T" + (char)0x00 + (char)0x00 + (char)0x00 + "E" + (char)0x00 + "L" + (char)0x00 + "E" + (char)0x00 + "M" + (char)0x00 + "E" + (char)0x00 + "N" + (char)0x00 + "T" + (char)0x00 + (char)0x00 + (char)0x00 + "N" + (char)0x00 + "O" + (char)0x00 + "T" + (char)0x00 + "A" + (char)0x00 + "T" + (char)0x00 + "I" + (char)0x00 + "O" + (char)0x00 + "N"))
                     {
                         return "Impulse Reactor " + GetFileVersion(file);
                     }
@@ -302,20 +300,23 @@ namespace DICUI.External
                         return "LaserLock Marathon " + GetLaserLockBuild(FileContent, false);
                 }
 
-                position = FileContent.IndexOf("GetModuleHandleA" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "GetProcAddress" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "LoadLibraryA" + (char)0x00 + (char)0x00 + "KERNEL32.dll" + (char)0x00 + "ëy" + (char)0x01 + "SNIF");
+                position = FileContent.IndexOf("GetModuleHandleA" + (char)0x00 + (char)0x00 + (char)0x00
+                    + (char)0x00 + "GetProcAddress" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00
+                    + "LoadLibraryA" + (char)0x00 + (char)0x00 + "KERNEL32.dll" + (char)0x00 + "ëy" + (char)0x01 + "SNIF");
                 if (position > -1)
                 {
                     position--; ;
                     return "LaserLock " + GetLaserLockVersion(FileContent, position) + " " + GetLaserLockBuild(FileContent, false);
                 }
 
-                if (FileContent.Contains("LASERLOK_INIT" + (char)0xC + "LASERLOK_RUN" + (char)0xE + "LASERLOK_CHECK" + (char)0xF + "LASERLOK_CHECK2" + (char)0xF + "LASERLOK_CHECK3"))
+                if (FileContent.Contains("LASERLOK_INIT" + (char)0xC + "LASERLOK_RUN" + (char)0xE + "LASERLOK_CHECK"
+                    + (char)0xF + "LASERLOK_CHECK2" + (char)0xF + "LASERLOK_CHECK3"))
                 {
                     IsLaserLockWithoutVersion = true;
                     return "LaserLock 5";
                 }
 
-                if (FileContent.Contains(":\\LASERLOK\\LASERLOK.IN" + (char)0x0 + "C:\\NOMOUSE.SP"))
+                if (FileContent.Contains(":\\LASERLOK\\LASERLOK.IN" + (char)0x00 + "C:\\NOMOUSE.SP"))
                 {
                     IsLaserLockWithoutVersion = true;
                     return "LaserLock 3";
@@ -435,14 +436,15 @@ namespace DICUI.External
                 }
 
                 // SolidShield
-                if (FileContent.Contains("D" + (char)0x00 + "V" + (char)0x00 + "M" + (char)0x00 + " " + (char)0x00 + "L" + (char)0x00 + "i" + (char)0x00 + "b" + (char)0x00 + "r" + (char)0x00 + "a" + (char)0x00 + "r" + (char)0x00 + "y"))
+                if (FileContent.Contains("D" + (char)0x00 + "V" + (char)0x00 + "M" + (char)0x00 + " " + (char)0x00 + "L" + (char)0x00
+                    + "i" + (char)0x00 + "b" + (char)0x00 + "r" + (char)0x00 + "a" + (char)0x00 + "r" + (char)0x00 + "y"))
                 {
                     return "SolidShield " + GetFileVersion(file);
                 }
 
-                if (FileContent.Contains("" + (char)0x42 + (char)0x0 + (char)0x49 + (char)0x0 + (char)0x4E + (char)0x0 + (char)0x7 + (char)0x0 +
-                    (char)0x49 + (char)0x0 + (char)0x44 + (char)0x0 + (char)0x52 + (char)0x0 + (char)0x5F + (char)0x0 +
-                    (char)0x53 + (char)0x0 + (char)0x47 + (char)0x0 + (char)0x54 + (char)0x0))
+                if (FileContent.Contains("B" + (char)0x00 + "I" + (char)0x00 + "N" + (char)0x00 + (char)0x7 + (char)0x00 +
+                    "I" + (char)0x00 + "D" + (char)0x00 + "R" + (char)0x00 + "_" + (char)0x00 +
+                    "S" + (char)0x00 + "G" + (char)0x00 + "T" + (char)0x0))
                 {
                     return "SolidShield"; //B.I.N...I.D.R._.S.G.T.
                 }
@@ -472,10 +474,12 @@ namespace DICUI.External
                     else if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                         && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00)
                     {
-                        position = FileContent.IndexOf("T" + (char)0x0 + "a" + (char)0x0 + "g" + (char)0x0 + "e" + (char)0x0 + "s" + (char)0x0 + "S" + (char)0x0 + "e" + (char)0x0 + "t" + (char)0x0 + "u" + (char)0x0 + "p"
-                            + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x30 + (char)0x0 + (char)0x8 + (char)0x0 + (char)0x1 + (char)0x0
-                            + "F" + (char)0x0 + "i" + (char)0x0 + "l" + (char)0x0 + "e" + (char)0x0 + "V" + (char)0x0 + "e" + (char)0x0 + "r" + (char)0x0 + "s" + (char)0x0 + "i" + (char)0x0 + "o" + (char)0x0 + "n"
-                            + (char)0x0 + (char)0x0 + (char)0x0 + (char)0x0);
+                        position = FileContent.IndexOf("T" + (char)0x00 + "a" + (char)0x00 + "g" + (char)0x00 + "e" + (char)0x00 + "s"
+                            + (char)0x00 + "S" + (char)0x00 + "e" + (char)0x00 + "t" + (char)0x00 + "u" + (char)0x00 + "p"
+                            + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "0" + (char)0x00 + (char)0x8
+                            + (char)0x00 + (char)0x1 + (char)0x0 + "F" + (char)0x00 + "i" + (char)0x00 + "l" + (char)0x00 + "e"
+                            + (char)0x00 + "V" + (char)0x00 + "e" + (char)0x00 + "r" + (char)0x00 + "s" + (char)0x00 + "i" + (char)0x00
+                            + "o" + (char)0x00 + "n" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x0);
                         if (position > -1)
                         {
                             position--;
@@ -496,14 +500,19 @@ namespace DICUI.External
                     return "StarForce 3-5";
                 }
 
-                if (FileContent.Contains("P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "d" + (char)0x00 + " " + (char)0x00 + "M" + (char)0x00 + "o" + (char)0x00 + "d" + (char)0x00 + "u" + (char)0x00 + "l" + (char)0x00 + "e"))
+                if (FileContent.Contains("P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00
+                    + "c" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "d" + (char)0x00 + " " + (char)0x00 + "M" + (char)0x00
+                    + "o" + (char)0x00 + "d" + (char)0x00 + "u" + (char)0x00 + "l" + (char)0x00 + "e"))
                 {
                     IsStarForceWithoutVersion = true;
                     return "StarForce 5";
                 }
 
-                if (FileContent.Contains("(" + (char)0x00 + "c" + (char)0x00 + ")" + (char)0x00 + " " + (char)0x00 + "P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00 + "i" + (char)0x00 + "o" + (char)0x00 + "n"
-                    + (char)0x00 + " " + (char)0x00 + "T" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "h" + (char)0x00 + "n" + (char)0x00 + "o" + (char)0x00 + "l" + (char)0x00 + "o" + (char)0x00 + "g" + (char)0x00 + "y" + (char)0x00)
+                if (FileContent.Contains("(" + (char)0x00 + "c" + (char)0x00 + ")" + (char)0x00 + " " + (char)0x00 + "P" + (char)0x00
+                    + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00
+                    + "i" + (char)0x00 + "o" + (char)0x00 + "n" + (char)0x00 + " " + (char)0x00 + "T" + (char)0x00 + "e" + (char)0x00
+                    + "c" + (char)0x00 + "h" + (char)0x00 + "n" + (char)0x00 + "o" + (char)0x00 + "l" + (char)0x00 + "o" + (char)0x00
+                    + "g" + (char)0x00 + "y" + (char)0x00)
                 || FileContent.Contains("Protection Technology, Ltd."))
                 {
                     //if (FileContent.Contains("PSA_GetDiscLabel")
@@ -538,11 +547,11 @@ namespace DICUI.External
                     return "Tagès " + GetFileVersion(file);
                 }
 
-                position = FileContent.IndexOf("" + (char)0xE8 + (char)0x75 + (char)0x0 + (char)0x0 + (char)0x0 + (char)0xE8);
+                position = FileContent.IndexOf("" + (char)0xE8 + "u" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0xE8);
                 if (position > -1)
                 {
                     position--;
-                    if (FileContent.Substring(position + 8, 3) == "" + (char)0xFF + (char)0xFF + (char)0x68)
+                    if (FileContent.Substring(position + 8, 3) == "" + (char)0xFF + (char)0xFF + "h")
                     {
                         return "Tagès " + GetTagesVersion(file, position);
                     }
@@ -1397,7 +1406,7 @@ namespace DICUI.External
         #endregion
 
         // TODO: Create a case-insenstive dictioanry for this... Windows case-insensitivity doesn't fare well here
-        private static Dictionary<string, string> CreateProtectionMapping()
+        private static Dictionary<string, string> CreateFilenameProtectionMapping()
         {
             var mapping = new Dictionary<string, string>();
 
@@ -1601,6 +1610,39 @@ namespace DICUI.External
             mapping.Add("XCP.DAT", "XCP");
             mapping.Add("ECDPlayerControl.ocx", "XCP");
             mapping.Add("go.exe", "XCP"); // Path.Combine("contents", "go.exe")
+
+            return mapping;
+        }
+
+        private static Dictionary<string, string> CreateInternalProtectionMapping()
+        {
+            var mapping = new Dictionary<string, string>();
+
+            // 3PLock
+            mapping[".ldr"] = "3PLock";
+            mapping[".ldt"] = "3PLock";
+            // mapping["Y" + (char)0xC3 + "U" + (char)0x8B + (char)0xEC + (char)0x83 + (char)0xEC + "0SVW"] = "3PLock"; // YÃU‹ìƒì0SVW
+
+            // ActiveMARK
+            mapping["TMSAMVOF"] = "ActiveMARK";
+
+            // ActiveMARK 5
+            mapping[" " + (char)0xC2 + (char)0x16 + (char)0x00 + (char)0xA8 + (char)0xC1 + (char)0x16
+                    + (char)0x00 + (char)0xB8 + (char)0xC1 + (char)0x16 + (char)0x00 + (char)0x86 + (char)0xC8 + (char)0x16 + (char)0x0
+                    + (char)0x9A + (char)0xC1 + (char)0x16 + (char)0x00 + (char)0x10 + (char)0xC2 + (char)0x16 + (char)0x00] = "ActiveMARK 5";
+
+            // Alpha-ROM
+            mapping["SETTEC"] = "Alpha-ROM";
+
+            // Armadillo
+            mapping[".nicode" + (char)0x00] = "Armadillo";
+            mapping["ARMDEBUG"] = "Armadillo";
+
+            // CD-Cops
+            mapping["CD-Cops,  ver. "] = "CD-Cops"; // + Version
+            mapping[".grand" + (char)0x00] = "CD-Cops";
+
+            // CD-Lock
 
             return mapping;
         }
