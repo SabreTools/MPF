@@ -27,16 +27,9 @@ namespace DICUI.External
     // TODO: Add any missing protection schemes
     public class ProtectionFind
     {
-        // Special protections
+        // Generic Protections
         private bool IsCDCheck;
         private bool IsDummyFiles;
-        private bool IsImpulseReactorWithoutVersion;
-        private bool IsSafeDiscRemovedVersion;
-        private bool IsSolidShieldWithoutVersion;
-        private bool IsStarForceWithoutVersion;
-        private bool IsLaserLockWithoutVersion;
-
-        private string SecuROMpaulversion;
 
         public ProtectionFind()
         {
@@ -48,14 +41,6 @@ namespace DICUI.External
         public Dictionary<string, string> Scan(string path)
         {
             var protections = new Dictionary<string, string>();
-
-            // Set all of the output variables
-            IsImpulseReactorWithoutVersion = false;
-            IsLaserLockWithoutVersion = false;
-            IsSafeDiscRemovedVersion = false;
-            IsSolidShieldWithoutVersion = false;
-            IsStarForceWithoutVersion = false;
-            SecuROMpaulversion = "";
 
             // Create mappings for checking against
             var mappings = CreateFilenameProtectionMapping();
@@ -89,46 +74,7 @@ namespace DICUI.External
                 // Now check to see if the file contains any additional information
                 string protectionname = ScanInFile(file);
                 if (!String.IsNullOrEmpty(protectionname))
-                {
-                    if (IsImpulseReactorWithoutVersion)
-                    {
-                        IsImpulseReactorWithoutVersion = false;
-                        if (ImpulseReactor(out string version, files))
-                            protections[file] = "Impulse Reactor " + version;
-                    }
-                    else if (IsLaserLockWithoutVersion)
-                    {
-                        IsLaserLockWithoutVersion = false;
-                        if (LaserLock(out string version, path, files) && version.Length > 0)
-                            protections[file] = "LaserLock " + version;
-                    }
-                    else if (IsSafeDiscRemovedVersion)
-                    {
-                        IsSafeDiscRemovedVersion = false;
-                        if (SafeDisc2Plus(out string version, files) && version != "2-4")
-                            protections[file] = "SafeDisc " + version;
-                    }
-                    else if (IsSolidShieldWithoutVersion)
-                    {
-                        IsSolidShieldWithoutVersion = false;
-                        if (SolidShield(out string version, files) && version.Length > 0)
-                            protections[file] = "SolidShield " + version;
-                    }
-                    else if (IsStarForceWithoutVersion)
-                    {
-                        IsStarForceWithoutVersion = false;
-                        if (StarForce(out string version, files) && version.Length > 0)
-                            protections[file] = "StarForce " + version;
-                    }
-
-                    if (SecuROMpaulversion.Length > 0)
-                    {
-                        if (!protectionname.StartsWith("SecuROM Product Activation"))
-                            protections[file] = protectionname + " + SecuROM Product Activation" + SecuROMpaulversion;
-                    }
-                    else
-                        protections[file] = protectionname;
-                }
+                    protections[file] = protectionname;
             }
 
             // If we have an empty list, we need to take care of that
@@ -153,89 +99,51 @@ namespace DICUI.External
 
             try
             {
+                // Load the current file and check for specialty strings first
                 StreamReader sr = new StreamReader(file, Encoding.Default);
                 int position = -1;
                 string FileContent = sr.ReadToEnd();
                 sr.Close();
 
-                // Create mappings for checking against
-                var mappings = CreateInternalProtectionMapping();
-
-                // Loop through all of the string-only possible matches
-                foreach (string key in mappings.Keys)
-                {
-                    if (FileContent.Contains(key))
-                    {
-                        return mappings[key];
-                    }
-                }
-
                 // CD-Cops
-                position = FileContent.IndexOf("CD-Cops,  ver. ");
-                if (position > -1)
-                {
+                if ((position = FileContent.IndexOf("CD-Cops,  ver. ")) > -1)
                     return "CD-Cops " + GetCDDVDCopsVersion(file, position);
-                }
 
                 // DVD-Cops
-                position = FileContent.IndexOf("DVD-Cops,  ver. ");
-                if (position > -1)
-                {
+                if ((position = FileContent.IndexOf("DVD-Cops,  ver. ")) > -1)
                     return "DVD-Cops " + GetCDDVDCopsVersion(file, position);
-                }
 
                 // Impulse Reactor
-                if (FileContent.Contains("CVPInitializeClient"))
-                {
-                    if (FileContent.Contains("A" + (char)0x00 + "T" + (char)0x00 + "T" + (char)0x00 + "L" + (char)0x00 + "I" + (char)0x00 + "S" + (char)0x00 + "T" + (char)0x00 + (char)0x00 + (char)0x00 + "E" + (char)0x00 + "L" + (char)0x00 + "E" + (char)0x00 + "M" + (char)0x00 + "E" + (char)0x00 + "N" + (char)0x00 + "T" + (char)0x00 + (char)0x00 + (char)0x00 + "N" + (char)0x00 + "O" + (char)0x00 + "T" + (char)0x00 + "A" + (char)0x00 + "T" + (char)0x00 + "I" + (char)0x00 + "O" + (char)0x00 + "N"))
-                    {
-                        return "Impulse Reactor " + GetFileVersion(file);
-                    }
-                    else
-                    {
-                        IsImpulseReactorWithoutVersion = true;
-                        return "Impulse Reactor";
-                    }
-                }
+                if (FileContent.Contains("CVPInitializeClient")
+                    && FileContent.Contains("A" + (char)0x00 + "T" + (char)0x00 + "T" + (char)0x00 + "L" + (char)0x00 + "I"
+                        + (char)0x00 + "S" + (char)0x00 + "T" + (char)0x00 + (char)0x00 + (char)0x00 + "E" + (char)0x00 + "L"
+                        + (char)0x00 + "E" + (char)0x00 + "M" + (char)0x00 + "E" + (char)0x00 + "N" + (char)0x00 + "T" + (char)0x00
+                        + (char)0x00 + (char)0x00 + "N" + (char)0x00 + "O" + (char)0x00 + "T" + (char)0x00 + "A" + (char)0x00 + "T"
+                        + (char)0x00 + "I" + (char)0x00 + "O" + (char)0x00 + "N"))
+                    return "Impulse Reactor " + GetFileVersion(file);
 
                 // JoWooD X-Prot
-                if (FileContent.Contains(".ext    "))
-                {
-                    position = FileContent.IndexOf("kernel32.dll" + (char)0x00 + (char)0x00 + (char)0x00 + "VirtualProtect");
-                    if (position > -1)
-                    {
-                        position--; ;
-                        return "JoWooD X-Prot " + GetJoWooDXProt1Version(file, position);
-                    }
-                    else
-                        return "JoWooD X-Prot v1";
-                }
+                if (FileContent.Contains(".ext    ")
+                    && (position = FileContent.IndexOf("kernel32.dll" + (char)0x00 + (char)0x00 + (char)0x00 + "VirtualProtect")) > -1)
+                    return "JoWooD X-Prot " + GetJoWooDXProt1Version(file, --position);
 
                 // LaserLock
-                if (FileContent.Contains("Packed by SPEEnc V2 Asterios Parlamentas.PE"))
-                {
-                    position = FileContent.IndexOf("GetModuleHandleA" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "GetProcAddress" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "LoadLibraryA" + (char)0x00 + (char)0x00 + "KERNEL32.dll" + (char)0x00 + "ëy" + (char)0x01 + "SNIF");
-                    if (position > -1)
-                    {
-                        position--;
-                        return "LaserLock " + GetLaserLockVersion(FileContent, position) + " " + GetLaserLockBuild(FileContent, true);
-                    }
-                    else
-                        return "LaserLock Marathon " + GetLaserLockBuild(FileContent, false);
-                }
+                if (FileContent.Contains("Packed by SPEEnc V2 Asterios Parlamentas.PE")
+                    && (position = FileContent.IndexOf("GetModuleHandleA" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00
+                    + "GetProcAddress" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "LoadLibraryA" + (char)0x00 + (char)0x00
+                    + "KERNEL32.dll" + (char)0x00 + "ëy" + (char)0x01 + "SNIF")) > -1)
+                    return "LaserLock " + GetLaserLockVersion(FileContent, position) + " " + GetLaserLockBuild(FileContent, true);
 
-                position = FileContent.IndexOf("GetModuleHandleA" + (char)0x00 + (char)0x00 + (char)0x00
-                    + (char)0x00 + "GetProcAddress" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00
-                    + "LoadLibraryA" + (char)0x00 + (char)0x00 + "KERNEL32.dll" + (char)0x00 + "ëy" + (char)0x01 + "SNIF");
-                if (position > -1)
-                {
-                    position--; ;
-                    return "LaserLock " + GetLaserLockVersion(FileContent, position) + " " + GetLaserLockBuild(FileContent, false);
-                }
+                if (FileContent.Contains("Packed by SPEEnc V2 Asterios Parlamentas.PE"))
+                    return "LaserLock Marathon " + GetLaserLockBuild(FileContent, false);
+
+                if ((position = FileContent.IndexOf("GetModuleHandleA" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00
+                    + "GetProcAddress" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "LoadLibraryA" + (char)0x00 + (char)0x00
+                    + "KERNEL32.dll" + (char)0x00 + "ëy" + (char)0x01 + "SNIF")) > -1)
+                    return "LaserLock " + GetLaserLockVersion(FileContent, --position) + " " + GetLaserLockBuild(FileContent, false);
 
                 // ProtectDisc
-                position = FileContent.IndexOf("HúMETINF");
-                if (position > -1)
+                if ((FileContent.IndexOf("HúMETINF")) > -1)
                 {
                     position--;
                     string version = EVORE.SearchProtectDiscVersion(file);
@@ -252,8 +160,7 @@ namespace DICUI.External
                     }
                 }
 
-                position = FileContent.IndexOf("ACE-PCD");
-                if (position > -1)
+                if ((FileContent.IndexOf("ACE-PCD")) > -1)
                 {
                     position--;
                     string version;
@@ -268,8 +175,7 @@ namespace DICUI.External
                 }
 
                 // SafeDisc / SafeCast
-                position = FileContent.IndexOf("BoG_ *90.0&!!  Yy>");
-                if (position > -1)
+                if ((FileContent.IndexOf("BoG_ *90.0&!!  Yy>")) > -1)
                 {
                     position--;
                     if (FileContent.IndexOf("product activation library") > 0)
@@ -286,46 +192,33 @@ namespace DICUI.External
                     if (version.Length > 0)
                         return "SafeDisc " + version;
 
-                    IsSafeDiscRemovedVersion = true;
                     return "SafeDisc 3.20-4.xx (version removed)";
                 }
 
                 // SecuROM
-                position = FileContent.IndexOf("AddD" + (char)0x03 + (char)0x00 + (char)0x00 + (char)0x00);
-                if (position > -1)
-                {
+                if ((FileContent.IndexOf("AddD" + (char)0x03 + (char)0x00 + (char)0x00 + (char)0x00)) > -1)
                     return "SecuROM " + GetSecuROM4Version(file, position);
-                }
 
-                position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03);
-                if (position > -1)
-                {
-                    position--; ;
-                    return "SecuROM " + GetSecuROM4and5Version(file, position);
-                }
+                if ((position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03)) > -1)
+                    return "SecuROM " + GetSecuROM4and5Version(file, --position);
 
                 if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                     return "SecuROM " + GetSecuROM7Version(file);
 
                 if (FileContent.Contains("_and_play.dll" + (char)0x00 + "drm_pagui_doit"))
-                {
-                    SecuROMpaulversion = GetFileVersion(file);
-                    return "SecuROM Product Activation " + SecuROMpaulversion;
-                }
+                    return "SecuROM Product Activation " + GetFileVersion(file);
 
                 // SolidShield
                 if (FileContent.Contains("D" + (char)0x00 + "V" + (char)0x00 + "M" + (char)0x00 + " " + (char)0x00 + "L" + (char)0x00
                     + "i" + (char)0x00 + "b" + (char)0x00 + "r" + (char)0x00 + "a" + (char)0x00 + "r" + (char)0x00 + "y"))
                     return "SolidShield " + GetFileVersion(file);
 
-                position = FileContent.IndexOf("" + (char)0xEF + (char)0xBE + (char)0xAD + (char)0xDE);
-                if (position > -1)
+                if ((position = FileContent.IndexOf("" + (char)0xEF + (char)0xBE + (char)0xAD + (char)0xDE)) > -1)
                 {
                     position--;
                     if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                     && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
                     {
-                        IsSolidShieldWithoutVersion = true;
                         return "SolidShield 1";
                     }
                 }
@@ -356,27 +249,12 @@ namespace DICUI.External
                         }
                         else
                         {
-                            IsSolidShieldWithoutVersion = true;
                             return "SolidShield 2";
                         }
                     }
                 }
 
                 // StarForce
-                if (FileContent.Contains(".sforce") || FileContent.Contains(".brick"))
-                {
-                    IsStarForceWithoutVersion = true;
-                    return "StarForce 3-5";
-                }
-
-                if (FileContent.Contains("P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00
-                    + "c" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "d" + (char)0x00 + " " + (char)0x00 + "M" + (char)0x00
-                    + "o" + (char)0x00 + "d" + (char)0x00 + "u" + (char)0x00 + "l" + (char)0x00 + "e"))
-                {
-                    IsStarForceWithoutVersion = true;
-                    return "StarForce 5";
-                }
-
                 if (FileContent.Contains("(" + (char)0x00 + "c" + (char)0x00 + ")" + (char)0x00 + " " + (char)0x00 + "P" + (char)0x00
                     + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "c" + (char)0x00 + "t" + (char)0x00
                     + "i" + (char)0x00 + "o" + (char)0x00 + "n" + (char)0x00 + " " + (char)0x00 + "T" + (char)0x00 + "e" + (char)0x00
@@ -396,34 +274,19 @@ namespace DICUI.External
                 // TAGES
                 if (FileContent.Contains("protected-tages-runtime.exe") ||
                     FileContent.Contains("tagesprotection.com"))
-                {
-                    return "Tagès " + GetFileVersion(file);
-                }
+                    return "TAGES " + GetFileVersion(file);
 
-                position = FileContent.IndexOf("" + (char)0xE8 + "u" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0xE8);
-                if (position > -1)
-                {
-                    position--;
-                    if (FileContent.Substring(position + 8, 3) == "" + (char)0xFF + (char)0xFF + "h")
-                    {
-                        return "Tagès " + GetTagesVersion(file, position);
-                    }
-                }
+                if ((position = FileContent.IndexOf("" + (char)0xE8 + "u" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0xE8)) > -1
+                    && FileContent.Substring(--position + 8, 3) == "" + (char)0xFF + (char)0xFF + "h")
+                    return "TAGES " + GetTagesVersion(file, position);
 
                 // VOB ProtectCD/DVD
-                position = FileContent.IndexOf("VOB ProtectCD");
-                if (position > -1)
-                {
-                    position--;
-                    return "VOB ProtectCD/DVD " + GetProtectCDoldVersion(file, position);
-                }
+                if ((position = FileContent.IndexOf("VOB ProtectCD")) > -1)
+                    return "VOB ProtectCD/DVD " + GetProtectCDoldVersion(file, --position);
 
-                position = FileContent.IndexOf("DCP-BOV" + (char)0x00 + (char)0x00);
-                if (position > -1)
+                if ((position = FileContent.IndexOf("DCP-BOV" + (char)0x00 + (char)0x00)) > -1)
                 {
-                    position--;
-                    string version;
-                    version = GetVOBProtectCDDVDVersion(file, position);
+                    string version = GetVOBProtectCDDVDVersion(file, --position);
                     if (version.Length > 0)
                     {
                         return "VOB ProtectCD/DVD " + version;
@@ -440,6 +303,18 @@ namespace DICUI.External
                     }
 
                     return "VOB ProtectCD/DVD 5.9-6.0" + GetVOBProtectCDDVDBuild(file, position);
+                }
+
+                // Create mappings for checking against
+                var mappings = CreateInternalProtectionMapping();
+
+                // Loop through all of the string-only possible matches
+                foreach (string key in mappings.Keys)
+                {
+                    if (FileContent.Contains(key))
+                    {
+                        return mappings[key];
+                    }
                 }
 
                 if (!IsCDCheck)
@@ -572,7 +447,7 @@ namespace DICUI.External
         }
 
         // TODO: Do any of these trigger an infinite loop when called? (Especially `out string version` ones
-        #region Protections
+        #region Path-Based Protections
 
         private bool DummyFiles(string[] files)
         {
@@ -834,25 +709,6 @@ namespace DICUI.External
                 return true;
             }
             fileindex = files.ToList().IndexOf("c11prot.dll");
-            if (fileindex > -1)
-            {
-                version = ScanInFile(files[fileindex]);
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool StarForce(out string version, string[] files)
-        {
-            version = "";
-            int fileindex = files.ToList().IndexOf("protect.dll");
-            if (fileindex > -1)
-            {
-                version = ScanInFile(files[fileindex]);
-                return true;
-            }
-            fileindex = files.ToList().IndexOf("protect.exe");
             if (fileindex > -1)
             {
                 version = ScanInFile(files[fileindex]);
@@ -1245,6 +1101,7 @@ namespace DICUI.External
         /// </summary>
         /// <remarks>
         /// TODO: Create a case-insenstive dictionary for this since some filenames may have multiple cases
+        /// TODO: Create populate local variable instead of recreating each time?
         /// </remarks>
         private static Dictionary<string, string> CreateFilenameProtectionMapping()
         {
@@ -1303,11 +1160,6 @@ namespace DICUI.External
             // DVD Crypt
             mapping.Add("DvdCrypt.pdb", "DVD Crypt");
 
-            // DVD-Movie-PROTECT
-            //mapping.Add("VIDEO_TS", "DVD-Movie-PROTECT"); // Directory name
-            //mapping.Add(".bup", "DVD-Movie-PROTECT");
-            //mapping.Add(".ifo", "DVD-Movie-PROTECT");
-
             // FreeLock
             mapping.Add("FREELOCK.IMG", "FreeLock");
 
@@ -1338,7 +1190,6 @@ namespace DICUI.External
             mapping.Add("laserlok.in", "LaserLock");
             mapping.Add("laserlok.o10", "LaserLock");
             mapping.Add("laserlok.011", "LaserLock");
-            //mapping.Add("LASERLOK", "LaserLock"); // Directory name
 
             // MediaCloQ
             mapping.Add("sunncomm.ico", "MediaCloQ");
@@ -1348,10 +1199,6 @@ namespace DICUI.External
 
             // Origin
             mapping.Add("OriginSetup.exe", "Origin");
-
-            // Protect DVD-Video
-            //mapping.Add("VIDEO_TS", "Protect DVD-Video"); // Directory name
-            // mapping.Add(".ifo", "Protect DVD-Video");
 
             // PSX LibCrypt - TODO: That's... not accurate
             mapping.Add(".cnf", "PSX LibCrypt");
@@ -1457,6 +1304,9 @@ namespace DICUI.External
         /// <summary>
         /// Create a list of strings mapped to protections for when secondary strings and position doesn't matter
         /// </summary>
+         /// <remarks>
+        /// TODO: Create populate local variable instead of recreating each time?
+        /// </remarks>
         private static Dictionary<string, string> CreateInternalProtectionMapping()
         {
             var mapping = new Dictionary<string, string>();
@@ -1511,7 +1361,11 @@ namespace DICUI.External
             // Games for Windows - Live
             mapping["xlive.dll"] = "Games for Windows - Live";
 
+            // Impulse Reactor
+            mapping["CVPInitializeClient"] = "Impulse Reactor";
+
             // JoWooD X-Prot
+            mapping[".ext    "] = "JoWooD X-Prot v1";
             mapping["@HC09    "] = "JoWooD X-Prot v2";
 
             // Key-Lock (Dongle)
@@ -1539,6 +1393,13 @@ namespace DICUI.External
             mapping["B" + (char)0x00 + "I" + (char)0x00 + "N" + (char)0x00 + (char)0x7 + (char)0x00 +
                     "I" + (char)0x00 + "D" + (char)0x00 + "R" + (char)0x00 + "_" + (char)0x00 +
                     "S" + (char)0x00 + "G" + (char)0x00 + "T" + (char)0x0] = "SolidShield";
+
+            // StarForce
+            mapping[".sforce"] = "StarForce 3-5";
+            mapping[".brick"] = "StarForce 3-5";
+            mapping["P" + (char)0x00 + "r" + (char)0x00 + "o" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00
+                + "c" + (char)0x00 + "t" + (char)0x00 + "e" + (char)0x00 + "d" + (char)0x00 + " " + (char)0x00 + "M" + (char)0x00
+                + "o" + (char)0x00 + "d" + (char)0x00 + "u" + (char)0x00 + "l" + (char)0x00 + "e"] = "StarForce 5";
 
             // SVK Protector
             mapping["?SVKP" + (char)0x00 + (char)0x00] = "SVK Protector";
