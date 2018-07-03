@@ -30,6 +30,9 @@ namespace DICUI.External
         /// <summary>
         /// Scan a path to find any known copy protection(s)
         /// </summary>
+        /// <remarks>
+        /// TODO: Sector scanning?
+        /// </remarks>
         public static Dictionary<string, string> Scan(string path)
         {
             var protections = new Dictionary<string, string>();
