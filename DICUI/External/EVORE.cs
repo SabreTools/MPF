@@ -71,14 +71,12 @@ namespace DICUI.External
 
         private static bool IsEXE(string file)
         {
-            BinaryReader breader = new BinaryReader(new StreamReader(file).BaseStream);
-            int PEHeaderOffset;
-            short Characteristics;
+            BinaryReader breader = new BinaryReader(File.OpenRead(file));
             breader.ReadBytes(60);
-            PEHeaderOffset = breader.ReadInt32();
+            int PEHeaderOffset = breader.ReadInt32();
             breader.BaseStream.Seek(PEHeaderOffset, SeekOrigin.Begin);
             breader.ReadBytes(22);
-            Characteristics = breader.ReadInt16();
+            short Characteristics = breader.ReadInt16();
             breader.Close();
             //check if file is dll
             if ((Characteristics & 0x2000) == 0x2000)
@@ -91,28 +89,23 @@ namespace DICUI.External
         {
             FileInfo fiExe = new FileInfo(exefile);
             Section[] sections = ReadSections(exefile);
-            BinaryReader breader = new BinaryReader(new StreamReader(exefile).BaseStream, Encoding.Default);
-            int PEHeaderOffset;
-            uint ImportTableRVA;
-            uint ImportTableSize;
-            uint DllNameRVA;
-            uint DLLNameOffset;
+            BinaryReader breader = new BinaryReader(File.OpenRead(exefile), Encoding.Default);
             long lastPosition;
             string[] saDependentDLLs = null;
             breader.ReadBytes(60);
-            PEHeaderOffset = breader.ReadInt32();
+            int PEHeaderOffset = breader.ReadInt32();
             breader.BaseStream.Seek(PEHeaderOffset + 120 + 8, SeekOrigin.Begin); //120 Bytes till IMAGE_DATA_DIRECTORY array,8 Bytes=size of IMAGE_DATA_DIRECTORY
-            ImportTableRVA = breader.ReadUInt32();
-            ImportTableSize = breader.ReadUInt32();
+            uint ImportTableRVA = breader.ReadUInt32();
+            uint ImportTableSize = breader.ReadUInt32();
             breader.BaseStream.Seek(RVA2Offset(ImportTableRVA, sections), SeekOrigin.Begin);
             breader.BaseStream.Seek(12, SeekOrigin.Current);
-            DllNameRVA = breader.ReadUInt32();
+            uint DllNameRVA = breader.ReadUInt32();
             while (DllNameRVA != 0)
             {
                 string sDllName = "";
                 byte bChar;
                 lastPosition = breader.BaseStream.Position;
-                DLLNameOffset = RVA2Offset(DllNameRVA, sections);
+                uint DLLNameOffset = RVA2Offset(DllNameRVA, sections);
                 if (DLLNameOffset > 0)
                 {
                     breader.BaseStream.Seek(DLLNameOffset, SeekOrigin.Begin);
@@ -150,16 +143,13 @@ namespace DICUI.External
 
         private static Section[] ReadSections(string exefile)
         {
-            BinaryReader breader = new BinaryReader(new StreamReader(exefile).BaseStream);
-            uint PEHeaderOffset;
-            ushort NumberOfSections;
-            Section[] sections;
+            BinaryReader breader = new BinaryReader(File.OpenRead(exefile));
             breader.ReadBytes(60);
-            PEHeaderOffset = breader.ReadUInt32();
+            uint PEHeaderOffset = breader.ReadUInt32();
             breader.BaseStream.Seek(PEHeaderOffset + 6, SeekOrigin.Begin);
-            NumberOfSections = breader.ReadUInt16();
+            ushort NumberOfSections = breader.ReadUInt16();
             breader.BaseStream.Seek(PEHeaderOffset + 120 + 16 * 8, SeekOrigin.Begin);
-            sections = new Section[NumberOfSections];
+            Section[] sections = new Section[NumberOfSections];
             for (int i = 0; i < NumberOfSections; i++)
             {
                 breader.BaseStream.Seek(8, SeekOrigin.Current);
