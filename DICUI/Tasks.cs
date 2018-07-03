@@ -289,11 +289,9 @@ namespace DICUI
                 return ProtectionFind.Scan(path);
             });
 
-            // return found; // Scan() path
             if (found == null)
-            {
                 return "None found";
-            }
+
             return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
         }
 
