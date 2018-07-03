@@ -214,9 +214,15 @@ namespace DICUI.External
                     {
                         position--;
                         if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
-                        && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
-                        {
+                            && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
                             return "SolidShield 1";
+                        else
+                        {
+                            string version = GetFileVersion(file);
+                            string desc = FileVersionInfo.GetVersionInfo(file).FileDescription.ToLower();
+                            if (!string.IsNullOrEmpty(version) && desc.Contains("solidshield"))
+                                return "SolidShield Core.dll " + version;
+                            return "SolidShield EXE Wrapper";
                         }
                     }
 
