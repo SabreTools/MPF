@@ -42,7 +42,10 @@ namespace DICUI.External
         {
         }
 
-        public Dictionary<string, string> Scan(string path, bool advancedscan)
+        /// <summary>
+        /// Scan a path to find any known copy protection(s)
+        /// </summary>
+        public Dictionary<string, string> Scan(string path)
         {
             var protections = new Dictionary<string, string>();
 
@@ -84,7 +87,7 @@ namespace DICUI.External
                     protections[file] = mappings[Path.GetExtension(file)];
 
                 // Now check to see if the file contains any additional information
-                string protectionname = ScanInFile(file, advancedscan);
+                string protectionname = ScanInFile(file);
                 if (!String.IsNullOrEmpty(protectionname))
                 {
                     if (IsImpulseReactorWithoutVersion)
@@ -137,9 +140,14 @@ namespace DICUI.External
             return protections;
         }
 
-        // TODO: Handle archives (zip, arc, cab[ms], cab[is])
-        // TODO: Find protection mentions in text files
-        private string ScanInFile(string file, bool advancedscan)
+        /// <summary>
+        /// Scan an individual file for copy protection
+        /// </summary>
+        /// <remarks>
+        /// TODO: Handle archives (zip, arc, cab[ms], cab[is])
+        /// TODO: Find protection mentions in text files
+        /// </remarks>
+        private string ScanInFile(string file)
         {
             #region Content Checks
 
@@ -230,39 +238,32 @@ namespace DICUI.External
                 if (position > -1)
                 {
                     position--;
-                    if (advancedscan)
+                    string version = EVORE.SearchProtectDiscVersion(file);
+                    if (version.Length > 0)
                     {
-                        string version = EVORE.SearchProtectDiscVersion(file);
-                        if (version.Length > 0)
+                        string[] astrVersionArray = version.Split('.');
+                        if (astrVersionArray[0] == "9")
                         {
-                            string[] astrVersionArray = version.Split('.');
-                            if (astrVersionArray[0] == "9")
-                            {
-                                if (GetProtectDiscVersionBuild76till10(file, position, out int ibuild).Length > 0)
-                                    return "ProtectDisc " + astrVersionArray[0] + "." + astrVersionArray[1] + astrVersionArray[2] + "." + astrVersionArray[3] + " (Build " + ibuild + ")";
-                            }
-                            else
-                                return "ProtectDisc " + astrVersionArray[0] + "." + astrVersionArray[1] + "." + astrVersionArray[2] + " (Build " + astrVersionArray[3] + ")";
+                            if (GetProtectDiscVersionBuild76till10(file, position, out int ibuild).Length > 0)
+                                return "ProtectDisc " + astrVersionArray[0] + "." + astrVersionArray[1] + astrVersionArray[2] + "." + astrVersionArray[3] + " (Build " + ibuild + ")";
                         }
+                        else
+                            return "ProtectDisc " + astrVersionArray[0] + "." + astrVersionArray[1] + "." + astrVersionArray[2] + " (Build " + astrVersionArray[3] + ")";
                     }
-
-                    return "ProtectDisc " + GetProtectDiscVersionBuild76till10(file, position, out int irefBuild);
                 }
 
                 position = FileContent.IndexOf("ACE-PCD");
                 if (position > -1)
                 {
                     position--;
-                    if (advancedscan)
+                    string version;
+                    version = EVORE.SearchProtectDiscVersion(file);
+                    if (version.Length > 0)
                     {
-                        string version;
-                        version = EVORE.SearchProtectDiscVersion(file);
-                        if (version.Length > 0)
-                        {
-                            string[] astrVersionArray = version.Split('.');
-                            return "ProtectDisc " + astrVersionArray[0] + "." + astrVersionArray[1] + "." + astrVersionArray[2] + " (Build " + astrVersionArray[3] + ")";
-                        }
+                        string[] astrVersionArray = version.Split('.');
+                        return "ProtectDisc " + astrVersionArray[0] + "." + astrVersionArray[1] + "." + astrVersionArray[2] + " (Build " + astrVersionArray[3] + ")";
                     }
+
                     return "ProtectDisc " + GetProtectDiscVersionBuild6till8(file, position);
                 }
 
@@ -281,12 +282,9 @@ namespace DICUI.External
                     || FileContent.Contains("stxt774")
                     || FileContent.Contains("stxt371"))
                 {
-                    if (advancedscan)
-                    {
-                        string version = EVORE.SearchSafeDiscVersion(file);
-                        if (version.Length > 0)
-                            return "SafeDisc " + version;
-                    }
+                    string version = EVORE.SearchSafeDiscVersion(file);
+                    if (version.Length > 0)
+                        return "SafeDisc " + version;
 
                     IsSafeDiscRemovedVersion = true;
                     return "SafeDisc 3.20-4.xx (version removed)";
@@ -430,18 +428,17 @@ namespace DICUI.External
                     {
                         return "VOB ProtectCD/DVD " + version;
                     }
-                    if (advancedscan)
+
+                    version = EVORE.SearchProtectDiscVersion(file);
+                    if (version.Length > 0)
                     {
-                        version = EVORE.SearchProtectDiscVersion(file);
-                        if (version.Length > 0)
+                        if (version.StartsWith("2"))
                         {
-                            if (version.StartsWith("2"))
-                            {
-                                version = "6" + version.Substring(1);
-                            }
-                            return "VOB ProtectCD/DVD " + version;
+                            version = "6" + version.Substring(1);
                         }
+                        return "VOB ProtectCD/DVD " + version;
                     }
+
                     return "VOB ProtectCD/DVD 5.9-6.0" + GetVOBProtectCDDVDBuild(file, position);
                 }
 
@@ -553,13 +550,13 @@ namespace DICUI.External
 
             // SolidShield
             if (Path.GetFileName(file) == "dvm.dll")
-                return "SolidShield " + ScanInFile(file, false);
+                return "SolidShield " + ScanInFile(file);
             else if (Path.GetFileName(file) == "hc.dll")
-                return "SolidShield " + ScanInFile(file, false);
+                return "SolidShield " + ScanInFile(file);
             else if (Path.GetFileName(file) == "solidshield-cd.dll")
-                return "SolidShield " + ScanInFile(file, false);
+                return "SolidShield " + ScanInFile(file);
             else if (Path.GetFileName(file) == "c11prot.dll")
-                return "SolidShield " + ScanInFile(file, false);
+                return "SolidShield " + ScanInFile(file);
 
             // WTM Copy Protection
             if (Path.GetFileName(file) == "Viewer.exe")
@@ -821,25 +818,25 @@ namespace DICUI.External
             int fileindex = files.ToList().IndexOf("dvm.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex], false);
+                version = ScanInFile(files[fileindex]);
                 return true;
             }
             fileindex = files.ToList().IndexOf("hc.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex], false);
+                version = ScanInFile(files[fileindex]);
                 return true;
             }
             fileindex = files.ToList().IndexOf("solidshield-cd.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex], false);
+                version = ScanInFile(files[fileindex]);
                 return true;
             }
             fileindex = files.ToList().IndexOf("c11prot.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex], false);
+                version = ScanInFile(files[fileindex]);
                 return true;
             }
 
@@ -852,13 +849,13 @@ namespace DICUI.External
             int fileindex = files.ToList().IndexOf("protect.dll");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex], false);
+                version = ScanInFile(files[fileindex]);
                 return true;
             }
             fileindex = files.ToList().IndexOf("protect.exe");
             if (fileindex > -1)
             {
-                version = ScanInFile(files[fileindex], false);
+                version = ScanInFile(files[fileindex]);
                 return true;
             }
 
@@ -1246,7 +1243,9 @@ namespace DICUI.External
         /// <summary>
         /// Create a list of filenames and extensions mapped to protections for when only file existence matters
         /// </summary>
-        /// <remarks>TODO: Create a case-insenstive dictionary for this since some filenames may have multiple cases</remarks>
+        /// <remarks>
+        /// TODO: Create a case-insenstive dictionary for this since some filenames may have multiple cases
+        /// </remarks>
         private static Dictionary<string, string> CreateFilenameProtectionMapping()
         {
             var mapping = new Dictionary<string, string>();
