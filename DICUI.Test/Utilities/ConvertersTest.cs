@@ -148,12 +148,8 @@ namespace DICUI.Test.Utilities
 
                 Array.ForEach(markers, mmarker =>
                 {
-                // a marker can be the same of the found one, or one of a category before or a category after but never in the middle between
-                // the system and the mapped category
-
-                if (!(mmarker == marker || mmarker < system || mmarker > marker))
-                    ;
-
+                    // a marker can be the same of the found one, or one of a category before or a category after but never in the middle between
+                    // the system and the mapped category
                     Assert.True(mmarker == marker || mmarker < system || mmarker > marker);
                 });
             });

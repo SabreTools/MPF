@@ -13,7 +13,6 @@ namespace DICUI.Data
     {
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
-        public const string FloppyDriveString = "<<FLOPPY>>";
 
         // Private lists of known drive speed ranges
         private static IReadOnlyList<int> AllowedDriveSpeedsForCD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
@@ -64,15 +63,17 @@ namespace DICUI.Data
             public bool IsHeader() => data is KnownSystemCategory?;
             public bool IsSystem() => data is KnownSystem?;
 
-            public static implicit operator KnownSystem?(KnownSystemComboBoxItem item) => item.data as KnownSystem?;
+            public static implicit operator KnownSystem? (KnownSystemComboBoxItem item) => item.data as KnownSystem?;
 
-
-            public string Name()
+            public string Name
             {
-                if (IsHeader())
-                    return "---------- " + (data as KnownSystemCategory?).Name() + " ----------";
-                else
-                    return (data as KnownSystem?).Name();
+                get
+                {
+                    if (IsHeader())
+                        return "---------- " + (data as KnownSystemCategory?).Name() + " ----------";
+                    else
+                        return (data as KnownSystem?).Name();
+                }
             }
         }
     }

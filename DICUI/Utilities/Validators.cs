@@ -12,6 +12,23 @@ using static DICUI.Data.UIElements;
 
 namespace DICUI.Utilities
 {
+    public class Drive
+    {
+        public char Letter { get; private set; }
+        public bool IsFloppy { get; private set; }
+        public string VolumeLabel { get; private set; }
+
+        private Drive(char letter, string volumeLabel, bool isFloppy)
+        {
+            this.Letter = letter;
+            this.IsFloppy = isFloppy;
+            this.VolumeLabel = volumeLabel;
+        }
+
+        public static Drive Floppy(char letter) => new Drive(letter, null, true);
+        public static Drive Optical(char letter, string volumeLabel) => new Drive(letter, volumeLabel, false);
+    }
+
     public static class Validators
     {
         /// <summary>
@@ -388,17 +405,18 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Create a list of active optical drives matched to their volume labels
+        /// Create a list of active drives matched to their volume labels
         /// </summary>
         /// <returns>Active drives, matched to labels, if possible</returns>
         /// <remarks>
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// </remarks>
-        public static OrderedDictionary<char, string> CreateListOfDrives()
+        public static List<Drive> CreateListOfDrives()
         {
+            var drives = new List<Drive>();
+
             // Get the floppy drives
-            var floppyDrives = new List<KeyValuePair<char, string>>();
             try
             {
                 ManagementObjectSearcher searcher =
@@ -412,7 +430,7 @@ namespace DICUI.Utilities
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = queryObj["DeviceID"].ToString()[0];
-                        floppyDrives.Add(new KeyValuePair<char, string>(devId, UIElements.FloppyDriveString));
+                        drives.Add(Drive.Floppy(devId));
                     }
                 }
             }
@@ -422,23 +440,16 @@ namespace DICUI.Utilities
             }
 
             // Get the optical disc drives
-            List<KeyValuePair<char, string>> discDrives = DriveInfo.GetDrives()
+            List<Drive> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
-                .Select(d => new KeyValuePair<char, string>(d.Name[0], d.VolumeLabel))
+                .Select(d => Drive.Optical(d.Name[0], d.VolumeLabel))                
                 .ToList();
 
             // Add the two lists together and order
-            floppyDrives.AddRange(discDrives);
-            floppyDrives = floppyDrives.OrderBy(i => i.Key).ToList();
+            drives.AddRange(discDrives);
+            drives = drives.OrderBy(i => i.Letter).ToList();
 
-            // Add to the ordered dictionary and return
-            var drivesDict = new OrderedDictionary<char, string>();
-            foreach (var drive in floppyDrives)
-            {
-                drivesDict.Add(drive.Key, drive.Value);
-            }
-
-            return drivesDict;
+            return drives;
         }
 
         /// <summary>

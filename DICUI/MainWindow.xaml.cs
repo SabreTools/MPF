@@ -16,7 +16,7 @@ namespace DICUI
     public partial class MainWindow : Window
     {
         // Private UI-related variables
-        private List<KeyValuePair<char, string>> _drives { get; set; }
+        private List<Drive> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
         private List<KnownSystem?> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
@@ -208,11 +208,8 @@ namespace DICUI
         private void PopulateDrives()
         {
             // Populate the list of drives and add it to the combo box
-            _drives = Validators.CreateListOfDrives()
-                .Select(i => new KeyValuePair<char, string>(i.Key, i.Value))
-                .ToList();
+            _drives = Validators.CreateListOfDrives();
             cmb_DriveLetter.ItemsSource = _drives;
-            cmb_DriveLetter.DisplayMemberPath = "Key";
 
             if (cmb_DriveLetter.Items.Count > 0)
             {
@@ -249,7 +246,6 @@ namespace DICUI
         private DumpEnvironment DetermineEnvironment()
         {
             // Populate all KVPs
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
 
             return new DumpEnvironment()
             {
@@ -261,8 +257,7 @@ namespace DICUI
                 OutputFilename = txt_OutputFilename.Text,
 
                 // Get the currently selected options
-                DriveLetter = (char)driveKvp?.Key,
-                IsFloppy = (driveKvp?.Value == UIElements.FloppyDriveString),
+                Drive = cmb_DriveLetter.SelectedItem as Drive,
 
                 DICParameters = txt_Parameters.Text,
 
@@ -331,16 +326,16 @@ namespace DICUI
                 // Populate with the correct params for inputs (if we're not on the default option)
                 if (selectedSystem != KnownSystem.NONE && selectedMediaType != MediaType.NONE)
                 {
-                    var driveletter = cmb_DriveLetter.SelectedValue as KeyValuePair<char, string>?;
+                    Drive drive = cmb_DriveLetter.SelectedValue as Drive;
 
                     // If drive letter is invalid, skip this
-                    if (driveletter == null)
+                    if (drive == null)
                         return;
 
                     string command = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
                     List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(selectedSystem, selectedMediaType);
                     txt_Parameters.Text = command
-                        + " " + driveletter?.Key
+                        + " " + drive.Letter
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selectedMediaType != MediaType.Floppy
                             && selectedMediaType != MediaType.BluRay
@@ -426,18 +421,18 @@ namespace DICUI
         /// </summary>
         private void GetOutputNames()
         {
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
+            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
             KnownSystem? systemType = cmb_SystemType.SelectedItem as KnownSystem?;
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
-            if (driveKvp != null
-                && !String.IsNullOrWhiteSpace(driveKvp?.Value)
-                && driveKvp?.Value != UIElements.FloppyDriveString
+            if (drive != null
+                && !String.IsNullOrWhiteSpace(drive.VolumeLabel)
+                && !drive.IsFloppy
                 && systemType != null
                 && mediaType != null)
             {
-                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
-                txt_OutputFilename.Text = driveKvp?.Value + mediaType.Extension();
+                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, drive.VolumeLabel);
+                txt_OutputFilename.Text = drive.VolumeLabel + mediaType.Extension();
             }
             else
             {
@@ -457,11 +452,9 @@ namespace DICUI
             cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
             // Get the drive letter from the selected item
-            var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
-            {
+            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
+            if (drive == null || drive.IsFloppy)
                 return;
-            }
 
             //Validators.GetDriveSpeed((char)selected?.Key);
             //Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
@@ -473,13 +466,12 @@ namespace DICUI
                 return;
             }
 
-            char driveLetter = (char)selected?.Key;
             Process childProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = _options.dicPath,
-                    Arguments = DICCommands.DriveSpeed + " " + driveLetter,
+                    Arguments = DICCommands.DriveSpeed + " " + drive.Letter,
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -512,14 +504,12 @@ namespace DICUI
         private void SetCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
-            {
+            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
+            if (drive == null || drive.IsFloppy)
                 return;
-            }
 
             // Get the current optical disc type
-            _currentMediaType = Validators.GetDiscType(selected?.Key);
+            _currentMediaType = Validators.GetDiscType(drive.Letter);
 
             // If we have an invalid current type, we don't care and return
             if (_currentMediaType == null || _currentMediaType == MediaType.NONE)

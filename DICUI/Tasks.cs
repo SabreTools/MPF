@@ -49,14 +49,15 @@ namespace DICUI
         public string OutputFilename;
 
         // UI information
-        public char DriveLetter;
+        public Drive Drive;
         public KnownSystem? System;
         public MediaType? Type;
-        public bool IsFloppy;
         public string DICParameters;
 
         // External process information
         public Process dicProcess;
+
+        public bool IsFloppy { get => Drive.IsFloppy; }
 
         /// <summary>
         /// Checks if the configuration is valid
@@ -66,7 +67,7 @@ namespace DICUI
         {
             return !((string.IsNullOrWhiteSpace(DICParameters)
             || !Validators.ValidateParameters(DICParameters)
-            || (IsFloppy ^ Type == MediaType.Floppy)));
+            || (Drive.IsFloppy ^ Type == MediaType.Floppy)));
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace DICUI
             if (System == KnownSystem.Custom)
             {
                 Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
-                DriveLetter = (String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
+                Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
                 OutputDirectory = Path.GetDirectoryName(path);
                 OutputFilename = Path.GetFileName(path);
             }
@@ -129,7 +130,7 @@ namespace DICUI
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = env.DICPath,
-                        Arguments = DICCommands.Eject + " " + env.DriveLetter,
+                        Arguments = DICCommands.Eject + " " + env.Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -269,7 +270,7 @@ namespace DICUI
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = env.SubdumpPath,
-                        Arguments = "-i " + env.DriveLetter + ": -f " + Path.Combine(env.OutputDirectory, Path.GetFileNameWithoutExtension(env.OutputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                        Arguments = "-i " + env.Drive.Letter + ": -f " + Path.Combine(env.OutputDirectory, Path.GetFileNameWithoutExtension(env.OutputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
                     },
                 };
                 childProcess.Start();
@@ -288,7 +289,7 @@ namespace DICUI
             if (!DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.OutputDirectory, env.OutputFilename, env.System, env.Type, env.DriveLetter);
+            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.OutputDirectory, env.OutputFilename, env.System, env.Type, env.Drive.Letter);
             List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.System, env.Type);
             bool success = DumpInformation.WriteOutputData(env.OutputDirectory, env.OutputFilename, formattedValues);
 

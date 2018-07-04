@@ -117,8 +117,6 @@ namespace DICUI.Utilities
         {
             if (value is MediaType?)
                 return ((MediaType?)value).Name();
-            else if (value is KnownSystemComboBoxItem item)
-                return item.Name();
             else
                 return "";
         }
