@@ -92,8 +92,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="External\OrderedDictionary.cs" />
-    <Compile Include="External\IOrderedDictionary.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Tasks.cs" />
     <Compile Include="Utilities\DumpInformation.cs" />
