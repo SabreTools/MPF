@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using IMAPI2;
 using DICUI.Data;
 using DICUI.External;
+using static DICUI.Data.UIElements;
 
 namespace DICUI.Utilities
 {
@@ -378,40 +379,12 @@ namespace DICUI.Utilities
         ///	If something has a "string, null" value, it should be assumed that it is a separator
         /// </remarks>
         /// TODO: Figure out a way that the sections can be generated more automatically
-        public static OrderedDictionary<string, KnownSystem?> CreateListOfSystems()
+        public static List<KnownSystem?> CreateListOfSystems()
         {
-            var systemsDict = new OrderedDictionary<string, KnownSystem?>();
-
-            foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
-            {
-                // In the special cases of breaks, we want to add the proper mappings for sections
-                switch (system)
-                {
-                    // Consoles section
-                    case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        systemsDict.Add("---------- Consoles ----------", null);
-                        break;
-
-                    // Computers section
-                    case KnownSystem.AcornArchimedes:
-                        systemsDict.Add("---------- Computers ----------", null);
-                        break;
-
-                    // Arcade section
-                    case KnownSystem.AmigaCUBOCD32:
-                        systemsDict.Add("---------- Arcade ----------", null);
-                        break;
-
-                    // Other section
-                    case KnownSystem.AudioCD:
-                        systemsDict.Add("---------- Others ----------", null);
-                        break;
-                }
-
-                systemsDict.Add(Converters.KnownSystemToString(system), system);
-            }
-
-            return systemsDict;
+            return Enum.GetValues(typeof(KnownSystem))
+                .OfType<KnownSystem?>()
+                .Where(s => !s.IsMarker())
+                .ToList();
         }
 
         /// <summary>

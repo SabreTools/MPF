@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
@@ -118,6 +119,44 @@ namespace DICUI.Test.Utilities
         {
             string actual = Converters.KnownSystemToString(knownSystem);
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void KnownSystemHasValidCategory()
+        {
+            var values = Validators.CreateListOfSystems();
+            KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerConsoleEnd, KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
+
+            values.ForEach(system => {
+                if (system == KnownSystem.NONE || system == KnownSystem.Custom)
+                    return;
+
+                // we check that the category is the first category value higher than the system
+                KnownSystemCategory category = ((KnownSystem?)system).Category();
+                KnownSystem marker = KnownSystem.NONE;
+
+                switch (category)
+                {
+                    case KnownSystemCategory.Arcade: marker = KnownSystem.MarkerArcadeEnd; break;
+                    case KnownSystemCategory.Console: marker = KnownSystem.MarkerConsoleEnd; break;
+                    case KnownSystemCategory.Computer: marker = KnownSystem.MarkerComputerEnd; break;
+                    case KnownSystemCategory.Other: marker = KnownSystem.MarkerOtherEnd; break;
+                }
+
+                Assert.NotEqual(KnownSystem.NONE, marker);
+                Assert.True(marker > system);
+
+                Array.ForEach(markers, mmarker =>
+                {
+                // a marker can be the same of the found one, or one of a category before or a category after but never in the middle between
+                // the system and the mapped category
+
+                if (!(mmarker == marker || mmarker < system || mmarker > marker))
+                    ;
+
+                    Assert.True(mmarker == marker || mmarker < system || mmarker > marker);
+                });
+            });
         }
     }
 }

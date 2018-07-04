@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DICUI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
@@ -50,6 +51,30 @@ namespace DICUI.Data
         public static DoubleCollection AllowedDriveSpeedsForBDAsCollection { get; } = GetDoubleCollectionFromIntList(AllowedDriveSpeedsForBD);
         private static DoubleCollection GetDoubleCollectionFromIntList(IReadOnlyList<int> list)
             => new DoubleCollection(list.Select(i => Convert.ToDouble(i)).ToList());
+
+        public class KnownSystemComboBoxItem
+        {
+            private object data;
+
+            public KnownSystemComboBoxItem(KnownSystem? system) => data = system;
+            public KnownSystemComboBoxItem(KnownSystemCategory? category) => data = category;
+
+            public Brush Foreground { get => IsHeader() ? Brushes.Gray : Brushes.Black; }
+
+            public bool IsHeader() => data is KnownSystemCategory?;
+            public bool IsSystem() => data is KnownSystem?;
+
+            public static implicit operator KnownSystem?(KnownSystemComboBoxItem item) => item.data as KnownSystem?;
+
+
+            public string Name()
+            {
+                if (IsHeader())
+                    return "---------- " + (data as KnownSystemCategory?).Name() + " ----------";
+                else
+                    return (data as KnownSystem?).Name();
+            }
+        }
     }
 
     /// <summary>

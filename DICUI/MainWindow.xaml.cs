@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
+using static DICUI.Data.UIElements;
 
 namespace DICUI
 {
@@ -17,7 +18,7 @@ namespace DICUI
         // Private UI-related variables
         private List<KeyValuePair<char, string>> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
-        private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
+        private List<KnownSystem?> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
 
         private DumpEnvironment _env;
@@ -74,6 +75,13 @@ namespace DICUI
 
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // If we're on a separator, go to the next item and return
+            if ((cmb_SystemType.SelectedItem as KnownSystemComboBoxItem).IsHeader())
+            {
+                cmb_SystemType.SelectedIndex++;
+                return;
+            }
+
             PopulateMediaTypeAccordingToChosenSystem();
         }
 
@@ -145,11 +153,11 @@ namespace DICUI
         /// </summary>
         private void PopulateMediaTypeAccordingToChosenSystem()
         {
-            var currentSystem = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            KnownSystem? currentSystem = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
 
             if (currentSystem != null)
             {
-                _mediaTypes = Validators.GetValidMediaTypes(currentSystem?.Value).ToList();
+                _mediaTypes = Validators.GetValidMediaTypes(currentSystem).ToList();
                 cmb_MediaType.ItemsSource = _mediaTypes;
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
@@ -168,11 +176,26 @@ namespace DICUI
         /// </summary>
         private void PopulateSystems()
         {
-            _systems = Validators.CreateListOfSystems()
-                .Select(i => new KeyValuePair<string, KnownSystem?>(i.Key, i.Value))
-                .ToList();
-            cmb_SystemType.ItemsSource = _systems;
-            cmb_SystemType.DisplayMemberPath = "Key";
+            _systems = Validators.CreateListOfSystems();
+
+            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = _systems
+                .GroupBy(s => s.Category())
+                .ToDictionary(
+                    k => k.Key,
+                    v => v
+                        .OrderBy(s => s.Name())
+                        .ToList()
+                );
+
+            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
+
+            foreach (var group in mapping)
+            {
+                comboBoxItems.Add(new KnownSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => comboBoxItems.Add(new KnownSystemComboBoxItem(system)));
+            }
+
+            cmb_SystemType.ItemsSource = comboBoxItems;
             cmb_SystemType.SelectedIndex = 0;
 
             btn_StartStop.IsEnabled = false;
@@ -227,7 +250,6 @@ namespace DICUI
         {
             // Populate all KVPs
             var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
 
             return new DumpEnvironment()
             {
@@ -244,7 +266,7 @@ namespace DICUI
 
                 DICParameters = txt_Parameters.Text,
 
-                System = systemKvp?.Value,
+                System = cmb_SystemType.SelectedItem as KnownSystem?,
                 Type = cmb_MediaType.SelectedItem as MediaType?
             };
         }
@@ -274,23 +296,14 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
-
-            // If we're on a separator, go to the next item and return
-            if (systemKvp?.Value == null)
-            {
-                cmb_SystemType.SelectedIndex++;
-                return;
-            }
-
             // Get the selected system info
-            var selectedSystem = systemKvp?.Value;
+            KnownSystem? selectedSystem = cmb_SystemType.SelectedItem as KnownSystem? ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
             lbl_Status.Content = result.Message;
-            btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
+            btn_StartStop.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
             cmb_DriveSpeed.IsEnabled = selectedMediaType.DoesSupportDriveSpeed() && selectedSystem.DoesSupportDriveSpeed();
@@ -414,13 +427,13 @@ namespace DICUI
         private void GetOutputNames()
         {
             var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            KnownSystem? systemType = cmb_SystemType.SelectedItem as KnownSystem?;
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
             if (driveKvp != null
                 && !String.IsNullOrWhiteSpace(driveKvp?.Value)
                 && driveKvp?.Value != UIElements.FloppyDriveString
-                && systemKvp != null
+                && systemType != null
                 && mediaType != null)
             {
                 txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
