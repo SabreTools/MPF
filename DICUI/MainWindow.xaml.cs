@@ -261,7 +261,7 @@ namespace DICUI
 
                 DICParameters = txt_Parameters.Text,
 
-                System = cmb_SystemType.SelectedItem as KnownSystem?,
+                System = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem),
                 Type = cmb_MediaType.SelectedItem as MediaType?
             };
         }
@@ -292,7 +292,7 @@ namespace DICUI
         private void EnsureDiscInformation()
         {
             // Get the selected system info
-            KnownSystem? selectedSystem = cmb_SystemType.SelectedItem as KnownSystem? ?? KnownSystem.NONE;
+            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
@@ -422,7 +422,7 @@ namespace DICUI
         private void GetOutputNames()
         {
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
-            KnownSystem? systemType = cmb_SystemType.SelectedItem as KnownSystem?;
+            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem);
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
             if (drive != null
