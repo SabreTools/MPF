@@ -55,6 +55,10 @@ namespace DICUI.External
             if (ProtectDVDVideo(path, files))
                 protections[path] = "Protect DVD-Video";
 
+            // Zzxzz
+            if (Directory.Exists(Path.Combine(path, "Zzxzz")))
+                protections[path] = "Zzxzz";
+
             // Loop through all files and scan them
             foreach (string file in files)
             {
@@ -1047,6 +1051,9 @@ namespace DICUI.External
             mapping.Add("XCP.DAT", "XCP");
             mapping.Add("ECDPlayerControl.ocx", "XCP");
             mapping.Add("go.exe", "XCP"); // Path.Combine("contents", "go.exe")
+
+            // Zzxzz
+            mapping.Add("Zzz.aze", "Zzxzz"); // Path.Combine("Zzxxzz", "Zzz.aze")
 
             return mapping;
         }
