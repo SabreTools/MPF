@@ -471,7 +471,7 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Get the highest supported drive speed as reported by DiscImageCreator
+        /// Set the drive speed based on reported maximum and user-defined option
         /// </summary>
         private async void SetSupportedDriveSpeed()
         {
@@ -485,6 +485,11 @@ namespace DICUI
 
             // Get the drive speed
             int speed = await Tasks.GetDiscSpeed(env);
+
+            // If we have an invalid speed, we need to jump out
+            // TODO: Should we disable dumping in this case?
+            if (speed == -1)
+                return;
 
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
