@@ -501,10 +501,9 @@ namespace DICUI.External
 
         private static string GetCDDVDCopsVersion(string file, int position)
         {
-            char[] version;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(position + 15, SeekOrigin.Begin); // Begin reading after "CD-Cops,  ver."
-            version = br.ReadChars(4);
+            char[] version = br.ReadChars(4);
             if (version[0] == 0x00)
                 return "";
             return new string(version);
@@ -636,21 +635,19 @@ namespace DICUI.External
 
         private static string GetProtectDiscVersionBuild76till10(string file, int position, out int irefBuild)
         {
-            irefBuild = 0;
-            byte version, subversion, versionindicatorPD9, subsubversionPD9x, subversionPD9x1, subversionPD9x2;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(position + 37, SeekOrigin.Begin);
-            subversion = br.ReadByte();
+            byte subversion = br.ReadByte();
             br.ReadByte();
-            version = br.ReadByte();
+            byte version = br.ReadByte();
             br.BaseStream.Seek(position + 49, SeekOrigin.Begin);
             irefBuild = br.ReadInt32();
             br.BaseStream.Seek(position + 53, SeekOrigin.Begin);
-            versionindicatorPD9 = br.ReadByte();
+            byte versionindicatorPD9 = br.ReadByte();
             br.BaseStream.Seek(position + 0x40, SeekOrigin.Begin);
-            subsubversionPD9x = br.ReadByte();
-            subversionPD9x2 = br.ReadByte();
-            subversionPD9x1 = br.ReadByte();
+            byte subsubversionPD9x = br.ReadByte();
+            byte subversionPD9x2 = br.ReadByte();
+            byte subversionPD9x1 = br.ReadByte();
             br.Close();
 
             // version 7
@@ -722,29 +719,20 @@ namespace DICUI.External
 
         private static string GetSecuROM4Version(string file, int position)
         {
-            char version;
-            char subVersion1;
-            char subVersion2;
-            char subsubVersion1;
-            char subsubVersion2;
-            char subsubsubVersion1;
-            char subsubsubVersion2;
-            char subsubsubVersion3;
-            char subsubsubVersion4;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream, Encoding.Default);
             br.BaseStream.Seek(position + 8, SeekOrigin.Begin); // Begin reading after "AddD"
-            version = br.ReadChar();
+            char version = br.ReadChar();
             br.ReadByte();
-            subVersion1 = br.ReadChar();
-            subVersion2 = br.ReadChar();
+            char subVersion1 = br.ReadChar();
+            char subVersion2 = br.ReadChar();
             br.ReadByte();
-            subsubVersion1 = br.ReadChar();
-            subsubVersion2 = br.ReadChar();
+            char subsubVersion1 = br.ReadChar();
+            char subsubVersion2 = br.ReadChar();
             br.ReadByte();
-            subsubsubVersion1 = br.ReadChar();
-            subsubsubVersion2 = br.ReadChar();
-            subsubsubVersion3 = br.ReadChar();
-            subsubsubVersion4 = br.ReadChar();
+            char subsubsubVersion1 = br.ReadChar();
+            char subsubsubVersion2 = br.ReadChar();
+            char subsubsubVersion3 = br.ReadChar();
+            char subsubsubVersion4 = br.ReadChar();
             br.Close();
             return version + "." + subVersion1 + subVersion2 + "." + subsubVersion1 + subsubVersion2 + "." + subsubsubVersion1 + subsubsubVersion2 + subsubsubVersion3 + subsubsubVersion4;
         }
@@ -795,13 +783,11 @@ namespace DICUI.External
 
         private static string GetSysiphusVersion(string file, int position)
         {
-            char version;
-            char subVersion;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream, Encoding.Default);
             br.BaseStream.Seek(position - 3, SeekOrigin.Begin);
-            subVersion = br.ReadChar();
+            char subVersion = br.ReadChar();
             br.ReadChar();
-            version = br.ReadChar();
+            char version = br.ReadChar();
             br.Close();
             if (Char.IsNumber(version) && Char.IsNumber(subVersion))
                 return version + "." + subVersion;
@@ -841,17 +827,14 @@ namespace DICUI.External
 
         private static string GetVOBProtectCDDVDVersion(string file, int position)
         {
-            byte version;
-            byte subVersion;
-            byte subsubVersion;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream, Encoding.Default);
             br.BaseStream.Seek(position - 2, SeekOrigin.Begin);
-            version = br.ReadByte();
+            byte version = br.ReadByte();
             if (version == 5)
             {
                 br.BaseStream.Seek(position - 4, SeekOrigin.Begin);
-                subsubVersion = (byte)((br.ReadByte() & 0xF0) >> 4);
-                subVersion = (byte)((br.ReadByte() & 0xF0) >> 4);
+                byte subsubVersion = (byte)((br.ReadByte() & 0xF0) >> 4);
+                byte subVersion = (byte)((br.ReadByte() & 0xF0) >> 4);
                 br.Close();
                 return version + "." + subVersion + "." + subsubVersion;
             }
