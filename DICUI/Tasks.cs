@@ -52,6 +52,10 @@ namespace DICUI
             if (!File.Exists(env.DICPath))
                 return -1;
 
+            // Validate that the drive is set up
+            if (env.Drive == null)
+                return -1;
+
             // Validate we're not trying to get the speed for a floppy disk
             if (env.IsFloppy)
                 return -1;
