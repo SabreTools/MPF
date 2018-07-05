@@ -24,7 +24,6 @@ using System.Text;
 
 namespace DICUI.External
 {
-    // TODO: Add any missing protection schemes
     public static class ProtectionFind
     {
         /// <summary>
