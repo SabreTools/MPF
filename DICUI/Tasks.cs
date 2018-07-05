@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using DICUI.Data;
@@ -41,6 +43,66 @@ namespace DICUI
     public class Tasks
     {
         /// <summary>
+        /// Get disc speed using DIC
+        /// </summary>
+        /// <returns>Drive speed if possible, -1 on error</returns>
+        public static async Task<int> GetDiscSpeed(DumpEnvironment env)
+        {
+            // Validate that the required program exists
+            if (!File.Exists(env.DICPath))
+                return -1;
+
+            // Validate we're not trying to get the speed for a floppy disk
+            if (env.IsFloppy)
+                return -1;
+
+            // Get the drive speed directly
+            //int speed = Validators.GetDriveSpeed((char)selected?.Key);
+            //int speed = Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
+
+            // Get the drive speed from DIC, if possible
+            Process childProcess;
+            string output = await Task.Run(() =>
+            {
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = env.DICPath,
+                        Arguments = DICCommands.DriveSpeed + " " + env.Drive.Letter,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+                return childProcess.StandardOutput.ReadToEnd();
+            });
+
+            // If we get that the firmware is out of date, tell the user
+            if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
+            {
+                MessageBox.Show($"DiscImageCreator has reported that drive {env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
+                return -1;
+            }
+            // Otherwise, if we find the maximum read speed as reported
+            else if (output.Contains("ReadSpeedMaximum:"))
+            {
+                int index = output.IndexOf("ReadSpeedMaximum:");
+                string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
+                if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
+                {
+                    return -1;
+                }
+
+                return speed;
+            }
+
+            return -1;
+        }
+
+        /// <summary>
         /// Eject the disc using DIC
         /// </summary>
         public static async void EjectDisc(DumpEnvironment env)
@@ -51,6 +113,7 @@ namespace DICUI
 
             CancelDumping(env);
 
+            // Validate we're not trying to eject a floppy disk
             if (env.IsFloppy)
                 return;
 

@@ -473,52 +473,20 @@ namespace DICUI
         /// <summary>
         /// Get the highest supported drive speed as reported by DiscImageCreator
         /// </summary>
-        private void SetSupportedDriveSpeed()
+        private async void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
             var values = AllowedSpeeds.GetForMediaType(_currentMediaType);
             cmb_DriveSpeed.ItemsSource = values;
             cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
-            // Get the drive letter from the selected item
-            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
-            if (drive == null || drive.IsFloppy)
-                return;
+            // Get the current environment
+            var env = DetermineEnvironment();
 
-            //Validators.GetDriveSpeed((char)selected?.Key);
-            //Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
+            // Get the drive speed
+            int speed = await Tasks.GetDiscSpeed(env);
 
-            // Validate that the required program exists and it's not DICUI itself
-            if (!File.Exists(_options.dicPath) ||
-                Path.GetFullPath(_options.dicPath) == Path.GetFullPath(Process.GetCurrentProcess().MainModule.FileName))
-            {
-                return;
-            }
-
-            Process childProcess = new Process()
-            {
-                StartInfo = new ProcessStartInfo()
-                {
-                    FileName = _options.dicPath,
-                    Arguments = DICCommands.DriveSpeed + " " + drive.Letter,
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                },
-            };
-            childProcess.Start();
-            childProcess.WaitForExit();
-            string output = childProcess.StandardOutput.ReadToEnd();
-
-            int index = output.IndexOf("ReadSpeedMaximum:");
-            string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
-            if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
-            {
-                return;
-            }
-
-            // choose speed value according to maximum value reported by DIC adjusted to a precise speed from list
-            // and the one choosen in options
+            // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
                 AllowedSpeeds.GetForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
                 _options.preferredDumpSpeedCD
