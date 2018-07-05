@@ -300,9 +300,27 @@ namespace DICUI
             KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem) ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
-            Result result = GetSupportStatus(selectedSystem, selectedMediaType);
+            Result result = Validators.GetSupportStatus(selectedSystem, selectedMediaType);
+            string resultMessage = result.Message;
+            if (result && _currentMediaType != null && _currentMediaType != MediaType.NONE)
+            {
+                // If the current media type is still supported, change the index to that
+                int index = _mediaTypes.IndexOf(_currentMediaType);
+                if (index != -1)
+                {
+                    if (cmb_MediaType.SelectedIndex != index)
+                    {
+                        cmb_MediaType.SelectedIndex = index;
+                    }
+                }
+                // Otherwise, we tell the user that the disc/system combo is not supported
+                else
+                {
+                    resultMessage = $"Disc of type {_currentMediaType.Name()} found, but the current system does not support it!";
+                }
+            };
 
-            lbl_Status.Content = result.Message;
+            lbl_Status.Content = resultMessage;
             btn_StartStop.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
@@ -350,74 +368,6 @@ namespace DICUI
                                 ? (int?)cmb_DriveSpeed.SelectedItem + " " : "")
                         + string.Join(" ", defaultParams);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Verify that, given a system and a media type, they are correct
-        /// </summary>
-        private Result GetSupportStatus(KnownSystem? system, MediaType? type)
-        {
-            // No system chosen, update status
-            if (system == KnownSystem.NONE)
-                return Result.Failure("Please select a valid system");
-            // custom system chosen, then don't check anything
-            else if (system == KnownSystem.Custom)
-                return Result.Success("{0} ready to dump", type.Name());
-
-            // If we're on an unsupported type, update the status accordingly
-            switch (type)
-            {
-                // Fully supported types
-                case MediaType.CD:
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                    if (system == KnownSystem.MicrosoftXBOX360XDG3)
-                    {
-                        return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
-                    }
-                    else
-                    {
-                        // TODO: this code should adjust things in a method which is meant to verify values so maybe we can find a better fit 
-                        // Take care of the selected item
-                        if (_currentMediaType != null && _currentMediaType != MediaType.NONE)
-                        {
-                            int index = _mediaTypes.IndexOf(_currentMediaType);
-                            if (index != -1)
-                            {
-                                if (cmb_MediaType.SelectedIndex != index)
-                                {
-                                    cmb_MediaType.SelectedIndex = index;
-                                }
-                            }
-                            else
-                            {
-                                return Result.Success("Disc of type {0} found, but the current system does not support it!", _currentMediaType.Name());
-                            }
-                        }
-                    }
-                    return Result.Success("{0} ready to dump", type.Name());
-
-                // Partially supported types
-                case MediaType.GDROM:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
-                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
-
-                // Undumpable but recognized types
-                case MediaType.LaserDisc:
-                case MediaType.WiiUOpticalDisc:
-                case MediaType.CED:
-                case MediaType.UMD:
-                case MediaType.Cartridge:
-                case MediaType.Cassette:
-                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
-
-                // Invalid or unknown types
-                case MediaType.NONE:
-                default:
-                    return Result.Failure("Please select a valid disc type");
             }
         }
 

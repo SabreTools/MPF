@@ -659,6 +659,54 @@ namespace DICUI.Utilities
             return -1;
         }
 
+
+        /// <summary>
+        /// Verify that, given a system and a media type, they are correct
+        /// </summary>
+        public static Result GetSupportStatus(KnownSystem? system, MediaType? type)
+        {
+            // No system chosen, update status
+            if (system == KnownSystem.NONE)
+                return Result.Failure("Please select a valid system");
+            // custom system chosen, then don't check anything
+            else if (system == KnownSystem.Custom)
+                return Result.Success("{0} ready to dump", type.Name());
+
+            // If we're on an unsupported type, update the status accordingly
+            switch (type)
+            {
+                // Fully supported types
+                case MediaType.CD:
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    if (system == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+                    }
+                    return Result.Success("{0} ready to dump", type.Name());
+
+                // Partially supported types
+                case MediaType.GDROM:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+
+                // Undumpable but recognized types
+                case MediaType.LaserDisc:
+                case MediaType.WiiUOpticalDisc:
+                case MediaType.CED:
+                case MediaType.UMD:
+                case MediaType.Cartridge:
+                case MediaType.Cassette:
+                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+
+                // Invalid or unknown types
+                case MediaType.NONE:
+                default:
+                    return Result.Failure("Please select a valid disc type");
+            }
+        }
         /// <summary>
         /// Validate that at string would be valid as input to DiscImageCreator
         /// </summary>
