@@ -258,7 +258,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(DriveLetter) ?? "";
-                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes";
+                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes"; // TODO: This needs to be verified
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = "No";
                             if (File.Exists(combinedBase + "_subIntention.txt"))
