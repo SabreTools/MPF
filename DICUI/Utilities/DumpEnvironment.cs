@@ -12,6 +12,26 @@ using DICUI.Data;
 namespace DICUI.Utilities
 {
     /// <summary>
+    /// Represents information for a single drive
+    /// </summary>
+    public class Drive
+    {
+        public char Letter { get; private set; }
+        public bool IsFloppy { get; private set; }
+        public string VolumeLabel { get; private set; }
+
+        private Drive(char letter, string volumeLabel, bool isFloppy)
+        {
+            this.Letter = letter;
+            this.IsFloppy = isFloppy;
+            this.VolumeLabel = volumeLabel;
+        }
+
+        public static Drive Floppy(char letter) => new Drive(letter, null, true);
+        public static Drive Optical(char letter, string volumeLabel) => new Drive(letter, volumeLabel, false);
+    }
+
+    /// <summary>
     /// Represents the state of all settings to be used during dumping
     /// </summary>
     public class DumpEnvironment

@@ -10,25 +10,6 @@ using DICUI.Data;
 
 namespace DICUI.Utilities
 {
-    // TODO: Consider putting this in its own file, or with DumpEnvironment
-    // TODO: Investigate whether or not this could be a struct
-    public class Drive
-    {
-        public char Letter { get; private set; }
-        public bool IsFloppy { get; private set; }
-        public string VolumeLabel { get; private set; }
-
-        private Drive(char letter, string volumeLabel, bool isFloppy)
-        {
-            this.Letter = letter;
-            this.IsFloppy = isFloppy;
-            this.VolumeLabel = volumeLabel;
-        }
-
-        public static Drive Floppy(char letter) => new Drive(letter, null, true);
-        public static Drive Optical(char letter, string volumeLabel) => new Drive(letter, volumeLabel, false);
-    }
-
     public static class Validators
     {
         /// <summary>
