@@ -221,12 +221,14 @@ namespace DICUI
                 cmb_DriveLetter.SelectedIndex = 0;
                 lbl_Status.Content = "Valid media found! Choose your Media Type";
                 btn_StartStop.IsEnabled = true;
+                btn_Scan.IsEnabled = true;
             }
             else
             {
                 cmb_DriveLetter.SelectedIndex = -1;
                 lbl_Status.Content = "No valid media found!";
                 btn_StartStop.IsEnabled = false;
+                btn_Scan.IsEnabled = false;
             }
         }
 
