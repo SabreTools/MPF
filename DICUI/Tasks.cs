@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using DICUI.Data;
+using DICUI.External;
 using DICUI.Utilities;
 
 namespace DICUI
@@ -33,74 +33,6 @@ namespace DICUI
         public static Result Failure(string message, params object[] args) => new Result(false, string.Format(message, args));
 
         public static implicit operator bool(Result result) => result.success;
-    }
-
-    /// <summary>
-    /// Represents the state of all settings to be used during dumping
-    /// </summary>
-    public class DumpEnvironment
-    {
-        // Tool paths
-        public string DICPath;
-        public string SubdumpPath;
-
-        // Output paths
-        public string OutputDirectory;
-        public string OutputFilename;
-
-        // UI information
-        public Drive Drive;
-        public KnownSystem? System;
-        public MediaType? Type;
-        public string DICParameters;
-
-        // External process information
-        public Process dicProcess;
-
-        public bool IsFloppy { get => Drive.IsFloppy; }
-
-        /// <summary>
-        /// Checks if the configuration is valid
-        /// </summary>
-        /// <returns>True if the configuration is valid, false otherwise</returns>
-        public bool IsConfigurationValid()
-        {
-            return !((string.IsNullOrWhiteSpace(DICParameters)
-            || !Validators.ValidateParameters(DICParameters)
-            || (Drive.IsFloppy ^ Type == MediaType.Floppy)));
-        }
-
-        /// <summary>
-        /// Adjust the current environment if we are given custom parameters
-        /// </summary>
-        public void AdjustForCustomConfiguration()
-        {
-            // If we have a custom configuration, we need to extract the best possible information from it
-            if (System == KnownSystem.Custom)
-            {
-                Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
-                Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
-                OutputDirectory = Path.GetDirectoryName(path);
-                OutputFilename = Path.GetFileName(path);
-            }
-        }
-
-        /// <summary>
-        /// Fix the output paths to remove characters that DiscImageCreator can't handle
-        /// </summary>
-        /// <remarks>
-        /// TODO: Investigate why the `&` replacement is needed
-        /// </remarks>
-        public void FixOutputPaths()
-        {
-            // Only fix OutputDirectory if it's not blank or null
-            if (!String.IsNullOrWhiteSpace(OutputDirectory))
-                OutputDirectory = OutputDirectory.Replace('.', '_').Replace('&', '_');
-
-            // Only fix OutputFilename if it's not blank or null
-            if (!String.IsNullOrWhiteSpace(OutputFilename))
-                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
-        }
     }
 
     /// <summary>
@@ -206,7 +138,7 @@ namespace DICUI
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
             // If a complete dump already exists
-            if (DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
+            if (env.FoundAllFiles())
             {
                 MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
@@ -279,6 +211,24 @@ namespace DICUI
         }
 
         /// <summary>
+        /// Run protection scan on a given dump environment
+        /// </summary>
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Copy protection detected in the envirionment, if any</returns>
+        public static async Task<string> RunProtectionScan(string path)
+        {
+            var found = await Task.Run(() =>
+            {
+                return ProtectionFind.Scan(path);
+            });
+
+            if (found == null)
+                return "None found";
+
+            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+        }
+
+        /// <summary>
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <param name="env">DumpEnvirionment containing all required information</param>
@@ -286,12 +236,12 @@ namespace DICUI
         private static Result VerifyAndSaveDumpOutput(DumpEnvironment env)
         {
             // Check to make sure that the output had all the correct files
-            if (!DumpInformation.FoundAllFiles(env.OutputDirectory, env.OutputFilename, env.Type))
+            if (!env.FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            Dictionary<string, string> templateValues = DumpInformation.ExtractOutputInformation(env.OutputDirectory, env.OutputFilename, env.System, env.Type, env.Drive.Letter);
-            List<string> formattedValues = DumpInformation.FormatOutputData(templateValues, env.System, env.Type);
-            bool success = DumpInformation.WriteOutputData(env.OutputDirectory, env.OutputFilename, formattedValues);
+            Dictionary<string, string> templateValues = env.ExtractOutputInformation();
+            List<string> formattedValues = env.FormatOutputData(templateValues);
+            bool success = env.WriteOutputData(formattedValues);
 
             return Result.Success();
         }

@@ -73,6 +73,11 @@ namespace DICUI
             PopulateDrives();
         }
 
+        private void btn_Scan_Click(object sender, RoutedEventArgs e)
+        {
+            ScanAndShowProtection();
+        }
+
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If we're on a separator, go to the next item and return
@@ -438,6 +443,30 @@ namespace DICUI
             {
                 txt_OutputDirectory.Text = _options.defaultOutputPath;
                 txt_OutputFilename.Text = "disc.bin";
+            }
+        }
+
+        /// <summary>
+        /// Scan and show copy protection for the current disc
+        /// </summary>
+        private async void ScanAndShowProtection()
+        {
+            var env = DetermineEnvironment();
+            if (env.DriveLetter != default(char))
+            {
+                var tempContent = lbl_Status.Content;
+                lbl_Status.Content = "Scanning for copy protection... this might take a while!";
+                btn_StartStop.IsEnabled = false;
+                btn_Search.IsEnabled = false;
+                btn_Scan.IsEnabled = false;
+
+                string protections = await Tasks.RunProtectionScan(env.DriveLetter + ":\\");
+                MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                lbl_Status.Content = tempContent;
+                btn_StartStop.IsEnabled = true;
+                btn_Search.IsEnabled = true;
+                btn_Scan.IsEnabled = true;
             }
         }
 
