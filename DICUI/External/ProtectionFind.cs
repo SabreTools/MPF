@@ -200,7 +200,7 @@ namespace DICUI.External
                         return "SecuROM " + GetSecuROM4Version(file, position);
 
                     if ((position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03)) > -1)
-                         return "SecuROM " + GetSecuROM4and5Version(file, position);
+                        return "SecuROM " + GetSecuROM4and5Version(file, position);
 
                     if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                         return "SecuROM " + GetSecuROM7Version(file);
