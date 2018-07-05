@@ -96,6 +96,8 @@
     <Compile Include="Options.cs" />
     <Compile Include="Tasks.cs" />
     <Compile Include="External\ProtectionFind.cs" />
+    <Compile Include="UI\KnownSystemComboBoxItem.cs" />
+    <Compile Include="UI\AllowedSpeeds.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />
     <Compile Include="Utilities\Validators.cs" />
     <Compile Include="Utilities\Converters.cs" />

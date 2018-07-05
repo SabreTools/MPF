@@ -60,7 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\UIElementsTest.cs" />
+    <Compile Include="UI\AllowedSpeedsTest.cs" />
     <Compile Include="Utilities\DumpEnvironmentTest.cs" />
     <Compile Include="ResultTest.cs" />
     <Compile Include="TasksTest.cs" />

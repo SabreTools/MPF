@@ -1,84 +1,12 @@
-﻿using DICUI.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Media;
-
-namespace DICUI.Data
+﻿namespace DICUI.Data
 {
     /// <summary>
     /// Variables for UI elements
     /// </summary>
-    /// <remarks>
-    /// TODO: Pull out anything not a const string from this class
-    /// </remarks>
     public static class UIElements
     {
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
-
-        // Private lists of known drive speed ranges
-        private static IReadOnlyList<int> AllowedDriveSpeedsForCD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
-        private static IReadOnlyList<int> AllowedDriveSpeedsForDVD { get; } = AllowedDriveSpeedsForCD.Where(s => s <= 24).ToList();
-        private static IReadOnlyList<int> AllowedDriveSpeedsForBD { get; } = AllowedDriveSpeedsForCD.Where(s => s <= 16).ToList();
-        private static IReadOnlyList<int> AllowedDriveSpeedsForUnknownType { get; } = AllowedDriveSpeedsForCD; // TODO: All or {1}? Maybe null?
-
-        /// <summary>
-        /// Get list of all drive speeds for a given MediaType
-        /// </summary>
-        /// <param name="type">MediaType? that represents the current item</param>
-        /// <returns>Read-only list of drive speeds</returns>
-        public static IReadOnlyList<int> GetAllowedDriveSpeedsForMediaType(MediaType? type)
-        {
-            switch (type)
-            {
-                case MediaType.CD:
-                case MediaType.GDROM:
-                    return AllowedDriveSpeedsForCD;
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
-                    return AllowedDriveSpeedsForDVD;
-                case MediaType.BluRay:
-                    return AllowedDriveSpeedsForBD;
-                default:
-                    return AllowedDriveSpeedsForUnknownType;
-            }
-        }
-
-        // Create collections for UI based on known drive speeds
-        public static DoubleCollection AllowedDriveSpeedsForCDAsCollection { get; } = GetDoubleCollectionFromIntList(AllowedDriveSpeedsForCD);
-        public static DoubleCollection AllowedDriveSpeedsForDVDAsCollection { get; } = GetDoubleCollectionFromIntList(AllowedDriveSpeedsForDVD);
-        public static DoubleCollection AllowedDriveSpeedsForBDAsCollection { get; } = GetDoubleCollectionFromIntList(AllowedDriveSpeedsForBD);
-        private static DoubleCollection GetDoubleCollectionFromIntList(IReadOnlyList<int> list)
-            => new DoubleCollection(list.Select(i => Convert.ToDouble(i)).ToList());
-
-        public class KnownSystemComboBoxItem
-        {
-            private object data;
-
-            public KnownSystemComboBoxItem(KnownSystem? system) => data = system;
-            public KnownSystemComboBoxItem(KnownSystemCategory? category) => data = category;
-
-            public Brush Foreground { get => IsHeader() ? Brushes.Gray : Brushes.Black; }
-
-            public bool IsHeader() => data is KnownSystemCategory?;
-            public bool IsSystem() => data is KnownSystem?;
-
-            public static implicit operator KnownSystem? (KnownSystemComboBoxItem item) => item.data as KnownSystem?;
-
-            public string Name
-            {
-                get
-                {
-                    if (IsHeader())
-                        return "---------- " + (data as KnownSystemCategory?).Name() + " ----------";
-                    else
-                        return (data as KnownSystem?).Name();
-                }
-            }
-        }
     }
 
     /// <summary>

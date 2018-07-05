@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
+using DICUI.UI;
 
 namespace DICUI
 {
@@ -80,7 +81,7 @@ namespace DICUI
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If we're on a separator, go to the next item and return
-            if ((cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem).IsHeader())
+            if ((cmb_SystemType.SelectedItem as KnownSystemComboBoxItem).IsHeader())
             {
                 cmb_SystemType.SelectedIndex++;
                 return;
@@ -157,7 +158,7 @@ namespace DICUI
         /// </summary>
         private void PopulateMediaTypeAccordingToChosenSystem()
         {
-            KnownSystem? currentSystem = cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem;
+            KnownSystem? currentSystem = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
 
             if (currentSystem != null)
             {
@@ -191,12 +192,12 @@ namespace DICUI
                         .ToList()
                 );
 
-            List<UIElements.KnownSystemComboBoxItem> comboBoxItems = new List<UIElements.KnownSystemComboBoxItem>();
+            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
 
             foreach (var group in mapping)
             {
-                comboBoxItems.Add(new UIElements.KnownSystemComboBoxItem(group.Key));
-                group.Value.ForEach(system => comboBoxItems.Add(new UIElements.KnownSystemComboBoxItem(system)));
+                comboBoxItems.Add(new KnownSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => comboBoxItems.Add(new KnownSystemComboBoxItem(system)));
             }
 
             cmb_SystemType.ItemsSource = comboBoxItems;
@@ -265,7 +266,7 @@ namespace DICUI
 
                 DICParameters = txt_Parameters.Text,
 
-                System = (KnownSystem?)(cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem),
+                System = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem),
                 Type = cmb_MediaType.SelectedItem as MediaType?
             };
         }
@@ -296,7 +297,7 @@ namespace DICUI
         private void EnsureDiscInformation()
         {
             // Get the selected system info
-            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
+            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
@@ -426,7 +427,7 @@ namespace DICUI
         private void GetOutputNames()
         {
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
-            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem);
+            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem);
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
             if (drive != null
@@ -475,7 +476,7 @@ namespace DICUI
         private void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            var values = UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType);
+            var values = AllowedSpeeds.GetForMediaType(_currentMediaType);
             cmb_DriveSpeed.ItemsSource = values;
             cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
@@ -489,7 +490,7 @@ namespace DICUI
 
             // Validate that the required program exists and it's not DICUI itself
             if (!File.Exists(_options.dicPath) ||
-                Path.GetFullPath(_options.dicPath) == Path.GetFullPath(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName))
+                Path.GetFullPath(_options.dicPath) == Path.GetFullPath(Process.GetCurrentProcess().MainModule.FileName))
             {
                 return;
             }
@@ -519,7 +520,7 @@ namespace DICUI
             // choose speed value according to maximum value reported by DIC adjusted to a precise speed from list
             // and the one choosen in options
             int chosenSpeed = Math.Min(
-                UIElements.GetAllowedDriveSpeedsForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
+                AllowedSpeeds.GetForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
                 _options.preferredDumpSpeedCD
             );
 
