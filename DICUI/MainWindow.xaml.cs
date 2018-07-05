@@ -306,18 +306,12 @@ namespace DICUI
             {
                 // If the current media type is still supported, change the index to that
                 int index = _mediaTypes.IndexOf(_currentMediaType);
-                if (index != -1)
-                {
-                    if (cmb_MediaType.SelectedIndex != index)
-                    {
-                        cmb_MediaType.SelectedIndex = index;
-                    }
-                }
+                if (index != -1 && cmb_MediaType.SelectedIndex != index)
+                    cmb_MediaType.SelectedIndex = index;
+
                 // Otherwise, we tell the user that the disc/system combo is not supported
                 else
-                {
                     resultMessage = $"Disc of type {_currentMediaType.Name()} found, but the current system does not support it!";
-                }
             };
 
             lbl_Status.Content = resultMessage;
