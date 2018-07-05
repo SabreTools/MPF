@@ -196,11 +196,11 @@ namespace DICUI.External
                     }
 
                     // SecuROM
-                    if ((FileContent.IndexOf("AddD" + (char)0x03 + (char)0x00 + (char)0x00 + (char)0x00)) > -1)
+                    if ((position = FileContent.IndexOf("AddD" + (char)0x03 + (char)0x00 + (char)0x00 + (char)0x00)) > -1)
                         return "SecuROM " + GetSecuROM4Version(file, position);
 
                     if ((position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03)) > -1)
-                        return "SecuROM " + GetSecuROM4and5Version(file, --position);
+                         return "SecuROM " + GetSecuROM4and5Version(file, position);
 
                     if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                         return "SecuROM " + GetSecuROM7Version(file);
@@ -703,14 +703,11 @@ namespace DICUI.External
 
         private static string GetSafeDiscVersion(string file, int position)
         {
-            int version;
-            int subVersion;
-            int subsubVersion;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(position + 20, SeekOrigin.Begin); // Begin reading after "BoG_ *90.0&!!  Yy>" for old SafeDisc
-            version = br.ReadInt32();
-            subVersion = br.ReadInt32();
-            subsubVersion = br.ReadInt32();
+            int version = br.ReadInt32();
+            int subVersion = br.ReadInt32();
+            int subsubVersion = br.ReadInt32();
             if (version != 0)
                 return version + "." + subVersion.ToString("00") + "." + subsubVersion.ToString("000");
             br.BaseStream.Seek(position + 18 + 14, SeekOrigin.Begin); // Begin reading after "BoG_ *90.0&!!  Yy>" for newer SafeDisc
@@ -754,29 +751,20 @@ namespace DICUI.External
 
         private static string GetSecuROM4and5Version(string file, int position)
         {
-            byte version;
-            byte subVersion1;
-            byte subVersion2;
-            byte subsubVersion1;
-            byte subsubVersion2;
-            byte subsubsubVersion1;
-            byte subsubsubVersion2;
-            byte subsubsubVersion3;
-            byte subsubsubVersion4;
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(position + 8, SeekOrigin.Begin); // Begin reading after "ÊÝÝ¬"
-            version = (byte)(br.ReadByte() & 0xF);
+            byte version = (byte)(br.ReadByte() & 0xF);
             br.ReadByte();
-            subVersion1 = (byte)(br.ReadByte() ^ 36);
-            subVersion2 = (byte)(br.ReadByte() ^ 28);
+            byte subVersion1 = (byte)(br.ReadByte() ^ 36);
+            byte subVersion2 = (byte)(br.ReadByte() ^ 28);
             br.ReadByte();
-            subsubVersion1 = (byte)(br.ReadByte() ^ 42);
-            subsubVersion2 = (byte)(br.ReadByte() ^ 8);
+            byte subsubVersion1 = (byte)(br.ReadByte() ^ 42);
+            byte subsubVersion2 = (byte)(br.ReadByte() ^ 8);
             br.ReadByte();
-            subsubsubVersion1 = (byte)(br.ReadByte() ^ 16);
-            subsubsubVersion2 = (byte)(br.ReadByte() ^ 116);
-            subsubsubVersion3 = (byte)(br.ReadByte() ^ 34);
-            subsubsubVersion4 = (byte)(br.ReadByte() ^ 22);
+            byte subsubsubVersion1 = (byte)(br.ReadByte() ^ 16);
+            byte subsubsubVersion2 = (byte)(br.ReadByte() ^ 116);
+            byte subsubsubVersion3 = (byte)(br.ReadByte() ^ 34);
+            byte subsubsubVersion4 = (byte)(br.ReadByte() ^ 22);
             br.Close();
             if (version == 0 || version > 9)
                 return "";
