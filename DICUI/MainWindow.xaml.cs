@@ -250,8 +250,6 @@ namespace DICUI
         /// <returns>Filled DumpEnvironment instance</returns>
         private DumpEnvironment DetermineEnvironment()
         {
-            // Populate all KVPs
-
             return new DumpEnvironment()
             {
                 // Paths to tools
@@ -266,7 +264,7 @@ namespace DICUI
 
                 DICParameters = txt_Parameters.Text,
 
-                System = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem),
+                System = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem,
                 Type = cmb_MediaType.SelectedItem as MediaType?
             };
         }
@@ -297,7 +295,7 @@ namespace DICUI
         private void EnsureDiscInformation()
         {
             // Get the selected system info
-            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
+            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem) ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
