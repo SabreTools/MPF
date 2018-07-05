@@ -776,7 +776,7 @@ namespace DICUI.External
             BinaryReader br = new BinaryReader(new StreamReader(file).BaseStream);
             br.BaseStream.Seek(236, SeekOrigin.Begin);
             byte[] bytes = br.ReadBytes(4);
-            // if bytes(0) = 0xED && bytes(3) = 0x5C {
+            // if (bytes[0] == 0xED && bytes[3] == 0x5C {
             if (bytes[3] == 0x5C)
             {
                 //SecuROM 7 new and 8
