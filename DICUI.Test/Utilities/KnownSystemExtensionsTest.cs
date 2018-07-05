@@ -11,14 +11,13 @@ namespace DICUI.Test.Utilities
         public void NameTest()
         {
             var values = (KnownSystem[])Enum.GetValues(typeof(KnownSystem));
-
-            Array.ForEach(values, system =>
+            foreach(var system in values)
             {
                 string expected = Converters.KnownSystemToString(system);
                 string actual = ((KnownSystem?)system).Name();
 
                 Assert.Equal(expected, actual);
-            });            
+            }
         }
 
         [Theory]
@@ -33,13 +32,11 @@ namespace DICUI.Test.Utilities
             Assert.Equal(expected, actual);
         }
 
-
         [Fact]
         public void IsMarkerTest()
         {
             var values = (KnownSystem[])Enum.GetValues(typeof(KnownSystem));
-
-            Array.ForEach(values, system =>
+            foreach(var system in values)
             {
                 bool expected = system == KnownSystem.MarkerArcadeEnd || system == KnownSystem.MarkerComputerEnd ||
                                 system == KnownSystem.MarkerOtherEnd || system == KnownSystem.MarkerConsoleEnd;
@@ -47,23 +44,18 @@ namespace DICUI.Test.Utilities
                 bool actual = ((KnownSystem?)system).IsMarker();
 
                 Assert.Equal(expected, actual);
-            });
+            }
         }
 
         [Fact]
         public void CategoryNameNotEmptyTest()
         {
             var values = (KnownSystemCategory[])Enum.GetValues(typeof(KnownSystemCategory));
-
-            Array.ForEach(values, system =>
+            foreach (var system in values)
             {
                 string actual = ((KnownSystem?)system).Name();
-
                 Assert.NotEqual("", actual);
-            });
+            }
         }
-
-
-
     }
 }
