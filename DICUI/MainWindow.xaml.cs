@@ -9,15 +9,16 @@ using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
+using static DICUI.Data.UIElements;
 
 namespace DICUI
 {
     public partial class MainWindow : Window
     {
         // Private UI-related variables
-        private List<KeyValuePair<char, string>> _drives { get; set; }
+        private List<Drive> _drives { get; set; }
         private MediaType? _currentMediaType { get; set; }
-        private List<KeyValuePair<string, KnownSystem?>> _systems { get; set; }
+        private List<KnownSystem?> _systems { get; set; }
         private List<MediaType?> _mediaTypes { get; set; }
 
         private DumpEnvironment _env;
@@ -74,6 +75,13 @@ namespace DICUI
 
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // If we're on a separator, go to the next item and return
+            if ((cmb_SystemType.SelectedItem as KnownSystemComboBoxItem).IsHeader())
+            {
+                cmb_SystemType.SelectedIndex++;
+                return;
+            }
+
             PopulateMediaTypeAccordingToChosenSystem();
         }
 
@@ -145,11 +153,11 @@ namespace DICUI
         /// </summary>
         private void PopulateMediaTypeAccordingToChosenSystem()
         {
-            var currentSystem = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            KnownSystem? currentSystem = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
 
             if (currentSystem != null)
             {
-                _mediaTypes = Validators.GetValidMediaTypes(currentSystem?.Value).ToList();
+                _mediaTypes = Validators.GetValidMediaTypes(currentSystem).ToList();
                 cmb_MediaType.ItemsSource = _mediaTypes;
 
                 cmb_MediaType.IsEnabled = _mediaTypes.Count > 1;
@@ -168,11 +176,26 @@ namespace DICUI
         /// </summary>
         private void PopulateSystems()
         {
-            _systems = Validators.CreateListOfSystems()
-                .Select(i => new KeyValuePair<string, KnownSystem?>(i.Key, i.Value))
-                .ToList();
-            cmb_SystemType.ItemsSource = _systems;
-            cmb_SystemType.DisplayMemberPath = "Key";
+            _systems = Validators.CreateListOfSystems();
+
+            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = _systems
+                .GroupBy(s => s.Category())
+                .ToDictionary(
+                    k => k.Key,
+                    v => v
+                        .OrderBy(s => s.Name())
+                        .ToList()
+                );
+
+            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
+
+            foreach (var group in mapping)
+            {
+                comboBoxItems.Add(new KnownSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => comboBoxItems.Add(new KnownSystemComboBoxItem(system)));
+            }
+
+            cmb_SystemType.ItemsSource = comboBoxItems;
             cmb_SystemType.SelectedIndex = 0;
 
             btn_StartStop.IsEnabled = false;
@@ -185,11 +208,8 @@ namespace DICUI
         private void PopulateDrives()
         {
             // Populate the list of drives and add it to the combo box
-            _drives = Validators.CreateListOfDrives()
-                .Select(i => new KeyValuePair<char, string>(i.Key, i.Value))
-                .ToList();
+            _drives = Validators.CreateListOfDrives();
             cmb_DriveLetter.ItemsSource = _drives;
-            cmb_DriveLetter.DisplayMemberPath = "Key";
 
             if (cmb_DriveLetter.Items.Count > 0)
             {
@@ -226,8 +246,6 @@ namespace DICUI
         private DumpEnvironment DetermineEnvironment()
         {
             // Populate all KVPs
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            var systemKvp = cmb_SystemType.SelectedValue as KeyValuePair<string, KnownSystem?>?;
 
             return new DumpEnvironment()
             {
@@ -239,12 +257,11 @@ namespace DICUI
                 OutputFilename = txt_OutputFilename.Text,
 
                 // Get the currently selected options
-                DriveLetter = (char)driveKvp?.Key,
-                IsFloppy = (driveKvp?.Value == UIElements.FloppyDriveString),
+                Drive = cmb_DriveLetter.SelectedItem as Drive,
 
                 DICParameters = txt_Parameters.Text,
 
-                System = systemKvp?.Value,
+                System = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem),
                 Type = cmb_MediaType.SelectedItem as MediaType?
             };
         }
@@ -274,23 +291,14 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
-
-            // If we're on a separator, go to the next item and return
-            if (systemKvp?.Value == null)
-            {
-                cmb_SystemType.SelectedIndex++;
-                return;
-            }
-
             // Get the selected system info
-            var selectedSystem = systemKvp?.Value;
+            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
 
             lbl_Status.Content = result.Message;
-            btn_StartStop.IsEnabled = result && (_drives.Count > 0 ? true : false);
+            btn_StartStop.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
             cmb_DriveSpeed.IsEnabled = selectedMediaType.DoesSupportDriveSpeed() && selectedSystem.DoesSupportDriveSpeed();
@@ -318,16 +326,16 @@ namespace DICUI
                 // Populate with the correct params for inputs (if we're not on the default option)
                 if (selectedSystem != KnownSystem.NONE && selectedMediaType != MediaType.NONE)
                 {
-                    var driveletter = cmb_DriveLetter.SelectedValue as KeyValuePair<char, string>?;
+                    Drive drive = cmb_DriveLetter.SelectedValue as Drive;
 
                     // If drive letter is invalid, skip this
-                    if (driveletter == null)
+                    if (drive == null)
                         return;
 
                     string command = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
                     List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(selectedSystem, selectedMediaType);
                     txt_Parameters.Text = command
-                        + " " + driveletter?.Key
+                        + " " + drive.Letter
                         + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
                         + (selectedMediaType != MediaType.Floppy
                             && selectedMediaType != MediaType.BluRay
@@ -413,18 +421,18 @@ namespace DICUI
         /// </summary>
         private void GetOutputNames()
         {
-            var driveKvp = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            var systemKvp = cmb_SystemType.SelectedItem as KeyValuePair<string, KnownSystem?>?;
+            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
+            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem);
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
-            if (driveKvp != null
-                && !String.IsNullOrWhiteSpace(driveKvp?.Value)
-                && driveKvp?.Value != UIElements.FloppyDriveString
-                && systemKvp != null
+            if (drive != null
+                && !String.IsNullOrWhiteSpace(drive.VolumeLabel)
+                && !drive.IsFloppy
+                && systemType != null
                 && mediaType != null)
             {
-                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, driveKvp?.Value);
-                txt_OutputFilename.Text = driveKvp?.Value + mediaType.Extension();
+                txt_OutputDirectory.Text = Path.Combine(_options.defaultOutputPath, drive.VolumeLabel);
+                txt_OutputFilename.Text = drive.VolumeLabel + mediaType.Extension();
             }
             else
             {
@@ -444,11 +452,9 @@ namespace DICUI
             cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
             // Get the drive letter from the selected item
-            var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
-            {
+            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
+            if (drive == null || drive.IsFloppy)
                 return;
-            }
 
             //Validators.GetDriveSpeed((char)selected?.Key);
             //Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
@@ -460,13 +466,12 @@ namespace DICUI
                 return;
             }
 
-            char driveLetter = (char)selected?.Key;
             Process childProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = _options.dicPath,
-                    Arguments = DICCommands.DriveSpeed + " " + driveLetter,
+                    Arguments = DICCommands.DriveSpeed + " " + drive.Letter,
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -499,14 +504,12 @@ namespace DICUI
         private void SetCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            var selected = cmb_DriveLetter.SelectedItem as KeyValuePair<char, string>?;
-            if (selected == null || (selected?.Value == UIElements.FloppyDriveString))
-            {
+            Drive drive = cmb_DriveLetter.SelectedItem as Drive;
+            if (drive == null || drive.IsFloppy)
                 return;
-            }
 
             // Get the current optical disc type
-            _currentMediaType = Validators.GetDiscType(selected?.Key);
+            _currentMediaType = Validators.GetDiscType(drive.Letter);
 
             // If we have an invalid current type, we don't care and return
             if (_currentMediaType == null || _currentMediaType == MediaType.NONE)

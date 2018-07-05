@@ -48,7 +48,13 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-            <ComboBox x:Name="cmb_SystemType" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="cmb_SystemType_SelectionChanged" />
+            <ComboBox x:Name="cmb_SystemType" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="cmb_SystemType_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <ComboBox x:Name="cmb_MediaType" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="cmb_MediaType_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -65,7 +71,13 @@
             <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
 
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged" />
+            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Letter}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
             <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged" />

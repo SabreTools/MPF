@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Windows.Data;
 using IMAPI2;
 using DICUI.Data;
+using static DICUI.Data.UIElements;
 
 namespace DICUI.Utilities
 {
@@ -44,11 +45,66 @@ namespace DICUI.Utilities
     /// </summary>
     public static class KnownSystemExtensions
     {
+        public static string Name(this KnownSystem? system)
+        {
+            return Converters.KnownSystemToString(system);
+        }
+
         public static bool DoesSupportDriveSpeed(this KnownSystem? system)
         {
             return system != KnownSystem.MicrosoftXBOX
                 && system != KnownSystem.MicrosoftXBOX360XDG2
                 && system != KnownSystem.MicrosoftXBOX360XDG3;
+        }
+
+        public static KnownSystemCategory Category(this KnownSystem? system)
+        {
+            if (system < KnownSystem.MarkerConsoleEnd)
+                return KnownSystemCategory.Console;
+            else if (system < KnownSystem.MarkerComputerEnd)
+                return KnownSystemCategory.Computer;
+            else if (system < KnownSystem.MarkerArcadeEnd)
+                return KnownSystemCategory.Arcade;
+            else if (system < KnownSystem.MarkerOtherEnd)
+                return KnownSystemCategory.Other;
+            else
+                return KnownSystemCategory.Custom;
+        }
+
+        public static bool IsMarker(this KnownSystem? system)
+        {
+            switch (system)
+            {
+                case KnownSystem.MarkerArcadeEnd:
+                case KnownSystem.MarkerComputerEnd:
+                case KnownSystem.MarkerConsoleEnd:
+                case KnownSystem.MarkerOtherEnd:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Extensions for KnownSystemCategory?
+    /// </summary>
+    public static class KnownSystemCategoryExtensions
+    {
+        /// <summary>
+        /// Get the string representation of a KnownSystemCategory
+        /// </summary>
+        public static string Name(this KnownSystemCategory? category)
+        {
+            switch (category)
+            {
+                case KnownSystemCategory.Arcade: return "Arcade";
+                case KnownSystemCategory.Computer: return "Computers";
+                case KnownSystemCategory.Console: return "Consoles";
+                case KnownSystemCategory.Other: return "Other";
+                case KnownSystemCategory.Custom: return "Custom";
+                default: return "";
+            }
         }
     }
 

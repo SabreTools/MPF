@@ -1,4 +1,5 @@
 ﻿using DICUI.Data;
+using DICUI.Utilities;
 using Xunit;
 
 namespace DICUI.Test
@@ -6,18 +7,18 @@ namespace DICUI.Test
     public class DumpEnvironmentTest
     {
         [Theory]
-        [InlineData(null, false, MediaType.NONE, false)]
-        [InlineData("", false, MediaType.NONE, false)]
-        [InlineData("cd F test.bin 8 /c2 20", false, MediaType.CD, true)]
-        [InlineData("fd A test.img", true, MediaType.Floppy, true)]
-        [InlineData("dvd X test.iso 8 /raw", false, MediaType.Floppy, false)]
-        [InlineData("stop D", false, MediaType.DVD, true)]
-        public void IsConfigurationValidTest(string parameters, bool isFloppy, MediaType? mediaType, bool expected)
+        [InlineData(null, 'D', false, MediaType.NONE, false)]
+        [InlineData("", 'D', false, MediaType.NONE, false)]
+        [InlineData("cd F test.bin 8 /c2 20", 'F', false, MediaType.CD, true)]
+        [InlineData("fd A test.img", 'A', true, MediaType.Floppy, true)]
+        [InlineData("dvd X test.iso 8 /raw", 'X', false, MediaType.Floppy, false)]
+        [InlineData("stop D", 'D', false, MediaType.DVD, true)]
+        public void IsConfigurationValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
             var env = new DumpEnvironment
             {
                 DICParameters = parameters,
-                IsFloppy = isFloppy,
+                Drive = isFloppy ? Drive.Floppy(letter) : Drive.Optical(letter, ""),
                 Type = mediaType,
             };
 
@@ -44,7 +45,7 @@ namespace DICUI.Test
             Assert.Equal(parameters, env.DICParameters);
             Assert.Equal(expectedMediaType, env.Type);
             Assert.Equal(expectedKnownSystem, env.System);
-            Assert.Equal(expectedDriveLetter, env.DriveLetter);
+            Assert.Equal(expectedDriveLetter, env.Drive.Letter);
             Assert.Equal(expectedOutputDirectory, env.OutputDirectory);
             Assert.Equal(expectedOutputFilename, env.OutputFilename);
         }
