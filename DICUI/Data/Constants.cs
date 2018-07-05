@@ -9,6 +9,9 @@ namespace DICUI.Data
     /// <summary>
     /// Variables for UI elements
     /// </summary>
+    /// <remarks>
+    /// TODO: Pull out anything not a const string from this class
+    /// </remarks>
     public static class UIElements
     {
         public const string StartDumping = "Start Dumping";

@@ -4,8 +4,8 @@ using System.Globalization;
 using System.Windows.Data;
 using IMAPI2;
 using DICUI.Data;
-using static DICUI.Data.UIElements;
 
+// TODO: Consider making the *Extensions classes into its own file
 namespace DICUI.Utilities
 {
     /// <summary>
@@ -52,9 +52,15 @@ namespace DICUI.Utilities
 
         public static bool DoesSupportDriveSpeed(this KnownSystem? system)
         {
-            return system != KnownSystem.MicrosoftXBOX
-                && system != KnownSystem.MicrosoftXBOX360XDG2
-                && system != KnownSystem.MicrosoftXBOX360XDG3;
+            switch (system)
+            {
+                case KnownSystem.MicrosoftXBOX:
+                case KnownSystem.MicrosoftXBOX360XDG2:
+                case KnownSystem.MicrosoftXBOX360XDG3:
+                    return false;
+                default:
+                    return true;
+            }
         }
 
         public static KnownSystemCategory Category(this KnownSystem? system)
@@ -98,12 +104,18 @@ namespace DICUI.Utilities
         {
             switch (category)
             {
-                case KnownSystemCategory.Arcade: return "Arcade";
-                case KnownSystemCategory.Computer: return "Computers";
-                case KnownSystemCategory.Console: return "Consoles";
-                case KnownSystemCategory.Other: return "Other";
-                case KnownSystemCategory.Custom: return "Custom";
-                default: return "";
+                case KnownSystemCategory.Arcade:
+                    return "Arcade";
+                case KnownSystemCategory.Computer:
+                    return "Computers";
+                case KnownSystemCategory.Console:
+                    return "Consoles";
+                case KnownSystemCategory.Other:
+                    return "Other";
+                case KnownSystemCategory.Custom:
+                    return "Custom";
+                default:
+                    return "";
             }
         }
     }
@@ -117,6 +129,8 @@ namespace DICUI.Utilities
         {
             if (value is MediaType?)
                 return ((MediaType?)value).Name();
+            else if (value is KnownSystem?)
+                return ((KnownSystem?)value).Name();
             else
                 return "";
         }

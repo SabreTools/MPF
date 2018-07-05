@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using IMAPI2;
 using DICUI.Data;
-using DICUI.External;
-using static DICUI.Data.UIElements;
 
 namespace DICUI.Utilities
 {
+    // TODO: Consider putting this in its own file, or with DumpEnvironment
+    // TODO: Investigate whether or not this could be a struct
     public class Drive
     {
         public char Letter { get; private set; }
@@ -389,13 +389,9 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Create a list of systems matched to their respective enums
+        /// Create a list of systems
         /// </summary>
-        /// <returns>Systems matched to enums, if possible</returns>
-        /// <remarks>
-        ///	If something has a "string, null" value, it should be assumed that it is a separator
-        /// </remarks>
-        /// TODO: Figure out a way that the sections can be generated more automatically
+        /// <returns>KnownSystems, if possible</returns>
         public static List<KnownSystem?> CreateListOfSystems()
         {
             return Enum.GetValues(typeof(KnownSystem))

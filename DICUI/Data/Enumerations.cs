@@ -3,7 +3,6 @@
     /// <summary>
     /// Known systems
     /// </summary>
-    /// <remarks>Ensure that Utilities methods are updated as well</remarks>
     public enum KnownSystem
     {
         NONE = 0,
@@ -137,7 +136,7 @@
 
         #endregion
 
-        Custom = 0x0EADBEEF
+        Custom,
     }
 
     /// <summary>

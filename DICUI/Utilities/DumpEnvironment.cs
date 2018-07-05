@@ -54,7 +54,10 @@ namespace DICUI.Utilities
             if (System == KnownSystem.Custom)
             {
                 Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
-                Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
+                if (Type == MediaType.Floppy)
+                    Drive = Drive.Floppy(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
+                else
+                    Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
                 OutputDirectory = Path.GetDirectoryName(path);
                 OutputFilename = Path.GetFileName(path);
             }
@@ -257,7 +260,7 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(DriveLetter) ?? "";
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes"; // TODO: This needs to be verified
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = "No";
@@ -273,8 +276,8 @@ namespace DICUI.Utilities
                             
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(DriveLetter) ?? "";
-                            mappings[Template.VersionField] = GetPlayStation2Version(DriveLetter) ?? "";
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
+                            mappings[Template.VersionField] = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
                     }
 
@@ -355,8 +358,8 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(DriveLetter) ?? "";
-                            mappings[Template.VersionField] = GetPlayStation2Version(DriveLetter) ?? "";
+                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
+                            mappings[Template.VersionField] = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
                     }
                     break;
@@ -730,7 +733,7 @@ namespace DICUI.Utilities
                 return "(CHECK WITH PROTECTIONID)";
             }
 
-            return Task.Run(() => Tasks.RunProtectionScan(DriveLetter + ":\\")).Result;
+            return Task.Run(() => Tasks.RunProtectionScan(Drive.Letter + ":\\")).Result;
         }
 
         /// <summary>

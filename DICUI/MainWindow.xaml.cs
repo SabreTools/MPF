@@ -9,7 +9,6 @@ using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
-using static DICUI.Data.UIElements;
 
 namespace DICUI
 {
@@ -81,7 +80,7 @@ namespace DICUI
         private void cmb_SystemType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If we're on a separator, go to the next item and return
-            if ((cmb_SystemType.SelectedItem as KnownSystemComboBoxItem).IsHeader())
+            if ((cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem).IsHeader())
             {
                 cmb_SystemType.SelectedIndex++;
                 return;
@@ -158,7 +157,7 @@ namespace DICUI
         /// </summary>
         private void PopulateMediaTypeAccordingToChosenSystem()
         {
-            KnownSystem? currentSystem = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
+            KnownSystem? currentSystem = cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem;
 
             if (currentSystem != null)
             {
@@ -192,12 +191,12 @@ namespace DICUI
                         .ToList()
                 );
 
-            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
+            List<UIElements.KnownSystemComboBoxItem> comboBoxItems = new List<UIElements.KnownSystemComboBoxItem>();
 
             foreach (var group in mapping)
             {
-                comboBoxItems.Add(new KnownSystemComboBoxItem(group.Key));
-                group.Value.ForEach(system => comboBoxItems.Add(new KnownSystemComboBoxItem(system)));
+                comboBoxItems.Add(new UIElements.KnownSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => comboBoxItems.Add(new UIElements.KnownSystemComboBoxItem(system)));
             }
 
             cmb_SystemType.ItemsSource = comboBoxItems;
@@ -266,7 +265,7 @@ namespace DICUI
 
                 DICParameters = txt_Parameters.Text,
 
-                System = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem),
+                System = (KnownSystem?)(cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem),
                 Type = cmb_MediaType.SelectedItem as MediaType?
             };
         }
@@ -297,7 +296,7 @@ namespace DICUI
         private void EnsureDiscInformation()
         {
             // Get the selected system info
-            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
+            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem)  ?? KnownSystem.NONE;
             MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
 
             Result result = GetSupportStatus(selectedSystem, selectedMediaType);
@@ -427,7 +426,7 @@ namespace DICUI
         private void GetOutputNames()
         {
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
-            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem);
+            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as UIElements.KnownSystemComboBoxItem);
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
             if (drive != null
@@ -452,7 +451,7 @@ namespace DICUI
         private async void ScanAndShowProtection()
         {
             var env = DetermineEnvironment();
-            if (env.DriveLetter != default(char))
+            if (env.Drive.Letter != default(char))
             {
                 var tempContent = lbl_Status.Content;
                 lbl_Status.Content = "Scanning for copy protection... this might take a while!";
@@ -460,7 +459,7 @@ namespace DICUI
                 btn_Search.IsEnabled = false;
                 btn_Scan.IsEnabled = false;
 
-                string protections = await Tasks.RunProtectionScan(env.DriveLetter + ":\\");
+                string protections = await Tasks.RunProtectionScan(env.Drive.Letter + ":\\");
                 MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 lbl_Status.Content = tempContent;
