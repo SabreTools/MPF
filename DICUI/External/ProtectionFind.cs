@@ -340,13 +340,19 @@ namespace DICUI.External
 
             #region Textfile Content Checks
 
-            // No-op
+            if (extension == "txt" || extension == "rtf" || extension == "doc" || extension == "docx")
+            {
+                // No-op
+            }
 
             #endregion
 
             #region Archive Content Checks
 
-            // No-op
+            if (extension == "7z" || extension == "cab" || extension == "rar" || extension == "zip")
+            {
+                // No-op
+            }
 
             #endregion
 
