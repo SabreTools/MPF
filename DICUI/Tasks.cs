@@ -40,6 +40,9 @@ namespace DICUI
     /// <summary>
     /// Class containing dumping tasks
     /// </summary>
+    /// <remarks>
+    /// TODO: Everything that uses DumpEnvironment as a sole parameter could be moved to DumpEnvironment and made instanced
+    /// </remarks>
     public class Tasks
     {
         /// <summary>
