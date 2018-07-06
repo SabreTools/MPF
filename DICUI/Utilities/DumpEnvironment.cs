@@ -55,14 +55,44 @@ namespace DICUI.Utilities
         public Process dicProcess;
 
         /// <summary>
-        /// Checks if the configuration is valid
+        /// Checks if the parameters are valid
         /// </summary>
         /// <returns>True if the configuration is valid, false otherwise</returns>
-        public bool IsConfigurationValid()
+        public bool ParametersValid()
         {
             return !((string.IsNullOrWhiteSpace(DICParameters)
             || !Validators.ValidateParameters(DICParameters)
             || (IsFloppy ^ Type == MediaType.Floppy)));
+        }
+
+        /// <summary>
+        /// Validate the current environment is ready for a dump
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        public Result IsValidForDump()
+        {
+            // Validate that everything is good
+            if (ParametersValid())
+                return Result.Failure("Error! Current configuration is not supported!");
+
+            AdjustForCustomConfiguration();
+            FixOutputPaths();
+
+            // Validate that the required program exists
+            if (!File.Exists(DICPath))
+                return Result.Failure("Error! Could not find DiscImageCreator!");
+
+            // If a complete dump already exists
+            if (FoundAllFiles())
+            {
+                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                {
+                    return Result.Failure("Dumping aborted!");
+                }
+            }
+
+            return Result.Success();
         }
 
         /// <summary>

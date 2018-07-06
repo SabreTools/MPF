@@ -159,7 +159,7 @@ namespace DICUI
         /// </summary>
         public static async Task<Result> StartDumping(DumpEnvironment env)
         {
-            Result result = ValidateEnvironment(env);
+            Result result = env.IsValidForDump();
 
             // is something is wrong in environment return
             if (!result)
@@ -184,37 +184,6 @@ namespace DICUI
             result = Tasks.VerifyAndSaveDumpOutput(env);
 
             return result;
-        }
-
-        /// <summary>
-        /// Validate the current DumpEnvironment
-        /// </summary>
-        /// <param name="env">DumpEnvirionment containing all required information</param>
-        /// <returns>Result instance with the outcome</returns>
-        private static Result ValidateEnvironment(DumpEnvironment env)
-        {
-            // Validate that everything is good
-            if (!env.IsConfigurationValid())
-                return Result.Failure("Error! Current configuration is not supported!");
-
-            env.AdjustForCustomConfiguration();
-            env.FixOutputPaths();
-
-            // Validate that the required program exists
-            if (!File.Exists(env.DICPath))
-                return Result.Failure("Error! Could not find DiscImageCreator!");
-
-            // If a complete dump already exists
-            if (env.FoundAllFiles())
-            {
-                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-                {
-                    return Result.Failure("Dumping aborted!");
-                }
-            }
-
-            return Result.Success();
         }
 
         /// <summary>
