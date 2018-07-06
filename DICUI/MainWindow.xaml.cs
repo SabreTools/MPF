@@ -103,6 +103,7 @@ namespace DICUI
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            CacheCurrentDiscType();
             SetCurrentDiscType();
             GetOutputNames();
             SetSupportedDriveSpeed();
@@ -303,21 +304,13 @@ namespace DICUI
             if (_env.Type == null)
                 _env.Type = MediaType.NONE;
 
+            // Get the status to write out
             Result result = Validators.GetSupportStatus(_env.System, _env.Type);
-            string resultMessage = result.Message;
-            if (result && _currentMediaType != null && _currentMediaType != MediaType.NONE)
-            {
-                // If the current media type is still supported, change the index to that
-                int index = _mediaTypes.IndexOf(_currentMediaType);
-                if (index != -1 && cmb_MediaType.SelectedIndex != index)
-                    cmb_MediaType.SelectedIndex = index;
+            lbl_Status.Content = result.Message;
 
-                // Otherwise, we tell the user that the disc/system combo is not supported
-                else
-                    resultMessage = $"Disc of type {_currentMediaType.Name()} found, but the current system does not support it!";
-            };
+            // Set the index for the current disc type
+            SetCurrentDiscType();
 
-            lbl_Status.Content = resultMessage;
             btn_StartStop.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
@@ -430,9 +423,9 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Set the current disc type in the combo box
+        /// Cache the current disc type to internal variable
         /// </summary>
-        private void SetCurrentDiscType()
+        private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
@@ -441,23 +434,23 @@ namespace DICUI
 
             // Get the current optical disc type
             _currentMediaType = Validators.GetDiscType(drive.Letter);
+        }
 
+        /// <summary>
+        /// Set the current disc type in the combo box
+        /// </summary>
+        private void SetCurrentDiscType()
+        {
             // If we have an invalid current type, we don't care and return
             if (_currentMediaType == null || _currentMediaType == MediaType.NONE)
-            {
                 return;
-            }
 
             // Now set the selected item, if possible
             int index = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
             if (index != -1)
-            {
                 cmb_MediaType.SelectedIndex = index;
-            }
             else
-            {
                 lbl_Status.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
-            }
         }
 
         #endregion
