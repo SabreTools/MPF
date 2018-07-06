@@ -215,8 +215,8 @@ namespace DICUI.Utilities
             // TODO: don't return, just keep generating output from DIC
             /*if (!result.Item1)
             {
-                lbl_Status.Content = result.Item2;
-                btn_StartStop.Content = UIElements.StartDumping;
+                StatusLabel.Content = result.Item2;
+                StartStopButton.Content = UIElements.StartDumping;
                 return;
             }*/
 

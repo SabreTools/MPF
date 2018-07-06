@@ -26,7 +26,7 @@ namespace DICUI
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
-            dialog.InitialDirectory = System.AppDomain.CurrentDomain.BaseDirectory;
+            dialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
             dialog.Filter = "Executables (*.exe)|*.exe";
             dialog.FilterIndex = 0;
             dialog.RestoreDirectory = true;
@@ -51,7 +51,7 @@ namespace DICUI
             return FindName("txt_" + name) as TextBox;
         }
 
-        private void btn_BrowseForPath_Click(object sender, EventArgs e)
+        private void BrowseForPathClick(object sender, EventArgs e)
         {
             Button button = sender as Button;
             // strips button prefix to obtain the setting name
@@ -100,8 +100,8 @@ namespace DICUI
         {
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
 
-            slider_DumpSpeedCD.Value = _options.preferredDumpSpeedCD;
-            slider_DumpSpeedDVD.Value = _options.preferredDumpSpeedDVD;
+            DumpSpeedCDSlider.Value = _options.preferredDumpSpeedCD;
+            DumpSpeedDVDSlider.Value = _options.preferredDumpSpeedDVD;
         }
 
         #region Event Handlers
@@ -110,8 +110,8 @@ namespace DICUI
         {
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
 
-            _options.preferredDumpSpeedCD = Convert.ToInt32(slider_DumpSpeedCD.Value);
-            _options.preferredDumpSpeedDVD = Convert.ToInt32(slider_DumpSpeedDVD.Value);
+            _options.preferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
+            _options.preferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
 
             _options.Save();
             Hide();
