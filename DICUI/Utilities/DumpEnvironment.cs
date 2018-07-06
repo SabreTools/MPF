@@ -1328,7 +1328,7 @@ namespace DICUI.Utilities
         private Result IsValidForDump()
         {
             // Validate that everything is good
-            if (ParametersValid())
+            if (!ParametersValid())
                 return Result.Failure("Error! Current configuration is not supported!");
 
             AdjustForCustomConfiguration();
