@@ -84,7 +84,7 @@ namespace DICUI
                 return;
             }
 
-            PopulateMediaTypeAccordingToChosenSystem();
+            PopulateMediaType();
         }
 
         private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -152,9 +152,9 @@ namespace DICUI
         #region Helpers
 
         /// <summary>
-        /// Populate disc type according to system type
+        /// Populate media type according to system type
         /// </summary>
-        private void PopulateMediaTypeAccordingToChosenSystem()
+        private void PopulateMediaType()
         {
             KnownSystem? currentSystem = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
 
