@@ -65,11 +65,11 @@ namespace DICUI
             }
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
-                Tasks.CancelDumping(_env);
+                _env.CancelDumping();
 
                 if (chk_EjectWhenDone.IsChecked == true)
                 {
-                    Tasks.EjectDisc(_env);
+                    _env.EjectDisc();
                 }
             }
         }
@@ -293,14 +293,14 @@ namespace DICUI
             btn_StartStop.Content = UIElements.StopDumping;
             lbl_Status.Content = "Beginning dumping process";
 
-            var task = Tasks.StartDumping(_env);
+            var task = _env.StartDumping();
             Result result = await task;
 
             lbl_Status.Content = result ? "Dumping complete!" : result.Message;
             btn_StartStop.Content = UIElements.StartDumping;
 
             if (chk_EjectWhenDone.IsChecked == true)
-                Tasks.EjectDisc(_env);
+                _env.EjectDisc();
         }
 
         /// <summary>
@@ -437,10 +437,10 @@ namespace DICUI
             cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
             // Get the current environment
-            var env = DetermineEnvironment();
+            _env = DetermineEnvironment();
 
             // Get the drive speed
-            int speed = await Tasks.GetDiscSpeed(env);
+            int speed = await _env.GetDiscSpeed();
 
             // If we have an invalid speed, we need to jump out
             // TODO: Should we disable dumping in this case?
