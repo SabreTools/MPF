@@ -771,7 +771,7 @@ namespace DICUI.Utilities
                 return "(CHECK WITH PROTECTIONID)";
             }
 
-            return Task.Run(() => Tasks.RunProtectionScan(Drive.Letter + ":\\")).Result;
+            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).Result;
         }
 
         /// <summary>
