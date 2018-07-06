@@ -144,7 +144,7 @@ namespace DICUI
         public void OnOptionsUpdated()
         {
             GetOutputNames();
-            //TODO: here we should adjust maximum speed if it changed in options
+            SetSupportedDriveSpeed();
         }
 
         #endregion
