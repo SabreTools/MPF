@@ -24,11 +24,19 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" HorizontalAlignment="Stretch" IsLocked="True">
-            <ToolBar>
-                <Button x:Name="tbr_Options" Content="Options" Click="tbr_Options_Click" />
-            </ToolBar>
-        </ToolBarTray>
+        <StackPanel VerticalAlignment="Top" Grid.ColumnSpan="4">
+            <Menu Width="Auto" Height="20" >
+                <MenuItem Header="_File">
+                    <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" />
+                </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left" Width="140" Click="tbr_Options_Click"/>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem x:Name="About" Header="&amp;About" HorizontalAlignment="Left" Width="140"/>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
         <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,4.6,5.2,4.8" HorizontalAlignment="Stretch" Header="Controls"/>
         <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5.2,5.2,4.8" HorizontalAlignment="Stretch" Header="Status"/>
