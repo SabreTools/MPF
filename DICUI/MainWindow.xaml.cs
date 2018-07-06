@@ -370,7 +370,7 @@ namespace DICUI
         private void GetOutputNames()
         {
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
-            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem);
+            KnownSystem? systemType = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
             if (drive != null
