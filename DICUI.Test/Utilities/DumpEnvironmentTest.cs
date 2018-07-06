@@ -13,7 +13,7 @@ namespace DICUI.Test
         [InlineData("fd A test.img", 'A', true, MediaType.Floppy, true)]
         [InlineData("dvd X test.iso 8 /raw", 'X', false, MediaType.Floppy, false)]
         [InlineData("stop D", 'D', false, MediaType.DVD, true)]
-        public void IsConfigurationValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
+        public void ParametersValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
             var env = new DumpEnvironment
             {
@@ -22,7 +22,7 @@ namespace DICUI.Test
                 Type = mediaType,
             };
 
-            bool actual = env.IsConfigurationValid();
+            bool actual = env.ParametersValid();
             Assert.Equal(expected, actual);
         }
 
@@ -119,6 +119,27 @@ namespace DICUI.Test
 
         [Fact]
         public void WriteOutputDataTest()
+        {
+            // TODO: Implement
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void EjectDiscTest()
+        {
+            // TODO: Implement
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void CancelDumpingTest()
+        {
+            // TODO: Implement
+            Assert.True(true);
+        }
+
+        [Fact]
+        public void StartDumpingTest()
         {
             // TODO: Implement
             Assert.True(true);

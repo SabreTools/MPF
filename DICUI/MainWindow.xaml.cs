@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
@@ -16,34 +14,17 @@ namespace DICUI
     public partial class MainWindow : Window
     {
         // Private UI-related variables
-        private List<Drive> _drives { get; set; }
-        private MediaType? _currentMediaType { get; set; }
-        private List<KnownSystem?> _systems { get; set; }
-        private List<MediaType?> _mediaTypes { get; set; }
+        private List<Drive> _drives;
+        private MediaType? _currentMediaType;
+        private List<KnownSystem?> _systems;
+        private List<MediaType?> _mediaTypes;
+        private bool _alreadyShown;
 
         private DumpEnvironment _env;
 
         // Option related
         private Options _options;
         private OptionsWindow _optionsWindow;
-
-        bool _shown;
-
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-
-            if (_shown)
-                return;
-
-            _shown = true;
-
-            // Populate the list of systems
-            PopulateSystems();
-
-            // Populate the list of drives
-            PopulateDrives();
-        }
 
         public MainWindow()
         {
@@ -53,10 +34,31 @@ namespace DICUI
             _options = new Options();
             _options.Load();
 
-
+            // Disable buttons until we load fully
+            btn_StartStop.IsEnabled = false;
+            btn_Search.IsEnabled = false;
+            btn_Scan.IsEnabled = false;
         }
 
         #region Events
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            if (_alreadyShown)
+                return;
+
+            _alreadyShown = true;
+
+            // Populate the list of systems
+            lbl_Status.Content = "Creating system list, please wait!";
+            PopulateSystems();
+
+            // Populate the list of drives
+            lbl_Status.Content = "Creating drive list, please wait!";
+            PopulateDrives();
+        }
 
         private void btn_StartStop_Click(object sender, RoutedEventArgs e)
         {
@@ -67,12 +69,11 @@ namespace DICUI
             }
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
-                Tasks.CancelDumping(_env);
+                _env.CancelDumping();
+                btn_Scan.IsEnabled = true;
 
                 if (chk_EjectWhenDone.IsChecked == true)
-                {
-                    Tasks.EjectDisc(_env);
-                }
+                    _env.EjectDisc();
             }
         }
 
@@ -101,7 +102,7 @@ namespace DICUI
                 return;
             }
 
-            PopulateMediaTypeAccordingToChosenSystem();
+            PopulateMediaType();
         }
 
         private void cmb_MediaType_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -119,6 +120,7 @@ namespace DICUI
 
         private void cmb_DriveLetter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            CacheCurrentDiscType();
             SetCurrentDiscType();
             GetOutputNames();
             SetSupportedDriveSpeed();
@@ -129,7 +131,33 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
-        private void tbr_Options_Click(object sender, RoutedEventArgs e)
+        private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
+        private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
+        // Toolbar Events
+
+        private void AppExitClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void AboutClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"ReignStumble - Project Lead / UI Design{Environment.NewLine}" +
+                $"darksabre76 - Project Co-Lead / Backend Design{Environment.NewLine}" +
+                $"Jakz - Feature Contributor{Environment.NewLine}" +
+                $"NHellFire - Feature Contributor{Environment.NewLine}" +
+                $"Dizzzy - Concept/Ideas/Beta tester{Environment.NewLine}", "About", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OptionsClick(object sender, RoutedEventArgs e)
         {
             // lazy initialization
             if (_optionsWindow == null)
@@ -147,20 +175,10 @@ namespace DICUI
             _optionsWindow.Show();
         }
 
-        private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EnsureDiscInformation();
-        }
-
-        private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EnsureDiscInformation();
-        }
-
         public void OnOptionsUpdated()
         {
             GetOutputNames();
-            //TODO: here we should adjust maximum speed if it changed in options
+            SetSupportedDriveSpeed();
         }
 
         #endregion
@@ -168,9 +186,9 @@ namespace DICUI
         #region Helpers
 
         /// <summary>
-        /// Populate disc type according to system type
+        /// Populate media type according to system type
         /// </summary>
-        private void PopulateMediaTypeAccordingToChosenSystem()
+        private void PopulateMediaType()
         {
             KnownSystem? currentSystem = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
 
@@ -293,16 +311,17 @@ namespace DICUI
             _env = DetermineEnvironment();
 
             btn_StartStop.Content = UIElements.StopDumping;
+            btn_Scan.IsEnabled = false;
             lbl_Status.Content = "Beginning dumping process";
 
-            var task = Tasks.StartDumping(_env);
-            Result result = await task;
+            Result result = await _env.StartDumping();
 
             lbl_Status.Content = result ? "Dumping complete!" : result.Message;
             btn_StartStop.Content = UIElements.StartDumping;
+            btn_Scan.IsEnabled = true;
 
             if (chk_EjectWhenDone.IsChecked == true)
-                Tasks.EjectDisc(_env);
+                _env.EjectDisc();
         }
 
         /// <summary>
@@ -310,32 +329,29 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            // Get the selected system info
-            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem) ?? KnownSystem.NONE;
-            MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
+            // Get the current environment information
+            _env = DetermineEnvironment();
 
-            Result result = Validators.GetSupportStatus(selectedSystem, selectedMediaType);
-            string resultMessage = result.Message;
-            if (result && _currentMediaType != null && _currentMediaType != MediaType.NONE)
-            {
-                // If the current media type is still supported, change the index to that
-                int index = _mediaTypes.IndexOf(_currentMediaType);
-                if (index != -1 && cmb_MediaType.SelectedIndex != index)
-                    cmb_MediaType.SelectedIndex = index;
+            // Take care of null cases
+            if (_env.System == null)
+                _env.System = KnownSystem.NONE;
+            if (_env.Type == null)
+                _env.Type = MediaType.NONE;
 
-                // Otherwise, we tell the user that the disc/system combo is not supported
-                else
-                    resultMessage = $"Disc of type {_currentMediaType.Name()} found, but the current system does not support it!";
-            };
+            // Get the status to write out
+            Result result = Validators.GetSupportStatus(_env.System, _env.Type);
+            lbl_Status.Content = result.Message;
 
-            lbl_Status.Content = resultMessage;
+            // Set the index for the current disc type
+            SetCurrentDiscType();
+
             btn_StartStop.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
-            cmb_DriveSpeed.IsEnabled = selectedMediaType.DoesSupportDriveSpeed() && selectedSystem.DoesSupportDriveSpeed();
+            cmb_DriveSpeed.IsEnabled = _env.Type.DoesSupportDriveSpeed() && _env.System.DoesSupportDriveSpeed();
 
             // Special case for Custom input
-            if (selectedSystem == KnownSystem.Custom)
+            if (_env.System == KnownSystem.Custom)
             {
                 txt_Parameters.IsEnabled = true;
                 txt_OutputFilename.IsEnabled = false;
@@ -354,28 +370,10 @@ namespace DICUI
                 btn_OutputDirectoryBrowse.IsEnabled = true;
                 cmb_DriveLetter.IsEnabled = true;
 
-                // Populate with the correct params for inputs (if we're not on the default option)
-                if (selectedSystem != KnownSystem.NONE && selectedMediaType != MediaType.NONE)
-                {
-                    Drive drive = cmb_DriveLetter.SelectedValue as Drive;
-
-                    // If drive letter is invalid, skip this
-                    if (drive == null)
-                        return;
-
-                    string command = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
-                    List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(selectedSystem, selectedMediaType);
-                    txt_Parameters.Text = command
-                        + " " + drive.Letter
-                        + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
-                        + (selectedMediaType != MediaType.Floppy
-                            && selectedMediaType != MediaType.BluRay
-                            && selectedSystem != KnownSystem.MicrosoftXBOX
-                            && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
-                            && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
-                                ? (int?)cmb_DriveSpeed.SelectedItem + " " : "")
-                        + string.Join(" ", defaultParams);
-                }
+                // Generate the full parameters from the environment
+                string generated = _env.GetFullParameters((int?)cmb_DriveSpeed.SelectedItem);
+                if (generated != null)
+                    txt_Parameters.Text = generated;
             }
         }
 
@@ -385,7 +383,7 @@ namespace DICUI
         private void GetOutputNames()
         {
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
-            KnownSystem? systemType = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem);
+            KnownSystem? systemType = cmb_SystemType.SelectedItem as KnownSystemComboBoxItem;
             MediaType? mediaType = cmb_MediaType.SelectedItem as MediaType?;
 
             if (drive != null
@@ -418,7 +416,7 @@ namespace DICUI
                 btn_Search.IsEnabled = false;
                 btn_Scan.IsEnabled = false;
 
-                string protections = await Tasks.RunProtectionScan(env.Drive.Letter + ":\\");
+                string protections = await Validators.RunProtectionScanOnPath(env.Drive.Letter + ":\\");
                 MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 lbl_Status.Content = tempContent;
@@ -439,10 +437,10 @@ namespace DICUI
             cmb_DriveSpeed.SelectedIndex = values.Count / 2;
 
             // Get the current environment
-            var env = DetermineEnvironment();
+            _env = DetermineEnvironment();
 
             // Get the drive speed
-            int speed = await Tasks.GetDiscSpeed(env);
+            int speed = await _env.GetDiscSpeed();
 
             // If we have an invalid speed, we need to jump out
             // TODO: Should we disable dumping in this case?
@@ -459,9 +457,9 @@ namespace DICUI
         }
 
         /// <summary>
-        /// Set the current disc type in the combo box
+        /// Cache the current disc type to internal variable
         /// </summary>
-        private void SetCurrentDiscType()
+        private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
             Drive drive = cmb_DriveLetter.SelectedItem as Drive;
@@ -470,35 +468,25 @@ namespace DICUI
 
             // Get the current optical disc type
             _currentMediaType = Validators.GetDiscType(drive.Letter);
+        }
 
+        /// <summary>
+        /// Set the current disc type in the combo box
+        /// </summary>
+        private void SetCurrentDiscType()
+        {
             // If we have an invalid current type, we don't care and return
             if (_currentMediaType == null || _currentMediaType == MediaType.NONE)
-            {
                 return;
-            }
 
             // Now set the selected item, if possible
             int index = _mediaTypes.FindIndex(kvp => kvp.Value == _currentMediaType);
             if (index != -1)
-            {
                 cmb_MediaType.SelectedIndex = index;
-            }
             else
-            {
                 lbl_Status.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
-            }
         }
 
         #endregion
-
-        private void AppExit_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-
-        private void About_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Hello, world!", "My App", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
     }
 }
