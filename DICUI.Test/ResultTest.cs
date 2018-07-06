@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using DICUI.Utilities;
+using Xunit;
 
 namespace DICUI.Test
 {

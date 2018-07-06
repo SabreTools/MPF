@@ -402,7 +402,7 @@ namespace DICUI
                 btn_Search.IsEnabled = false;
                 btn_Scan.IsEnabled = false;
 
-                string protections = await Tasks.RunProtectionScan(env.Drive.Letter + ":\\");
+                string protections = await Validators.RunProtectionScanOnPath(env.Drive.Letter + ":\\");
                 MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 lbl_Status.Content = tempContent;

@@ -5,8 +5,10 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using IMAPI2;
 using DICUI.Data;
+using DICUI.External;
 
 namespace DICUI.Utilities
 {
@@ -430,6 +432,111 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Determine the base flags to use for checking a commandline
+        /// </summary>
+        /// <param name="parameters">Parameters as a string to check</param>
+        /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
+        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
+        /// <param name="letter">Output string containing the found drive letter</param>
+        /// <param name="path">Output string containing the found path</param>
+        /// <returns>False on error (and all outputs set to null), true otherwise</returns>
+        public static bool DetermineFlags(string parameters, out MediaType? type, out KnownSystem? system, out string letter, out string path)
+        {
+            // Populate all output variables with null
+            type = null; system = null; letter = null; path = null;
+
+            // The string has to be valid by itself first
+            if (String.IsNullOrWhiteSpace(parameters))
+            {
+                return false;
+            }
+
+            // Now split the string into parts for easier validation
+            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
+            parameters = parameters.Trim();
+            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Select(m => m.Value)
+                .ToList();
+
+            type = Converters.BaseCommmandToMediaType(parts[0]);
+            system = Converters.BaseCommandToKnownSystem(parts[0]);
+
+            // Determine what the commandline should look like given the first item
+            switch (parts[0])
+            {
+                case DICCommands.CompactDisc:
+                case DICCommands.GDROM:
+                case DICCommands.Swap:
+                case DICCommands.Data:
+                case DICCommands.Audio:
+                case DICCommands.DigitalVideoDisc:
+                case DICCommands.BluRay:
+                case DICCommands.XBOX:
+                case DICCommands.Floppy:
+                    if (!IsValidDriveLetter(parts[1]))
+                    {
+                        return false;
+                    }
+                    letter = parts[1];
+
+                    if (IsFlag(parts[2]))
+                    {
+                        return false;
+                    }
+                    path = parts[2].Trim('\"');
+
+                    // Special case for GameCube/Wii
+                    if (parts.Contains(DICFlags.Raw))
+                    {
+                        type = MediaType.GameCubeGameDisc;
+                        system = KnownSystem.NintendoGameCube;
+                    }
+                    // Special case for PlayStation
+                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
+                        || parts.Contains(DICFlags.ScanAntiMod))
+                    {
+                        type = MediaType.CD;
+                        system = KnownSystem.SonyPlayStation;
+                    }
+                    // Special case for Saturn
+                    else if (parts.Contains(DICFlags.SeventyFour))
+                    {
+                        type = MediaType.CD;
+                        system = KnownSystem.SegaSaturn;
+                    }
+
+                    break;
+                case DICCommands.Stop:
+                case DICCommands.Start:
+                case DICCommands.Eject:
+                case DICCommands.Close:
+                case DICCommands.Reset:
+                case DICCommands.DriveSpeed:
+                    if (!IsValidDriveLetter(parts[1]))
+                    {
+                        return false;
+                    }
+                    letter = parts[1];
+
+                    break;
+                case DICCommands.Sub:
+                case DICCommands.MDS:
+                    if (IsFlag(parts[1]))
+                    {
+                        return false;
+                    }
+                    path = parts[1].Trim('\"');
+
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Get the current disc type from drive letter
         /// </summary>
         /// <param name="driveLetter"></param>
@@ -658,7 +765,6 @@ namespace DICUI.Utilities
 
             return -1;
         }
-
 
         /// <summary>
         /// Verify that, given a system and a media type, they are correct
@@ -1115,108 +1221,21 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Determine the base flags to use for checking a commandline
+        /// Run protection scan on a given dump environment
         /// </summary>
-        /// <param name="parameters">Parameters as a string to check</param>
-        /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
-        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
-        /// <param name="letter">Output string containing the found drive letter</param>
-        /// <param name="path">Output string containing the found path</param>
-        /// <returns>False on error (and all outputs set to null), true otherwise</returns>
-        public static bool DetermineFlags(string parameters, out MediaType? type, out KnownSystem? system, out string letter, out string path)
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Copy protection detected in the envirionment, if any</returns>
+        public static async Task<string> RunProtectionScanOnPath(string path)
         {
-            // Populate all output variables with null
-            type = null; system = null; letter = null; path = null;
-
-            // The string has to be valid by itself first
-            if (String.IsNullOrWhiteSpace(parameters))
+            var found = await Task.Run(() =>
             {
-                return false;
-            }
+                return ProtectionFind.Scan(path);
+            });
 
-            // Now split the string into parts for easier validation
-            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters.Trim();
-            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
-                .Cast<Match>()
-                .Select(m => m.Value)
-                .ToList();
+            if (found == null)
+                return "None found";
 
-            type = Converters.BaseCommmandToMediaType(parts[0]);
-            system = Converters.BaseCommandToKnownSystem(parts[0]);
-
-            // Determine what the commandline should look like given the first item
-            switch (parts[0])
-            {
-                case DICCommands.CompactDisc:
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
-                case DICCommands.Data:
-                case DICCommands.Audio:
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.BluRay:
-                case DICCommands.XBOX:
-                case DICCommands.Floppy:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
-                        return false;
-                    }
-                    letter = parts[1];
-
-                    if (IsFlag(parts[2]))
-                    {
-                        return false;
-                    }
-                    path = parts[2].Trim('\"');
-
-                    // Special case for GameCube/Wii
-                    if (parts.Contains(DICFlags.Raw))
-                    {
-                        type = MediaType.GameCubeGameDisc;
-                        system = KnownSystem.NintendoGameCube;
-                    }
-                    // Special case for PlayStation
-                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
-                        || parts.Contains(DICFlags.ScanAntiMod))
-                    {
-                        type = MediaType.CD;
-                        system = KnownSystem.SonyPlayStation;
-                    }
-                    // Special case for Saturn
-                    else if (parts.Contains(DICFlags.SeventyFour))
-                    {
-                        type = MediaType.CD;
-                        system = KnownSystem.SegaSaturn;
-                    }
-
-                    break;
-                case DICCommands.Stop:
-                case DICCommands.Start:
-                case DICCommands.Eject:
-                case DICCommands.Close:
-                case DICCommands.Reset:
-                case DICCommands.DriveSpeed:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
-                        return false;
-                    }
-                    letter = parts[1];
-
-                    break;
-                case DICCommands.Sub:
-                case DICCommands.MDS:
-                    if (IsFlag(parts[1]))
-                    {
-                        return false;
-                    }
-                    path = parts[1].Trim('\"');
-
-                    break;
-                default:
-                    return false;
-            }
-
-            return true;
+            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
         }
     }
 }
