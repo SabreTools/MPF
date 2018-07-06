@@ -308,11 +308,16 @@ namespace DICUI
         /// </summary>
         private void EnsureDiscInformation()
         {
-            // Get the selected system info
-            KnownSystem? selectedSystem = (KnownSystem?)(cmb_SystemType.SelectedItem as KnownSystemComboBoxItem) ?? KnownSystem.NONE;
-            MediaType? selectedMediaType = cmb_MediaType.SelectedItem as MediaType? ?? MediaType.NONE;
+            // Get the current environment information
+            _env = DetermineEnvironment();
 
-            Result result = Validators.GetSupportStatus(selectedSystem, selectedMediaType);
+            // Take care of null cases
+            if (_env.System == null)
+                _env.System = KnownSystem.NONE;
+            if (_env.Type == null)
+                _env.Type = MediaType.NONE;
+
+            Result result = Validators.GetSupportStatus(_env.System, _env.Type);
             string resultMessage = result.Message;
             if (result && _currentMediaType != null && _currentMediaType != MediaType.NONE)
             {
@@ -330,10 +335,10 @@ namespace DICUI
             btn_StartStop.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
-            cmb_DriveSpeed.IsEnabled = selectedMediaType.DoesSupportDriveSpeed() && selectedSystem.DoesSupportDriveSpeed();
+            cmb_DriveSpeed.IsEnabled = _env.Type.DoesSupportDriveSpeed() && _env.System.DoesSupportDriveSpeed();
 
             // Special case for Custom input
-            if (selectedSystem == KnownSystem.Custom)
+            if (_env.System == KnownSystem.Custom)
             {
                 txt_Parameters.IsEnabled = true;
                 txt_OutputFilename.IsEnabled = false;
@@ -352,28 +357,10 @@ namespace DICUI
                 btn_OutputDirectoryBrowse.IsEnabled = true;
                 cmb_DriveLetter.IsEnabled = true;
 
-                // Populate with the correct params for inputs (if we're not on the default option)
-                if (selectedSystem != KnownSystem.NONE && selectedMediaType != MediaType.NONE)
-                {
-                    Drive drive = cmb_DriveLetter.SelectedValue as Drive;
-
-                    // If drive letter is invalid, skip this
-                    if (drive == null)
-                        return;
-
-                    string command = Converters.KnownSystemAndMediaTypeToBaseCommand(selectedSystem, selectedMediaType);
-                    List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(selectedSystem, selectedMediaType);
-                    txt_Parameters.Text = command
-                        + " " + drive.Letter
-                        + " \"" + Path.Combine(txt_OutputDirectory.Text, txt_OutputFilename.Text) + "\" "
-                        + (selectedMediaType != MediaType.Floppy
-                            && selectedMediaType != MediaType.BluRay
-                            && selectedSystem != KnownSystem.MicrosoftXBOX
-                            && selectedSystem != KnownSystem.MicrosoftXBOX360XDG2
-                            && selectedSystem != KnownSystem.MicrosoftXBOX360XDG3
-                                ? (int?)cmb_DriveSpeed.SelectedItem + " " : "")
-                        + string.Join(" ", defaultParams);
-                }
+                // Generate the full parameters from the environment
+                string generated = _env.GetFullParameters((int?)cmb_DriveSpeed.SelectedItem);
+                if (generated != null)
+                    txt_Parameters.Text = generated;
             }
         }
 

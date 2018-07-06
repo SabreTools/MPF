@@ -169,6 +169,32 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the full parameter string for DIC
+        /// </summary>
+        /// <param name="driveSpeed">Nullable int representing the drive speed</param>
+        /// <returns>String representing the params, null on error</returns>
+        public string GetFullParameters(int? driveSpeed)
+        {
+            // Populate with the correct params for inputs (if we're not on the default option)
+            if (System != KnownSystem.NONE && Type != MediaType.NONE)
+            {
+                // If drive letter is invalid, skip this
+                if (Drive == null)
+                    return null;
+
+                string command = Converters.KnownSystemAndMediaTypeToBaseCommand(System, Type);
+                List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(System, Type);
+                return command
+                    + " " + Drive.Letter
+                    + " \"" + Path.Combine(OutputDirectory, OutputFilename) + "\" "
+                    + (Type.DoesSupportDriveSpeed() && System.DoesSupportDriveSpeed() ? driveSpeed + " " : "")
+                    + string.Join(" ", defaultParams);
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Execute a complete dump workflow
         /// </summary>
         public async Task<Result> StartDumping()
