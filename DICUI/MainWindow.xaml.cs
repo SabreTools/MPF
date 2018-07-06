@@ -52,11 +52,10 @@ namespace DICUI
             else if ((string)btn_StartStop.Content == UIElements.StopDumping)
             {
                 _env.CancelDumping();
+                btn_Scan.IsEnabled = true;
 
                 if (chk_EjectWhenDone.IsChecked == true)
-                {
                     _env.EjectDisc();
-                }
             }
         }
 
@@ -278,13 +277,14 @@ namespace DICUI
             _env = DetermineEnvironment();
 
             btn_StartStop.Content = UIElements.StopDumping;
+            btn_Scan.IsEnabled = false;
             lbl_Status.Content = "Beginning dumping process";
 
-            var task = _env.StartDumping();
-            Result result = await task;
+            Result result = await _env.StartDumping();
 
             lbl_Status.Content = result ? "Dumping complete!" : result.Message;
             btn_StartStop.Content = UIElements.StartDumping;
+            btn_Scan.IsEnabled = true;
 
             if (chk_EjectWhenDone.IsChecked == true)
                 _env.EjectDisc();
