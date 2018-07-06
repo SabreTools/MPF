@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DICUI"
         xmlns:utilities="clr-namespace:DICUI.Utilities"
         mc:Ignorable="d"
-        Title="Disc Image Creator GUI" Height="450" Width="600">
+        Title="Disc Image Creator GUI" Height="450" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
 
     <Window.Resources>
         <utilities:EnumDescriptionConverter x:Key="enumConverter" />
