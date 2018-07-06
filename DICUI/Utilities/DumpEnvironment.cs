@@ -52,53 +52,162 @@ namespace DICUI.Utilities
         public string DICParameters;
 
         // External process information
-        public Process dicProcess;
+        private Process dicProcess;
+
+        #region Public Functionality
 
         /// <summary>
-        /// Checks if the parameters are valid
+        /// Cancel an in-progress dumping process
         /// </summary>
-        /// <returns>True if the configuration is valid, false otherwise</returns>
-        public bool ParametersValid()
+        public void CancelDumping()
         {
-            return !((string.IsNullOrWhiteSpace(DICParameters)
-            || !Validators.ValidateParameters(DICParameters)
-            || (IsFloppy ^ Type == MediaType.Floppy)));
+            try
+            {
+                if (dicProcess != null && !dicProcess.HasExited)
+                    dicProcess.Kill();
+            }
+            catch
+            { }
         }
 
         /// <summary>
-        /// Validate the current environment is ready for a dump
+        /// Eject the disc using DIC
         /// </summary>
-        /// <returns>Result instance with the outcome</returns>
-        public Result IsValidForDump()
+        public async void EjectDisc()
         {
-            // Validate that everything is good
-            if (ParametersValid())
-                return Result.Failure("Error! Current configuration is not supported!");
-
-            AdjustForCustomConfiguration();
-            FixOutputPaths();
-
             // Validate that the required program exists
             if (!File.Exists(DICPath))
-                return Result.Failure("Error! Could not find DiscImageCreator!");
+                return;
 
-            // If a complete dump already exists
-            if (FoundAllFiles())
+            CancelDumping();
+
+            // Validate we're not trying to eject a floppy disk
+            if (IsFloppy)
+                return;
+
+            Process childProcess;
+            await Task.Run(() =>
             {
-                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                childProcess = new Process()
                 {
-                    return Result.Failure("Dumping aborted!");
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = DICPath,
+                        Arguments = DICCommands.Eject + " " + Drive.Letter,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+            });
+        }
+
+        /// <summary>
+        /// Get disc speed using DIC
+        /// </summary>
+        /// <returns>Drive speed if possible, -1 on error</returns>
+        public async Task<int> GetDiscSpeed()
+        {
+            // Validate that the required program exists
+            if (!File.Exists(DICPath))
+                return -1;
+
+            // Validate that the drive is set up
+            if (Drive == null)
+                return -1;
+
+            // Validate we're not trying to get the speed for a floppy disk
+            if (IsFloppy)
+                return -1;
+
+            // Get the drive speed directly
+            //int speed = Validators.GetDriveSpeed((char)selected?.Key);
+            //int speed = Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
+
+            // Get the drive speed from DIC, if possible
+            Process childProcess;
+            string output = await Task.Run(() =>
+            {
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = DICPath,
+                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+                return childProcess.StandardOutput.ReadToEnd();
+            });
+
+            // If we get that the firmware is out of date, tell the user
+            if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
+            {
+                MessageBox.Show($"DiscImageCreator has reported that drive {Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
+                return -1;
+            }
+            // Otherwise, if we find the maximum read speed as reported
+            else if (output.Contains("ReadSpeedMaximum:"))
+            {
+                int index = output.IndexOf("ReadSpeedMaximum:");
+                string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
+                if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
+                {
+                    return -1;
                 }
+
+                return speed;
             }
 
-            return Result.Success();
+            return -1;
         }
+
+        /// <summary>
+        /// Execute a complete dump workflow
+        /// </summary>
+        public async Task<Result> StartDumping()
+        {
+            Result result = IsValidForDump();
+
+            // is something is wrong in environment return
+            if (!result)
+                return result;
+
+            // execute DIC
+            await Task.Run(() => ExecuteDiskImageCreator());
+
+            // execute additional tools
+            result = ExecuteAdditionalToolsAfterDIC();
+
+            // is something is wrong with additional tools report and return
+            // TODO: don't return, just keep generating output from DIC
+            /*if (!result.Item1)
+            {
+                lbl_Status.Content = result.Item2;
+                btn_StartStop.Content = UIElements.StartDumping;
+                return;
+            }*/
+
+            // verify dump output and save it
+            result = VerifyAndSaveDumpOutput();
+
+            return result;
+        }
+
+        #endregion
+
+        #region Internal for Testing Purposes
 
         /// <summary>
         /// Adjust the current environment if we are given custom parameters
         /// </summary>
-        public void AdjustForCustomConfiguration()
+        internal void AdjustForCustomConfiguration()
         {
             // If we have a custom configuration, we need to extract the best possible information from it
             if (System == KnownSystem.Custom)
@@ -119,7 +228,7 @@ namespace DICUI.Utilities
         /// <remarks>
         /// TODO: Investigate why the `&` replacement is needed
         /// </remarks>
-        public void FixOutputPaths()
+        internal void FixOutputPaths()
         {
             // Only fix OutputDirectory if it's not blank or null
             if (!String.IsNullOrWhiteSpace(OutputDirectory))
@@ -131,96 +240,75 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Attempts to find the first track of a dumped disc based on the inputs
+        /// Checks if the parameters are valid
         /// </summary>
-        /// <returns>Proper path to first track, null on error</returns>
-        /// <remarks>
-        /// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
-        /// This can lead to a situation where the outputFilename contains a path, but only the filename gets
-        /// used in the processing and can lead to a "false null" return
-        /// </remarks>
-        public string GetFirstTrack()
+        /// <returns>True if the configuration is valid, false otherwise</returns>
+        internal bool ParametersValid()
         {
-            // First, sanitized the output filename to strip off any potential extension
-            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
+            return !((string.IsNullOrWhiteSpace(DICParameters)
+            || !Validators.ValidateParameters(DICParameters)
+            || (IsFloppy ^ Type == MediaType.Floppy)));
+        }
 
-            // Go through all standard output naming schemes
-            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
-            if (File.Exists(combinedBase + ".bin"))
+        #endregion
+
+        #region Private Helpers
+
+        /// <summary>
+        /// Run any additional tools given a DumpEnvironment
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        private Result ExecuteAdditionalToolsAfterDIC()
+        {
+            // Special cases
+            switch (System)
             {
-                return combinedBase + ".bin";
-            }
-            if (File.Exists(combinedBase + " (Track 1).bin"))
-            {
-                return combinedBase + " (Track 1).bin";
-            }
-            if (File.Exists(combinedBase + " (Track 01).bin"))
-            {
-                return combinedBase + " (Track 01).bin";
-            }
-            if (File.Exists(combinedBase + ".iso"))
-            {
-                return Path.Combine(combinedBase + ".iso");
+                case KnownSystem.SegaSaturn:
+                    if (!File.Exists(SubdumpPath))
+                        return Result.Failure("Error! Could not find subdump!");
+
+                    ExecuteSubdump();
+                    break;
             }
 
-            return null;
+            return Result.Success();
         }
 
         /// <summary>
-        /// Ensures that all required output files have been created
+        /// Run DiscImageCreator
         /// </summary>
-        /// <returns></returns>
-        public bool FoundAllFiles()
+        private void ExecuteDiskImageCreator()
         {
-            // First, sanitized the output filename to strip off any potential extension
-            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
-
-            // Now ensure that all required files exist
-            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
-            switch (Type)
+            dicProcess = new Process()
             {
-                case MediaType.CD:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    return File.Exists(combinedBase + ".c2")
-                        && File.Exists(combinedBase + ".ccd")
-                        && File.Exists(combinedBase + ".cue")
-                        && File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + ".img")
-                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
-                        && File.Exists(combinedBase + ".scm")
-                        && File.Exists(combinedBase + ".sub")
-                        && File.Exists(combinedBase + "_c2Error.txt")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_img.cue")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_subError.txt")
-                        && File.Exists(combinedBase + "_subInfo.txt")
-                        // && File.Exists(combinedBase + "_subIntention.txt")
-                        && File.Exists(combinedBase + "_subReadable.txt")
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
-                    return File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.Floppy:
-                    return File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                       && File.Exists(combinedBase + "_disc.txt");
-                default:
-                    // Non-dumping commands will usually produce no output, so this is irrelevant
-                    return true;
-            }
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = DICPath,
+                    Arguments = DICParameters,
+                },
+            };
+            dicProcess.Start();
+            dicProcess.WaitForExit();
+        }
+
+        /// <summary>
+        /// Execute subdump for a (potential) Sega Saturn dump
+        /// </summary>
+        private async void ExecuteSubdump()
+        {
+            await Task.Run(() =>
+            {
+                Process childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = SubdumpPath,
+                        Arguments = "-i " + Drive.Letter + ": -f " + Path.Combine(OutputDirectory, Path.GetFileNameWithoutExtension(OutputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit();
+            });
         }
 
         /// <summary>
@@ -229,7 +317,7 @@ namespace DICUI.Utilities
         /// <param name="driveLetter">Drive letter to check</param>
         /// <returns>Dictionary containing mapped output values, null on error</returns>
         /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
-        public Dictionary<string, string> ExtractOutputInformation()
+        private Dictionary<string, string> ExtractOutputInformation()
         {
             // Ensure the current disc combination should exist
             if (!Validators.GetValidMediaTypes(System).Contains(Type))
@@ -323,7 +411,7 @@ namespace DICUI.Utilities
                                     mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
-                            
+
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
@@ -336,7 +424,7 @@ namespace DICUI.Utilities
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                     string layerbreak = GetLayerbreak(combinedBase + "_disc.txt") ?? "";
-                    
+
                     // If we have a single-layer disc
                     if (String.IsNullOrWhiteSpace(layerbreak))
                     {
@@ -417,14 +505,13 @@ namespace DICUI.Utilities
 
             return mappings;
         }
-
         /// <summary>
         /// Format the output data in a human readable way, separating each printed line into a new item in the list
         /// </summary>
         /// <param name="info">Information dictionary that should contain normalized values</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
         /// <remarks>TODO: Get full list of customizable stuff for other systems</remarks>
-        public List<string> FormatOutputData(Dictionary<string, string> info)
+        private List<string> FormatOutputData(Dictionary<string, string> info)
         {
             // Check to see if the inputs are valid
             if (info == null)
@@ -573,55 +660,118 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Write the data to the output folder
+        /// Ensures that all required output files have been created
         /// </summary>
-        /// <param name="lines">Preformatted list of lines to write out to the file</param>
-        /// <returns>True on success, false on error</returns>
-        public bool WriteOutputData(List<string> lines)
+        /// <returns></returns>
+        private bool FoundAllFiles()
         {
-            // Check to see if the inputs are valid
-            if (lines == null)
-            {
-                return false;
-            }
-
-            // Then, sanitized the output filename to strip off any potential extension
+            // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
-            // Now write out to a generic file
-            try
+            // Now ensure that all required files exist
+            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
+            switch (Type)
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
-                {
-                    foreach (string line in lines)
-                    {
-                        sw.WriteLine(line);
-                    }
-                }
+                case MediaType.CD:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    return File.Exists(combinedBase + ".c2")
+                        && File.Exists(combinedBase + ".ccd")
+                        && File.Exists(combinedBase + ".cue")
+                        && File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + ".img")
+                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
+                        && File.Exists(combinedBase + ".scm")
+                        && File.Exists(combinedBase + ".sub")
+                        && File.Exists(combinedBase + "_c2Error.txt")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_img.cue")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_subError.txt")
+                        && File.Exists(combinedBase + "_subInfo.txt")
+                        // && File.Exists(combinedBase + "_subIntention.txt")
+                        && File.Exists(combinedBase + "_subReadable.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case MediaType.Floppy:
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                       && File.Exists(combinedBase + "_disc.txt");
+                default:
+                    // Non-dumping commands will usually produce no output, so this is irrelevant
+                    return true;
             }
-            catch
-            {
-                // We don't care what the error is right now
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>
-        /// Get the full lines from the input file, if possible
+        /// Get the existance of an anti-modchip string from the input file, if possible
         /// </summary>
-        /// <param name="filename">file location</param>
-        /// <returns>Full text of the file, null on error</returns>
-        private string GetFullFile(string filename)
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Antimodchip existance if possible, false on error</returns>
+        private bool GetAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(filename))
+            if (!File.Exists(disc))
             {
-                return null;
+                return false;
             }
 
-            return string.Join("\n", File.ReadAllLines(filename));
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Check for either antimod string
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line.StartsWith("Detected anti-mod string"))
+                        {
+                            return true;
+                        }
+                        else if (line.StartsWith("No anti-mod string"))
+                        {
+                            return false;
+                        }
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the current copy protection scheme, if possible
+        /// </summary>
+        /// <returns>Copy protection scheme if possible, null on error</returns>
+        private string GetCopyProtection()
+        {
+            MessageBoxResult result = MessageBox.Show("Would you like to scan for copy protection? Warning: This may take a long time depending on the size of the disc!", "Copy Protection Scan", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+            {
+                return "(CHECK WITH PROTECTIONID)";
+            }
+
+            return Task.Run(() => Tasks.RunProtectionScan(Drive.Letter + ":\\")).Result;
         }
 
         /// <summary>
@@ -729,61 +879,55 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the existance of an anti-modchip string from the input file, if possible
+        /// Attempts to find the first track of a dumped disc based on the inputs
         /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Antimodchip existance if possible, false on error</returns>
-        private bool GetAntiModchipDetected(string disc)
+        /// <returns>Proper path to first track, null on error</returns>
+        /// <remarks>
+        /// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
+        /// This can lead to a situation where the outputFilename contains a path, but only the filename gets
+        /// used in the processing and can lead to a "false null" return
+        /// </remarks>
+        private string GetFirstTrack()
         {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
+            // First, sanitized the output filename to strip off any potential extension
+            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
+
+            // Go through all standard output naming schemes
+            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
+            if (File.Exists(combinedBase + ".bin"))
             {
-                return false;
+                return combinedBase + ".bin";
+            }
+            if (File.Exists(combinedBase + " (Track 1).bin"))
+            {
+                return combinedBase + " (Track 1).bin";
+            }
+            if (File.Exists(combinedBase + " (Track 01).bin"))
+            {
+                return combinedBase + " (Track 01).bin";
+            }
+            if (File.Exists(combinedBase + ".iso"))
+            {
+                return Path.Combine(combinedBase + ".iso");
             }
 
-            using (StreamReader sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Check for either antimod string
-                    string line = sr.ReadLine().Trim();
-                    while (!sr.EndOfStream)
-                    {
-                        if (line.StartsWith("Detected anti-mod string"))
-                        {
-                            return true;
-                        }
-                        else if (line.StartsWith("No anti-mod string"))
-                        {
-                            return false;
-                        }
-
-                        line = sr.ReadLine().Trim();
-                    }
-
-                    return false;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
-            }
+            return null;
         }
 
         /// <summary>
-        /// Get the current copy protection scheme, if possible
+        /// Get the full lines from the input file, if possible
         /// </summary>
-        /// <returns>Copy protection scheme if possible, null on error</returns>
-        private string GetCopyProtection()
+        /// <param name="filename">file location</param>
+        /// <returns>Full text of the file, null on error</returns>
+        private string GetFullFile(string filename)
         {
-            MessageBoxResult result = MessageBox.Show("Would you like to scan for copy protection? Warning: This may take a long time depending on the size of the disc!", "Copy Protection Scan", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(filename))
             {
-                return "(CHECK WITH PROTECTIONID)";
+                return null;
             }
 
-            return Task.Run(() => Tasks.RunProtectionScan(Drive.Letter + ":\\")).Result;
+            return string.Join("\n", File.ReadAllLines(filename));
         }
 
         /// <summary>
@@ -1150,5 +1294,90 @@ namespace DICUI.Utilities
                 }
             }
         }
+
+        /// <summary>
+        /// Validate the current environment is ready for a dump
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        private Result IsValidForDump()
+        {
+            // Validate that everything is good
+            if (ParametersValid())
+                return Result.Failure("Error! Current configuration is not supported!");
+
+            AdjustForCustomConfiguration();
+            FixOutputPaths();
+
+            // Validate that the required program exists
+            if (!File.Exists(DICPath))
+                return Result.Failure("Error! Could not find DiscImageCreator!");
+
+            // If a complete dump already exists
+            if (FoundAllFiles())
+            {
+                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                {
+                    return Result.Failure("Dumping aborted!");
+                }
+            }
+
+            return Result.Success();
+        }
+
+        /// <summary>
+        /// Verify that the current environment has a complete dump and create submission info is possible
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        private Result VerifyAndSaveDumpOutput()
+        {
+            // Check to make sure that the output had all the correct files
+            if (!FoundAllFiles())
+                return Result.Failure("Error! Please check output directory as dump may be incomplete!");
+
+            Dictionary<string, string> templateValues = ExtractOutputInformation();
+            List<string> formattedValues = FormatOutputData(templateValues);
+            bool success = WriteOutputData(formattedValues);
+
+            return Result.Success();
+        }
+
+        /// <summary>
+        /// Write the data to the output folder
+        /// </summary>
+        /// <param name="lines">Preformatted list of lines to write out to the file</param>
+        /// <returns>True on success, false on error</returns>
+        private bool WriteOutputData(List<string> lines)
+        {
+            // Check to see if the inputs are valid
+            if (lines == null)
+            {
+                return false;
+            }
+
+            // Then, sanitized the output filename to strip off any potential extension
+            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
+
+            // Now write out to a generic file
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                {
+                    foreach (string line in lines)
+                    {
+                        sw.WriteLine(line);
+                    }
+                }
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
     }
 }
