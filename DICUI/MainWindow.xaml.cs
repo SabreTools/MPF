@@ -27,6 +27,24 @@ namespace DICUI
         private Options _options;
         private OptionsWindow _optionsWindow;
 
+        bool _shown;
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            if (_shown)
+                return;
+
+            _shown = true;
+
+            // Populate the list of systems
+            PopulateSystems();
+
+            // Populate the list of drives
+            PopulateDrives();
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -35,11 +53,7 @@ namespace DICUI
             _options = new Options();
             _options.Load();
 
-            // Populate the list of systems
-            PopulateSystems();
 
-            // Populate the list of drives
-            PopulateDrives();
         }
 
         #region Events
