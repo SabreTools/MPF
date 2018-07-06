@@ -18,7 +18,7 @@ namespace DICUI
         private MediaType? _currentMediaType;
         private List<KnownSystem?> _systems;
         private List<MediaType?> _mediaTypes;
-        bool _alreadyShown;
+        private bool _alreadyShown;
 
         private DumpEnvironment _env;
 
@@ -131,7 +131,33 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
-        private void tbr_Options_Click(object sender, RoutedEventArgs e)
+        private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
+        private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnsureDiscInformation();
+        }
+
+        // Toolbar Events
+
+        private void AppExitClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void AboutClick(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show($"ReignStumble - Project Lead / UI Design{Environment.NewLine}" +
+                $"darksabre76 - Project Co-Lead / Backend Design{Environment.NewLine}" +
+                $"Jakz - Feature Contributor{Environment.NewLine}" +
+                $"NHellFire - Feature Contributor{Environment.NewLine}" +
+                $"Dizzzy - Concept/Ideas/Beta tester{Environment.NewLine}", "About", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void OptionsClick(object sender, RoutedEventArgs e)
         {
             // lazy initialization
             if (_optionsWindow == null)
@@ -147,16 +173,6 @@ namespace DICUI
             _optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             _optionsWindow.Refresh();
             _optionsWindow.Show();
-        }
-
-        private void txt_OutputFilename_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EnsureDiscInformation();
-        }
-
-        private void txt_OutputDirectory_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EnsureDiscInformation();
         }
 
         public void OnOptionsUpdated()
@@ -472,15 +488,5 @@ namespace DICUI
         }
 
         #endregion
-
-        private void AppExit_Click(object sender, RoutedEventArgs e)
-        {
-            System.Windows.Application.Current.Shutdown();
-        }
-
-        private void About_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Hello, world!", "My App", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
     }
 }
