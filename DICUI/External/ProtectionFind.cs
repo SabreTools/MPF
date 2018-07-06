@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LibMSPackN;
 
 namespace DICUI.External
 {
@@ -349,9 +350,43 @@ namespace DICUI.External
 
             #region Archive Content Checks
 
-            if (extension == "7z" || extension == "cab" || extension == "rar" || extension == "zip")
+            if (extension == "7z" || extension == "rar" || extension == "zip")
             {
                 // No-op
+            }
+            else if (extension == "cab")
+            {
+                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                Directory.CreateDirectory(tempPath);
+
+                try
+                {
+                    MSCabinet cabfile = new MSCabinet(file);
+                    foreach (var sub in cabfile.GetFiles())
+                    {
+                        string tempfile = Path.Combine(tempPath, sub.Filename);
+                        sub.ExtractTo(tempfile);
+                        string protection = ScanInFile(tempfile);
+                        File.Delete(tempfile);
+
+                        if (!String.IsNullOrEmpty(protection))
+                        {
+                            return protection;
+                        }
+                    }
+                }
+                catch
+                {
+                    // We assume it's an InstallShield CAB and ignore
+                }
+                finally
+                {
+                    try
+                    {
+                        Directory.Delete(tempPath, true);
+                    }
+                    catch { }
+                }
             }
 
             #endregion
