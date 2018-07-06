@@ -244,6 +244,9 @@ namespace DICUI
         /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
         private void PopulateDrives()
         {
+            // Always enable the disk scan
+            DiskScanButton.IsEnabled = true;
+
             // Populate the list of drives and add it to the combo box
             _drives = Validators.CreateListOfDrives();
             DriveLetterComboBox.ItemsSource = _drives;
