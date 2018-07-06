@@ -14,10 +14,10 @@ namespace DICUI
     public partial class MainWindow : Window
     {
         // Private UI-related variables
-        private List<Drive> _drives { get; set; }
-        private MediaType? _currentMediaType { get; set; }
-        private List<KnownSystem?> _systems { get; set; }
-        private List<MediaType?> _mediaTypes { get; set; }
+        private List<Drive> _drives;
+        private MediaType? _currentMediaType;
+        private List<KnownSystem?> _systems;
+        private List<MediaType?> _mediaTypes;
 
         private DumpEnvironment _env;
 
