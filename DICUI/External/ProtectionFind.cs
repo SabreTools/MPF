@@ -89,7 +89,7 @@ namespace DICUI.External
         /// Scan an individual file for copy protection
         /// </summary>
         /// <remarks>
-        /// TODO: Handle archives (zip, arc, cab[ms], cab[is])
+        /// TODO: Handle archives (zip, arc, cab[is])
         /// TODO: Find protection mentions in text files
         /// TODO: Might have to work on Streams instead to later support archives
         /// </remarks>
