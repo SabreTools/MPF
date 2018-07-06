@@ -99,7 +99,10 @@ namespace DICUI.External
 
             #region EXE/DLL/ICD/DAT Content Checks
 
-            if (extension == "exe" || extension == "dll" || extension == "dat" || extension == "icd")
+            if (extension == "exe" || extension == "ex_"
+                || extension == "dll" || extension == "dl_"
+                || extension == "dat"
+                || extension == "icd")
             {
                 try
                 {
@@ -229,7 +232,7 @@ namespace DICUI.External
                             string desc = FileVersionInfo.GetVersionInfo(file).FileDescription.ToLower();
                             if (!string.IsNullOrEmpty(version) && desc.Contains("solidshield"))
                                 return "SolidShield Core.dll " + version;
-                            return "SolidShield EXE Wrapper";
+                            //return "SolidShield EXE Wrapper";
                         }
                     }
 
@@ -1154,6 +1157,12 @@ namespace DICUI.External
             // CopyKiller
             mapping["Tom Commander"] = "CopyKiller";
 
+            // Cucko (EA Custom) - TODO: Verify this doesn't over-match
+            mapping["EASTL"] = "Cucko (EA Custom)";
+
+            // dotFuscator - Not a protection
+            //mapping["DotfuscatorAttribute"] = "dotFuscator";
+
             // EXE Stealth
             mapping["??[[__[[_" + (char)0x00 + "{{" + (char)0x0
                     + (char)0x00 + "{{" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x0
@@ -1176,6 +1185,9 @@ namespace DICUI.External
             mapping[":\\LASERLOK\\LASERLOK.IN" + (char)0x00 + "C:\\NOMOUSE.SP"] = "LaserLock 3";
             mapping["LASERLOK_INIT" + (char)0xC + "LASERLOK_RUN" + (char)0xE + "LASERLOK_CHECK"
                     + (char)0xF + "LASERLOK_CHECK2" + (char)0xF + "LASERLOK_CHECK3"] = "LaserLock 5";
+
+            // PE Compact 2 - Not a protection
+            //mapping["PEC2"] = "PE Compact 2";
 
             // Ring-Protech
             mapping[(char)0x00 + "Allocator" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00] = "Ring-Protech";
