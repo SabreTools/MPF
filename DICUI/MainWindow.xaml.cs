@@ -18,30 +18,13 @@ namespace DICUI
         private MediaType? _currentMediaType;
         private List<KnownSystem?> _systems;
         private List<MediaType?> _mediaTypes;
+        bool _alreadyShown;
 
         private DumpEnvironment _env;
 
         // Option related
         private Options _options;
         private OptionsWindow _optionsWindow;
-
-        bool _shown;
-
-        protected override void OnContentRendered(EventArgs e)
-        {
-            base.OnContentRendered(e);
-
-            if (_shown)
-                return;
-
-            _shown = true;
-
-            // Populate the list of systems
-            PopulateSystems();
-
-            // Populate the list of drives
-            PopulateDrives();
-        }
 
         public MainWindow()
         {
@@ -51,10 +34,31 @@ namespace DICUI
             _options = new Options();
             _options.Load();
 
-
+            // Disable buttons until we load fully
+            btn_StartStop.IsEnabled = false;
+            btn_Search.IsEnabled = false;
+            btn_Scan.IsEnabled = false;
         }
 
         #region Events
+
+        protected override void OnContentRendered(EventArgs e)
+        {
+            base.OnContentRendered(e);
+
+            if (_alreadyShown)
+                return;
+
+            _alreadyShown = true;
+
+            // Populate the list of systems
+            lbl_Status.Content = "Creating system list, please wait!";
+            PopulateSystems();
+
+            // Populate the list of drives
+            lbl_Status.Content = "Creating drive list, please wait!";
+            PopulateDrives();
+        }
 
         private void btn_StartStop_Click(object sender, RoutedEventArgs e)
         {
