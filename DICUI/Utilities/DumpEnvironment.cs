@@ -100,7 +100,7 @@ namespace DICUI.Utilities
                     },
                 };
                 childProcess.Start();
-                childProcess.WaitForExit();
+                childProcess.WaitForExit(1000);
                 childProcess.Close();
             });
         }
@@ -139,13 +139,11 @@ namespace DICUI.Utilities
                         Arguments = DICCommands.DriveSpeed + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
-                        RedirectStandardInput = true,
                         RedirectStandardOutput = true,
                     },
                 };
                 childProcess.Start();
                 childProcess.WaitForExit(1000);
-                childProcess.StandardInput.WriteLine("A");
                 string stdout = childProcess.StandardOutput.ReadToEnd();
                 childProcess.Dispose();
                 return stdout;
