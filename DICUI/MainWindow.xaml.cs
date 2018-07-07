@@ -103,6 +103,7 @@ namespace DICUI
             }
 
             PopulateMediaType();
+            EnsureDiscInformation();
         }
 
         private void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -116,6 +117,7 @@ namespace DICUI
             // TODO: This is giving people the benefit of the doubt that their change is valid
             SetSupportedDriveSpeed();
             GetOutputNames();
+            EnsureDiscInformation();
         }
 
         private void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
