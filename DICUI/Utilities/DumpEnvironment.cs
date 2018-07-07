@@ -129,8 +129,8 @@ namespace DICUI.Utilities
                 return -1;
 
             // Get the drive speed directly
-            //int speed = Validators.GetDriveSpeed((char)selected?.Key);
-            //int speed = Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
+            //int speed = Validators.GetDriveSpeed(Drive.Letter);
+            //int speed = Validators.GetDriveSpeedEx(Drive.Letter, _currentMediaType);
 
             // Get the drive speed from DIC, if possible
             Process childProcess;
