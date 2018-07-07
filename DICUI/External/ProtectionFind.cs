@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LibMSPackN;
 
 namespace DICUI.External
 {
@@ -88,7 +89,7 @@ namespace DICUI.External
         /// Scan an individual file for copy protection
         /// </summary>
         /// <remarks>
-        /// TODO: Handle archives (zip, arc, cab[ms], cab[is])
+        /// TODO: Handle archives (zip, arc, cab[is])
         /// TODO: Find protection mentions in text files
         /// TODO: Might have to work on Streams instead to later support archives
         /// </remarks>
@@ -98,7 +99,10 @@ namespace DICUI.External
 
             #region EXE/DLL/ICD/DAT Content Checks
 
-            if (extension == "exe" || extension == "dll" || extension == "dat" || extension == "icd")
+            if (extension == "exe" || extension == "ex_"
+                || extension == "dll" || extension == "dl_"
+                || extension == "dat"
+                || extension == "icd")
             {
                 try
                 {
@@ -205,7 +209,8 @@ namespace DICUI.External
                     if ((position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03)) > -1)
                         return "SecuROM " + GetSecuROM4and5Version(file, position);
 
-                    if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
+                    if (FileContent.Contains(".securom"))
+                    //if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                         return "SecuROM " + GetSecuROM7Version(file);
 
                     if (FileContent.Contains("_and_play.dll" + (char)0x00 + "drm_pagui_doit"))
@@ -228,7 +233,7 @@ namespace DICUI.External
                             string desc = FileVersionInfo.GetVersionInfo(file).FileDescription.ToLower();
                             if (!string.IsNullOrEmpty(version) && desc.Contains("solidshield"))
                                 return "SolidShield Core.dll " + version;
-                            return "SolidShield EXE Wrapper";
+                            //return "SolidShield EXE Wrapper";
                         }
                     }
 
@@ -349,9 +354,43 @@ namespace DICUI.External
 
             #region Archive Content Checks
 
-            if (extension == "7z" || extension == "cab" || extension == "rar" || extension == "zip")
+            if (extension == "7z" || extension == "rar" || extension == "zip")
             {
                 // No-op
+            }
+            else if (extension == "cab")
+            {
+                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                Directory.CreateDirectory(tempPath);
+
+                try
+                {
+                    MSCabinet cabfile = new MSCabinet(file);
+                    foreach (var sub in cabfile.GetFiles())
+                    {
+                        string tempfile = Path.Combine(tempPath, sub.Filename);
+                        sub.ExtractTo(tempfile);
+                        string protection = ScanInFile(tempfile);
+                        File.Delete(tempfile);
+
+                        if (!String.IsNullOrEmpty(protection))
+                        {
+                            return protection;
+                        }
+                    }
+                }
+                catch
+                {
+                    // We assume it's an InstallShield CAB and ignore
+                }
+                finally
+                {
+                    try
+                    {
+                        Directory.Delete(tempPath, true);
+                    }
+                    catch { }
+                }
             }
 
             #endregion
@@ -1119,6 +1158,12 @@ namespace DICUI.External
             // CopyKiller
             mapping["Tom Commander"] = "CopyKiller";
 
+            // Cucko (EA Custom) - TODO: Verify this doesn't over-match
+            mapping["EASTL"] = "Cucko (EA Custom)";
+
+            // dotFuscator - Not a protection
+            //mapping["DotfuscatorAttribute"] = "dotFuscator";
+
             // EXE Stealth
             mapping["??[[__[[_" + (char)0x00 + "{{" + (char)0x0
                     + (char)0x00 + "{{" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x0
@@ -1141,6 +1186,9 @@ namespace DICUI.External
             mapping[":\\LASERLOK\\LASERLOK.IN" + (char)0x00 + "C:\\NOMOUSE.SP"] = "LaserLock 3";
             mapping["LASERLOK_INIT" + (char)0xC + "LASERLOK_RUN" + (char)0xE + "LASERLOK_CHECK"
                     + (char)0xF + "LASERLOK_CHECK2" + (char)0xF + "LASERLOK_CHECK3"] = "LaserLock 5";
+
+            // PE Compact 2 - Not a protection
+            //mapping["PEC2"] = "PE Compact 2";
 
             // Ring-Protech
             mapping[(char)0x00 + "Allocator" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00] = "Ring-Protech";

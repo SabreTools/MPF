@@ -93,7 +93,7 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.Eject + " " + Drive.Letter,
+                        Arguments = DICCommands.Eject + " " + Drive.Letter + " " + DICFlags.DisableBeep,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -135,7 +135,7 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter,
+                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter + " " + DICFlags.DisableBeep,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -215,8 +215,8 @@ namespace DICUI.Utilities
             // TODO: don't return, just keep generating output from DIC
             /*if (!result.Item1)
             {
-                lbl_Status.Content = result.Item2;
-                btn_StartStop.Content = UIElements.StartDumping;
+                StatusLabel.Content = result.Item2;
+                StartStopButton.Content = UIElements.StartDumping;
                 return;
             }*/
 

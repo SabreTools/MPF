@@ -29,16 +29,16 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DicImageCreator Path" />
-            <TextBox x:Name="txt_dicPath" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="btn_dicPath" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click" />
+            <TextBox x:Name="DICPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="DICPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="subdump Path" />
-            <TextBox x:Name="txt_subdumpPath" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="btn_subdumpPath" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click"/>
+            <TextBox x:Name="SubDumpPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="SubDumpPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick"/>
 
             <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
-            <TextBox x:Name="txt_defaultOutputPath" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="btn_defaultOutputPath" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="btn_BrowseForPath_Click" />
+            <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="DefaultOutputPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
         </Grid>
 
         <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Preferred Dump Speed">
@@ -55,12 +55,12 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Content="CD-ROM" />
-                <Slider x:Name="slider_DumpSpeedCD" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static lui:AllowedSpeeds.ForCDAsCollection}}" />
-                <TextBox x:Name="txt_DumpSpeedCD" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=slider_DumpSpeedCD, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static lui:AllowedSpeeds.ForCDAsCollection}}" />
+                <TextBox x:Name="DumpSpeedCDTextBox" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                 <Label Grid.Row="1" Grid.Column="0" Content="DVD-ROM" />
-                <Slider x:Name="slider_DumpSpeedDVD" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static lui:AllowedSpeeds.ForDVDAsCollection}}" />
-                <TextBox x:Name="txt_DumpSpeedDVD" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=slider_DumpSpeedDVD, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static lui:AllowedSpeeds.ForDVDAsCollection}}" />
+                <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
             </Grid>
             
@@ -73,8 +73,8 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="btn_Accept" Grid.Row="0" Grid.Column="1" Height="22" Width="80" Content="Accept" Click="OnAcceptClick" />
-            <Button x:Name="btn_Cancel" Grid.Row="0" Grid.Column="2" Height="22" Width="80" Content="Cancel" Click="OnCancelClick" />
+            <Button x:Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="22" Width="80" Content="Accept" Click="OnAcceptClick" />
+            <Button x:Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="22" Width="80" Content="Cancel" Click="OnCancelClick" />
 
         </Grid>
     </Grid>
