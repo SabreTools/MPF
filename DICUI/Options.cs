@@ -7,9 +7,9 @@ namespace DICUI
 {
     public class Options
     {
-        public string defaultOutputPath { get; private set; }
-        public string dicPath { get; private set; }
-        public string subdumpPath { get; private set; }
+        public string DefaultOutputPath { get; private set; }
+        public string DICPath { get; private set; }
+        public string SubDumpPath { get; private set; }
 
         public int preferredDumpSpeedCD { get; set; }
         public int preferredDumpSpeedDVD { get; set; }
@@ -40,9 +40,9 @@ namespace DICUI
         public void Load()
         {
             //TODO: hardcoded, we should find a better way
-            dicPath = ConfigurationManager.AppSettings["dicPath"] ?? @"Programs\DiscImageCreator.exe";
-            subdumpPath = ConfigurationManager.AppSettings["subdumpPath"] ?? "subdump.exe";
-            defaultOutputPath = ConfigurationManager.AppSettings["defaultOutputPath"] ?? "ISO";
+            DICPath = ConfigurationManager.AppSettings["DICPath"] ?? @"Programs\DiscImageCreator.exe";
+            SubDumpPath = ConfigurationManager.AppSettings["SubDumpPath"] ?? "subdump.exe";
+            DefaultOutputPath = ConfigurationManager.AppSettings["DefaultOutputPath"] ?? "ISO";
 
             this.preferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
             this.preferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 72;

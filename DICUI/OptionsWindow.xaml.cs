@@ -42,23 +42,23 @@ namespace DICUI
 
         private string[] PathSettings()
         {
-            string[] pathSettings = { "defaultOutputPath", "dicPath", "subdumpPath" };
+            string[] pathSettings = { "DefaultOutputPath", "DICPath", "SubDumpPath" };
             return pathSettings;
         }
 
         private TextBox TextBoxForPathSetting(string name)
         {
-            return FindName("txt_" + name) as TextBox;
+            return FindName(name + "TextBox") as TextBox;
         }
 
         private void BrowseForPathClick(object sender, EventArgs e)
         {
             Button button = sender as Button;
             // strips button prefix to obtain the setting name
-            string pathSettingName = button.Name.Substring("btn_".Length);
+            string pathSettingName = button.Name.Substring(0, button.Name.IndexOf("Button"));
 
             // TODO: hack for now, then we'll see
-            bool shouldBrowseForPath = pathSettingName == "defaultOutputPath";
+            bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
 
             CommonDialog dialog = shouldBrowseForPath ? (CommonDialog)CreateFolderBrowserDialog() : CreateOpenFileDialog();
             using (dialog)

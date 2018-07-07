@@ -290,8 +290,8 @@ namespace DICUI
             return new DumpEnvironment()
             {
                 // Paths to tools
-                SubdumpPath = _options.subdumpPath,
-                DICPath = _options.dicPath,
+                SubdumpPath = _options.SubDumpPath,
+                DICPath = _options.DICPath,
 
                 OutputDirectory = OutputDirectoryTextBox.Text,
                 OutputFilename = OutputFilenameTextBox.Text,
@@ -398,12 +398,12 @@ namespace DICUI
                 && systemType != null
                 && mediaType != null)
             {
-                OutputDirectoryTextBox.Text = Path.Combine(_options.defaultOutputPath, drive.VolumeLabel);
+                OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive.VolumeLabel);
                 OutputFilenameTextBox.Text = drive.VolumeLabel + mediaType.Extension();
             }
             else
             {
-                OutputDirectoryTextBox.Text = _options.defaultOutputPath;
+                OutputDirectoryTextBox.Text = _options.DefaultOutputPath;
                 OutputFilenameTextBox.Text = "disc.bin";
             }
         }
