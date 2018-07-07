@@ -93,14 +93,20 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.Eject + " " + Drive.Letter + " " + DICFlags.DisableBeep,
+                        Arguments = DICCommands.Eject + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                     },
                 };
                 childProcess.Start();
-                childProcess.WaitForExit();
+                childProcess.WaitForExit(1000);
+
+                // Just in case, we want to push a button 5 times to clear any errors
+                for (int i = 0; i < 5; i++)
+                    childProcess.StandardInput.WriteLine("Y");
+
+                childProcess.Dispose();
             });
         }
 
@@ -135,19 +141,32 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter + " " + DICFlags.DisableBeep,
+                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
+                        RedirectStandardInput = true,
                     },
                 };
                 childProcess.Start();
-                childProcess.WaitForExit();
-                return childProcess.StandardOutput.ReadToEnd();
+                childProcess.WaitForExit(1000);
+
+                // Just in case, we want to push a button 5 times to clear any errors
+                for (int i = 0; i < 5; i++)
+                    childProcess.StandardInput.WriteLine("Y");
+
+                string stdout = childProcess.StandardOutput.ReadToEnd();
+                childProcess.Dispose();
+                return stdout;
             });
 
+            // If a drive or argument was invalid, just exit
+            if (output.Contains("Invalid argument"))
+            {
+                return -1;
+            }
             // If we get that the firmware is out of date, tell the user
-            if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
+            else if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
             {
                 MessageBox.Show($"DiscImageCreator has reported that drive {Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                 return -1;
