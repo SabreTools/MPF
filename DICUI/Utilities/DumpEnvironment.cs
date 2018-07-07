@@ -93,7 +93,7 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.Eject + " " + Drive.Letter + " " + DICFlags.DisableBeep,
+                        Arguments = DICCommands.Eject + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -101,6 +101,7 @@ namespace DICUI.Utilities
                 };
                 childProcess.Start();
                 childProcess.WaitForExit();
+                childProcess.Close();
             });
         }
 
@@ -135,15 +136,19 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter + " " + DICFlags.DisableBeep,
+                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
+                        RedirectStandardInput = true,
                         RedirectStandardOutput = true,
                     },
                 };
                 childProcess.Start();
-                childProcess.WaitForExit();
-                return childProcess.StandardOutput.ReadToEnd();
+                childProcess.WaitForExit(1000);
+                childProcess.StandardInput.WriteLine("A");
+                string stdout = childProcess.StandardOutput.ReadToEnd();
+                childProcess.Dispose();
+                return stdout;
             });
 
             // If we get that the firmware is out of date, tell the user
