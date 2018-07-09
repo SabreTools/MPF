@@ -114,9 +114,6 @@ namespace DICUI.Test.Utilities
             HashSet<string> actualSet = actual != null ? new HashSet<string>(actual) : null;
 
             Assert.Equal(expectedSet, actualSet);
-
-                /*foreach (string param in expected)
-                    Assert.Contains(param, actual);*/
         }
 
         [Theory]
