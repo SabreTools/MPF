@@ -26,19 +26,25 @@ namespace DICUI
         private Options _options;
         private OptionsWindow _optionsWindow;
 
+        public bool QuietMode { get; set; }
+
         public MainWindow()
         {
+            QuietMode = true;
+
             InitializeComponent();
 
             // Initializes and load Options object
             _options = new Options();
             _options.Load();
+            ViewModels.OptionsViewModel = new OptionsViewModel(_options);
 
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
             DiskScanButton.IsEnabled = false;
             CopyProtectScanButton.IsEnabled = false;
         }
+
 
         #region Events
 
@@ -181,6 +187,7 @@ namespace DICUI
         {
             GetOutputNames();
             SetSupportedDriveSpeed();
+            EnsureDiscInformation();
         }
 
         #endregion
@@ -227,6 +234,8 @@ namespace DICUI
                 );
 
             List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
+
+            comboBoxItems.Add(new KnownSystemComboBoxItem(KnownSystem.NONE));
 
             foreach (var group in mapping)
             {
@@ -302,6 +311,10 @@ namespace DICUI
                 Drive = DriveLetterComboBox.SelectedItem as Drive,
 
                 DICParameters = ParametersTextBox.Text,
+
+                QuietMode = _options.QuietMode,
+                ParanoidMode = _options.ParanoidMode,
+                RereadAmountC2 = _options.RereadAmountForC2,
 
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
                 Type = MediaTypeComboBox.SelectedItem as MediaType?
@@ -475,7 +488,8 @@ namespace DICUI
                 return;
 
             // Get the current optical disc type
-            _currentMediaType = Validators.GetDiscType(drive.Letter);
+            if (!_options.SkipMediaTypeDetection)
+                _currentMediaType = Validators.GetDiscType(drive.Letter);
         }
 
         /// <summary>

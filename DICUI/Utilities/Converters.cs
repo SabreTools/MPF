@@ -262,7 +262,7 @@ namespace DICUI.Utilities
         /// <param name="sys">KnownSystem value to check</param>
         /// <param name="type">MediaType value to check</param>
         /// <returns>List of strings representing the parameters</returns>
-        public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type)
+        public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type, bool paranoid, int RereadAmountC2)
         {
             // First check to see if the combination of system and MediaType is valid
             var validTypes = Validators.GetValidMediaTypes(sys);
@@ -271,12 +271,16 @@ namespace DICUI.Utilities
                 return null;
             }
 
+            string rereadAmount = RereadAmountC2 > 0 ? Convert.ToString(RereadAmountC2) : null;
+
             // Now sort based on disc type
             List<string> parameters = new List<string>();
             switch (type)
             {
                 case MediaType.CD:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
+                    parameters.Add(DICFlags.C2Opcode);
+                    if (rereadAmount != null)
+                        parameters.Add(rereadAmount);
 
                     switch (sys)
                     {
@@ -284,11 +288,19 @@ namespace DICUI.Utilities
                         case KnownSystem.IBMPCCompatible:
                             parameters.Add(DICFlags.NoFixSubQSecuROM);
                             parameters.Add(DICFlags.ScanFileProtect);
-                            parameters.Add(DICFlags.ScanSectorProtect);
+
+                            if (paranoid)
+                            {
+                                parameters.Add(DICFlags.ScanSectorProtect);
+                                parameters.Add(DICFlags.SubchannelReadLevel); parameters.Add("2");
+                            }
+
                             break;
+
                         case KnownSystem.NECPCEngineTurboGrafxCD:
                             parameters.Add(DICFlags.MCN);
                             break;
+
                         case KnownSystem.SonyPlayStation:
                             parameters.Add(DICFlags.ScanAntiMod);
                             parameters.Add(DICFlags.NoFixSubQLibCrypt);
@@ -296,13 +308,17 @@ namespace DICUI.Utilities
                     }
                     break;
                 case MediaType.DVD:
-                    // Currently no defaults set
+                    if (paranoid)
+                        parameters.Add(DICFlags.CMI);
                     break;
                 case MediaType.GDROM:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
+                    parameters.Add(DICFlags.C2Opcode);
+                    if (rereadAmount != null)
+                        parameters.Add(rereadAmount);
                     break;
                 case MediaType.HDDVD:
-                    // Currently no defaults set
+                    if (paranoid)
+                        parameters.Add(DICFlags.CMI);
                     break;
                 case MediaType.BluRay:
                     // Currently no defaults set

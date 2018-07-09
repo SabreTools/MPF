@@ -14,26 +14,26 @@ namespace DICUI
         public int preferredDumpSpeedCD { get; set; }
         public int preferredDumpSpeedDVD { get; set; }
 
+        public bool QuietMode { get; set; }
+        public bool ParanoidMode { get; set; }
+        public int RereadAmountForC2 { get; set; }
+
+        public bool SkipMediaTypeDetection { get; set; }
+
         public void Save()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             //TODO: reflection is used
+            //TODO: is remove needed, doesn't the value get directly overridden
             Array.ForEach(
                 GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance), 
                 p => {
                     configFile.AppSettings.Settings.Remove(p.Name);
-                    configFile.AppSettings.Settings.Add(p.Name, p.GetValue(this) as string);
+                    configFile.AppSettings.Settings.Add(p.Name, Convert.ToString(p.GetValue(this)));
                 }
             );
-
-            //TODO: is remove needed, doesn't the value get directly overridden?
-            configFile.AppSettings.Settings.Remove("preferredDumpSpeedCD");
-            configFile.AppSettings.Settings.Add("preferredDumpSpeedCD", Convert.ToString(preferredDumpSpeedCD));
-
-            configFile.AppSettings.Settings.Remove("preferredDumpSpeedDVD");
-            configFile.AppSettings.Settings.Add("preferredDumpSpeedDVD", Convert.ToString(preferredDumpSpeedDVD));
-
+            
             configFile.Save(ConfigurationSaveMode.Modified);
         }
 
@@ -46,6 +46,11 @@ namespace DICUI
 
             this.preferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
             this.preferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 72;
+
+            this.QuietMode = Boolean.TryParse(ConfigurationManager.AppSettings["QuietMode"], out bool quietMode) ? quietMode : false;
+            this.ParanoidMode = Boolean.TryParse(ConfigurationManager.AppSettings["ParanoidMode"], out bool paranoidMode) ? paranoidMode : false;
+            this.SkipMediaTypeDetection = Boolean.TryParse(ConfigurationManager.AppSettings["SkipMediaTypeDetection"], out bool skipMediaTypeDetection) ? skipMediaTypeDetection : false;
+            this.RereadAmountForC2 = Int32.TryParse(ConfigurationManager.AppSettings["RereadAmountForC2"], out int rereadAmountForC2) ? rereadAmountForC2 : 20;
         }
 
 

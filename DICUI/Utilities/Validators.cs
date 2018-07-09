@@ -379,7 +379,7 @@ namespace DICUI.Utilities
         {
             return Enum.GetValues(typeof(KnownSystem))
                 .OfType<KnownSystem?>()
-                .Where(s => !s.IsMarker())
+                .Where(s => !s.IsMarker() && s != KnownSystem.NONE)
                 .ToList();
         }
 

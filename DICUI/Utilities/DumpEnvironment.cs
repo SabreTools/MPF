@@ -51,6 +51,11 @@ namespace DICUI.Utilities
         public bool IsFloppy { get => Drive.IsFloppy; }
         public string DICParameters;
 
+        // extra DIC arguments
+        public bool QuietMode;
+        public bool ParanoidMode;
+        public int RereadAmountC2;
+
         // External process information
         private Process dicProcess;
 
@@ -202,12 +207,17 @@ namespace DICUI.Utilities
                     return null;
 
                 string command = Converters.KnownSystemAndMediaTypeToBaseCommand(System, Type);
-                List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(System, Type);
+                List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(System, Type, ParanoidMode, RereadAmountC2);
+
+                if (QuietMode)
+                    defaultParams.Add(DICFlags.DisableBeep);
+
                 return command
                     + " " + Drive.Letter
                     + " \"" + Path.Combine(OutputDirectory, OutputFilename) + "\" "
                     + (Type.DoesSupportDriveSpeed() && System.DoesSupportDriveSpeed() ? driveSpeed + " " : "")
-                    + string.Join(" ", defaultParams);
+                    + string.Join(" ", defaultParams)
+                    ;
             }
 
             return null;
