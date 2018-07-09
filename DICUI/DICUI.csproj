@@ -103,6 +103,7 @@
     <Compile Include="External\ProtectionFind.cs" />
     <Compile Include="UI\KnownSystemComboBoxItem.cs" />
     <Compile Include="UI\AllowedSpeeds.cs" />
+    <Compile Include="UI\ViewModels.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\Result.cs" />

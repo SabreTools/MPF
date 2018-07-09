@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DICUI"
         xmlns:utilities="clr-namespace:DICUI.Utilities"
         mc:Ignorable="d"
+        x:Name="mainWindow"
         Title="Disc Image Creator GUI" Height="450" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
 
     <Window.Resources>
@@ -30,7 +31,7 @@
                     <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="AppExitClick" />
                 </MenuItem>
                 <MenuItem Header="_Tools">
-                    <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left" Width="140" Click="OptionsClick"/>
+                    <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="140" Click="OptionsClick"/>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem x:Name="About" Header="_About" HorizontalAlignment="Left" Width="140" Click="AboutClick"/>

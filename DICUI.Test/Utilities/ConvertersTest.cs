@@ -91,14 +91,16 @@ namespace DICUI.Test.Utilities
             Assert.Equal(expected, actual);
         }
 
+        //TODO: added paranoid flags, need to add tests once its behavior has been defined
+        //TODO: added c2 flag, we can add tests to verify that specific behavior
         [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, new string[] { DICFlags.C2Opcode, "20", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect })]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, new string[] { DICFlags.Raw })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, new string[] { })]
-        public void KnownSystemAndMediaTypeToParametersTest(KnownSystem? knownSystem, MediaType? mediaType, string[] expected)
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, true, new string[] { DICFlags.C2Opcode, "20", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect })]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, null)]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, true, new string[] { DICFlags.Raw })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, new string[] { })]
+        public void KnownSystemAndMediaTypeToParametersTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, string[] expected)
         {
-            List<string> actual = Converters.KnownSystemAndMediaTypeToParameters(knownSystem, mediaType);
+            List<string> actual = Converters.KnownSystemAndMediaTypeToParameters(knownSystem, mediaType, paranoid, 20);
 
             if (expected == null)
                 Assert.Null(actual);

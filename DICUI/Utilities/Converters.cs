@@ -262,7 +262,7 @@ namespace DICUI.Utilities
         /// <param name="sys">KnownSystem value to check</param>
         /// <param name="type">MediaType value to check</param>
         /// <returns>List of strings representing the parameters</returns>
-        public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type)
+        public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type, bool paranoid, uint RereadAmountC2)
         {
             // First check to see if the combination of system and MediaType is valid
             var validTypes = Validators.GetValidMediaTypes(sys);
@@ -271,20 +271,26 @@ namespace DICUI.Utilities
                 return null;
             }
 
+            //TODO: adjust parameters according to paranoid mode
+
             // Now sort based on disc type
             List<string> parameters = new List<string>();
             switch (type)
             {
                 case MediaType.CD:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
+                    parameters.Add(DICFlags.C2Opcode); parameters.Add(RereadAmountC2 > 0 ? Convert.ToString(RereadAmountC2) : "20");
 
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
                             parameters.Add(DICFlags.NoFixSubQSecuROM);
-                            parameters.Add(DICFlags.ScanFileProtect);
-                            parameters.Add(DICFlags.ScanSectorProtect);
+
+                            if (paranoid)
+                            {
+                                parameters.Add(DICFlags.ScanFileProtect);
+                                parameters.Add(DICFlags.ScanSectorProtect);
+                            }
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
                             parameters.Add(DICFlags.MCN);
@@ -299,7 +305,7 @@ namespace DICUI.Utilities
                     // Currently no defaults set
                     break;
                 case MediaType.GDROM:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
+                    parameters.Add(DICFlags.C2Opcode); parameters.Add(RereadAmountC2 > 0 ? Convert.ToString(RereadAmountC2) : "20");
                     break;
                 case MediaType.HDDVD:
                     // Currently no defaults set
