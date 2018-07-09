@@ -59,15 +59,17 @@ namespace DICUI.Utilities
         public bool SubchannelReadLevel;
         public int? SubchannelReadLevelValue; // 0 no next sub, 1 next sub (default), 2 next and next next
 
+        /// <summary>
+        /// Generic empty constructor for adding things individually
+        /// </summary>
         public Parameters()
         {
         }
 
         /// <summary>
-        /// Populate a parameters object from a param string
+        /// Populate a Parameters object from a param string
         /// </summary>
-        /// <param name=""></param>
-        /// <param name=""></param>
+        /// <param name="parameters">String possibly representing a set of parameters</param>
         public Parameters(string parameters)
         {
             // The string has to be valid by itself first
