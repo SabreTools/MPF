@@ -302,6 +302,7 @@ namespace DICUI
                 Drive = DriveLetterComboBox.SelectedItem as Drive,
 
                 DICParameters = ParametersTextBox.Text,
+                // DICParameters = new Parameters(ParametersTextBox.Text),
 
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
                 Type = MediaTypeComboBox.SelectedItem as MediaType?

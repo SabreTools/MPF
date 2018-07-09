@@ -50,6 +50,7 @@ namespace DICUI.Utilities
         public MediaType? Type;
         public bool IsFloppy { get => Drive.IsFloppy; }
         public string DICParameters;
+        //public Parameters DICParameters;
 
         // External process information
         private Process dicProcess;
@@ -258,6 +259,7 @@ namespace DICUI.Utilities
             if (System == KnownSystem.Custom)
             {
                 Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
+                //Validators.DetermineFlags(DICParameters.GenerateParameters(), out Type, out System, out string letter, out string path);
                 if (Type == MediaType.Floppy)
                     Drive = Drive.Floppy(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
                 else
@@ -291,8 +293,11 @@ namespace DICUI.Utilities
         internal bool ParametersValid()
         {
             return !((string.IsNullOrWhiteSpace(DICParameters)
-            || !Validators.ValidateParameters(DICParameters)
-            || (IsFloppy ^ Type == MediaType.Floppy)));
+                || !Validators.ValidateParameters(DICParameters)
+                || (IsFloppy ^ Type == MediaType.Floppy)));
+            //return !((string.IsNullOrWhiteSpace(DICParameters.GenerateParameters())
+            //|| !Validators.ValidateParameters(DICParameters.GenerateParameters())
+            //|| (IsFloppy ^ Type == MediaType.Floppy)));
         }
 
         #endregion
@@ -330,6 +335,7 @@ namespace DICUI.Utilities
                 {
                     FileName = DICPath,
                     Arguments = DICParameters,
+                    //Arguments = DICParameters.GenerateParameters(),
                 },
             };
             dicProcess.Start();
