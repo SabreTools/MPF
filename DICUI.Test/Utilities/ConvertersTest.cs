@@ -92,9 +92,9 @@ namespace DICUI.Test.Utilities
         }
 
         [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, new string[] { DICFlags.C2Opcode, "20", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect })]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, new string[] { DICFlagStrings.C2Opcode, "20", DICFlagStrings.NoFixSubQSecuROM, DICFlagStrings.ScanFileProtect })]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, new string[] { DICFlags.Raw })]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, new string[] { DICFlagStrings.Raw })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, new string[] { })]
         public void KnownSystemAndMediaTypeToParametersTest(KnownSystem? knownSystem, MediaType? mediaType, string[] expected)
         {

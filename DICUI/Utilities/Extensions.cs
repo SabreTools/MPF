@@ -14,6 +14,17 @@ namespace DICUI.Utilities
     }
 
     /// <summary>
+    /// Extensions for DICFlag for easier calling
+    /// </summary>
+    public static class DICFlagExtensions
+    {
+        public static string Name(this DICFlag command)
+        {
+            return Converters.DICFlagToString(command);
+        }
+    }
+
+    /// <summary>
     /// Extensions for MediaType? for easier calling
     /// </summary>
     public static class MediaTypeExtensions

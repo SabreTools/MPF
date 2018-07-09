@@ -140,6 +140,66 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the string representation of the DICFlag enum values
+        /// </summary>
+        /// <param name="command">DICFlag value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string DICFlagToString(DICFlag flag)
+        {
+            switch (flag)
+            {
+                case DICFlag.AddOffset:
+                    return DICFlagStrings.AddOffset;
+                case DICFlag.AMSF:
+                    return DICFlagStrings.AMSF;
+                case DICFlag.BEOpcode:
+                    return DICFlagStrings.BEOpcode;
+                case DICFlag.C2Opcode:
+                    return DICFlagStrings.C2Opcode;
+                case DICFlag.CopyrightManagementInformation:
+                    return DICFlagStrings.CopyrightManagementInformation;
+                case DICFlag.D8Opcode:
+                    return DICFlagStrings.D8Opcode;
+                case DICFlag.DisableBeep:
+                    return DICFlagStrings.DisableBeep;
+                case DICFlag.ForceUnitAccess:
+                    return DICFlagStrings.ForceUnitAccess;
+                case DICFlag.MCN:
+                    return DICFlagStrings.MCN;
+                case DICFlag.MultiSession:
+                    return DICFlagStrings.MultiSession;
+                case DICFlag.NoFixSubP:
+                    return DICFlagStrings.NoFixSubP;
+                case DICFlag.NoFixSubQ:
+                    return DICFlagStrings.NoFixSubQ;
+                case DICFlag.NoFixSubQLibCrypt:
+                    return DICFlagStrings.NoFixSubQLibCrypt;
+                case DICFlag.NoFixSubQSecuROM:
+                    return DICFlagStrings.NoFixSubQSecuROM;
+                case DICFlag.NoFixSubRtoW:
+                    return DICFlagStrings.NoFixSubRtoW;
+                case DICFlag.Raw:
+                    return DICFlagStrings.Raw;
+                case DICFlag.Reverse:
+                    return DICFlagStrings.Reverse;
+                case DICFlag.ScanAntiMod:
+                    return DICFlagStrings.ScanAntiMod;
+                case DICFlag.ScanFileProtect:
+                    return DICFlagStrings.ScanFileProtect;
+                case DICFlag.ScanSectorProtect:
+                    return DICFlagStrings.ScanSectorProtect;
+                case DICFlag.SeventyFour:
+                    return DICFlagStrings.SeventyFour;
+                case DICFlag.SubchannelReadLevel:
+                    return DICFlagStrings.SubchannelReadLevel;
+
+                case DICFlag.NONE:
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
         /// Convert IMAPI physical media type to a MediaType
         /// </summary>
         /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
@@ -326,22 +386,22 @@ namespace DICUI.Utilities
             switch (type)
             {
                 case MediaType.CD:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
+                    parameters.Add(DICFlagStrings.C2Opcode); parameters.Add("20");
 
                     switch (sys)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            parameters.Add(DICFlags.NoFixSubQSecuROM);
-                            parameters.Add(DICFlags.ScanFileProtect);
-                            parameters.Add(DICFlags.ScanSectorProtect);
+                            parameters.Add(DICFlagStrings.NoFixSubQSecuROM);
+                            parameters.Add(DICFlagStrings.ScanFileProtect);
+                            parameters.Add(DICFlagStrings.ScanSectorProtect);
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(DICFlags.MCN);
+                            parameters.Add(DICFlagStrings.MCN);
                             break;
                         case KnownSystem.SonyPlayStation:
-                            parameters.Add(DICFlags.ScanAntiMod);
-                            parameters.Add(DICFlags.NoFixSubQLibCrypt);
+                            parameters.Add(DICFlagStrings.ScanAntiMod);
+                            parameters.Add(DICFlagStrings.NoFixSubQLibCrypt);
                             break;
                     }
                     break;
@@ -349,7 +409,7 @@ namespace DICUI.Utilities
                     // Currently no defaults set
                     break;
                 case MediaType.GDROM:
-                    parameters.Add(DICFlags.C2Opcode); parameters.Add("20");
+                    parameters.Add(DICFlagStrings.C2Opcode); parameters.Add("20");
                     break;
                 case MediaType.HDDVD:
                     // Currently no defaults set
@@ -360,10 +420,10 @@ namespace DICUI.Utilities
 
                 // Special Formats
                 case MediaType.GameCubeGameDisc:
-                    parameters.Add(DICFlags.Raw);
+                    parameters.Add(DICFlagStrings.Raw);
                     break;
                 case MediaType.WiiOpticalDisc:
-                    parameters.Add(DICFlags.Raw);
+                    parameters.Add(DICFlagStrings.Raw);
                     break;
 
                 // Non-optical

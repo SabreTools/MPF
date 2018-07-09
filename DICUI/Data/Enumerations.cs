@@ -26,6 +26,36 @@
     }
 
     /// <summary>
+    /// Supported DIC flags
+    /// </summary>
+    public enum DICFlag
+    {
+        NONE = 0,
+        AddOffset,
+        AMSF,
+        BEOpcode,
+        C2Opcode,
+        CopyrightManagementInformation,
+        D8Opcode,
+        DisableBeep,
+        ForceUnitAccess,
+        MCN,
+        MultiSession,
+        NoFixSubP,
+        NoFixSubQ,
+        NoFixSubQLibCrypt,
+        NoFixSubQSecuROM,
+        NoFixSubRtoW,
+        Raw,
+        Reverse,
+        ScanAntiMod,
+        ScanFileProtect,
+        ScanSectorProtect,
+        SeventyFour,
+        SubchannelReadLevel,
+    }
+
+    /// <summary>
     /// Known systems
     /// </summary>
     public enum KnownSystem
