@@ -12,7 +12,7 @@
     /// <summary>
     /// Top-level commands for DiscImageCreator
     /// </summary>
-    public static class DICCommands
+    public static class DICCommandStrings
     {
         public const string Audio = "audio";
         public const string BluRay = "bd";
@@ -42,7 +42,7 @@
         public const string AMSF = "/p";
         public const string BEOpcode = "/be";
         public const string C2Opcode = "/c2";
-        public const string CMI = "/c";
+        public const string CopyrightManagementInformation = "/c";
         public const string D8Opcode = "/d8";
         public const string DisableBeep = "/q";
         public const string ForceUnitAccess = "/f";

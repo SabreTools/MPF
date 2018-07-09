@@ -40,21 +40,21 @@ namespace DICUI.Utilities
         {
             switch (baseCommand)
             {
-                case DICCommands.Audio:
-                case DICCommands.CompactDisc:
-                case DICCommands.Data:
+                case DICCommandStrings.Audio:
+                case DICCommandStrings.CompactDisc:
+                case DICCommandStrings.Data:
                     return MediaType.CD;
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
+                case DICCommandStrings.GDROM:
+                case DICCommandStrings.Swap:
                     return MediaType.GDROM;
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.XBOX:
+                case DICCommandStrings.DigitalVideoDisc:
+                case DICCommandStrings.XBOX:
                     return MediaType.DVD;
-                case DICCommands.BluRay:
+                case DICCommandStrings.BluRay:
                     return MediaType.BluRay;
 
                 // Non-optical
-                case DICCommands.Floppy:
+                case DICCommandStrings.Floppy:
                     return MediaType.Floppy;
                 default:
                     return null;
@@ -70,31 +70,81 @@ namespace DICUI.Utilities
         {
             switch (baseCommand)
             {
-                case DICCommands.Audio:
+                case DICCommandStrings.Audio:
                     return KnownSystem.AudioCD;
-                case DICCommands.CompactDisc:
-                case DICCommands.Data:
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.Floppy:
+                case DICCommandStrings.CompactDisc:
+                case DICCommandStrings.Data:
+                case DICCommandStrings.DigitalVideoDisc:
+                case DICCommandStrings.Floppy:
                     return KnownSystem.IBMPCCompatible;
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
+                case DICCommandStrings.GDROM:
+                case DICCommandStrings.Swap:
                     return KnownSystem.SegaDreamcast;
-                case DICCommands.BluRay:
+                case DICCommandStrings.BluRay:
                     return KnownSystem.SonyPlayStation3;
-                case DICCommands.XBOX:
+                case DICCommandStrings.XBOX:
                     return KnownSystem.MicrosoftXBOX;
                 default:
                     return null;
             }
         }
 
-		/// <summary>
-		/// Convert IMAPI physical media type to a MediaType
-		/// </summary>
-		/// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
-		/// <returns>MediaType if possible, null on error</returns>
-		public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
+        /// <summary>
+        /// Get the string representation of the DICCommand enum values
+        /// </summary>
+        /// <param name="command">DICCommand value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string DICCommandToString(DICCommand command)
+        {
+            switch (command)
+            {
+                case DICCommand.Audio:
+                    return DICCommandStrings.Audio;
+                case DICCommand.BluRay:
+                    return DICCommandStrings.BluRay;
+                case DICCommand.Close:
+                    return DICCommandStrings.Close;
+                case DICCommand.CompactDisc:
+                    return DICCommandStrings.CompactDisc;
+                case DICCommand.Data:
+                    return DICCommandStrings.Data;
+                case DICCommand.DigitalVideoDisc:
+                    return DICCommandStrings.DigitalVideoDisc;
+                case DICCommand.DriveSpeed:
+                    return DICCommandStrings.DriveSpeed;
+                case DICCommand.Eject:
+                    return DICCommandStrings.Eject;
+                case DICCommand.Floppy:
+                    return DICCommandStrings.Floppy;
+                case DICCommand.GDROM:
+                    return DICCommandStrings.GDROM;
+                case DICCommand.MDS:
+                    return DICCommandStrings.MDS;
+                case DICCommand.Reset:
+                    return DICCommandStrings.Reset;
+                case DICCommand.Start:
+                    return DICCommandStrings.Start;
+                case DICCommand.Stop:
+                    return DICCommandStrings.Stop;
+                case DICCommand.Sub:
+                    return DICCommandStrings.Sub;
+                case DICCommand.Swap:
+                    return DICCommandStrings.Swap;
+                case DICCommand.XBOX:
+                    return DICCommandStrings.XBOX;
+
+                case DICCommand.NONE:
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        /// Convert IMAPI physical media type to a MediaType
+        /// </summary>
+        /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
+        /// <returns>MediaType if possible, null on error</returns>
+        public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
 		{
 			switch (type)
 			{
@@ -227,29 +277,29 @@ namespace DICUI.Utilities
                 case MediaType.CD:
                     if (sys == KnownSystem.MicrosoftXBOX)
                     {
-                        return DICCommands.XBOX;
+                        return DICCommandStrings.XBOX;
                     }
-                    return DICCommands.CompactDisc;
+                    return DICCommandStrings.CompactDisc;
                 case MediaType.DVD:
                     if (sys == KnownSystem.MicrosoftXBOX
                         || sys == KnownSystem.MicrosoftXBOX360XDG2
                         || sys == KnownSystem.MicrosoftXBOX360XDG3)
                     {
-                        return DICCommands.XBOX;
+                        return DICCommandStrings.XBOX;
                     }
-                    return DICCommands.DigitalVideoDisc;
+                    return DICCommandStrings.DigitalVideoDisc;
                 case MediaType.GDROM:
-                    return DICCommands.GDROM;
+                    return DICCommandStrings.GDROM;
                 case MediaType.HDDVD:
-                    return DICCommands.DigitalVideoDisc;
+                    return DICCommandStrings.DigitalVideoDisc;
                 case MediaType.BluRay:
-                    return DICCommands.BluRay;
+                    return DICCommandStrings.BluRay;
                 case MediaType.GameCubeGameDisc:
-                    return DICCommands.DigitalVideoDisc;
+                    return DICCommandStrings.DigitalVideoDisc;
                 case MediaType.WiiOpticalDisc:
-                    return DICCommands.DigitalVideoDisc;
+                    return DICCommandStrings.DigitalVideoDisc;
                 case MediaType.Floppy:
-                    return DICCommands.Floppy;
+                    return DICCommandStrings.Floppy;
 
                 default:
                     return null;
