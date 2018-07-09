@@ -38,7 +38,7 @@ namespace DICUI.UI
             get { return Convert.ToString(_options.RereadAmountForC2); }
             set
             {
-                if (UInt32.TryParse(value, out uint result))
+                if (Int32.TryParse(value, out int result))
                     _options.RereadAmountForC2 = result;
             }
         }

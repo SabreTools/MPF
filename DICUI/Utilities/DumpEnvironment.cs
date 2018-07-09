@@ -54,7 +54,7 @@ namespace DICUI.Utilities
         // extra DIC arguments
         public bool QuietMode;
         public bool ParanoidMode;
-        public uint RereadAmountC2;
+        public int RereadAmountC2;
 
         // External process information
         private Process dicProcess;
