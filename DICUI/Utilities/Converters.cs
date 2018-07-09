@@ -8,51 +8,6 @@ using DICUI.Data;
 namespace DICUI.Utilities
 {
     /// <summary>
-    /// Extensions for MediaType? for easier calling
-    /// </summary>
-    public static class MediaTypeExtensions
-    {
-        public static string Name(this MediaType? type)
-        {
-            return Converters.MediaTypeToString(type);
-        }
-
-        public static string Extension(this MediaType? type)
-        {
-            return Converters.MediaTypeToExtension(type);
-        }
-
-        public static bool DoesSupportDriveSpeed(this MediaType? type)
-        {
-            switch(type)
-            {
-                case MediaType.CD:
-                case MediaType.DVD:
-                case MediaType.GDROM:
-                case MediaType.HDDVD:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Extensions for KnownSystem? for easier calling
-    /// </summary>
-    public static class KnownSystemExtensions
-    {
-        public static bool DoesSupportDriveSpeed(this KnownSystem? system)
-        {
-            return system != KnownSystem.MicrosoftXBOX
-                && system != KnownSystem.MicrosoftXBOX360XDG2
-                && system != KnownSystem.MicrosoftXBOX360XDG3;
-        }
-    }
-
-    /// <summary>
     /// Used to provide a converter to XAML files to render comboboxes with enum values
     /// </summary>
     public class EnumDescriptionConverter : IValueConverter
@@ -61,6 +16,8 @@ namespace DICUI.Utilities
         {
             if (value is MediaType?)
                 return ((MediaType?)value).Name();
+            else if (value is KnownSystem?)
+                return ((KnownSystem?)value).Name();
             else
                 return "";
         }

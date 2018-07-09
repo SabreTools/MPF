@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DICUI.Data;
+using DICUI.UI;
 using Xunit;
 
 namespace DICUI.Test.Data
@@ -14,7 +15,7 @@ namespace DICUI.Test.Data
         [InlineData(null, 72)] // TODO: Update when fully determined
         public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
         {
-            var actual = UIElements.GetAllowedDriveSpeedsForMediaType(mediaType);
+            var actual = AllowedSpeeds.GetForMediaType(mediaType);
             Assert.Equal(maxExpected, actual.Last());
         }
     }

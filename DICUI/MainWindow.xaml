@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:DICUI"
         xmlns:utilities="clr-namespace:DICUI.Utilities"
         mc:Ignorable="d"
-        Title="Disc Image Creator GUI" Height="450" Width="600">
+        Title="Disc Image Creator GUI" Height="450" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
 
     <Window.Resources>
         <utilities:EnumDescriptionConverter x:Key="enumConverter" />
@@ -24,11 +24,19 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
 
-        <ToolBarTray Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Height="30" HorizontalAlignment="Stretch" IsLocked="True">
-            <ToolBar>
-                <Button x:Name="tbr_Options" Content="Options" Click="tbr_Options_Click" />
-            </ToolBar>
-        </ToolBarTray>
+        <StackPanel VerticalAlignment="Top" Grid.ColumnSpan="4">
+            <Menu Width="Auto" Height="20" >
+                <MenuItem Header="_File">
+                    <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="140" Click="AppExitClick" />
+                </MenuItem>
+                <MenuItem Header="_Tools">
+                    <MenuItem x:Name="Options" Header="_Options" HorizontalAlignment="Left" Width="140" Click="OptionsClick"/>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem x:Name="About" Header="_About" HorizontalAlignment="Left" Width="140" Click="AboutClick"/>
+                </MenuItem>
+            </Menu>
+        </StackPanel>
         <GroupBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5,5.2,5.4" HorizontalAlignment="Stretch" Header="Settings"/>
         <GroupBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,4.6,5.2,4.8" HorizontalAlignment="Stretch" Header="Controls"/>
         <GroupBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5,5.2,5.2,4.8" HorizontalAlignment="Stretch" Header="Status"/>
@@ -48,8 +56,14 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-            <ComboBox x:Name="cmb_SystemType" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="cmb_SystemType_SelectionChanged" />
-            <ComboBox x:Name="cmb_MediaType" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="cmb_MediaType_SelectionChanged">
+            <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="left" SelectionChanged="SystemTypeComboBoxSelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="right" SelectionChanged="MediaTypeComboBoxSelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Converter={StaticResource enumConverter}}" />
@@ -58,24 +72,31 @@
             </ComboBox>
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
-            <TextBox x:Name="txt_OutputFilename" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="txt_OutputFilename_TextChanged" />
+            <TextBox x:Name="OutputFilenameTextBox" Grid.Row="1" Grid.Column="1" Height="22" TextChanged="OutputFilenameTextBoxTextChanged" />
 
             <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
-            <TextBox x:Name="txt_OutputDirectory" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" TextChanged="txt_OutputDirectory_TextChanged" />
-            <Button x:Name="btn_OutputDirectoryBrowse" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="btn_OutputDirectoryBrowse_Click"/>
+            <TextBox x:Name="OutputDirectoryTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="left" TextChanged="OutputDirectoryTextBoxTextChanged" />
+            <Button x:Name="OutputDirectoryBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="OutputDirectoryBrowseButtonClick"/>
 
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-            <ComboBox x:Name="cmb_DriveLetter" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveLetter_SelectionChanged" />
+            <ComboBox x:Name="DriveLetterComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="DriveLetterComboBoxSelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Letter}" />
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
             <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
-            <ComboBox x:Name="cmb_DriveSpeed" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="cmb_DriveSpeed_SelectionChanged" />
+            <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="left" SelectionChanged="DriveSpeedComboBoxSelectionChanged" />
 
             <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Parameters</Label>
-            <TextBox x:Name="txt_Parameters" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" IsEnabled="False" />
+            <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" IsEnabled="False" />
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Margin="15,19.6,15.2,9.8" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -84,9 +105,10 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Button x:Name="btn_StartStop" Grid.Row="0" Grid.Column="0" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="btn_StartStop_Click" IsEnabled="False" />
-            <Button x:Name="btn_Search" Grid.Row="0" Grid.Column="1" Height="22" Width="150" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="btn_Search_Click" />
-            <CheckBox x:Name="chk_EjectWhenDone" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Eject When Done" IsChecked="False" />
+            <Button x:Name="StartStopButton" Grid.Row="0" Grid.Column="0" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="StartStopButtonClick" IsEnabled="False" />
+            <Button x:Name="DiskScanButton" Grid.Row="0" Grid.Column="1" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="DiskScanButtonClick" />
+            <Button x:Name="CopyProtectScanButton" Grid.Row="0" Grid.Column="2" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for protection" Click="CopyProtectScanButtonClick" />
+            <CheckBox x:Name="EjectWhenDoneCheckBox" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Eject When Done" IsChecked="False" />
         </Grid>
 
         <Grid Grid.Row="3" Grid.Column="0" Margin="15,20.2,15.2,9.8" Grid.ColumnSpan="2">
@@ -97,7 +119,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label x:Name="lbl_Status" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for CD or DVD..." />
+            <Label x:Name="StatusLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for CD or DVD..." />
         </Grid>
     </Grid>
 </Window>

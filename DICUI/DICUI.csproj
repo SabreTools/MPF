@@ -67,6 +67,12 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
+    <Reference Include="LessIO, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LessIO.0.5.0\lib\net40\LessIO.dll</HintPath>
+    </Reference>
+    <Reference Include="libmspackn, Version=0.8.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\packages\libmspack4n.0.8.0\lib\net40\libmspackn.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -92,11 +98,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="External\OrderedDictionary.cs" />
-    <Compile Include="External\IOrderedDictionary.cs" />
+    <Compile Include="External\EVORE.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Tasks.cs" />
-    <Compile Include="Utilities\DumpInformation.cs" />
+    <Compile Include="External\ProtectionFind.cs" />
+    <Compile Include="UI\KnownSystemComboBoxItem.cs" />
+    <Compile Include="UI\AllowedSpeeds.cs" />
+    <Compile Include="Utilities\DumpEnvironment.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Result.cs" />
     <Compile Include="Utilities\Validators.cs" />
     <Compile Include="Utilities\Converters.cs" />
     <Compile Include="OptionsWindow.xaml.cs">
@@ -127,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
@@ -162,6 +172,11 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="mspack.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

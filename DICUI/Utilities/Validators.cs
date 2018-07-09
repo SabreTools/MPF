@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using IMAPI2;
 using DICUI.Data;
 using DICUI.External;
@@ -371,61 +372,30 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Create a list of systems matched to their respective enums
+        /// Create a list of systems
         /// </summary>
-        /// <returns>Systems matched to enums, if possible</returns>
-        /// <remarks>
-        ///	If something has a "string, null" value, it should be assumed that it is a separator
-        /// </remarks>
-        /// TODO: Figure out a way that the sections can be generated more automatically
-        public static OrderedDictionary<string, KnownSystem?> CreateListOfSystems()
+        /// <returns>KnownSystems, if possible</returns>
+        public static List<KnownSystem?> CreateListOfSystems()
         {
-            var systemsDict = new OrderedDictionary<string, KnownSystem?>();
-
-            foreach (KnownSystem system in Enum.GetValues(typeof(KnownSystem)))
-            {
-                // In the special cases of breaks, we want to add the proper mappings for sections
-                switch (system)
-                {
-                    // Consoles section
-                    case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        systemsDict.Add("---------- Consoles ----------", null);
-                        break;
-
-                    // Computers section
-                    case KnownSystem.AcornArchimedes:
-                        systemsDict.Add("---------- Computers ----------", null);
-                        break;
-
-                    // Arcade section
-                    case KnownSystem.AmigaCUBOCD32:
-                        systemsDict.Add("---------- Arcade ----------", null);
-                        break;
-
-                    // Other section
-                    case KnownSystem.AudioCD:
-                        systemsDict.Add("---------- Others ----------", null);
-                        break;
-                }
-
-                systemsDict.Add(Converters.KnownSystemToString(system), system);
-            }
-
-            return systemsDict;
+            return Enum.GetValues(typeof(KnownSystem))
+                .OfType<KnownSystem?>()
+                .Where(s => !s.IsMarker())
+                .ToList();
         }
 
         /// <summary>
-        /// Create a list of active optical drives matched to their volume labels
+        /// Create a list of active drives matched to their volume labels
         /// </summary>
         /// <returns>Active drives, matched to labels, if possible</returns>
         /// <remarks>
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// </remarks>
-        public static OrderedDictionary<char, string> CreateListOfDrives()
+        public static List<Drive> CreateListOfDrives()
         {
+            var drives = new List<Drive>();
+
             // Get the floppy drives
-            var floppyDrives = new List<KeyValuePair<char, string>>();
             try
             {
                 ManagementObjectSearcher searcher =
@@ -439,7 +409,7 @@ namespace DICUI.Utilities
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = queryObj["DeviceID"].ToString()[0];
-                        floppyDrives.Add(new KeyValuePair<char, string>(devId, UIElements.FloppyDriveString));
+                        drives.Add(Drive.Floppy(devId));
                     }
                 }
             }
@@ -449,23 +419,121 @@ namespace DICUI.Utilities
             }
 
             // Get the optical disc drives
-            List<KeyValuePair<char, string>> discDrives = DriveInfo.GetDrives()
+            List<Drive> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
-                .Select(d => new KeyValuePair<char, string>(d.Name[0], d.VolumeLabel))
+                .Select(d => Drive.Optical(d.Name[0], d.VolumeLabel))                
                 .ToList();
 
             // Add the two lists together and order
-            floppyDrives.AddRange(discDrives);
-            floppyDrives = floppyDrives.OrderBy(i => i.Key).ToList();
+            drives.AddRange(discDrives);
+            drives = drives.OrderBy(i => i.Letter).ToList();
 
-            // Add to the ordered dictionary and return
-            var drivesDict = new OrderedDictionary<char, string>();
-            foreach (var drive in floppyDrives)
+            return drives;
+        }
+
+        /// <summary>
+        /// Determine the base flags to use for checking a commandline
+        /// </summary>
+        /// <param name="parameters">Parameters as a string to check</param>
+        /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
+        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
+        /// <param name="letter">Output string containing the found drive letter</param>
+        /// <param name="path">Output string containing the found path</param>
+        /// <returns>False on error (and all outputs set to null), true otherwise</returns>
+        public static bool DetermineFlags(string parameters, out MediaType? type, out KnownSystem? system, out string letter, out string path)
+        {
+            // Populate all output variables with null
+            type = null; system = null; letter = null; path = null;
+
+            // The string has to be valid by itself first
+            if (String.IsNullOrWhiteSpace(parameters))
             {
-                drivesDict.Add(drive.Key, drive.Value);
+                return false;
             }
 
-            return drivesDict;
+            // Now split the string into parts for easier validation
+            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
+            parameters = parameters.Trim();
+            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
+                .Cast<Match>()
+                .Select(m => m.Value)
+                .ToList();
+
+            type = Converters.BaseCommmandToMediaType(parts[0]);
+            system = Converters.BaseCommandToKnownSystem(parts[0]);
+
+            // Determine what the commandline should look like given the first item
+            switch (parts[0])
+            {
+                case DICCommands.CompactDisc:
+                case DICCommands.GDROM:
+                case DICCommands.Swap:
+                case DICCommands.Data:
+                case DICCommands.Audio:
+                case DICCommands.DigitalVideoDisc:
+                case DICCommands.BluRay:
+                case DICCommands.XBOX:
+                case DICCommands.Floppy:
+                    if (!IsValidDriveLetter(parts[1]))
+                    {
+                        return false;
+                    }
+                    letter = parts[1];
+
+                    if (IsFlag(parts[2]))
+                    {
+                        return false;
+                    }
+                    path = parts[2].Trim('\"');
+
+                    // Special case for GameCube/Wii
+                    if (parts.Contains(DICFlags.Raw))
+                    {
+                        type = MediaType.GameCubeGameDisc;
+                        system = KnownSystem.NintendoGameCube;
+                    }
+                    // Special case for PlayStation
+                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
+                        || parts.Contains(DICFlags.ScanAntiMod))
+                    {
+                        type = MediaType.CD;
+                        system = KnownSystem.SonyPlayStation;
+                    }
+                    // Special case for Saturn
+                    else if (parts.Contains(DICFlags.SeventyFour))
+                    {
+                        type = MediaType.CD;
+                        system = KnownSystem.SegaSaturn;
+                    }
+
+                    break;
+                case DICCommands.Stop:
+                case DICCommands.Start:
+                case DICCommands.Eject:
+                case DICCommands.Close:
+                case DICCommands.Reset:
+                case DICCommands.DriveSpeed:
+                    if (!IsValidDriveLetter(parts[1]))
+                    {
+                        return false;
+                    }
+                    letter = parts[1];
+
+                    break;
+                case DICCommands.Sub:
+                case DICCommands.MDS:
+                    if (IsFlag(parts[1]))
+                    {
+                        return false;
+                    }
+                    path = parts[1].Trim('\"');
+
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -505,32 +573,39 @@ namespace DICUI.Utilities
             }
 
             // Get all relevant disc information
-            MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-            deviceId = deviceId.ToLower().Replace('\\', '#');
-            string id = null;
-            foreach (var disc in discMaster)
+            try
             {
-                if (disc.ToString().Contains(deviceId))
+                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+                deviceId = deviceId.ToLower().Replace('\\', '#');
+                string id = null;
+                foreach (var disc in discMaster)
                 {
-                    id = disc.ToString();
+                    if (disc.ToString().Contains(deviceId))
+                    {
+                        id = disc.ToString();
+                    }
+                }
+
+                // If we couldn't find the drive, we don't care and return
+                if (id == null)
+                {
+                    return null;
+                }
+
+                // Otherwise, we get the media type, if any
+                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                recorder.InitializeDiscRecorder(id);
+                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+                dataWriter.Recorder = recorder;
+                var media = dataWriter.CurrentPhysicalMediaType;
+                if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+                {
+                    return Converters.IMAPIDiskTypeToMediaType(media);
                 }
             }
-
-            // If we couldn't find the drive, we don't care and return
-            if (id == null)
+            catch
             {
-                return null;
-            }
-
-            // Otherwise, we get the media type, if any
-            MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-            recorder.InitializeDiscRecorder(id);
-            MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-            dataWriter.Recorder = recorder;
-            var media = dataWriter.CurrentPhysicalMediaType;
-            if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-            {
-                return Converters.IMAPIDiskTypeToMediaType(media);
+                // We don't care what the error is
             }
 
             return null;
@@ -691,6 +766,53 @@ namespace DICUI.Utilities
             return -1;
         }
 
+        /// <summary>
+        /// Verify that, given a system and a media type, they are correct
+        /// </summary>
+        public static Result GetSupportStatus(KnownSystem? system, MediaType? type)
+        {
+            // No system chosen, update status
+            if (system == KnownSystem.NONE)
+                return Result.Failure("Please select a valid system");
+            // custom system chosen, then don't check anything
+            else if (system == KnownSystem.Custom)
+                return Result.Success("{0} ready to dump", type.Name());
+
+            // If we're on an unsupported type, update the status accordingly
+            switch (type)
+            {
+                // Fully supported types
+                case MediaType.CD:
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    if (system == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+                    }
+                    return Result.Success("{0} ready to dump", type.Name());
+
+                // Partially supported types
+                case MediaType.GDROM:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+
+                // Undumpable but recognized types
+                case MediaType.LaserDisc:
+                case MediaType.WiiUOpticalDisc:
+                case MediaType.CED:
+                case MediaType.UMD:
+                case MediaType.Cartridge:
+                case MediaType.Cassette:
+                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+
+                // Invalid or unknown types
+                case MediaType.NONE:
+                default:
+                    return Result.Failure("Please select a valid disc type");
+            }
+        }
         /// <summary>
         /// Validate that at string would be valid as input to DiscImageCreator
         /// </summary>
@@ -1099,108 +1221,21 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Determine the base flags to use for checking a commandline
+        /// Run protection scan on a given dump environment
         /// </summary>
-        /// <param name="parameters">Parameters as a string to check</param>
-        /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
-        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
-        /// <param name="letter">Output string containing the found drive letter</param>
-        /// <param name="path">Output string containing the found path</param>
-        /// <returns>False on error (and all outputs set to null), true otherwise</returns>
-        public static bool DetermineFlags(string parameters, out MediaType? type, out KnownSystem? system, out string letter, out string path)
+        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <returns>Copy protection detected in the envirionment, if any</returns>
+        public static async Task<string> RunProtectionScanOnPath(string path)
         {
-            // Populate all output variables with null
-            type = null; system = null; letter = null; path = null;
-
-            // The string has to be valid by itself first
-            if (String.IsNullOrWhiteSpace(parameters))
+            var found = await Task.Run(() =>
             {
-                return false;
-            }
+                return ProtectionFind.Scan(path);
+            });
 
-            // Now split the string into parts for easier validation
-            // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
-            parameters = parameters.Trim();
-            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
-                .Cast<Match>()
-                .Select(m => m.Value)
-                .ToList();
+            if (found == null)
+                return "None found";
 
-            type = Converters.BaseCommmandToMediaType(parts[0]);
-            system = Converters.BaseCommandToKnownSystem(parts[0]);
-
-            // Determine what the commandline should look like given the first item
-            switch (parts[0])
-            {
-                case DICCommands.CompactDisc:
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
-                case DICCommands.Data:
-                case DICCommands.Audio:
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.BluRay:
-                case DICCommands.XBOX:
-                case DICCommands.Floppy:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
-                        return false;
-                    }
-                    letter = parts[1];
-
-                    if (IsFlag(parts[2]))
-                    {
-                        return false;
-                    }
-                    path = parts[2].Trim('\"');
-
-                    // Special case for GameCube/Wii
-                    if (parts.Contains(DICFlags.Raw))
-                    {
-                        type = MediaType.GameCubeGameDisc;
-                        system = KnownSystem.NintendoGameCube;
-                    }
-                    // Special case for PlayStation
-                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
-                        || parts.Contains(DICFlags.ScanAntiMod))
-                    {
-                        type = MediaType.CD;
-                        system = KnownSystem.SonyPlayStation;
-                    }
-                    // Special case for Saturn
-                    else if (parts.Contains(DICFlags.SeventyFour))
-                    {
-                        type = MediaType.CD;
-                        system = KnownSystem.SegaSaturn;
-                    }
-
-                    break;
-                case DICCommands.Stop:
-                case DICCommands.Start:
-                case DICCommands.Eject:
-                case DICCommands.Close:
-                case DICCommands.Reset:
-                case DICCommands.DriveSpeed:
-                    if (!IsValidDriveLetter(parts[1]))
-                    {
-                        return false;
-                    }
-                    letter = parts[1];
-
-                    break;
-                case DICCommands.Sub:
-                case DICCommands.MDS:
-                    if (IsFlag(parts[1]))
-                    {
-                        return false;
-                    }
-                    path = parts[1].Trim('\"');
-
-                    break;
-                default:
-                    return false;
-            }
-
-            return true;
+            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
         }
     }
 }

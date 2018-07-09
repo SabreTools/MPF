@@ -3,7 +3,6 @@
     /// <summary>
     /// Known systems
     /// </summary>
-    /// <remarks>Ensure that Utilities methods are updated as well</remarks>
     public enum KnownSystem
     {
         NONE = 0,
@@ -39,6 +38,8 @@
         VTechVFlashVSmilePro,
         ZAPiTGamesGameWaveFamilyEntertainmentSystem,
 
+        MarkerConsoleEnd,
+
         #endregion
 
         #region Computers
@@ -51,6 +52,8 @@
         NECPC88,
         NECPC98,
         SharpX68000,
+
+        MarkerComputerEnd,
 
         #endregion
 
@@ -110,6 +113,8 @@
         TandyMemorexVisualInformationSystem,
         TsunamiTsuMoMultiGameMotionSystem,
 
+        MarkerArcadeEnd,
+
         #endregion
 
         #region Other
@@ -127,10 +132,24 @@
         TomyKissSite,
         VideoCD,
 
+        MarkerOtherEnd,
+
         #endregion
 
-        Custom = -1
+        Custom,
     }
+
+    /// <summary>
+    /// Known system category
+    /// </summary>
+    public enum KnownSystemCategory
+    {
+        Console = 0,
+        Computer,
+        Arcade,
+        Other,
+        Custom
+    };
 
     /// <summary>
     /// Known media types
