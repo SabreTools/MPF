@@ -657,6 +657,23 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Generate parameters based on a set of known inputs
+        /// </summary>
+        /// <param name="system">KnownSystem value to use</param>
+        /// <param name="type">MediaType value to use</param>
+        /// <param name="driveLetter">Drive letter to use</param>
+        /// <param name="filename">Filename to use</param>
+        /// <param name="driveSpeed">Drive speed to use</param>
+        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed)
+        {
+            SetBaseCommand(system, type);
+            DriveLetter = driveLetter.ToString();
+            DriveSpeed = driveSpeed;
+            Filename = filename;
+            SetDefaultParameters(system, type);
+        }
+
+        /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
         /// <returns>Correctly formatted parameter string, null on error</returns>
@@ -1016,7 +1033,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a valid drive letter, false otherwise</returns>
-        private static bool IsValidDriveLetter(string parameter)
+        private bool IsValidDriveLetter(string parameter)
         {
             if (!Regex.IsMatch(parameter, @"^[A-Z]:?\\?$"))
                 return false;
@@ -1029,7 +1046,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a flag, false otherwise</returns>
-        private static bool IsFlag(string parameter)
+        private bool IsFlag(string parameter)
         {
             if (parameter.Trim('\"').StartsWith("/"))
                 return true;
@@ -1043,7 +1060,7 @@ namespace DICUI.Utilities
         /// <param name="parameters">List of parameters to check against</param>
         /// <param name="index">Current index</param>
         /// <returns>True if the next item exists, false otherwise</returns>
-        private static bool DoesExist(List<string> parameters, int index)
+        private bool DoesExist(List<string> parameters, int index)
         {
             if (index >= parameters.Count)
                 return false;
@@ -1058,7 +1075,7 @@ namespace DICUI.Utilities
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid number, false otherwise</returns>
-        private static bool IsValidNumber(string parameter, int lowerBound = -1, int upperBound = -1)
+        private bool IsValidNumber(string parameter, int lowerBound = -1, int upperBound = -1)
         {
             if (!Int32.TryParse(parameter, out int temp))
                 return false;
@@ -1068,6 +1085,133 @@ namespace DICUI.Utilities
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Set the DIC command to be used for a given system and media type
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <param name="type">MediaType value to check</param>
+        private void SetBaseCommand(KnownSystem? system, MediaType? type)
+        {
+            // If we have an invalid combination, we should Command = null
+            if (!Validators.GetValidMediaTypes(system).Contains(type))
+            {
+                Command = DICCommand.NONE;
+                return;
+            }
+
+            switch (type)
+            {
+                case MediaType.CD:
+                    if (system == KnownSystem.MicrosoftXBOX)
+                    {
+                        Command = DICCommand.XBOX;
+                        return;
+                    }
+                    Command = DICCommand.CompactDisc;
+                    return;
+                case MediaType.DVD:
+                    if (system == KnownSystem.MicrosoftXBOX
+                        || system == KnownSystem.MicrosoftXBOX360XDG2
+                        || system == KnownSystem.MicrosoftXBOX360XDG3)
+                    {
+                        Command = DICCommand.XBOX;
+                        return;
+                    }
+                    Command = DICCommand.DigitalVideoDisc;
+                    return;
+                case MediaType.GDROM:
+                    Command = DICCommand.GDROM;
+                    return;
+                case MediaType.HDDVD:
+                    Command = DICCommand.DigitalVideoDisc;
+                    return;
+                case MediaType.BluRay:
+                    Command = DICCommand.BluRay;
+                    return;
+                case MediaType.GameCubeGameDisc:
+                    Command = DICCommand.DigitalVideoDisc;
+                    return;
+                case MediaType.WiiOpticalDisc:
+                    Command = DICCommand.DigitalVideoDisc;
+                    return;
+                case MediaType.Floppy:
+                    Command = DICCommand.Floppy;
+                    return;
+
+                default:
+                    Command = DICCommand.NONE;
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// Set default parameters for a given system and media type
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <param name="type">MediaType value to check</param>
+        private void SetDefaultParameters(KnownSystem? system, MediaType? type)
+        {
+            // First check to see if the combination of system and MediaType is valid
+            var validTypes = Validators.GetValidMediaTypes(system);
+            if (!validTypes.Contains(type))
+            {
+                return;
+            }
+
+            // Now sort based on disc type
+            List<string> parameters = new List<string>();
+            switch (type)
+            {
+                case MediaType.CD:
+                    this[DICFlag.C2Opcode] = true;
+                    C2OpcodeValue[0] = 20;
+
+                    switch (system)
+                    {
+                        case KnownSystem.AppleMacintosh:
+                        case KnownSystem.IBMPCCompatible:
+                            this[DICFlag.NoFixSubQSecuROM] = true;
+                            this[DICFlag.ScanFileProtect] = true;
+                            this[DICFlag.ScanSectorProtect] = true;
+                            break;
+                        case KnownSystem.NECPCEngineTurboGrafxCD:
+                            this[DICFlag.MCN] = true;
+                            break;
+                        case KnownSystem.SonyPlayStation:
+                            this[DICFlag.ScanAntiMod] = true;
+                            this[DICFlag.NoFixSubQLibCrypt] = true;
+                            break;
+                    }
+                    break;
+                case MediaType.DVD:
+                    // Currently no defaults set
+                    break;
+                case MediaType.GDROM:
+                    this[DICFlag.C2Opcode] = true;
+                    C2OpcodeValue[0] = 20;
+                    break;
+                case MediaType.HDDVD:
+                    // Currently no defaults set
+                    break;
+                case MediaType.BluRay:
+                    // Currently no defaults set
+                    break;
+
+                // Special Formats
+                case MediaType.GameCubeGameDisc:
+                    this[DICFlag.Raw] = true;
+                    break;
+                case MediaType.WiiOpticalDisc:
+                    this[DICFlag.Raw] = true;
+                    break;
+
+                // Non-optical
+                case MediaType.Floppy:
+                    // Currently no defaults set
+                    break;
+            }
         }
     }
 }

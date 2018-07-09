@@ -320,8 +320,9 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the DIC command to be used for a given MediaType
+        /// Set the DIC command to be used for a given system and media type
         /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
         /// <param name="type">MediaType value to check</param>
         /// <returns>String containing the command, null on error</returns>
         public static string KnownSystemAndMediaTypeToBaseCommand(KnownSystem? sys, MediaType? type)
@@ -367,7 +368,7 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get list of default parameters for a given system and disc type
+        /// Get list of default parameters for a given system and media type
         /// </summary>
         /// <param name="sys">KnownSystem value to check</param>
         /// <param name="type">MediaType value to check</param>
