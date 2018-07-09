@@ -106,6 +106,7 @@
     <Compile Include="UI\ViewModels.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />
     <Compile Include="Utilities\Extensions.cs" />
+    <Compile Include="Utilities\Parameters.cs" />
     <Compile Include="Utilities\Result.cs" />
     <Compile Include="Utilities\Validators.cs" />
     <Compile Include="Utilities\Converters.cs" />
