@@ -23,40 +23,34 @@ namespace DICUI.Utilities
         public string Filename;
 
         // Sector Information
-        public int? StartLBA;
-        public int? EndLBA;
+        public int? StartLBAValue;
+        public int? EndLBAValue;
 
         // DIC Flags
-        public bool AddOffset;
+        private Dictionary<DICFlag, bool> _flags;
+        public bool this[DICFlag key]
+        {
+            get
+            {
+                if (_flags.ContainsKey(key))
+                    return _flags[key];
+                return false;
+            }
+            set
+            {
+                _flags[key] = value;
+            }
+        }
+
+        // DIC Flag Values
         public int? AddOffsetValue;
-        public bool AMSF;
-        public bool BEOpcode;
         public string BEOpcodeValue; // raw (default), pack
-        public bool C2Opcode;
         public int?[] C2OpcodeValue = new int?[4];    // Reread Value;
         //public int? C2OpcodeValue2;   // 0 reread issue sector (default), 1 reread all
         //public int? C2OpcodeValue3;   // First LBA to reread (default 0)
         //public int? C2OpcodeValue4;   // Last LBA to reread (default EOS)
-        public bool CopyrightManagementInformation;
-        public bool D8Opcode;
-        public bool DisableBeep;
-        public bool ForceUnitAccess;
         public int? ForceUnitAccessValue; // Delete per specified (default 1)
-        public bool MCN;
-        public bool MultiSession;
-        public bool NoFixSubP;
-        public bool NoFixSubQ;
-        public bool NoFixSubQLibCrypt;
-        public bool NoFixSubQSecuROM;
-        public bool NoFixSubRtoW;
-        public bool Raw;
-        public bool Reverse;
-        public bool ScanAntiMod;
-        public bool ScanFileProtect;
         public int? ScanFileProtectValue; // Timeout value (default 60)
-        public bool ScanSectorProtect;
-        public bool SeventyFour;
-        public bool SubchannelReadLevel;
         public int? SubchannelReadLevelValue; // 0 no next sub, 1 next sub (default), 2 next and next next
 
         /// <summary>
@@ -109,12 +103,12 @@ namespace DICUI.Utilities
                     if (!DoesExist(parts, 4) || !IsValidNumber(parts[4], lowerBound: 0))
                         return;
                     else
-                        StartLBA = Int32.Parse(parts[4]);
+                        StartLBAValue = Int32.Parse(parts[4]);
 
                     if (!DoesExist(parts, 5) || !IsValidNumber(parts[5], lowerBound: 0))
                         return;
                     else
-                        EndLBA = Int32.Parse(parts[5]);
+                        EndLBAValue = Int32.Parse(parts[5]);
 
                     Command = DICCommand.Audio;
                     index = 6;
@@ -186,12 +180,12 @@ namespace DICUI.Utilities
                     if (!DoesExist(parts, 4) || !IsValidNumber(parts[4], lowerBound: 0))
                         return;
                     else
-                        StartLBA = Int32.Parse(parts[4]);
+                        StartLBAValue = Int32.Parse(parts[4]);
 
                     if (!DoesExist(parts, 5) || !IsValidNumber(parts[5], lowerBound: 0))
                         return;
                     else
-                        EndLBA = Int32.Parse(parts[5]);
+                        EndLBAValue = Int32.Parse(parts[5]);
 
                     Command = DICCommand.Data;
                     index = 6;
@@ -384,7 +378,7 @@ namespace DICUI.Utilities
                 {
                     switch (parts[i])
                     {
-                        case DICFlags.AddOffset:
+                        case DICFlagStrings.AddOffset:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc)
                                 return;
@@ -393,19 +387,19 @@ namespace DICUI.Utilities
                             else if (!IsValidNumber(parts[i + 1]))
                                 return;
 
-                            AddOffset = true;
+                            this[DICFlag.AddOffset] = true;
                             AddOffsetValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlags.AMSF:
+                        case DICFlagStrings.AMSF:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return;
 
-                            AMSF = true;
+                            this[DICFlag.AMSF] = true;
                             break;
 
-                        case DICFlags.BEOpcode:
+                        case DICFlagStrings.BEOpcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -413,30 +407,30 @@ namespace DICUI.Utilities
                                 return;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                BEOpcode = true;
+                                this[DICFlag.BEOpcode] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                BEOpcode = true;
+                                this[DICFlag.BEOpcode] = true;
                                 break;
                             }
                             else if (parts[i + 1] != "raw" && (parts[i + 1] != "pack"))
                                 return;
 
-                            BEOpcode = true;
+                            this[DICFlag.BEOpcode] = true;
                             BEOpcodeValue = parts[i + 1];
                             i++;
                             break;
 
-                        case DICFlags.C2Opcode:
+                        case DICFlagStrings.C2Opcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return;
 
-                            C2Opcode = true;
+                            this[DICFlag.C2Opcode] = true;
                             for (int j = 0; j < 4; j++)
                             {
                                 if (!DoesExist(parts, i + 1))
@@ -454,24 +448,24 @@ namespace DICUI.Utilities
 
                             break;
 
-                        case DICFlags.CopyrightManagementInformation:
+                        case DICFlagStrings.CopyrightManagementInformation:
                             if (parts[0] != DICCommandStrings.DigitalVideoDisc)
                                 return;
 
-                            CopyrightManagementInformation = true;
+                            this[DICFlag.CopyrightManagementInformation] = true;
                             break;
 
-                        case DICFlags.D8Opcode:
+                        case DICFlagStrings.D8Opcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return;
 
-                            D8Opcode = true;
+                            this[DICFlag.D8Opcode] = true;
                             break;
 
-                        case DICFlags.DisableBeep:
+                        case DICFlagStrings.DisableBeep:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.BluRay
                                 && parts[0] != DICCommandStrings.CompactDisc
@@ -481,10 +475,10 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.XBOX)
                                 return;
 
-                            DisableBeep = true;
+                            this[DICFlag.DisableBeep] = true;
                             break;
 
-                        case DICFlags.ForceUnitAccess:
+                        case DICFlagStrings.ForceUnitAccess:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.BluRay
                                 && parts[0] != DICCommandStrings.CompactDisc
@@ -495,143 +489,143 @@ namespace DICUI.Utilities
                                 return;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                ForceUnitAccess = true;
+                                this[DICFlag.ForceUnitAccess] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                ForceUnitAccess = true;
+                                this[DICFlag.ForceUnitAccess] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 return;
 
-                            ForceUnitAccess = true;
+                            this[DICFlag.ForceUnitAccess] = true;
                             ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlags.MCN:
+                        case DICFlagStrings.MCN:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return;
 
-                            MCN = true;
+                            this[DICFlag.MCN] = true;
                             break;
 
-                        case DICFlags.MultiSession:
+                        case DICFlagStrings.MultiSession:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return;
 
-                            MultiSession = true;
+                            this[DICFlag.MultiSession] = true;
                             break;
 
-                        case DICFlags.NoFixSubP:
+                        case DICFlagStrings.NoFixSubP:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return;
 
-                            NoFixSubP = true;
+                            this[DICFlag.NoFixSubP] = true;
                             break;
 
-                        case DICFlags.NoFixSubQ:
+                        case DICFlagStrings.NoFixSubQ:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return;
 
-                            NoFixSubQ = true;
+                            this[DICFlag.NoFixSubQ] = true;
                             break;
 
-                        case DICFlags.NoFixSubQLibCrypt:
+                        case DICFlagStrings.NoFixSubQLibCrypt:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return;
 
-                            NoFixSubQLibCrypt = true;
+                            this[DICFlag.NoFixSubQLibCrypt] = true;
                             break;
 
-                        case DICFlags.NoFixSubQSecuROM:
+                        case DICFlagStrings.NoFixSubQSecuROM:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return;
 
-                            NoFixSubQSecuROM = true;
+                            this[DICFlag.NoFixSubQSecuROM] = true;
                             break;
 
-                        case DICFlags.NoFixSubRtoW:
+                        case DICFlagStrings.NoFixSubRtoW:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return;
 
-                            NoFixSubRtoW = true;
+                            this[DICFlag.NoFixSubRtoW] = true;
                             break;
 
-                        case DICFlags.Raw:
+                        case DICFlagStrings.Raw:
                             if (parts[0] != DICCommandStrings.DigitalVideoDisc)
                                 return;
 
-                            Raw = true;
+                            this[DICFlag.Raw] = true;
                             break;
 
-                        case DICFlags.Reverse:
+                        case DICFlagStrings.Reverse:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
                                 return;
 
-                            Reverse = true;
+                            this[DICFlag.Reverse] = true;
                             break;
 
-                        case DICFlags.ScanAntiMod:
+                        case DICFlagStrings.ScanAntiMod:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return;
 
-                            ScanAntiMod = true;
+                            this[DICFlag.ScanAntiMod] = true;
                             break;
 
-                        case DICFlags.ScanFileProtect:
+                        case DICFlagStrings.ScanFileProtect:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
                                 return;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                ScanFileProtect = true;
+                                this[DICFlag.ScanFileProtect] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                ScanFileProtect = true;
+                                this[DICFlag.ScanFileProtect] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 return;
 
-                            ScanFileProtect = true;
+                            this[DICFlag.ScanFileProtect] = true;
                             ScanFileProtectValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlags.ScanSectorProtect:
+                        case DICFlagStrings.ScanSectorProtect:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
                                 return;
 
-                            ScanSectorProtect = true;
+                            this[DICFlag.ScanSectorProtect] = true;
                             break;
 
-                        case DICFlags.SeventyFour:
+                        case DICFlagStrings.SeventyFour:
                             if (parts[0] != DICCommandStrings.Swap)
                                 return;
 
-                            SeventyFour = true;
+                            this[DICFlag.SeventyFour] = true;
                             break;
 
-                        case DICFlags.SubchannelReadLevel:
+                        case DICFlagStrings.SubchannelReadLevel:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -639,18 +633,18 @@ namespace DICUI.Utilities
                                 return;
                             else if (DoesExist(parts, i + 1))
                             {
-                                SubchannelReadLevel = true;
+                                this[DICFlag.SubchannelReadLevel] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                SubchannelReadLevel = true;
+                                this[DICFlag.SubchannelReadLevel] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0, upperBound: 2))
                                 return;
 
-                            SubchannelReadLevel = true;
+                            this[DICFlag.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
@@ -732,11 +726,11 @@ namespace DICUI.Utilities
             if (Command == DICCommand.Audio
                 || Command == DICCommand.Data)
             {
-                if (StartLBA != null && StartLBA > 0
-                    && EndLBA != null && EndLBA > 0)
+                if (StartLBAValue != null && StartLBAValue > 0
+                    && EndLBAValue != null && EndLBAValue > 0)
                 {
-                    parameters.Add(StartLBA.ToString());
-                    parameters.Add(EndLBA.ToString());
+                    parameters.Add(StartLBAValue.ToString());
+                    parameters.Add(EndLBAValue.ToString());
                 }
                 else
                     return null;
@@ -746,9 +740,9 @@ namespace DICUI.Utilities
             if (Command == DICCommand.Audio
                 || Command == DICCommand.CompactDisc)
             {
-                if (AddOffset)
+                if (this[DICFlag.AddOffset])
                 {
-                    parameters.Add(DICFlags.AddOffset);
+                    parameters.Add(DICFlagStrings.AddOffset);
                     if (AddOffsetValue != null)
                         parameters.Add(AddOffsetValue.ToString());
                     else
@@ -759,8 +753,8 @@ namespace DICUI.Utilities
             // AMSF Dumping
             if (Command == DICCommand.CompactDisc)
             {
-                if (AMSF)
-                    parameters.Add(DICFlags.AMSF);
+                if (this[DICFlag.AMSF])
+                    parameters.Add(DICFlagStrings.AMSF);
             }
 
             // BE Opcode
@@ -770,9 +764,9 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (BEOpcode && !D8Opcode)
+                if (this[DICFlag.BEOpcode] && !this[DICFlag.D8Opcode])
                 {
-                    parameters.Add(DICFlags.BEOpcode);
+                    parameters.Add(DICFlagStrings.BEOpcode);
                     if (BEOpcodeValue != null
                         && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
                         parameters.Add(BEOpcodeValue);
@@ -786,9 +780,9 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (C2Opcode)
+                if (this[DICFlag.C2Opcode])
                 {
-                    parameters.Add(DICFlags.C2Opcode);
+                    parameters.Add(DICFlagStrings.C2Opcode);
                     if (C2OpcodeValue[0] != null)
                     {
                         if (C2OpcodeValue[0] > 0)
@@ -823,8 +817,8 @@ namespace DICUI.Utilities
             // Copyright Management Information
             if (Command == DICCommand.DigitalVideoDisc)
             {
-                if (CopyrightManagementInformation)
-                    parameters.Add(DICFlags.CopyrightManagementInformation);
+                if (this[DICFlag.CopyrightManagementInformation])
+                    parameters.Add(DICFlagStrings.CopyrightManagementInformation);
             }
 
             // D8 Opcode
@@ -834,8 +828,8 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (D8Opcode)
-                    parameters.Add(DICFlags.D8Opcode);
+                if (this[DICFlag.D8Opcode])
+                    parameters.Add(DICFlagStrings.D8Opcode);
             }
 
             // Disable Beep
@@ -848,8 +842,8 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap
                || Command == DICCommand.XBOX)
             {
-                if (DisableBeep)
-                    parameters.Add(DICFlags.DisableBeep);
+                if (this[DICFlag.DisableBeep])
+                    parameters.Add(DICFlagStrings.DisableBeep);
             }
 
             // Force Unit Access
@@ -859,9 +853,9 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap
                || Command == DICCommand.XBOX)
             {
-                if (ForceUnitAccess)
+                if (this[DICFlag.ForceUnitAccess])
                 {
-                    parameters.Add(DICFlags.ForceUnitAccess);
+                    parameters.Add(DICFlagStrings.ForceUnitAccess);
                     if (ForceUnitAccessValue != null)
                         parameters.Add(ForceUnitAccessValue.ToString());
                 }
@@ -870,15 +864,15 @@ namespace DICUI.Utilities
             // MCN
             if (Command == DICCommand.CompactDisc)
             {
-                if (MCN)
-                    parameters.Add(DICFlags.MCN);
+                if (this[DICFlag.MCN])
+                    parameters.Add(DICFlagStrings.MCN);
             }
 
             // Multi-Session
             if (Command == DICCommand.CompactDisc)
             {
-                if (MultiSession)
-                    parameters.Add(DICFlags.MultiSession);
+                if (this[DICFlag.MultiSession])
+                    parameters.Add(DICFlagStrings.MultiSession);
             }
 
             // Not fix SubP
@@ -888,8 +882,8 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (NoFixSubP)
-                    parameters.Add(DICFlags.NoFixSubP);
+                if (this[DICFlag.NoFixSubP])
+                    parameters.Add(DICFlagStrings.NoFixSubP);
             }
 
             // Not fix SubQ
@@ -899,8 +893,8 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (NoFixSubQ)
-                    parameters.Add(DICFlags.NoFixSubQ);
+                if (this[DICFlag.NoFixSubQ])
+                    parameters.Add(DICFlagStrings.NoFixSubQ);
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
@@ -910,8 +904,8 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (NoFixSubQLibCrypt)
-                    parameters.Add(DICFlags.NoFixSubQLibCrypt);
+                if (this[DICFlag.NoFixSubQLibCrypt])
+                    parameters.Add(DICFlagStrings.NoFixSubQLibCrypt);
             }
             
             // Not fix SubQ (SecuROM)
@@ -921,8 +915,8 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (NoFixSubQSecuROM)
-                    parameters.Add(DICFlags.NoFixSubQSecuROM);
+                if (this[DICFlag.NoFixSubQSecuROM])
+                    parameters.Add(DICFlagStrings.NoFixSubQSecuROM);
             }
 
             // Not fix SubRtoW
@@ -932,31 +926,31 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (NoFixSubRtoW)
-                    parameters.Add(DICFlags.NoFixSubRtoW);
+                if (this[DICFlag.NoFixSubRtoW])
+                    parameters.Add(DICFlagStrings.NoFixSubRtoW);
             }
 
             // Raw read (2064 byte/sector)
             if (Command == DICCommand.DigitalVideoDisc)
             {
-                if (Raw)
-                    parameters.Add(DICFlags.Raw);
+                if (this[DICFlag.Raw])
+                    parameters.Add(DICFlagStrings.Raw);
             }
 
             // Reverse read
             if (Command == DICCommand.CompactDisc
                || Command == DICCommand.Data)
             {
-                if (Reverse)
-                    parameters.Add(DICFlags.Reverse);
+                if (this[DICFlag.Reverse])
+                    parameters.Add(DICFlagStrings.Reverse);
             }
 
             // Scan PlayStation anti-mod strings
             if (Command == DICCommand.CompactDisc
                || Command == DICCommand.Data)
             {
-                if (ScanAntiMod)
-                    parameters.Add(DICFlags.ScanAntiMod);
+                if (this[DICFlag.ScanAntiMod])
+                    parameters.Add(DICFlagStrings.ScanAntiMod);
             }
 
             // Scan file to detect protect
@@ -965,9 +959,9 @@ namespace DICUI.Utilities
                || Command == DICCommand.Data
                || Command == DICCommand.Swap)
             {
-                if (ScanFileProtect)
+                if (this[DICFlag.ScanFileProtect])
                 {
-                    parameters.Add(DICFlags.ScanFileProtect);
+                    parameters.Add(DICFlagStrings.ScanFileProtect);
                     if (ScanFileProtectValue != null)
                     {
                         if (ScanFileProtectValue > 0)
@@ -983,15 +977,15 @@ namespace DICUI.Utilities
                || Command == DICCommand.Data
                || Command == DICCommand.Swap)
             {
-                if (ScanSectorProtect)
-                    parameters.Add(DICFlags.ScanSectorProtect);
+                if (this[DICFlag.ScanSectorProtect])
+                    parameters.Add(DICFlagStrings.ScanSectorProtect);
             }
 
             // Scan 74:00:00 (Saturn)
             if (Command == DICCommand.Swap)
             {
-                if (SeventyFour)
-                    parameters.Add(DICFlags.SeventyFour);
+                if (this[DICFlag.SeventyFour])
+                    parameters.Add(DICFlagStrings.SeventyFour);
             }
 
             // Set Subchannel read level
@@ -1001,9 +995,9 @@ namespace DICUI.Utilities
                || Command == DICCommand.GDROM
                || Command == DICCommand.Swap)
             {
-                if (SubchannelReadLevel)
+                if (this[DICFlag.SubchannelReadLevel])
                 {
-                    parameters.Add(DICFlags.SubchannelReadLevel);
+                    parameters.Add(DICFlagStrings.SubchannelReadLevel);
                     if (SubchannelReadLevelValue != null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)

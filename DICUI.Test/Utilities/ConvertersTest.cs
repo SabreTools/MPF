@@ -93,18 +93,18 @@ namespace DICUI.Test.Utilities
 
         [Theory]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, false, 20, new string[] { DICFlags.Raw })]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, false, 20, new string[] { DICFlagStrings.Raw })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, new string[] { })]
         /* paranoid mode tests */
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CD, true, 1000, new string[] { DICFlags.C2Opcode, "1000", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect, DICFlags.ScanSectorProtect, DICFlags.SubchannelReadLevel, "2"})]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, false, 20, new string[] { DICFlags.C2Opcode, "20", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, new string[] { DICFlags.CMI })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, new string[] { DICFlags.CMI })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CD, true, 1000, new string[] { DICFlagStrings.C2Opcode, "1000", DICFlagStrings.NoFixSubQSecuROM, DICFlagStrings.ScanFileProtect, DICFlagStrings.ScanSectorProtect, DICFlagStrings.SubchannelReadLevel, "2"})]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, false, 20, new string[] { DICFlagStrings.C2Opcode, "20", DICFlagStrings.NoFixSubQSecuROM, DICFlagStrings.ScanFileProtect })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, new string[] { DICFlagStrings.CMI })]
+        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, new string[] { DICFlagStrings.CMI })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, new string[] { })]
         [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, new string[] { })]
         /* reread c2 */
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, new string[] { DICFlags.C2Opcode, "1000", })]
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, new string[] { DICFlags.C2Opcode })]
+        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, new string[] { DICFlagStrings.C2Opcode, "1000", })]
+        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, new string[] { DICFlagStrings.C2Opcode })]
 
         public void KnownSystemAndMediaTypeToParametersTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, string[] expected)
         {

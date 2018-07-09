@@ -487,20 +487,20 @@ namespace DICUI.Utilities
                     path = parts[2].Trim('\"');
 
                     // Special case for GameCube/Wii
-                    if (parts.Contains(DICFlags.Raw))
+                    if (parts.Contains(DICFlagStrings.Raw))
                     {
                         type = MediaType.GameCubeGameDisc;
                         system = KnownSystem.NintendoGameCube;
                     }
                     // Special case for PlayStation
-                    else if (parts.Contains(DICFlags.NoFixSubQLibCrypt)
-                        || parts.Contains(DICFlags.ScanAntiMod))
+                    else if (parts.Contains(DICFlagStrings.NoFixSubQLibCrypt)
+                        || parts.Contains(DICFlagStrings.ScanAntiMod))
                     {
                         type = MediaType.CD;
                         system = KnownSystem.SonyPlayStation;
                     }
                     // Special case for Saturn
-                    else if (parts.Contains(DICFlags.SeventyFour))
+                    else if (parts.Contains(DICFlagStrings.SeventyFour))
                     {
                         type = MediaType.CD;
                         system = KnownSystem.SegaSaturn;
@@ -940,7 +940,7 @@ namespace DICUI.Utilities
                 {
                     switch (parts[i])
                     {
-                        case DICFlags.AddOffset:
+                        case DICFlagStrings.AddOffset:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc)
                                 return false;
@@ -950,12 +950,12 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.AMSF:
+                        case DICFlagStrings.AMSF:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return false;
                             break;
 
-                        case DICFlags.BEOpcode:
+                        case DICFlagStrings.BEOpcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -973,7 +973,7 @@ namespace DICUI.Utilities
                             i++;
                             break;
 
-                        case DICFlags.C2Opcode:
+                        case DICFlagStrings.C2Opcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -995,12 +995,12 @@ namespace DICUI.Utilities
 
                             break;
 
-                        case DICFlags.CopyrightManagementInformation:
+                        case DICFlagStrings.CopyrightManagementInformation:
                             if (parts[0] != DICCommandStrings.DigitalVideoDisc)
                                 return false;
                             break;
 
-                        case DICFlags.D8Opcode:
+                        case DICFlagStrings.D8Opcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1009,7 +1009,7 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.DisableBeep:
+                        case DICFlagStrings.DisableBeep:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.BluRay
                                 && parts[0] != DICCommandStrings.CompactDisc
@@ -1021,7 +1021,7 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.ForceUnitAccess:
+                        case DICFlagStrings.ForceUnitAccess:
                             if (parts[0] != DICCommandStrings.BluRay
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.DigitalVideoDisc
@@ -1038,17 +1038,17 @@ namespace DICUI.Utilities
                             i++;
                             break;
 
-                        case DICFlags.MCN:
+                        case DICFlagStrings.MCN:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return false;
                             break;
 
-                        case DICFlags.MultiSession:
+                        case DICFlagStrings.MultiSession:
                             if (parts[0] != DICCommandStrings.CompactDisc)
                                 return false;
                             break;
 
-                        case DICFlags.NoFixSubP:
+                        case DICFlagStrings.NoFixSubP:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1057,7 +1057,7 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.NoFixSubQ:
+                        case DICFlagStrings.NoFixSubQ:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1066,7 +1066,7 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.NoFixSubQLibCrypt:
+                        case DICFlagStrings.NoFixSubQLibCrypt:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1075,7 +1075,7 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.NoFixSubQSecuROM:
+                        case DICFlagStrings.NoFixSubQSecuROM:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1084,7 +1084,7 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.NoFixSubRtoW:
+                        case DICFlagStrings.NoFixSubRtoW:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1093,24 +1093,24 @@ namespace DICUI.Utilities
                                 return false;
                             break;
 
-                        case DICFlags.Raw:
+                        case DICFlagStrings.Raw:
                             if (parts[0] != DICCommandStrings.DigitalVideoDisc)
                                 return false;
                             break;
 
-                        case DICFlags.Reverse:
+                        case DICFlagStrings.Reverse:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
                                 return false;
                             break;
 
-                        case DICFlags.ScanAntiMod:
+                        case DICFlagStrings.ScanAntiMod:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
                                 return false;
                             break;
 
-                        case DICFlags.ScanFileProtect:
+                        case DICFlagStrings.ScanFileProtect:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
@@ -1126,19 +1126,19 @@ namespace DICUI.Utilities
                             i++;
                             break;
 
-                        case DICFlags.ScanSectorProtect:
+                        case DICFlagStrings.ScanSectorProtect:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.Swap)
                                 return false;
                             break;
 
-                        case DICFlags.SeventyFour:
+                        case DICFlagStrings.SeventyFour:
                             if (parts[0] != DICCommandStrings.Swap)
                                 return false;
                             break;
 
-                        case DICFlags.SubchannelReadLevel:
+                        case DICFlagStrings.SubchannelReadLevel:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data

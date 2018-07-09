@@ -36,7 +36,7 @@
     /// <summary>
     /// Dumping flags for DiscImageCreator
     /// </summary>
-    public static class DICFlags
+    public static class DICFlagStrings
     {
         public const string AddOffset = "/a";
         public const string AMSF = "/p";
