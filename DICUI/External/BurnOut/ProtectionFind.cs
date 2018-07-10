@@ -90,7 +90,7 @@ namespace DICUI.External.BurnOut
         /// Scan an individual file for copy protection
         /// </summary>
         /// <remarks>
-        /// TODO: Handle archives (zip, arc, cab[is])
+        /// TODO: Handle archives (zip, arc)
         /// TODO: Find protection mentions in text files
         /// TODO: Might have to work on Streams instead to later support archives
         /// </remarks>
