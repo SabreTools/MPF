@@ -21,7 +21,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace DICUI.External
+namespace DICUI.External.BurnOut
 {
     struct Section
     {

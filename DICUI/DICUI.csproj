@@ -98,9 +98,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="External\EVORE.cs" />
+    <Compile Include="External\BurnOut\EVORE.cs" />
+    <Compile Include="External\iXcomp\IXComp.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="External\ProtectionFind.cs" />
+    <Compile Include="External\BurnOut\ProtectionFind.cs" />
     <Compile Include="UI\KnownSystemComboBoxItem.cs" />
     <Compile Include="UI\AllowedSpeeds.cs" />
     <Compile Include="UI\ViewModels.cs" />
@@ -177,6 +178,15 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="mspack.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Programs\i3comp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Programs\i5comp.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Programs\i6comp.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
