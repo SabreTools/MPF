@@ -9,7 +9,7 @@ namespace DICUI.Test.Utilities
         public void DriveConstructorsTest()
         {
             Assert.True(Drive.Floppy('a').IsFloppy);
-            Assert.False(Drive.Optical('d', "test").IsFloppy);
+            Assert.False(Drive.Optical('d', "test", true).IsFloppy);
         }
     }
 }

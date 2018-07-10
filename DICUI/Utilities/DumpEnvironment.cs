@@ -19,16 +19,18 @@ namespace DICUI.Utilities
         public char Letter { get; private set; }
         public bool IsFloppy { get; private set; }
         public string VolumeLabel { get; private set; }
+        public bool MarkedActive { get; private set; }
 
-        private Drive(char letter, string volumeLabel, bool isFloppy)
+        private Drive(char letter, string volumeLabel, bool isFloppy, bool markedActive)
         {
             this.Letter = letter;
             this.IsFloppy = isFloppy;
             this.VolumeLabel = volumeLabel;
+            this.MarkedActive = markedActive;
         }
 
-        public static Drive Floppy(char letter) => new Drive(letter, null, true);
-        public static Drive Optical(char letter, string volumeLabel) => new Drive(letter, volumeLabel, false);
+        public static Drive Floppy(char letter) => new Drive(letter, null, true, true);
+        public static Drive Optical(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, false, active);
     }
 
     /// <summary>
@@ -266,7 +268,7 @@ namespace DICUI.Utilities
                 if (Type == MediaType.Floppy)
                     Drive = Drive.Floppy(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
                 else
-                    Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
+                    Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "", true);
                 OutputDirectory = Path.GetDirectoryName(path);
                 OutputFilename = Path.GetFileName(path);
             }
