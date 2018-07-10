@@ -41,6 +41,7 @@ namespace DICUI.Utilities
                 _flags[key] = value;
             }
         }
+        public IEnumerable<DICFlag> Keys => _flags.Keys;
 
         // DIC Flag Values
         public int? AddOffsetValue;
@@ -65,6 +66,462 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
         public Parameters(string parameters)
+        {
+            ValidateAndSetParameters(parameters);
+        }
+
+        /// <summary>
+        /// Generate parameters based on a set of known inputs
+        /// </summary>
+        /// <param name="system">KnownSystem value to use</param>
+        /// <param name="type">MediaType value to use</param>
+        /// <param name="driveLetter">Drive letter to use</param>
+        /// <param name="filename">Filename to use</param>
+        /// <param name="driveSpeed">Drive speed to use</param>
+        /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
+        /// <param name="rereadCount">User-defined reread count</param>
+        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int rereadCount)
+        {
+            SetBaseCommand(system, type);
+            DriveLetter = driveLetter.ToString();
+            DriveSpeed = driveSpeed;
+            Filename = filename;
+            SetDefaultParameters(system, type, paranoid, rereadCount);
+        }
+
+        /// <summary>
+        /// Determine the base flags to use for checking a commandline
+        /// </summary>
+        /// <param name="parameters">Parameters as a string to check</param>
+        /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
+        /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
+        /// <param name="letter">Output string containing the found drive letter</param>
+        /// <param name="path">Output string containing the found path</param>
+        /// <returns>False on error (and all outputs set to null), true otherwise</returns>
+        public bool DetermineFlags(out MediaType? type, out KnownSystem? system, out string letter, out string path)
+        {
+            // Populate all output variables with null
+            type = null; system = null; letter = null; path = null;
+
+            // If we're not already valid, output false
+            if (!IsValid())
+                return false;
+
+            // Set the default outputs
+            type = Converters.BaseCommmandToMediaType(Command);
+            system = Converters.BaseCommandToKnownSystem(Command);
+            letter = DriveLetter;
+            path = Filename;
+
+            // Determine what the commandline should look like given the first item
+            switch (Command)
+            {
+                case DICCommand.Audio:
+                case DICCommand.CompactDisc:
+                case DICCommand.Data:
+                case DICCommand.DigitalVideoDisc:
+                case DICCommand.GDROM:
+                case DICCommand.Swap:
+                    // GameCube and Wii
+                    if (this[DICFlag.Raw])
+                    {
+                        type = MediaType.GameCubeGameDisc;
+                        system = KnownSystem.NintendoGameCube;
+                    }
+
+                    // PlaySTation
+                    else if (this[DICFlag.NoFixSubQLibCrypt]
+                        || this[DICFlag.ScanAntiMod])
+                    {
+                        type = MediaType.CD;
+                        system = KnownSystem.SonyPlayStation;
+                    }
+
+                    // Saturn
+                    else if (this[DICFlag.SeventyFour])
+                    {
+                        type = MediaType.CD;
+                        system = KnownSystem.SegaSaturn;
+                    }
+
+                    break;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Blindly generate a parameter string based on the inputs
+        /// </summary>
+        /// <returns>Correctly formatted parameter string, null on error</returns>
+        public string GenerateParameters()
+        {
+            List<string> parameters = new List<string>();
+
+            if (Command != DICCommand.NONE)
+                parameters.Add(Command.Name());
+            else
+                return null;
+
+            // Drive Letter
+            if (Command == DICCommand.Audio
+                || Command == DICCommand.BluRay
+                || Command == DICCommand.Close
+                || Command == DICCommand.CompactDisc
+                || Command == DICCommand.Data
+                || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.DriveSpeed
+                || Command == DICCommand.Eject
+                || Command == DICCommand.Floppy
+                || Command == DICCommand.GDROM
+                || Command == DICCommand.Reset
+                || Command == DICCommand.Start
+                || Command == DICCommand.Stop
+                || Command == DICCommand.Swap
+                || Command == DICCommand.XBOX)
+            {
+                if (DriveLetter != null)
+                    parameters.Add(DriveLetter);
+                else
+                    return null;
+            }
+
+            // Filename
+            if (Command == DICCommand.Audio
+                || Command == DICCommand.BluRay
+                || Command == DICCommand.CompactDisc
+                || Command == DICCommand.Data
+                || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.Floppy
+                || Command == DICCommand.GDROM
+                || Command == DICCommand.MDS
+                || Command == DICCommand.Swap
+                || Command == DICCommand.Sub
+                || Command == DICCommand.XBOX)
+            {
+                if (Filename != null)
+                    parameters.Add(Filename);
+                else
+                    return null;
+            }
+
+            // Drive Speed
+            if (Command == DICCommand.Audio
+                || Command == DICCommand.CompactDisc
+                || Command == DICCommand.Data
+                || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.GDROM
+                || Command == DICCommand.Swap)
+            {
+                if (DriveSpeed != null)
+                    parameters.Add(DriveSpeed.ToString());
+                else
+                    return null;
+            }
+
+            // LBA Markers
+            if (Command == DICCommand.Audio
+                || Command == DICCommand.Data)
+            {
+                if (StartLBAValue != null && StartLBAValue > 0
+                    && EndLBAValue != null && EndLBAValue > 0)
+                {
+                    parameters.Add(StartLBAValue.ToString());
+                    parameters.Add(EndLBAValue.ToString());
+                }
+                else
+                    return null;
+            }
+
+            // Add Offset
+            if (Command == DICCommand.Audio
+                || Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.AddOffset])
+                {
+                    parameters.Add(DICFlagStrings.AddOffset);
+                    if (AddOffsetValue != null)
+                        parameters.Add(AddOffsetValue.ToString());
+                    else
+                        return null;
+                }
+            }
+
+            // AMSF Dumping
+            if (Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.AMSF])
+                    parameters.Add(DICFlagStrings.AMSF);
+            }
+
+            // BE Opcode
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.BEOpcode] && !this[DICFlag.D8Opcode])
+                {
+                    parameters.Add(DICFlagStrings.BEOpcode);
+                    if (BEOpcodeValue != null
+                        && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
+                        parameters.Add(BEOpcodeValue);
+                }
+            }
+
+            // C2 Opcode
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.C2Opcode])
+                {
+                    parameters.Add(DICFlagStrings.C2Opcode);
+                    if (C2OpcodeValue[0] != null)
+                    {
+                        if (C2OpcodeValue[0] > 0)
+                            parameters.Add(C2OpcodeValue[0].ToString());
+                        else
+                            return null;
+                    }
+                    if (C2OpcodeValue[1] != null)
+                    {
+                        if (C2OpcodeValue[1] == 0)
+                            parameters.Add(C2OpcodeValue[1].ToString());
+                        else if (C2OpcodeValue[1] == 1)
+                        {
+                            parameters.Add(C2OpcodeValue[1].ToString());
+                            if (C2OpcodeValue[2] != null && C2OpcodeValue[3] != null)
+                            {
+                                if (C2OpcodeValue[2] > 0 && C2OpcodeValue[3] > 0)
+                                {
+                                    parameters.Add(C2OpcodeValue[2].ToString());
+                                    parameters.Add(C2OpcodeValue[3].ToString());
+                                }
+                                else
+                                    return null;
+                            }
+                        }
+                        else
+                            return null;
+                    }
+                }
+            }
+
+            // Copyright Management Information
+            if (Command == DICCommand.DigitalVideoDisc)
+            {
+                if (this[DICFlag.CopyrightManagementInformation])
+                    parameters.Add(DICFlagStrings.CopyrightManagementInformation);
+            }
+
+            // D8 Opcode
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.D8Opcode])
+                    parameters.Add(DICFlagStrings.D8Opcode);
+            }
+
+            // Disable Beep
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.BluRay
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.DigitalVideoDisc
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap
+               || Command == DICCommand.XBOX)
+            {
+                if (this[DICFlag.DisableBeep])
+                    parameters.Add(DICFlagStrings.DisableBeep);
+            }
+
+            // Force Unit Access
+            if (Command == DICCommand.BluRay
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.DigitalVideoDisc
+               || Command == DICCommand.Swap
+               || Command == DICCommand.XBOX)
+            {
+                if (this[DICFlag.ForceUnitAccess])
+                {
+                    parameters.Add(DICFlagStrings.ForceUnitAccess);
+                    if (ForceUnitAccessValue != null)
+                        parameters.Add(ForceUnitAccessValue.ToString());
+                }
+            }
+
+            // MCN
+            if (Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.MCN])
+                    parameters.Add(DICFlagStrings.MCN);
+            }
+
+            // Multi-Session
+            if (Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.MultiSession])
+                    parameters.Add(DICFlagStrings.MultiSession);
+            }
+
+            // Not fix SubP
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.NoFixSubP])
+                    parameters.Add(DICFlagStrings.NoFixSubP);
+            }
+
+            // Not fix SubQ
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.NoFixSubQ])
+                    parameters.Add(DICFlagStrings.NoFixSubQ);
+            }
+
+            // Not fix SubQ (PlayStation LibCrypt)
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.NoFixSubQLibCrypt])
+                    parameters.Add(DICFlagStrings.NoFixSubQLibCrypt);
+            }
+            
+            // Not fix SubQ (SecuROM)
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.NoFixSubQSecuROM])
+                    parameters.Add(DICFlagStrings.NoFixSubQSecuROM);
+            }
+
+            // Not fix SubRtoW
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.NoFixSubRtoW])
+                    parameters.Add(DICFlagStrings.NoFixSubRtoW);
+            }
+
+            // Raw read (2064 byte/sector)
+            if (Command == DICCommand.DigitalVideoDisc)
+            {
+                if (this[DICFlag.Raw])
+                    parameters.Add(DICFlagStrings.Raw);
+            }
+
+            // Reverse read
+            if (Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data)
+            {
+                if (this[DICFlag.Reverse])
+                    parameters.Add(DICFlagStrings.Reverse);
+            }
+
+            // Scan PlayStation anti-mod strings
+            if (Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data)
+            {
+                if (this[DICFlag.ScanAntiMod])
+                    parameters.Add(DICFlagStrings.ScanAntiMod);
+            }
+
+            // Scan file to detect protect
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.ScanFileProtect])
+                {
+                    parameters.Add(DICFlagStrings.ScanFileProtect);
+                    if (ScanFileProtectValue != null)
+                    {
+                        if (ScanFileProtectValue > 0)
+                            parameters.Add(ScanFileProtectValue.ToString());
+                        else
+                            return null;
+                    }
+                }
+            }
+
+            // Scan file to detect protect
+            if (Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.ScanSectorProtect])
+                    parameters.Add(DICFlagStrings.ScanSectorProtect);
+            }
+
+            // Scan 74:00:00 (Saturn)
+            if (Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.SeventyFour])
+                    parameters.Add(DICFlagStrings.SeventyFour);
+            }
+
+            // Set Subchannel read level
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
+               || Command == DICCommand.GDROM
+               || Command == DICCommand.Swap)
+            {
+                if (this[DICFlag.SubchannelReadLevel])
+                {
+                    parameters.Add(DICFlagStrings.SubchannelReadLevel);
+                    if (SubchannelReadLevelValue != null)
+                    {
+                        if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
+                            parameters.Add(SubchannelReadLevelValue.ToString());
+                        else
+                            return null;
+                    }
+                }
+            }
+
+            return string.Join(" ", parameters);
+        }
+
+        /// <summary>
+        /// Returns if the current Parameter object is valid
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return GenerateParameters() != null;
+        }
+
+        /// <summary>
+        /// Scan a possible parameter string and populate whatever possible
+        /// </summary>
+        /// <param name="parameters">String possibly representing parameters</param>
+        private void ValidateAndSetParameters(string parameters)
         {
             // The string has to be valid by itself first
             if (String.IsNullOrWhiteSpace(parameters))
@@ -657,378 +1114,6 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Generate parameters based on a set of known inputs
-        /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
-        /// <param name="driveLetter">Drive letter to use</param>
-        /// <param name="filename">Filename to use</param>
-        /// <param name="driveSpeed">Drive speed to use</param>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed)
-        {
-            SetBaseCommand(system, type);
-            DriveLetter = driveLetter.ToString();
-            DriveSpeed = driveSpeed;
-            Filename = filename;
-            SetDefaultParameters(system, type);
-        }
-
-        /// <summary>
-        /// Blindly generate a parameter string based on the inputs
-        /// </summary>
-        /// <returns>Correctly formatted parameter string, null on error</returns>
-        public string GenerateParameters()
-        {
-            List<string> parameters = new List<string>();
-
-            parameters.Add(Command.Name());
-
-            // Drive Letter
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.BluRay
-                || Command == DICCommand.Close
-                || Command == DICCommand.CompactDisc
-                || Command == DICCommand.Data
-                || Command == DICCommand.DigitalVideoDisc
-                || Command == DICCommand.DriveSpeed
-                || Command == DICCommand.Eject
-                || Command == DICCommand.Floppy
-                || Command == DICCommand.GDROM
-                || Command == DICCommand.Reset
-                || Command == DICCommand.Start
-                || Command == DICCommand.Stop
-                || Command == DICCommand.Swap
-                || Command == DICCommand.XBOX)
-            {
-                if (DriveLetter != null)
-                    parameters.Add(DriveLetter);
-                else
-                    return null;
-            }
-
-            // Filename
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.BluRay
-                || Command == DICCommand.CompactDisc
-                || Command == DICCommand.Data
-                || Command == DICCommand.DigitalVideoDisc
-                || Command == DICCommand.Floppy
-                || Command == DICCommand.GDROM
-                || Command == DICCommand.MDS
-                || Command == DICCommand.Swap
-                || Command == DICCommand.Sub
-                || Command == DICCommand.XBOX)
-            {
-                if (Filename != null)
-                    parameters.Add(Filename);
-                else
-                    return null;
-            }
-
-            // Drive Speed
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.CompactDisc
-                || Command == DICCommand.Data
-                || Command == DICCommand.DigitalVideoDisc
-                || Command == DICCommand.GDROM
-                || Command == DICCommand.Swap)
-            {
-                if (DriveSpeed != null)
-                    parameters.Add(DriveSpeed.ToString());
-                else
-                    return null;
-            }
-
-            // LBA Markers
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.Data)
-            {
-                if (StartLBAValue != null && StartLBAValue > 0
-                    && EndLBAValue != null && EndLBAValue > 0)
-                {
-                    parameters.Add(StartLBAValue.ToString());
-                    parameters.Add(EndLBAValue.ToString());
-                }
-                else
-                    return null;
-            }
-
-            // Add Offset
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.CompactDisc)
-            {
-                if (this[DICFlag.AddOffset])
-                {
-                    parameters.Add(DICFlagStrings.AddOffset);
-                    if (AddOffsetValue != null)
-                        parameters.Add(AddOffsetValue.ToString());
-                    else
-                        return null;
-                }
-            }
-
-            // AMSF Dumping
-            if (Command == DICCommand.CompactDisc)
-            {
-                if (this[DICFlag.AMSF])
-                    parameters.Add(DICFlagStrings.AMSF);
-            }
-
-            // BE Opcode
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.BEOpcode] && !this[DICFlag.D8Opcode])
-                {
-                    parameters.Add(DICFlagStrings.BEOpcode);
-                    if (BEOpcodeValue != null
-                        && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
-                        parameters.Add(BEOpcodeValue);
-                }
-            }
-
-            // C2 Opcode
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.C2Opcode])
-                {
-                    parameters.Add(DICFlagStrings.C2Opcode);
-                    if (C2OpcodeValue[0] != null)
-                    {
-                        if (C2OpcodeValue[0] > 0)
-                            parameters.Add(C2OpcodeValue[0].ToString());
-                        else
-                            return null;
-                    }
-                    if (C2OpcodeValue[1] != null)
-                    {
-                        if (C2OpcodeValue[1] == 0)
-                            parameters.Add(C2OpcodeValue[1].ToString());
-                        else if (C2OpcodeValue[1] == 1)
-                        {
-                            parameters.Add(C2OpcodeValue[1].ToString());
-                            if (C2OpcodeValue[2] != null && C2OpcodeValue[3] != null)
-                            {
-                                if (C2OpcodeValue[2] > 0 && C2OpcodeValue[3] > 0)
-                                {
-                                    parameters.Add(C2OpcodeValue[2].ToString());
-                                    parameters.Add(C2OpcodeValue[3].ToString());
-                                }
-                                else
-                                    return null;
-                            }
-                        }
-                        else
-                            return null;
-                    }
-                }
-            }
-
-            // Copyright Management Information
-            if (Command == DICCommand.DigitalVideoDisc)
-            {
-                if (this[DICFlag.CopyrightManagementInformation])
-                    parameters.Add(DICFlagStrings.CopyrightManagementInformation);
-            }
-
-            // D8 Opcode
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.D8Opcode])
-                    parameters.Add(DICFlagStrings.D8Opcode);
-            }
-
-            // Disable Beep
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.BluRay
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.DigitalVideoDisc
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap
-               || Command == DICCommand.XBOX)
-            {
-                if (this[DICFlag.DisableBeep])
-                    parameters.Add(DICFlagStrings.DisableBeep);
-            }
-
-            // Force Unit Access
-            if (Command == DICCommand.BluRay
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.DigitalVideoDisc
-               || Command == DICCommand.Swap
-               || Command == DICCommand.XBOX)
-            {
-                if (this[DICFlag.ForceUnitAccess])
-                {
-                    parameters.Add(DICFlagStrings.ForceUnitAccess);
-                    if (ForceUnitAccessValue != null)
-                        parameters.Add(ForceUnitAccessValue.ToString());
-                }
-            }
-
-            // MCN
-            if (Command == DICCommand.CompactDisc)
-            {
-                if (this[DICFlag.MCN])
-                    parameters.Add(DICFlagStrings.MCN);
-            }
-
-            // Multi-Session
-            if (Command == DICCommand.CompactDisc)
-            {
-                if (this[DICFlag.MultiSession])
-                    parameters.Add(DICFlagStrings.MultiSession);
-            }
-
-            // Not fix SubP
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.NoFixSubP])
-                    parameters.Add(DICFlagStrings.NoFixSubP);
-            }
-
-            // Not fix SubQ
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.NoFixSubQ])
-                    parameters.Add(DICFlagStrings.NoFixSubQ);
-            }
-
-            // Not fix SubQ (PlayStation LibCrypt)
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.NoFixSubQLibCrypt])
-                    parameters.Add(DICFlagStrings.NoFixSubQLibCrypt);
-            }
-            
-            // Not fix SubQ (SecuROM)
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.NoFixSubQSecuROM])
-                    parameters.Add(DICFlagStrings.NoFixSubQSecuROM);
-            }
-
-            // Not fix SubRtoW
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.NoFixSubRtoW])
-                    parameters.Add(DICFlagStrings.NoFixSubRtoW);
-            }
-
-            // Raw read (2064 byte/sector)
-            if (Command == DICCommand.DigitalVideoDisc)
-            {
-                if (this[DICFlag.Raw])
-                    parameters.Add(DICFlagStrings.Raw);
-            }
-
-            // Reverse read
-            if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data)
-            {
-                if (this[DICFlag.Reverse])
-                    parameters.Add(DICFlagStrings.Reverse);
-            }
-
-            // Scan PlayStation anti-mod strings
-            if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data)
-            {
-                if (this[DICFlag.ScanAntiMod])
-                    parameters.Add(DICFlagStrings.ScanAntiMod);
-            }
-
-            // Scan file to detect protect
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.ScanFileProtect])
-                {
-                    parameters.Add(DICFlagStrings.ScanFileProtect);
-                    if (ScanFileProtectValue != null)
-                    {
-                        if (ScanFileProtectValue > 0)
-                            parameters.Add(ScanFileProtectValue.ToString());
-                        else
-                            return null;
-                    }
-                }
-            }
-
-            // Scan file to detect protect
-            if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.ScanSectorProtect])
-                    parameters.Add(DICFlagStrings.ScanSectorProtect);
-            }
-
-            // Scan 74:00:00 (Saturn)
-            if (Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.SeventyFour])
-                    parameters.Add(DICFlagStrings.SeventyFour);
-            }
-
-            // Set Subchannel read level
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
-            {
-                if (this[DICFlag.SubchannelReadLevel])
-                {
-                    parameters.Add(DICFlagStrings.SubchannelReadLevel);
-                    if (SubchannelReadLevelValue != null)
-                    {
-                        if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
-                            parameters.Add(SubchannelReadLevelValue.ToString());
-                        else
-                            return null;
-                    }
-                }
-            }
-
-            return string.Join(" ", parameters);
-        }
-
-        /// <summary>
         /// Returns whether a string is a valid drive letter
         /// </summary>
         /// <param name="parameter">String value to check</param>
@@ -1151,7 +1236,9 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="system">KnownSystem value to check</param>
         /// <param name="type">MediaType value to check</param>
-        private void SetDefaultParameters(KnownSystem? system, MediaType? type)
+        /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
+        /// <param name="rereadCount">User-defined reread count</param>
+        private void SetDefaultParameters(KnownSystem? system, MediaType? type, bool paranoid, int rereadCount)
         {
             // First check to see if the combination of system and MediaType is valid
             var validTypes = Validators.GetValidMediaTypes(system);
@@ -1160,13 +1247,26 @@ namespace DICUI.Utilities
                 return;
             }
 
+            // Set the C2 reread count
+            switch (rereadCount)
+            {
+                case -1:
+                    C2OpcodeValue[0] = null;
+                    break;
+                case 0:
+                    C2OpcodeValue[0] = 20;
+                    break;
+                default:
+                    C2OpcodeValue[0] = rereadCount;
+                    break;
+            }
+
             // Now sort based on disc type
             List<string> parameters = new List<string>();
             switch (type)
             {
                 case MediaType.CD:
                     this[DICFlag.C2Opcode] = true;
-                    C2OpcodeValue[0] = 20;
 
                     switch (system)
                     {
@@ -1174,7 +1274,13 @@ namespace DICUI.Utilities
                         case KnownSystem.IBMPCCompatible:
                             this[DICFlag.NoFixSubQSecuROM] = true;
                             this[DICFlag.ScanFileProtect] = true;
-                            this[DICFlag.ScanSectorProtect] = true;
+
+                            if (paranoid)
+                            {
+                                this[DICFlag.ScanSectorProtect] = true;
+                                this[DICFlag.SubchannelReadLevel] = true;
+                                SubchannelReadLevelValue = 2;
+                            }
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
                             this[DICFlag.MCN] = true;
@@ -1186,14 +1292,15 @@ namespace DICUI.Utilities
                     }
                     break;
                 case MediaType.DVD:
-                    // Currently no defaults set
+                    if (paranoid)
+                        this[DICFlag.CopyrightManagementInformation] = true;
                     break;
                 case MediaType.GDROM:
                     this[DICFlag.C2Opcode] = true;
-                    C2OpcodeValue[0] = 20;
                     break;
                 case MediaType.HDDVD:
-                    // Currently no defaults set
+                    if (paranoid)
+                        this[DICFlag.CopyrightManagementInformation] = true;
                     break;
                 case MediaType.BluRay:
                     // Currently no defaults set

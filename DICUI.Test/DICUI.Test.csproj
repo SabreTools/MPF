@@ -70,6 +70,7 @@
     <Compile Include="Utilities\DICCommandExtensionsTest.cs" />
     <Compile Include="Utilities\KnownSystemExtensionsTest.cs" />
     <Compile Include="Utilities\MediaTypeExtensionsTest.cs" />
+    <Compile Include="Utilities\ParametersTest.cs" />
     <Compile Include="Utilities\ValidatorsTest.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -310,8 +310,7 @@ namespace DICUI
                 // Get the currently selected options
                 Drive = DriveLetterComboBox.SelectedItem as Drive,
 
-                DICParameters = ParametersTextBox.Text,
-                // DICParameters = new Parameters(ParametersTextBox.Text),
+                DICParameters = new Parameters(ParametersTextBox.Text),
 
                 QuietMode = _options.QuietMode,
                 ParanoidMode = _options.ParanoidMode,
