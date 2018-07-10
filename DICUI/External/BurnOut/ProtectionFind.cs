@@ -21,7 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DICUI.External.unshield;
+using DICUI.External.iXcomp;
 using LibMSPackN;
 
 namespace DICUI.External.BurnOut
@@ -389,7 +389,22 @@ namespace DICUI.External.BurnOut
                     // InstallShield CAB - "ISc"
                     else if (magic.StartsWith("ISc"))
                     {
-                        string files = Unshield.ListFiles(file);
+                        IXComp.ListFiles(file, out int version);
+                        IXComp.ExtractAll(file, tempPath, version);
+                        var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
+                        files.Select(f => (new FileInfo(f).IsReadOnly = false));
+                        foreach (var sub in files)
+                        {
+                            string protection = ScanInFile(sub);
+                            try
+                            {
+                                File.Delete(sub);
+                            }
+                            catch { }
+
+                            if (!String.IsNullOrEmpty(protection))
+                                return protection;
+                        }
                     }
                 }
                 catch
