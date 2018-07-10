@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
@@ -9,46 +8,46 @@ namespace DICUI.Test.Utilities
     public class ConvertersTest
     {
         [Theory]
-        [InlineData(DICCommands.Audio, MediaType.CD)]
-        [InlineData(DICCommands.BluRay, MediaType.BluRay)]
-        [InlineData(DICCommands.Close, null)]
-        [InlineData(DICCommands.CompactDisc, MediaType.CD)]
-        [InlineData(DICCommands.Data, MediaType.CD)]
-        [InlineData(DICCommands.DigitalVideoDisc, MediaType.DVD)]
-        [InlineData(DICCommands.Eject, null)]
-        [InlineData(DICCommands.Floppy, MediaType.Floppy)]
-        [InlineData(DICCommands.GDROM, MediaType.GDROM)]
-        [InlineData(DICCommands.MDS, null)]
-        [InlineData(DICCommands.Reset, null)]
-        [InlineData(DICCommands.Start, null)]
-        [InlineData(DICCommands.Stop, null)]
-        [InlineData(DICCommands.Sub, null)]
-        [InlineData(DICCommands.Swap, MediaType.GDROM)]
-        [InlineData(DICCommands.XBOX, MediaType.DVD)]
-        public void BaseCommandToMediaTypeTest(string command, MediaType? expected)
+        [InlineData(DICCommand.Audio, MediaType.CD)]
+        [InlineData(DICCommand.BluRay, MediaType.BluRay)]
+        [InlineData(DICCommand.Close, null)]
+        [InlineData(DICCommand.CompactDisc, MediaType.CD)]
+        [InlineData(DICCommand.Data, MediaType.CD)]
+        [InlineData(DICCommand.DigitalVideoDisc, MediaType.DVD)]
+        [InlineData(DICCommand.Eject, null)]
+        [InlineData(DICCommand.Floppy, MediaType.Floppy)]
+        [InlineData(DICCommand.GDROM, MediaType.GDROM)]
+        [InlineData(DICCommand.MDS, null)]
+        [InlineData(DICCommand.Reset, null)]
+        [InlineData(DICCommand.Start, null)]
+        [InlineData(DICCommand.Stop, null)]
+        [InlineData(DICCommand.Sub, null)]
+        [InlineData(DICCommand.Swap, MediaType.GDROM)]
+        [InlineData(DICCommand.XBOX, MediaType.DVD)]
+        public void BaseCommandToMediaTypeTest(DICCommand command, MediaType? expected)
         {
             MediaType? actual = Converters.BaseCommmandToMediaType(command);
             Assert.Equal(expected, actual);
         }
 
         [Theory]
-        [InlineData(DICCommands.Audio, KnownSystem.AudioCD)]
-        [InlineData(DICCommands.BluRay, KnownSystem.SonyPlayStation3)]
-        [InlineData(DICCommands.Close, null)]
-        [InlineData(DICCommands.CompactDisc, KnownSystem.IBMPCCompatible)]
-        [InlineData(DICCommands.Data, KnownSystem.IBMPCCompatible)]
-        [InlineData(DICCommands.DigitalVideoDisc, KnownSystem.IBMPCCompatible)]
-        [InlineData(DICCommands.Eject, null)]
-        [InlineData(DICCommands.Floppy, KnownSystem.IBMPCCompatible)]
-        [InlineData(DICCommands.GDROM, KnownSystem.SegaDreamcast)]
-        [InlineData(DICCommands.MDS, null)]
-        [InlineData(DICCommands.Reset, null)]
-        [InlineData(DICCommands.Start, null)]
-        [InlineData(DICCommands.Stop, null)]
-        [InlineData(DICCommands.Sub, null)]
-        [InlineData(DICCommands.Swap, KnownSystem.SegaDreamcast)]
-        [InlineData(DICCommands.XBOX, KnownSystem.MicrosoftXBOX)]
-        public void BaseCommandToKnownSystemTest(string command, KnownSystem? expected)
+        [InlineData(DICCommand.Audio, KnownSystem.AudioCD)]
+        [InlineData(DICCommand.BluRay, KnownSystem.SonyPlayStation3)]
+        [InlineData(DICCommand.Close, null)]
+        [InlineData(DICCommand.CompactDisc, KnownSystem.IBMPCCompatible)]
+        [InlineData(DICCommand.Data, KnownSystem.IBMPCCompatible)]
+        [InlineData(DICCommand.DigitalVideoDisc, KnownSystem.IBMPCCompatible)]
+        [InlineData(DICCommand.Eject, null)]
+        [InlineData(DICCommand.Floppy, KnownSystem.IBMPCCompatible)]
+        [InlineData(DICCommand.GDROM, KnownSystem.SegaDreamcast)]
+        [InlineData(DICCommand.MDS, null)]
+        [InlineData(DICCommand.Reset, null)]
+        [InlineData(DICCommand.Start, null)]
+        [InlineData(DICCommand.Stop, null)]
+        [InlineData(DICCommand.Sub, null)]
+        [InlineData(DICCommand.Swap, KnownSystem.SegaDreamcast)]
+        [InlineData(DICCommand.XBOX, KnownSystem.MicrosoftXBOX)]
+        public void BaseCommandToKnownSystemTest(DICCommand command, KnownSystem? expected)
         {
             KnownSystem? actual = Converters.BaseCommandToKnownSystem(command);
             Assert.Equal(expected, actual);
@@ -76,44 +75,6 @@ namespace DICUI.Test.Utilities
         {
             string actual = Converters.MediaTypeToString(mediaType);
             Assert.Equal(expected, actual);
-        }
-
-        [Theory]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CD, DICCommands.XBOX)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, DICCommands.XBOX)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, null)]
-        [InlineData(KnownSystem.SegaNu, MediaType.BluRay, DICCommands.BluRay)]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.Floppy, DICCommands.Floppy)]
-        [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, null)]
-        public void KnownSystemAndMediaTypeToBaseCommandTest(KnownSystem? knownSystem, MediaType? mediaType, string expected)
-        {
-            string actual = Converters.KnownSystemAndMediaTypeToBaseCommand(knownSystem, mediaType);
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, false, 20, new string[] { DICFlags.Raw })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, new string[] { })]
-        /* paranoid mode tests */
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CD, true, 1000, new string[] { DICFlags.C2Opcode, "1000", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect, DICFlags.ScanSectorProtect, DICFlags.SubchannelReadLevel, "2"})]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, false, 20, new string[] { DICFlags.C2Opcode, "20", DICFlags.NoFixSubQSecuROM, DICFlags.ScanFileProtect })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, new string[] { DICFlags.CMI })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, new string[] { DICFlags.CMI })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, new string[] { })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, new string[] { })]
-        /* reread c2 */
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, new string[] { DICFlags.C2Opcode, "1000", })]
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, new string[] { DICFlags.C2Opcode })]
-
-        public void KnownSystemAndMediaTypeToParametersTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, string[] expected)
-        {
-            List<string> actual = Converters.KnownSystemAndMediaTypeToParameters(knownSystem, mediaType, paranoid, rereadC2);
-
-            HashSet<string> expectedSet = expected != null ? new HashSet<string>(expected) : null;
-            HashSet<string> actualSet = actual != null ? new HashSet<string>(actual) : null;
-
-            Assert.Equal(expectedSet, actualSet);
         }
 
         [Theory]

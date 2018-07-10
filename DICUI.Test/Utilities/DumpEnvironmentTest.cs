@@ -17,7 +17,7 @@ namespace DICUI.Test
         {
             var env = new DumpEnvironment
             {
-                DICParameters = parameters,
+                DICParameters = new Parameters(parameters),
                 Drive = isFloppy ? Drive.Floppy(letter) : Drive.Optical(letter, ""),
                 Type = mediaType,
             };
@@ -37,12 +37,12 @@ namespace DICUI.Test
         {
             var env = new DumpEnvironment
             {
-                DICParameters = parameters,
+                DICParameters = new Parameters(parameters),
                 System = KnownSystem.Custom,
             };
 
             env.AdjustForCustomConfiguration();
-            Assert.Equal(parameters, env.DICParameters);
+            Assert.Equal(new Parameters(parameters), env.DICParameters);
             Assert.Equal(expectedMediaType, env.Type);
             Assert.Equal(expectedKnownSystem, env.System);
             Assert.Equal(expectedDriveLetter, env.Drive.Letter);

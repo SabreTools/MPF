@@ -49,7 +49,7 @@ namespace DICUI.Utilities
         public KnownSystem? System;
         public MediaType? Type;
         public bool IsFloppy { get => Drive.IsFloppy; }
-        public string DICParameters;
+        public Parameters DICParameters;
 
         // extra DIC arguments
         public bool QuietMode;
@@ -98,7 +98,7 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.Eject + " " + Drive.Letter,
+                        Arguments = DICCommandStrings.Eject + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -134,8 +134,8 @@ namespace DICUI.Utilities
                 return -1;
 
             // Get the drive speed directly
-            //int speed = Validators.GetDriveSpeed((char)selected?.Key);
-            //int speed = Validators.GetDriveSpeedEx((char)selected?.Key, _currentMediaType);
+            //int speed = Validators.GetDriveSpeed(Drive.Letter);
+            //int speed = Validators.GetDriveSpeedEx(Drive.Letter, _currentMediaType);
 
             // Get the drive speed from DIC, if possible
             Process childProcess;
@@ -146,7 +146,7 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = DICPath,
-                        Arguments = DICCommands.DriveSpeed + " " + Drive.Letter,
+                        Arguments = DICCommandStrings.DriveSpeed + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -206,18 +206,13 @@ namespace DICUI.Utilities
                 if (Drive == null)
                     return null;
 
-                string command = Converters.KnownSystemAndMediaTypeToBaseCommand(System, Type);
-                List<string> defaultParams = Converters.KnownSystemAndMediaTypeToParameters(System, Type, ParanoidMode, RereadAmountC2);
-
+                // Set the proper parameters
+                DICParameters = new Parameters(System, Type, Drive.Letter, Path.Combine(OutputDirectory, OutputFilename), driveSpeed, ParanoidMode, RereadAmountC2);
                 if (QuietMode)
-                    defaultParams.Add(DICFlags.DisableBeep);
+                    DICParameters[DICFlag.DisableBeep] = true;
 
-                return command
-                    + " " + Drive.Letter
-                    + " \"" + Path.Combine(OutputDirectory, OutputFilename) + "\" "
-                    + (Type.DoesSupportDriveSpeed() && System.DoesSupportDriveSpeed() ? driveSpeed + " " : "")
-                    + string.Join(" ", defaultParams)
-                    ;
+                // Generate and return the param string
+                return DICParameters.GenerateParameters();
             }
 
             return null;
@@ -267,7 +262,7 @@ namespace DICUI.Utilities
             // If we have a custom configuration, we need to extract the best possible information from it
             if (System == KnownSystem.Custom)
             {
-                Validators.DetermineFlags(DICParameters, out Type, out System, out string letter, out string path);
+                DICParameters.DetermineFlags(out Type, out System, out string letter, out string path);
                 if (Type == MediaType.Floppy)
                     Drive = Drive.Floppy(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
                 else
@@ -300,9 +295,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return !((string.IsNullOrWhiteSpace(DICParameters)
-            || !Validators.ValidateParameters(DICParameters)
-            || (IsFloppy ^ Type == MediaType.Floppy)));
+            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.Floppy);
         }
 
         #endregion
@@ -339,7 +332,7 @@ namespace DICUI.Utilities
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = DICPath,
-                    Arguments = DICParameters,
+                    Arguments = DICParameters.GenerateParameters() ?? "",
                 },
             };
             dicProcess.Start();

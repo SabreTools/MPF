@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using IMAPI2;
@@ -14,7 +13,11 @@ namespace DICUI.Utilities
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is MediaType?)
+            if (value is DICCommand)
+                return ((DICCommand)value).Name();
+            else if (value is DICFlag)
+                return ((DICFlag)value).Name();
+            else if (value is MediaType?)
                 return ((MediaType?)value).Name();
             else if (value is KnownSystem?)
                 return ((KnownSystem?)value).Name();
@@ -33,28 +36,28 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the MediaType associated with a given base command
         /// </summary>
-        /// <param name="baseCommand">String value to check</param>
+        /// <param name="baseCommand">DICCommand value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static MediaType? BaseCommmandToMediaType(string baseCommand)
+        public static MediaType? BaseCommmandToMediaType(DICCommand baseCommand)
         {
             switch (baseCommand)
             {
-                case DICCommands.Audio:
-                case DICCommands.CompactDisc:
-                case DICCommands.Data:
+                case DICCommand.Audio:
+                case DICCommand.CompactDisc:
+                case DICCommand.Data:
                     return MediaType.CD;
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
+                case DICCommand.GDROM:
+                case DICCommand.Swap:
                     return MediaType.GDROM;
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.XBOX:
+                case DICCommand.DigitalVideoDisc:
+                case DICCommand.XBOX:
                     return MediaType.DVD;
-                case DICCommands.BluRay:
+                case DICCommand.BluRay:
                     return MediaType.BluRay;
 
                 // Non-optical
-                case DICCommands.Floppy:
+                case DICCommand.Floppy:
                     return MediaType.Floppy;
                 default:
                     return null;
@@ -64,37 +67,147 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the most common known system for a given MediaType
         /// </summary>
-        /// <param name="baseCommand">String value to check</param>
+        /// <param name="baseCommand">DICCommand value to check</param>
         /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? BaseCommandToKnownSystem(string baseCommand)
+        public static KnownSystem? BaseCommandToKnownSystem(DICCommand baseCommand)
         {
             switch (baseCommand)
             {
-                case DICCommands.Audio:
+                case DICCommand.Audio:
                     return KnownSystem.AudioCD;
-                case DICCommands.CompactDisc:
-                case DICCommands.Data:
-                case DICCommands.DigitalVideoDisc:
-                case DICCommands.Floppy:
+                case DICCommand.CompactDisc:
+                case DICCommand.Data:
+                case DICCommand.DigitalVideoDisc:
+                case DICCommand.Floppy:
                     return KnownSystem.IBMPCCompatible;
-                case DICCommands.GDROM:
-                case DICCommands.Swap:
+                case DICCommand.GDROM:
+                case DICCommand.Swap:
                     return KnownSystem.SegaDreamcast;
-                case DICCommands.BluRay:
+                case DICCommand.BluRay:
                     return KnownSystem.SonyPlayStation3;
-                case DICCommands.XBOX:
+                case DICCommand.XBOX:
                     return KnownSystem.MicrosoftXBOX;
                 default:
                     return null;
             }
         }
 
-		/// <summary>
-		/// Convert IMAPI physical media type to a MediaType
-		/// </summary>
-		/// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
-		/// <returns>MediaType if possible, null on error</returns>
-		public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
+        /// <summary>
+        /// Get the string representation of the DICCommand enum values
+        /// </summary>
+        /// <param name="command">DICCommand value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string DICCommandToString(DICCommand command)
+        {
+            switch (command)
+            {
+                case DICCommand.Audio:
+                    return DICCommandStrings.Audio;
+                case DICCommand.BluRay:
+                    return DICCommandStrings.BluRay;
+                case DICCommand.Close:
+                    return DICCommandStrings.Close;
+                case DICCommand.CompactDisc:
+                    return DICCommandStrings.CompactDisc;
+                case DICCommand.Data:
+                    return DICCommandStrings.Data;
+                case DICCommand.DigitalVideoDisc:
+                    return DICCommandStrings.DigitalVideoDisc;
+                case DICCommand.DriveSpeed:
+                    return DICCommandStrings.DriveSpeed;
+                case DICCommand.Eject:
+                    return DICCommandStrings.Eject;
+                case DICCommand.Floppy:
+                    return DICCommandStrings.Floppy;
+                case DICCommand.GDROM:
+                    return DICCommandStrings.GDROM;
+                case DICCommand.MDS:
+                    return DICCommandStrings.MDS;
+                case DICCommand.Reset:
+                    return DICCommandStrings.Reset;
+                case DICCommand.Start:
+                    return DICCommandStrings.Start;
+                case DICCommand.Stop:
+                    return DICCommandStrings.Stop;
+                case DICCommand.Sub:
+                    return DICCommandStrings.Sub;
+                case DICCommand.Swap:
+                    return DICCommandStrings.Swap;
+                case DICCommand.XBOX:
+                    return DICCommandStrings.XBOX;
+
+                case DICCommand.NONE:
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the DICFlag enum values
+        /// </summary>
+        /// <param name="command">DICFlag value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string DICFlagToString(DICFlag flag)
+        {
+            switch (flag)
+            {
+                case DICFlag.AddOffset:
+                    return DICFlagStrings.AddOffset;
+                case DICFlag.AMSF:
+                    return DICFlagStrings.AMSF;
+                case DICFlag.BEOpcode:
+                    return DICFlagStrings.BEOpcode;
+                case DICFlag.C2Opcode:
+                    return DICFlagStrings.C2Opcode;
+                case DICFlag.CopyrightManagementInformation:
+                    return DICFlagStrings.CopyrightManagementInformation;
+                case DICFlag.D8Opcode:
+                    return DICFlagStrings.D8Opcode;
+                case DICFlag.DisableBeep:
+                    return DICFlagStrings.DisableBeep;
+                case DICFlag.ForceUnitAccess:
+                    return DICFlagStrings.ForceUnitAccess;
+                case DICFlag.MCN:
+                    return DICFlagStrings.MCN;
+                case DICFlag.MultiSession:
+                    return DICFlagStrings.MultiSession;
+                case DICFlag.NoFixSubP:
+                    return DICFlagStrings.NoFixSubP;
+                case DICFlag.NoFixSubQ:
+                    return DICFlagStrings.NoFixSubQ;
+                case DICFlag.NoFixSubQLibCrypt:
+                    return DICFlagStrings.NoFixSubQLibCrypt;
+                case DICFlag.NoFixSubQSecuROM:
+                    return DICFlagStrings.NoFixSubQSecuROM;
+                case DICFlag.NoFixSubRtoW:
+                    return DICFlagStrings.NoFixSubRtoW;
+                case DICFlag.Raw:
+                    return DICFlagStrings.Raw;
+                case DICFlag.Reverse:
+                    return DICFlagStrings.Reverse;
+                case DICFlag.ScanAntiMod:
+                    return DICFlagStrings.ScanAntiMod;
+                case DICFlag.ScanFileProtect:
+                    return DICFlagStrings.ScanFileProtect;
+                case DICFlag.ScanSectorProtect:
+                    return DICFlagStrings.ScanSectorProtect;
+                case DICFlag.SeventyFour:
+                    return DICFlagStrings.SeventyFour;
+                case DICFlag.SubchannelReadLevel:
+                    return DICFlagStrings.SubchannelReadLevel;
+
+                case DICFlag.NONE:
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        /// Convert IMAPI physical media type to a MediaType
+        /// </summary>
+        /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
+        /// <returns>MediaType if possible, null on error</returns>
+        public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
 		{
 			switch (type)
 			{
@@ -207,138 +320,6 @@ namespace DICUI.Utilities
                 default:
                     return "Unknown";
             }
-        }
-
-        /// <summary>
-        /// Get the DIC command to be used for a given MediaType
-        /// </summary>
-        /// <param name="type">MediaType value to check</param>
-        /// <returns>String containing the command, null on error</returns>
-        public static string KnownSystemAndMediaTypeToBaseCommand(KnownSystem? sys, MediaType? type)
-        {
-            // If we have an invalid combination, we should return null
-            if (!Validators.GetValidMediaTypes(sys).Contains(type))
-            {
-                return null;
-            }
-
-            switch (type)
-            {
-                case MediaType.CD:
-                    if (sys == KnownSystem.MicrosoftXBOX)
-                    {
-                        return DICCommands.XBOX;
-                    }
-                    return DICCommands.CompactDisc;
-                case MediaType.DVD:
-                    if (sys == KnownSystem.MicrosoftXBOX
-                        || sys == KnownSystem.MicrosoftXBOX360XDG2
-                        || sys == KnownSystem.MicrosoftXBOX360XDG3)
-                    {
-                        return DICCommands.XBOX;
-                    }
-                    return DICCommands.DigitalVideoDisc;
-                case MediaType.GDROM:
-                    return DICCommands.GDROM;
-                case MediaType.HDDVD:
-                    return DICCommands.DigitalVideoDisc;
-                case MediaType.BluRay:
-                    return DICCommands.BluRay;
-                case MediaType.GameCubeGameDisc:
-                    return DICCommands.DigitalVideoDisc;
-                case MediaType.WiiOpticalDisc:
-                    return DICCommands.DigitalVideoDisc;
-                case MediaType.Floppy:
-                    return DICCommands.Floppy;
-
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get list of default parameters for a given system and disc type
-        /// </summary>
-        /// <param name="sys">KnownSystem value to check</param>
-        /// <param name="type">MediaType value to check</param>
-        /// <returns>List of strings representing the parameters</returns>
-        public static List<string> KnownSystemAndMediaTypeToParameters(KnownSystem? sys, MediaType? type, bool paranoid, int RereadAmountC2)
-        {
-            // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validators.GetValidMediaTypes(sys);
-            if (!validTypes.Contains(type))
-            {
-                return null;
-            }
-
-            string rereadAmount = RereadAmountC2 > 0 ? Convert.ToString(RereadAmountC2) : null;
-
-            // Now sort based on disc type
-            List<string> parameters = new List<string>();
-            switch (type)
-            {
-                case MediaType.CD:
-                    parameters.Add(DICFlags.C2Opcode);
-                    if (rereadAmount != null)
-                        parameters.Add(rereadAmount);
-
-                    switch (sys)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
-                            parameters.Add(DICFlags.NoFixSubQSecuROM);
-                            parameters.Add(DICFlags.ScanFileProtect);
-
-                            if (paranoid)
-                            {
-                                parameters.Add(DICFlags.ScanSectorProtect);
-                                parameters.Add(DICFlags.SubchannelReadLevel); parameters.Add("2");
-                            }
-
-                            break;
-
-                        case KnownSystem.NECPCEngineTurboGrafxCD:
-                            parameters.Add(DICFlags.MCN);
-                            break;
-
-                        case KnownSystem.SonyPlayStation:
-                            parameters.Add(DICFlags.ScanAntiMod);
-                            parameters.Add(DICFlags.NoFixSubQLibCrypt);
-                            break;
-                    }
-                    break;
-                case MediaType.DVD:
-                    if (paranoid)
-                        parameters.Add(DICFlags.CMI);
-                    break;
-                case MediaType.GDROM:
-                    parameters.Add(DICFlags.C2Opcode);
-                    if (rereadAmount != null)
-                        parameters.Add(rereadAmount);
-                    break;
-                case MediaType.HDDVD:
-                    if (paranoid)
-                        parameters.Add(DICFlags.CMI);
-                    break;
-                case MediaType.BluRay:
-                    // Currently no defaults set
-                    break;
-
-                // Special Formats
-                case MediaType.GameCubeGameDisc:
-                    parameters.Add(DICFlags.Raw);
-                    break;
-                case MediaType.WiiOpticalDisc:
-                    parameters.Add(DICFlags.Raw);
-                    break;
-
-                // Non-optical
-                case MediaType.Floppy:
-                    // Currently no defaults set
-                    break;
-            }
-
-            return parameters;
         }
 
         /// <summary>
