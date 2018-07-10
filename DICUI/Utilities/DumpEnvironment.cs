@@ -1366,6 +1366,16 @@ namespace DICUI.Utilities
             if (!File.Exists(DICPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
+            // Validate that the user explicitly wants an inactive drive to be considered for dumping
+            if (!Drive.MarkedActive)
+            {
+                MessageBoxResult result = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                {
+                    return Result.Failure("Dumping aborted!");
+                }
+            }
+
             // If a complete dump already exists
             if (FoundAllFiles())
             {
