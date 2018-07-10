@@ -63,5 +63,20 @@ namespace DICUI.Test.Utilities
             Assert.Equal(expectedDriveLetter, actualDriveLetter);
             Assert.Equal(expectedPath, actualPath);
         }
+
+        [Theory]
+        [InlineData(null, false)]
+        [InlineData("", false)]
+        [InlineData("cd F test.bin 8 /c2 20", true)]
+        [InlineData("fd A test.img", true)]
+        [InlineData("dvd X super\\test.iso 8 /raw", true)]
+        [InlineData("bd D longer\\path_test.iso 16", false)]
+        [InlineData("stop D", true)]
+        [InlineData("ls", false)]
+        public void ValidateParametersTest(string parameters, bool expected)
+        {
+            Parameters actual = new Parameters(parameters);
+            Assert.Equal(expected, actual.IsValid());
+        }
     }
 }

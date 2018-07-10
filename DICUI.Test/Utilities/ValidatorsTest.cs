@@ -41,20 +41,5 @@ namespace DICUI.Test.Utilities
             // TODO: Implement
             Assert.True(true);
         }
-
-        [Theory]
-        [InlineData(null, false)]
-        [InlineData("", false)]
-        [InlineData("cd F test.bin 8 /c2 20", true)]
-        [InlineData("fd A test.img", true)]
-        [InlineData("dvd X super\\test.iso 8 /raw", true)]
-        [InlineData("bd D longer\\path_test.iso 16", false)]
-        [InlineData("stop D", true)]
-        [InlineData("ls", false)]
-        public void ValidateParametersTest(string parameters, bool expected)
-        {
-            bool actual = Validators.ValidateParameters(parameters);
-            Assert.Equal(expected, actual);
-        }
     }
 }
