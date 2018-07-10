@@ -295,8 +295,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return !((DICParameters.IsValid()
-                || (IsFloppy ^ Type == MediaType.Floppy)));
+            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.Floppy);
         }
 
         #endregion

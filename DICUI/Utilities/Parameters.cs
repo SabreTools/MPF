@@ -27,7 +27,7 @@ namespace DICUI.Utilities
         public int? EndLBAValue;
 
         // DIC Flags
-        private Dictionary<DICFlag, bool> _flags;
+        private Dictionary<DICFlag, bool> _flags = new Dictionary<DICFlag, bool>();
         public bool this[DICFlag key]
         {
             get
@@ -200,7 +200,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.XBOX)
             {
                 if (Filename != null)
-                    parameters.Add(Filename);
+                    parameters.Add("\"" + Filename + "\"");
                 else
                     return null;
             }
