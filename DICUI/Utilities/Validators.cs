@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using IMAPI2;
 using DICUI.Data;
-using DICUI.External;
+using DICUI.External.BurnOut;
 
 namespace DICUI.Utilities
 {

@@ -21,9 +21,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DICUI.External.unshield;
 using LibMSPackN;
 
-namespace DICUI.External
+namespace DICUI.External.BurnOut
 {
     public static class ProtectionFind
     {
@@ -150,9 +151,8 @@ namespace DICUI.External
                         return "LaserLock " + GetLaserLockVersion(FileContent, --position) + " " + GetLaserLockBuild(FileContent, false);
 
                     // ProtectDisc
-                    if ((FileContent.IndexOf("HúMETINF")) > -1)
+                    if ((position = FileContent.IndexOf("HúMETINF")) > -1)
                     {
-                        position--;
                         string version = EVORE.SearchProtectDiscVersion(file);
                         if (version.Length > 0)
                         {
@@ -167,11 +167,9 @@ namespace DICUI.External
                         }
                     }
 
-                    if ((FileContent.IndexOf("ACE-PCD")) > -1)
+                    if ((position = FileContent.IndexOf("ACE-PCD")) > -1)
                     {
-                        position--;
-                        string version;
-                        version = EVORE.SearchProtectDiscVersion(file);
+                        string version = EVORE.SearchProtectDiscVersion(file);
                         if (version.Length > 0)
                         {
                             string[] astrVersionArray = version.Split('.');
@@ -182,6 +180,14 @@ namespace DICUI.External
                     }
 
                     // SafeDisc / SafeCast
+                    if ((position = FileContent.IndexOf("BoG_ *90.0&!!  Yy>")) > -1)
+                    {
+                        if (FileContent.IndexOf("product activation library") > 0)
+                            return "SafeCast " + GetSafeDiscVersion(file, position);
+                        else
+                            return "SafeDisc " + GetSafeDiscVersion(file, position);
+                    }
+
                     if (FileContent.Contains((char)0x00 + (char)0x00 + "BoG_")
                         || FileContent.Contains("stxt774")
                         || FileContent.Contains("stxt371"))
@@ -191,15 +197,6 @@ namespace DICUI.External
                             return "SafeDisc " + version;
 
                         return "SafeDisc 3.20-4.xx (version removed)";
-                    }
-
-                    if ((FileContent.IndexOf("BoG_ *90.0&!!  Yy>")) > -1)
-                    {
-                        position--;
-                        if (FileContent.IndexOf("product activation library") > 0)
-                            return "SafeCast " + GetSafeDiscVersion(file, position);
-                        else
-                            return "SafeDisc " + GetSafeDiscVersion(file, position);
                     }
 
                     // SecuROM
@@ -223,7 +220,7 @@ namespace DICUI.External
 
                     if ((position = FileContent.IndexOf("" + (char)0xEF + (char)0xBE + (char)0xAD + (char)0xDE)) > -1)
                     {
-                        position--;
+                        position--; // TODO: Verify this subtract
                         if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                             && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
                             return "SolidShield 1";
@@ -241,7 +238,7 @@ namespace DICUI.External
                     position = position == -1 ? FileContent.IndexOf("" + (char)0xAD + (char)0xDE + (char)0xFE + (char)0xCA + (char)0x5) : position;
                     if (position > -1)
                     {
-                        position--;
+                        position--; // TODO: Verify this subtract
                         if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                             && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
                         {
@@ -298,16 +295,16 @@ namespace DICUI.External
                         return "TAGES " + GetFileVersion(file);
 
                     if ((position = FileContent.IndexOf("" + (char)0xE8 + "u" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0xE8)) > -1
-                        && FileContent.Substring(--position + 8, 3) == "" + (char)0xFF + (char)0xFF + "h")
+                        && FileContent.Substring(--position + 8, 3) == "" + (char)0xFF + (char)0xFF + "h") // TODO: Verify this subtract
                         return "TAGES " + GetTagesVersion(file, position);
 
                     // VOB ProtectCD/DVD
                     if ((position = FileContent.IndexOf("VOB ProtectCD")) > -1)
-                        return "VOB ProtectCD/DVD " + GetProtectCDoldVersion(file, --position);
+                        return "VOB ProtectCD/DVD " + GetProtectCDoldVersion(file, --position); // TODO: Verify this subtract
 
                     if ((position = FileContent.IndexOf("DCP-BOV" + (char)0x00 + (char)0x00)) > -1)
                     {
-                        string version = GetVOBProtectCDDVDVersion(file, --position);
+                        string version = GetVOBProtectCDDVDVersion(file, --position); // TODO: Verify this subtract
                         if (version.Length > 0)
                         {
                             return "VOB ProtectCD/DVD " + version;
@@ -365,23 +362,39 @@ namespace DICUI.External
 
                 try
                 {
-                    MSCabinet cabfile = new MSCabinet(file);
-                    foreach (var sub in cabfile.GetFiles())
+                    // Read the first 4 bytes to get the archive type
+                    string magic = "";
+                    using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
                     {
-                        string tempfile = Path.Combine(tempPath, sub.Filename);
-                        sub.ExtractTo(tempfile);
-                        string protection = ScanInFile(tempfile);
-                        File.Delete(tempfile);
+                        magic = new String(br.ReadChars(4));
+                    }
 
-                        if (!String.IsNullOrEmpty(protection))
+                    // Microsoft CAB - "MSCF"
+                    if (magic.StartsWith("MSCF"))
+                    {
+                        MSCabinet cabfile = new MSCabinet(file);
+                        foreach (var sub in cabfile.GetFiles())
                         {
-                            return protection;
+                            string tempfile = Path.Combine(tempPath, sub.Filename);
+                            sub.ExtractTo(tempfile);
+                            string protection = ScanInFile(tempfile);
+                            File.Delete(tempfile);
+
+                            if (!String.IsNullOrEmpty(protection))
+                            {
+                                return protection;
+                            }
                         }
+                    }
+                    // InstallShield CAB - "ISc"
+                    else if (magic.StartsWith("ISc"))
+                    {
+                        string files = Unshield.ListFiles(file);
                     }
                 }
                 catch
                 {
-                    // We assume it's an InstallShield CAB and ignore
+                    // We had access issues so we ignore
                 }
                 finally
                 {
