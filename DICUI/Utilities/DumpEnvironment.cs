@@ -135,9 +135,13 @@ namespace DICUI.Utilities
             if (IsFloppy)
                 return -1;
 
+            // Make sure that the current drive is active
+            if (!Drive.MarkedActive)
+                return -1;
+
             // Get the drive speed directly
-            //int speed = Validators.GetDriveSpeed(Drive.Letter);
-            //int speed = Validators.GetDriveSpeedEx(Drive.Letter, _currentMediaType);
+            //int speed = Validators.GetDriveSpeed(Drive);
+            //int speed = Validators.GetDriveSpeedEx(Drive, _currentMediaType);
 
             // Get the drive speed from DIC, if possible
             Process childProcess;
