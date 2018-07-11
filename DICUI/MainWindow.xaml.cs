@@ -264,7 +264,8 @@ namespace DICUI
 
             if (DriveLetterComboBox.Items.Count > 0)
             {
-                DriveLetterComboBox.SelectedIndex = 0;
+                int index = _drives.FindIndex(d => d.MarkedActive);
+                DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
                 StatusLabel.Content = "Valid media found! Choose your Media Type";
                 StartStopButton.IsEnabled = true;
                 CopyProtectScanButton.IsEnabled = true;
