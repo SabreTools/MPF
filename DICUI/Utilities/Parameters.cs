@@ -200,7 +200,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.XBOX)
             {
                 if (Filename != null)
-                    parameters.Add("\"" + Filename + "\"");
+                    parameters.Add("\"" + Filename.Trim('"') + "\"");
                 else
                     return null;
             }
