@@ -220,17 +220,15 @@ namespace DICUI.External.BurnOut
 
                     if ((position = FileContent.IndexOf("" + (char)0xEF + (char)0xBE + (char)0xAD + (char)0xDE)) > -1)
                     {
-                        position--; // TODO: Verify this subtract
                         if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                             && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
-                            return "SolidShield 1";
+                            return "SolidShield 1 (SolidShield EXE Wrapper)";
                         else
                         {
                             string version = GetFileVersion(file);
                             string desc = FileVersionInfo.GetVersionInfo(file).FileDescription.ToLower();
                             if (!string.IsNullOrEmpty(version) && desc.Contains("solidshield"))
                                 return "SolidShield Core.dll " + version;
-                            //return "SolidShield EXE Wrapper";
                         }
                     }
 
@@ -255,7 +253,7 @@ namespace DICUI.External.BurnOut
                                 + "o" + (char)0x00 + "n" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00);
                             if (position > -1)
                             {
-                                position--;
+                                position--; // TODO: Verify this subtract
                                 return "SolidShield 2 + Tagès " + FileContent.Substring(position + 0x38, 1) + "." + FileContent.Substring(position + 0x38 + 4, 1) + "." + FileContent.Substring(position + 0x38 + 8, 1) + "." + FileContent.Substring(position + 0x38 + 12, 1);
                             }
                             else
