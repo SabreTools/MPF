@@ -227,8 +227,7 @@ namespace DICUI.Utilities
         /// <summary>
         /// Execute a complete dump workflow
         /// </summary>
-        /// TODO: Add callback to update the label at each step
-        public async Task<Result> StartDumping()
+        public async Task<Result> StartDumping(IProgress<Result> progress)
         {
             Result result = IsValidForDump();
 
@@ -238,9 +237,11 @@ namespace DICUI.Utilities
 
             // execute DIC
             await Task.Run(() => ExecuteDiskImageCreator());
+            progress?.Report(Result.Success("DiscImageCreator has finished!"));
 
             // execute additional tools
             result = ExecuteAdditionalToolsAfterDIC();
+            progress?.Report(result);
 
             // is something is wrong with additional tools report and return
             // TODO: don't return, just keep generating output from DIC
@@ -251,7 +252,8 @@ namespace DICUI.Utilities
                 return;
             }*/
 
-            // verify dump output and save it
+            // Verify dump output and save it
+            progress?.Report(Result.Success("Gathering submission information..."));
             result = VerifyAndSaveDumpOutput();
 
             return result;

@@ -149,6 +149,11 @@ namespace DICUI
             EnsureDiscInformation();
         }
 
+        private void ProgressUpdated(object sender, Result value)
+        {
+            StatusLabel.Content = value.Message;
+        }
+
         // Toolbar Events
 
         private void AppExitClick(object sender, RoutedEventArgs e)
@@ -336,7 +341,9 @@ namespace DICUI
             CopyProtectScanButton.IsEnabled = false;
             StatusLabel.Content = "Beginning dumping process";
 
-            Result result = await _env.StartDumping();
+            var progress = new Progress<Result>();
+            progress.ProgressChanged += ProgressUpdated;
+            Result result = await _env.StartDumping(progress);
 
             StatusLabel.Content = result ? "Dumping complete!" : result.Message;
             StartStopButton.Content = UIElements.StartDumping;
