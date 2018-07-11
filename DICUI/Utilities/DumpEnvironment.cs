@@ -227,6 +227,7 @@ namespace DICUI.Utilities
         /// <summary>
         /// Execute a complete dump workflow
         /// </summary>
+        /// TODO: Add callback to update the label at each step
         public async Task<Result> StartDumping()
         {
             Result result = IsValidForDump();
