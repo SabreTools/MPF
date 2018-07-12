@@ -28,7 +28,7 @@ build:
 
 # post-build step
 after_build:
-- 7z a dicui_%APPVEYOR_BUILD_VERSION%.zip bin\Debug
+- 7z a dicui_%APPVEYOR_BUILD_VERSION%.zip DICUI\bin\Debug
 
 # artifact linking
 artifacts:

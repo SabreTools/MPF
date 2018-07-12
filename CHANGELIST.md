@@ -1,3 +1,13 @@
+### 1.07 (2018-06-27)
+
+- Separated system and media type for easier navigation
+- Combined instances of single- and dual-layer discs
+- Removed reliance on **sg-raw** and **psxt001z**
+- Added system and disc type to the submission info
+- First attempt at getting current disc type
+- Made the three PSX-specific fields (**EDC**, **Anti-modchip**, and **LibCrypt**) automatically filled in, when possible
+- Many, many, many behind the scenes updates for speed, future features, and stability
+
 ### 1.06 (2018-06-15)
 
 - Fixed not being able to use the `/c2` flag properly
