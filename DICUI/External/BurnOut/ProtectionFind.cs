@@ -96,13 +96,27 @@ namespace DICUI.External.BurnOut
         /// </remarks>
         private static string ScanInFile(string file)
         {
+            // Get the extension for certain checks
             string extension = Path.GetExtension(file).ToLower().TrimStart('.');
 
-            #region EXE/DLL/ICD/DAT Content Checks
+            // Read the first 4 bytes to get the file type
+            string magic = "";
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
+                {
+                    magic = new String(br.ReadChars(4));
+                }
+            }
+            catch
+            {
+                // We don't care what the issue was, we can't open the file
+                return null;
+            }
 
-            if (extension == "exe" || extension == "ex_"
-                || extension == "dll" || extension == "dl_"
-                || extension == "dat"
+            #region Executable Content Checks
+
+            if (magic.StartsWith("MZ") // Windows Executable
                 || extension == "icd")
             {
                 try
@@ -368,69 +382,59 @@ namespace DICUI.External.BurnOut
             {
                 // No-op
             }
-            else if (extension == "cab")
+            // Microsoft CAB - "MSCF"
+            else if (magic.StartsWith("MSCF"))
             {
                 string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 Directory.CreateDirectory(tempPath);
 
-                try
+                MSCabinet cabfile = new MSCabinet(file);
+                foreach (var sub in cabfile.GetFiles())
                 {
-                    // Read the first 4 bytes to get the archive type
-                    string magic = "";
-                    using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
-                    {
-                        magic = new String(br.ReadChars(4));
-                    }
+                    string tempfile = Path.Combine(tempPath, sub.Filename);
+                    sub.ExtractTo(tempfile);
+                    string protection = ScanInFile(tempfile);
+                    File.Delete(tempfile);
 
-                    // Microsoft CAB - "MSCF"
-                    if (magic.StartsWith("MSCF"))
+                    if (!String.IsNullOrEmpty(protection))
                     {
-                        MSCabinet cabfile = new MSCabinet(file);
-                        foreach (var sub in cabfile.GetFiles())
+                        try
                         {
-                            string tempfile = Path.Combine(tempPath, sub.Filename);
-                            sub.ExtractTo(tempfile);
-                            string protection = ScanInFile(tempfile);
-                            File.Delete(tempfile);
-
-                            if (!String.IsNullOrEmpty(protection))
-                            {
-                                return protection;
-                            }
+                            Directory.Delete(tempPath, true);
                         }
-                    }
-                    // InstallShield CAB - "ISc"
-                    else if (magic.StartsWith("ISc"))
-                    {
-                        IXComp.ListFiles(file, out int version);
-                        IXComp.ExtractAll(file, tempPath, version);
-                        var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
-                        files.Select(f => (new FileInfo(f).IsReadOnly = false));
-                        foreach (var sub in files)
-                        {
-                            string protection = ScanInFile(sub);
-                            try
-                            {
-                                File.Delete(sub);
-                            }
-                            catch { }
-
-                            if (!String.IsNullOrEmpty(protection))
-                                return protection;
-                        }
+                        catch { }
+                        return protection;
                     }
                 }
-                catch
+            }
+            // InstallShield CAB - "ISc"
+            else if (magic.StartsWith("ISc"))
+            {
+                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                Directory.CreateDirectory(tempPath);
+
+                IXComp.ListFiles(file, out int version);
+                IXComp.ExtractAll(file, tempPath, version);
+                var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
+                files.Select(f => (new FileInfo(f).IsReadOnly = false));
+                foreach (var sub in files)
                 {
-                    // We had access issues so we ignore
-                }
-                finally
-                {
+                    string protection = ScanInFile(sub);
                     try
                     {
-                        Directory.Delete(tempPath, true);
+                        File.Delete(sub);
                     }
                     catch { }
+
+                    if (!String.IsNullOrEmpty(protection))
+                    {
+                        try
+                        {
+                            Directory.Delete(tempPath, true);
+                        }
+                        catch { }
+                        return protection;
+                    }
                 }
             }
 
