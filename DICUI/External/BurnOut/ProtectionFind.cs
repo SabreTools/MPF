@@ -389,58 +389,66 @@ namespace DICUI.External.BurnOut
             // InstallShield CAB
             else if (magic.StartsWith("ISc"))
             {
-                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(tempPath);
-
-                IXComp.ListFiles(file, out int version);
-                IXComp.ExtractAll(file, tempPath, version);
-                var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
-                files.Select(f => (new FileInfo(f).IsReadOnly = false));
-                foreach (var sub in files)
+                try
                 {
-                    string protection = ScanInFile(sub);
-                    try
-                    {
-                        File.Delete(sub);
-                    }
-                    catch { }
+                    string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(tempPath);
 
-                    if (!String.IsNullOrEmpty(protection))
+                    IXComp.ListFiles(file, out int version);
+                    IXComp.ExtractAll(file, tempPath, version);
+                    var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
+                    files.Select(f => (new FileInfo(f).IsReadOnly = false));
+                    foreach (var sub in files)
                     {
+                        string protection = ScanInFile(sub);
                         try
                         {
-                            Directory.Delete(tempPath, true);
+                            File.Delete(sub);
                         }
                         catch { }
-                        return protection;
+
+                        if (!String.IsNullOrEmpty(protection))
+                        {
+                            try
+                            {
+                                Directory.Delete(tempPath, true);
+                            }
+                            catch { }
+                            return protection;
+                        }
                     }
                 }
+                catch { }
             }
 
             // Microsoft CAB
             else if (magic.StartsWith("MSCF"))
             {
-                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(tempPath);
-
-                MSCabinet cabfile = new MSCabinet(file);
-                foreach (var sub in cabfile.GetFiles())
+                try
                 {
-                    string tempfile = Path.Combine(tempPath, sub.Filename);
-                    sub.ExtractTo(tempfile);
-                    string protection = ScanInFile(tempfile);
-                    File.Delete(tempfile);
+                    string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(tempPath);
 
-                    if (!String.IsNullOrEmpty(protection))
+                    MSCabinet cabfile = new MSCabinet(file);
+                    foreach (var sub in cabfile.GetFiles())
                     {
-                        try
+                        string tempfile = Path.Combine(tempPath, sub.Filename);
+                        sub.ExtractTo(tempfile);
+                        string protection = ScanInFile(tempfile);
+                        File.Delete(tempfile);
+
+                        if (!String.IsNullOrEmpty(protection))
                         {
-                            Directory.Delete(tempPath, true);
+                            try
+                            {
+                                Directory.Delete(tempPath, true);
+                            }
+                            catch { }
+                            return protection;
                         }
-                        catch { }
-                        return protection;
                     }
                 }
+                catch { }
             }
 
             // PKZIP
