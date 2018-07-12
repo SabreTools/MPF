@@ -385,6 +385,7 @@ namespace DICUI.External.BurnOut
             {
                 // No-op
             }
+
             // InstallShield CAB
             else if (magic.StartsWith("ISc"))
             {
@@ -415,6 +416,7 @@ namespace DICUI.External.BurnOut
                     }
                 }
             }
+
             // Microsoft CAB
             else if (magic.StartsWith("MSCF"))
             {
@@ -440,6 +442,7 @@ namespace DICUI.External.BurnOut
                     }
                 }
             }
+
             // PKZIP
             else if (magic.StartsWith("PK" + (char)03 + (char)04)
                 || magic.StartsWith("PK" + (char)05 + (char)06)
@@ -448,6 +451,7 @@ namespace DICUI.External.BurnOut
                 // No-op
             }
             // RAR
+
             else if (magic.StartsWith("Rar!"))
             {
                 // No-op
