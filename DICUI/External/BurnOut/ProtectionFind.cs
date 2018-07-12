@@ -99,13 +99,13 @@ namespace DICUI.External.BurnOut
             // Get the extension for certain checks
             string extension = Path.GetExtension(file).ToLower().TrimStart('.');
 
-            // Read the first 4 bytes to get the file type
+            // Read the first 8 bytes to get the file type
             string magic = "";
             try
             {
                 using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
                 {
-                    magic = new String(br.ReadChars(4));
+                    magic = new String(br.ReadChars(8));
                 }
             }
             catch
@@ -116,8 +116,8 @@ namespace DICUI.External.BurnOut
 
             #region Executable Content Checks
 
-            if (magic.StartsWith("MZ") // Windows Executable
-                || extension == "icd")
+            // Windows Executable and DLL
+            if (magic.StartsWith("MZ"))
             {
                 try
                 {
@@ -354,7 +354,9 @@ namespace DICUI.External.BurnOut
 
             #region Textfile Content Checks
 
-            if (extension == "txt" || extension == "rtf" || extension == "doc" || extension == "docx")
+            if (magic.StartsWith("{\rtf") // Rich Text File
+                || magic.StartsWith("" + (char)0xd0 + (char)0xcf + (char)0x11 + (char)0xe0 + (char)0xa1 + (char)0xb1 + (char)0x1a + (char)0xe1) // Microsoft Office File (old)\
+                || extension == "txt") // Generic textfile (no header)
             {
                 try
                 {
@@ -382,7 +384,7 @@ namespace DICUI.External.BurnOut
             {
                 // No-op
             }
-            // Microsoft CAB - "MSCF"
+            // Microsoft CAB
             else if (magic.StartsWith("MSCF"))
             {
                 string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -407,7 +409,7 @@ namespace DICUI.External.BurnOut
                     }
                 }
             }
-            // InstallShield CAB - "ISc"
+            // InstallShield CAB
             else if (magic.StartsWith("ISc"))
             {
                 string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
