@@ -221,7 +221,7 @@ namespace DICUI.External.BurnOut
                         return "SecuROM " + GetSecuROM4and5Version(file, position);
 
                     if (FileContent.Contains(".securom"))
-                    //if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
+                        //if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                         return "SecuROM " + GetSecuROM7Version(file);
 
                     if (FileContent.Contains("_and_play.dll" + (char)0x00 + "drm_pagui_doit"))
@@ -380,34 +380,10 @@ namespace DICUI.External.BurnOut
 
             #region Archive Content Checks
 
-            if (extension == "7z" || extension == "rar" || extension == "zip")
+            // 7-zip
+            if (magic.StartsWith("7z" + (char)0xbc + (char)0xaf + (char)0x27 + (char)0x1c))
             {
                 // No-op
-            }
-            // Microsoft CAB
-            else if (magic.StartsWith("MSCF"))
-            {
-                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(tempPath);
-
-                MSCabinet cabfile = new MSCabinet(file);
-                foreach (var sub in cabfile.GetFiles())
-                {
-                    string tempfile = Path.Combine(tempPath, sub.Filename);
-                    sub.ExtractTo(tempfile);
-                    string protection = ScanInFile(tempfile);
-                    File.Delete(tempfile);
-
-                    if (!String.IsNullOrEmpty(protection))
-                    {
-                        try
-                        {
-                            Directory.Delete(tempPath, true);
-                        }
-                        catch { }
-                        return protection;
-                    }
-                }
             }
             // InstallShield CAB
             else if (magic.StartsWith("ISc"))
@@ -438,6 +414,43 @@ namespace DICUI.External.BurnOut
                         return protection;
                     }
                 }
+            }
+            // Microsoft CAB
+            else if (magic.StartsWith("MSCF"))
+            {
+                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                Directory.CreateDirectory(tempPath);
+
+                MSCabinet cabfile = new MSCabinet(file);
+                foreach (var sub in cabfile.GetFiles())
+                {
+                    string tempfile = Path.Combine(tempPath, sub.Filename);
+                    sub.ExtractTo(tempfile);
+                    string protection = ScanInFile(tempfile);
+                    File.Delete(tempfile);
+
+                    if (!String.IsNullOrEmpty(protection))
+                    {
+                        try
+                        {
+                            Directory.Delete(tempPath, true);
+                        }
+                        catch { }
+                        return protection;
+                    }
+                }
+            }
+            // PKZIP
+            else if (magic.StartsWith("PK" + (char)03 + (char)04)
+                || magic.StartsWith("PK" + (char)05 + (char)06)
+                || magic.StartsWith("PK" + (char)07 + (char)08))
+            {
+                // No-op
+            }
+            // RAR
+            else if (magic.StartsWith("Rar!"))
+            {
+                // No-op
             }
 
             #endregion
