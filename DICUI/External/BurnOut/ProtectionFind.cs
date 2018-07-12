@@ -342,6 +342,21 @@ namespace DICUI.External.BurnOut
 
             if (extension == "txt" || extension == "rtf" || extension == "doc" || extension == "docx")
             {
+                try
+                {
+                    StreamReader sr = File.OpenText(file);
+                    string FileContent = sr.ReadToEnd().ToLower();
+                    sr.Close();
+
+                    // CD-Key
+                    if (FileContent.Contains("a valid serial number is required")
+                        || FileContent.Contains("serial number is located"))
+                        return "CD-Key / Serial";
+                }
+                catch
+                {
+                    // We don't care what the error was
+                }
                 // No-op
             }
 
@@ -1189,6 +1204,9 @@ namespace DICUI.External.BurnOut
 
             // dotFuscator - Not a protection
             //mapping["DotfuscatorAttribute"] = "dotFuscator";
+
+            // EA CdKey Registration Module
+            mapping["ereg.ea-europe.com"] = "EA CdKey Registration Module";
 
             // EXE Stealth
             mapping["??[[__[[_" + (char)0x00 + "{{" + (char)0x0
