@@ -355,7 +355,7 @@ namespace DICUI.External.BurnOut
             #region Textfile Content Checks
 
             if (magic.StartsWith("{\rtf") // Rich Text File
-                || magic.StartsWith("" + (char)0xd0 + (char)0xcf + (char)0x11 + (char)0xe0 + (char)0xa1 + (char)0xb1 + (char)0x1a + (char)0xe1) // Microsoft Office File (old)\
+                || magic.StartsWith("" + (char)0xd0 + (char)0xcf + (char)0x11 + (char)0xe0 + (char)0xa1 + (char)0xb1 + (char)0x1a + (char)0xe1) // Microsoft Office File (old)
                 || extension == "txt") // Generic textfile (no header)
             {
                 try
