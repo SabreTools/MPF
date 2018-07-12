@@ -220,8 +220,8 @@ namespace DICUI.External.BurnOut
                     if ((position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03)) > -1)
                         return "SecuROM " + GetSecuROM4and5Version(file, position);
 
-                    if (FileContent.Contains(".securom"))
-                        //if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
+                    if (FileContent.Contains(".securom")
+                        || FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                         return "SecuROM " + GetSecuROM7Version(file);
 
                     if (FileContent.Contains("_and_play.dll" + (char)0x00 + "drm_pagui_doit"))
