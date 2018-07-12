@@ -97,7 +97,8 @@ namespace DICUI.External.iXcomp
                 },
             };
             p.Start();
-            p.WaitForExit();
+            p.WaitForExit(10 * 60 * 1000); // 10-minute timeout
+            p.Kill();
             return true;
         }
     }
