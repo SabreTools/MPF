@@ -26,12 +26,8 @@ namespace DICUI
         private Options _options;
         private OptionsWindow _optionsWindow;
 
-        public bool QuietMode { get; set; }
-
         public MainWindow()
         {
-            QuietMode = true;
-
             InitializeComponent();
 
             // Initializes and load Options object
