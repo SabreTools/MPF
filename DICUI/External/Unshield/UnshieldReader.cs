@@ -14,6 +14,9 @@ namespace DICUI.External.Unshield
         public uint VolumeBytesLeft;
         public uint ObfuscationOffset;
 
+        /// <summary>
+        /// Create a new UnshieldReader from an existing cabinet, index, and file descriptor
+        /// </summary>
         public static UnshieldReader Create(UnshieldCabinet unshield, int index, FileDescriptor fileDescriptor)
         {
             UnshieldReader reader = new UnshieldReader();
@@ -47,11 +50,17 @@ namespace DICUI.External.Unshield
             return reader;
         }
 
+        /// <summary>
+        /// Dispose of the current object
+        /// </summary>
         public void Dispose()
         {
             VolumeFile?.Close();
         }
 
+        /// <summary>
+        /// Open the volume at the inputted index
+        /// </summary>
         public bool OpenVolume(int volume)
         {
             bool success = false;
@@ -232,24 +241,17 @@ namespace DICUI.External.Unshield
             return success;
         }
 
+        /// <summary>
+        /// Deobfuscate a buffer
+        /// </summary>
         public void Deobfuscate(ref byte[] buffer, ref int bufferPointer, int size)
         {
-            Deobfuscate(ref buffer, ref bufferPointer, size, ref this.ObfuscationOffset);
+            this.Deobfuscate(ref buffer, ref bufferPointer, size, ref this.ObfuscationOffset);
         }
 
-        // Deobfuscate a buffer. Seed is 0 at file start
-        public static void Deobfuscate(ref byte[] buffer, ref int bufferPointer, int size, ref uint seed)
-        {
-            uint tmpSeed = seed;
-
-            for (; size > 0; size--, bufferPointer++, tmpSeed++)
-            {
-                buffer[bufferPointer] = (byte)(ROR8(buffer[bufferPointer] ^ 0xd5, 2) - (tmpSeed % 0x47));
-            }
-
-            seed = tmpSeed;
-        }
-
+        /// <summary>
+        /// Read a certain number of bytes from the current volume
+        /// </summary>
         public bool Read(ref byte[] buffer, ref int bufferPointer, int size)
         {
             bool success = false;
@@ -300,5 +302,26 @@ namespace DICUI.External.Unshield
             success = true;
             return success;
         }
+
+        /// <summary>
+        /// Deobfuscate a buffer with a seed value
+        /// </summary>
+        /// <remarks>Seed is 0 at file start</remarks>
+        private void Deobfuscate(ref byte[] buffer, ref int bufferPointer, int size, ref uint seed)
+        {
+            uint tmpSeed = seed;
+
+            for (; size > 0; size--, bufferPointer++, tmpSeed++)
+            {
+                buffer[bufferPointer] = (byte)(ROR8(buffer[bufferPointer] ^ 0xd5, 2) - (tmpSeed % 0x47));
+            }
+
+            seed = tmpSeed;
+        }
+
+        /// <summary>
+        /// Rotate Right 8
+        /// </summary>
+        private int ROR8(int x, int n) { return (((x) >> ((int)(n))) | ((x) << (8 - (int)(n)))); }
     }
 }

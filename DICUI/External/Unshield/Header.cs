@@ -29,6 +29,9 @@ namespace DICUI.External.Unshield
 
         public StringBuffer StringBuffer = new StringBuffer();
 
+        /// <summary>
+        /// Add a new StringBuffer to the existing list
+        /// </summary>
         public StringBuffer AddStringBuffer()
         {
             StringBuffer result = new StringBuffer();
@@ -37,14 +40,9 @@ namespace DICUI.External.Unshield
             return result;
         }
 
-        public int GetBuffer(uint offset)
-        {
-            if (offset > 0)
-                return (int)(this.Common.CabDescriptorOffset + offset);
-            else
-                return -1;
-        }
-
+        /// <summary>
+        /// Populate the CabDescriptor from header data
+        /// </summary>
         public bool GetCabDescriptor()
         {
             if (this.Common.CabDescriptorSize > 0)
@@ -101,11 +99,17 @@ namespace DICUI.External.Unshield
             }
         }
 
+        /// <summary>
+        /// Populate the CommonHeader from header data
+        /// </summary>
         public bool GetCommmonHeader()
         {
             return CommonHeader.ReadCommonHeader(ref this.Data, this.DataPointer, this.Common);
         }
 
+        /// <summary>
+        /// Populate the component list from header data
+        /// </summary>
         public bool GetComponents()
         {
             int count = 0;
@@ -123,7 +127,7 @@ namespace DICUI.External.Unshield
 
                     while (list.NextOffset > 0)
                     {
-                        int p = GetBuffer(list.NextOffset);
+                        int p = GetDataOffset(list.NextOffset);
 
                         list.NameOffset = BitConverter.ToUInt32(this.Data, p); p += 4;
                         list.DescriptorOffset = BitConverter.ToUInt32(this.Data, p); p += 4;
@@ -145,6 +149,20 @@ namespace DICUI.External.Unshield
             return true;
         }
 
+        /// <summary>
+        /// Get the real data offset
+        /// </summary>
+        public int GetDataOffset(uint offset)
+        {
+            if (offset > 0)
+                return (int)(this.Common.CabDescriptorOffset + offset);
+            else
+                return -1;
+        }
+
+        /// <summary>
+        /// Populate the file group list from header data
+        /// </summary>
         public bool GetFileGroups()
         {
             int count = 0;
@@ -162,7 +180,7 @@ namespace DICUI.External.Unshield
 
                     while (list.NextOffset > 0)
                     {
-                        int p = GetBuffer(list.NextOffset);
+                        int p = GetDataOffset(list.NextOffset);
 
                         list.NameOffset = BitConverter.ToUInt32(this.Data, p); p += 4;
                         list.DescriptorOffset = BitConverter.ToUInt32(this.Data, p); p += 4;
@@ -184,6 +202,9 @@ namespace DICUI.External.Unshield
             return true;
         }
 
+        /// <summary>
+        /// Populate the file table from header data
+        /// </summary>
         public bool GetFileTable()
         {
             int p = (int)(this.Common.CabDescriptorOffset +
@@ -200,11 +221,17 @@ namespace DICUI.External.Unshield
             return true;
         }
 
+        /// <summary>
+        /// Get the UInt32 at the given offset in the header data as a string
+        /// </summary>
         public string GetString(uint offset)
         {
-            return GetUTF8String(this.Data, GetBuffer(offset));
+            return GetUTF8String(this.Data, GetDataOffset(offset));
         }
 
+        /// <summary>
+        /// Convert a UInt32 read from a buffer to a string
+        /// </summary>
         public string GetUTF8String(byte[] buffer, int bufferPointer)
         {
             return BitConverter.ToUInt32(buffer, bufferPointer).ToString("X8");

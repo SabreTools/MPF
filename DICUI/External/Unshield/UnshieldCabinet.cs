@@ -904,11 +904,6 @@ namespace DICUI.External.Unshield
         }
 
         /// <summary>
-        /// Rotate Right 8
-        /// </summary>
-        private static int ROR8(int x, int n) { return (((x) >> ((int)(n))) | ((x) << (8 - (int)(n)))); }
-
-        /// <summary>
         /// Create the generic filename pattern to look for from the input filename
         /// </summary>
         private bool CreateFilenamePattern(string filename)

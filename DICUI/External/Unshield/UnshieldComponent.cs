@@ -9,10 +9,13 @@ namespace DICUI.External.Unshield
         public string[] FileGroupNames;
         public int FileGroupNamesPointer = 0;
 
+        /// <summary>
+        /// Create a new UnshieldComponent from a header and data offset
+        /// </summary>
         public static UnshieldComponent Create(Header header, uint offset)
         {
             UnshieldComponent self = new UnshieldComponent();
-            int bufferPointer = header.GetBuffer(offset);
+            int bufferPointer = header.GetDataOffset(offset);
             uint fileGroupTableOffset;
 
             self.Name = header.GetString((uint)bufferPointer); bufferPointer += 4;
@@ -45,7 +48,7 @@ namespace DICUI.External.Unshield
 
             fileGroupTableOffset = BitConverter.ToUInt32(header.Data, bufferPointer); bufferPointer += 4;
 
-            bufferPointer = header.GetBuffer(fileGroupTableOffset);
+            bufferPointer = header.GetDataOffset(fileGroupTableOffset);
 
             for (int i = 0; i < self.FileGroupCount; i++)
             {

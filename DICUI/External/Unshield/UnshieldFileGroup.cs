@@ -8,10 +8,13 @@ namespace DICUI.External.Unshield
         public uint FirstFile;
         public uint LastFile;
 
+        /// <summary>
+        /// Create a new UnshieldFileGroup from a header and data offset
+        /// </summary>
         public static UnshieldFileGroup Create(Header header, uint offset)
         {
             UnshieldFileGroup self = new UnshieldFileGroup();
-            int pPointer = header.GetBuffer(offset);
+            int pPointer = header.GetDataOffset(offset);
 
             // unshield_trace("File group descriptor offset: %08x", offset);
 

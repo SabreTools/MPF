@@ -10,6 +10,9 @@ namespace DICUI.External.Unshield
         public uint CabDescriptorOffset;
         public uint CabDescriptorSize; // 10
 
+        /// <summary>
+        /// Populate a CommonHeader from an input buffer
+        /// </summary>
         public static bool ReadCommonHeader(ref byte[] buffer, int bufferPointer, CommonHeader common)
         {
             common.Signature = BitConverter.ToUInt32(buffer, bufferPointer); bufferPointer += 4;
