@@ -478,6 +478,8 @@ namespace DICUI
             var env = DetermineEnvironment();
             if (env.Drive.Letter != default(char))
             {
+                ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", _env.Drive.Letter);
+
                 var tempContent = StatusLabel.Content;
                 StatusLabel.Content = "Scanning for copy protection... this might take a while!";
                 StartStopButton.IsEnabled = false;
@@ -486,6 +488,7 @@ namespace DICUI
 
                 string protections = await Validators.RunProtectionScanOnPath(env.Drive.Letter + ":\\");
                 MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
+                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n{1}", env.Drive.Letter, protections);
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
@@ -515,7 +518,7 @@ namespace DICUI
             if (speed == -1)
                 return;
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {0}.", _env.Drive.Letter, speed);
+            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {1}.", _env.Drive.Letter, speed);
 
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
