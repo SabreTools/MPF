@@ -487,7 +487,8 @@ namespace DICUI
                 CopyProtectScanButton.IsEnabled = false;
 
                 string protections = await Validators.RunProtectionScanOnPath(env.Drive.Letter + ":\\");
-                MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (!ViewModels.LoggerViewModel.WindowVisible)
+                    MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
                 ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n{1}", env.Drive.Letter, protections);
 
                 StatusLabel.Content = tempContent;
