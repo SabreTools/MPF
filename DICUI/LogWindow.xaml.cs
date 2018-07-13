@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DICUI.UI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -356,6 +357,19 @@ namespace DICUI
             GracefullyTerminateProcess();
         }
 
+        private void OnHideButton(object sender, EventArgs e)
+        {
+            ViewModels.LoggerViewModel.WindowVisible = false;
+            //TODO: this should be bound directly to WindowVisible property in two way fashion
+            // we need to study how to properly do it in XAML
+            _mainWindow.ShowLogMenuItem.IsChecked = false;
+        }
+
+        private void OnClearButton(object sender, EventArgs e)
+        {
+            output.Document.Blocks.Clear();
+        }
+
         private void OnAbortButton(object sender, EventArgs args)
         {
             GracefullyTerminateProcess();
@@ -367,5 +381,6 @@ namespace DICUI
         }
 
         #endregion
+
     }
 }

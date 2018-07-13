@@ -44,6 +44,16 @@ namespace DICUI.UI
                     _options.RereadAmountForC2 = result;
             }
         }
+
+        public bool VerboseLogging
+        {
+            get { return _options.VerboseLogging; }
+            set
+            {
+                _options.VerboseLogging = value;
+                _options.Save();
+            }
+        }
     }
 
     public class LoggerViewModel
@@ -52,7 +62,6 @@ namespace DICUI.UI
 
         public void SetWindow(LogWindow logWindow) => _logWindow = logWindow;
 
-        public bool Verbose { get; set; } = true;
         public bool WindowVisible
         {
             get => _logWindow != null ? _logWindow.IsVisible : false;
@@ -68,10 +77,14 @@ namespace DICUI.UI
             }
         }
 
-        public void VerboseLog(string text) => _logWindow.AppendToTextBox(text, Brushes.Yellow);
+        public void VerboseLog(string text)
+        {
+            if (ViewModels.OptionsViewModel.VerboseLogging)
+                _logWindow.AppendToTextBox(text, Brushes.Yellow);
+        }
+
         public void VerboseLog(string format, params object[] args) => VerboseLog(string.Format(format, args));
         public void VerboseLogLn(string format, params object[] args) => VerboseLog(string.Format(format, args) + "\n");
-
     }
 
     public static class ViewModels

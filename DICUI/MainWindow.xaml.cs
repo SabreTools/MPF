@@ -53,11 +53,6 @@ namespace DICUI
 
         #region Events
 
-        private void CheckChanged(object sender, RoutedEventArgs a)
-        {
-            //ViewModels.LoggerViewModel.WindowVisibility = (bool)((MenuItem)sender).IsChecked ? Visibility.Visible : Visibility.Hidden;
-        }
-
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
@@ -373,6 +368,7 @@ namespace DICUI
             StartStopButton.Content = UIElements.StopDumping;
             CopyProtectScanButton.IsEnabled = false;
             StatusLabel.Content = "Beginning dumping process";
+            ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
 
             Result result = await _env.StartDumping();
 
@@ -506,6 +502,8 @@ namespace DICUI
             // TODO: Should we disable dumping in this case?
             if (speed == -1)
                 return;
+
+            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {0}.", _env.Drive.Letter, speed);
 
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(

@@ -20,6 +20,8 @@ namespace DICUI
 
         public bool SkipMediaTypeDetection { get; set; }
 
+        public bool VerboseLogging { get; set; }
+
         public void Save()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -51,6 +53,7 @@ namespace DICUI
             this.ParanoidMode = Boolean.TryParse(ConfigurationManager.AppSettings["ParanoidMode"], out bool paranoidMode) ? paranoidMode : false;
             this.SkipMediaTypeDetection = Boolean.TryParse(ConfigurationManager.AppSettings["SkipMediaTypeDetection"], out bool skipMediaTypeDetection) ? skipMediaTypeDetection : false;
             this.RereadAmountForC2 = Int32.TryParse(ConfigurationManager.AppSettings["RereadAmountForC2"], out int rereadAmountForC2) ? rereadAmountForC2 : 20;
+            this.VerboseLogging = Boolean.TryParse(ConfigurationManager.AppSettings["VerboseLogging"], out bool verboseLogging) ? verboseLogging : false;
         }
 
 
