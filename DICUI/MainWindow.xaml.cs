@@ -28,12 +28,8 @@ namespace DICUI
 
         private LogWindow _logWindow;
 
-        public bool QuietMode { get; set; }
-
         public MainWindow()
         {
-            QuietMode = true;
-
             InitializeComponent();
 
             // Initializes and load Options object
@@ -61,6 +57,14 @@ namespace DICUI
                 return;
 
             _alreadyShown = true;
+
+            if (_options.OpenLogWindowAtStartup)
+            {
+                //TODO: this should be bound directly to WindowVisible property in two way fashion
+                // we need to study how to properly do it in XAML
+                ShowLogMenuItem.IsChecked = true;
+                ViewModels.LoggerViewModel.WindowVisible = true;
+            }
 
             // Populate the list of systems
             StatusLabel.Content = "Creating system list, please wait!";

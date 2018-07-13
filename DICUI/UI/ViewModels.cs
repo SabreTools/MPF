@@ -54,6 +54,16 @@ namespace DICUI.UI
                 _options.Save();
             }
         }
+
+        public bool OpenLogWindowAtStartup
+        {
+            get { return _options.OpenLogWindowAtStartup; }
+            set
+            {
+                _options.OpenLogWindowAtStartup = value;
+                _options.Save();
+            }
+        }
     }
 
     public class LoggerViewModel

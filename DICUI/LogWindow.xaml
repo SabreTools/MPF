@@ -27,6 +27,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
+                <ColumnDefinition />
                 <ColumnDefinition Width="4*"/>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -37,8 +38,13 @@
                       DataContext="{Binding Source={x:Static lui:ViewModels.OptionsViewModel}}" 
                       IsChecked="{Binding Path=VerboseLogging}"    
             />
-            <Button Margin="0 0 10 10" Grid.Column="2" Height="22" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
-            <Button Margin="0 0 10 10" Grid.Column="3" Height="22" Width="60" Content="Hide" HorizontalAlignment="Right" Click="OnHideButton" />
+            <CheckBox Content="Open at startup" Margin="10 0 0 10" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" 
+                      ToolTip="Open this window at startup"
+                      DataContext="{Binding Source={x:Static lui:ViewModels.OptionsViewModel}}" 
+                      IsChecked="{Binding Path=OpenLogWindowAtStartup}"    
+            />
+            <Button Margin="0 0 10 10" Grid.Column="3" Height="22" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
+            <Button Margin="0 0 10 10" Grid.Column="4" Height="22" Width="60" Content="Hide" HorizontalAlignment="Right" Click="OnHideButton" />
             <Button Visibility="Hidden" Name="AbortButton" Margin="0 0 10 10" Grid.Column="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton" />
         </Grid>
         
