@@ -42,6 +42,8 @@ namespace DICUI
             ViewModels.OptionsViewModel = new OptionsViewModel(_options);
 
             _logWindow = new LogWindow();
+            ViewModels.LoggerViewModel = new LoggerViewModel(_logWindow);
+
             MainWindowLocationChanged(null, null);
 
             // Disable buttons until we load fully
@@ -259,7 +261,9 @@ namespace DICUI
         {
             _systems = Validators.CreateListOfSystems();
 
-            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = _systems
+            ViewModels.LoggerViewModel.VerboseLogLn("Populating systems, {0} systems found.", _systems.Count);
+
+            Dictionary <KnownSystemCategory, List<KnownSystem?>> mapping = _systems
                 .GroupBy(s => s.Category())
                 .ToDictionary(
                     k => k.Key,
@@ -290,6 +294,8 @@ namespace DICUI
         /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
         private void PopulateDrives()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Scanning for drives..");
+            
             // Always enable the disk scan
             DiskScanButton.IsEnabled = true;
 
@@ -303,6 +309,8 @@ namespace DICUI
                 StatusLabel.Content = "Valid media found! Choose your Media Type";
                 StartStopButton.IsEnabled = true;
                 CopyProtectScanButton.IsEnabled = true;
+
+                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives containing media: {1}", _drives.Count, String.Join(", ", _drives.Select(d => d.Letter)));
             }
             else
             {
@@ -310,6 +318,8 @@ namespace DICUI
                 StatusLabel.Content = "No valid media found!";
                 StartStopButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
+
+                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives contaning valid media.");
             }
         }
 
@@ -524,7 +534,11 @@ namespace DICUI
 
             // Get the current optical disc type
             if (!_options.SkipMediaTypeDetection)
+            {
+                ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetDiscType(drive.Letter);
+                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType != null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
+            }
         }
 
         /// <summary>

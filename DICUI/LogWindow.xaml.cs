@@ -249,7 +249,7 @@ namespace DICUI
             public void Set(State state) => this.state = state;
         }
 
-        private void AppendToTextBox(string text, Brush color)
+        public void AppendToTextBox(string text, Brush color)
         {
             if (Application.Current.Dispatcher.CheckAccess())
             {
@@ -342,7 +342,7 @@ namespace DICUI
 
         void OnProcessExit(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(() => btnAbort.IsEnabled = false);
+            Dispatcher.Invoke(() => AbortButton.IsEnabled = false);
             GracefullyTerminateProcess();
         }
 

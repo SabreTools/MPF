@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace DICUI.UI
 {
@@ -44,9 +45,24 @@ namespace DICUI.UI
         }
     }
 
+    public class LoggerViewModel
+    {
+        private readonly LogWindow _logWindow;
+
+        public LoggerViewModel(LogWindow logWindow) => _logWindow = logWindow;
+
+        public bool Verbose { get; set; } = true;
+
+        public void VerboseLog(string text) => _logWindow.AppendToTextBox(text, Brushes.Yellow);
+        public void VerboseLog(string format, params object[] args) => VerboseLog(string.Format(format, args));
+        public void VerboseLogLn(string format, params object[] args) => VerboseLog(string.Format(format, args) + "\n");
+
+    }
+
     public static class ViewModels
     {
         public static OptionsViewModel OptionsViewModel { get; set; }
+        public static LoggerViewModel LoggerViewModel { get; set; }
     }
 
 }
