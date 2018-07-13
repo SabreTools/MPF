@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Media;
 
 namespace DICUI.UI
@@ -47,11 +48,25 @@ namespace DICUI.UI
 
     public class LoggerViewModel
     {
-        private readonly LogWindow _logWindow;
+        private LogWindow _logWindow;
 
-        public LoggerViewModel(LogWindow logWindow) => _logWindow = logWindow;
+        public void SetWindow(LogWindow logWindow) => _logWindow = logWindow;
 
         public bool Verbose { get; set; } = true;
+        public bool WindowVisible
+        {
+            get => _logWindow != null ? _logWindow.IsVisible : false;
+            set
+            {
+                if (value)
+                {
+                    _logWindow.AdjustPositionToMainWindow();
+                    _logWindow.Show();
+                }
+                else
+                    _logWindow.Hide();
+            }
+        }
 
         public void VerboseLog(string text) => _logWindow.AppendToTextBox(text, Brushes.Yellow);
         public void VerboseLog(string format, params object[] args) => VerboseLog(string.Format(format, args));
@@ -62,7 +77,7 @@ namespace DICUI.UI
     public static class ViewModels
     {
         public static OptionsViewModel OptionsViewModel { get; set; }
-        public static LoggerViewModel LoggerViewModel { get; set; }
+        public static LoggerViewModel LoggerViewModel { get; set; } = new LoggerViewModel();
     }
 
 }

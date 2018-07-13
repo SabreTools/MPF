@@ -41,10 +41,8 @@ namespace DICUI
             _options.Load();
             ViewModels.OptionsViewModel = new OptionsViewModel(_options);
 
-            _logWindow = new LogWindow();
-            ViewModels.LoggerViewModel = new LoggerViewModel(_logWindow);
-
-            MainWindowLocationChanged(null, null);
+            _logWindow = new LogWindow(this);
+            ViewModels.LoggerViewModel.SetWindow(_logWindow);
 
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
@@ -54,6 +52,11 @@ namespace DICUI
 
 
         #region Events
+
+        private void CheckChanged(object sender, RoutedEventArgs a)
+        {
+            //ViewModels.LoggerViewModel.WindowVisibility = (bool)((MenuItem)sender).IsChecked ? Visibility.Visible : Visibility.Hidden;
+        }
 
         protected override void OnContentRendered(EventArgs e)
         {
@@ -158,14 +161,8 @@ namespace DICUI
 
         private void MainWindowLocationChanged(object sender, EventArgs e)
         {
-            _logWindow.Left = this.Left;
-            _logWindow.Top = this.Top + this.Height + 10;
-
-            if (!_logWindow.IsVisible)
-            {
-                _logWindow.WindowState = WindowState.Normal;
-                _logWindow.Show();
-            }
+            if (_logWindow.IsVisible)
+                _logWindow.AdjustPositionToMainWindow();
         }
 
         private void MainWindowLocationActivated(object sender, EventArgs e)
@@ -180,10 +177,7 @@ namespace DICUI
         private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (_logWindow.IsVisible)
-            {
                 _logWindow.Close();
-                e.Cancel = false;
-            }
         }
 
         // Toolbar Events

@@ -28,15 +28,19 @@ namespace DICUI
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
+        private MainWindow _mainWindow;
+
         private FlowDocument _document;
         private Paragraph _paragraph;
         private List<Matcher> _matchers;
 
         volatile Process _process;
 
-        public LogWindow()
+        public LogWindow(MainWindow mainWindow)
         {
             InitializeComponent();
+
+            this._mainWindow = mainWindow;
 
             _document = new FlowDocument();
             _paragraph = new Paragraph();
@@ -125,6 +129,12 @@ namespace DICUI
                 _process.EnableRaisingEvents = true;
                 _process.Exited += OnProcessExit;
             });
+        }
+
+        public void AdjustPositionToMainWindow()
+        {
+            this.Left = _mainWindow.Left;
+            this.Top = _mainWindow.Top + _mainWindow.Height + 10;
         }
 
         private void GracefullyTerminateProcess()
