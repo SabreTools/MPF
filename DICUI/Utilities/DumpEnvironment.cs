@@ -20,16 +20,18 @@ namespace DICUI.Utilities
         public char Letter { get; private set; }
         public bool IsFloppy { get; private set; }
         public string VolumeLabel { get; private set; }
+        public bool MarkedActive { get; private set; }
 
-        private Drive(char letter, string volumeLabel, bool isFloppy)
+        private Drive(char letter, string volumeLabel, bool isFloppy, bool markedActive)
         {
             this.Letter = letter;
             this.IsFloppy = isFloppy;
             this.VolumeLabel = volumeLabel;
+            this.MarkedActive = markedActive;
         }
 
-        public static Drive Floppy(char letter) => new Drive(letter, null, true);
-        public static Drive Optical(char letter, string volumeLabel) => new Drive(letter, volumeLabel, false);
+        public static Drive Floppy(char letter) => new Drive(letter, null, true, true);
+        public static Drive Optical(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, false, active);
     }
 
     /// <summary>
@@ -136,9 +138,13 @@ namespace DICUI.Utilities
             if (IsFloppy)
                 return -1;
 
+            // Make sure that the current drive is active
+            if (!Drive.MarkedActive)
+                return -1;
+
             // Get the drive speed directly
-            //int speed = Validators.GetDriveSpeed(Drive.Letter);
-            //int speed = Validators.GetDriveSpeedEx(Drive.Letter, _currentMediaType);
+            //int speed = Validators.GetDriveSpeed(Drive);
+            //int speed = Validators.GetDriveSpeedEx(Drive, _currentMediaType);
 
             // Get the drive speed from DIC, if possible
             Process childProcess;
@@ -224,7 +230,7 @@ namespace DICUI.Utilities
         /// <summary>
         /// Execute a complete dump workflow
         /// </summary>
-        public async Task<Result> StartDumping()
+        public async Task<Result> StartDumping(IProgress<Result> progress)
         {
             Result result = IsValidForDump();
 
@@ -234,9 +240,11 @@ namespace DICUI.Utilities
 
             // execute DIC
             await Task.Run(() => ExecuteDiskImageCreator());
+            progress?.Report(Result.Success("DiscImageCreator has finished!"));
 
             // execute additional tools
             result = ExecuteAdditionalToolsAfterDIC();
+            progress?.Report(result);
 
             // is something is wrong with additional tools report and return
             // TODO: don't return, just keep generating output from DIC
@@ -247,7 +255,8 @@ namespace DICUI.Utilities
                 return;
             }*/
 
-            // verify dump output and save it
+            // Verify dump output and save it
+            progress?.Report(Result.Success("Gathering submission information..."));
             result = VerifyAndSaveDumpOutput();
 
             return result;
@@ -269,7 +278,7 @@ namespace DICUI.Utilities
                 if (Type == MediaType.Floppy)
                     Drive = Drive.Floppy(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
                 else
-                    Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "");
+                    Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "", true);
                 OutputDirectory = Path.GetDirectoryName(path);
                 OutputFilename = Path.GetFileName(path);
             }
@@ -1364,6 +1373,16 @@ namespace DICUI.Utilities
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
+
+            // Validate that the user explicitly wants an inactive drive to be considered for dumping
+            if (!Drive.MarkedActive)
+            {
+                MessageBoxResult result = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
+                {
+                    return Result.Failure("Dumping aborted!");
+                }
+            }
 
             // If a complete dump already exists
             if (FoundAllFiles())

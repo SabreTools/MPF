@@ -92,6 +92,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <HintPath>..\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -103,7 +106,18 @@
     </Compile>
     <Compile Include="Data\Constants.cs" />
     <Compile Include="External\BurnOut\EVORE.cs" />
-    <Compile Include="External\iXcomp\IXComp.cs" />
+    <Compile Include="External\Unshield\CabDescriptor.cs" />
+    <Compile Include="External\Unshield\CommonHeader.cs" />
+    <Compile Include="External\Unshield\FileDescriptor.cs" />
+    <Compile Include="External\Unshield\Header.cs" />
+    <None Include="External\Unshield\LICENSE" />
+    <Compile Include="External\Unshield\OffsetList.cs" />
+    <Compile Include="External\Unshield\StringBuffer.cs" />
+    <Compile Include="External\Unshield\UnshieldCabinet.cs" />
+    <Compile Include="External\Unshield\UnshieldComponent.cs" />
+    <Compile Include="External\Unshield\UnshieldFileGroup.cs" />
+    <Compile Include="External\Unshield\UnshieldReader.cs" />
+    <Compile Include="External\Unshield\VolumeHeader.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="External\BurnOut\ProtectionFind.cs" />
     <Compile Include="UI\KnownSystemComboBoxItem.cs" />
@@ -186,15 +200,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="mspack.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Programs\i3comp.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Programs\i5comp.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Programs\i6comp.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

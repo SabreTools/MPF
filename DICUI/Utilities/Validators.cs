@@ -419,8 +419,8 @@ namespace DICUI.Utilities
 
             // Get the optical disc drives
             List<Drive> discDrives = DriveInfo.GetDrives()
-                .Where(d => d.DriveType == DriveType.CDRom && d.IsReady)
-                .Select(d => Drive.Optical(d.Name[0], d.VolumeLabel))                
+                .Where(d => d.DriveType == DriveType.CDRom)
+                .Select(d => Drive.Optical(d.Name[0], (d.IsReady ? d.VolumeLabel : UIElements.DiscNotDetected), d.IsReady))                
                 .ToList();
 
             // Add the two lists together and order
@@ -516,11 +516,15 @@ namespace DICUI.Utilities
         /// capabilities of the drives (according to QPXTool)
         /// TransferRate appears to be the CURRENT transfer rate, not the maximum... basically making that flag useless
         /// </remarks>
-        public static int GetDriveSpeed(char driveLetter)
+        public static int GetDriveSpeed(Drive drive)
         {
+            // If the current drive is not active or optical
+            if (drive.IsFloppy || !drive.MarkedActive)
+                return -1;
+
             ManagementObjectSearcher searcher =
                     new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + drive.Letter + ":\'");
 
             var collection = searcher.Get();
             double? transferRate = -1;
@@ -540,15 +544,19 @@ namespace DICUI.Utilities
             return 0;
         }
 
-        public unsafe static int GetDriveSpeedEx(char driveLetter, MediaType? mediaType)
+        public unsafe static int GetDriveSpeedEx(Drive drive, MediaType? mediaType)
         {
+            // If the current drive is not active or optical
+            if (drive.IsFloppy || !drive.MarkedActive)
+                return -1;
+
             // Get the DeviceID from the current drive letter
             string deviceId = null;
             try
             {
                 ManagementObjectSearcher searcher =
                     new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + drive.Letter + ":\'");
 
                 var collection = searcher.Get();
                 foreach (ManagementObject queryObj in collection)

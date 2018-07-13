@@ -21,7 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DICUI.External.iXcomp;
+using DICUI.External.Unshield;
 using LibMSPackN;
 
 namespace DICUI.External.BurnOut
@@ -72,7 +72,7 @@ namespace DICUI.External.BurnOut
                     protections[file] = mappings[Path.GetExtension(file)];
 
                 // Now check to see if the file contains any additional information
-                string protectionname = ScanInFile(file).Replace("" + (char)0x00, "");
+                string protectionname = ScanInFile(file)?.Replace("" + (char)0x00, "");
                 if (!String.IsNullOrEmpty(protectionname))
                     protections[file] = protectionname;
             }
@@ -96,14 +96,28 @@ namespace DICUI.External.BurnOut
         /// </remarks>
         private static string ScanInFile(string file)
         {
+            // Get the extension for certain checks
             string extension = Path.GetExtension(file).ToLower().TrimStart('.');
 
-            #region EXE/DLL/ICD/DAT Content Checks
+            // Read the first 8 bytes to get the file type
+            string magic = "";
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
+                {
+                    magic = new String(br.ReadChars(8));
+                }
+            }
+            catch
+            {
+                // We don't care what the issue was, we can't open the file
+                return null;
+            }
 
-            if (extension == "exe" || extension == "ex_"
-                || extension == "dll" || extension == "dl_"
-                || extension == "dat"
-                || extension == "icd")
+            #region Executable Content Checks
+
+            // Windows Executable and DLL
+            if (magic.StartsWith("MZ"))
             {
                 try
                 {
@@ -206,8 +220,8 @@ namespace DICUI.External.BurnOut
                     if ((position = FileContent.IndexOf("" + (char)0xCA + (char)0xDD + (char)0xDD + (char)0xAC + (char)0x03)) > -1)
                         return "SecuROM " + GetSecuROM4and5Version(file, position);
 
-                    if (FileContent.Contains(".securom"))
-                    //if (FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
+                    if (FileContent.Contains(".securom")
+                        || FileContent.StartsWith(".securom" + (char)0xE0 + (char)0xC0))
                         return "SecuROM " + GetSecuROM7Version(file);
 
                     if (FileContent.Contains("_and_play.dll" + (char)0x00 + "drm_pagui_doit"))
@@ -220,17 +234,15 @@ namespace DICUI.External.BurnOut
 
                     if ((position = FileContent.IndexOf("" + (char)0xEF + (char)0xBE + (char)0xAD + (char)0xDE)) > -1)
                     {
-                        position--; // TODO: Verify this subtract
                         if (FileContent.Substring(position + 5, 3) == "" + (char)0x00 + (char)0x00 + (char)0x00
                             && FileContent.Substring(position + 16, 4) == "" + (char)0x00 + (char)0x10 + (char)0x00 + (char)0x00)
-                            return "SolidShield 1";
+                            return "SolidShield 1 (SolidShield EXE Wrapper)";
                         else
                         {
                             string version = GetFileVersion(file);
                             string desc = FileVersionInfo.GetVersionInfo(file).FileDescription.ToLower();
                             if (!string.IsNullOrEmpty(version) && desc.Contains("solidshield"))
                                 return "SolidShield Core.dll " + version;
-                            //return "SolidShield EXE Wrapper";
                         }
                     }
 
@@ -255,7 +267,7 @@ namespace DICUI.External.BurnOut
                                 + "o" + (char)0x00 + "n" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00);
                             if (position > -1)
                             {
-                                position--;
+                                position--; // TODO: Verify this subtract
                                 return "SolidShield 2 + Tagès " + FileContent.Substring(position + 0x38, 1) + "." + FileContent.Substring(position + 0x38 + 4, 1) + "." + FileContent.Substring(position + 0x38 + 8, 1) + "." + FileContent.Substring(position + 0x38 + 12, 1);
                             }
                             else
@@ -342,8 +354,25 @@ namespace DICUI.External.BurnOut
 
             #region Textfile Content Checks
 
-            if (extension == "txt" || extension == "rtf" || extension == "doc" || extension == "docx")
+            if (magic.StartsWith("{\rtf") // Rich Text File
+                || magic.StartsWith("" + (char)0xd0 + (char)0xcf + (char)0x11 + (char)0xe0 + (char)0xa1 + (char)0xb1 + (char)0x1a + (char)0xe1) // Microsoft Office File (old)
+                || extension == "txt") // Generic textfile (no header)
             {
+                try
+                {
+                    StreamReader sr = File.OpenText(file);
+                    string FileContent = sr.ReadToEnd().ToLower();
+                    sr.Close();
+
+                    // CD-Key
+                    if (FileContent.Contains("a valid serial number is required")
+                        || FileContent.Contains("serial number is located"))
+                        return "CD-Key / Serial";
+                }
+                catch
+                {
+                    // We don't care what the error was
+                }
                 // No-op
             }
 
@@ -351,74 +380,90 @@ namespace DICUI.External.BurnOut
 
             #region Archive Content Checks
 
-            if (extension == "7z" || extension == "rar" || extension == "zip")
+            // 7-zip
+            if (magic.StartsWith("7z" + (char)0xbc + (char)0xaf + (char)0x27 + (char)0x1c))
             {
                 // No-op
             }
-            else if (extension == "cab")
-            {
-                string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-                Directory.CreateDirectory(tempPath);
 
+            // InstallShield CAB
+            else if (magic.StartsWith("ISc"))
+            {
                 try
                 {
-                    // Read the first 4 bytes to get the archive type
-                    string magic = "";
-                    using (BinaryReader br = new BinaryReader(File.OpenRead(file)))
-                    {
-                        magic = new String(br.ReadChars(4));
-                    }
+                    string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(tempPath);
 
-                    // Microsoft CAB - "MSCF"
-                    if (magic.StartsWith("MSCF"))
+                    UnshieldCabinet cabfile = UnshieldCabinet.Open(file);
+                    for (int i = 0; i < cabfile.FileCount; i++)
                     {
-                        MSCabinet cabfile = new MSCabinet(file);
-                        foreach (var sub in cabfile.GetFiles())
+                        string tempFileName = Path.Combine(tempPath, cabfile.FileName(i));
+                        if (cabfile.FileSave(i, tempFileName))
                         {
-                            string tempfile = Path.Combine(tempPath, sub.Filename);
-                            sub.ExtractTo(tempfile);
-                            string protection = ScanInFile(tempfile);
-                            File.Delete(tempfile);
-
-                            if (!String.IsNullOrEmpty(protection))
-                            {
-                                return protection;
-                            }
-                        }
-                    }
-                    // InstallShield CAB - "ISc"
-                    else if (magic.StartsWith("ISc"))
-                    {
-                        IXComp.ListFiles(file, out int version);
-                        IXComp.ExtractAll(file, tempPath, version);
-                        var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
-                        files.Select(f => (new FileInfo(f).IsReadOnly = false));
-                        foreach (var sub in files)
-                        {
-                            string protection = ScanInFile(sub);
+                            string protection = ScanInFile(tempFileName);
                             try
                             {
-                                File.Delete(sub);
+                                File.Delete(tempFileName);
                             }
                             catch { }
 
                             if (!String.IsNullOrEmpty(protection))
+                            {
+                                try
+                                {
+                                    Directory.Delete(tempPath, true);
+                                }
+                                catch { }
                                 return protection;
+                            }
                         }
                     }
                 }
-                catch
+                catch { }
+            }
+
+            // Microsoft CAB
+            else if (magic.StartsWith("MSCF"))
+            {
+                try
                 {
-                    // We had access issues so we ignore
-                }
-                finally
-                {
-                    try
+                    string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                    Directory.CreateDirectory(tempPath);
+
+                    MSCabinet cabfile = new MSCabinet(file);
+                    foreach (var sub in cabfile.GetFiles())
                     {
-                        Directory.Delete(tempPath, true);
+                        string tempfile = Path.Combine(tempPath, sub.Filename);
+                        sub.ExtractTo(tempfile);
+                        string protection = ScanInFile(tempfile);
+                        File.Delete(tempfile);
+
+                        if (!String.IsNullOrEmpty(protection))
+                        {
+                            try
+                            {
+                                Directory.Delete(tempPath, true);
+                            }
+                            catch { }
+                            return protection;
+                        }
                     }
-                    catch { }
                 }
+                catch { }
+            }
+
+            // PKZIP
+            else if (magic.StartsWith("PK" + (char)03 + (char)04)
+                || magic.StartsWith("PK" + (char)05 + (char)06)
+                || magic.StartsWith("PK" + (char)07 + (char)08))
+            {
+                // No-op
+            }
+            // RAR
+
+            else if (magic.StartsWith("Rar!"))
+            {
+                // No-op
             }
 
             #endregion
@@ -1192,10 +1237,13 @@ namespace DICUI.External.BurnOut
             // dotFuscator - Not a protection
             //mapping["DotfuscatorAttribute"] = "dotFuscator";
 
+            // EA CdKey Registration Module
+            mapping["ereg.ea-europe.com"] = "EA CdKey Registration Module";
+
             // EXE Stealth
             mapping["??[[__[[_" + (char)0x00 + "{{" + (char)0x0
                     + (char)0x00 + "{{" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x0
-                    + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "?;;??;;??"] = "EXE Stealth";
+                    + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "?;??;??"] = "EXE Stealth";
 
             // Games for Windows - Live
             mapping["xlive.dll"] = "Games for Windows - Live";

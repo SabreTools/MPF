@@ -5,6 +5,7 @@
     /// </summary>
     public static class UIElements
     {
+        public const string DiscNotDetected = "Disc Not Detected";
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
 
