@@ -489,7 +489,7 @@ namespace DICUI
                 string protections = await Validators.RunProtectionScanOnPath(env.Drive.Letter + ":\\");
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
-                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n{1}", env.Drive.Letter, protections);
+                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", env.Drive.Letter, protections);
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
