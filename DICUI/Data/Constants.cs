@@ -7,6 +7,8 @@
     {
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
+
+        public const int LogWindowMarginFromMainWindow = 10;
     }
 
     /// <summary>

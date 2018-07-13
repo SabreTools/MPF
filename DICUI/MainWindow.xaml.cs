@@ -44,6 +44,17 @@ namespace DICUI
             StartStopButton.IsEnabled = false;
             DiskScanButton.IsEnabled = false;
             CopyProtectScanButton.IsEnabled = false;
+
+            if (_options.OpenLogWindowAtStartup)
+            {
+                System.Drawing.Rectangle bounds = WinForms.Screen.PrimaryScreen.WorkingArea;
+
+                this.WindowStartupLocation = WindowStartupLocation.Manual;
+                double combinedHeight = this.Height + _logWindow.Height + UIElements.LogWindowMarginFromMainWindow;
+
+                this.Left = bounds.Left + (bounds.Width - this.Width) / 2;
+                this.Top = bounds.Top + (bounds.Height - combinedHeight) / 2;
+            }
         }
 
 
@@ -164,12 +175,12 @@ namespace DICUI
                 _logWindow.AdjustPositionToMainWindow();
         }
 
-        private void MainWindowLocationActivated(object sender, EventArgs e)
+        private void MainWindowActivated(object sender, EventArgs e)
         {
-            if (_logWindow.IsVisible)
+            if (_logWindow.IsVisible && !this.Topmost)
             {
                 _logWindow.Topmost = true;
-                this.Topmost = true;
+                _logWindow.Topmost = false;
             }
         }
 

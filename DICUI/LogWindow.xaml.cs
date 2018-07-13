@@ -16,6 +16,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using DICUI.Data;
 using DICUI.UI;
 
 namespace DICUI
@@ -135,7 +136,7 @@ namespace DICUI
         public void AdjustPositionToMainWindow()
         {
             this.Left = _mainWindow.Left;
-            this.Top = _mainWindow.Top + _mainWindow.Height + 10;
+            this.Top = _mainWindow.Top + _mainWindow.Height + UIElements.LogWindowMarginFromMainWindow;
         }
 
         private void GracefullyTerminateProcess()
