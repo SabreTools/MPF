@@ -330,6 +330,8 @@ namespace DICUI.Utilities
         /// </summary>
         private void ExecuteDiskImageCreator()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Launching DiskImageCreator process.");
+
             dicProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
