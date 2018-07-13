@@ -21,7 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using DICUI.External.iXcomp;
+using DICUI.External.Unshield;
 using LibMSPackN;
 
 namespace DICUI.External.BurnOut
@@ -72,7 +72,7 @@ namespace DICUI.External.BurnOut
                     protections[file] = mappings[Path.GetExtension(file)];
 
                 // Now check to see if the file contains any additional information
-                string protectionname = ScanInFile(file).Replace("" + (char)0x00, "");
+                string protectionname = ScanInFile(file)?.Replace("" + (char)0x00, "");
                 if (!String.IsNullOrEmpty(protectionname))
                     protections[file] = protectionname;
             }
@@ -394,27 +394,28 @@ namespace DICUI.External.BurnOut
                     string tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                     Directory.CreateDirectory(tempPath);
 
-                    IXComp.ListFiles(file, out int version);
-                    IXComp.ExtractAll(file, tempPath, version);
-                    var files = Directory.GetFiles(tempPath, "*", SearchOption.AllDirectories);
-                    files.Select(f => (new FileInfo(f).IsReadOnly = false));
-                    foreach (var sub in files)
+                    UnshieldCabinet cabfile = UnshieldCabinet.Open(file);
+                    for (int i = 0; i < cabfile.FileCount; i++)
                     {
-                        string protection = ScanInFile(sub);
-                        try
+                        string tempFileName = Path.Combine(tempPath, cabfile.FileName(i));
+                        if (cabfile.FileSave(i, tempFileName))
                         {
-                            File.Delete(sub);
-                        }
-                        catch { }
-
-                        if (!String.IsNullOrEmpty(protection))
-                        {
+                            string protection = ScanInFile(tempFileName);
                             try
                             {
-                                Directory.Delete(tempPath, true);
+                                File.Delete(tempFileName);
                             }
                             catch { }
-                            return protection;
+
+                            if (!String.IsNullOrEmpty(protection))
+                            {
+                                try
+                                {
+                                    Directory.Delete(tempPath, true);
+                                }
+                                catch { }
+                                return protection;
+                            }
                         }
                     }
                 }
@@ -1242,7 +1243,7 @@ namespace DICUI.External.BurnOut
             // EXE Stealth
             mapping["??[[__[[_" + (char)0x00 + "{{" + (char)0x0
                     + (char)0x00 + "{{" + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x0
-                    + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "?;;??;;??"] = "EXE Stealth";
+                    + (char)0x00 + (char)0x00 + (char)0x00 + (char)0x00 + "?;??;??"] = "EXE Stealth";
 
             // Games for Windows - Live
             mapping["xlive.dll"] = "Games for Windows - Live";
