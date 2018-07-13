@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media;
 
 namespace DICUI.UI
 {
@@ -42,11 +44,63 @@ namespace DICUI.UI
                     _options.RereadAmountForC2 = result;
             }
         }
+
+        public bool VerboseLogging
+        {
+            get { return _options.VerboseLogging; }
+            set
+            {
+                _options.VerboseLogging = value;
+                _options.Save();
+            }
+        }
+
+        public bool OpenLogWindowAtStartup
+        {
+            get { return _options.OpenLogWindowAtStartup; }
+            set
+            {
+                _options.OpenLogWindowAtStartup = value;
+                _options.Save();
+            }
+        }
+    }
+
+    public class LoggerViewModel
+    {
+        private LogWindow _logWindow;
+
+        public void SetWindow(LogWindow logWindow) => _logWindow = logWindow;
+
+        public bool WindowVisible
+        {
+            get => _logWindow != null ? _logWindow.IsVisible : false;
+            set
+            {
+                if (value)
+                {
+                    _logWindow.AdjustPositionToMainWindow();
+                    _logWindow.Show();
+                }
+                else
+                    _logWindow.Hide();
+            }
+        }
+
+        public void VerboseLog(string text)
+        {
+            if (ViewModels.OptionsViewModel.VerboseLogging)
+                _logWindow.AppendToTextBox(text, Brushes.Yellow);
+        }
+
+        public void VerboseLog(string format, params object[] args) => VerboseLog(string.Format(format, args));
+        public void VerboseLogLn(string format, params object[] args) => VerboseLog(string.Format(format, args) + "\n");
     }
 
     public static class ViewModels
     {
         public static OptionsViewModel OptionsViewModel { get; set; }
+        public static LoggerViewModel LoggerViewModel { get; set; } = new LoggerViewModel();
     }
 
 }

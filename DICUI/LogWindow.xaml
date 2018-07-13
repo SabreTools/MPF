@@ -1,0 +1,54 @@
+﻿<Window x:Class="DICUI.LogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lui="clr-namespace:DICUI.UI"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+        Title="Log Window" Height="350" Width="600" Closed="OnWindowClosed" Loaded="OnWindowLoaded"
+        >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="40" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Height="22" Margin="10 10 10 0">
+            <ProgressBar x:Name="progressBar" />
+            <TextBlock x:Name="progressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
+        </Grid>
+        <Border Grid.Row="1" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
+            <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
+                <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" />
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Content="Verbose" Margin="10 0 0 10" Grid.Column="0" VerticalAlignment="Center" 
+                      ToolTip="Enable verbose logging of tasks"
+                      DataContext="{Binding Source={x:Static lui:ViewModels.OptionsViewModel}}" 
+                      IsChecked="{Binding Path=VerboseLogging}"    
+            />
+            <CheckBox Content="Open at startup" Margin="10 0 0 10" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" 
+                      ToolTip="Open this window at startup"
+                      DataContext="{Binding Source={x:Static lui:ViewModels.OptionsViewModel}}" 
+                      IsChecked="{Binding Path=OpenLogWindowAtStartup}"    
+            />
+            <Button Margin="0 0 10 10" Grid.Column="3" Height="22" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
+            <Button Margin="0 0 10 10" Grid.Column="4" Height="22" Width="60" Content="Hide" HorizontalAlignment="Right" Click="OnHideButton" />
+            <Button Visibility="Hidden" Name="AbortButton" Margin="0 0 10 10" Grid.Column="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton" />
+        </Grid>
+        
+
+
+    </Grid>
+</Window>

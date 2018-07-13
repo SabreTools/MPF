@@ -26,6 +26,8 @@ namespace DICUI
         private Options _options;
         private OptionsWindow _optionsWindow;
 
+        private LogWindow _logWindow;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,6 +36,9 @@ namespace DICUI
             _options = new Options();
             _options.Load();
             ViewModels.OptionsViewModel = new OptionsViewModel(_options);
+
+            _logWindow = new LogWindow(this);
+            ViewModels.LoggerViewModel.SetWindow(_logWindow);
 
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
@@ -52,6 +57,14 @@ namespace DICUI
                 return;
 
             _alreadyShown = true;
+
+            if (_options.OpenLogWindowAtStartup)
+            {
+                //TODO: this should be bound directly to WindowVisible property in two way fashion
+                // we need to study how to properly do it in XAML
+                ShowLogMenuItem.IsChecked = true;
+                ViewModels.LoggerViewModel.WindowVisible = true;
+            }
 
             // Populate the list of systems
             StatusLabel.Content = "Creating system list, please wait!";
@@ -150,6 +163,27 @@ namespace DICUI
             StatusLabel.Content = value.Message;
         }
 
+        private void MainWindowLocationChanged(object sender, EventArgs e)
+        {
+            if (_logWindow.IsVisible)
+                _logWindow.AdjustPositionToMainWindow();
+        }
+
+        private void MainWindowLocationActivated(object sender, EventArgs e)
+        {
+            if (_logWindow.IsVisible)
+            {
+                _logWindow.Topmost = true;
+                this.Topmost = true;
+            }
+        }
+
+        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_logWindow.IsVisible)
+                _logWindow.Close();
+        }
+
         // Toolbar Events
 
         private void AppExitClick(object sender, RoutedEventArgs e)
@@ -225,7 +259,9 @@ namespace DICUI
         {
             _systems = Validators.CreateListOfSystems();
 
-            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = _systems
+            ViewModels.LoggerViewModel.VerboseLogLn("Populating systems, {0} systems found.", _systems.Count);
+
+            Dictionary <KnownSystemCategory, List<KnownSystem?>> mapping = _systems
                 .GroupBy(s => s.Category())
                 .ToDictionary(
                     k => k.Key,
@@ -256,6 +292,8 @@ namespace DICUI
         /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
         private void PopulateDrives()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Scanning for drives..");
+            
             // Always enable the disk scan
             DiskScanButton.IsEnabled = true;
 
@@ -270,6 +308,8 @@ namespace DICUI
                 StatusLabel.Content = "Valid media found! Choose your Media Type";
                 StartStopButton.IsEnabled = true;
                 CopyProtectScanButton.IsEnabled = true;
+
+                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives containing media: {1}", _drives.Count, String.Join(", ", _drives.Select(d => d.Letter)));
             }
             else
             {
@@ -277,6 +317,8 @@ namespace DICUI
                 StatusLabel.Content = "No valid media found!";
                 StartStopButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
+
+                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives contaning valid media.");
             }
         }
 
@@ -336,6 +378,7 @@ namespace DICUI
             StartStopButton.Content = UIElements.StopDumping;
             CopyProtectScanButton.IsEnabled = false;
             StatusLabel.Content = "Beginning dumping process";
+            ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
 
             var progress = new Progress<Result>();
             progress.ProgressChanged += ProgressUpdated;
@@ -472,6 +515,8 @@ namespace DICUI
             if (speed == -1)
                 return;
 
+            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {0}.", _env.Drive.Letter, speed);
+
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
                 AllowedSpeeds.GetForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
@@ -493,7 +538,11 @@ namespace DICUI
 
             // Get the current optical disc type
             if (!_options.SkipMediaTypeDetection)
+            {
+                ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetDiscType(drive.Letter);
+                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType != null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
+            }
         }
 
         /// <summary>
