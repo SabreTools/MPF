@@ -1,8 +1,7 @@
 ﻿<Window x:Class="DICUI.LogWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="700" Loaded="Window_Loaded" Closed="OnWindowClose"
-        Background="GhostWhite"
+        Title="Log Window" Height="350" Width="600" Closed="OnWindowClosed" Loaded="OnWindowLoaded"
         >
     <Grid>
         <Grid.RowDefinitions>

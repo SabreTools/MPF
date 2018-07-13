@@ -26,6 +26,8 @@ namespace DICUI
         private Options _options;
         private OptionsWindow _optionsWindow;
 
+        private LogWindow _logWindow;
+
         public bool QuietMode { get; set; }
 
         public MainWindow()
@@ -38,6 +40,9 @@ namespace DICUI
             _options = new Options();
             _options.Load();
             ViewModels.OptionsViewModel = new OptionsViewModel(_options);
+
+            _logWindow = new LogWindow();
+            MainWindowLocationChanged(null, null);
 
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
@@ -147,6 +152,36 @@ namespace DICUI
         private void OutputDirectoryTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             EnsureDiscInformation();
+        }
+
+        private void MainWindowLocationChanged(object sender, EventArgs e)
+        {
+            _logWindow.Left = this.Left;
+            _logWindow.Top = this.Top + this.Height + 10;
+
+            if (!_logWindow.IsVisible)
+            {
+                _logWindow.WindowState = WindowState.Normal;
+                _logWindow.Show();
+            }
+        }
+
+        private void MainWindowLocationActivated(object sender, EventArgs e)
+        {
+            if (_logWindow.IsVisible)
+            {
+                _logWindow.Topmost = true;
+                this.Topmost = true;
+            }
+        }
+
+        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_logWindow.IsVisible)
+            {
+                _logWindow.Close();
+                e.Cancel = false;
+            }
         }
 
         // Toolbar Events

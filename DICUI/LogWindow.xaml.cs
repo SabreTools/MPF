@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -19,6 +21,13 @@ namespace DICUI
 {
     public partial class LogWindow : Window
     {
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
         private FlowDocument _document;
         private Paragraph _paragraph;
         private List<Matcher> _matchers;
@@ -83,10 +92,6 @@ namespace DICUI
                         progressLabel.Text = string.Format("Scanning sectors for protection.. ({0:##.##}%)", percentProgress);
                     }
                 }));
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
         }
 
         public void StartDump(string args)
@@ -324,9 +329,15 @@ namespace DICUI
 
         #region EventHandlers
 
-        private void OnWindowClose(object sender, EventArgs e)
+        private void OnWindowClosed(object sender, EventArgs e)
         {
             GracefullyTerminateProcess();
+        }
+
+        private void OnWindowLoaded(object sender, EventArgs e)
+        {
+            var hwnd = new WindowInteropHelper(this).Handle;
+            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
         }
 
         void OnProcessExit(object sender, EventArgs e)
