@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using DICUI.Data;
+using DICUI.UI;
 
 namespace DICUI.Utilities
 {
@@ -80,6 +81,8 @@ namespace DICUI.Utilities
         /// </summary>
         public async void EjectDisc()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Ejecting Disc..");
+            
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return;
@@ -327,6 +330,8 @@ namespace DICUI.Utilities
         /// </summary>
         private void ExecuteDiskImageCreator()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Launching DiskImageCreator process.");
+
             dicProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
