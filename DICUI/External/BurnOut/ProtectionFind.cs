@@ -92,7 +92,6 @@ namespace DICUI.External.BurnOut
         /// <remarks>
         /// TODO: Handle archives (zip, arc)
         /// TODO: Find protection mentions in text files
-        /// TODO: Might have to work on Streams instead to later support archives
         /// </remarks>
         private static string ScanInFile(string file)
         {
@@ -972,7 +971,6 @@ namespace DICUI.External.BurnOut
         /// </summary>
         /// <remarks>
         /// TODO: Create a case-insenstive dictionary for this since some filenames may have multiple cases
-        /// TODO: Create populate local variable instead of recreating each time?
         /// </remarks>
         private static Dictionary<string, string> CreateFilenameProtectionMapping()
         {
@@ -1178,9 +1176,6 @@ namespace DICUI.External.BurnOut
         /// <summary>
         /// Create a list of strings mapped to protections for when secondary strings and position doesn't matter
         /// </summary>
-         /// <remarks>
-        /// TODO: Create populate local variable instead of recreating each time?
-        /// </remarks>
         private static Dictionary<string, string> CreateInternalProtectionMapping()
         {
             var mapping = new Dictionary<string, string>();

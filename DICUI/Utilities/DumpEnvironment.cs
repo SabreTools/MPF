@@ -234,30 +234,24 @@ namespace DICUI.Utilities
         {
             Result result = IsValidForDump();
 
-            // is something is wrong in environment return
+            // If the environment is invalid, return
             if (!result)
                 return result;
 
-            // execute DIC
+            // Execute DIC
+            progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
             await Task.Run(() => ExecuteDiskImageCreator());
             progress?.Report(Result.Success("DiscImageCreator has finished!"));
 
-            // execute additional tools
+            // Execute additional tools
+            progress?.Report(Result.Success("Running any additional tools... please wait!"));
             result = ExecuteAdditionalToolsAfterDIC();
             progress?.Report(result);
 
-            // is something is wrong with additional tools report and return
-            // TODO: don't return, just keep generating output from DIC
-            /*if (!result.Item1)
-            {
-                StatusLabel.Content = result.Item2;
-                StartStopButton.Content = UIElements.StartDumping;
-                return;
-            }*/
-
             // Verify dump output and save it
-            progress?.Report(Result.Success("Gathering submission information..."));
+            progress?.Report(Result.Success("Gathering submission information... please wait!"));
             result = VerifyAndSaveDumpOutput();
+            progress?.Report(Result.Success("All submission information gathered!"));
 
             return result;
         }
