@@ -561,6 +561,7 @@ namespace DICUI.Utilities
 
             return mappings;
         }
+
         /// <summary>
         /// Format the output data in a human readable way, separating each printed line into a new item in the list
         /// </summary>
@@ -827,7 +828,7 @@ namespace DICUI.Utilities
                 return "(CHECK WITH PROTECTIONID)";
             }
 
-            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).Result;
+            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
         }
 
         /// <summary>
