@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DICUI.External.Unshield;
+using DICUI.Utilities;
 using LibMSPackN;
 
 namespace DICUI.External.BurnOut
@@ -965,12 +966,9 @@ namespace DICUI.External.BurnOut
         /// <summary>
         /// Create a list of filenames and extensions mapped to protections for when only file existence matters
         /// </summary>
-        /// <remarks>
-        /// TODO: Create a case-insenstive dictionary for this since some filenames may have multiple cases
-        /// </remarks>
-        private static Dictionary<string, string> CreateFilenameProtectionMapping()
+        private static CaseInsensitiveDictionary<string> CreateFilenameProtectionMapping()
         {
-            var mapping = new Dictionary<string, string>();
+            var mapping = new CaseInsensitiveDictionary<string>();
 
             // AACS
             mapping.Add("VTKF000.AACS", "AACS"); // Path.Combine("aacs", "VTKF000.AACS")
