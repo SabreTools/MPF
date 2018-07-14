@@ -89,10 +89,6 @@ namespace DICUI.External.BurnOut
         /// <summary>
         /// Scan an individual file for copy protection
         /// </summary>
-        /// <remarks>
-        /// TODO: Handle archives (zip, arc)
-        /// TODO: Find protection mentions in text files
-        /// </remarks>
         private static string ScanInFile(string file)
         {
             // Get the extension for certain checks
