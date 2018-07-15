@@ -472,7 +472,7 @@ namespace DICUI
             else
             {
                 OutputDirectoryTextBox.Text = _options.DefaultOutputPath;
-                OutputFilenameTextBox.Text = "disc.bin";
+                OutputFilenameTextBox.Text = "disc" + mediaType.Extension();
             }
         }
 

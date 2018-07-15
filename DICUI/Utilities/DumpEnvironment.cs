@@ -925,7 +925,7 @@ namespace DICUI.Utilities
                         return Int64.Parse(line.Remove(0, "Total errors:".Length).Trim());
                     }
 
-                    return -1;
+                    return -1; // TODO: Check this
                 }
                 catch
                 {

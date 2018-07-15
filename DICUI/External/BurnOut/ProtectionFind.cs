@@ -455,8 +455,8 @@ namespace DICUI.External.BurnOut
             {
                 // No-op
             }
+            
             // RAR
-
             else if (magic.StartsWith("Rar!"))
             {
                 // No-op
