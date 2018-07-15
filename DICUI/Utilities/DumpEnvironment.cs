@@ -106,6 +106,7 @@ namespace DICUI.Utilities
                         Arguments = DICCommandStrings.Eject + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
+                        RedirectStandardInput = true,
                         RedirectStandardOutput = true,
                     },
                 };
@@ -158,8 +159,8 @@ namespace DICUI.Utilities
                         Arguments = DICCommandStrings.DriveSpeed + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
-                        RedirectStandardOutput = true,
                         RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
                     },
                 };
                 childProcess.Start();
