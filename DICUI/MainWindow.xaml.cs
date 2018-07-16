@@ -315,20 +315,20 @@ namespace DICUI
             {
                 int index = _drives.FindIndex(d => d.MarkedActive);
                 DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
-                StatusLabel.Content = "Valid media found! Choose your Media Type";
+                StatusLabel.Content = "Valid drive found! Choose your Media Type";
                 StartStopButton.IsEnabled = true;
                 CopyProtectScanButton.IsEnabled = true;
 
-                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives containing media: {1}", _drives.Count, String.Join(", ", _drives.Select(d => d.Letter)));
+                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", _drives.Count, String.Join(", ", _drives.Select(d => d.Letter)));
             }
             else
             {
                 DriveLetterComboBox.SelectedIndex = -1;
-                StatusLabel.Content = "No valid media found!";
+                StatusLabel.Content = "No valid drive found!";
                 StartStopButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
 
-                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives contaning valid media.");
+                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives");
             }
         }
 
@@ -526,7 +526,8 @@ namespace DICUI
             if (speed == -1)
                 return;
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {1}.", _env.Drive.Letter, speed);
+            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {1}", _env.Drive.Letter, speed);
+            ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values));
 
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
@@ -534,6 +535,7 @@ namespace DICUI
                 _options.preferredDumpSpeedCD
             );
 
+            ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", chosenSpeed);
             DriveSpeedComboBox.SelectedValue = chosenSpeed;
         }
 

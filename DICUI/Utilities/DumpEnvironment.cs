@@ -69,6 +69,8 @@ namespace DICUI.Utilities
         /// </summary>
         public void CancelDumping()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
+
             try
             {
                 if (dicProcess != null && !dicProcess.HasExited)
@@ -83,7 +85,7 @@ namespace DICUI.Utilities
         /// </summary>
         public async void EjectDisc()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Ejecting Disc..");
+            ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {Drive.Letter}");
             
             // Validate that the required program exists
             if (!File.Exists(DICPath))
