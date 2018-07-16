@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DICUI.External.Unshield;
+using DICUI.Utilities;
 using LibMSPackN;
 
 namespace DICUI.External.BurnOut
@@ -89,11 +90,6 @@ namespace DICUI.External.BurnOut
         /// <summary>
         /// Scan an individual file for copy protection
         /// </summary>
-        /// <remarks>
-        /// TODO: Handle archives (zip, arc)
-        /// TODO: Find protection mentions in text files
-        /// TODO: Might have to work on Streams instead to later support archives
-        /// </remarks>
         private static string ScanInFile(string file)
         {
             // Get the extension for certain checks
@@ -459,8 +455,8 @@ namespace DICUI.External.BurnOut
             {
                 // No-op
             }
+            
             // RAR
-
             else if (magic.StartsWith("Rar!"))
             {
                 // No-op
@@ -970,13 +966,9 @@ namespace DICUI.External.BurnOut
         /// <summary>
         /// Create a list of filenames and extensions mapped to protections for when only file existence matters
         /// </summary>
-        /// <remarks>
-        /// TODO: Create a case-insenstive dictionary for this since some filenames may have multiple cases
-        /// TODO: Create populate local variable instead of recreating each time?
-        /// </remarks>
-        private static Dictionary<string, string> CreateFilenameProtectionMapping()
+        private static CaseInsensitiveDictionary<string> CreateFilenameProtectionMapping()
         {
-            var mapping = new Dictionary<string, string>();
+            var mapping = new CaseInsensitiveDictionary<string>();
 
             // AACS
             mapping.Add("VTKF000.AACS", "AACS"); // Path.Combine("aacs", "VTKF000.AACS")
@@ -1178,9 +1170,6 @@ namespace DICUI.External.BurnOut
         /// <summary>
         /// Create a list of strings mapped to protections for when secondary strings and position doesn't matter
         /// </summary>
-         /// <remarks>
-        /// TODO: Create populate local variable instead of recreating each time?
-        /// </remarks>
         private static Dictionary<string, string> CreateInternalProtectionMapping()
         {
             var mapping = new Dictionary<string, string>();

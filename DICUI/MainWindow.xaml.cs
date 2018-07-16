@@ -57,7 +57,6 @@ namespace DICUI
             }
         }
 
-
         #region Events
 
         protected override void OnContentRendered(EventArgs e)
@@ -140,7 +139,6 @@ namespace DICUI
                 _currentMediaType = MediaTypeComboBox.SelectedItem as MediaType?;
             }
 
-            // TODO: This is giving people the benefit of the doubt that their change is valid
             SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
@@ -379,9 +377,6 @@ namespace DICUI
         /// <summary>
         /// Begin the dumping process using the given inputs
         /// </summary>
-        /// <remarks>
-        /// TODO: Add the scan and output steps back here for label updates
-        /// </remarks>
         private async void StartDumping()
         {
             _env = DetermineEnvironment();
@@ -477,7 +472,7 @@ namespace DICUI
             else
             {
                 OutputDirectoryTextBox.Text = _options.DefaultOutputPath;
-                OutputFilenameTextBox.Text = "disc.bin";
+                OutputFilenameTextBox.Text = "disc" + mediaType.Extension();
             }
         }
 
@@ -526,7 +521,6 @@ namespace DICUI
             int speed = await _env.GetDiscSpeed();
 
             // If we have an invalid speed, we need to jump out
-            // TODO: Should we disable dumping in this case?
             if (speed == -1)
                 return;
 

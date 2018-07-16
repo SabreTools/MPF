@@ -106,6 +106,7 @@ namespace DICUI.Utilities
                         Arguments = DICCommandStrings.Eject + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
+                        RedirectStandardInput = true,
                         RedirectStandardOutput = true,
                     },
                 };
@@ -158,8 +159,8 @@ namespace DICUI.Utilities
                         Arguments = DICCommandStrings.DriveSpeed + " " + Drive.Letter,
                         CreateNoWindow = true,
                         UseShellExecute = false,
-                        RedirectStandardOutput = true,
                         RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
                     },
                 };
                 childProcess.Start();
@@ -234,30 +235,24 @@ namespace DICUI.Utilities
         {
             Result result = IsValidForDump();
 
-            // is something is wrong in environment return
+            // If the environment is invalid, return
             if (!result)
                 return result;
 
-            // execute DIC
+            // Execute DIC
+            progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
             await Task.Run(() => ExecuteDiskImageCreator());
             progress?.Report(Result.Success("DiscImageCreator has finished!"));
 
-            // execute additional tools
+            // Execute additional tools
+            progress?.Report(Result.Success("Running any additional tools... please wait!"));
             result = ExecuteAdditionalToolsAfterDIC();
             progress?.Report(result);
 
-            // is something is wrong with additional tools report and return
-            // TODO: don't return, just keep generating output from DIC
-            /*if (!result.Item1)
-            {
-                StatusLabel.Content = result.Item2;
-                StartStopButton.Content = UIElements.StartDumping;
-                return;
-            }*/
-
             // Verify dump output and save it
-            progress?.Report(Result.Success("Gathering submission information..."));
+            progress?.Report(Result.Success("Gathering submission information... please wait!"));
             result = VerifyAndSaveDumpOutput();
+            progress?.Report(Result.Success("All submission information gathered!"));
 
             return result;
         }
@@ -567,6 +562,7 @@ namespace DICUI.Utilities
 
             return mappings;
         }
+
         /// <summary>
         /// Format the output data in a human readable way, separating each printed line into a new item in the list
         /// </summary>
@@ -833,7 +829,7 @@ namespace DICUI.Utilities
                 return "(CHECK WITH PROTECTIONID)";
             }
 
-            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).Result;
+            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -930,7 +926,7 @@ namespace DICUI.Utilities
                         return Int64.Parse(line.Remove(0, "Total errors:".Length).Trim());
                     }
 
-                    return -1;
+                    return -1; // TODO: Check this
                 }
                 catch
                 {
@@ -1010,10 +1006,10 @@ namespace DICUI.Utilities
                 try
                 {
                     // Fast forward to the layerbreak
-                    while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
+                    while (!sr.ReadLine().Trim().StartsWith("========== SectorLength ==========")) ;
 
                     // Now that we're at the layerbreak line, attempt to get the decimal version
-                    return sr.ReadLine().Split(' ')[1];
+                    return sr.ReadLine().Trim().Split(' ')[1];
                 }
                 catch
                 {

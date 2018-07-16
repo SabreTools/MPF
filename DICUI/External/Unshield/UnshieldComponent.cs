@@ -52,7 +52,7 @@ namespace DICUI.External.Unshield
 
             for (int i = 0; i < self.FileGroupCount; i++)
             {
-                self.FileGroupNames[i] = header.GetString((uint)bufferPointer); bufferPointer += 4; // TODO: Verify GetString
+                self.FileGroupNames[i] = header.GetString((uint)bufferPointer); bufferPointer += 4;
             }
 
             return self;
