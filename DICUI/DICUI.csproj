@@ -105,27 +105,12 @@
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="External\BurnOut\EVORE.cs" />
-    <Compile Include="External\Unshield\CabDescriptor.cs" />
-    <Compile Include="External\Unshield\CommonHeader.cs" />
-    <Compile Include="External\Unshield\FileDescriptor.cs" />
-    <Compile Include="External\Unshield\Header.cs" />
-    <None Include="External\Unshield\LICENSE" />
-    <Compile Include="External\Unshield\OffsetList.cs" />
-    <Compile Include="External\Unshield\StringBuffer.cs" />
-    <Compile Include="External\Unshield\UnshieldCabinet.cs" />
-    <Compile Include="External\Unshield\UnshieldComponent.cs" />
-    <Compile Include="External\Unshield\UnshieldFileGroup.cs" />
-    <Compile Include="External\Unshield\UnshieldReader.cs" />
-    <Compile Include="External\Unshield\VolumeHeader.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="External\BurnOut\ProtectionFind.cs" />
     <Compile Include="UI\KnownSystemComboBoxItem.cs" />
     <Compile Include="UI\AllowedSpeeds.cs" />
     <Compile Include="UI\ViewModels.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />
     <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\CaseInsensitiveDictionary.cs" />
     <Compile Include="Utilities\Parameters.cs" />
     <Compile Include="Utilities\Result.cs" />
     <Compile Include="Utilities\Validators.cs" />
@@ -203,6 +188,12 @@
     <Content Include="mspack.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BurnOutSharp\BurnOutSharp\BurnOutSharp.csproj">
+      <Project>{1da4212e-6071-4951-b45d-bb74a7838246}</Project>
+      <Name>BurnOutSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

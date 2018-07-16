@@ -5,9 +5,9 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using BurnOutSharp;
 using IMAPI2;
 using DICUI.Data;
-using DICUI.External.BurnOut;
 
 namespace DICUI.Utilities
 {

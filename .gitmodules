@@ -1,0 +1,3 @@
+[submodule "BurnOutSharp"]
+	path = BurnOutSharp
+	url = https://github.com/mnadareski/BurnOutSharp
