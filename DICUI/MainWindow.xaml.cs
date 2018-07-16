@@ -514,7 +514,6 @@ namespace DICUI
             // Set the drive speed list that's appropriate
             var values = AllowedSpeeds.GetForMediaType(_currentMediaType);
             DriveSpeedComboBox.ItemsSource = values;
-            DriveSpeedComboBox.SelectedIndex = values.Count / 2;
 
             // Get the current environment
             _env = DetermineEnvironment();
@@ -524,7 +523,10 @@ namespace DICUI
 
             // If we have an invalid speed, we need to jump out
             if (speed == -1)
+            {
+                DriveSpeedComboBox.SelectedIndex = values.Count / 2;
                 return;
+            }
 
             ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {1}", _env.Drive.Letter, speed);
             ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values.Where(s => s <= speed)));
