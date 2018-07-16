@@ -369,6 +369,7 @@ namespace DICUI
 
                 QuietMode = _options.QuietMode,
                 ParanoidMode = _options.ParanoidMode,
+                ScanForProtection = _options.ScanForProtection,
                 RereadAmountC2 = _options.RereadAmountForC2,
 
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,

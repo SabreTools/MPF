@@ -57,6 +57,7 @@ namespace DICUI.Utilities
         // extra DIC arguments
         public bool QuietMode;
         public bool ParanoidMode;
+        public bool ScanForProtection;
         public int RereadAmountC2;
 
         // External process information
@@ -825,13 +826,9 @@ namespace DICUI.Utilities
         /// <returns>Copy protection scheme if possible, null on error</returns>
         private string GetCopyProtection()
         {
-            MessageBoxResult result = MessageBox.Show("Would you like to scan for copy protection? Warning: This may take a long time depending on the size of the disc!", "Copy Protection Scan", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-            {
-                return "(CHECK WITH PROTECTIONID)";
-            }
-
-            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
+            if (ScanForProtection)
+                return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
+            return "(CHECK WITH PROTECTIONID)";
         }
 
         /// <summary>

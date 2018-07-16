@@ -24,6 +24,12 @@ namespace DICUI.UI
             set { _options.ParanoidMode = value; }
         }
 
+        public bool ScanForProtection
+        {
+            get { return _options.ScanForProtection; }
+            set { _options.ScanForProtection = value; }
+        }
+
         public bool SkipMediaTypeDetection
         {
             get { return _options.SkipMediaTypeDetection; }
