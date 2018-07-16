@@ -180,11 +180,6 @@ namespace DICUI
             outputViewer.ScrollToBottom();
         }
 
-        private void output_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            outputViewer.ScrollToBottom();
-        }
-
         async Task ConsumeOutput(TextReader reader, Action<string> callback)
         {
             char[] buffer = new char[256];
@@ -379,6 +374,11 @@ namespace DICUI
         private void OnStartButton(object sender, EventArgs args)
         {
             StartDump("cd e Gam.iso 16");
+        }
+
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            outputViewer.ScrollToBottom();
         }
 
         #endregion
