@@ -170,6 +170,7 @@ namespace DICUI
         private void ProgressUpdated(object sender, Result value)
         {
             StatusLabel.Content = value.Message;
+            ViewModels.LoggerViewModel.VerboseLogLn(value.Message);
         }
 
         private void MainWindowLocationChanged(object sender, EventArgs e)
@@ -391,6 +392,7 @@ namespace DICUI
             Result result = await _env.StartDumping(progress);
 
             StatusLabel.Content = result ? "Dumping complete!" : result.Message;
+            ViewModels.LoggerViewModel.VerboseLogLn(result ? "Dumping complete!" : result.Message);
             StartStopButton.Content = UIElements.StartDumping;
             CopyProtectScanButton.IsEnabled = true;
 
