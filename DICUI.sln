@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI", "DICUI\DICUI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Test", "DICUI.Test\DICUI.Test.csproj", "{7CC064D2-38AB-4A05-8519-28660DE4562A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurnOutSharp", "BurnOutSharp\BurnOutSharp\BurnOutSharp.csproj", "{1DA4212E-6071-4951-B45D-BB74A7838246}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnshieldSharp", "BurnOutSharp\UnshieldSharp\UnshieldSharp\UnshieldSharp.csproj", "{39EDC0B8-5E96-4A16-9104-2D0025836071}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{7CC064D2-38AB-4A05-8519-28660DE4562A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CC064D2-38AB-4A05-8519-28660DE4562A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CC064D2-38AB-4A05-8519-28660DE4562A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DA4212E-6071-4951-B45D-BB74A7838246}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DA4212E-6071-4951-B45D-BB74A7838246}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DA4212E-6071-4951-B45D-BB74A7838246}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DA4212E-6071-4951-B45D-BB74A7838246}.Release|Any CPU.Build.0 = Release|Any CPU
-		{39EDC0B8-5E96-4A16-9104-2D0025836071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{39EDC0B8-5E96-4A16-9104-2D0025836071}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{39EDC0B8-5E96-4A16-9104-2D0025836071}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{39EDC0B8-5E96-4A16-9104-2D0025836071}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
