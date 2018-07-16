@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -175,6 +176,11 @@ namespace DICUI
         }
 
         private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            outputViewer.ScrollToBottom();
+        }
+
+        private void output_TextChanged(object sender, TextChangedEventArgs e)
         {
             outputViewer.ScrollToBottom();
         }
