@@ -137,9 +137,9 @@ namespace DICUI
             if (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
             {
                 _currentMediaType = MediaTypeComboBox.SelectedItem as MediaType?;
+                SetSupportedDriveSpeed();
             }
 
-            SetSupportedDriveSpeed();
             GetOutputNames();
             EnsureDiscInformation();
         }
@@ -528,7 +528,7 @@ namespace DICUI
                 return;
             }
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {1}", _env.Drive.Letter, speed);
+            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0} ({1]): {2}", _env.Drive.Letter, _currentMediaType.Name(), speed);
 
             DriveSpeedComboBox.ItemsSource = values.Where(s => s <= speed);
             ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values.Where(s => s <= speed)));
