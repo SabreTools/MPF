@@ -1006,10 +1006,10 @@ namespace DICUI.Utilities
                 try
                 {
                     // Fast forward to the layerbreak
-                    while (!sr.ReadLine().Trim().StartsWith("EndDataSector")) ;
+                    while (!sr.ReadLine().Trim().StartsWith("========== SectorLength ==========")) ;
 
                     // Now that we're at the layerbreak line, attempt to get the decimal version
-                    return sr.ReadLine().Split(' ')[1];
+                    return sr.ReadLine().Trim().Split(' ')[1];
                 }
                 catch
                 {
