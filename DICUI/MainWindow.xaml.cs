@@ -527,11 +527,11 @@ namespace DICUI
                 return;
 
             ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0}: {1}", _env.Drive.Letter, speed);
-            ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values));
+            ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values.Where(s => s <= speed)));
 
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
-                AllowedSpeeds.GetForMediaType(_currentMediaType).Where(s => s <= speed).Last(),
+                values.Where(s => s <= speed).Last(),
                 _options.preferredDumpSpeedCD
             );
 
