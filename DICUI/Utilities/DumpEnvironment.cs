@@ -295,7 +295,7 @@ namespace DICUI.Utilities
 
             // Only fix OutputFilename if it's not blank or null
             if (!String.IsNullOrWhiteSpace(OutputFilename))
-                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
+                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.') == -1 ? 0 : OutputFilename.LastIndexOf('.')).ToString();
         }
 
         /// <summary>
@@ -458,7 +458,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
-                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes"; // TODO: This needs to be verified
+                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? "No" : "Yes";
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = "No";
                             if (File.Exists(combinedBase + "_subIntention.txt"))
@@ -752,7 +752,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_subError.txt")
                         && File.Exists(combinedBase + "_subInfo.txt")
                         // && File.Exists(combinedBase + "_subIntention.txt")
-                        && File.Exists(combinedBase + "_subReadable.txt")
+                        && (File.Exists(combinedBase + "_subReadable.txt") || File.Exists(combinedBase + "_sub.txt"))
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case MediaType.DVD:
                 case MediaType.HDDVD:
@@ -1041,7 +1041,7 @@ namespace DICUI.Utilities
                 {
                     // Fast forward to the PVD
                     string line = sr.ReadLine();
-                    while (!line.StartsWith("[INFO]"))
+                    while (!line.StartsWith("[INFO] Number of sector(s) where EDC doesn't exist: "))
                     {
                         line = sr.ReadLine();
                     }
