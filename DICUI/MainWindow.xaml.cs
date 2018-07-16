@@ -127,6 +127,7 @@ namespace DICUI
                 return;
             }
 
+            ViewModels.LoggerViewModel.VerboseLogLn("Changed system to: {0}", (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name);
             PopulateMediaType();
             EnsureDiscInformation();
         }
@@ -528,7 +529,7 @@ namespace DICUI
                 return;
             }
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0} ({1]): {2}", _env.Drive.Letter, _currentMediaType.Name(), speed);
+            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0} ({1}): {2}", _env.Drive.Letter, _currentMediaType.Name(), speed);
 
             DriveSpeedComboBox.ItemsSource = values.Where(s => s <= speed);
             ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values.Where(s => s <= speed)));
