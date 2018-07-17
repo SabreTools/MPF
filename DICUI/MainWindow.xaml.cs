@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -8,25 +9,12 @@ using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.UI;
-using System.Runtime.InteropServices;
+
 namespace DICUI
 {
 
     public partial class MainWindow : Window
     {
-        [DllImport("gdi32.dll")]
-        public static extern int GetDeviceCaps(IntPtr hDc, int nIndex);
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetDC(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDc);
-
-        public const int LOGPIXELSX = 88;
-        public const int LOGPIXELSY = 90;
-
-
         // Private UI-related variables
         private List<Drive> _drives;
         private MediaType? _currentMediaType;
@@ -41,27 +29,6 @@ namespace DICUI
         private OptionsWindow _optionsWindow;
 
         private LogWindow _logWindow;
-
-
-        public void TransformToUnit(double pixelX,
-                      double pixelY,
-                      out int unitX,
-                      out int unitY)
-        {
-            IntPtr hDc = GetDC(IntPtr.Zero);
-            if (hDc != IntPtr.Zero)
-            {
-                int dpiX = GetDeviceCaps(hDc, LOGPIXELSX);
-                int dpiY = GetDeviceCaps(hDc, LOGPIXELSY);
-
-                ReleaseDC(IntPtr.Zero, hDc);
-
-                unitX = (int)(pixelX / ((double)dpiX / 96));
-                unitY = (int)(pixelY / ((double)dpiY / 96));
-            }
-            else
-                throw new ArgumentNullException("Failed to get DC.");
-        }
 
         public MainWindow()
         {
@@ -82,17 +49,13 @@ namespace DICUI
 
             if (_options.OpenLogWindowAtStartup)
             {
-                System.Drawing.Rectangle bounds = WinForms.Screen.PrimaryScreen.WorkingArea;
-
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
                 double combinedHeight = this.Height + _logWindow.Height + UIElements.LogWindowMarginFromMainWindow;
-                TransformToUnit(bounds.Left, bounds.Top, out int unitLeft, out int unitTop);
-                TransformToUnit(bounds.Width, bounds.Height, out int unitWidth, out int unitHeight);
+                Rectangle bounds = GetScaledCoordinates(WinForms.Screen.PrimaryScreen.WorkingArea);
 
-                this.Left = unitLeft + (unitWidth - this.Width) / 2;
-                this.Top = unitTop + (unitHeight - combinedHeight) / 2;
+                this.Left = bounds.Left + (bounds.Width - this.Width) / 2;
+                this.Top = bounds.Top + (bounds.Height - combinedHeight) / 2;
             }
-
         }
 
         #region Events
@@ -422,6 +385,11 @@ namespace DICUI
         {
             _env = DetermineEnvironment();
 
+            // Check for the firmware first
+            // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
+            if (!await _env.DriveHasLatestFimrware())
+                return;
+
             StartStopButton.Content = UIElements.StopDumping;
             CopyProtectScanButton.IsEnabled = false;
             StatusLabel.Content = "Beginning dumping process";
@@ -549,36 +517,20 @@ namespace DICUI
         /// <summary>
         /// Set the drive speed based on reported maximum and user-defined option
         /// </summary>
-        private async void SetSupportedDriveSpeed()
+        private void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
             var values = AllowedSpeeds.GetForMediaType(_currentMediaType);
-
-            // Get the current environment
-            _env = DetermineEnvironment();
-
-            // Get the drive speed
-            int speed = await _env.GetDiscSpeed();
-
-            // If we have an invalid speed, we need to jump out
-            if (speed == -1)
-            {
-                DriveSpeedComboBox.ItemsSource = values;
-                DriveSpeedComboBox.SelectedIndex = values.Count / 2;
-                return;
-            }
-
-            ViewModels.LoggerViewModel.VerboseLogLn("Determined max drive speed for {0} ({1}): {2}", _env.Drive.Letter, _currentMediaType.Name(), speed);
-
-            DriveSpeedComboBox.ItemsSource = values.Where(s => s <= speed);
-            ViewModels.LoggerViewModel.VerboseLogLn("Supported drive speeds: {0}", string.Join(",", values.Where(s => s <= speed)));
+            DriveSpeedComboBox.ItemsSource = values;
+            ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
 
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
             int chosenSpeed = Math.Min(
-                values.Where(s => s <= speed).Last(),
+                values.Where(s => s <= values[values.Count / 2]).Last(),
                 _options.preferredDumpSpeedCD
             );
 
+            // Set the selected speed
             ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", chosenSpeed);
             DriveSpeedComboBox.SelectedValue = chosenSpeed;
         }
@@ -617,6 +569,36 @@ namespace DICUI
                 MediaTypeComboBox.SelectedIndex = index;
             else
                 StatusLabel.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
+        }
+
+        #endregion
+
+        #region UI Helpers
+
+        /// <summary>
+        /// Get pixel coordinates based on DPI scaling
+        /// </summary>
+        /// <param name="bounds">Rectangle representing the bounds to transform</param>
+        /// <returns>Rectangle representing the scaled bounds</returns>
+        private Rectangle GetScaledCoordinates(Rectangle bounds)
+        {
+            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
+            return new Rectangle(
+                TransformCoordinate(g, bounds.Left),
+                TransformCoordinate(g, bounds.Top),
+                TransformCoordinate(g, bounds.Width),
+                TransformCoordinate(g, bounds.Height));
+        }
+
+        /// <summary>
+        /// Transform an individual coordinate using DPI scaling
+        /// </summary>
+        /// <param name="g">Graphics instance to scale according to</param>
+        /// <param name="coord">Current integer coordinate</param>
+        /// <returns>Scaled integer coordinate</returns>
+        private int TransformCoordinate(Graphics g, int coord)
+        {
+            return (int)(coord / ((double)g.DpiX / 96));
         }
 
         #endregion
