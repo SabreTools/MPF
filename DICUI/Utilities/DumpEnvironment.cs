@@ -436,6 +436,7 @@ namespace DICUI.Utilities
                     switch (System)
                     {
                         case KnownSystem.AppleMacintosh:
+                        case KnownSystem.EnhancedCD:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
@@ -532,6 +533,7 @@ namespace DICUI.Utilities
                     switch (System)
                     {
                         case KnownSystem.AppleMacintosh:
+                        case KnownSystem.EnhancedCD:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
