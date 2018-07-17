@@ -8,11 +8,25 @@ using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.UI;
-
+using System.Runtime.InteropServices;
 namespace DICUI
 {
+
     public partial class MainWindow : Window
     {
+        [DllImport("gdi32.dll")]
+        public static extern int GetDeviceCaps(IntPtr hDc, int nIndex);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetDC(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern int ReleaseDC(IntPtr hWnd, IntPtr hDc);
+
+        public const int LOGPIXELSX = 88;
+        public const int LOGPIXELSY = 90;
+
+
         // Private UI-related variables
         private List<Drive> _drives;
         private MediaType? _currentMediaType;
@@ -27,6 +41,27 @@ namespace DICUI
         private OptionsWindow _optionsWindow;
 
         private LogWindow _logWindow;
+
+
+        public void TransformToUnit(double pixelX,
+                      double pixelY,
+                      out int unitX,
+                      out int unitY)
+        {
+            IntPtr hDc = GetDC(IntPtr.Zero);
+            if (hDc != IntPtr.Zero)
+            {
+                int dpiX = GetDeviceCaps(hDc, LOGPIXELSX);
+                int dpiY = GetDeviceCaps(hDc, LOGPIXELSY);
+
+                ReleaseDC(IntPtr.Zero, hDc);
+
+                unitX = (int)(pixelX / ((double)dpiX / 96));
+                unitY = (int)(pixelY / ((double)dpiY / 96));
+            }
+            else
+                throw new ArgumentNullException("Failed to get DC.");
+        }
 
         public MainWindow()
         {
@@ -51,10 +86,13 @@ namespace DICUI
 
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
                 double combinedHeight = this.Height + _logWindow.Height + UIElements.LogWindowMarginFromMainWindow;
+                TransformToUnit(bounds.Left, bounds.Top, out int unitLeft, out int unitTop);
+                TransformToUnit(bounds.Width, bounds.Height, out int unitWidth, out int unitHeight);
 
-                this.Left = bounds.Left + (bounds.Width - this.Width) / 2;
-                this.Top = bounds.Top + (bounds.Height - combinedHeight) / 2;
+                this.Left = unitLeft + (unitWidth - this.Width) / 2;
+                this.Top = unitTop + (unitHeight - combinedHeight) / 2;
             }
+
         }
 
         #region Events
@@ -270,7 +308,7 @@ namespace DICUI
 
             ViewModels.LoggerViewModel.VerboseLogLn("Populating systems, {0} systems found.", _systems.Count);
 
-            Dictionary <KnownSystemCategory, List<KnownSystem?>> mapping = _systems
+            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = _systems
                 .GroupBy(s => s.Category())
                 .ToDictionary(
                     k => k.Key,
@@ -302,7 +340,7 @@ namespace DICUI
         private void PopulateDrives()
         {
             ViewModels.LoggerViewModel.VerboseLogLn("Scanning for drives..");
-            
+
             // Always enable the disk scan
             DiskScanButton.IsEnabled = true;
 
