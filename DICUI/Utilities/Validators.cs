@@ -336,6 +336,12 @@ namespace DICUI.Utilities
                 case KnownSystem.EnhancedCD:
                     types.Add(MediaType.CD);
                     break;
+                case KnownSystem.EnhancedDVD:
+                    types.Add(MediaType.DVD);
+                    break;
+                case KnownSystem.EnhancedBD:
+                    types.Add(MediaType.BluRay);
+                    break;
                 case KnownSystem.HDDVDVideo:
                     types.Add(MediaType.HDDVD);
                     break;
