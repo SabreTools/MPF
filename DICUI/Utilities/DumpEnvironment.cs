@@ -125,32 +125,16 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get disc speed using DIC
+        /// Gets if the current drive has the latest firmware
         /// </summary>
-        /// <returns>Drive speed if possible, -1 on error</returns>
-        public async Task<int> GetDiscSpeed()
+        /// <returns></returns>
+        public async Task<bool> DriveHasLatestFimrware()
         {
             // Validate that the required program exists
             if (!File.Exists(DICPath))
-                return -1;
+                return false;
 
-            // Validate that the drive is set up
-            if (Drive == null)
-                return -1;
-
-            // Validate we're not trying to get the speed for a floppy disk
-            if (IsFloppy)
-                return -1;
-
-            // Make sure that the current drive is active
-            if (!Drive.MarkedActive)
-                return -1;
-
-            // Get the drive speed directly
-            //int speed = Validators.GetDriveSpeed(Drive);
-            //int speed = Validators.GetDriveSpeedEx(Drive, _currentMediaType);
-
-            // Get the drive speed from DIC, if possible
+            // Use the drive speed command as a quick test
             Process childProcess;
             string output = await Task.Run(() =>
             {
@@ -178,31 +162,15 @@ namespace DICUI.Utilities
                 return stdout;
             });
 
-            // If a drive or argument was invalid, just exit
-            if (output.Contains("Invalid argument"))
-            {
-                return -1;
-            }
-            // If we get that the firmware is out of date, tell the user
-            else if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
+            // If we get the firmware message
+            if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
             {
                 MessageBox.Show($"DiscImageCreator has reported that drive {Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
-                return -1;
-            }
-            // Otherwise, if we find the maximum read speed as reported
-            else if (output.Contains("ReadSpeedMaximum:"))
-            {
-                int index = output.IndexOf("ReadSpeedMaximum:");
-                string readspeed = Regex.Match(output.Substring(index), @"ReadSpeedMaximum: [0-9]+KB/sec \(([0-9]*)x\)").Groups[1].Value;
-                if (!Int32.TryParse(readspeed, out int speed) || speed <= 0)
-                {
-                    return -1;
-                }
-
-                return speed;
+                return false;
             }
 
-            return -1;
+            // Otherwise, we know the firmware's good
+            return true;
         }
 
         /// <summary>
