@@ -584,21 +584,21 @@ namespace DICUI
         {
             Graphics g = Graphics.FromHwnd(IntPtr.Zero);
             return new Rectangle(
-                TransformCoordinate(g, bounds.Left),
-                TransformCoordinate(g, bounds.Top),
-                TransformCoordinate(g, bounds.Width),
-                TransformCoordinate(g, bounds.Height));
+                TransformCoordinate(bounds.Left, g.DpiX),
+                TransformCoordinate(bounds.Top, g.DpiY),
+                TransformCoordinate(bounds.Width, g.DpiX),
+                TransformCoordinate(bounds.Height, g.DpiY));
         }
 
         /// <summary>
         /// Transform an individual coordinate using DPI scaling
         /// </summary>
-        /// <param name="g">Graphics instance to scale according to</param>
         /// <param name="coord">Current integer coordinate</param>
+        /// <param name="dpi">DPI scaling factor</param>
         /// <returns>Scaled integer coordinate</returns>
-        private int TransformCoordinate(Graphics g, int coord)
+        private int TransformCoordinate(int coord, float dpi)
         {
-            return (int)(coord / ((double)g.DpiX / 96));
+            return (int)(coord / ((double)dpi / 96));
         }
 
         #endregion
