@@ -582,12 +582,14 @@ namespace DICUI
         /// <returns>Rectangle representing the scaled bounds</returns>
         private Rectangle GetScaledCoordinates(Rectangle bounds)
         {
-            Graphics g = Graphics.FromHwnd(IntPtr.Zero);
-            return new Rectangle(
+            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
+            {
+                return new Rectangle(
                 TransformCoordinate(bounds.Left, g.DpiX),
                 TransformCoordinate(bounds.Top, g.DpiY),
                 TransformCoordinate(bounds.Width, g.DpiX),
                 TransformCoordinate(bounds.Height, g.DpiY));
+            }
         }
 
         /// <summary>
