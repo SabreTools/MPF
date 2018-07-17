@@ -17,7 +17,7 @@
         </Grid>
         <Border Grid.Row="1" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
             <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
-                <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" />
+                <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" TextChanged="OnTextChanged" />
             </ScrollViewer>
         </Border>
 

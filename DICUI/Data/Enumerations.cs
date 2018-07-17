@@ -178,6 +178,8 @@
         BDVideo,
         DVDVideo,
         EnhancedCD,
+        EnhancedDVD,
+        EnhancedBD,
         HDDVDVideo,
         PalmOS,
         PhilipsCDiDigitalVideo,

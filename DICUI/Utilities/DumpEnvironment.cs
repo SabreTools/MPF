@@ -57,6 +57,7 @@ namespace DICUI.Utilities
         // extra DIC arguments
         public bool QuietMode;
         public bool ParanoidMode;
+        public bool ScanForProtection;
         public int RereadAmountC2;
 
         // External process information
@@ -69,6 +70,8 @@ namespace DICUI.Utilities
         /// </summary>
         public void CancelDumping()
         {
+            ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
+
             try
             {
                 if (dicProcess != null && !dicProcess.HasExited)
@@ -83,7 +86,7 @@ namespace DICUI.Utilities
         /// </summary>
         public async void EjectDisc()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Ejecting Disc..");
+            ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {Drive.Letter}");
             
             // Validate that the required program exists
             if (!File.Exists(DICPath))
@@ -293,7 +296,7 @@ namespace DICUI.Utilities
 
             // Only fix OutputFilename if it's not blank or null
             if (!String.IsNullOrWhiteSpace(OutputFilename))
-                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.')).ToString();
+                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.') == -1 ? 0 : OutputFilename.LastIndexOf('.')).ToString();
         }
 
         /// <summary>
@@ -433,6 +436,9 @@ namespace DICUI.Utilities
                     switch (System)
                     {
                         case KnownSystem.AppleMacintosh:
+                        case KnownSystem.EnhancedCD:
+                        case KnownSystem.EnhancedDVD:
+                        case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
@@ -456,7 +462,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
-                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_eccEdc.txt") > 0 ? "No" : "Yes"; // TODO: This needs to be verified
+                            mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? "No" : "Yes";
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = "No";
                             if (File.Exists(combinedBase + "_subIntention.txt"))
@@ -529,6 +535,9 @@ namespace DICUI.Utilities
                     switch (System)
                     {
                         case KnownSystem.AppleMacintosh:
+                        case KnownSystem.EnhancedCD:
+                        case KnownSystem.EnhancedDVD:
+                        case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
@@ -750,7 +759,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_subError.txt")
                         && File.Exists(combinedBase + "_subInfo.txt")
                         // && File.Exists(combinedBase + "_subIntention.txt")
-                        && File.Exists(combinedBase + "_subReadable.txt")
+                        && (File.Exists(combinedBase + "_subReadable.txt") || File.Exists(combinedBase + "_sub.txt"))
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case MediaType.DVD:
                 case MediaType.HDDVD:
@@ -823,13 +832,9 @@ namespace DICUI.Utilities
         /// <returns>Copy protection scheme if possible, null on error</returns>
         private string GetCopyProtection()
         {
-            MessageBoxResult result = MessageBox.Show("Would you like to scan for copy protection? Warning: This may take a long time depending on the size of the disc!", "Copy Protection Scan", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-            {
-                return "(CHECK WITH PROTECTIONID)";
-            }
-
-            return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
+            if (ScanForProtection)
+                return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
+            return "(CHECK WITH PROTECTIONID)";
         }
 
         /// <summary>
@@ -1039,7 +1044,7 @@ namespace DICUI.Utilities
                 {
                     // Fast forward to the PVD
                     string line = sr.ReadLine();
-                    while (!line.StartsWith("[INFO]"))
+                    while (!line.StartsWith("[INFO] Number of sector(s) where EDC doesn't exist: "))
                     {
                         line = sr.ReadLine();
                     }

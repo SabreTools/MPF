@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -373,6 +374,11 @@ namespace DICUI
         private void OnStartButton(object sender, EventArgs args)
         {
             StartDump("cd e Gam.iso 16");
+        }
+
+        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            outputViewer.ScrollToBottom();
         }
 
         #endregion

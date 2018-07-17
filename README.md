@@ -1,10 +1,12 @@
-# DICUI
+i'# DICUI
 
 DiscImageCreator UI in C#
 
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project :)
 
 We are using DiscImageCreator (DIC), created by Sarami, and we would like to thanks him for his great software. The latest release of DIC can be found on [the GitHub page](https://github.com/saramibreak/DiscImageCreator)
+
+This project relies on two open-source code ports to help perform copy protection scanning: [BurnOutSharp](https://github.com/mnadareski/BurnOutSharp) and [UnshieldSharp](https://github.com/mnadareski/UnshieldSharp)
 
 ## System Requirements
 
@@ -30,12 +32,16 @@ A list of all changes can now be found [here](https://github.com/reignstumble/DI
 
 Here are the talented people who have contributed to the project so far:
 
-**ReignStumble** - Project Lead / UI Design
+- **ReignStumble** - Project Lead / UI Design
+- **darksabre76** - Project Co-Lead / Backend Design
+- **Jakz** - Primary Feature Contributor
+- **NHellFire** - Feature Contributor
 
-**darksabre76** - Project Co-Lead / Backend Design
+## Notable Testers
 
-**Jakz** - Feature Contributor
+These are the tireless individuals who have dedicated countless hours to help test the many features of DICUI and have worked with the development team closely:
 
-**NHellFire** - Feature Contributor
-
-**Dizzzy** - Concept/Ideas/Beta tester
+- **Dizzzy/user7** - Concept, ideas, tester
+- **Kludge** - Primary stress tester
+- **ajshell1** - Tester
+- **eientei95** - Tester

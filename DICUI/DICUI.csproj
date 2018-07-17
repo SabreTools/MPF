@@ -67,6 +67,9 @@
   </PropertyGroup>
   <PropertyGroup />
   <ItemGroup>
+    <Reference Include="BurnOutSharp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BurnOutSharp.1.3.5\lib\net461\BurnOutSharp.dll</HintPath>
+    </Reference>
     <Reference Include="LessIO, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LessIO.0.5.0\lib\net40\LessIO.dll</HintPath>
     </Reference>
@@ -89,6 +92,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UnshieldSharp, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UnshieldSharp.1.4.2.1\lib\net461\UnshieldSharp.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -105,27 +111,12 @@
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="External\BurnOut\EVORE.cs" />
-    <Compile Include="External\Unshield\CabDescriptor.cs" />
-    <Compile Include="External\Unshield\CommonHeader.cs" />
-    <Compile Include="External\Unshield\FileDescriptor.cs" />
-    <Compile Include="External\Unshield\Header.cs" />
-    <None Include="External\Unshield\LICENSE" />
-    <Compile Include="External\Unshield\OffsetList.cs" />
-    <Compile Include="External\Unshield\StringBuffer.cs" />
-    <Compile Include="External\Unshield\UnshieldCabinet.cs" />
-    <Compile Include="External\Unshield\UnshieldComponent.cs" />
-    <Compile Include="External\Unshield\UnshieldFileGroup.cs" />
-    <Compile Include="External\Unshield\UnshieldReader.cs" />
-    <Compile Include="External\Unshield\VolumeHeader.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="External\BurnOut\ProtectionFind.cs" />
     <Compile Include="UI\KnownSystemComboBoxItem.cs" />
     <Compile Include="UI\AllowedSpeeds.cs" />
     <Compile Include="UI\ViewModels.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />
     <Compile Include="Utilities\Extensions.cs" />
-    <Compile Include="Utilities\CaseInsensitiveDictionary.cs" />
     <Compile Include="Utilities\Parameters.cs" />
     <Compile Include="Utilities\Result.cs" />
     <Compile Include="Utilities\Validators.cs" />

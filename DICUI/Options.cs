@@ -16,6 +16,7 @@ namespace DICUI
 
         public bool QuietMode { get; set; }
         public bool ParanoidMode { get; set; }
+        public bool ScanForProtection { get; set; }
         public int RereadAmountForC2 { get; set; }
 
         public bool SkipMediaTypeDetection { get; set; }
@@ -52,6 +53,7 @@ namespace DICUI
 
             this.QuietMode = Boolean.TryParse(ConfigurationManager.AppSettings["QuietMode"], out bool quietMode) ? quietMode : false;
             this.ParanoidMode = Boolean.TryParse(ConfigurationManager.AppSettings["ParanoidMode"], out bool paranoidMode) ? paranoidMode : false;
+            this.ScanForProtection = Boolean.TryParse(ConfigurationManager.AppSettings["ScanForProtection"], out bool scanForProtection) ? scanForProtection : true;
             this.SkipMediaTypeDetection = Boolean.TryParse(ConfigurationManager.AppSettings["SkipMediaTypeDetection"], out bool skipMediaTypeDetection) ? skipMediaTypeDetection : false;
             this.RereadAmountForC2 = Int32.TryParse(ConfigurationManager.AppSettings["RereadAmountForC2"], out int rereadAmountForC2) ? rereadAmountForC2 : 20;
             this.VerboseLogging = Boolean.TryParse(ConfigurationManager.AppSettings["VerboseLogging"], out bool verboseLogging) ? verboseLogging : true;

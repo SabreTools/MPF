@@ -5,9 +5,9 @@ using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using BurnOutSharp;
 using IMAPI2;
 using DICUI.Data;
-using DICUI.External.BurnOut;
 
 namespace DICUI.Utilities
 {
@@ -98,12 +98,14 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.SonyPlayStation3:
                     types.Add(MediaType.BluRay);
+                    types.Add(MediaType.CD); // TODO: Confirm this
                     break;
                 case KnownSystem.SonyPlayStation4:
                     types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.SonyPlayStationPortable:
                     types.Add(MediaType.UMD);
+                    types.Add(MediaType.DVD); // TODO: Confirm this
                     break;
                 case KnownSystem.VMLabsNuon:
                     types.Add(MediaType.DVD);
@@ -333,6 +335,12 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.EnhancedCD:
                     types.Add(MediaType.CD);
+                    break;
+                case KnownSystem.EnhancedDVD:
+                    types.Add(MediaType.DVD);
+                    break;
+                case KnownSystem.EnhancedBD:
+                    types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.HDDVDVideo:
                     types.Add(MediaType.HDDVD);
