@@ -98,12 +98,14 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.SonyPlayStation3:
                     types.Add(MediaType.BluRay);
+                    types.Add(MediaType.CD); // TODO: Confirm this
                     break;
                 case KnownSystem.SonyPlayStation4:
                     types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.SonyPlayStationPortable:
                     types.Add(MediaType.UMD);
+                    types.Add(MediaType.DVD); // TODO: Confirm this
                     break;
                 case KnownSystem.VMLabsNuon:
                     types.Add(MediaType.DVD);
