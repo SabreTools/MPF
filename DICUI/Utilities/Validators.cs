@@ -356,6 +356,9 @@ namespace DICUI.Utilities
                 case KnownSystem.PlayStationGameSharkUpdates:
                     types.Add(MediaType.CD);
                     break;
+                case KnownSystem.RainbowDisc:
+                    types.Add(MediaType.CD);
+                    break;
                 case KnownSystem.TaoiKTV:
                     types.Add(MediaType.CD);
                     break;

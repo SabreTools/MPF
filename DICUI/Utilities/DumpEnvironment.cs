@@ -408,6 +408,7 @@ namespace DICUI.Utilities
                         case KnownSystem.EnhancedDVD:
                         case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
+                        case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
                             if (File.Exists(combinedBase + "_subIntention.txt"))
@@ -507,6 +508,7 @@ namespace DICUI.Utilities
                         case KnownSystem.EnhancedDVD:
                         case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
+                        case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
                             mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
                             if (File.Exists(combinedBase + "_subIntention.txt"))

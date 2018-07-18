@@ -185,6 +185,7 @@
         PhilipsCDiDigitalVideo,
         PhotoCD,
         PlayStationGameSharkUpdates,
+        RainbowDisc,
         TaoiKTV,
         TomyKissSite,
         VideoCD,
