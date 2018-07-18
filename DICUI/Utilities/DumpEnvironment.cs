@@ -614,7 +614,11 @@ namespace DICUI.Utilities
                 switch (System)
                 {
                     case KnownSystem.AppleMacintosh:
+                    case KnownSystem.EnhancedCD:
+                    case KnownSystem.EnhancedDVD:
+                    case KnownSystem.EnhancedBD:
                     case KnownSystem.IBMPCCompatible:
+                    case KnownSystem.RainbowDisc:
                         output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
                         break;
                 }
@@ -657,7 +661,11 @@ namespace DICUI.Utilities
                 switch (System)
                 {
                     case KnownSystem.AppleMacintosh:
+                    case KnownSystem.EnhancedCD:
+                    case KnownSystem.EnhancedDVD:
+                    case KnownSystem.EnhancedBD:
                     case KnownSystem.IBMPCCompatible:
+                    case KnownSystem.RainbowDisc:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
                         break;
                     case KnownSystem.MicrosoftXBOX:
