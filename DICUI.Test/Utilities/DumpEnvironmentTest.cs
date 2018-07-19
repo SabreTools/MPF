@@ -1,4 +1,6 @@
-﻿using DICUI.Data;
+﻿using System;
+using System.Linq;
+using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
 
@@ -42,7 +44,6 @@ namespace DICUI.Test
             };
 
             env.AdjustForCustomConfiguration();
-            Assert.Equal(new Parameters(parameters), env.DICParameters);
             Assert.Equal(expectedMediaType, env.Type);
             Assert.Equal(expectedKnownSystem, env.System);
             Assert.Equal(expectedDriveLetter, env.Drive.Letter);

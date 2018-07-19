@@ -67,7 +67,28 @@ namespace DICUI.Utilities
         /// <param name="parameters">String possibly representing a set of parameters</param>
         public Parameters(string parameters)
         {
-            ValidateAndSetParameters(parameters);
+            // If any parameters are not valid, wipe out everything
+            if (!ValidateAndSetParameters(parameters))
+            {
+                Command = DICCommand.NONE;
+
+                DriveLetter = null;
+                DriveSpeed = null;
+
+                Filename = null;
+
+                StartLBAValue = null;
+                EndLBAValue = null;
+
+                _flags = new Dictionary<DICFlag, bool>();
+
+                AddOffsetValue = null;
+                BEOpcodeValue = null;
+                C2OpcodeValue = new int?[4];
+                ForceUnitAccessValue = null;
+                ScanFileProtectValue = null;
+                SubchannelReadLevelValue = null;
+            }
         }
 
         /// <summary>
@@ -521,12 +542,13 @@ namespace DICUI.Utilities
         /// Scan a possible parameter string and populate whatever possible
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
-        private void ValidateAndSetParameters(string parameters)
+        /// <returns></returns>
+        private bool ValidateAndSetParameters(string parameters)
         {
             // The string has to be valid by itself first
             if (String.IsNullOrWhiteSpace(parameters))
             {
-                return;
+                return false;
             }
 
             // Now split the string into parts for easier validation
@@ -543,27 +565,27 @@ namespace DICUI.Utilities
             {
                 case DICCommandStrings.Audio:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
-                        return;
+                        return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
                     if (!DoesExist(parts, 4) || !IsValidNumber(parts[4], lowerBound: 0))
-                        return;
+                        return false;
                     else
                         StartLBAValue = Int32.Parse(parts[4]);
 
                     if (!DoesExist(parts, 5) || !IsValidNumber(parts[5], lowerBound: 0))
-                        return;
+                        return false;
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
 
@@ -573,12 +595,12 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.BluRay:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
@@ -588,29 +610,29 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.Close:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.Close;
                     break;
 
                 case DICCommandStrings.CompactDisc:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
-                        return;
+                        return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
@@ -620,27 +642,27 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.Data:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
-                        return;
+                        return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
                     if (!DoesExist(parts, 4) || !IsValidNumber(parts[4], lowerBound: 0))
-                        return;
+                        return false;
                     else
                         StartLBAValue = Int32.Parse(parts[4]);
 
                     if (!DoesExist(parts, 5) || !IsValidNumber(parts[5], lowerBound: 0))
-                        return;
+                        return false;
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
 
@@ -650,17 +672,17 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.DigitalVideoDisc:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 24)) // Officially 0-16
-                        return;
+                        return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
@@ -670,58 +692,58 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.DriveSpeed:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.DriveSpeed;
                     break;
 
                 case DICCommandStrings.Eject:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.Eject;
                     break;
 
                 case DICCommandStrings.Floppy:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (parts.Count > 3)
-                        return;
+                        return false;
 
                     Command = DICCommand.Floppy;
                     break;
 
                 case DICCommandStrings.GDROM:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
-                        return;
+                        return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
@@ -731,77 +753,77 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.MDS:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
-                        return;
+                        return false;
                     else
                         Filename = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.MDS;
                     break;
 
                 case DICCommandStrings.Reset:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.Reset;
                     break;
 
                 case DICCommandStrings.Start:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.Start;
                     break;
 
                 case DICCommandStrings.Stop:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.Stop;
                     break;
 
                 case DICCommandStrings.Sub:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
-                        return;
+                        return false;
                     else
                         Filename = parts[1];
 
                     if (parts.Count > 2)
-                        return;
+                        return false;
 
                     Command = DICCommand.Sub;
                     break;
 
                 case DICCommandStrings.Swap:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
                     if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
-                        return;
+                        return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
@@ -811,12 +833,12 @@ namespace DICUI.Utilities
 
                 case DICCommandStrings.XBOX:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
-                        return;
+                        return false;
                     else
                         DriveLetter = parts[1];
 
                     if (!DoesExist(parts, 2) || IsFlag(parts[2]))
-                        return;
+                        return false;
                     else
                         Filename = parts[2];
 
@@ -825,7 +847,7 @@ namespace DICUI.Utilities
                     break;
 
                 default:
-                    return;
+                    return false;
             }
 
             // Loop through all auxilary flags, if necessary
@@ -838,11 +860,11 @@ namespace DICUI.Utilities
                         case DICFlagStrings.AddOffset:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc)
-                                return;
+                                return false;
                             else if (!DoesExist(parts, i + 1))
-                                return;
+                                return false;
                             else if (!IsValidNumber(parts[i + 1]))
-                                return;
+                                return false;
 
                             this[DICFlag.AddOffset] = true;
                             AddOffsetValue = Int32.Parse(parts[i + 1]);
@@ -851,7 +873,7 @@ namespace DICUI.Utilities
 
                         case DICFlagStrings.AMSF:
                             if (parts[0] != DICCommandStrings.CompactDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.AMSF] = true;
                             break;
@@ -861,7 +883,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[DICFlag.BEOpcode] = true;
@@ -873,7 +895,7 @@ namespace DICUI.Utilities
                                 break;
                             }
                             else if (parts[i + 1] != "raw" && (parts[i + 1] != "pack"))
-                                return;
+                                return false;
 
                             this[DICFlag.BEOpcode] = true;
                             BEOpcodeValue = parts[i + 1];
@@ -885,7 +907,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
 
                             this[DICFlag.C2Opcode] = true;
                             for (int j = 0; j < 4; j++)
@@ -895,7 +917,7 @@ namespace DICUI.Utilities
                                 else if (IsFlag(parts[i + 1]))
                                     break;
                                 else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                                    return;
+                                    return false;
                                 else
                                 {
                                     C2OpcodeValue[j] = Int32.Parse(parts[i + 1]);
@@ -907,7 +929,7 @@ namespace DICUI.Utilities
 
                         case DICFlagStrings.CopyrightManagementInformation:
                             if (parts[0] != DICCommandStrings.DigitalVideoDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.CopyrightManagementInformation] = true;
                             break;
@@ -917,7 +939,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
 
                             this[DICFlag.D8Opcode] = true;
                             break;
@@ -930,7 +952,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.DigitalVideoDisc
                                 && parts[0] != DICCommandStrings.GDROM
                                 && parts[0] != DICCommandStrings.XBOX)
-                                return;
+                                return false;
 
                             this[DICFlag.DisableBeep] = true;
                             break;
@@ -943,7 +965,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM
                                 && parts[0] != DICCommandStrings.XBOX)
-                                return;
+                                return false;
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[DICFlag.ForceUnitAccess] = true;
@@ -955,7 +977,7 @@ namespace DICUI.Utilities
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                                return;
+                                return false;
 
                             this[DICFlag.ForceUnitAccess] = true;
                             ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
@@ -964,14 +986,14 @@ namespace DICUI.Utilities
 
                         case DICFlagStrings.MCN:
                             if (parts[0] != DICCommandStrings.CompactDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.MCN] = true;
                             break;
 
                         case DICFlagStrings.MultiSession:
                             if (parts[0] != DICCommandStrings.CompactDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.MultiSession] = true;
                             break;
@@ -981,7 +1003,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
 
                             this[DICFlag.NoFixSubP] = true;
                             break;
@@ -991,14 +1013,14 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
 
                             this[DICFlag.NoFixSubQ] = true;
                             break;
 
                         case DICFlagStrings.NoFixSubQLibCrypt:
                             if (parts[0] != DICCommandStrings.CompactDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.NoFixSubQLibCrypt] = true;
                             break;
@@ -1008,7 +1030,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
 
                             this[DICFlag.NoFixSubQSecuROM] = true;
                             break;
@@ -1018,14 +1040,14 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
 
                             this[DICFlag.NoFixSubRtoW] = true;
                             break;
 
                         case DICFlagStrings.Raw:
                             if (parts[0] != DICCommandStrings.DigitalVideoDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.Raw] = true;
                             break;
@@ -1033,14 +1055,14 @@ namespace DICUI.Utilities
                         case DICFlagStrings.Reverse:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
-                                return;
+                                return false;
 
                             this[DICFlag.Reverse] = true;
                             break;
 
                         case DICFlagStrings.ScanAntiMod:
                             if (parts[0] != DICCommandStrings.CompactDisc)
-                                return;
+                                return false;
 
                             this[DICFlag.ScanAntiMod] = true;
                             break;
@@ -1048,7 +1070,7 @@ namespace DICUI.Utilities
                         case DICFlagStrings.ScanFileProtect:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
-                                return;
+                                return false;
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[DICFlag.ScanFileProtect] = true;
@@ -1060,7 +1082,7 @@ namespace DICUI.Utilities
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
-                                return;
+                                return false;
 
                             this[DICFlag.ScanFileProtect] = true;
                             ScanFileProtectValue = Int32.Parse(parts[i + 1]);
@@ -1070,14 +1092,14 @@ namespace DICUI.Utilities
                         case DICFlagStrings.ScanSectorProtect:
                             if (parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data)
-                                return;
+                                return false;
 
                             this[DICFlag.ScanSectorProtect] = true;
                             break;
 
                         case DICFlagStrings.SeventyFour:
                             if (parts[0] != DICCommandStrings.Swap)
-                                return;
+                                return false;
 
                             this[DICFlag.SeventyFour] = true;
                             break;
@@ -1087,7 +1109,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.CompactDisc
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
-                                return;
+                                return false;
                             else if (DoesExist(parts, i + 1))
                             {
                                 this[DICFlag.SubchannelReadLevel] = true;
@@ -1099,7 +1121,7 @@ namespace DICUI.Utilities
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0, upperBound: 2))
-                                return;
+                                return false;
 
                             this[DICFlag.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
@@ -1107,10 +1129,12 @@ namespace DICUI.Utilities
                             break;
 
                         default:
-                            return;
+                            return false;
                     }
                 }
             }
+
+            return true;
         }
 
         /// <summary>
