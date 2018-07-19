@@ -1,6 +1,8 @@
-i'# DICUI
+# DICUI
 
 DiscImageCreator UI in C#
+
+[![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/dicui)
 
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project :)
 

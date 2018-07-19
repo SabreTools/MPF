@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
@@ -40,10 +40,13 @@ namespace DICUI.Test.Utilities
         {
             Parameters actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, paranoid, rereadC2);
 
-            HashSet<DICFlag> expectedSet = expected != null ? new HashSet<DICFlag>(expected) : null;
-            HashSet<DICFlag> actualSet = actual != null ? new HashSet<DICFlag>(actual.Keys) : null;
+            HashSet<DICFlag> expectedSet = new HashSet<DICFlag>(expected ?? new DICFlag[0]);
+            HashSet<DICFlag> actualSet = new HashSet<DICFlag>(actual.Keys ?? new DICFlag[0]);
             Assert.Equal(expectedSet, actualSet);
-            Assert.Equal(rereadC2, actual.C2OpcodeValue[0]);
+            if (rereadC2 == -1 || !Validators.GetValidMediaTypes(knownSystem).Contains(mediaType))
+                Assert.Null(actual.C2OpcodeValue[0]);
+            else
+                Assert.Equal(rereadC2, actual.C2OpcodeValue[0]);
             Assert.Equal(subchannelLevel, actual.SubchannelReadLevelValue);
         }
 

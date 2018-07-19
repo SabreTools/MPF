@@ -10,7 +10,7 @@ environment:
 
 # msbuild configuration
 platform:
-- AnyCPU
+- Any CPU
 configuration:
 - Debug
 
