@@ -548,6 +548,8 @@ namespace DICUI.Utilities
                     return "Photo CD";
                 case KnownSystem.PlayStationGameSharkUpdates:
                     return "PlayStation GameShark Updates";
+                case KnownSystem.RainbowDisc:
+                    return "Rainbow Disc";
                 case KnownSystem.TaoiKTV:
                     return "Tao iKTV";
                 case KnownSystem.TomyKissSite:

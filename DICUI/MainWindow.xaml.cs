@@ -470,20 +470,8 @@ namespace DICUI
             KnownSystem? systemType = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
             MediaType? mediaType = MediaTypeComboBox.SelectedItem as MediaType?;
 
-            if (drive != null
-                && !String.IsNullOrWhiteSpace(drive.VolumeLabel)
-                && !drive.IsFloppy
-                && systemType != null
-                && mediaType != null)
-            {
-                OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive.VolumeLabel);
-                OutputFilenameTextBox.Text = drive.VolumeLabel + mediaType.Extension();
-            }
-            else
-            {
-                OutputDirectoryTextBox.Text = _options.DefaultOutputPath;
-                OutputFilenameTextBox.Text = "disc" + mediaType.Extension();
-            }
+            OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
+            OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? "disc") + (mediaType.Extension() ?? ".bin");
         }
 
         /// <summary>

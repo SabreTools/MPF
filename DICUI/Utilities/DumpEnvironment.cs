@@ -217,12 +217,12 @@ namespace DICUI.Utilities
 
             // Execute additional tools
             progress?.Report(Result.Success("Running any additional tools... please wait!"));
-            result = ExecuteAdditionalToolsAfterDIC();
+            result = await Task.Run(() => ExecuteAdditionalToolsAfterDIC());
             progress?.Report(result);
 
             // Verify dump output and save it
             progress?.Report(Result.Success("Gathering submission information... please wait!"));
-            result = VerifyAndSaveDumpOutput();
+            result = await Task.Run(() => VerifyAndSaveDumpOutput());
             progress?.Report(Result.Success("All submission information gathered!"));
 
             return result;
@@ -294,10 +294,10 @@ namespace DICUI.Utilities
                         return Result.Failure("Error! Could not find subdump!");
 
                     ExecuteSubdump();
-                    break;
+                    return Result.Success("subdump has finished!");
             }
 
-            return Result.Success();
+            return Result.Success("No external tools needed!");
         }
 
         /// <summary>
@@ -408,8 +408,10 @@ namespace DICUI.Utilities
                         case KnownSystem.EnhancedDVD:
                         case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
+                        case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
+                            string protection = GetCopyProtection();
+                            mappings[Template.CopyProtectionField] = (!String.IsNullOrWhiteSpace(protection) ? protection : Template.RequiredIfExistsValue);
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -507,8 +509,10 @@ namespace DICUI.Utilities
                         case KnownSystem.EnhancedDVD:
                         case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
+                        case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            mappings[Template.CopyProtectionField] = GetCopyProtection() ?? Template.RequiredIfExistsValue;
+                            string protection = GetCopyProtection();
+                            mappings[Template.CopyProtectionField] = (!String.IsNullOrWhiteSpace(protection) ? protection : Template.RequiredIfExistsValue);
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -612,7 +616,11 @@ namespace DICUI.Utilities
                 switch (System)
                 {
                     case KnownSystem.AppleMacintosh:
+                    case KnownSystem.EnhancedCD:
+                    case KnownSystem.EnhancedDVD:
+                    case KnownSystem.EnhancedBD:
                     case KnownSystem.IBMPCCompatible:
+                    case KnownSystem.RainbowDisc:
                         output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
                         break;
                 }
@@ -655,7 +663,11 @@ namespace DICUI.Utilities
                 switch (System)
                 {
                     case KnownSystem.AppleMacintosh:
+                    case KnownSystem.EnhancedCD:
+                    case KnownSystem.EnhancedDVD:
+                    case KnownSystem.EnhancedBD:
                     case KnownSystem.IBMPCCompatible:
+                    case KnownSystem.RainbowDisc:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
                         break;
                     case KnownSystem.MicrosoftXBOX:
