@@ -410,8 +410,7 @@ namespace DICUI.Utilities
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            string protection = GetCopyProtection();
-                            mappings[Template.CopyProtectionField] = (!String.IsNullOrWhiteSpace(protection) ? protection : Template.RequiredIfExistsValue);
+                            mappings[Template.CopyProtectionField] = GetCopyProtection();
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -511,8 +510,7 @@ namespace DICUI.Utilities
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
-                            string protection = GetCopyProtection();
-                            mappings[Template.CopyProtectionField] = (!String.IsNullOrWhiteSpace(protection) ? protection : Template.RequiredIfExistsValue);
+                            mappings[Template.CopyProtectionField] = GetCopyProtection();
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");

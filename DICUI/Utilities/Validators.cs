@@ -575,7 +575,7 @@ namespace DICUI.Utilities
                 return ProtectionFind.Scan(path);
             });
 
-            if (found == null)
+            if (found == null || found.Count == 0)
                 return "None found";
 
             return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
