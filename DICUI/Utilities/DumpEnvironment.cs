@@ -989,7 +989,16 @@ namespace DICUI.Utilities
                 try
                 {
                     // Fast forward to the layerbreak
-                    while (!sr.ReadLine().Trim().StartsWith("========== SectorLength ==========")) ;
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        // We definitely found a single-layer disc
+                        if (line.Contains("NumberOfLayers: Single Layer"))
+                            return null;
+                        else if (line.Trim().StartsWith("========== SectorLength =========="))
+                            break;
+                        line = sr.ReadLine();
+                    }
 
                     // Now that we're at the layerbreak line, attempt to get the decimal version
                     return sr.ReadLine().Trim().Split(' ')[1];
