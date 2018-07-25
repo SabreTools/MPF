@@ -441,6 +441,8 @@ namespace DICUI.Utilities
                     return "Incredible Technologies Eagle";
                 case KnownSystem.IncredibleTechnologiesVarious:
                     return "Incredible Technologies PC-based Systems";
+                case KnownSystem.KonamieAmusement:
+                    return "Konami e-Amusement";
                 case KnownSystem.KonamiFirebeat:
                     return "Konami Firebeat";
                 case KnownSystem.KonamiGVSystem:

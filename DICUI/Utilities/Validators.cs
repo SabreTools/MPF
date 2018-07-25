@@ -193,6 +193,9 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
                     break;
+                case KnownSystem.KonamieAmusement:
+                    types.Add(MediaType.CD);
+                    break;
                 case KnownSystem.KonamiFirebeat:
                     types.Add(MediaType.CD);
                     break;

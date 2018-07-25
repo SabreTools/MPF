@@ -127,6 +127,7 @@
         ICEPCHardware,
         IncredibleTechnologiesEagle,
         IncredibleTechnologiesVarious,
+        KonamieAmusement,
         KonamiFirebeat,
         KonamiGVSystem,
         KonamiM2,
