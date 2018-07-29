@@ -1,3 +1,13 @@
+### 1.10 (2018-07-29)
+
+- Added many new options for user customization
+- Added unit testing and an AppVeyor build
+- Many code refactorings
+- **LOG WINDOW**
+- Separated out protection scan and Unshield ports to new projects
+- Added "empty drive" support; should help with 3DO and HFS dumping
+- And much more! See the full Git commit list for more details
+
 ### 1.07 (2018-06-27)
 
 - Separated system and media type for easier navigation
