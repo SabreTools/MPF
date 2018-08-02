@@ -1282,12 +1282,18 @@ namespace DICUI.Utilities
                     while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
 
                     // Now that we're at the ranges, read each line in and concatenate
-                    // TODO: Make this output like the old method (startlba-endlba)
-                    string line = sr.ReadLine();
-                    while (!line.Trim().StartsWith("========== Unlock 2 state(wxripper) =========="))
+                    string line = sr.ReadLine().Trim();
+                    Regex r = new Regex(@"Layer [01]\s*Unknown:.*, startLBA:\s*(\d+), endLBA:\s*(\d+)");
+                    while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                     {
-                        ss += line + "\n";
-                        line = sr.ReadLine();
+                        // If we have a recognized line format, parse it
+                        if (line.StartsWith("Layer "))
+                        {
+                            var match = r.Match(line);
+                            ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                        }
+
+                        line = sr.ReadLine().Trim();
                     }
 
                     // Fast forward to the aux hashes
