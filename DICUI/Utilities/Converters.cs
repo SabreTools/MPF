@@ -52,6 +52,9 @@ namespace DICUI.Utilities
                     return MediaType.GDROM;
                 case DICCommand.DigitalVideoDisc:
                 case DICCommand.XBOX:
+                case DICCommand.XBOXSwap:
+                case DICCommand.XGD2Swap:
+                case DICCommand.XGD3Swap:
                     return MediaType.DVD;
                 case DICCommand.BluRay:
                     return MediaType.BluRay;
@@ -86,7 +89,12 @@ namespace DICUI.Utilities
                 case DICCommand.BluRay:
                     return KnownSystem.SonyPlayStation3;
                 case DICCommand.XBOX:
+                case DICCommand.XBOXSwap:
                     return KnownSystem.MicrosoftXBOX;
+                case DICCommand.XGD2Swap:
+                    return KnownSystem.MicrosoftXBOX360XGD2;
+                case DICCommand.XGD3Swap:
+                    return KnownSystem.MicrosoftXBOX360XGD3;
                 default:
                     return null;
             }
@@ -135,6 +143,12 @@ namespace DICUI.Utilities
                     return DICCommandStrings.Swap;
                 case DICCommand.XBOX:
                     return DICCommandStrings.XBOX;
+                case DICCommand.XBOXSwap:
+                    return DICCommandStrings.XBOXSwap;
+                case DICCommand.XGD2Swap:
+                    return DICCommandStrings.XGD2Swap;
+                case DICCommand.XGD3Swap:
+                    return DICCommandStrings.XGD3Swap;
 
                 case DICCommand.NONE:
                 default:
@@ -345,10 +359,10 @@ namespace DICUI.Utilities
                     return "Mattel HyperScan";
                 case KnownSystem.MicrosoftXBOX:
                     return "Microsoft XBOX";
-                case KnownSystem.MicrosoftXBOX360XDG2:
-                    return "Microsoft XBOX 360 (XDG2)";
-                case KnownSystem.MicrosoftXBOX360XDG3:
-                    return "Microsoft XBOX 360 (XDG3)";
+                case KnownSystem.MicrosoftXBOX360XGD2:
+                    return "Microsoft XBOX 360 (XGD2)";
+                case KnownSystem.MicrosoftXBOX360XGD3:
+                    return "Microsoft XBOX 360 (XGD3)";
                 case KnownSystem.MicrosoftXBOXOne:
                     return "Microsoft XBOX One";
                 case KnownSystem.NECPCEngineTurboGrafxCD:

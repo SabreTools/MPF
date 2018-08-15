@@ -521,8 +521,8 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.MicrosoftXBOX:
-                        case KnownSystem.MicrosoftXBOX360XDG2:
-                        case KnownSystem.MicrosoftXBOX360XDG3:
+                        case KnownSystem.MicrosoftXBOX360XGD2:
+                        case KnownSystem.MicrosoftXBOX360XGD3:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss))
                             {
                                 mappings[Template.XBOXDMIHash] = dmihash ?? "";
@@ -669,8 +669,8 @@ namespace DICUI.Utilities
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
                         break;
                     case KnownSystem.MicrosoftXBOX:
-                    case KnownSystem.MicrosoftXBOX360XDG2:
-                    case KnownSystem.MicrosoftXBOX360XDG3:
+                    case KnownSystem.MicrosoftXBOX360XGD2:
+                    case KnownSystem.MicrosoftXBOX360XGD3:
                         output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
                         output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
                         output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");

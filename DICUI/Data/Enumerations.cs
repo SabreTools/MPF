@@ -23,6 +23,9 @@
         Sub,
         Swap,
         XBOX,
+        XBOXSwap,
+        XGD2Swap,
+        XGD3Swap,
     }
 
     /// <summary>
@@ -70,8 +73,8 @@
         CommodoreAmigaCDTV,
         MattelHyperscan,
         MicrosoftXBOX,
-        MicrosoftXBOX360XDG2,
-        MicrosoftXBOX360XDG3,
+        MicrosoftXBOX360XGD2,
+        MicrosoftXBOX360XGD3,
         MicrosoftXBOXOne,
         NECPCEngineTurboGrafxCD,
         NECPCFX,

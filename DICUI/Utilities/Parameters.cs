@@ -199,7 +199,10 @@ namespace DICUI.Utilities
                 || Command == DICCommand.Start
                 || Command == DICCommand.Stop
                 || Command == DICCommand.Swap
-                || Command == DICCommand.XBOX)
+                || Command == DICCommand.XBOX
+                || Command == DICCommand.XBOXSwap
+                || Command == DICCommand.XGD2Swap
+                || Command == DICCommand.XGD3Swap)
             {
                 if (DriveLetter != null)
                     parameters.Add(DriveLetter);
@@ -218,7 +221,10 @@ namespace DICUI.Utilities
                 || Command == DICCommand.MDS
                 || Command == DICCommand.Swap
                 || Command == DICCommand.Sub
-                || Command == DICCommand.XBOX)
+                || Command == DICCommand.XBOX
+                || Command == DICCommand.XBOXSwap
+                || Command == DICCommand.XGD2Swap
+                || Command == DICCommand.XGD3Swap)
             {
                 if (Filename != null)
                     parameters.Add("\"" + Filename.Trim('"') + "\"");
@@ -846,6 +852,26 @@ namespace DICUI.Utilities
                     index = 3;
                     break;
 
+                case DICCommandStrings.XBOXSwap:
+                case DICCommandStrings.XGD2Swap:
+                case DICCommandStrings.XGD3Swap:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else
+                        DriveLetter = parts[1];
+
+                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else
+                        Filename = parts[2];
+
+                    for (int i = 3; i < parts.Count; i++)
+                    {
+                        if (!Int64.TryParse(parts[i], out long temp))
+                            return false;
+                    }
+
+                    break;
                 default:
                     return false;
             }
@@ -1222,8 +1248,8 @@ namespace DICUI.Utilities
                     return;
                 case MediaType.DVD:
                     if (system == KnownSystem.MicrosoftXBOX
-                        || system == KnownSystem.MicrosoftXBOX360XDG2
-                        || system == KnownSystem.MicrosoftXBOX360XDG3)
+                        || system == KnownSystem.MicrosoftXBOX360XGD2
+                        || system == KnownSystem.MicrosoftXBOX360XGD3)
                     {
                         Command = DICCommand.XBOX;
                         return;

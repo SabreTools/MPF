@@ -44,11 +44,11 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
                     break;
-                case KnownSystem.MicrosoftXBOX360XDG2:
+                case KnownSystem.MicrosoftXBOX360XGD2:
                     types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
                     break;
-                case KnownSystem.MicrosoftXBOX360XDG3:
+                case KnownSystem.MicrosoftXBOX360XGD3:
                     types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
                     break;
@@ -538,7 +538,7 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    if (system == KnownSystem.MicrosoftXBOX360XDG3)
+                    if (system == KnownSystem.MicrosoftXBOX360XGD3)
                     {
                         return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
                     }

@@ -34,6 +34,9 @@
         public const string Sub = "sub";
         public const string Swap = "swap";
         public const string XBOX = "xbox";
+        public const string XBOXSwap = "xboxswap";
+        public const string XGD2Swap = "xgd2swap";
+        public const string XGD3Swap = "xgd3swap";
     }
 
     /// <summary>
