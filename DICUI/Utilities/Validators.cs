@@ -245,6 +245,7 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoCapcomTaitoSystem246:
+                    types.Add(MediaType.CD);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
@@ -303,7 +304,7 @@ namespace DICUI.Utilities
                 case KnownSystem.SegaRingWide:
                     types.Add(MediaType.DVD);
                     break;
-                case KnownSystem.SegaSTV:
+                case KnownSystem.SegaTitanVideo:
                     types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SegaSystem32:

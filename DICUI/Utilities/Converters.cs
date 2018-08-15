@@ -525,8 +525,8 @@ namespace DICUI.Utilities
                     return "Sega RingEdge 2";
                 case KnownSystem.SegaRingWide:
                     return "Sega RingWide";
-                case KnownSystem.SegaSTV:
-                    return "Sega STV";
+                case KnownSystem.SegaTitanVideo:
+                    return "Sega Titan Video";
                 case KnownSystem.SegaSystem32:
                     return "Sega System 32";
                 case KnownSystem.SeibuCATSSystem:

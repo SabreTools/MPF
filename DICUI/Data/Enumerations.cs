@@ -165,7 +165,7 @@
         SegaRingEdge,
         SegaRingEdge2,
         SegaRingWide,
-        SegaSTV,
+        SegaTitanVideo,
         SegaSystem32,
         SeibuCATSSystem,
         TABAustriaQuizard,
