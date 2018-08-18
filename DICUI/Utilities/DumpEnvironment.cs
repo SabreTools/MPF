@@ -1172,7 +1172,7 @@ namespace DICUI.Utilities
                     }
 
                     // Once it finds the "VER" line, extract the version
-                    return Regex.Match(line, @"VER = (.*)").Groups[1].Value;
+                    return Regex.Match(line, @"VER\s*=\s*(.*)").Groups[1].Value;
                 }
             }
             catch
