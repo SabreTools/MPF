@@ -385,24 +385,34 @@ namespace DICUI
         {
             _env = DetermineEnvironment();
 
-            // Check for the firmware first
-            // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-            if (!await _env.DriveHasLatestFimrware())
-                return;
+            try
+            {
+                // Check for the firmware first
+                // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
+                if (!await _env.DriveHasLatestFimrware())
+                    return;
 
-            StartStopButton.Content = UIElements.StopDumping;
-            CopyProtectScanButton.IsEnabled = false;
-            StatusLabel.Content = "Beginning dumping process";
-            ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
+                StartStopButton.Content = UIElements.StopDumping;
+                CopyProtectScanButton.IsEnabled = false;
+                StatusLabel.Content = "Beginning dumping process";
+                ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
 
-            var progress = new Progress<Result>();
-            progress.ProgressChanged += ProgressUpdated;
-            Result result = await _env.StartDumping(progress);
+                var progress = new Progress<Result>();
+                progress.ProgressChanged += ProgressUpdated;
+                Result result = await _env.StartDumping(progress);
 
-            StatusLabel.Content = result ? "Dumping complete!" : result.Message;
-            ViewModels.LoggerViewModel.VerboseLogLn(result ? "Dumping complete!" : result.Message);
-            StartStopButton.Content = UIElements.StartDumping;
-            CopyProtectScanButton.IsEnabled = true;
+                StatusLabel.Content = result ? "Dumping complete!" : result.Message;
+                ViewModels.LoggerViewModel.VerboseLogLn(result ? "Dumping complete!" : result.Message);
+            }
+            catch
+            {
+                // No-op, we don't care what it was
+            }
+            finally
+            {
+                StartStopButton.Content = UIElements.StartDumping;
+                CopyProtectScanButton.IsEnabled = true;
+            }
 
             if (EjectWhenDoneCheckBox.IsChecked == true)
                 _env.EjectDisc();
