@@ -187,6 +187,8 @@ namespace DICUI.Utilities
                 if (Drive == null)
                     return null;
 
+                FixOutputPaths();
+
                 // Set the proper parameters
                 DICParameters = new Parameters(System, Type, Drive.Letter, Path.Combine(OutputDirectory, OutputFilename), driveSpeed, ParanoidMode, RereadAmountC2);
                 if (QuietMode)

@@ -354,7 +354,7 @@ namespace DICUI
         /// <returns>Filled DumpEnvironment instance</returns>
         private DumpEnvironment DetermineEnvironment()
         {
-            return new DumpEnvironment()
+            var env = new DumpEnvironment()
             {
                 // Paths to tools
                 SubdumpPath = _options.SubDumpPath,
@@ -376,6 +376,9 @@ namespace DICUI
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
                 Type = MediaTypeComboBox.SelectedItem as MediaType?
             };
+
+            env.FixOutputPaths();
+            return env;
         }
 
         /// <summary>
