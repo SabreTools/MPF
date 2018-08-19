@@ -32,7 +32,7 @@ after_build:
 - ps: appveyor DownloadFile http://www.rawdump.net/tools/subdump_fua_0x28.zip
 - 7z e DiscImageCreator_20180619.zip -oDICUI\bin\Debug\Programs Release_ANSI\*
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug *
-- mv subdump_fua_0x28.exe subdump.exe
+- mv DICUI\bin\Debug\subdump_fua_0x28.exe DICUI\bin\Debug\subdump.exe
 - 7z a DICUI.zip DICUI\bin\Debug
 
 # artifact linking
