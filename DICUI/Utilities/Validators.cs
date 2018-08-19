@@ -574,15 +574,22 @@ namespace DICUI.Utilities
         /// <returns>Copy protection detected in the envirionment, if any</returns>
         public static async Task<string> RunProtectionScanOnPath(string path)
         {
-            var found = await Task.Run(() =>
+            try
             {
-                return ProtectionFind.Scan(path);
-            });
+                var found = await Task.Run(() =>
+                {
+                    return ProtectionFind.Scan(path);
+                });
 
-            if (found == null || found.Count == 0)
-                return "None found";
+                if (found == null || found.Count == 0)
+                    return "None found";
 
-            return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+                return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+            }
+            catch
+            {
+                return "Disc could not be scanned!";
+            }
         }
     }
 }

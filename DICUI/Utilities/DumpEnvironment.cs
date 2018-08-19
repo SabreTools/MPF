@@ -421,6 +421,7 @@ namespace DICUI.Utilities
                                     mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
+
                             break;
                         case KnownSystem.SegaSaturn:
                             mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack()) ?? "";
@@ -430,6 +431,7 @@ namespace DICUI.Utilities
                                 mappings[Template.VersionField] = version ?? "";
                                 mappings[Template.SaturnBuildDateField] = buildDate ?? "";
                             }
+
                             break;
                         case KnownSystem.SonyPlayStation:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
@@ -521,6 +523,7 @@ namespace DICUI.Utilities
                                     mappings[Template.SubIntentionField] = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                                 }
                             }
+
                             break;
                         case KnownSystem.MicrosoftXBOX:
                         case KnownSystem.MicrosoftXBOX360XGD2:
@@ -532,10 +535,14 @@ namespace DICUI.Utilities
                                 mappings[Template.XBOXSSHash] = sshash ?? "";
                                 mappings[Template.XBOXSSRanges] = ss ?? "";
                             }
+
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             mappings[Template.VersionField] = GetPlayStation2Version(Drive.Letter) ?? "";
+                            break;
+                        case KnownSystem.SonyPlayStation4:
+                            mappings[Template.VersionField] = GetPlayStation4Version(Drive.Letter) ?? "";
                             break;
                     }
                     break;
@@ -1154,7 +1161,7 @@ namespace DICUI.Utilities
                 return null;
             }
 
-            // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
+            // If we can't find SYSTEM.CNF, we don't have a PlayStation 2 disc
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
             if (!File.Exists(systemCnfPath))
             {
@@ -1175,6 +1182,43 @@ namespace DICUI.Utilities
 
                     // Once it finds the "VER" line, extract the version
                     return Regex.Match(line, @"VER\s*=\s*(.*)").Groups[1].Value;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        private string GetPlayStation4Version(char driveLetter)
+        {
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+            {
+                return null;
+            }
+
+            // If we can't find param.sfo, we don't have a PlayStation 4 disc
+            string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+            if (!File.Exists(paramSfoPath))
+            {
+                return null;
+            }
+
+            // Let's try reading param.sfo to find the version at the end of the file
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(0x9A4, SeekOrigin.Begin);
+                    return new string(br.ReadChars(5));
                 }
             }
             catch
@@ -1419,12 +1463,7 @@ namespace DICUI.Utilities
         {
             // Check to see if the inputs are valid
             if (lines == null)
-            {
                 return false;
-            }
-
-            // Then, sanitized the output filename to strip off any potential extension
-            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
             // Now write out to a generic file
             try
@@ -1432,9 +1471,7 @@ namespace DICUI.Utilities
                 using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
-                    {
                         sw.WriteLine(line);
-                    }
                 }
             }
             catch
