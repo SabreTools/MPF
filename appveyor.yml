@@ -1,5 +1,5 @@
 # version format
-version: 1.06_{build}
+version: 1.10-{build}
 
 # vm template
 image: Visual Studio 2017
@@ -28,6 +28,11 @@ build:
 
 # post-build step
 after_build:
+- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/2112299/DiscImageCreator_20180619.zip
+- ps: appveyor DownloadFile http://www.rawdump.net/tools/subdump_fua_0x28.zip
+- 7z e DiscImageCreator_20180619.zip -oDICUI\bin\Debug\Programs Release_ANSI\*
+- 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug *
+- mv subdump_fua_0x28.exe subdump.exe
 - 7z a DICUI.zip DICUI\bin\Debug
 
 # artifact linking
