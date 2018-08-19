@@ -542,6 +542,7 @@ namespace DICUI.Utilities
                             mappings[Template.VersionField] = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
                         case KnownSystem.SonyPlayStation4:
+                            mappings[Template.PlayStation4PICField] = GetPlayStation4PIC(Path.Combine(OutputDirectory, "PIC.bin")) ?? "";
                             mappings[Template.VersionField] = GetPlayStation4Version(Drive.Letter) ?? "";
                             break;
                     }
@@ -685,6 +686,10 @@ namespace DICUI.Utilities
                         output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
                         output.Add(Template.XBOXSSRanges + ":"); output.Add("");
                         output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
+                        break;
+                    case KnownSystem.SonyPlayStation4:
+                        output.Add(Template.PlayStation4PICField + ":"); output.Add("");
+                        output.AddRange(info[Template.PlayStation4PICField].Split('\n'));
                         break;
                 }
                 if (info.ContainsKey(Template.SubIntentionField))
@@ -1187,6 +1192,35 @@ namespace DICUI.Utilities
             catch
             {
                 // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the hex contents of the PIC file
+        /// </summary>
+        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
+        /// <returns>PIC data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        private string GetPlayStation4PIC(string picPath)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(picPath))
+            {
+                return null;
+            }
+
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
+                {
+                    string hex = BitConverter.ToString(br.ReadBytes(140)).Replace("-", string.Empty);
+                    return Regex.Replace(hex, ".{32}", "$0\n");
+                }
+            }
+            catch
+            {
+                // We don't care what the error was right now
                 return null;
             }
         }
