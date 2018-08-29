@@ -2,7 +2,7 @@
 
 DiscImageCreator UI in C#
 
-[![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/dicui)
+[![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts)
 
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project :)
 
@@ -12,7 +12,7 @@ This project relies on two open-source code ports to help perform copy protectio
 
 ## System Requirements
 
-Even though this is written in C#, this program can only be used on Windows systems due to the base program, DiscImageCreator, being Windows-only.
+Even though this is written in C#, this program can only be used on Windows systems due to the base program, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
 
 - Windows 7 (newest version of Windows recommended)
 - .NET Framework 4.6.1 Runtimes
