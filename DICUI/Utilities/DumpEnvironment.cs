@@ -459,7 +459,8 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt") ?? "";
+                    bool isXbox = (System == KnownSystem.MicrosoftXBOX || System == KnownSystem.MicrosoftXBOX360);
+                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt", isXbox) ?? "";
 
                     // If we have a single-layer disc
                     if (String.IsNullOrWhiteSpace(layerbreak))
@@ -683,8 +684,8 @@ namespace DICUI.Utilities
                         output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
                         output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
                         output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
-                        output.Add(Template.XBOXSSRanges + ":"); output.Add("");
                         output.Add(Template.XBOXSSVersion + ": " + info[Template.XBOXSSVersion]);
+                        output.Add(Template.XBOXSSRanges + ":"); output.Add("");
                         output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
                     case KnownSystem.SonyPlayStation4:
@@ -989,8 +990,9 @@ namespace DICUI.Utilities
         /// Get the layerbreak from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
+        /// <param name="ignoreFirst">True if the first sector length is to be ignored, false otherwise</param>
         /// <returns>Layerbreak if possible, null on error</returns>
-        private string GetLayerbreak(string disc)
+        private string GetLayerbreak(string disc, bool ignoreFirst)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -1010,7 +1012,13 @@ namespace DICUI.Utilities
                         if (line.Contains("NumberOfLayers: Single Layer"))
                             return null;
                         else if (line.Trim().StartsWith("========== SectorLength =========="))
-                            break;
+                        {
+                            // Skip the first one and unset the flag
+                            if (ignoreFirst)
+                                ignoreFirst = false;
+                            else
+                                break;
+                        }
                         line = sr.ReadLine();
                     }
 
@@ -1392,16 +1400,21 @@ namespace DICUI.Utilities
                         line = sr.ReadLine().Trim();
                     }
 
-                    // Fast forward to the aux hashes
-                    while (!line.Trim().StartsWith("<rom"))
+                    // TODO: This step now fails because of changed outputs. The wrapped try/catch here should be removed when this is replaced
+                    try
                     {
-                        line = sr.ReadLine();
-                    }
+                        // Fast forward to the aux hashes
+                        while (!line.Trim().StartsWith("<rom"))
+                        {
+                            line = sr.ReadLine();
+                        }
 
-                    // Read in the hashes to the proper parts
-                    sshash = line.Trim();
-                    pfihash = sr.ReadLine().Trim();
-                    dmihash = sr.ReadLine().Trim();
+                        // Read in the hashes to the proper parts
+                        sshash = line.Trim();
+                        pfihash = sr.ReadLine().Trim();
+                        dmihash = sr.ReadLine().Trim();
+                    }
+                    catch { }
 
                     return true;
                 }
