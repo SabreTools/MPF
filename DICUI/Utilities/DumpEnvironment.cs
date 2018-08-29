@@ -526,6 +526,9 @@ namespace DICUI.Utilities
                             }
 
                             break;
+                        case KnownSystem.DVDVideo:
+                            mappings[Template.CopyProtectionField] = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt");
+                            break;
                         case KnownSystem.MicrosoftXBOX:
                         case KnownSystem.MicrosoftXBOX360:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
@@ -678,6 +681,10 @@ namespace DICUI.Utilities
                     case KnownSystem.IBMPCCompatible:
                     case KnownSystem.RainbowDisc:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
+                        break;
+                    case KnownSystem.DVDVideo:
+                        output.Add(Template.CopyProtectionField + ":"); output.Add("");
+                        output.AddRange(info[Template.CopyProtectionField].Split('\n'));
                         break;
                     case KnownSystem.MicrosoftXBOX:
                     case KnownSystem.MicrosoftXBOX360:
@@ -878,6 +885,85 @@ namespace DICUI.Utilities
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get the DVD protection information, if possible
+        /// </summary>
+        /// <param name="cssKey">_CSSKey.txt file location</param>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Formatted string representing the DVD protection, null on error</returns>
+        private string GetDVDProtection(string cssKey, string disc)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(cssKey) || !File.Exists(disc))
+            {
+                return null;
+            }
+
+            // Setup all of the individual pieces
+            string region = null, rceProtection = null, copyrightProtectionSystemType = null, encryptedDiscKey = null, playerKey = null, decryptedDiscKey = null;
+
+            // Get everything from _disc.txt first
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the copyright information
+                    while (!sr.ReadLine().Trim().StartsWith("========== CopyrightInformation =========="));
+
+                    // Now read until we hit the manufacturing information
+                    string line = sr.ReadLine().Trim();
+                    while (!line.StartsWith("========== ManufacturingInformation =========="))
+                    {
+                        if (line.StartsWith("CopyrightProtectionType"))
+                            copyrightProtectionSystemType = line.Substring("CopyrightProtectionType: ".Length);
+                        else if (line.StartsWith("RegionManagementInformation"))
+                            region = line.Substring("RegionManagementInformation: ".Length);
+
+                        line = sr.ReadLine().Trim();
+                    }
+                }
+                catch { }
+            }
+
+            // Get everything from _CSSKey.txt next
+            using (StreamReader sr = File.OpenText(cssKey))
+            {
+                try
+                {
+                    // Read until the end
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+
+                        if (line.StartsWith("[001]"))
+                            encryptedDiscKey = line.Substring("[001]: ".Length);
+                        else if (line.StartsWith("PlayerKey"))
+                            playerKey = line.Substring("PlayerKey[1]: ".Length);
+                        else if (line.StartsWith("DecryptedDiscKey"))
+                            decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+                    }
+                }
+                catch { }
+            }
+
+            // Now we format everything we can
+            string protection = "";
+            if (!String.IsNullOrEmpty(region))
+                protection += $"Region: {region}\n";
+            if (!String.IsNullOrEmpty(rceProtection))
+                protection += $"RCE Protection: {rceProtection}\n";
+            if (!String.IsNullOrEmpty(copyrightProtectionSystemType))
+                protection += $"Copyright Protection System Type: {copyrightProtectionSystemType}\n";
+            if (!String.IsNullOrEmpty(encryptedDiscKey))
+                protection += $"Encrypted Disc Key: {encryptedDiscKey}\n";
+            if (!String.IsNullOrEmpty(playerKey))
+                protection += $"Player Key: {playerKey}\n";
+            if (!String.IsNullOrEmpty(decryptedDiscKey))
+                protection += $"Decrypted Disc Key: {decryptedDiscKey}\n";
+
+            return protection;
         }
 
         /// <summary>
