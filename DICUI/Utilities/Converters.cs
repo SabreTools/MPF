@@ -92,9 +92,8 @@ namespace DICUI.Utilities
                 case DICCommand.XBOXSwap:
                     return KnownSystem.MicrosoftXBOX;
                 case DICCommand.XGD2Swap:
-                    return KnownSystem.MicrosoftXBOX360XGD2;
                 case DICCommand.XGD3Swap:
-                    return KnownSystem.MicrosoftXBOX360XGD3;
+                    return KnownSystem.MicrosoftXBOX360;
                 default:
                     return null;
             }
@@ -359,10 +358,8 @@ namespace DICUI.Utilities
                     return "Mattel HyperScan";
                 case KnownSystem.MicrosoftXBOX:
                     return "Microsoft XBOX";
-                case KnownSystem.MicrosoftXBOX360XGD2:
-                    return "Microsoft XBOX 360 (XGD2)";
-                case KnownSystem.MicrosoftXBOX360XGD3:
-                    return "Microsoft XBOX 360 (XGD3)";
+                case KnownSystem.MicrosoftXBOX360:
+                    return "Microsoft XBOX 360";
                 case KnownSystem.MicrosoftXBOXOne:
                     return "Microsoft XBOX One";
                 case KnownSystem.NECPCEngineTurboGrafxCD:

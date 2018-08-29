@@ -71,8 +71,7 @@ namespace DICUI.Utilities
             switch (system)
             {
                 case KnownSystem.MicrosoftXBOX:
-                case KnownSystem.MicrosoftXBOX360XGD2:
-                case KnownSystem.MicrosoftXBOX360XGD3:
+                case KnownSystem.MicrosoftXBOX360:
                     return false;
                 default:
                     return true;

@@ -117,6 +117,7 @@
         public const string XBOXPFIHash = "PFI.bin Hashes";
         public const string XBOXSSHash = "SS.bin Hashes";
         public const string XBOXSSRanges = "Security Sector Ranges";
+        public const string XBOXSSVersion = "Security Sector Version";
 
         // Default values
 

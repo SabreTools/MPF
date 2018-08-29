@@ -1248,8 +1248,7 @@ namespace DICUI.Utilities
                     return;
                 case MediaType.DVD:
                     if (system == KnownSystem.MicrosoftXBOX
-                        || system == KnownSystem.MicrosoftXBOX360XGD2
-                        || system == KnownSystem.MicrosoftXBOX360XGD3)
+                        || system == KnownSystem.MicrosoftXBOX360)
                     {
                         Command = DICCommand.XBOX;
                         return;

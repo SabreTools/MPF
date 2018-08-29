@@ -526,13 +526,13 @@ namespace DICUI.Utilities
 
                             break;
                         case KnownSystem.MicrosoftXBOX:
-                        case KnownSystem.MicrosoftXBOX360XGD2:
-                        case KnownSystem.MicrosoftXBOX360XGD3:
-                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss))
+                        case KnownSystem.MicrosoftXBOX360:
+                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
                             {
                                 mappings[Template.XBOXDMIHash] = dmihash ?? "";
                                 mappings[Template.XBOXPFIHash] = pfihash ?? "";
                                 mappings[Template.XBOXSSHash] = sshash ?? "";
+                                mappings[Template.XBOXSSVersion] = ssver ?? "";
                                 mappings[Template.XBOXSSRanges] = ss ?? "";
                             }
 
@@ -679,12 +679,12 @@ namespace DICUI.Utilities
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
                         break;
                     case KnownSystem.MicrosoftXBOX:
-                    case KnownSystem.MicrosoftXBOX360XGD2:
-                    case KnownSystem.MicrosoftXBOX360XGD3:
+                    case KnownSystem.MicrosoftXBOX360:
                         output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
                         output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
                         output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
                         output.Add(Template.XBOXSSRanges + ":"); output.Add("");
+                        output.Add(Template.XBOXSSVersion + ": " + info[Template.XBOXSSVersion]);
                         output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
                         break;
                     case KnownSystem.SonyPlayStation4:
@@ -1344,9 +1344,9 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss)
+        private bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
         {
-            dmihash = null; pfihash = null; sshash = null; ss = null;
+            dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -1358,18 +1358,34 @@ namespace DICUI.Utilities
             {
                 try
                 {
+                    // Fast forward to the Security Sector version
+                    while (!sr.ReadLine().Trim().StartsWith("========== SecuritySector =========="));
+
+                    // Now we need to read until the line starts with the version
+                    sr.ReadLine(); // "Unknown: <CRC32>"
+                    ssver = sr.ReadLine().Trim().Split(' ')[4]; // "Version of challenge table: <VER>"
+
                     // Fast forward to the Security Sector Ranges
-                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
+                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:"));
 
                     // Now that we're at the ranges, read each line in and concatenate
                     string line = sr.ReadLine().Trim();
-                    Regex r = new Regex(@"Layer [01]\s*Unknown:.*, startLBA:\s*(\d+), endLBA:\s*(\d+)");
+
+                    // TODO: Clean up these regex definitions
+                    Regex layerRegex = new Regex(@"Layer [01]\s*Unknown:.*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                    Regex unknownRegex = new Regex(@"Unknown ranges\s*Unknown:.*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+
                     while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                     {
                         // If we have a recognized line format, parse it
                         if (line.StartsWith("Layer "))
                         {
-                            var match = r.Match(line);
+                            var match = layerRegex.Match(line);
+                            ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                        }
+                        else if (line.StartsWith("Unknown"))
+                        {
+                            var match = unknownRegex.Match(line);
                             ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
                         }
 

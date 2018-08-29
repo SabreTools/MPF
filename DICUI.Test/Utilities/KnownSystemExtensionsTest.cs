@@ -23,8 +23,7 @@ namespace DICUI.Test.Utilities
         [Theory]
         [InlineData(KnownSystem.AppleMacintosh, true)]
         [InlineData(KnownSystem.MicrosoftXBOX, false)]
-        [InlineData(KnownSystem.MicrosoftXBOX360XGD2, false)]
-        [InlineData(KnownSystem.MicrosoftXBOX360XGD3, false)]
+        [InlineData(KnownSystem.MicrosoftXBOX360, false)]
         [InlineData(KnownSystem.SonyPlayStation3, true)]
         public void DriveSpeedSupportedTest(KnownSystem? knownSystem, bool expected)
         {
