@@ -1400,21 +1400,16 @@ namespace DICUI.Utilities
                         line = sr.ReadLine().Trim();
                     }
 
-                    // TODO: This step now fails because of changed outputs. The wrapped try/catch here should be removed when this is replaced
-                    try
+                    // Fast forward to the aux hashes
+                    while (!line.Trim().StartsWith("<rom"))
                     {
-                        // Fast forward to the aux hashes
-                        while (!line.Trim().StartsWith("<rom"))
-                        {
-                            line = sr.ReadLine();
-                        }
-
-                        // Read in the hashes to the proper parts
-                        sshash = line.Trim();
-                        pfihash = sr.ReadLine().Trim();
-                        dmihash = sr.ReadLine().Trim();
+                        line = sr.ReadLine();
                     }
-                    catch { }
+
+                    // Read in the hashes to the proper parts
+                    sshash = line.Trim();
+                    pfihash = sr.ReadLine().Trim();
+                    dmihash = sr.ReadLine().Trim();
 
                     return true;
                 }
