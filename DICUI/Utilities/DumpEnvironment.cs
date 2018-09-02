@@ -1460,23 +1460,14 @@ namespace DICUI.Utilities
                     while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:"));
 
                     // Now that we're at the ranges, read each line in and concatenate
-                    string line = sr.ReadLine().Trim();
-
-                    // TODO: Clean up these regex definitions
                     Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
-                    Regex unknownRegex = new Regex(@"Unknown ranges.*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
-
+                    string line = sr.ReadLine().Trim();
                     while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                     {
                         // If we have a recognized line format, parse it
                         if (line.StartsWith("Layer "))
                         {
                             var match = layerRegex.Match(line);
-                            ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
-                        }
-                        else if (line.StartsWith("Unknown ranges"))
-                        {
-                            var match = unknownRegex.Match(line);
                             ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
                         }
 
