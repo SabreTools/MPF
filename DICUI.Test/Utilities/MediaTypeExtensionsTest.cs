@@ -37,7 +37,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.CD, true)]
         [InlineData(MediaType.DVD, true)]
         [InlineData(MediaType.Floppy, false)]
-        [InlineData(MediaType.BluRay, false)]
+        [InlineData(MediaType.BluRay, true)]
         [InlineData(MediaType.LaserDisc, false)]
         public void DriveSpeedSupportedTest(MediaType? mediaType, bool expected)
         {

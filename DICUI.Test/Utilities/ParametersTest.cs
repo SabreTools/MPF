@@ -9,7 +9,7 @@ namespace DICUI.Test.Utilities
     public class ParametersTest
     {
         [Theory]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CD, DICCommand.XBOX)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CD, DICCommand.CompactDisc)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, DICCommand.XBOX)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, DICCommand.NONE)]
         [InlineData(KnownSystem.SegaNu, MediaType.BluRay, DICCommand.BluRay)]
@@ -73,7 +73,7 @@ namespace DICUI.Test.Utilities
         [InlineData("cd F test.bin 8 /c2 20", true)]
         [InlineData("fd A test.img", true)]
         [InlineData("dvd X super\\test.iso 8 /raw", true)]
-        [InlineData("bd D longer\\path_test.iso 16", false)]
+        [InlineData("bd D longer\\path_test.iso 16", true)]
         [InlineData("stop D", true)]
         [InlineData("ls", false)]
         public void ValidateParametersTest(string parameters, bool expected)
