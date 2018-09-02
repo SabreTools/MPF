@@ -1452,11 +1452,8 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Fast forward to the Security Sector version
-                    while (!sr.ReadLine().Trim().StartsWith("========== SecuritySector =========="));
-
-                    // Now we need to read until the line starts with the version
-                    sr.ReadLine(); // "Unknown: <CRC32>"
+                    // Fast forward to the Security Sector version and read it
+                    while (!sr.ReadLine().Trim().StartsWith("CPR_MAI Key"));
                     ssver = sr.ReadLine().Trim().Split(' ')[4]; // "Version of challenge table: <VER>"
 
                     // Fast forward to the Security Sector Ranges
@@ -1466,8 +1463,8 @@ namespace DICUI.Utilities
                     string line = sr.ReadLine().Trim();
 
                     // TODO: Clean up these regex definitions
-                    Regex layerRegex = new Regex(@"Layer [01]\s*Unknown:.*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
-                    Regex unknownRegex = new Regex(@"Unknown ranges\s*Unknown:.*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                    Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                    Regex unknownRegex = new Regex(@"Unknown ranges.*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
 
                     while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                     {
@@ -1477,7 +1474,7 @@ namespace DICUI.Utilities
                             var match = layerRegex.Match(line);
                             ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
                         }
-                        else if (line.StartsWith("Unknown"))
+                        else if (line.StartsWith("Unknown ranges"))
                         {
                             var match = unknownRegex.Match(line);
                             ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
@@ -1487,15 +1484,26 @@ namespace DICUI.Utilities
                     }
 
                     // Fast forward to the aux hashes
-                    while (!line.Trim().StartsWith("<rom"))
+                    while (!line.StartsWith("<rom"))
                     {
-                        line = sr.ReadLine();
+                        line = sr.ReadLine().Trim();
                     }
 
                     // Read in the hashes to the proper parts
-                    sshash = line.Trim();
-                    pfihash = sr.ReadLine().Trim();
-                    dmihash = sr.ReadLine().Trim();
+                    while (line.StartsWith("<rom"))
+                    {
+                        if (line.Contains("SS.bin"))
+                            sshash = line;
+                        else if (line.Contains("PFI.bin"))
+                            pfihash = line;
+                        else if (line.Contains("DMI.bin"))
+                            dmihash = line;
+
+                        if (sr.EndOfStream)
+                            break;
+
+                        line = sr.ReadLine().Trim();
+                    }
 
                     return true;
                 }

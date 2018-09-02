@@ -234,11 +234,16 @@ namespace DICUI.Utilities
 
             // Drive Speed
             if (Command == DICCommand.Audio
+                || Command == DICCommand.BluRay
                 || Command == DICCommand.CompactDisc
                 || Command == DICCommand.Data
                 || Command == DICCommand.DigitalVideoDisc
                 || Command == DICCommand.GDROM
-                || Command == DICCommand.Swap)
+                || Command == DICCommand.Swap
+                || Command == DICCommand.XBOX
+                || Command == DICCommand.XBOXSwap
+                || Command == DICCommand.XGD2Swap
+                || Command == DICCommand.XGD3Swap)
             {
                 if (DriveSpeed != null)
                     parameters.Add(DriveSpeed.ToString());
@@ -610,8 +615,13 @@ namespace DICUI.Utilities
                     else
                         Filename = parts[2];
 
+                    if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
+                        return false;
+                    else
+                        DriveSpeed = Int32.Parse(parts[3]);
+
                     Command = DICCommand.BluRay;
-                    index = 3;
+                    index = 4;
                     break;
 
                 case DICCommandStrings.Close:
@@ -848,8 +858,13 @@ namespace DICUI.Utilities
                     else
                         Filename = parts[2];
 
+                    if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
+                        return false;
+                    else
+                        DriveSpeed = Int32.Parse(parts[3]);
+
                     Command = DICCommand.XBOX;
-                    index = 3;
+                    index = 4;
                     break;
 
                 case DICCommandStrings.XBOXSwap:
@@ -865,7 +880,12 @@ namespace DICUI.Utilities
                     else
                         Filename = parts[2];
 
-                    for (int i = 3; i < parts.Count; i++)
+                    if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 72))
+                        return false;
+                    else
+                        DriveSpeed = Int32.Parse(parts[3]);
+
+                    for (int i = 4; i < parts.Count; i++)
                     {
                         if (!Int64.TryParse(parts[i], out long temp))
                             return false;

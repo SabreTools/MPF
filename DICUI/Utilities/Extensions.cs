@@ -47,6 +47,7 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.GDROM:
                 case MediaType.HDDVD:
+                case MediaType.BluRay:
                 case MediaType.GameCubeGameDisc:
                 case MediaType.WiiOpticalDisc:
                     return true;
@@ -64,18 +65,6 @@ namespace DICUI.Utilities
         public static string Name(this KnownSystem? system)
         {
             return Converters.KnownSystemToString(system);
-        }
-
-        public static bool DoesSupportDriveSpeed(this KnownSystem? system)
-        {
-            switch (system)
-            {
-                case KnownSystem.MicrosoftXBOX:
-                case KnownSystem.MicrosoftXBOX360:
-                    return false;
-                default:
-                    return true;
-            }
         }
 
         public static KnownSystemCategory Category(this KnownSystem? system)

@@ -450,7 +450,7 @@ namespace DICUI
             StartStopButton.IsEnabled = result && (_drives != null && _drives.Count > 0 ? true : false);
 
             // If we're in a type that doesn't support drive speeds
-            DriveSpeedComboBox.IsEnabled = _env.Type.DoesSupportDriveSpeed() && _env.System.DoesSupportDriveSpeed();
+            DriveSpeedComboBox.IsEnabled = _env.Type.DoesSupportDriveSpeed();
 
             // Special case for Custom input
             if (_env.System == KnownSystem.Custom)
@@ -530,10 +530,33 @@ namespace DICUI
             DriveSpeedComboBox.ItemsSource = values;
             ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
 
+            // Find the minimum set to compare against
+            int preferred = 100;
+            switch (_currentMediaType)
+            {
+                case MediaType.CD:
+                case MediaType.GDROM:
+                    preferred = _options.preferredDumpSpeedCD;
+                    break;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    preferred = _options.preferredDumpSpeedDVD;
+                    break;
+                case MediaType.BluRay:
+                    preferred = _options.preferredDumpSpeedBD;
+                    break;
+                default:
+                    preferred = _options.preferredDumpSpeedCD;
+                    break;
+            }
+
             // Choose the lower of the two speeds between the allowed speeds and the user-defined one
+            // TODO: Inform more users about setting preferences in the settings so this comparison doesn't need to happen
             int chosenSpeed = Math.Min(
                 values.Where(s => s <= values[values.Count / 2]).Last(),
-                _options.preferredDumpSpeedCD
+                preferred
             );
 
             // Set the selected speed

@@ -13,6 +13,7 @@ namespace DICUI
 
         public int preferredDumpSpeedCD { get; set; }
         public int preferredDumpSpeedDVD { get; set; }
+        public int preferredDumpSpeedBD { get; set; }
 
         public bool QuietMode { get; set; }
         public bool ParanoidMode { get; set; }
@@ -49,7 +50,8 @@ namespace DICUI
             DefaultOutputPath = ConfigurationManager.AppSettings["DefaultOutputPath"] ?? "ISO";
 
             this.preferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
-            this.preferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 72;
+            this.preferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 24;
+            this.preferredDumpSpeedBD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedBD"], out int maxDumpSpeedBD) ? maxDumpSpeedBD : 16;
 
             this.QuietMode = Boolean.TryParse(ConfigurationManager.AppSettings["QuietMode"], out bool quietMode) ? quietMode : false;
             this.ParanoidMode = Boolean.TryParse(ConfigurationManager.AppSettings["ParanoidMode"], out bool paranoidMode) ? paranoidMode : false;
@@ -77,9 +79,18 @@ namespace DICUI
         {
             switch (type)
             {
-                case MediaType.CD: return preferredDumpSpeedCD;
-                case MediaType.DVD: return preferredDumpSpeedDVD;
-                default: return 8;
+                case MediaType.CD:
+                case MediaType.GDROM:
+                    return preferredDumpSpeedCD;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.GameCubeGameDisc:
+                case MediaType.WiiOpticalDisc:
+                    return preferredDumpSpeedDVD;
+                case MediaType.BluRay:
+                    return preferredDumpSpeedBD;
+                default:
+                    return 8;
             }
         }
     }

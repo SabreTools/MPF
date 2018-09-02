@@ -102,6 +102,7 @@ namespace DICUI
 
             DumpSpeedCDSlider.Value = _options.preferredDumpSpeedCD;
             DumpSpeedDVDSlider.Value = _options.preferredDumpSpeedDVD;
+            DumpSpeedBDSlider.Value = _options.preferredDumpSpeedBD;
         }
 
         #region Event Handlers
@@ -112,6 +113,7 @@ namespace DICUI
 
             _options.preferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
             _options.preferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
+            _options.preferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
 
             _options.Save();
             Hide();

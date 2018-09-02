@@ -20,17 +20,6 @@ namespace DICUI.Test.Utilities
             }
         }
 
-        [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, true)]
-        [InlineData(KnownSystem.MicrosoftXBOX, false)]
-        [InlineData(KnownSystem.MicrosoftXBOX360, false)]
-        [InlineData(KnownSystem.SonyPlayStation3, true)]
-        public void DriveSpeedSupportedTest(KnownSystem? knownSystem, bool expected)
-        {
-            bool actual = knownSystem.DoesSupportDriveSpeed();
-            Assert.Equal(expected, actual);
-        }
-
         [Fact]
         public void IsMarkerTest()
         {

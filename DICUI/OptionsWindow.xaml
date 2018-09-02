@@ -6,12 +6,12 @@
         xmlns:lui="clr-namespace:DICUI.UI"
         xmlns:l="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Options" Height="400" Width="515.132">
+        Title="Options" Height="480" Width="515.132">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="100"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
@@ -45,7 +45,7 @@
         </Grid>
 
         <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Preferred Dump Speed">
-            <Grid Height="60">
+            <Grid Height="100">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
                     <ColumnDefinition Width="2.0*"/>
@@ -53,6 +53,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
@@ -64,6 +65,10 @@
                 <Label Grid.Row="1" Grid.Column="0" Content="DVD-ROM" />
                 <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static lui:AllowedSpeeds.ForDVDAsCollection}}" />
                 <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+
+                <Label Grid.Row="2" Grid.Column="0" Content="BD-ROM" />
+                <Slider x:Name="DumpSpeedBDSlider" Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static lui:AllowedSpeeds.ForBDAsCollection}}" />
+                <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
             </Grid>
 
