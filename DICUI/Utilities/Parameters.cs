@@ -1259,11 +1259,6 @@ namespace DICUI.Utilities
             switch (type)
             {
                 case MediaType.CD:
-                    if (system == KnownSystem.MicrosoftXBOX)
-                    {
-                        Command = DICCommand.XBOX;
-                        return;
-                    }
                     Command = DICCommand.CompactDisc;
                     return;
                 case MediaType.DVD:

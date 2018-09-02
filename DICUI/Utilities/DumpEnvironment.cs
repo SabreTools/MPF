@@ -688,12 +688,15 @@ namespace DICUI.Utilities
                         break;
                     case KnownSystem.MicrosoftXBOX:
                     case KnownSystem.MicrosoftXBOX360:
-                        output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
-                        output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
-                        output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
-                        output.Add(Template.XBOXSSVersion + ": " + info[Template.XBOXSSVersion]);
-                        output.Add(Template.XBOXSSRanges + ":"); output.Add("");
-                        output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
+                        if (Type == MediaType.DVD)
+                        {
+                            output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
+                            output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
+                            output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
+                            output.Add(Template.XBOXSSVersion + ": " + info[Template.XBOXSSVersion]);
+                            output.Add(Template.XBOXSSRanges + ":"); output.Add("");
+                            output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
+                        }
                         break;
                     case KnownSystem.SonyPlayStation4:
                         output.Add(Template.PlayStation4PICField + ":"); output.Add("");
