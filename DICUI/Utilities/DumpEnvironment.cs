@@ -532,7 +532,7 @@ namespace DICUI.Utilities
 
                             break;
                         case KnownSystem.DVDVideo:
-                            mappings[Template.CopyProtectionField] = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt");
+                            mappings[Template.CopyProtectionField] = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
                             break;
                         case KnownSystem.MicrosoftXBOX:
                         case KnownSystem.MicrosoftXBOX360:
@@ -926,7 +926,7 @@ namespace DICUI.Utilities
         private string GetDVDProtection(string cssKey, string disc)
         {
             // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(cssKey) || !File.Exists(disc))
+            if (!File.Exists(disc))
             {
                 return null;
             }
@@ -957,25 +957,28 @@ namespace DICUI.Utilities
                 catch { }
             }
 
-            // Get everything from _CSSKey.txt next
-            using (StreamReader sr = File.OpenText(cssKey))
+            // Get everything from _CSSKey.txt next, if it exists
+            if (File.Exists(cssKey))
             {
-                try
+                using (StreamReader sr = File.OpenText(cssKey))
                 {
-                    // Read until the end
-                    while (!sr.EndOfStream)
+                    try
                     {
-                        string line = sr.ReadLine().Trim();
+                        // Read until the end
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine().Trim();
 
-                        if (line.StartsWith("[001]"))
-                            encryptedDiscKey = line.Substring("[001]: ".Length);
-                        else if (line.StartsWith("PlayerKey"))
-                            playerKey = line.Substring("PlayerKey[1]: ".Length);
-                        else if (line.StartsWith("DecryptedDiscKey"))
-                            decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+                            if (line.StartsWith("[001]"))
+                                encryptedDiscKey = line.Substring("[001]: ".Length);
+                            else if (line.StartsWith("PlayerKey"))
+                                playerKey = line.Substring("PlayerKey[1]: ".Length);
+                            else if (line.StartsWith("DecryptedDiscKey"))
+                                decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+                        }
                     }
+                    catch { }
                 }
-                catch { }
             }
 
             // Now we format everything we can
@@ -1022,25 +1025,22 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    // Fast forward to the PVD
-                    string line = sr.ReadLine();
-                    while (!line.StartsWith("[NO ERROR]")
-                        && !line.StartsWith("Total errors:"))
+                    // Read in the error count whenever we find it
+                    while (!sr.EndOfStream)
                     {
-                        line = sr.ReadLine();
+                        string line = sr.ReadLine().Trim();
+
+                        if (line.StartsWith("[NO ERROR]"))
+                            return 0;
+                        else if (line.StartsWith("Total errors"))
+                        {
+                            if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
+                                return te;
+                        }
                     }
 
-                    // Now that we're at the error line, determine what the value should be
-                    if (line.StartsWith("[NO ERROR]"))
-                    {
-                        return 0;
-                    }
-                    else if (line.StartsWith("Total errors:"))
-                    {
-                        return Int64.Parse(line.Remove(0, "Total errors:".Length).Trim());
-                    }
-
-                    return -1; // TODO: Check this
+                    // If we haven't found anything, return -1
+                    return -1;
                 }
                 catch
                 {
