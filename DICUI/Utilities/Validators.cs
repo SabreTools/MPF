@@ -541,16 +541,19 @@ namespace DICUI.Utilities
                 case MediaType.GDROM:
                 case MediaType.GameCubeGameDisc:
                 case MediaType.WiiOpticalDisc:
-                    return Result.Success("{0} discs are partially supported by DIC", type.Name());
+                    return Result.Success("{0} partially supported for dumping", type.Name());
+
+                // Special case for other supported tools
+                case MediaType.UMD:
+                    return Result.Success("{0} supported for submission info parsing", type.Name());
 
                 // Undumpable but recognized types
                 case MediaType.LaserDisc:
                 case MediaType.WiiUOpticalDisc:
                 case MediaType.CED:
-                case MediaType.UMD:
                 case MediaType.Cartridge:
                 case MediaType.Cassette:
-                    return Result.Failure("{0} discs are not currently supported by DIC", type.Name());
+                    return Result.Failure("{0} discs are not supported for dumping", type.Name());
 
                 // Invalid or unknown types
                 case MediaType.NONE:

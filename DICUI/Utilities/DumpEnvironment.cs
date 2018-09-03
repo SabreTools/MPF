@@ -208,19 +208,24 @@ namespace DICUI.Utilities
         {
             Result result = IsValidForDump();
 
-            // If the environment is invalid, return
-            if (!result)
-                return result;
+            // Execute DIC and external tools, if needed
+            if (Validators.GetSupportStatus(System, Type)
+                && !result.Message.Contains("not supported") // Completely unsupported media
+                && !result.Message.Contains("submission info")) // Submission info-only media
+            {
+                // If the environment is invalid, return
+                if (!result)
+                    return result;
 
-            // Execute DIC
-            progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
-            await Task.Run(() => ExecuteDiskImageCreator());
-            progress?.Report(Result.Success("DiscImageCreator has finished!"));
+                progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
+                await Task.Run(() => ExecuteDiskImageCreator());
+                progress?.Report(Result.Success("DiscImageCreator has finished!"));
 
-            // Execute additional tools
-            progress?.Report(Result.Success("Running any additional tools... please wait!"));
-            result = await Task.Run(() => ExecuteAdditionalToolsAfterDIC());
-            progress?.Report(result);
+                // Execute additional tools
+                progress?.Report(Result.Success("Running any additional tools... please wait!"));
+                result = await Task.Run(() => ExecuteAdditionalToolsAfterDIC());
+                progress?.Report(result);
+            }
 
             // Verify dump output and save it
             progress?.Report(Result.Success("Gathering submission information... please wait!"));
@@ -551,6 +556,19 @@ namespace DICUI.Utilities
                             break;
                     }
                     break;
+
+                case MediaType.UMD:
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
+                    mappings[Template.DATField] = Template.RequiredValue + " [Not automatically generated for UMD]";
+                    if (GetUMDAuxInfo(combinedBase + "_disc.txt", out string title, out string umdversion, out string umdlayer))
+                    {
+                        mappings[Template.TitleField] = title ?? "";
+                        mappings[Template.VersionField] = umdversion ?? "";
+                        if (!String.IsNullOrWhiteSpace(umdlayer))
+                            mappings[Template.LayerbreakField] = umdlayer ?? "";
+                    }
+
+                    break;
             }
 
             return mappings;
@@ -663,6 +681,7 @@ namespace DICUI.Utilities
                 {
                     case MediaType.DVD:
                     case MediaType.BluRay:
+                    case MediaType.UMD:
                         // If we have a dual-layer disc
                         if (info.ContainsKey(Template.LayerbreakField))
                         {
@@ -717,8 +736,11 @@ namespace DICUI.Utilities
                         output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]); output.Add("");
                         break;
                 }
-                output.Add(Template.DATField + ":"); output.Add("");
-                output.AddRange(info[Template.DATField].Split('\n'));
+                if (info.ContainsKey(Template.DATField))
+                {
+                    output.Add(Template.DATField + ":"); output.Add("");
+                    output.AddRange(info[Template.DATField].Split('\n'));
+                }
 
                 return output;
             }
@@ -780,6 +802,11 @@ namespace DICUI.Utilities
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                        && File.Exists(combinedBase + "_disc.txt");
+                case MediaType.UMD:
+                    return File.Exists(combinedBase + "_disc.txt")
+                        || File.Exists(combinedBase + "_mainError.txt")
+                        || File.Exists(combinedBase + "_mainInfo.txt")
+                        || File.Exists(combinedBase + "_volDesc.txt");
                 default:
                     // Non-dumping commands will usually produce no output, so this is irrelevant
                     return true;
@@ -1433,6 +1460,49 @@ namespace DICUI.Utilities
             {
                 // We don't care what the error is
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the UMD auxiliary info from the outputted files, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetUMDAuxInfo(string disc, out string title, out string umdversion, out string umdlayer)
+        {
+            title = null; umdversion = null; umdlayer = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return false;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Loop through everything to get the first instance of each required field
+                    string line = string.Empty;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().Trim();
+
+                        if (line.StartsWith("TITLE") && title == null)
+                            title = line.Substring("TITLE: ".Length);
+                        else if (line.StartsWith("version") && umdversion == null)
+                            umdversion = line.Substring("version: ".Length);
+                        else if (line.StartsWith("L0 length"))
+                            umdlayer = line.Split(' ')[2];
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
             }
         }
 
