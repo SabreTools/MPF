@@ -523,9 +523,6 @@ namespace DICUI.Utilities
             // No system chosen, update status
             if (system == KnownSystem.NONE)
                 return Result.Failure("Please select a valid system");
-            // custom system chosen, then don't check anything
-            else if (system == KnownSystem.Custom)
-                return Result.Success("{0} ready to dump", type.Name());
 
             // If we're on an unsupported type, update the status accordingly
             switch (type)

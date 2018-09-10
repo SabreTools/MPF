@@ -196,8 +196,6 @@
         MarkerOtherEnd,
 
         #endregion
-
-        Custom,
     }
 
     /// <summary>

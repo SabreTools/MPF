@@ -196,6 +196,17 @@ namespace DICUI
                 _logWindow.Close();
         }
 
+        private void EnableParametersCheckBoxClick(object sender, RoutedEventArgs e)
+        {
+            if (EnableParametersCheckBox.IsChecked == true)
+                ParametersTextBox.IsEnabled = true;
+            else
+            {
+                ParametersTextBox.IsEnabled = false;
+                ProcessCustomParameters();
+            }
+        }
+
         // Toolbar Events
 
         private void AppExitClick(object sender, RoutedEventArgs e)
@@ -391,7 +402,23 @@ namespace DICUI
         /// </summary>
         private async void StartDumping()
         {
-            _env = DetermineEnvironment();
+            if (_env == null)
+                _env = DetermineEnvironment();
+
+            // If still in custom parameter mode, check that users meant to continue or not
+            if (EnableParametersCheckBox.IsChecked == true)
+            {
+                MessageBoxResult result = MessageBox.Show("It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", "Custom Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    EnableParametersCheckBox.IsChecked = false;
+                    ParametersTextBox.IsEnabled = false;
+                    ProcessCustomParameters();
+                }
+                else if (result == MessageBoxResult.Cancel)
+                    return;
+                // If "No", then we continue with the current known environment
+            }
 
             try
             {
@@ -452,27 +479,9 @@ namespace DICUI
             // If we're in a type that doesn't support drive speeds
             DriveSpeedComboBox.IsEnabled = _env.Type.DoesSupportDriveSpeed();
 
-            // Special case for Custom input
-            if (_env.System == KnownSystem.Custom)
+            // If input params are not enabled, generate the full parameters from the environment
+            if (!ParametersTextBox.IsEnabled)
             {
-                ParametersTextBox.IsEnabled = true;
-                OutputFilenameTextBox.IsEnabled = false;
-                OutputDirectoryTextBox.IsEnabled = false;
-                OutputDirectoryBrowseButton.IsEnabled = false;
-                DriveLetterComboBox.IsEnabled = false;
-                DriveSpeedComboBox.IsEnabled = false;
-                StartStopButton.IsEnabled = (_drives.Count > 0 ? true : false);
-                StatusLabel.Content = "User input mode";
-            }
-            else
-            {
-                ParametersTextBox.IsEnabled = false;
-                OutputFilenameTextBox.IsEnabled = true;
-                OutputDirectoryTextBox.IsEnabled = true;
-                OutputDirectoryBrowseButton.IsEnabled = true;
-                DriveLetterComboBox.IsEnabled = true;
-
-                // Generate the full parameters from the environment
                 string generated = _env.GetFullParameters((int?)DriveSpeedComboBox.SelectedItem);
                 if (generated != null)
                     ParametersTextBox.Text = generated;
@@ -497,8 +506,10 @@ namespace DICUI
         /// </summary>
         private async void ScanAndShowProtection()
         {
-            var env = DetermineEnvironment();
-            if (env.Drive.Letter != default(char))
+            if (_env == null)
+                _env = DetermineEnvironment();
+
+            if (_env.Drive.Letter != default(char))
             {
                 ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", _env.Drive.Letter);
 
@@ -508,10 +519,10 @@ namespace DICUI
                 DiskScanButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
 
-                string protections = await Validators.RunProtectionScanOnPath(env.Drive.Letter + ":\\");
+                string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\");
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
-                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", env.Drive.Letter, protections);
+                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", _env.Drive.Letter, protections);
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
@@ -598,6 +609,41 @@ namespace DICUI
                 MediaTypeComboBox.SelectedIndex = index;
             else
                 StatusLabel.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
+        }
+
+        /// <summary>
+        /// Process the current custom parameters back into UI values
+        /// </summary>
+        private void ProcessCustomParameters()
+        {
+            _env.DICParameters = new Parameters(ParametersTextBox.Text);
+
+            int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.DICParameters.DriveLetter[0]);
+            if (driveIndex > -1)
+                DriveLetterComboBox.SelectedIndex = driveIndex;
+
+            int driveSpeed = _env.DICParameters.DriveSpeed ?? -1;
+            if (driveSpeed > 0)
+                DriveSpeedComboBox.SelectedValue = driveSpeed;
+            else
+                _env.DICParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
+
+            string trimmedPath = _env.DICParameters.Filename?.Trim('"') ?? string.Empty;
+            string outputDirectory = Path.GetDirectoryName(trimmedPath);
+            string outputFilename = Path.GetFileName(trimmedPath);
+            if (!String.IsNullOrWhiteSpace(outputDirectory))
+                OutputDirectoryTextBox.Text = outputDirectory;
+            else
+                outputDirectory = OutputDirectoryTextBox.Text;
+            if (!String.IsNullOrWhiteSpace(outputFilename))
+                OutputFilenameTextBox.Text = outputFilename;
+            else
+                outputFilename = OutputFilenameTextBox.Text;
+
+            MediaType? mediaType = Converters.BaseCommmandToMediaType(_env.DICParameters.Command);
+            int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
+            if (mediaTypeIndex > -1)
+                MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
         }
 
         #endregion

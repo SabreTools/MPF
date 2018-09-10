@@ -240,24 +240,6 @@ namespace DICUI.Utilities
         #region Internal for Testing Purposes
 
         /// <summary>
-        /// Adjust the current environment if we are given custom parameters
-        /// </summary>
-        internal void AdjustForCustomConfiguration()
-        {
-            // If we have a custom configuration, we need to extract the best possible information from it
-            if (System == KnownSystem.Custom)
-            {
-                DICParameters.DetermineFlags(out Type, out System, out string letter, out string path);
-                if (Type == MediaType.Floppy)
-                    Drive = Drive.Floppy(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0]);
-                else
-                    Drive = Drive.Optical(String.IsNullOrWhiteSpace(letter) ? new char() : letter[0], "", true);
-                OutputDirectory = Path.GetDirectoryName(path);
-                OutputFilename = Path.GetFileName(path);
-            }
-        }
-
-        /// <summary>
         /// Fix the output paths to remove characters that DiscImageCreator can't handle
         /// </summary>
         /// <remarks>
@@ -401,9 +383,7 @@ namespace DICUI.Utilities
                     mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
                     mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
-                    mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt",
-                        combinedBase + "_c2Error.txt",
-                        combinedBase + "_mainError.txt").ToString();
+                    mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt").ToString();
                     mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue") ?? "";
                     mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
 
@@ -1003,19 +983,13 @@ namespace DICUI.Utilities
         /// Get the detected error count from the input files, if possible
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt file location</param>
-        /// <param name="c2Error">_c2Error.txt file location</param>
-        /// <param name="mainError">_mainError.txt file location</param>
         /// <returns>Error count if possible, -1 on error</returns>
-        private long GetErrorCount(string edcecc, string c2Error, string mainError)
+        private long GetErrorCount(string edcecc)
         {
-            // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(edcecc) || !File.Exists(c2Error) || !File.Exists(mainError))
-            {
-                return -1;
-            }
+            // TODO: Better usage of _mainInfo and _c2Error for uncorrectable errors
 
-            // First off, if the mainError file has any contents, we have an uncorrectable error
-            if (new FileInfo(mainError).Length > 0)
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(edcecc))
             {
                 return -1;
             }
@@ -1036,6 +1010,8 @@ namespace DICUI.Utilities
                         {
                             if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
                                 return te;
+                            else
+                                return Int64.MinValue;
                         }
                     }
 
@@ -1045,7 +1021,7 @@ namespace DICUI.Utilities
                 catch
                 {
                     // We don't care what the exception is right now
-                    return -1;
+                    return Int64.MaxValue;
                 }
             }
         }
@@ -1623,7 +1599,6 @@ namespace DICUI.Utilities
             if (!ParametersValid())
                 return Result.Failure("Error! Current configuration is not supported!");
 
-            AdjustForCustomConfiguration();
             FixOutputPaths();
 
             // Validate that the required program exists

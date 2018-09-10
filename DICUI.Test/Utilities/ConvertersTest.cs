@@ -82,7 +82,6 @@ namespace DICUI.Test.Utilities
         [InlineData(KnownSystem.NECPC88, "NEC PC-88")]
         [InlineData(KnownSystem.KonamiPython, "Konami Python")]
         [InlineData(KnownSystem.HDDVDVideo, "HD-DVD-Video")]
-        [InlineData(KnownSystem.Custom, "Custom Input")]
         [InlineData(KnownSystem.NONE, "Unknown")]
         public void KnownSystemToStringTest(KnownSystem? knownSystem, string expected)
         {
@@ -97,7 +96,7 @@ namespace DICUI.Test.Utilities
             KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerConsoleEnd, KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
 
             values.ForEach(system => {
-                if (system == KnownSystem.NONE || system == KnownSystem.Custom)
+                if (system == KnownSystem.NONE)
                     return;
 
                 // we check that the category is the first category value higher than the system

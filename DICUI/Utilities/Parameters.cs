@@ -17,7 +17,7 @@ namespace DICUI.Utilities
 
         // Drive Information
         public string DriveLetter;
-        int? DriveSpeed;
+        public int? DriveSpeed;
 
         // Path Information
         public string Filename;
@@ -1156,7 +1156,7 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.Data
                                 && parts[0] != DICCommandStrings.GDROM)
                                 return false;
-                            else if (DoesExist(parts, i + 1))
+                            else if (!DoesExist(parts, i + 1))
                             {
                                 this[DICFlag.SubchannelReadLevel] = true;
                                 break;

@@ -29,29 +29,6 @@ namespace DICUI.Test
         }
 
         [Theory]
-        [InlineData(null, null, null, new char(), null, null)]
-        [InlineData("", null, null, new char(), null, null)]
-        [InlineData("cd F test.bin 8 /c2 20", MediaType.CD, KnownSystem.IBMPCCompatible, 'F', "", "test.bin")]
-        [InlineData("fd A blah\\test.img", MediaType.Floppy, KnownSystem.IBMPCCompatible, 'A', "blah", "test.img")]
-        [InlineData("dvd X super\\blah\\test.iso 8 /raw", MediaType.GameCubeGameDisc, KnownSystem.NintendoGameCube, 'X', "super\\blah", "test.iso")]
-        [InlineData("stop D", null, null, 'D', null, null)]
-        public void AdjustForCustomConfigurationTest(string parameters, MediaType? expectedMediaType, KnownSystem? expectedKnownSystem, char expectedDriveLetter, string expectedOutputDirectory, string expectedOutputFilename)
-        {
-            var env = new DumpEnvironment
-            {
-                DICParameters = new Parameters(parameters),
-                System = KnownSystem.Custom,
-            };
-
-            env.AdjustForCustomConfiguration();
-            Assert.Equal(expectedMediaType, env.Type);
-            Assert.Equal(expectedKnownSystem, env.System);
-            Assert.Equal(expectedDriveLetter, env.Drive.Letter);
-            Assert.Equal(expectedOutputDirectory, env.OutputDirectory);
-            Assert.Equal(expectedOutputFilename, env.OutputFilename);
-        }
-
-        [Theory]
         [InlineData(null, null, null, null)]
         [InlineData(" ", "", " ", "")]
         [InlineData("super", "blah.bin", "super", "blah.bin")]
