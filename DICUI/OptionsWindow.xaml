@@ -92,7 +92,7 @@
                 <CheckBox Grid.Column="0" VerticalAlignment="Center" Content="Quiet Mode" 
                           DataContext="{Binding Source={x:Static lui:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=QuietMode}" 
-                          ToolTip="Disable DiskImageCreator sounds" 
+                          ToolTip="Disable DiscImageCreator sounds" 
                           />
                 <CheckBox Grid.Column="1" VerticalAlignment="Center" Content="Paranoid Mode" 
                           DataContext="{Binding Source={x:Static lui:ViewModels.OptionsViewModel}}" 
