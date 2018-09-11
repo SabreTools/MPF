@@ -409,7 +409,7 @@ namespace DICUI.Utilities
 
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(GetFirstTrack()) ?? "";
+                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(combinedBase + "_mainInfo.txt") ?? "";
                             if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
                             {
                                 mappings[Template.DiscSerialField] = serial ?? "";
@@ -1027,42 +1027,6 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Attempts to find the first track of a dumped disc based on the inputs
-        /// </summary>
-        /// <returns>Proper path to first track, null on error</returns>
-        /// <remarks>
-        /// By default, this assumes that the outputFilename doesn't contain a proper path, and just a name.
-        /// This can lead to a situation where the outputFilename contains a path, but only the filename gets
-        /// used in the processing and can lead to a "false null" return
-        /// </remarks>
-        private string GetFirstTrack()
-        {
-            // First, sanitized the output filename to strip off any potential extension
-            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
-
-            // Go through all standard output naming schemes
-            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
-            if (File.Exists(combinedBase + ".bin"))
-            {
-                return combinedBase + ".bin";
-            }
-            if (File.Exists(combinedBase + " (Track 1).bin"))
-            {
-                return combinedBase + " (Track 1).bin";
-            }
-            if (File.Exists(combinedBase + " (Track 01).bin"))
-            {
-                return combinedBase + " (Track 01).bin";
-            }
-            if (File.Exists(combinedBase + ".iso"))
-            {
-                return Path.Combine(combinedBase + ".iso");
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Get the full lines from the input file, if possible
         /// </summary>
         /// <param name="filename">file location</param>
@@ -1177,8 +1141,11 @@ namespace DICUI.Utilities
             {
                 try
                 {
+                    // Make sure we're in the right sector
+                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel =========="));
+
                     // Fast forward to the PVD
-                    while (!sr.ReadLine().StartsWith("0310")) ;
+                    while (!sr.ReadLine().StartsWith("0310"));
 
                     // Now that we're at the PVD, read each line in and concatenate
                     string pvd = "";
@@ -1365,44 +1332,40 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the header from a Saturn disc, if possible
         /// </summary>
-        /// <param name="firstTrackPath">Path to the first track to check</param>
+        /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private string GetSaturnHeader(string firstTrackPath)
+        private string GetSaturnHeader(string mainInfo)
         {
-            // If the file doesn't exist, we can't get the header
-            if (!File.Exists(firstTrackPath))
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(mainInfo))
             {
                 return null;
             }
 
-            // Try to open the file and read the correct number of bytes
-            try
+            using (StreamReader sr = File.OpenText(mainInfo))
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(firstTrackPath)))
+                try
                 {
-                    br.ReadBytes(0x10);
-                    byte[] headerBytes = br.ReadBytes(0x100);
+                    // Make sure we're in the right sector
+                    while (!sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
 
-                    // Now format the bytes in a way we like
-                    string headerString = "";
-                    int ptr = 0;
-                    while (ptr < headerBytes.Length)
+                    // Fast forward to the header
+                    while (!sr.ReadLine().Trim().StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")) ;
+
+                    // Now that we're at the Header, read each line in and concatenate
+                    string header = "";
+                    for (int i = 0; i < 16; i++)
                     {
-                        byte[] sub = new byte[16];
-                        Array.Copy(headerBytes, ptr, sub, 0, 16);
-                        headerString += ptr.ToString("X").PadLeft(4, '0') + " : "
-                            + BitConverter.ToString(sub).Replace("-", " ") + "   "
-                            + Encoding.ASCII.GetString(sub) + "\n";
-                        ptr += 16;
+                        header += sr.ReadLine() + "\n"; // 0000-00F0
                     }
 
-                    return headerString.TrimEnd('\n');
+                    return header;
                 }
-            }
-            catch
-            {
-                // We don't care what the error was
-                return null;
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
             }
         }
 
@@ -1425,8 +1388,8 @@ namespace DICUI.Utilities
             try
             {
                 string[] header = saturnHeader.Split('\n');
-                string serialVersionLine = header[2].Substring(57);
-                string dateLine = header[3].Substring(57);
+                string serialVersionLine = header[2].Substring(58);
+                string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 8);
                 version = serialVersionLine.Substring(10, 6);
                 date = dateLine.Substring(0, 8);
