@@ -126,7 +126,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label x:Name="StatusLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for CD or DVD..." />
+            <Label x:Name="StatusLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Waiting for media..." />
         </Grid>
     </Grid>
 </Window>
