@@ -76,7 +76,8 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CD);
                     break;
                 case KnownSystem.SegaDreamcast:
-                    types.Add(MediaType.GDROM);
+                    types.Add(MediaType.CD);    // Low density partition
+                    types.Add(MediaType.GDROM); // Hight density partition
                     break;
                 case KnownSystem.SegaSaturn:
                     types.Add(MediaType.CD);
