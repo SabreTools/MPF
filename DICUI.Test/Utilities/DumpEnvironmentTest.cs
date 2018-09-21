@@ -11,9 +11,9 @@ namespace DICUI.Test
         [Theory]
         [InlineData(null, 'D', false, MediaType.NONE, false)]
         [InlineData("", 'D', false, MediaType.NONE, false)]
-        [InlineData("cd F test.bin 8 /c2 20", 'F', false, MediaType.CD, true)]
-        [InlineData("fd A test.img", 'A', true, MediaType.Floppy, true)]
-        [InlineData("dvd X test.iso 8 /raw", 'X', false, MediaType.Floppy, false)]
+        [InlineData("cd F test.bin 8 /c2 20", 'F', false, MediaType.CDROM, true)]
+        [InlineData("fd A test.img", 'A', true, MediaType.floppyDisk, true)]
+        [InlineData("dvd X test.iso 8 /raw", 'X', false, MediaType.floppyDisk, false)]
         [InlineData("stop D", 'D', false, MediaType.DVD, true)]
         public void ParametersValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
@@ -58,9 +58,9 @@ namespace DICUI.Test
         }
 
         [Theory]
-        [InlineData(MediaType.CD)]
+        [InlineData(MediaType.CDROM)]
         [InlineData(MediaType.DVD)]
-        [InlineData(MediaType.Floppy)]
+        [InlineData(MediaType.floppyDisk)]
         [InlineData(MediaType.LaserDisc)]
         public void FoundAllFilesTest(MediaType? mediaType)
         {
@@ -70,11 +70,11 @@ namespace DICUI.Test
         }
 
         [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD)]
-        [InlineData(KnownSystem.PhilipsCDi, MediaType.CD)]
-        [InlineData(KnownSystem.SegaSaturn, MediaType.CD)]
-        [InlineData(KnownSystem.SonyPlayStation, MediaType.CD)]
-        [InlineData(KnownSystem.SonyPlayStation2, MediaType.CD)]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM)]
+        [InlineData(KnownSystem.PhilipsCDi, MediaType.CDROM)]
+        [InlineData(KnownSystem.SegaSaturn, MediaType.CDROM)]
+        [InlineData(KnownSystem.SonyPlayStation, MediaType.CDROM)]
+        [InlineData(KnownSystem.SonyPlayStation2, MediaType.CDROM)]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.DVD)]
         [InlineData(KnownSystem.DVDVideo, MediaType.DVD)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD)]

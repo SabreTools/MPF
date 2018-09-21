@@ -8,14 +8,14 @@ namespace DICUI.Test.Utilities
     public class ConvertersTest
     {
         [Theory]
-        [InlineData(DICCommand.Audio, MediaType.CD)]
+        [InlineData(DICCommand.Audio, MediaType.CDROM)]
         [InlineData(DICCommand.BluRay, MediaType.BluRay)]
         [InlineData(DICCommand.Close, null)]
-        [InlineData(DICCommand.CompactDisc, MediaType.CD)]
-        [InlineData(DICCommand.Data, MediaType.CD)]
+        [InlineData(DICCommand.CompactDisc, MediaType.CDROM)]
+        [InlineData(DICCommand.Data, MediaType.CDROM)]
         [InlineData(DICCommand.DigitalVideoDisc, MediaType.DVD)]
         [InlineData(DICCommand.Eject, null)]
-        [InlineData(DICCommand.Floppy, MediaType.Floppy)]
+        [InlineData(DICCommand.Floppy, MediaType.floppyDisk)]
         [InlineData(DICCommand.GDROM, MediaType.GDROM)]
         [InlineData(DICCommand.MDS, null)]
         [InlineData(DICCommand.Reset, null)]
@@ -54,11 +54,11 @@ namespace DICUI.Test.Utilities
         }
 
         [Theory]
-        [InlineData(MediaType.CD, ".bin")]
+        [InlineData(MediaType.CDROM, ".bin")]
         [InlineData(MediaType.DVD, ".iso")]
         [InlineData(MediaType.LaserDisc, ".raw")]
-        [InlineData(MediaType.WiiUOpticalDisc, ".wud")]
-        [InlineData(MediaType.Floppy, ".img")]
+        [InlineData(MediaType.NintendoWiiUOpticalDisc, ".wud")]
+        [InlineData(MediaType.floppyDisk, ".img")]
         [InlineData(MediaType.Cassette, ".wav")]
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
@@ -68,7 +68,7 @@ namespace DICUI.Test.Utilities
         }
 
         [Theory]
-        [InlineData(MediaType.CD, "CD-ROM")]
+        [InlineData(MediaType.CDROM, "CD-ROM")]
         [InlineData(MediaType.LaserDisc, "LaserDisc")]
         [InlineData(MediaType.NONE, "Unknown")]
         public void MediaTypeToStringTest(MediaType? mediaType, string expected)

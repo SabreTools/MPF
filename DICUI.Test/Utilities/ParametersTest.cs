@@ -9,11 +9,11 @@ namespace DICUI.Test.Utilities
     public class ParametersTest
     {
         [Theory]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CD, DICCommand.CompactDisc)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CDROM, DICCommand.CompactDisc)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, DICCommand.XBOX)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, DICCommand.NONE)]
         [InlineData(KnownSystem.SegaNu, MediaType.BluRay, DICCommand.BluRay)]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.Floppy, DICCommand.Floppy)]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.floppyDisk, DICCommand.Floppy)]
         [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, DICCommand.NONE)]
         public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, DICCommand expected)
         {
@@ -23,11 +23,11 @@ namespace DICUI.Test.Utilities
 
         [Theory]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc, false, 20, null, new DICFlag[] { DICFlag.Raw })]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCube, false, 20, null, new DICFlag[] { DICFlag.Raw })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new DICFlag[] { })]
         /* paranoid mode tests */
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CD, true, 1000, 2, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect, DICFlag.ScanSectorProtect, DICFlag.SubchannelReadLevel })]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CD, false, 20, null, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect, DICFlag.ScanSectorProtect, DICFlag.SubchannelReadLevel })]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation })]
         [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new DICFlag[] { })]
@@ -53,9 +53,9 @@ namespace DICUI.Test.Utilities
         [Theory]
         [InlineData(null, null, null, null, null)]
         [InlineData("", null, null, null, null)]
-        [InlineData("cd F test.bin 8 /c2 20", MediaType.CD, KnownSystem.IBMPCCompatible, "F", "test.bin")]
-        [InlineData("fd A blah\\test.img", MediaType.Floppy, KnownSystem.IBMPCCompatible, "A", "blah\\test.img")]
-        [InlineData("dvd X super\\blah\\test.iso 8 /raw", MediaType.GameCubeGameDisc, KnownSystem.NintendoGameCube, "X", "super\\blah\\test.iso")]
+        [InlineData("cd F test.bin 8 /c2 20", MediaType.CDROM, KnownSystem.IBMPCCompatible, "F", "test.bin")]
+        [InlineData("fd A blah\\test.img", MediaType.floppyDisk, KnownSystem.IBMPCCompatible, "A", "blah\\test.img")]
+        [InlineData("dvd X super\\blah\\test.iso 8 /raw", MediaType.NintendoGameCube, KnownSystem.NintendoGameCube, "X", "super\\blah\\test.iso")]
         [InlineData("stop D", null, null, "D", null)]
         public void DetermineFlagsTest(string parameters, MediaType? expectedMediaType, KnownSystem? expectedKnownSystem, string expectedDriveLetter, string expectedPath)
         {

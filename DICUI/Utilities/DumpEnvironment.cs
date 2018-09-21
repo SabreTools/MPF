@@ -262,7 +262,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.Floppy);
+            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.floppyDisk);
         }
 
         #endregion
@@ -375,7 +375,7 @@ namespace DICUI.Utilities
             // Now we want to do a check by MediaType and extract all required info
             switch (Type)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
@@ -594,7 +594,7 @@ namespace DICUI.Utilities
                 output.Add("Ringcode Information:");
                 switch (Type)
                 {
-                    case MediaType.CD:
+                    case MediaType.CDROM:
                     case MediaType.GDROM:
                     case MediaType.DVD:
                     case MediaType.HDDVD:
@@ -636,7 +636,7 @@ namespace DICUI.Utilities
                 }
                 switch (Type)
                 {
-                    case MediaType.CD:
+                    case MediaType.CDROM:
                     case MediaType.GDROM:
                         output.Add(Template.ErrorCountField + ": " + info[Template.ErrorCountField]);
                         break;
@@ -709,7 +709,7 @@ namespace DICUI.Utilities
                 }
                 switch (Type)
                 {
-                    case MediaType.CD:
+                    case MediaType.CDROM:
                     case MediaType.GDROM:
                         output.Add(Template.CuesheetField + ":"); output.Add("");
                         output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
@@ -744,7 +744,7 @@ namespace DICUI.Utilities
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);
             switch (Type)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     return File.Exists(combinedBase + ".c2")
                         && File.Exists(combinedBase + ".ccd")
@@ -769,8 +769,8 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoGameCube:
+                case MediaType.NintendoWiiOpticalDisc:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                         && File.Exists(combinedBase + "_disc.txt")
@@ -778,7 +778,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_mainError.txt")
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.Floppy:
+                case MediaType.floppyDisk:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                        && File.Exists(combinedBase + "_disc.txt");

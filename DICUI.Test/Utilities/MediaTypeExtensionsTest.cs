@@ -7,7 +7,7 @@ namespace DICUI.Test.Utilities
     public class MediaTypeExtensionsTest
     {
         [Theory]
-        [InlineData(MediaType.CD)]
+        [InlineData(MediaType.CDROM)]
         [InlineData(MediaType.LaserDisc)]
         [InlineData(MediaType.NONE)]
         public void NameTest(MediaType? mediaType)
@@ -20,10 +20,10 @@ namespace DICUI.Test.Utilities
         }
 
         [Theory]
-        [InlineData(MediaType.CD)]
+        [InlineData(MediaType.CDROM)]
         [InlineData(MediaType.DVD)]
         [InlineData(MediaType.LaserDisc)]
-        [InlineData(MediaType.Floppy)]
+        [InlineData(MediaType.floppyDisk)]
         [InlineData(MediaType.NONE)]
         public void ExtensionTest(MediaType? mediaType)
         {
@@ -34,9 +34,9 @@ namespace DICUI.Test.Utilities
         }
 
         [Theory]
-        [InlineData(MediaType.CD, true)]
+        [InlineData(MediaType.CDROM, true)]
         [InlineData(MediaType.DVD, true)]
-        [InlineData(MediaType.Floppy, false)]
+        [InlineData(MediaType.floppyDisk, false)]
         [InlineData(MediaType.BluRay, true)]
         [InlineData(MediaType.LaserDisc, false)]
         public void DriveSpeedSupportedTest(MediaType? mediaType, bool expected)

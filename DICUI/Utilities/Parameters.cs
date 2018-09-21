@@ -146,7 +146,7 @@ namespace DICUI.Utilities
                     // GameCube and Wii
                     if (this[DICFlag.Raw])
                     {
-                        type = MediaType.GameCubeGameDisc;
+                        type = MediaType.NintendoGameCube;
                         system = KnownSystem.NintendoGameCube;
                     }
 
@@ -154,14 +154,14 @@ namespace DICUI.Utilities
                     else if (this[DICFlag.NoFixSubQLibCrypt]
                         || this[DICFlag.ScanAntiMod])
                     {
-                        type = MediaType.CD;
+                        type = MediaType.CDROM;
                         system = KnownSystem.SonyPlayStation;
                     }
 
                     // Saturn
                     else if (this[DICFlag.SeventyFour])
                     {
-                        type = MediaType.CD;
+                        type = MediaType.CDROM;
                         system = KnownSystem.SegaSaturn;
                     }
 
@@ -1258,7 +1258,7 @@ namespace DICUI.Utilities
 
             switch (type)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                     Command = DICCommand.CompactDisc;
                     return;
                 case MediaType.DVD:
@@ -1279,13 +1279,13 @@ namespace DICUI.Utilities
                 case MediaType.BluRay:
                     Command = DICCommand.BluRay;
                     return;
-                case MediaType.GameCubeGameDisc:
+                case MediaType.NintendoGameCube:
                     Command = DICCommand.DigitalVideoDisc;
                     return;
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoWiiOpticalDisc:
                     Command = DICCommand.DigitalVideoDisc;
                     return;
-                case MediaType.Floppy:
+                case MediaType.FloppyDisk:
                     Command = DICCommand.Floppy;
                     return;
 
@@ -1329,7 +1329,7 @@ namespace DICUI.Utilities
             List<string> parameters = new List<string>();
             switch (type)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                     this[DICFlag.C2Opcode] = true;
 
                     switch (system)
@@ -1371,15 +1371,15 @@ namespace DICUI.Utilities
                     break;
 
                 // Special Formats
-                case MediaType.GameCubeGameDisc:
+                case MediaType.NintendoGameCube:
                     this[DICFlag.Raw] = true;
                     break;
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoWiiOpticalDisc:
                     this[DICFlag.Raw] = true;
                     break;
 
                 // Non-optical
-                case MediaType.Floppy:
+                case MediaType.FloppyDisk:
                     // Currently no defaults set
                     break;
             }

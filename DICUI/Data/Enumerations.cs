@@ -215,25 +215,52 @@
     /// </summary>
     public enum MediaType
     {
-        // Generic Optical Formats
         NONE = 0,
-        CD,
+
+        #region Punched Media
+
+        ApertureCard,
+        JacquardLoomCard,
+        MagneticStripeCard,
+        OpticalPhonecard,
+        PunchedCard,
+        PunchedTape,
+
+        #endregion
+
+        #region Tape
+
+        Cassette,
+        DataCartridge,
+        OpenReel,
+
+        #endregion
+
+        #region Disc / Disc
+
+        BluRay,
+        CDROM,
         DVD,
+        FloppyDisk,
+        Floptical,
         GDROM,
         HDDVD,
-        BluRay,
-        LaserDisc,
-
-        // Special Optical Formats
-        GameCubeGameDisc,
-        WiiOpticalDisc,
-        WiiUOpticalDisc,
+        HardDisk,
+        IomegaBernoulliDisk,
+        IomegaJaz,
+        IomegaZip,
+        LaserDisc, // LD-ROM and LV-ROM variants
+        Nintendo64DD,
+        NintendoFamicomDiskSystem,
+        NintendoGameCube,
+        NintendoWiiOpticalDisc,
+        NintendoWiiUOpticalDisc,
         UMD,
 
-        // Non-Optical Formats
-        Floppy,
+        #endregion
+
+        // Unsorted Formats
         Cartridge,
-        Cassette,
         CED,
     }
 }

@@ -8,11 +8,11 @@ namespace DICUI.Test.Utilities
     public class ValidatorsTest
     {
         [Theory]
-        [InlineData(KnownSystem.BandaiApplePippin, MediaType.CD)]
+        [InlineData(KnownSystem.BandaiApplePippin, MediaType.CDROM)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.GameCubeGameDisc)]
-        [InlineData(KnownSystem.NintendoWii, MediaType.WiiOpticalDisc)]
-        [InlineData(KnownSystem.NintendoWiiU, MediaType.WiiUOpticalDisc)]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCube)]
+        [InlineData(KnownSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc)]
+        [InlineData(KnownSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc)]
         [InlineData(KnownSystem.SonyPlayStationPortable, MediaType.UMD)]
         public void GetValidMediaTypesTest(KnownSystem? knownSystem, MediaType? expected)
         {

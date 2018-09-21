@@ -8,7 +8,7 @@ namespace DICUI.Test.Data
     public class UIElementsTest
     {
         [Theory]
-        [InlineData(MediaType.CD, 72)]
+        [InlineData(MediaType.CDROM, 72)]
         [InlineData(MediaType.DVD, 24)]
         [InlineData(MediaType.BluRay, 16)]
         [InlineData(MediaType.LaserDisc, 72)] // TODO: Update when fully determined

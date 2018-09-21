@@ -46,7 +46,7 @@ namespace DICUI.Utilities
                 case DICCommand.Audio:
                 case DICCommand.CompactDisc:
                 case DICCommand.Data:
-                    return MediaType.CD;
+                    return MediaType.CDROM;
                 case DICCommand.GDROM:
                 case DICCommand.Swap:
                     return MediaType.GDROM;
@@ -61,7 +61,7 @@ namespace DICUI.Utilities
 
                 // Non-optical
                 case DICCommand.Floppy:
-                    return MediaType.Floppy;
+                    return MediaType.FloppyDisk;
                 default:
                     return null;
             }
@@ -221,38 +221,38 @@ namespace DICUI.Utilities
         /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
         public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
-		{
-			switch (type)
-			{
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
-					return MediaType.NONE;
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
-					return MediaType.CD;
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
-					return MediaType.DVD;
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
-					return MediaType.HDDVD;
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
-				case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
-					return MediaType.BluRay;
-				default:
-					return null;
-			}
-		}
+        {
+            switch (type)
+            {
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+                    return MediaType.NONE;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+                    return MediaType.CDROM;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+                    return MediaType.DVD;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+                    return MediaType.HDDVD;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+                    return MediaType.BluRay;
+                default:
+                    return null;
+            }
+        }
 
         /// <summary>
         /// Get the default extension for a given disc type
@@ -263,22 +263,22 @@ namespace DICUI.Utilities
         {
             switch (type)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                 case MediaType.GDROM:
                 case MediaType.Cartridge:
                     return ".bin";
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoWiiOpticalDisc:
                 case MediaType.UMD:
                     return ".iso";
                 case MediaType.LaserDisc:
-                case MediaType.GameCubeGameDisc:
+                case MediaType.NintendoGameCube:
                     return ".raw";
-                case MediaType.WiiUOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
                     return ".wud";
-                case MediaType.Floppy:
+                case MediaType.FloppyDisk:
                     return ".img";
                 case MediaType.Cassette:
                     return ".wav";
@@ -298,36 +298,80 @@ namespace DICUI.Utilities
         {
             switch (type)
             {
-                case MediaType.CD:
+                #region Punched Media
+
+                case MediaType.ApertureCard:
+                    return "Aperture card";
+                case MediaType.JacquardLoomCard:
+                    return "Jacquard Loom card";
+                case MediaType.MagneticStripeCard:
+                    return "Magnetic stripe card";
+                case MediaType.OpticalPhonecard:
+                    return "Optical phonecard";
+                case MediaType.PunchedCard:
+                    return "Punched card";
+                case MediaType.PunchedTape:
+                    return "Punched tape";
+
+                #endregion
+
+                #region Tape
+
+                case MediaType.OpenReel:
+                    return "Open Reel Tape";
+                case MediaType.DataCartridge:
+                    return "Data Tape Cartridge";
+                case MediaType.Cassette:
+                    return "Cassette Tape";
+
+                #endregion
+
+                #region Disc / Disc
+
+                case MediaType.BluRay:
+                    return "BD-ROM";
+                case MediaType.CDROM:
                     return "CD-ROM";
                 case MediaType.DVD:
-                    return "DVD";
+                    return "DVD-ROM";
+                case MediaType.FloppyDisk:
+                    return "Floppy Disk";
+                case MediaType.Floptical:
+                    return "Floptical";
                 case MediaType.GDROM:
                     return "GD-ROM";
                 case MediaType.HDDVD:
-                    return "HD-DVD";
-                case MediaType.BluRay:
-                    return "BluRay";
+                    return "HD-DVD-ROM";
+                case MediaType.HardDisk:
+                    return "Hard Disk";
+                case MediaType.IomegaBernoulliDisk:
+                    return "Iomega Bernoulli Disk";
+                case MediaType.IomegaJaz:
+                    return "Iomega Jaz";
+                case MediaType.IomegaZip:
+                    return "Iomega Zip";
                 case MediaType.LaserDisc:
-                    return "LaserDisc";
-
-                case MediaType.CED:
-                    return "CED";
-                case MediaType.GameCubeGameDisc:
-                    return "GameCube Game";
-                case MediaType.WiiOpticalDisc:
-                    return "Wii Optical";
-                case MediaType.WiiUOpticalDisc:
-                    return "Wii U Optical";
+                    return "LD-ROM / LV-ROM";
+                case MediaType.Nintendo64DD:
+                    return "64DD Disk";
+                case MediaType.NintendoFamicomDiskSystem:
+                    return "Famicom Disk System Disk";
+                case MediaType.NintendoGameCube:
+                    return "GameCube Disc";
+                case MediaType.NintendoWiiOpticalDisc:
+                    return "Wii Optical Disc";
+                case MediaType.NintendoWiiUOpticalDisc:
+                    return "Wii U Optical Disc";
                 case MediaType.UMD:
                     return "UMD";
 
+                #endregion
+
+                // Unsorted Formats
                 case MediaType.Cartridge:
                     return "Cartridge";
-                case MediaType.Cassette:
-                    return "Cassette Tape";
-                case MediaType.Floppy:
-                    return "Floppy Disk";
+                case MediaType.CED:
+                    return "CED";
 
                 case MediaType.NONE:
                 default:

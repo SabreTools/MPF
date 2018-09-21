@@ -545,14 +545,14 @@ namespace DICUI
             int preferred = 100;
             switch (_currentMediaType)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                 case MediaType.GDROM:
                     preferred = _options.preferredDumpSpeedCD;
                     break;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoGameCube:
+                case MediaType.NintendoWiiOpticalDisc:
                     preferred = _options.preferredDumpSpeedDVD;
                     break;
                 case MediaType.BluRay:

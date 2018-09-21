@@ -26,75 +26,75 @@ namespace DICUI.Utilities
                 #region Consoles
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.BandaiApplePippin:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.CommodoreAmigaCD32:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.CommodoreAmigaCDTV:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.MattelHyperscan:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.MicrosoftXBOX:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MicrosoftXBOX360:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MicrosoftXBOXOne:
                     types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.NECPCEngineTurboGrafxCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NECPCFX:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NintendoGameCube:
-                    types.Add(MediaType.GameCubeGameDisc);
+                    types.Add(MediaType.NintendoGameCube);
                     break;
                 case KnownSystem.NintendoWii:
-                    types.Add(MediaType.WiiOpticalDisc);
+                    types.Add(MediaType.NintendoWiiOpticalDisc);
                     break;
                 case KnownSystem.NintendoWiiU:
-                    types.Add(MediaType.WiiUOpticalDisc);
+                    types.Add(MediaType.NintendoWiiUOpticalDisc);
                     break;
                 case KnownSystem.Panasonic3DOInteractiveMultiplayer:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.PhilipsCDi:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SegaCDMegaCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SegaDreamcast:
-                    types.Add(MediaType.CD);    // Low density partition
+                    types.Add(MediaType.CDROM);    // Low density partition
                     types.Add(MediaType.GDROM); // Hight density partition
                     break;
                 case KnownSystem.SegaSaturn:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SNKNeoGeoCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SonyPlayStation:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SonyPlayStation2:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SonyPlayStation3:
                     types.Add(MediaType.BluRay);
-                    types.Add(MediaType.CD); // TODO: Confirm this
+                    types.Add(MediaType.CDROM); // TODO: Confirm this
                     break;
                 case KnownSystem.SonyPlayStation4:
                     types.Add(MediaType.BluRay);
@@ -107,7 +107,7 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.VTechVFlashVSmilePro:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
                     types.Add(MediaType.DVD);
@@ -118,32 +118,32 @@ namespace DICUI.Utilities
                 #region Computers
 
                 case KnownSystem.AcornArchimedes:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.AppleMacintosh:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
-                    types.Add(MediaType.Floppy);
+                    types.Add(MediaType.floppyDisk);
                     break;
                 case KnownSystem.CommodoreAmigaCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.FujitsuFMTowns:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.IBMPCCompatible:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
-                    types.Add(MediaType.Floppy);
+                    types.Add(MediaType.floppyDisk);
                     break;
                 case KnownSystem.NECPC88:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NECPC98:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SharpX68000:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
 
                 #endregion
@@ -151,31 +151,31 @@ namespace DICUI.Utilities
                 #region Arcade
 
                 case KnownSystem.AmigaCUBOCD32:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.AmericanLaserGames3DO:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.Atari3DO:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.Atronic:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.AUSCOMSystem1:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.BallyGameMagic:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.CapcomCPSystemIII:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.GlobalVRVarious:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.GlobalVRVortek:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.GlobalVRVortekV3:
                     types.Add(MediaType.DVD); // TODO: Confirm
@@ -184,23 +184,23 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.IncredibleTechnologiesEagle:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.IncredibleTechnologiesVarious:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.KonamieAmusement:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.KonamiFirebeat:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.KonamiGVSystem:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.KonamiM2:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.KonamiPython:
                     types.Add(MediaType.DVD); // TODO: Confirm
@@ -209,66 +209,66 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD); // TODO: Confirm
                     break;
                 case KnownSystem.KonamiSystem573:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.KonamiTwinkle:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.KonamiVarious:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesBoardwalk:
-                    types.Add(MediaType.CD); // TODO: Confirm
+                    types.Add(MediaType.CDROM); // TODO: Confirm
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchAurora:
-                    types.Add(MediaType.CD); // TODO: Confirm
+                    types.Add(MediaType.CDROM); // TODO: Confirm
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchForce:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchION:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchMaxx:
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.MeritIndustriesMegaTouchXL:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NamcoCapcomSystem256:
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoCapcomTaitoSystem246:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     types.Add(MediaType.GDROM);
                     break;
                 case KnownSystem.NamcoSystem12:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NamcoSystem357:
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.BluRay);
                     break;
                 case KnownSystem.NewJatreCDi:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NichibutsuHighRateSystem:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NichibutsuSuperCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.NichibutsuXRateSystem:
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.PhotoPlayVarious:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.RawThrillsVarious:
                     types.Add(MediaType.DVD);
@@ -302,22 +302,22 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaTitanVideo:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SegaSystem32:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SeibuCATSSystem:
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.TABAustriaQuizard:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.TandyMemorexVisualInformationSystem:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
 
                 #endregion
@@ -325,7 +325,7 @@ namespace DICUI.Utilities
                 #region Others
 
                 case KnownSystem.AudioCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.BDVideo:
                     types.Add(MediaType.BluRay);
@@ -334,7 +334,7 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.EnhancedCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.EnhancedDVD:
                     types.Add(MediaType.DVD);
@@ -346,28 +346,28 @@ namespace DICUI.Utilities
                     types.Add(MediaType.HDDVD);
                     break;
                 case KnownSystem.PalmOS:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.PhilipsCDiDigitalVideo:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.PhotoCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.PlayStationGameSharkUpdates:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.RainbowDisc:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.TaoiKTV:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.TomyKissSite:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.VideoCD:
-                    types.Add(MediaType.CD);
+                    types.Add(MediaType.CDROM);
                     break;
 
                 #endregion
@@ -529,7 +529,7 @@ namespace DICUI.Utilities
             switch (type)
             {
                 // Fully supported types
-                case MediaType.CD:
+                case MediaType.CDROM:
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
@@ -537,8 +537,8 @@ namespace DICUI.Utilities
 
                 // Partially supported types
                 case MediaType.GDROM:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoGameCube:
+                case MediaType.NintendoWiiOpticalDisc:
                     return Result.Success("{0} partially supported for dumping", type.Name());
 
                 // Special case for other supported tools
@@ -547,7 +547,7 @@ namespace DICUI.Utilities
 
                 // Undumpable but recognized types
                 case MediaType.LaserDisc:
-                case MediaType.WiiUOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
                 case MediaType.CED:
                 case MediaType.Cartridge:
                 case MediaType.Cassette:

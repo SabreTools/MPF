@@ -26,13 +26,13 @@ namespace DICUI.UI
         {
             switch (type)
             {
-                case MediaType.CD:
+                case MediaType.CDROM:
                 case MediaType.GDROM:
                     return cd;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.GameCubeGameDisc:
-                case MediaType.WiiOpticalDisc:
+                case MediaType.NintendoGameCube:
+                case MediaType.NintendoWiiOpticalDisc:
                     return dvd;
                 case MediaType.BluRay:
                     return bd;
