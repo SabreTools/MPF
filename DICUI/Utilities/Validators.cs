@@ -123,7 +123,7 @@ namespace DICUI.Utilities
                 case KnownSystem.AppleMacintosh:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
-                    types.Add(MediaType.floppyDisk);
+                    types.Add(MediaType.FloppyDisk);
                     break;
                 case KnownSystem.CommodoreAmigaCD:
                     types.Add(MediaType.CDROM);
@@ -134,7 +134,7 @@ namespace DICUI.Utilities
                 case KnownSystem.IBMPCCompatible:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
-                    types.Add(MediaType.floppyDisk);
+                    types.Add(MediaType.FloppyDisk);
                     break;
                 case KnownSystem.NECPC88:
                     types.Add(MediaType.CDROM);

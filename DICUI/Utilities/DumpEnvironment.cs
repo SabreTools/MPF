@@ -262,7 +262,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.floppyDisk);
+            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.FloppyDisk);
         }
 
         #endregion
@@ -778,7 +778,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_mainError.txt")
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.floppyDisk:
+                case MediaType.FloppyDisk:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                        && File.Exists(combinedBase + "_disc.txt");

@@ -13,7 +13,7 @@ namespace DICUI.Test.Utilities
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, DICCommand.XBOX)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, DICCommand.NONE)]
         [InlineData(KnownSystem.SegaNu, MediaType.BluRay, DICCommand.BluRay)]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.floppyDisk, DICCommand.Floppy)]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.FloppyDisk, DICCommand.Floppy)]
         [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, DICCommand.NONE)]
         public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, DICCommand expected)
         {
@@ -54,7 +54,7 @@ namespace DICUI.Test.Utilities
         [InlineData(null, null, null, null, null)]
         [InlineData("", null, null, null, null)]
         [InlineData("cd F test.bin 8 /c2 20", MediaType.CDROM, KnownSystem.IBMPCCompatible, "F", "test.bin")]
-        [InlineData("fd A blah\\test.img", MediaType.floppyDisk, KnownSystem.IBMPCCompatible, "A", "blah\\test.img")]
+        [InlineData("fd A blah\\test.img", MediaType.FloppyDisk, KnownSystem.IBMPCCompatible, "A", "blah\\test.img")]
         [InlineData("dvd X super\\blah\\test.iso 8 /raw", MediaType.NintendoGameCube, KnownSystem.NintendoGameCube, "X", "super\\blah\\test.iso")]
         [InlineData("stop D", null, null, "D", null)]
         public void DetermineFlagsTest(string parameters, MediaType? expectedMediaType, KnownSystem? expectedKnownSystem, string expectedDriveLetter, string expectedPath)

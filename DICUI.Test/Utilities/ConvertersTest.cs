@@ -15,7 +15,7 @@ namespace DICUI.Test.Utilities
         [InlineData(DICCommand.Data, MediaType.CDROM)]
         [InlineData(DICCommand.DigitalVideoDisc, MediaType.DVD)]
         [InlineData(DICCommand.Eject, null)]
-        [InlineData(DICCommand.Floppy, MediaType.floppyDisk)]
+        [InlineData(DICCommand.Floppy, MediaType.FloppyDisk)]
         [InlineData(DICCommand.GDROM, MediaType.GDROM)]
         [InlineData(DICCommand.MDS, null)]
         [InlineData(DICCommand.Reset, null)]
@@ -58,7 +58,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.DVD, ".iso")]
         [InlineData(MediaType.LaserDisc, ".raw")]
         [InlineData(MediaType.NintendoWiiUOpticalDisc, ".wud")]
-        [InlineData(MediaType.floppyDisk, ".img")]
+        [InlineData(MediaType.FloppyDisk, ".img")]
         [InlineData(MediaType.Cassette, ".wav")]
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
