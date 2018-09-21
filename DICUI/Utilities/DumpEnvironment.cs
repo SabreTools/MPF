@@ -240,20 +240,45 @@ namespace DICUI.Utilities
         #region Internal for Testing Purposes
 
         /// <summary>
-        /// Fix the output paths to remove characters that DiscImageCreator can't handle
+        /// Fix output paths to strip out any invalid characters
         /// </summary>
-        /// <remarks>
-        /// TODO: Investigate why the `&` replacement is needed
-        /// </remarks>
         internal void FixOutputPaths()
         {
-            // Only fix OutputDirectory if it's not blank or null
-            if (!String.IsNullOrWhiteSpace(OutputDirectory))
-                OutputDirectory = OutputDirectory.Replace('.', '_').Replace('&', '_');
+            try
+            {
+                // Cache if we had a directory separator or not
+                bool endedWithDirectorySeparator = OutputDirectory.EndsWith(Path.DirectorySeparatorChar.ToString());
 
-            // Only fix OutputFilename if it's not blank or null
-            if (!String.IsNullOrWhiteSpace(OutputFilename))
-                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_')).Replace('.', '_', 0, OutputFilename.LastIndexOf('.') == -1 ? 0 : OutputFilename.LastIndexOf('.')).ToString();
+                // Normalize the path so the below filters work better
+                string combinedPath = Path.Combine(OutputDirectory, OutputFilename);
+                OutputDirectory = Path.GetDirectoryName(combinedPath);
+                OutputFilename = Path.GetFileName(combinedPath);
+
+                // If we have either a blank filename or path, just exit
+                if (String.IsNullOrWhiteSpace(OutputFilename) || String.IsNullOrWhiteSpace(OutputDirectory))
+                    return;
+
+                // Take care of extra path characters
+                OutputDirectory = new StringBuilder(OutputDirectory.Replace('.', '_').Replace('&', '_'))
+                    .Replace(':', '_', 0, OutputDirectory.LastIndexOf(':') == -1 ? 0 : OutputDirectory.LastIndexOf(':')).ToString();
+                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_'))
+                    .Replace('.', '_', 0, OutputFilename.LastIndexOf('.') == -1 ? 0 : OutputFilename.LastIndexOf('.')).ToString();
+
+                // Sanitize everything else
+                foreach (char c in Path.GetInvalidPathChars())
+                    OutputDirectory = OutputDirectory.Replace(c, '_');
+                foreach (char c in Path.GetInvalidFileNameChars())
+                    OutputFilename = OutputFilename.Replace(c, '_');
+
+                // If we had a directory separator at the end before, add it again
+                if (endedWithDirectorySeparator)
+                    OutputDirectory += Path.DirectorySeparatorChar;
+            }
+            catch
+            {
+                // We don't care what the error was
+                return;
+            }
         }
 
         /// <summary>

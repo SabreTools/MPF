@@ -389,10 +389,18 @@ namespace DICUI
                 Type = MediaTypeComboBox.SelectedItem as MediaType?
             };
 
-            // Fix and write back the paths
+            // Fix the output paths
             env.FixOutputPaths();
+
+            // Disable automatic reprocessing of the textboxes until we're done
+            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
+            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
+
             OutputDirectoryTextBox.Text = env.OutputDirectory;
             OutputFilenameTextBox.Text = env.OutputFilename;
+
+            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
+            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
 
             return env;
         }
