@@ -69,7 +69,7 @@ namespace DICUI.Test.Utilities
 
         [Theory]
         [InlineData(MediaType.CDROM, "CD-ROM")]
-        [InlineData(MediaType.LaserDisc, "LaserDisc")]
+        [InlineData(MediaType.LaserDisc, "LD-ROM / LV-ROM")]
         [InlineData(MediaType.NONE, "Unknown")]
         public void MediaTypeToStringTest(MediaType? mediaType, string expected)
         {
