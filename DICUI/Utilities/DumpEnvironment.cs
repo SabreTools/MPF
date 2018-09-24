@@ -229,7 +229,7 @@ namespace DICUI.Utilities
 
             // Verify dump output and save it
             progress?.Report(Result.Success("Gathering submission information... please wait!"));
-            result = await Task.Run(() => VerifyAndSaveDumpOutput());
+            result = await Task.Run(() => VerifyAndSaveDumpOutput(progress));
             progress?.Report(Result.Success("All submission information gathered!"));
 
             return result;
@@ -359,7 +359,7 @@ namespace DICUI.Utilities
         /// <param name="driveLetter">Drive letter to check</param>
         /// <returns>Dictionary containing mapped output values, null on error</returns>
         /// <remarks>TODO: Make sure that all special formats are accounted for</remarks>
-        private Dictionary<string, string> ExtractOutputInformation()
+        private Dictionary<string, string> ExtractOutputInformation(IProgress<Result> progress)
         {
             // Ensure the current disc combination should exist
             if (!Validators.GetValidMediaTypes(System).Contains(Type))
@@ -422,7 +422,11 @@ namespace DICUI.Utilities
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
+
+                            progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                             mappings[Template.CopyProtectionField] = GetCopyProtection();
+                            progress?.Report(Result.Success("Copy protection scan complete!"));
+
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -525,7 +529,11 @@ namespace DICUI.Utilities
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
+
+                            progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                             mappings[Template.CopyProtectionField] = GetCopyProtection();
+                            progress?.Report(Result.Success("Copy protection scan complete!"));
+
                             if (File.Exists(combinedBase + "_subIntention.txt"))
                             {
                                 FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
@@ -1620,15 +1628,23 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        private Result VerifyAndSaveDumpOutput()
+        private Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
         {
             // Check to make sure that the output had all the correct files
             if (!FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            Dictionary<string, string> templateValues = ExtractOutputInformation();
+            progress?.Report(Result.Success("Extracting output information from output files..."));
+            Dictionary<string, string> templateValues = ExtractOutputInformation(progress);
+            progress?.Report(Result.Success("Extracting information complete!"));
+
+            progress?.Report(Result.Success("Formatting extracted information..."));
             List<string> formattedValues = FormatOutputData(templateValues);
+            progress?.Report(Result.Success("Formatting complete!"));
+
+            progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
             bool success = WriteOutputData(formattedValues);
+            progress?.Report(Result.Success("Writing complete!"));
 
             return Result.Success();
         }
