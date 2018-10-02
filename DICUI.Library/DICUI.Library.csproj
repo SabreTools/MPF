@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Enumerations.cs" />
-    <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Converters.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />

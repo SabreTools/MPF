@@ -89,6 +89,7 @@
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
     <Compile Include="EnumDescriptionConverter.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Windows\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
