@@ -1,17 +1,15 @@
-﻿<Window x:Class="DICUI.MainWindow"
+﻿<Window x:Class="DICUI.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
-        xmlns:lui="clr-namespace:DICUI.UI"
-        xmlns:utilities="clr-namespace:DICUI.Utilities"
         mc:Ignorable="d"
         Title="Disc Image Creator GUI" Height="450" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
         LocationChanged="MainWindowLocationChanged" Activated="MainWindowActivated" Closing="MainWindowClosing">
 
     <Window.Resources>
-        <utilities:EnumDescriptionConverter x:Key="enumConverter" />
+        <local:EnumDescriptionConverter x:Key="enumConverter" />
     </Window.Resources>
 
     <Grid>
@@ -34,7 +32,7 @@
                 <MenuItem Header="_Tools">
                     <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="140" Click="OptionsClick"/>
                     <MenuItem x:Name="ShowLogMenuItem" Header="Show _Log Window" IsCheckable="true" HorizontalAlignment="Left"
-                              DataContext="{Binding Source={x:Static lui:ViewModels.LoggerViewModel}}" 
+                              DataContext="{Binding Source={x:Static local:ViewModels.LoggerViewModel}}" 
                               IsChecked="{Binding Path=WindowVisible}"
                     />
                 </MenuItem>

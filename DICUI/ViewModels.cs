@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows.Media;
+using DICUI.Windows;
 
-namespace DICUI.UI
+namespace DICUI
 {
     public class OptionsViewModel
     {

@@ -2,7 +2,7 @@
 using DICUI.Data;
 using DICUI.Utilities;
 
-namespace DICUI.UI
+namespace DICUI
 {
     /// <summary>
     /// Represents a single item in the System combo box

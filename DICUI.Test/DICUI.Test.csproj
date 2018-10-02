@@ -78,13 +78,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DICUI.Library\DICUI.Library.csproj">
+      <Project>{51ab0928-13f9-44bf-a407-b6957a43a056}</Project>
+      <Name>DICUI.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DICUI\DICUI.csproj">
       <Project>{7b1b75eb-8940-466f-bd51-76471a57f9be}</Project>
       <Name>DICUI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

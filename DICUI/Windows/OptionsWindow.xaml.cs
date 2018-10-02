@@ -5,7 +5,7 @@ using System.Windows.Forms;
 using Button = System.Windows.Controls.Button;
 using TextBox = System.Windows.Controls.TextBox;
 
-namespace DICUI
+namespace DICUI.Windows
 {
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml

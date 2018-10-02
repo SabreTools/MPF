@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows; // TODO: Migrate all MessageBox calls
 using DICUI.Data;
-using DICUI.UI;
 
 namespace DICUI.Utilities
 {
@@ -70,8 +69,6 @@ namespace DICUI.Utilities
         /// </summary>
         public void CancelDumping()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
-
             try
             {
                 if (dicProcess != null && !dicProcess.HasExited)
@@ -86,8 +83,6 @@ namespace DICUI.Utilities
         /// </summary>
         public async void EjectDisc()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {Drive.Letter}");
-            
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return;
@@ -237,12 +232,12 @@ namespace DICUI.Utilities
 
         #endregion
 
-        #region Internal for Testing Purposes
+        #region Public for Testing Purposes
 
         /// <summary>
         /// Fix output paths to strip out any invalid characters
         /// </summary>
-        internal void FixOutputPaths()
+        public void FixOutputPaths()
         {
             try
             {
@@ -285,7 +280,7 @@ namespace DICUI.Utilities
         /// Checks if the parameters are valid
         /// </summary>
         /// <returns>True if the configuration is valid, false otherwise</returns>
-        internal bool ParametersValid()
+        public bool ParametersValid()
         {
             return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.FloppyDisk);
         }
@@ -319,8 +314,6 @@ namespace DICUI.Utilities
         /// </summary>
         private void ExecuteDiskImageCreator()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Launching DiscImageCreator process.");
-
             dicProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
