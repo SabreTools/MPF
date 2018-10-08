@@ -1,3 +1,17 @@
+### 1.11 (2018-09-20)
+
+- Fix formatting of XBOX and XBOX 360 security sector output
+- Add new XBOX swap commands and outputs
+- Fixes for some PlayStation 2 and 4 outputs
+- Added external programs to AppVeyor builds
+- Fixed `.` in path issues with DIC; attempted to fix issues with `&`
+- Combined XBOX 360 XGD 2/3 due to new DIC support with Kreon drives
+- Fixed (semi-)longstanding bug with XBOX disc layer detection
+- Added DVD-Video protection output
+- Made custom parameters work a little more intuitively
+- Added *EXPERIMENTAL* Winforms-based UI
+- And more! See the full Git commit list for more details
+
 ### 1.10 (2018-07-29)
 
 - Added many new options for user customization
