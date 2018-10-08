@@ -431,7 +431,7 @@ namespace DICUI.Utilities
             // Get the optical disc drives
             List<Drive> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom)
-                .Select(d => Drive.Optical(d.Name[0], (d.IsReady ? d.VolumeLabel : UIElements.DiscNotDetected), d.IsReady))                
+                .Select(d => Drive.Optical(d.Name[0], (d.IsReady ? d.VolumeLabel : Template.DiscNotDetected), d.IsReady))                
                 .ToList();
 
             // Add the two lists together and order

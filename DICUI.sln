@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI", "DICUI\DICUI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Test", "DICUI.Test\DICUI.Test.csproj", "{7CC064D2-38AB-4A05-8519-28660DE4562A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Library", "DICUI.Library\DICUI.Library.csproj", "{51AB0928-13F9-44BF-A407-B6957A43A056}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Forms", "DICUI.Forms\DICUI.Forms.csproj", "{A6719A99-BF0E-4637-9A8E-CB38B1E16971}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{7CC064D2-38AB-4A05-8519-28660DE4562A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CC064D2-38AB-4A05-8519-28660DE4562A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CC064D2-38AB-4A05-8519-28660DE4562A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51AB0928-13F9-44BF-A407-B6957A43A056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51AB0928-13F9-44BF-A407-B6957A43A056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51AB0928-13F9-44BF-A407-B6957A43A056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51AB0928-13F9-44BF-A407-B6957A43A056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

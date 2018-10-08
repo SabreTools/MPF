@@ -1,18 +1,6 @@
 ﻿namespace DICUI.Data
 {
     /// <summary>
-    /// Variables for UI elements
-    /// </summary>
-    public static class UIElements
-    {
-        public const string DiscNotDetected = "Disc Not Detected";
-        public const string StartDumping = "Start Dumping";
-        public const string StopDumping = "Stop Dumping";
-
-        public const int LogWindowMarginFromMainWindow = 10;
-    }
-
-    /// <summary>
     /// Top-level commands for DiscImageCreator
     /// </summary>
     public static class DICCommandStrings
@@ -125,5 +113,6 @@
         public const string RequiredIfExistsValue = "(REQUIRED, IF EXISTS)";
         public const string OptionalValue = "(OPTIONAL)";
         public const string YesNoValue = "Yes/No";
+        public const string DiscNotDetected = "Disc Not Detected";
     }
 }

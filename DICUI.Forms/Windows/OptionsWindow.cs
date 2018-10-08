@@ -1,16 +1,15 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using Button = System.Windows.Controls.Button;
-using TextBox = System.Windows.Controls.TextBox;
 
-namespace DICUI
+namespace DICUI.Forms.Windows
 {
     /// <summary>
-    /// Interaction logic for OptionsWindow.xaml
+    /// Interaction logic for OptionsWindow
     /// </summary>
-    public partial class OptionsWindow : Window
+    public partial class OptionsWindow : Form
     {
         private readonly MainWindow _mainWindow;
         private readonly Options _options;
@@ -19,7 +18,32 @@ namespace DICUI
         {
             InitializeComponent();
             _mainWindow = mainWindow;
-            _options = options;      
+            _options = options;
+
+            // Create data sets
+            DumpSpeedCDSlider.Minimum = (int)Constants.SpeedsForCDAsCollection.First();
+            DumpSpeedCDSlider.Maximum = (int)Constants.SpeedsForCDAsCollection.Last();
+            DumpSpeedDVDSlider.Minimum = (int)Constants.SpeedsForDVDAsCollection.First();
+            DumpSpeedDVDSlider.Maximum = (int)Constants.SpeedsForDVDAsCollection.Last();
+            DumpSpeedBDSlider.Minimum = (int)Constants.SpeedsForBDAsCollection.First();
+            DumpSpeedBDSlider.Maximum = (int)Constants.SpeedsForBDAsCollection.Last();
+
+            // Select the current values
+            DumpSpeedCDSlider.Value = _options.preferredDumpSpeedCD;
+            DumpSpeedDVDSlider.Value = _options.preferredDumpSpeedDVD;
+            DumpSpeedBDSlider.Value = _options.preferredDumpSpeedBD;
+
+            // Create textbox outputs
+            DumpSpeedCDTextBox.Text = DumpSpeedCDSlider.Value.ToString();
+            DumpSpeedDVDTextBox.Text = DumpSpeedDVDSlider.Value.ToString();
+            DumpSpeedBDTextBox.Text = DumpSpeedBDSlider.Value.ToString();
+
+            // Set options
+            QuietModeCheckBox.Checked = _options.QuietMode;
+            ParanoidModeCheckBox.Checked = _options.ParanoidMode;
+            C2RereadTimesTextBox.Text = _options.RereadAmountForC2.ToString();
+            AutoScanCheckBox.Checked = _options.ScanForProtection;
+            SkipDetectionCheckBox.Checked = _options.SkipMediaTypeDetection;
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -48,7 +72,17 @@ namespace DICUI
 
         private TextBox TextBoxForPathSetting(string name)
         {
-            return FindName(name + "TextBox") as TextBox;
+            switch (name)
+            {
+                case "DICPath":
+                    return DICPathTextBox;
+                case "SubDumpPath":
+                    return SubDumpPathTextBox;
+                case "DefaultOutputPath":
+                    return DefaultOutputPathTextBox;
+                default:
+                    return null;
+            }
         }
 
         private void BrowseForPathClick(object sender, EventArgs e)
@@ -96,7 +130,7 @@ namespace DICUI
             }
         }
 
-        public void Refresh()
+        public void RefreshSettings()
         {
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
 
@@ -107,6 +141,13 @@ namespace DICUI
 
         #region Event Handlers
 
+        private void SliderChanged(object sender, EventArgs e)
+        {
+            DumpSpeedCDTextBox.Text = DumpSpeedCDSlider.Value.ToString();
+            DumpSpeedDVDTextBox.Text = DumpSpeedDVDSlider.Value.ToString();
+            DumpSpeedBDTextBox.Text = DumpSpeedBDSlider.Value.ToString();
+        }
+
         private void OnAcceptClick(object sender, EventArgs e)
         {
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
@@ -114,6 +155,12 @@ namespace DICUI
             _options.preferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
             _options.preferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
             _options.preferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
+
+            _options.QuietMode = QuietModeCheckBox.Checked;
+            _options.ParanoidMode = ParanoidModeCheckBox.Checked;
+            _options.RereadAmountForC2 = Convert.ToInt32(C2RereadTimesTextBox.Text);
+            _options.ScanForProtection = AutoScanCheckBox.Checked;
+            _options.SkipMediaTypeDetection = SkipDetectionCheckBox.Checked;
 
             _options.Save();
             Hide();

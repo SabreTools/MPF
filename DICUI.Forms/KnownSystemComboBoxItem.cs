@@ -2,7 +2,7 @@
 using DICUI.Data;
 using DICUI.Utilities;
 
-namespace DICUI.UI
+namespace DICUI
 {
     /// <summary>
     /// Represents a single item in the System combo box
@@ -14,7 +14,7 @@ namespace DICUI.UI
         public KnownSystemComboBoxItem(KnownSystem? system) => data = system;
         public KnownSystemComboBoxItem(KnownSystemCategory? category) => data = category;
 
-        public Brush Foreground { get => IsHeader() ? Brushes.Gray : Brushes.Black; }
+        //public Brush Foreground { get => IsHeader() ? Brushes.Gray : Brushes.Black; } // TODO: Re-enable this
 
         public bool IsHeader() => data is KnownSystemCategory?;
         public bool IsSystem() => data is KnownSystem?;

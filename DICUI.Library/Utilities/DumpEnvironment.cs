@@ -6,9 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
 using DICUI.Data;
-using DICUI.UI;
 
 namespace DICUI.Utilities
 {
@@ -70,8 +68,6 @@ namespace DICUI.Utilities
         /// </summary>
         public void CancelDumping()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
-
             try
             {
                 if (dicProcess != null && !dicProcess.HasExited)
@@ -86,8 +82,6 @@ namespace DICUI.Utilities
         /// </summary>
         public async void EjectDisc()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {Drive.Letter}");
-            
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return;
@@ -164,10 +158,7 @@ namespace DICUI.Utilities
 
             // If we get the firmware message
             if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
-            {
-                MessageBox.Show($"DiscImageCreator has reported that drive {Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
-            }
 
             // Otherwise, we know the firmware's good
             return true;
@@ -237,12 +228,12 @@ namespace DICUI.Utilities
 
         #endregion
 
-        #region Internal for Testing Purposes
+        #region Public for Testing Purposes
 
         /// <summary>
         /// Fix output paths to strip out any invalid characters
         /// </summary>
-        internal void FixOutputPaths()
+        public void FixOutputPaths()
         {
             try
             {
@@ -285,9 +276,71 @@ namespace DICUI.Utilities
         /// Checks if the parameters are valid
         /// </summary>
         /// <returns>True if the configuration is valid, false otherwise</returns>
-        internal bool ParametersValid()
+        public bool ParametersValid()
         {
             return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.FloppyDisk);
+        }
+
+        /// <summary>
+        /// Ensures that all required output files have been created
+        /// </summary>
+        /// <returns></returns>
+        public bool FoundAllFiles()
+        {
+            // First, sanitized the output filename to strip off any potential extension
+            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
+
+            // Now ensure that all required files exist
+            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
+            switch (Type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    return File.Exists(combinedBase + ".c2")
+                        && File.Exists(combinedBase + ".ccd")
+                        && File.Exists(combinedBase + ".cue")
+                        && File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + ".img")
+                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
+                        && File.Exists(combinedBase + ".scm")
+                        && File.Exists(combinedBase + ".sub")
+                        && File.Exists(combinedBase + "_c2Error.txt")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_img.cue")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_subError.txt")
+                        && File.Exists(combinedBase + "_subInfo.txt")
+                        // && File.Exists(combinedBase + "_subIntention.txt")
+                        && (File.Exists(combinedBase + "_subReadable.txt") || File.Exists(combinedBase + "_sub.txt"))
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCube:
+                case MediaType.NintendoWiiOpticalDisc:
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                        && File.Exists(combinedBase + "_disc.txt")
+                        && File.Exists(combinedBase + "_drive.txt")
+                        && File.Exists(combinedBase + "_mainError.txt")
+                        && File.Exists(combinedBase + "_mainInfo.txt")
+                        && File.Exists(combinedBase + "_volDesc.txt");
+                case MediaType.FloppyDisk:
+                    return File.Exists(combinedBase + ".dat")
+                        && File.Exists(combinedBase + "_cmd.txt")
+                       && File.Exists(combinedBase + "_disc.txt");
+                case MediaType.UMD:
+                    return File.Exists(combinedBase + "_disc.txt")
+                        || File.Exists(combinedBase + "_mainError.txt")
+                        || File.Exists(combinedBase + "_mainInfo.txt")
+                        || File.Exists(combinedBase + "_volDesc.txt");
+                default:
+                    // Non-dumping commands will usually produce no output, so this is irrelevant
+                    return true;
+            }
         }
 
         #endregion
@@ -319,8 +372,6 @@ namespace DICUI.Utilities
         /// </summary>
         private void ExecuteDiskImageCreator()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Launching DiscImageCreator process.");
-
             dicProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
@@ -761,68 +812,6 @@ namespace DICUI.Utilities
             {
                 // We don't care what the error is
                 return null;
-            }
-        }
-
-        /// <summary>
-        /// Ensures that all required output files have been created
-        /// </summary>
-        /// <returns></returns>
-        private bool FoundAllFiles()
-        {
-            // First, sanitized the output filename to strip off any potential extension
-            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
-
-            // Now ensure that all required files exist
-            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
-            switch (Type)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    return File.Exists(combinedBase + ".c2")
-                        && File.Exists(combinedBase + ".ccd")
-                        && File.Exists(combinedBase + ".cue")
-                        && File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + ".img")
-                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
-                        && File.Exists(combinedBase + ".scm")
-                        && File.Exists(combinedBase + ".sub")
-                        && File.Exists(combinedBase + "_c2Error.txt")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_img.cue")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_subError.txt")
-                        && File.Exists(combinedBase + "_subInfo.txt")
-                        // && File.Exists(combinedBase + "_subIntention.txt")
-                        && (File.Exists(combinedBase + "_subReadable.txt") || File.Exists(combinedBase + "_sub.txt"))
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCube:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.FloppyDisk:
-                    return File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                       && File.Exists(combinedBase + "_disc.txt");
-                case MediaType.UMD:
-                    return File.Exists(combinedBase + "_disc.txt")
-                        || File.Exists(combinedBase + "_mainError.txt")
-                        || File.Exists(combinedBase + "_mainInfo.txt")
-                        || File.Exists(combinedBase + "_volDesc.txt");
-                default:
-                    // Non-dumping commands will usually produce no output, so this is irrelevant
-                    return true;
             }
         }
 
@@ -1600,26 +1589,6 @@ namespace DICUI.Utilities
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
-
-            // Validate that the user explicitly wants an inactive drive to be considered for dumping
-            if (!Drive.MarkedActive)
-            {
-                MessageBoxResult result = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-                {
-                    return Result.Failure("Dumping aborted!");
-                }
-            }
-
-            // If a complete dump already exists
-            if (FoundAllFiles())
-            {
-                MessageBoxResult result = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (result == MessageBoxResult.No || result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
-                {
-                    return Result.Failure("Dumping aborted!");
-                }
-            }
 
             return Result.Success();
         }

@@ -4,13 +4,18 @@ using System.Linq;
 using System.Windows.Media;
 using DICUI.Data;
 
-namespace DICUI.UI
+namespace DICUI
 {
     /// <summary>
-    /// Gets allowed drive speeds for a given media type
+    /// Variables for UI elements
     /// </summary>
-    public static class AllowedSpeeds
+    public static class Constants
     {
+        public const string StartDumping = "Start Dumping";
+        public const string StopDumping = "Stop Dumping";
+
+        public const int LogWindowMarginFromMainWindow = 10;
+
         // Private lists of known drive speed ranges
         private static IReadOnlyList<int> cd { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
         private static IReadOnlyList<int> dvd { get; } = cd.Where(s => s <= 24).ToList();
@@ -22,7 +27,7 @@ namespace DICUI.UI
         /// </summary>
         /// <param name="type">MediaType? that represents the current item</param>
         /// <returns>Read-only list of drive speeds</returns>
-        public static IReadOnlyList<int> GetForMediaType(MediaType? type)
+        public static IReadOnlyList<int> GetSpeedsForMediaType(MediaType? type)
         {
             switch (type)
             {
@@ -42,9 +47,9 @@ namespace DICUI.UI
         }
 
         // Create collections for UI based on known drive speeds
-        public static DoubleCollection ForCDAsCollection { get; } = GetDoubleCollectionFromIntList(cd);
-        public static DoubleCollection ForDVDAsCollection { get; } = GetDoubleCollectionFromIntList(dvd);
-        public static DoubleCollection ForBDAsCollection { get; } = GetDoubleCollectionFromIntList(bd);
+        public static DoubleCollection SpeedsForCDAsCollection { get; } = GetDoubleCollectionFromIntList(cd);
+        public static DoubleCollection SpeedsForDVDAsCollection { get; } = GetDoubleCollectionFromIntList(dvd);
+        public static DoubleCollection SpeedsForBDAsCollection { get; } = GetDoubleCollectionFromIntList(bd);
         private static DoubleCollection GetDoubleCollectionFromIntList(IReadOnlyList<int> list)
             => new DoubleCollection(list.Select(i => Convert.ToDouble(i)).ToList());
     }

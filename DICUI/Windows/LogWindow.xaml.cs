@@ -11,10 +11,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
-using DICUI.Data;
-using DICUI.UI;
 
-namespace DICUI
+namespace DICUI.Windows
 {
     public partial class LogWindow : Window
     {
@@ -131,7 +129,7 @@ namespace DICUI
         public void AdjustPositionToMainWindow()
         {
             this.Left = _mainWindow.Left;
-            this.Top = _mainWindow.Top + _mainWindow.Height + UIElements.LogWindowMarginFromMainWindow;
+            this.Top = _mainWindow.Top + _mainWindow.Height + Constants.LogWindowMarginFromMainWindow;
         }
 
         private void GracefullyTerminateProcess()

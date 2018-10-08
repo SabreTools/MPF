@@ -8,11 +8,9 @@ using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
-using DICUI.UI;
 
-namespace DICUI
+namespace DICUI.Windows
 {
-
     public partial class MainWindow : Window
     {
         // Private UI-related variables
@@ -50,7 +48,7 @@ namespace DICUI
             if (_options.OpenLogWindowAtStartup)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
-                double combinedHeight = this.Height + _logWindow.Height + UIElements.LogWindowMarginFromMainWindow;
+                double combinedHeight = this.Height + _logWindow.Height + Constants.LogWindowMarginFromMainWindow;
                 Rectangle bounds = GetScaledCoordinates(WinForms.Screen.PrimaryScreen.WorkingArea);
 
                 this.Left = bounds.Left + (bounds.Width - this.Width) / 2;
@@ -89,17 +87,21 @@ namespace DICUI
         private void StartStopButtonClick(object sender, RoutedEventArgs e)
         {
             // Dump or stop the dump
-            if ((string)StartStopButton.Content == UIElements.StartDumping)
+            if ((string)StartStopButton.Content == Constants.StartDumping)
             {
                 StartDumping();
             }
-            else if ((string)StartStopButton.Content == UIElements.StopDumping)
+            else if ((string)StartStopButton.Content == Constants.StopDumping)
             {
+                ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
                 _env.CancelDumping();
                 CopyProtectScanButton.IsEnabled = true;
 
                 if (EjectWhenDoneCheckBox.IsChecked == true)
+                {
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {_env.Drive.Letter}");
                     _env.EjectDisc();
+                }
             }
         }
 
@@ -433,9 +435,34 @@ namespace DICUI
                 // Check for the firmware first
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
                 if (!await _env.DriveHasLatestFimrware())
+                {
+                    MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
+                }
 
-                StartStopButton.Content = UIElements.StopDumping;
+                // Validate that the user explicitly wants an inactive drive to be considered for dumping
+                if (!_env.Drive.MarkedActive)
+                {
+                    MessageBoxResult mbresult = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                    {
+                        ViewModels.LoggerViewModel.VerboseLogLn("Dumping aborted!");
+                        return;
+                    }
+                }
+
+                // If a complete dump already exists
+                if (_env.FoundAllFiles())
+                {
+                    MessageBoxResult mbresult = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                    {
+                        ViewModels.LoggerViewModel.VerboseLogLn("Dumping aborted!");
+                        return;
+                    }
+                }
+
+                StartStopButton.Content = Constants.StopDumping;
                 CopyProtectScanButton.IsEnabled = false;
                 StatusLabel.Content = "Beginning dumping process";
                 ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
@@ -453,12 +480,15 @@ namespace DICUI
             }
             finally
             {
-                StartStopButton.Content = UIElements.StartDumping;
+                StartStopButton.Content = Constants.StartDumping;
                 CopyProtectScanButton.IsEnabled = true;
             }
 
             if (EjectWhenDoneCheckBox.IsChecked == true)
+            {
+                ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {_env.Drive.Letter}");
                 _env.EjectDisc();
+            }
         }
 
         /// <summary>
@@ -545,7 +575,7 @@ namespace DICUI
         private void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            var values = AllowedSpeeds.GetForMediaType(_currentMediaType);
+            var values = Constants.GetSpeedsForMediaType(_currentMediaType);
             DriveSpeedComboBox.ItemsSource = values;
             ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
 
