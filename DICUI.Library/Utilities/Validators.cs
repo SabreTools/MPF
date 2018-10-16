@@ -94,7 +94,8 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.SonyPlayStation3:
                     types.Add(MediaType.BluRay);
-                    types.Add(MediaType.CDROM); // TODO: Confirm this
+                    types.Add(MediaType.CDROM);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SonyPlayStation4:
                     types.Add(MediaType.BluRay);
