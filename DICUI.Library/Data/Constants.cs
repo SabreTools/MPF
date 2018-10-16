@@ -79,11 +79,11 @@
         public const string VersionField = "Version";
         public const string EditionField = "Edition/Release";
         public const string CopyProtectionField = "Copy Protection";
-        public const string MasteringRingField = "Mastering Ring";
+        public const string MasteringRingField = "Mastering Code (laser branded/etched)";
         public const string MasteringSIDField = "Mastering SID Code";
         public const string MouldSIDField = "Mould SID Code";
         public const string AdditionalMouldField = "Additional Mould";
-        public const string ToolstampField = "Toolstamp or Mastering Code";
+        public const string ToolstampField = "Toolstamp or Mastering Code (engraved/stamped)";
 
         // Automatic Information
 
