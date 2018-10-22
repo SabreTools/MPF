@@ -16,6 +16,7 @@
         public const string Floppy = "fd";
         public const string GDROM = "gd";
         public const string MDS = "mds";
+        public const string Merge = "merge";
         public const string Reset = "reset";
         public const string Start = "start";
         public const string Stop = "stop";
@@ -53,6 +54,7 @@
         public const string ScanFileProtect = "/sf";
         public const string ScanSectorProtect = "/ss";
         public const string SeventyFour = "/74";
+        public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
     }
 

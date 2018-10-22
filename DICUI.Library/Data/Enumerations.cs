@@ -17,6 +17,7 @@
         Floppy,
         GDROM,
         MDS,
+        Merge,
         Reset,
         Start,
         Stop,
@@ -55,6 +56,7 @@
         ScanFileProtect,
         ScanSectorProtect,
         SeventyFour,
+        SkipSector,
         SubchannelReadLevel,
     }
 

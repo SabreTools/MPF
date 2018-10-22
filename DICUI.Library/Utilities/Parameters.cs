@@ -21,6 +21,7 @@ namespace DICUI.Utilities
 
         // Path Information
         public string Filename;
+        public string OptiarcFilename;
 
         // Sector Information
         public int? StartLBAValue;
@@ -52,6 +53,7 @@ namespace DICUI.Utilities
         //public int? C2OpcodeValue4;   // Last LBA to reread (default EOS)
         public int? ForceUnitAccessValue; // Delete per specified (default 1)
         public int? ScanFileProtectValue; // Timeout value (default 60)
+        public int?[] SkipSectorValue = new int?[2]; // Skip between sectors
         public int? SubchannelReadLevelValue; // 0 no next sub, 1 next sub (default), 2 next and next next
 
         /// <summary>
@@ -219,6 +221,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.Floppy
                 || Command == DICCommand.GDROM
                 || Command == DICCommand.MDS
+                || Command == DICCommand.Merge
                 || Command == DICCommand.Swap
                 || Command == DICCommand.Sub
                 || Command == DICCommand.XBOX
@@ -228,6 +231,15 @@ namespace DICUI.Utilities
             {
                 if (Filename != null)
                     parameters.Add("\"" + Filename.Trim('"') + "\"");
+                else
+                    return null;
+            }
+
+            // Optiarc Filename
+            if (Command == DICCommand.Merge)
+            {
+                if (OptiarcFilename != null)
+                    parameters.Add("\"" + OptiarcFilename.Trim('"') + "\"");
                 else
                     return null;
             }
@@ -517,6 +529,27 @@ namespace DICUI.Utilities
                     parameters.Add(DICFlag.SeventyFour.Name());
             }
 
+            // Skip sectors
+            if (Command == DICCommand.Data)
+            {
+                if (this[DICFlag.SkipSector])
+                {
+                    if (SkipSectorValue[0] != null && SkipSectorValue[1] != null)
+                    {
+                        parameters.Add(DICFlag.SkipSector.Name());
+                        if (SkipSectorValue[0] >= 0 && SkipSectorValue[1] >= 0)
+                        {
+                            parameters.Add(SkipSectorValue[0].ToString());
+                            parameters.Add(SkipSectorValue[1].ToString());
+                        }
+                        else
+                            return null;
+                    }
+                    else
+                        return null;
+                }
+            }
+
             // Set Subchannel read level
             if (Command == DICCommand.Audio
                || Command == DICCommand.CompactDisc
@@ -777,6 +810,23 @@ namespace DICUI.Utilities
                         return false;
 
                     Command = DICCommand.MDS;
+                    break;
+
+                case DICCommandStrings.Merge:
+                    if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
+                        return false;
+                    else
+                        Filename = parts[1];
+
+                    if (!DoesExist(parts, 2) || IsFlag(parts[2]) || !File.Exists(parts[2]))
+                        return false;
+                    else
+                        OptiarcFilename = parts[2];
+
+                    if (parts.Count > 3)
+                        return false;
+
+                    Command = DICCommand.Merge;
                     break;
 
                 case DICCommandStrings.Reset:
@@ -1148,6 +1198,22 @@ namespace DICUI.Utilities
                                 return false;
 
                             this[DICFlag.SeventyFour] = true;
+                            break;
+
+                        case DICFlagStrings.SkipSector:
+                            if (parts[0] != DICCommandStrings.Data)
+                                return false;
+                            else if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
+                                return false;
+                            else if (IsFlag(parts[i + 1]) || IsFlag(parts[i + 2]))
+                                return false;
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0) || !IsValidNumber(parts[i + 2], lowerBound: 0))
+                                return false;
+
+                            this[DICFlag.SkipSector] = true;
+                            SkipSectorValue[0] = Int32.Parse(parts[i + 1]);
+                            SkipSectorValue[1] = Int32.Parse(parts[i + 2]);
+                            i += 2;
                             break;
 
                         case DICFlagStrings.SubchannelReadLevel:

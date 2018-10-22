@@ -102,6 +102,8 @@ namespace DICUI.Utilities
                     return DICCommandStrings.GDROM;
                 case DICCommand.MDS:
                     return DICCommandStrings.MDS;
+                case DICCommand.Merge:
+                    return DICCommandStrings.Merge;
                 case DICCommand.Reset:
                     return DICCommandStrings.Reset;
                 case DICCommand.Start:
@@ -178,6 +180,8 @@ namespace DICUI.Utilities
                     return DICFlagStrings.ScanSectorProtect;
                 case DICFlag.SeventyFour:
                     return DICFlagStrings.SeventyFour;
+                case DICFlag.SkipSector:
+                    return DICFlagStrings.SkipSector;
                 case DICFlag.SubchannelReadLevel:
                     return DICFlagStrings.SubchannelReadLevel;
 
