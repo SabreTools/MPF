@@ -791,19 +791,19 @@ namespace DICUI.Utilities
                     output.Add(Template.SubIntentionField + ":"); output.Add("");
                     output.AddRange(info[Template.SubIntentionField].Split('\n')); output.Add("");
                 }
+                if (info.ContainsKey(Template.DATField))
+                {
+                    output.Add(Template.DATField + ":"); output.Add("");
+                    output.AddRange(info[Template.DATField].Split('\n')); output.Add("");
+                }
                 switch (Type)
                 {
                     case MediaType.CDROM:
                     case MediaType.GDROM:
                         output.Add(Template.CuesheetField + ":"); output.Add("");
                         output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
-                        output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]); output.Add("");
+                        output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]);
                         break;
-                }
-                if (info.ContainsKey(Template.DATField))
-                {
-                    output.Add(Template.DATField + ":"); output.Add("");
-                    output.AddRange(info[Template.DATField].Split('\n'));
                 }
 
                 return output;
