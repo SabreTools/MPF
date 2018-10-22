@@ -301,7 +301,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + ".cue")
                         && File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + ".img")
-                        && File.Exists(combinedBase + ".img_EdcEcc.txt")
+                        && (System == KnownSystem.AudioCD || File.Exists(combinedBase + ".img_EdcEcc.txt"))
                         && File.Exists(combinedBase + ".scm")
                         && File.Exists(combinedBase + ".sub")
                         && File.Exists(combinedBase + "_c2Error.txt")
