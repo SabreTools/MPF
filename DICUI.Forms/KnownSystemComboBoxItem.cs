@@ -1,5 +1,4 @@
-﻿using System.Windows.Media;
-using DICUI.Data;
+﻿using DICUI.Data;
 using DICUI.Utilities;
 
 namespace DICUI

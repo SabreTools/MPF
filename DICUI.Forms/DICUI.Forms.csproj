@@ -58,6 +58,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="EnumDescriptionConverter.cs" />
     <Compile Include="KnownSystemComboBoxItem.cs" />
+    <Compile Include="MediaTypeComboBoxItem.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>

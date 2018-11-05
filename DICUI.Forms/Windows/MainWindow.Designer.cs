@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MenuBar = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainWindowLayout = new System.Windows.Forms.TableLayoutPanel();
             this.settingsGroupBox = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -56,9 +59,6 @@
             this.EjectWhenDoneCheckBox = new System.Windows.Forms.CheckBox();
             this.statusGroupBox = new System.Windows.Forms.GroupBox();
             this.StatusLabel = new System.Windows.Forms.TextBox();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showLogWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -74,13 +74,36 @@
             // 
             // MenuBar
             // 
+            this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.toolsToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(584, 24);
             this.MenuBar.TabIndex = 0;
             this.MenuBar.Text = "menuStrip1";
-            this.MenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-                fileToolStripMenuItem, toolsToolStripMenuItem, helpToolStripMenuItem});
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
             // 
             // mainWindowLayout
             // 
@@ -117,7 +140,7 @@
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.32794F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 73.67206F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 144F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 145F));
             this.tableLayoutPanel2.Controls.Add(this.parametersLabel, 0, 5);
             this.tableLayoutPanel2.Controls.Add(this.driveSpeedLabel, 0, 4);
             this.tableLayoutPanel2.Controls.Add(this.driveLetterLabel, 0, 3);
@@ -230,7 +253,7 @@
             this.SystemTypeComboBox.FormattingEnabled = true;
             this.SystemTypeComboBox.Location = new System.Drawing.Point(110, 13);
             this.SystemTypeComboBox.Name = "SystemTypeComboBox";
-            this.SystemTypeComboBox.Size = new System.Drawing.Size(295, 21);
+            this.SystemTypeComboBox.Size = new System.Drawing.Size(294, 21);
             this.SystemTypeComboBox.TabIndex = 13;
             this.SystemTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.SystemTypeComboBoxSelectionChanged);
             // 
@@ -239,7 +262,7 @@
             this.MediaTypeComboBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.MediaTypeComboBox.DisplayMember = "Name";
             this.MediaTypeComboBox.FormattingEnabled = true;
-            this.MediaTypeComboBox.Location = new System.Drawing.Point(415, 13);
+            this.MediaTypeComboBox.Location = new System.Drawing.Point(414, 13);
             this.MediaTypeComboBox.Name = "MediaTypeComboBox";
             this.MediaTypeComboBox.Size = new System.Drawing.Size(131, 21);
             this.MediaTypeComboBox.TabIndex = 14;
@@ -250,16 +273,16 @@
             this.OutputDirectoryTextBox.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.OutputDirectoryTextBox.Location = new System.Drawing.Point(110, 87);
             this.OutputDirectoryTextBox.Name = "OutputDirectoryTextBox";
-            this.OutputDirectoryTextBox.Size = new System.Drawing.Size(295, 20);
+            this.OutputDirectoryTextBox.Size = new System.Drawing.Size(294, 20);
             this.OutputDirectoryTextBox.TabIndex = 15;
             this.OutputDirectoryTextBox.TextChanged += new System.EventHandler(this.OutputDirectoryTextBoxTextChanged);
             // 
             // OutputDirectoryBrowseButton
             // 
             this.OutputDirectoryBrowseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.OutputDirectoryBrowseButton.Location = new System.Drawing.Point(411, 84);
+            this.OutputDirectoryBrowseButton.Location = new System.Drawing.Point(410, 84);
             this.OutputDirectoryBrowseButton.Name = "OutputDirectoryBrowseButton";
-            this.OutputDirectoryBrowseButton.Size = new System.Drawing.Size(139, 26);
+            this.OutputDirectoryBrowseButton.Size = new System.Drawing.Size(140, 26);
             this.OutputDirectoryBrowseButton.TabIndex = 16;
             this.OutputDirectoryBrowseButton.Text = "Browse";
             this.OutputDirectoryBrowseButton.UseVisualStyleBackColor = true;
@@ -293,16 +316,16 @@
             this.ParametersTextBox.Location = new System.Drawing.Point(110, 199);
             this.ParametersTextBox.Name = "ParametersTextBox";
             this.ParametersTextBox.ReadOnly = true;
-            this.ParametersTextBox.Size = new System.Drawing.Size(295, 20);
+            this.ParametersTextBox.Size = new System.Drawing.Size(294, 20);
             this.ParametersTextBox.TabIndex = 19;
             // 
             // EnableParametersCheckBox
             // 
             this.EnableParametersCheckBox.AutoSize = true;
             this.EnableParametersCheckBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.EnableParametersCheckBox.Location = new System.Drawing.Point(411, 193);
+            this.EnableParametersCheckBox.Location = new System.Drawing.Point(410, 193);
             this.EnableParametersCheckBox.Name = "EnableParametersCheckBox";
-            this.EnableParametersCheckBox.Size = new System.Drawing.Size(139, 33);
+            this.EnableParametersCheckBox.Size = new System.Drawing.Size(140, 33);
             this.EnableParametersCheckBox.TabIndex = 20;
             this.EnableParametersCheckBox.Text = "Enable Editing";
             this.EnableParametersCheckBox.UseVisualStyleBackColor = true;
@@ -402,27 +425,6 @@
             this.StatusLabel.TabIndex = 0;
             this.StatusLabel.Text = "Waiting for media...";
             this.StatusLabel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.T)));
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
             // 
             // exitToolStripMenuItem
             // 

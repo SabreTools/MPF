@@ -262,11 +262,15 @@ namespace DICUI.Forms.Windows
         private void PopulateMediaType()
         {
             KnownSystem? currentSystem = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
-
             if (currentSystem != null)
             {
                 _mediaTypes = Validators.GetValidMediaTypes(currentSystem).ToList();
-                MediaTypeComboBox.DataSource = _mediaTypes;
+
+                var comboBoxItems = new List<MediaTypeComboBoxItem>();
+                foreach (var mediaType in _mediaTypes)
+                    comboBoxItems.Add(new MediaTypeComboBoxItem(mediaType));
+
+                MediaTypeComboBox.DataSource = comboBoxItems;
 
                 MediaTypeComboBox.Enabled = _mediaTypes.Count > 1;
                 MediaTypeComboBox.SelectedIndex = (_mediaTypes.IndexOf(_currentMediaType) >= 0 ? _mediaTypes.IndexOf(_currentMediaType) : 0);
