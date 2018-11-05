@@ -530,10 +530,11 @@ namespace DICUI.Utilities
             switch (type)
             {
                 // Fully supported types
+                case MediaType.BluRay:
                 case MediaType.CDROM:
                 case MediaType.DVD:
+                case MediaType.FloppyDisk:
                 case MediaType.HDDVD:
-                case MediaType.BluRay:
                     return Result.Success("{0} ready to dump", type.Name());
 
                 // Partially supported types
@@ -546,18 +547,13 @@ namespace DICUI.Utilities
                 case MediaType.UMD:
                     return Result.Success("{0} supported for submission info parsing", type.Name());
 
-                // Undumpable but recognized types
-                case MediaType.LaserDisc:
-                case MediaType.NintendoWiiUOpticalDisc:
-                case MediaType.CED:
-                case MediaType.Cartridge:
-                case MediaType.Cassette:
-                    return Result.Failure("{0} discs are not supported for dumping", type.Name());
-
-                // Invalid or unknown types
+                // Specifically unknown type
                 case MediaType.NONE:
-                default:
                     return Result.Failure("Please select a valid disc type");
+
+                // Undumpable but recognized types
+                default:
+                    return Result.Failure("{0} discs are not supported for dumping", type.Name());
             }
         }
 
