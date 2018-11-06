@@ -634,7 +634,7 @@ namespace DICUI.Forms.Windows
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetDiscType(drive.Letter);
-                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType != null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
+                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
             }
         }
 

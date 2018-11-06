@@ -259,7 +259,6 @@ namespace DICUI.Utilities
                 case MediaType.Cassette:
                     return ".wav";
                 case MediaType.NONE:
-                case MediaType.CED:
                 default:
                     return null;
             }

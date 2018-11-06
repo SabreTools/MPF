@@ -263,7 +263,7 @@ namespace DICUI.Windows
 
             if (currentSystem != null)
             {
-                _mediaTypes = Validators.GetValidMediaTypes(currentSystem).ToList();
+                _mediaTypes = Validators.GetValidMediaTypes(currentSystem);
                 MediaTypeComboBox.ItemsSource = _mediaTypes;
 
                 MediaTypeComboBox.IsEnabled = _mediaTypes.Count > 1;
@@ -628,7 +628,7 @@ namespace DICUI.Windows
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetDiscType(drive.Letter);
-                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType != null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
+                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
             }
         }
 

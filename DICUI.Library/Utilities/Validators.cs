@@ -462,9 +462,7 @@ namespace DICUI.Utilities
 
                 var collection = searcher.Get();
                 foreach (ManagementObject queryObj in collection)
-                {
                     deviceId = (string)queryObj["DeviceID"];
-                }
             }
             catch
             {
@@ -474,9 +472,7 @@ namespace DICUI.Utilities
 
             // If we got no valid device, we don't care and just return
             if (deviceId == null)
-            {
                 return null;
-            }
 
             // Get all relevant disc information
             try
@@ -487,16 +483,12 @@ namespace DICUI.Utilities
                 foreach (var disc in discMaster)
                 {
                     if (disc.ToString().Contains(deviceId))
-                    {
                         id = disc.ToString();
-                    }
                 }
 
                 // If we couldn't find the drive, we don't care and return
                 if (id == null)
-                {
                     return null;
-                }
 
                 // Otherwise, we get the media type, if any
                 MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
@@ -505,9 +497,7 @@ namespace DICUI.Utilities
                 dataWriter.Recorder = recorder;
                 var media = dataWriter.CurrentPhysicalMediaType;
                 if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-                {
                     return Converters.IMAPIDiskTypeToMediaType(media);
-                }
             }
             catch
             {
