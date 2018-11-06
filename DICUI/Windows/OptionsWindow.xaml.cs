@@ -100,9 +100,9 @@ namespace DICUI.Windows
         {
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
 
-            DumpSpeedCDSlider.Value = _options.preferredDumpSpeedCD;
-            DumpSpeedDVDSlider.Value = _options.preferredDumpSpeedDVD;
-            DumpSpeedBDSlider.Value = _options.preferredDumpSpeedBD;
+            DumpSpeedCDSlider.Value = _options.PreferredDumpSpeedCD;
+            DumpSpeedDVDSlider.Value = _options.PreferredDumpSpeedDVD;
+            DumpSpeedBDSlider.Value = _options.PreferredDumpSpeedBD;
         }
 
         #region Event Handlers
@@ -111,9 +111,9 @@ namespace DICUI.Windows
         {
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
 
-            _options.preferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
-            _options.preferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
-            _options.preferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
+            _options.PreferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
+            _options.PreferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
+            _options.PreferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
 
             _options.Save();
             Hide();

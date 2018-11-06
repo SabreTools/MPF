@@ -11,9 +11,9 @@ namespace DICUI
         public string DICPath { get; private set; }
         public string SubDumpPath { get; private set; }
 
-        public int preferredDumpSpeedCD { get; set; }
-        public int preferredDumpSpeedDVD { get; set; }
-        public int preferredDumpSpeedBD { get; set; }
+        public int PreferredDumpSpeedCD { get; set; }
+        public int PreferredDumpSpeedDVD { get; set; }
+        public int PreferredDumpSpeedBD { get; set; }
 
         public bool QuietMode { get; set; }
         public bool ParanoidMode { get; set; }
@@ -49,9 +49,9 @@ namespace DICUI
             SubDumpPath = ConfigurationManager.AppSettings["SubDumpPath"] ?? "subdump.exe";
             DefaultOutputPath = ConfigurationManager.AppSettings["DefaultOutputPath"] ?? "ISO";
 
-            this.preferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
-            this.preferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 24;
-            this.preferredDumpSpeedBD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedBD"], out int maxDumpSpeedBD) ? maxDumpSpeedBD : 16;
+            this.PreferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
+            this.PreferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 24;
+            this.PreferredDumpSpeedBD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedBD"], out int maxDumpSpeedBD) ? maxDumpSpeedBD : 16;
 
             this.QuietMode = Boolean.TryParse(ConfigurationManager.AppSettings["QuietMode"], out bool quietMode) ? quietMode : false;
             this.ParanoidMode = Boolean.TryParse(ConfigurationManager.AppSettings["ParanoidMode"], out bool paranoidMode) ? paranoidMode : false;
@@ -81,14 +81,14 @@ namespace DICUI
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    return preferredDumpSpeedCD;
+                    return PreferredDumpSpeedCD;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.NintendoGameCube:
                 case MediaType.NintendoWiiOpticalDisc:
-                    return preferredDumpSpeedDVD;
+                    return PreferredDumpSpeedDVD;
                 case MediaType.BluRay:
-                    return preferredDumpSpeedBD;
+                    return PreferredDumpSpeedBD;
                 default:
                     return 8;
             }

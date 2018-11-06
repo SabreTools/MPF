@@ -585,19 +585,19 @@ namespace DICUI.Windows
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    preferred = _options.preferredDumpSpeedCD;
+                    preferred = _options.PreferredDumpSpeedCD;
                     break;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.NintendoGameCube:
                 case MediaType.NintendoWiiOpticalDisc:
-                    preferred = _options.preferredDumpSpeedDVD;
+                    preferred = _options.PreferredDumpSpeedDVD;
                     break;
                 case MediaType.BluRay:
-                    preferred = _options.preferredDumpSpeedBD;
+                    preferred = _options.PreferredDumpSpeedBD;
                     break;
                 default:
-                    preferred = _options.preferredDumpSpeedCD;
+                    preferred = _options.PreferredDumpSpeedCD;
                     break;
             }
 
