@@ -388,7 +388,7 @@ namespace DICUI.Windows
                 RereadAmountC2 = _options.RereadAmountForC2,
 
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
-                Type = MediaTypeComboBox.SelectedItem as MediaType?
+                Type = MediaTypeComboBox.SelectedItem as MediaType?,
             };
 
             // Fix the output paths
