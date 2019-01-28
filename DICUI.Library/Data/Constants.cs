@@ -101,8 +101,8 @@
         public const string PlayStationAntiModchipField = "Anti-modchip";
         public const string PlayStationLibCryptField = "LibCrypt";
         public const string PlayStation4PICField = "Permanent Information & Control (PIC)";
-        public const string SaturnHeaderField = "Header";
-        public const string SaturnBuildDateField = "Build Date";
+        public const string SegaHeaderField = "Header";
+        public const string SegaBuildDateField = "Build Date";
         public const string XBOXDMIHash = "DMI.bin Hashes";
         public const string XBOXPFIHash = "PFI.bin Hashes";
         public const string XBOXSSHash = "SS.bin Hashes";

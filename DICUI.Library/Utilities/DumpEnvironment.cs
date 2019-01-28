@@ -488,13 +488,32 @@ namespace DICUI.Utilities
                             }
 
                             break;
-                        case KnownSystem.SegaSaturn:
-                            mappings[Template.SaturnHeaderField] = GetSaturnHeader(combinedBase + "_mainInfo.txt") ?? "";
-                            if (GetSaturnBuildInfo(mappings[Template.SaturnHeaderField], out string serial, out string version, out string buildDate))
+                        case KnownSystem.SegaCDMegaCD:
+                            mappings[Template.SegaHeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
+                            // Take only the last 16 lines for Sega CD
+                            if (!string.IsNullOrEmpty(mappings[Template.SegaHeaderField]))
+                                mappings[Template.SegaHeaderField] = string.Join("\n", mappings[Template.SegaHeaderField].Split('\n').Skip(16));
+
+                            if (GetSegaCDBuildInfo(mappings[Template.SegaHeaderField], out string scdSerial, out string fixedDate))
                             {
-                                mappings[Template.DiscSerialField] = serial ?? "";
+                                mappings[Template.DiscSerialField] = scdSerial ?? "";
+                                mappings[Template.SegaBuildDateField] = fixedDate ?? "";
+                            }
+
+                            break;
+                        case KnownSystem.SegaSaturn:
+                            mappings[Template.SegaHeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
+                            // Take only the first 16 lines for Saturn
+                            if (!string.IsNullOrEmpty(mappings[Template.SegaHeaderField]))
+                                mappings[Template.SegaHeaderField] = string.Join("\n", mappings[Template.SegaHeaderField].Split('\n').Take(16));
+
+                            if (GetSaturnBuildInfo(mappings[Template.SegaHeaderField], out string saturnSerial, out string version, out string buildDate))
+                            {
+                                mappings[Template.DiscSerialField] = saturnSerial ?? "";
                                 mappings[Template.VersionField] = version ?? "";
-                                mappings[Template.SaturnBuildDateField] = buildDate ?? "";
+                                mappings[Template.SegaBuildDateField] = buildDate ?? "";
                             }
 
                             break;
@@ -541,7 +560,8 @@ namespace DICUI.Utilities
                         }
                         mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                         mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                        mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                        mappings["Label-Side " + Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                        mappings["Data-Side " + Template.MouldSIDField] = Template.RequiredIfExistsValue;
                         mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                         mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
                         mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
@@ -562,7 +582,8 @@ namespace DICUI.Utilities
                         mappings["Inner " + Template.MasteringRingField] = Template.RequiredIfExistsValue;
                         mappings["Outer " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
                         mappings["Inner " + Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                        mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                        mappings["Label-Side " + Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                        mappings["Data-Side " + Template.MouldSIDField] = Template.RequiredIfExistsValue;
                         mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                         mappings["Outer " + Template.ToolstampField] = Template.RequiredIfExistsValue;
                         mappings["Inner " + Template.ToolstampField] = Template.RequiredIfExistsValue;
@@ -667,8 +688,9 @@ namespace DICUI.Utilities
                 output.Add(Template.DiscSerialField + ": " + info[Template.DiscSerialField]);
                 switch (System)
                 {
+                    case KnownSystem.SegaCDMegaCD:
                     case KnownSystem.SegaSaturn:
-                        output.Add(Template.SaturnBuildDateField + ": " + info[Template.SaturnBuildDateField]);
+                        output.Add(Template.SegaBuildDateField + ": " + info[Template.SegaBuildDateField]);
                         break;
                     case KnownSystem.SonyPlayStation:
                     case KnownSystem.SonyPlayStation2:
@@ -690,7 +712,8 @@ namespace DICUI.Utilities
                             output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
                             output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
                             output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
-                            output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
+                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
+                            output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
                             output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
                             output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
                             output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
@@ -700,7 +723,8 @@ namespace DICUI.Utilities
                         {
                             output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
                             output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
-                            output.Add("\t" + Template.MouldSIDField + ": " + info[Template.MouldSIDField]);
+                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
+                            output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
                             output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
                             output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
                         }
@@ -731,9 +755,10 @@ namespace DICUI.Utilities
                 output.Add(Template.EditionField + ": " + info[Template.EditionField]);
                 switch (System)
                 {
+                    case KnownSystem.SegaCDMegaCD:
                     case KnownSystem.SegaSaturn:
-                        output.Add(Template.SaturnHeaderField + ":"); output.Add("");
-                        output.AddRange(info[Template.SaturnHeaderField].Split('\n')); output.Add("");
+                        output.Add(Template.SegaHeaderField + ":"); output.Add("");
+                        output.AddRange(info[Template.SegaHeaderField].Split('\n')); output.Add("");
                         break;
                     case KnownSystem.SonyPlayStation:
                         output.Add(Template.PlayStationEDCField + ": " + info[Template.PlayStationEDCField]);
@@ -1352,11 +1377,11 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the header from a Saturn disc, if possible
+        /// Get the header from a Sega Saturn or Sega CD / Mega CD disc, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private string GetSaturnHeader(string mainInfo)
+        private string GetSegaHeader(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -1376,9 +1401,9 @@ namespace DICUI.Utilities
 
                     // Now that we're at the Header, read each line in and concatenate
                     string header = "";
-                    for (int i = 0; i < 16; i++)
+                    for (int i = 0; i < 32; i++)
                     {
-                        header += sr.ReadLine() + "\n"; // 0000-00F0
+                        header += sr.ReadLine() + "\n"; // 0000-01F0
                     }
 
                     return header;
@@ -1392,16 +1417,17 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the build info from a Saturn disc, if possible
+        /// Get the build info from a Sega CD disc, if possible
         /// </summary>
-        /// <<param name="saturnHeader">String representing a formatter variant of the Saturn header</param>
+        /// <<param name="segaHeader">String representing a formatter variant of the  Sega CD header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetSaturnBuildInfo(string saturnHeader, out string serial, out string version, out string date)
+        /// <remarks>Note that this works for MOST headers, except ones where the copyright stretches > 1 line</remarks>
+        private bool GetSegaCDBuildInfo(string segaHeader, out string serial, out string date)
         {
-            serial = null; version = null; date = null;
+            serial = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (String.IsNullOrWhiteSpace(saturnHeader))
+            if (String.IsNullOrWhiteSpace(segaHeader))
             {
                 return false;
             }
@@ -1409,7 +1435,92 @@ namespace DICUI.Utilities
             // Now read it in cutting it into lines for easier parsing
             try
             {
-                string[] header = saturnHeader.Split('\n');
+                string[] header = segaHeader.Split('\n');
+                string serialVersionLine = header[8].Substring(58);
+                string dateLine = header[1].Substring(58);
+                serial = serialVersionLine.Substring(3, 7);
+                date = dateLine.Substring(8).Trim();
+
+                // Properly format the date string, if possible
+                string[] dateSplit = date.Split('.');
+
+                if (dateSplit.Length == 1)
+                    dateSplit = new string[] { date.Substring(0, 4), date.Substring(4) };
+
+                string month = dateSplit[1];
+                switch (month)
+                {
+                    case "JAN":
+                        dateSplit[1] = "01";
+                        break;
+                    case "FEB":
+                        dateSplit[1] = "02";
+                        break;
+                    case "MAR":
+                        dateSplit[1] = "03";
+                        break;
+                    case "APR":
+                        dateSplit[1] = "04";
+                        break;
+                    case "MAY":
+                        dateSplit[1] = "05";
+                        break;
+                    case "JUN":
+                        dateSplit[1] = "06";
+                        break;
+                    case "JUL":
+                        dateSplit[1] = "07";
+                        break;
+                    case "AUG":
+                        dateSplit[1] = "08";
+                        break;
+                    case "SEP":
+                        dateSplit[1] = "09";
+                        break;
+                    case "OCT":
+                        dateSplit[1] = "10";
+                        break;
+                    case "NOV":
+                        dateSplit[1] = "11";
+                        break;
+                    case "DEC":
+                        dateSplit[1] = "12";
+                        break;
+                    default:
+                        dateSplit[1] = "00";
+                        break;
+                }
+
+                date = string.Join("-", dateSplit);
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a Saturn disc, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        {
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (String.IsNullOrWhiteSpace(segaHeader))
+            {
+                return false;
+            }
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader.Split('\n');
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 8);
