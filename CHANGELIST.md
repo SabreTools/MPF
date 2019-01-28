@@ -1,3 +1,12 @@
+### 1.12 (2019-01-27)
+- Added a few new systems and formats
+- Added new DIC commands and flags
+- Updated the `!submissionInfo.txt` file order
+- Fixed Audio CD handling
+- Added Sega CD / Mega CD header extraction
+- Readded Floppy Disk as a supported format
+- And more! See the full Git commit list for more details
+
 ### 1.11 (2018-09-20)
 
 - Fix formatting of XBOX and XBOX 360 security sector output
