@@ -24,18 +24,18 @@ Ensure that your operating system is as up-to-date as possible, since some featu
 ## Releases
 
 Download the latest release here:
-[https://github.com/reignstumble/DICUI/releases](https://github.com/reignstumble/DICUI/releases)
+[https://github.com/SabreTools/DICUI/releases](https://github.com/SabreTools/DICUI/releases)
 
 ## Changelist
 
-A list of all changes can now be found [here](https://github.com/reignstumble/DICUI/blob/master/CHANGELIST.md).
+A list of all changes can now be found [here](https://github.com/SabreTools/DICUI/blob/master/CHANGELIST.md).
 
 ## Contributors
 
 Here are the talented people who have contributed to the project so far:
 
-- **ReignStumble** - Project Lead / UI Design
-- **darksabre76** - Project Co-Lead / Backend Design
+- **darksabre76** - Project Lead / Backend Design
+- **ReignStumble** - Former Project Lead / UI Design
 - **Jakz** - Primary Feature Contributor
 - **NHellFire** - Feature Contributor
 
