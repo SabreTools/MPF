@@ -268,6 +268,9 @@ namespace DICUI.Utilities
                 case KnownSystem.NichibutsuXRateSystem:
                     types.Add(MediaType.DVD);
                     break;
+                case KnownSystem.PanasonicM2:
+                    types.Add(MediaType.CDROM);
+                    break;
                 case KnownSystem.PhotoPlayVarious:
                     types.Add(MediaType.CDROM);
                     break;
@@ -342,6 +345,9 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.EnhancedBD:
                     types.Add(MediaType.BluRay);
+                    break;
+                case KnownSystem.HasbroVideoNow:
+                    types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.HDDVDVideo:
                     types.Add(MediaType.HDDVD);

@@ -519,6 +519,8 @@ namespace DICUI.Utilities
                     return "Nichibutsu Super CD";
                 case KnownSystem.NichibutsuXRateSystem:
                     return "NichibutsuX-Rate System";
+                case KnownSystem.PanasonicM2:
+                    return "Panasonic M2";
                 case KnownSystem.PhotoPlayVarious:
                     return "PhotoPlay PC-based Systems";
                 case KnownSystem.RawThrillsVarious:
@@ -570,6 +572,8 @@ namespace DICUI.Utilities
                     return "Enhanced DVD";
                 case KnownSystem.EnhancedBD:
                     return "Enhanced BD";
+                case KnownSystem.HasbroVideoNow:
+                    return "Hasbro VideoNow";
                 case KnownSystem.HDDVDVideo:
                     return "HD-DVD-Video";
                 case KnownSystem.PalmOS:
