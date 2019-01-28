@@ -96,7 +96,7 @@
                 <CheckBox Grid.Column="1" VerticalAlignment="Center" Content="Paranoid Mode" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=ParanoidMode}"
-                          ToolTip="Enable pedandic and super-safe flags" 
+                          ToolTip="Enable pedantic and super-safe flags" 
                           />
                 <Grid Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0">
                     <Grid.ColumnDefinitions>
