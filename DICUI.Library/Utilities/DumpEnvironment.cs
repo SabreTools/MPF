@@ -458,7 +458,7 @@ namespace DICUI.Utilities
                     mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
                     mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
-                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
+                    mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "Disc has no PVD";
                     mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt").ToString();
                     mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue") ?? "";
                     mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
