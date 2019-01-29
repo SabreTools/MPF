@@ -455,7 +455,8 @@ namespace DICUI.Utilities
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     mappings[Template.MasteringRingField] = Template.RequiredIfExistsValue;
                     mappings[Template.MasteringSIDField] = Template.RequiredIfExistsValue;
-                    mappings[Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                    mappings["Label-Side " + Template.MouldSIDField] = Template.RequiredIfExistsValue;
+                    mappings["Data-Side " + Template.MouldSIDField] = Template.RequiredIfExistsValue;
                     mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
                     mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "Disc has no PVD";
