@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Library", "DICUI.Libr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Forms", "DICUI.Forms\DICUI.Forms.csproj", "{A6719A99-BF0E-4637-9A8E-CB38B1E16971}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DICUI.Check", "DICUI.Check\DICUI.Check.csproj", "{8CFDE289-E171-4D49-A40D-5293265C1253}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6719A99-BF0E-4637-9A8E-CB38B1E16971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CFDE289-E171-4D49-A40D-5293265C1253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CFDE289-E171-4D49-A40D-5293265C1253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CFDE289-E171-4D49-A40D-5293265C1253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CFDE289-E171-4D49-A40D-5293265C1253}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

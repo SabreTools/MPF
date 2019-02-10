@@ -1709,7 +1709,7 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        private Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
         {
             // Check to make sure that the output had all the correct files
             if (!FoundAllFiles())
