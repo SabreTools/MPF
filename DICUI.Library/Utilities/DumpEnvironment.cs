@@ -713,8 +713,8 @@ namespace DICUI.Utilities
                             output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
                             output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
                             output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
-                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
                             output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
+                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
                             output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
                             output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
                             output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
@@ -724,8 +724,8 @@ namespace DICUI.Utilities
                         {
                             output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
                             output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
-                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
                             output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
+                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
                             output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
                             output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
                         }
