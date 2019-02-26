@@ -270,6 +270,7 @@ namespace DICUI.Utilities
                     break;
                 case KnownSystem.PanasonicM2:
                     types.Add(MediaType.CDROM);
+                    types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.PhotoPlayVarious:
                     types.Add(MediaType.CDROM);
