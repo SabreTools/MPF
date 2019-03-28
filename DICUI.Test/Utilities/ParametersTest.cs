@@ -28,7 +28,7 @@ namespace DICUI.Test.Utilities
         /* paranoid mode tests */
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect, DICFlag.ScanSectorProtect, DICFlag.SubchannelReadLevel })]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation, DICFlag.ScanFileProtect })]
         [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new DICFlag[] { })]
         [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new DICFlag[] { })]
