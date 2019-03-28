@@ -58,6 +58,7 @@
         SeventyFour,
         SkipSector,
         SubchannelReadLevel,
+        VideoNow,
     }
 
     /// <summary>

@@ -56,6 +56,7 @@
         public const string SeventyFour = "/74";
         public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
+        public const string VideoNow = "/vn";
     }
 
     /// <summary>

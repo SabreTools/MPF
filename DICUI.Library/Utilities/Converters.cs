@@ -184,6 +184,8 @@ namespace DICUI.Utilities
                     return DICFlagStrings.SkipSector;
                 case DICFlag.SubchannelReadLevel:
                     return DICFlagStrings.SubchannelReadLevel;
+                case DICFlag.VideoNow:
+                    return DICFlagStrings.VideoNow;
 
                 case DICFlag.NONE:
                 default:

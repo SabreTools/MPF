@@ -55,6 +55,7 @@ namespace DICUI.Utilities
         public int? ScanFileProtectValue; // Timeout value (default 60)
         public int?[] SkipSectorValue = new int?[2]; // Skip between sectors
         public int? SubchannelReadLevelValue; // 0 no next sub, 1 next sub (default), 2 next and next next
+        public int? VideoNowValue; // Insert n empty bytes in the head of 1st track
 
         /// <summary>
         /// Generic empty constructor for adding things individually
@@ -90,6 +91,7 @@ namespace DICUI.Utilities
                 ForceUnitAccessValue = null;
                 ScanFileProtectValue = null;
                 SubchannelReadLevelValue = null;
+                VideoNowValue = null;
             }
         }
 
@@ -498,6 +500,7 @@ namespace DICUI.Utilities
             if (Command == DICCommand.Audio
                || Command == DICCommand.CompactDisc
                || Command == DICCommand.Data
+               || Command == DICCommand.DigitalVideoDisc
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.ScanFileProtect])
@@ -564,6 +567,22 @@ namespace DICUI.Utilities
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
                             parameters.Add(SubchannelReadLevelValue.ToString());
+                        else
+                            return null;
+                    }
+                }
+            }
+
+            // VideoNow
+            if (Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.VideoNow])
+                {
+                    parameters.Add(DICFlag.VideoNow.Name());
+                    if (VideoNowValue != null)
+                    {
+                        if (VideoNowValue >= 0)
+                            parameters.Add(VideoNowValue.ToString());
                         else
                             return null;
                     }
@@ -1165,7 +1184,8 @@ namespace DICUI.Utilities
 
                         case DICFlagStrings.ScanFileProtect:
                             if (parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data)
+                                && parts[0] != DICCommandStrings.Data
+                                && parts[0] != DICCommandStrings.DigitalVideoDisc)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1237,6 +1257,27 @@ namespace DICUI.Utilities
 
                             this[DICFlag.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
+                            i++;
+                            break;
+
+                        case DICFlagStrings.VideoNow:
+                            if (parts[0] != DICCommandStrings.CompactDisc)
+                                return false;
+                            else if (!DoesExist(parts, i + 1))
+                            {
+                                this[DICFlag.VideoNow] = true;
+                                break;
+                            }
+                            else if (IsFlag(parts[i + 1]))
+                            {
+                                this[DICFlag.VideoNow] = true;
+                                break;
+                            }
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
+                                return false;
+
+                            this[DICFlag.VideoNow] = true;
+                            VideoNowValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
@@ -1412,6 +1453,9 @@ namespace DICUI.Utilities
                                 SubchannelReadLevelValue = 2;
                             }
                             break;
+                        case KnownSystem.HasbroVideoNow:
+                            this[DICFlag.VideoNow] = true;
+                            break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
                             this[DICFlag.MCN] = true;
                             break;
@@ -1423,7 +1467,10 @@ namespace DICUI.Utilities
                     break;
                 case MediaType.DVD:
                     if (paranoid)
+                    {
                         this[DICFlag.CopyrightManagementInformation] = true;
+                        this[DICFlag.ScanFileProtect] = true;
+                    }
                     break;
                 case MediaType.GDROM:
                     this[DICFlag.C2Opcode] = true;
