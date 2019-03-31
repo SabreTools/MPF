@@ -38,10 +38,11 @@ namespace DICUI.Check
                 }
 
                 // Now populate an environment
+                string procPath = args[i].TrimEnd(Path.DirectorySeparatorChar);
                 var env = new DumpEnvironment
                 {
-                    OutputDirectory = args[i],
-                    OutputFilename = "",
+                    OutputDirectory = procPath + Path.DirectorySeparatorChar,
+                    OutputFilename = Path.GetFileName(procPath) + ".bin",
                     System = knownSystem,
                     Type = mediaType,
                     ScanForProtection = false,
