@@ -460,7 +460,15 @@ namespace DICUI.Utilities
                     mappings[Template.AdditionalMouldField] = Template.RequiredIfExistsValue;
                     mappings[Template.ToolstampField] = Template.RequiredIfExistsValue;
                     mappings[Template.PVDField] = GetPVD(combinedBase + "_mainInfo.txt") ?? "Disc has no PVD";
-                    mappings[Template.ErrorCountField] = GetErrorCount(combinedBase + ".img_EdcEcc.txt").ToString();
+
+                    long errorCount = -1;
+                    if (File.Exists(combinedBase + ".img_EdcEcc.txt"))
+                        errorCount = GetErrorCount(combinedBase + ".img_EdcEcc.txt");
+                    else if (File.Exists(combinedBase + ".img_EccEdc.txt"))
+                        errorCount = GetErrorCount(combinedBase + ".img_EccEdc.txt");
+
+                    mappings[Template.ErrorCountField] = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+
                     mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue") ?? "";
                     mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
 
@@ -1030,7 +1038,7 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the detected error count from the input files, if possible
         /// </summary>
-        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <param name="edcecc">.img_EdcEcc.txt/.img_EccEdc.txt file location</param>
         /// <returns>Error count if possible, -1 on error</returns>
         private long GetErrorCount(string edcecc)
         {

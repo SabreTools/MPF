@@ -30,19 +30,18 @@ namespace DICUI.Check
             // Loop through all the rest of the args
             for (int i = 1; i < args.Length; i++)
             {
-                // Check for a directory
-                if (!Directory.Exists(args[i]))
+                // Check for a file
+                if (!File.Exists(args[i]))
                 {
-                    DisplayHelp($"{args[i]} is not a directory");
+                    DisplayHelp($"{args[i]} does not exist");
                     return;
                 }
 
                 // Now populate an environment
-                string procPath = args[i].TrimEnd(Path.DirectorySeparatorChar);
                 var env = new DumpEnvironment
                 {
-                    OutputDirectory = procPath + Path.DirectorySeparatorChar,
-                    OutputFilename = Path.GetFileName(procPath) + ".bin",
+                    OutputDirectory = "",
+                    OutputFilename = args[i],
                     System = knownSystem,
                     Type = mediaType,
                     ScanForProtection = false,
@@ -61,7 +60,7 @@ namespace DICUI.Check
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("DICUI.Check.exe <mediatype> </path/to/output> ...");
+            Console.WriteLine("DICUI.Check.exe <mediatype> </path/to/output.bin> ...");
             Console.WriteLine();
             Console.WriteLine(@"Media Types:\r\n
 cd / cdrom      - CD-ROM
