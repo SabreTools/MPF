@@ -34,6 +34,11 @@ namespace DICUI.Utilities
             return Converters.MediaTypeToString(type);
         }
 
+        public static string ShortName(this MediaType? type)
+        {
+            return Converters.MediaTypeToShortString(type);
+        }
+
         public static string Extension(this MediaType? type)
         {
             return Converters.MediaTypeToExtension(type);
@@ -65,6 +70,11 @@ namespace DICUI.Utilities
         public static string Name(this KnownSystem? system)
         {
             return Converters.KnownSystemToString(system);
+        }
+
+        public static string ShortName(this KnownSystem? system)
+        {
+            return Converters.KnownSystemToShortString(system);
         }
 
         public static KnownSystemCategory Category(this KnownSystem? system)
