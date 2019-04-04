@@ -629,7 +629,6 @@ namespace DICUI.Utilities
                             mappings[Template.CopyProtectionField] = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
                             break;
                         case KnownSystem.MicrosoftXBOX:
-                        case KnownSystem.MicrosoftXBOX360:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
                             {
                                 mappings[Template.XBOXDMIHash] = dmihash ?? "";
@@ -638,7 +637,29 @@ namespace DICUI.Utilities
                                 mappings[Template.XBOXSSVersion] = ssver ?? "";
                                 mappings[Template.XBOXSSRanges] = ss ?? "";
                             }
+                            if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial, out string version, out string region))
+                            {
+                                mappings[Template.DiscSerialField] = serial ?? Template.RequiredValue;
+                                mappings[Template.VersionField] = version ?? Template.RequiredValue;
+                                mappings[Template.RegionField] = region ?? Template.RequiredValue;
+                            }
 
+                            break;
+                        case KnownSystem.MicrosoftXBOX360:
+                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                            {
+                                mappings[Template.XBOXDMIHash] = dmi360hash ?? "";
+                                mappings[Template.XBOXPFIHash] = pfi360hash ?? "";
+                                mappings[Template.XBOXSSHash] = ss360hash ?? "";
+                                mappings[Template.XBOXSSVersion] = ssver360 ?? "";
+                                mappings[Template.XBOXSSRanges] = ss360 ?? "";
+                            }
+                            if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out string region360))
+                            {
+                                mappings[Template.DiscSerialField] = serial360 ?? Template.RequiredValue;
+                                mappings[Template.VersionField] = version360 ?? Template.RequiredValue;
+                                mappings[Template.RegionField] = region360 ?? Template.RequiredValue;
+                            }
                             break;
                         case KnownSystem.SonyPlayStation2:
                             mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
@@ -1657,6 +1678,96 @@ namespace DICUI.Utilities
                     // We don't care what the exception is right now
                     return false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the XOX serial info from the DMI.bin file, if possible
+        /// </summary>
+        /// <param name="dmi">DMI.bin file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetXBOXDMIInfo(string dmi, out string serial, out string version, out string region)
+        {
+            serial = null; version = null; region = null;
+
+            if (!File.Exists(dmi))
+                return false;
+
+            using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
+            {
+                try
+                {
+                    br.BaseStream.Seek(8, SeekOrigin.Begin);
+                    char[] str = br.ReadChars(8);
+
+                    serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}";
+                    version = $"1.{str[5]}{str[6]}";
+                    region = GetXBOXRegion(str[7]);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the XBOX 360 serial info from the DMI.bin file, if possible
+        /// </summary>
+        /// <param name="dmi">DMI.bin file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetXBOX360DMIInfo(string dmi, out string serial, out string version, out string region)
+        {
+            serial = null; version = null; region = null;
+
+            if (!File.Exists(dmi))
+                return false;
+
+            using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
+            {
+                try
+                {
+                    br.BaseStream.Seek(8, SeekOrigin.Begin);
+                    char[] str = br.ReadChars(9);
+
+                    serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}{str[5]}";
+                    version = $"1.{str[6]}{str[7]}";
+                    region = GetXBOXRegion(str[8]);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determine the region based on the XBOX serial character
+        /// </summary>
+        /// <param name="region">Character denoting the region</param>
+        /// <returns>Region name, if possible</returns>
+        private string GetXBOXRegion(char region)
+        {
+            switch (region)
+            {
+                case 'W':
+                    return "World";
+                case 'A':
+                    return "USA";
+                case 'J':
+                    return "Japan or Asia";
+                case 'E':
+                    return "Europe (or single country)";
+                case 'K':
+                    return "USA, Japan or USA, Asia";
+                case 'L':
+                    return "USA, Europe";
+                case 'H':
+                    return "Japan, Europe";
+                default:
+                    return "Could not determine region";
             }
         }
 
