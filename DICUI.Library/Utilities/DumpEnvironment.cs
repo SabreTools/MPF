@@ -654,7 +654,7 @@ namespace DICUI.Utilities
                                 mappings[Template.XBOXSSVersion] = ssver360 ?? "";
                                 mappings[Template.XBOXSSRanges] = ss360 ?? "";
                             }
-                            if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out string region360))
+                            if (GetXBOX360DMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out string region360))
                             {
                                 mappings[Template.DiscSerialField] = serial360 ?? Template.RequiredValue;
                                 mappings[Template.VersionField] = version360 ?? Template.RequiredValue;
@@ -1728,12 +1728,14 @@ namespace DICUI.Utilities
             {
                 try
                 {
-                    br.BaseStream.Seek(8, SeekOrigin.Begin);
-                    char[] str = br.ReadChars(9);
+                    br.BaseStream.Seek(64, SeekOrigin.Begin);
+                    char[] str = br.ReadChars(14);
 
                     serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}{str[5]}";
                     version = $"1.{str[6]}{str[7]}";
                     region = GetXBOXRegion(str[8]);
+                    // str[9], str[10], str[11] - unknown purpose
+                    // str[12], str[13] - disc <12> of <13>
                     return true;
                 }
                 catch
