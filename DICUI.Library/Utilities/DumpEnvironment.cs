@@ -290,6 +290,9 @@ namespace DICUI.Utilities
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
+            // Some disc types are audio-only
+            bool audioOnly = (System == KnownSystem.AtariJaguarCD) || (System == KnownSystem.AudioCD);
+
             // Now ensure that all required files exist
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);
             switch (Type)
@@ -301,8 +304,8 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + ".cue")
                         && File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + ".img")
-                        && (System == KnownSystem.AudioCD || File.Exists(combinedBase + ".img_EdcEcc.txt") || File.Exists(combinedBase + ".img_EccEdc.txt"))
-                        && (System == KnownSystem.AudioCD || File.Exists(combinedBase + ".scm"))
+                        && (audioOnly || File.Exists(combinedBase + ".img_EdcEcc.txt") || File.Exists(combinedBase + ".img_EccEdc.txt"))
+                        && (audioOnly || File.Exists(combinedBase + ".scm"))
                         && File.Exists(combinedBase + ".sub")
                         && File.Exists(combinedBase + "_c2Error.txt")
                         && File.Exists(combinedBase + "_cmd.txt")

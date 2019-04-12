@@ -25,6 +25,9 @@ namespace DICUI.Utilities
             {
                 #region Consoles
 
+                case KnownSystem.AtariJaguarCD:
+                    types.Add(MediaType.CDROM);
+                    break;
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     types.Add(MediaType.CDROM);
                     break;

@@ -629,6 +629,8 @@ namespace DICUI.Utilities
             {
                 #region Consoles
 
+                case KnownSystem.AtariJaguarCD:
+                    return "Atari Jaguar CD";
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     return "Bandai Playdia Quick Interactive System";
                 case KnownSystem.BandaiApplePippin:
@@ -876,6 +878,8 @@ namespace DICUI.Utilities
             {
                 #region Consoles
 
+                case KnownSystem.AtariJaguarCD:
+                    return "jaguar";
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     return "playdia";
                 case KnownSystem.BandaiApplePippin:
@@ -1123,6 +1127,15 @@ namespace DICUI.Utilities
             {
                 #region Consoles
 
+                case "jaguar":
+                case "jagcd":
+                case "jaguarcd":
+                case "jaguar cd":
+                case "atarijaguar":
+                case "atarijagcd":
+                case "atarijaguarcd":
+                case "atari jaguar cd":
+                    return KnownSystem.AtariJaguarCD;
                 case "playdia":
                 case "playdiaqis":
                 case "playdiaquickinteractivesystem":

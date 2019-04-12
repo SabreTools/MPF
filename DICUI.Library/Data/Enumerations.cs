@@ -70,6 +70,7 @@
 
         #region Consoles
 
+        AtariJaguarCD,
         BandaiPlaydiaQuickInteractiveSystem,
         BandaiApplePippin,
         CommodoreAmigaCD32,
