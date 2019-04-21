@@ -71,11 +71,14 @@ namespace DICUI.Check
                     return;
                 }
 
+                // Get the full file path
+                string filepath = Path.GetFullPath(args[i]);
+
                 // Now populate an environment
                 var env = new DumpEnvironment
                 {
                     OutputDirectory = "",
-                    OutputFilename = args[i],
+                    OutputFilename = filepath,
                     System = knownSystem,
                     Type = mediaType,
                     ScanForProtection = false,
