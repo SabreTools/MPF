@@ -1433,7 +1433,6 @@ namespace DICUI.Utilities
             }
 
             // Now sort based on disc type
-            List<string> parameters = new List<string>();
             switch (type)
             {
                 case MediaType.CDROM:
@@ -1454,6 +1453,9 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.HasbroVideoNow:
+                        case KnownSystem.HasbroVideoNowColor:
+                        case KnownSystem.HasbroVideoNowJr:
+                        case KnownSystem.HasbroVideoNowXP:
                             this[DICFlag.VideoNow] = true;
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using DICUI.Data;
+﻿using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
 
@@ -54,37 +52,6 @@ namespace DICUI.Test
         public void GetFirstTrackTest()
         {
             // TODO: Implement
-            Assert.True(true);
-        }
-
-        [Theory]
-        [InlineData(MediaType.CDROM)]
-        [InlineData(MediaType.DVD)]
-        [InlineData(MediaType.FloppyDisk)]
-        [InlineData(MediaType.LaserDisc)]
-        public void FoundAllFilesTest(MediaType? mediaType)
-        {
-            // TODO: Implement
-            // TODO: Get sample output data for each of the major types
-            Assert.True(true);
-        }
-
-        [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM)]
-        [InlineData(KnownSystem.PhilipsCDi, MediaType.CDROM)]
-        [InlineData(KnownSystem.SegaSaturn, MediaType.CDROM)]
-        [InlineData(KnownSystem.SonyPlayStation, MediaType.CDROM)]
-        [InlineData(KnownSystem.SonyPlayStation2, MediaType.CDROM)]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.DVD)]
-        [InlineData(KnownSystem.DVDVideo, MediaType.DVD)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD)]
-        [InlineData(KnownSystem.SonyPlayStation2, MediaType.DVD)]
-        [InlineData(KnownSystem.BDVideo, MediaType.BluRay)]
-        [InlineData(KnownSystem.AUSCOMSystem1, MediaType.Cassette)]
-        public void ExtractOutputInformation(KnownSystem? knownSystem, MediaType? mediaType)
-        {
-            // TODO: Implement
-            // TODO: Get sample output data for each of the major types
             Assert.True(true);
         }
 

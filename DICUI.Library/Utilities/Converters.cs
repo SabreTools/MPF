@@ -840,6 +840,12 @@ namespace DICUI.Utilities
                     return "Enhanced BD";
                 case KnownSystem.HasbroVideoNow:
                     return "Hasbro VideoNow";
+                case KnownSystem.HasbroVideoNowColor:
+                    return "Hasbro VideoNow Color";
+                case KnownSystem.HasbroVideoNowJr:
+                    return "Hasbro VideoNow Jr.";
+                case KnownSystem.HasbroVideoNowXP:
+                    return "Hasbro VideoNow XP";
                 case KnownSystem.HDDVDVideo:
                     return "HD-DVD-Video";
                 case KnownSystem.PalmOS:
@@ -1089,6 +1095,12 @@ namespace DICUI.Utilities
                     return "enhanced bd";
                 case KnownSystem.HasbroVideoNow:
                     return "videonow";
+                case KnownSystem.HasbroVideoNowColor:
+                    return "videonowcolor";
+                case KnownSystem.HasbroVideoNowJr:
+                    return "videonowjr";
+                case KnownSystem.HasbroVideoNowXP:
+                    return "videonowxp";
                 case KnownSystem.HDDVDVideo:
                     return "hddvd-video";
                 case KnownSystem.PalmOS:
@@ -1721,6 +1733,21 @@ namespace DICUI.Utilities
                 case "hasbrovideonow":
                 case "hasbro videonow":
                     return KnownSystem.HasbroVideoNow;
+                case "videonowcolor":
+                case "videonow color":
+                case "hasbrovideonowcolor":
+                case "hasbro videonow color":
+                    return KnownSystem.HasbroVideoNowColor;
+                case "videonowjr":
+                case "videonow jr":
+                case "hasbrovideonowjr":
+                case "hasbro videonow jr":
+                    return KnownSystem.HasbroVideoNowColor;
+                case "videonowxp":
+                case "videonow xp":
+                case "hasbrovideonowxp":
+                case "hasbro videonow xp":
+                    return KnownSystem.HasbroVideoNowColor;
                 case "hddvdvideo":
                 case "hddvd-video":
                 case "hd-dvd-video":

@@ -708,17 +708,20 @@ namespace DICUI.Utilities
 
             try
             {
-                List<string> output = new List<string>();
+                // Initialize with all of the standard fields
+                List<string> output = new List<string>
+                {
+                    Template.TitleField + ": " + info[Template.TitleField],
+                    Template.DiscNumberField + ": " + info[Template.DiscNumberField],
+                    Template.DiscTitleField + ": " + info[Template.DiscTitleField],
+                    Template.SystemField + ": " + info[Template.SystemField],
+                    Template.MediaTypeField + ": " + info[Template.MediaTypeField],
+                    Template.CategoryField + ": " + info[Template.CategoryField],
+                    Template.RegionField + ": " + info[Template.RegionField],
+                    Template.LanguagesField + ": " + info[Template.LanguagesField],
+                    Template.DiscSerialField + ": " + info[Template.DiscSerialField]
+                };
 
-                output.Add(Template.TitleField + ": " + info[Template.TitleField]);
-                output.Add(Template.DiscNumberField + ": " + info[Template.DiscNumberField]);
-                output.Add(Template.DiscTitleField + ": " + info[Template.DiscTitleField]);
-                output.Add(Template.SystemField + ": " + info[Template.SystemField]);
-                output.Add(Template.MediaTypeField + ": " + info[Template.MediaTypeField]);
-                output.Add(Template.CategoryField + ": " + info[Template.CategoryField]);
-                output.Add(Template.RegionField + ": " + info[Template.RegionField]);
-                output.Add(Template.LanguagesField + ": " + info[Template.LanguagesField]);
-                output.Add(Template.DiscSerialField + ": " + info[Template.DiscSerialField]);
                 switch (System)
                 {
                     case KnownSystem.SegaCDMegaCD:
@@ -1849,7 +1852,11 @@ namespace DICUI.Utilities
 
             progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
             bool success = WriteOutputData(formattedValues);
-            progress?.Report(Result.Success("Writing complete!"));
+
+            if (success)
+                progress?.Report(Result.Success("Writing complete!"));
+            else
+                progress?.Report(Result.Failure("Writing could not complete!"));
 
             return Result.Success();
         }

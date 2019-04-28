@@ -353,6 +353,15 @@ namespace DICUI.Utilities
                 case KnownSystem.HasbroVideoNow:
                     types.Add(MediaType.CDROM);
                     break;
+                case KnownSystem.HasbroVideoNowColor:
+                    types.Add(MediaType.CDROM);
+                    break;
+                case KnownSystem.HasbroVideoNowJr:
+                    types.Add(MediaType.CDROM);
+                    break;
+                case KnownSystem.HasbroVideoNowXP:
+                    types.Add(MediaType.CDROM);
+                    break;
                 case KnownSystem.HDDVDVideo:
                     types.Add(MediaType.HDDVD);
                     break;
