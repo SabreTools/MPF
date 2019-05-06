@@ -79,8 +79,8 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     break;
                 case KnownSystem.SegaDreamcast:
-                    types.Add(MediaType.CDROM);    // Low density partition
-                    types.Add(MediaType.GDROM); // Hight density partition
+                    types.Add(MediaType.CDROM); // Low density partition
+                    types.Add(MediaType.GDROM); // High density partition
                     break;
                 case KnownSystem.SegaSaturn:
                     types.Add(MediaType.CDROM);
@@ -250,7 +250,8 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.NamcoSegaNintendoTriforce:
-                    types.Add(MediaType.GDROM);
+                    types.Add(MediaType.CDROM); // Low density partition
+                    types.Add(MediaType.GDROM); // High density partition
                     break;
                 case KnownSystem.NamcoSystem12:
                     types.Add(MediaType.CDROM);
@@ -282,7 +283,8 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaChihiro:
-                    types.Add(MediaType.GDROM);
+                    types.Add(MediaType.CDROM); // Low density partition
+                    types.Add(MediaType.GDROM); // High density partition
                     break;
                 case KnownSystem.SegaEuropaR:
                     types.Add(MediaType.DVD); // TODO: Confirm
@@ -291,10 +293,12 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     break;
                 case KnownSystem.SegaNaomi:
-                    types.Add(MediaType.GDROM);
+                    types.Add(MediaType.CDROM); // Low density partition
+                    types.Add(MediaType.GDROM); // High density partition
                     break;
                 case KnownSystem.SegaNaomi2:
-                    types.Add(MediaType.GDROM);
+                    types.Add(MediaType.CDROM); // Low density partition
+                    types.Add(MediaType.GDROM); // High density partition
                     break;
                 case KnownSystem.SegaNu:
                     types.Add(MediaType.DVD);
