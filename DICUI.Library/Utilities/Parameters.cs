@@ -150,7 +150,7 @@ namespace DICUI.Utilities
                     // GameCube and Wii
                     if (this[DICFlag.Raw])
                     {
-                        type = MediaType.NintendoGameCube;
+                        type = MediaType.NintendoGameCubeGameDisc;
                         system = KnownSystem.NintendoGameCube;
                     }
 
@@ -1386,7 +1386,7 @@ namespace DICUI.Utilities
                 case MediaType.BluRay:
                     Command = DICCommand.BluRay;
                     return;
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                     Command = DICCommand.DigitalVideoDisc;
                     return;
                 case MediaType.NintendoWiiOpticalDisc:
@@ -1486,7 +1486,7 @@ namespace DICUI.Utilities
                     break;
 
                 // Special Formats
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                     this[DICFlag.Raw] = true;
                     break;
                 case MediaType.NintendoWiiOpticalDisc:

@@ -252,7 +252,7 @@ namespace DICUI.Utilities
                 case MediaType.UMD:
                     return ".iso";
                 case MediaType.LaserDisc:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                     return ".raw";
                 case MediaType.NintendoWiiUOpticalDisc:
                     return ".wud";
@@ -333,8 +333,8 @@ namespace DICUI.Utilities
                     return "64DD Disk";
                 case MediaType.NintendoFamicomDiskSystem:
                     return "Famicom Disk System Disk";
-                case MediaType.NintendoGameCube:
-                    return "GameCube Disc";
+                case MediaType.NintendoGameCubeGameDisc:
+                    return "GameCube Game Disc";
                 case MediaType.NintendoWiiOpticalDisc:
                     return "Wii Optical Disc";
                 case MediaType.NintendoWiiUOpticalDisc:
@@ -423,8 +423,8 @@ namespace DICUI.Utilities
                     return "64DD Disk";
                 case MediaType.NintendoFamicomDiskSystem:
                     return "Famicom Disk System Disk";
-                case MediaType.NintendoGameCube:
-                    return "GameCube Disc";
+                case MediaType.NintendoGameCubeGameDisc:
+                    return "GameCube Game Disc";
                 case MediaType.NintendoWiiOpticalDisc:
                     return "Wii Optical Disc";
                 case MediaType.NintendoWiiUOpticalDisc:
@@ -584,7 +584,8 @@ namespace DICUI.Utilities
                 case "nintendogamecube":
                 case "nintendo gamecube":
                 case "gamecube disc":
-                    return MediaType.NintendoGameCube;
+                case "gamecube game disc":
+                    return MediaType.NintendoGameCubeGameDisc;
                 case "wii":
                 case "nintendowii":
                 case "nintendo wii":
@@ -639,6 +640,16 @@ namespace DICUI.Utilities
                     return "Commodore Amiga CD32";
                 case KnownSystem.CommodoreAmigaCDTV:
                     return "Commodore Amiga CDTV";
+                case KnownSystem.FujitsuFMTownsMarty:
+                    return "Fujitsu FM Towns Marty";
+                case KnownSystem.HasbroVideoNow:
+                    return "Hasbro VideoNow";
+                case KnownSystem.HasbroVideoNowColor:
+                    return "Hasbro VideoNow Color";
+                case KnownSystem.HasbroVideoNowJr:
+                    return "Hasbro VideoNow Jr.";
+                case KnownSystem.HasbroVideoNowXP:
+                    return "Hasbro VideoNow XP";
                 case KnownSystem.MattelHyperscan:
                     return "Mattel HyperScan";
                 case KnownSystem.MicrosoftXBOX:
@@ -679,6 +690,8 @@ namespace DICUI.Utilities
                     return "Sony PlayStation 4";
                 case KnownSystem.SonyPlayStationPortable:
                     return "Sony PlayStation Portable";
+                case KnownSystem.TandyMemorexVisualInformationSystem:
+                    return "Tandy / Memorex Visual Information System";
                 case KnownSystem.VMLabsNuon:
                     return "VM Labs NUON";
                 case KnownSystem.VTechVFlashVSmilePro:
@@ -694,8 +707,8 @@ namespace DICUI.Utilities
                     return "Acorn Archimedes";
                 case KnownSystem.AppleMacintosh:
                     return "Apple Macintosh";
-                case KnownSystem.CommodoreAmigaCD:
-                    return "Commodore Amiga CD";
+                case KnownSystem.CommodoreAmiga:
+                    return "Commodore Amiga";
                 case KnownSystem.FujitsuFMTowns:
                     return "Fujitsu FM Towns series";
                 case KnownSystem.IBMPCCompatible:
@@ -757,8 +770,6 @@ namespace DICUI.Utilities
                     return "Konami PC-based Systems";
                 case KnownSystem.MeritIndustriesBoardwalk:
                     return "Merit Industries Boardwalk";
-                case KnownSystem.MeritIndustriesMegaTouchAurora:
-                    return "Merit Industries MegaTouch Aurora";
                 case KnownSystem.MeritIndustriesMegaTouchForce:
                     return "Merit Industries MegaTouch Force";
                 case KnownSystem.MeritIndustriesMegaTouchION:
@@ -817,8 +828,6 @@ namespace DICUI.Utilities
                     return "Seibu CATS System";
                 case KnownSystem.TABAustriaQuizard:
                     return "TAB-Austria Quizard";
-                case KnownSystem.TandyMemorexVisualInformationSystem:
-                    return "Tandy / Memorex Visual Information System";
                 case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
                     return "Tsunami TsuMo Multi-Game Motion System";
 
@@ -834,18 +843,6 @@ namespace DICUI.Utilities
                     return "DVD-Video";
                 case KnownSystem.EnhancedCD:
                     return "Enhanced CD";
-                case KnownSystem.EnhancedDVD:
-                    return "Enhanced DVD";
-                case KnownSystem.EnhancedBD:
-                    return "Enhanced BD";
-                case KnownSystem.HasbroVideoNow:
-                    return "Hasbro VideoNow";
-                case KnownSystem.HasbroVideoNowColor:
-                    return "Hasbro VideoNow Color";
-                case KnownSystem.HasbroVideoNowJr:
-                    return "Hasbro VideoNow Jr.";
-                case KnownSystem.HasbroVideoNowXP:
-                    return "Hasbro VideoNow XP";
                 case KnownSystem.HDDVDVideo:
                     return "HD-DVD-Video";
                 case KnownSystem.PalmOS:
@@ -892,8 +889,18 @@ namespace DICUI.Utilities
                     return "pippin";
                 case KnownSystem.CommodoreAmigaCD32:
                     return "cd32";
+                case KnownSystem.FujitsuFMTownsMarty:
+                    return "fmtm";
                 case KnownSystem.CommodoreAmigaCDTV:
                     return "cdtv";
+                case KnownSystem.HasbroVideoNow:
+                    return "videonow";
+                case KnownSystem.HasbroVideoNowColor:
+                    return "videonowcolor";
+                case KnownSystem.HasbroVideoNowJr:
+                    return "videonowjr";
+                case KnownSystem.HasbroVideoNowXP:
+                    return "videonowxp";
                 case KnownSystem.MattelHyperscan:
                     return "hyperscan";
                 case KnownSystem.MicrosoftXBOX:
@@ -934,6 +941,8 @@ namespace DICUI.Utilities
                     return "ps4";
                 case KnownSystem.SonyPlayStationPortable:
                     return "psp";
+                case KnownSystem.TandyMemorexVisualInformationSystem:
+                    return "vis";
                 case KnownSystem.VMLabsNuon:
                     return "nuon";
                 case KnownSystem.VTechVFlashVSmilePro:
@@ -949,8 +958,8 @@ namespace DICUI.Utilities
                     return "archimedes";
                 case KnownSystem.AppleMacintosh:
                     return "mac";
-                case KnownSystem.CommodoreAmigaCD:
-                    return "amigacd";
+                case KnownSystem.CommodoreAmiga:
+                    return "amiga";
                 case KnownSystem.FujitsuFMTowns:
                     return "fmtowns";
                 case KnownSystem.IBMPCCompatible:
@@ -1012,8 +1021,6 @@ namespace DICUI.Utilities
                     return "konami pc";
                 case KnownSystem.MeritIndustriesBoardwalk:
                     return "boardwalk";
-                case KnownSystem.MeritIndustriesMegaTouchAurora:
-                    return "megatouch aurora";
                 case KnownSystem.MeritIndustriesMegaTouchForce:
                     return "megatouch force";
                 case KnownSystem.MeritIndustriesMegaTouchION:
@@ -1072,8 +1079,6 @@ namespace DICUI.Utilities
                     return "seibu cats";
                 case KnownSystem.TABAustriaQuizard:
                     return "quizard";
-                case KnownSystem.TandyMemorexVisualInformationSystem:
-                    return "vis";
                 case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
                     return "tsumo";
 
@@ -1089,18 +1094,6 @@ namespace DICUI.Utilities
                     return "dvd-video";
                 case KnownSystem.EnhancedCD:
                     return "enhanced cd";
-                case KnownSystem.EnhancedDVD:
-                    return "enhanced dvd";
-                case KnownSystem.EnhancedBD:
-                    return "enhanced bd";
-                case KnownSystem.HasbroVideoNow:
-                    return "videonow";
-                case KnownSystem.HasbroVideoNowColor:
-                    return "videonowcolor";
-                case KnownSystem.HasbroVideoNowJr:
-                    return "videonowjr";
-                case KnownSystem.HasbroVideoNowXP:
-                    return "videonowxp";
                 case KnownSystem.HDDVDVideo:
                     return "hddvd-video";
                 case KnownSystem.PalmOS:
@@ -1176,6 +1169,31 @@ namespace DICUI.Utilities
                 case "commodoreamigacdtv":
                 case "commodore amiga cdtv":
                     return KnownSystem.CommodoreAmigaCDTV;
+                case "fmtm":
+                case "fmtownsmarty":
+                case "fm towns marty":
+                case "fujitsufmtownsmarty":
+                case "fujitsu fm towns marty":
+                    return KnownSystem.FujitsuFMTownsMarty;
+                case "videonow":
+                case "hasbrovideonow":
+                case "hasbro videonow":
+                    return KnownSystem.HasbroVideoNow;
+                case "videonowcolor":
+                case "videonow color":
+                case "hasbrovideonowcolor":
+                case "hasbro videonow color":
+                    return KnownSystem.HasbroVideoNowColor;
+                case "videonowjr":
+                case "videonow jr":
+                case "hasbrovideonowjr":
+                case "hasbro videonow jr":
+                    return KnownSystem.HasbroVideoNowColor;
+                case "videonowxp":
+                case "videonow xp":
+                case "hasbrovideonowxp":
+                case "hasbro videonow xp":
+                    return KnownSystem.HasbroVideoNowColor;
                 case "hyperscan":
                 case "mattelhyperscan":
                 case "mattel hyperscan":
@@ -1316,6 +1334,17 @@ namespace DICUI.Utilities
                 case "sonyplaystationportable":
                 case "sony playstation portable":
                     return KnownSystem.SonyPlayStationPortable;
+                case "vis":
+                case "tandyvis":
+                case "tandy vis":
+                case "tandyvisualinformationsystem":
+                case "tandy visual information system":
+                case "memorexvis":
+                case "memorex vis":
+                case "memorexvisualinformationsystem":
+                case "memorex visual information sytem":
+                case "tandy / memorex visual information system":
+                    return KnownSystem.TandyMemorexVisualInformationSystem;
                 case "nuon":
                 case "vmlabsnuon":
                 case "vm labs nuon":
@@ -1365,13 +1394,9 @@ namespace DICUI.Utilities
                 case "apple macintosh":
                     return KnownSystem.AppleMacintosh;
                 case "amiga":
-                case "amigacd":
-                case "amiga cd":
                 case "commodoreamiga":
                 case "commodore amiga":
-                case "commodoreamigacd":
-                case "commodore amiga cd":
-                    return KnownSystem.CommodoreAmigaCD;
+                    return KnownSystem.CommodoreAmiga;
                 case "fmtowns":
                 case "fmt":
                 case "fm towns":
@@ -1516,11 +1541,6 @@ namespace DICUI.Utilities
                 case "meritindustriesboardwalk":
                 case "merit industries boardwalk":
                     return KnownSystem.MeritIndustriesBoardwalk;
-                case "megatouchaurora":
-                case "megatouch aurora":
-                case "meritindustriesmegatouchaurora":
-                case "merit industries megatouch aurora":
-                    return KnownSystem.MeritIndustriesMegaTouchAurora;
                 case "megatouchforce":
                 case "megatouch force":
                 case "meritindustriesmegatouchforce":
@@ -1682,17 +1702,6 @@ namespace DICUI.Utilities
                 case "tabaustriaquizard":
                 case "tab-austria quizard":
                     return KnownSystem.TABAustriaQuizard;
-                case "vis":
-                case "tandyvis":
-                case "tandy vis":
-                case "tandyvisualinformationsystem":
-                case "tandy visual information system":
-                case "memorexvis":
-                case "memorex vis":
-                case "memorexvisualinformationsystem":
-                case "memorex visual information sytem":
-                case "tandy / memorex visual information system":
-                    return KnownSystem.TandyMemorexVisualInformationSystem;
                 case "tsumo":
                 case "tsunamitsumo":
                 case "tsunami tsumo":
@@ -1721,33 +1730,6 @@ namespace DICUI.Utilities
                 case "enhanced cdrom":
                 case "enhanced cd-rom":
                     return KnownSystem.EnhancedCD;
-                case "enhanceddvd":
-                case "enhanced dvd":
-                    return KnownSystem.EnhancedDVD;
-                case "enhancedbd":
-                case "enhanced bd":
-                case "enhancedbluray":
-                case "enhanced bluray":
-                    return KnownSystem.EnhancedBD;
-                case "videonow":
-                case "hasbrovideonow":
-                case "hasbro videonow":
-                    return KnownSystem.HasbroVideoNow;
-                case "videonowcolor":
-                case "videonow color":
-                case "hasbrovideonowcolor":
-                case "hasbro videonow color":
-                    return KnownSystem.HasbroVideoNowColor;
-                case "videonowjr":
-                case "videonow jr":
-                case "hasbrovideonowjr":
-                case "hasbro videonow jr":
-                    return KnownSystem.HasbroVideoNowColor;
-                case "videonowxp":
-                case "videonow xp":
-                case "hasbrovideonowxp":
-                case "hasbro videonow xp":
-                    return KnownSystem.HasbroVideoNowColor;
                 case "hddvdvideo":
                 case "hddvd-video":
                 case "hd-dvd-video":

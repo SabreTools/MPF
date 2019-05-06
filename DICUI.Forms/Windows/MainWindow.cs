@@ -301,9 +301,11 @@ namespace DICUI.Forms.Windows
                         .ToList()
                 );
 
-            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
-
-            comboBoxItems.Add(new KnownSystemComboBoxItem(KnownSystem.NONE));
+            // Initialize with the NONE system first so it appears on top
+            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>
+            {
+                new KnownSystemComboBoxItem(KnownSystem.NONE)
+            };
 
             foreach (var group in mapping)
             {
@@ -538,7 +540,7 @@ namespace DICUI.Forms.Windows
         private void GetOutputNames()
         {
             Drive drive = DriveLetterComboBox.SelectedItem as Drive;
-            KnownSystem? systemType = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
+            //KnownSystem? systemType = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem; // TODO: Add system as part of the output path
             MediaType? mediaType = MediaTypeComboBox.SelectedItem as MediaType?;
 
             OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
@@ -595,7 +597,7 @@ namespace DICUI.Forms.Windows
                     break;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     preferred = _options.PreferredDumpSpeedDVD;
                     break;
@@ -625,8 +627,7 @@ namespace DICUI.Forms.Windows
         private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            Drive drive = DriveLetterComboBox.SelectedItem as Drive;
-            if (drive == null || drive.IsFloppy)
+            if (!(DriveLetterComboBox.SelectedItem is Drive drive) || drive.IsFloppy)
                 return;
 
             // Get the current optical disc type

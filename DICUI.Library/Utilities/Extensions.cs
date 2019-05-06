@@ -53,7 +53,7 @@ namespace DICUI.Utilities
                 case MediaType.GDROM:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return true;
                 default:

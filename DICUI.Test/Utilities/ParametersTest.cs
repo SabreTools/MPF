@@ -23,7 +23,7 @@ namespace DICUI.Test.Utilities
 
         [Theory]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCube, false, 20, null, new DICFlag[] { DICFlag.Raw })]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new DICFlag[] { DICFlag.Raw })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new DICFlag[] { })]
         /* paranoid mode tests */
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect, DICFlag.ScanSectorProtect, DICFlag.SubchannelReadLevel })]
@@ -55,7 +55,7 @@ namespace DICUI.Test.Utilities
         [InlineData("", null, null, null, null)]
         [InlineData("cd F test.bin 8 /c2 20", MediaType.CDROM, KnownSystem.IBMPCCompatible, "F", "test.bin")]
         [InlineData("fd A blah\\test.img", MediaType.FloppyDisk, KnownSystem.IBMPCCompatible, "A", "blah\\test.img")]
-        [InlineData("dvd X super\\blah\\test.iso 8 /raw", MediaType.NintendoGameCube, KnownSystem.NintendoGameCube, "X", "super\\blah\\test.iso")]
+        [InlineData("dvd X super\\blah\\test.iso 8 /raw", MediaType.NintendoGameCubeGameDisc, KnownSystem.NintendoGameCube, "X", "super\\blah\\test.iso")]
         [InlineData("stop D", null, null, "D", null)]
         public void DetermineFlagsTest(string parameters, MediaType? expectedMediaType, KnownSystem? expectedKnownSystem, string expectedDriveLetter, string expectedPath)
         {

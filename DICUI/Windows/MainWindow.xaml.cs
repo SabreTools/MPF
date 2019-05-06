@@ -589,7 +589,7 @@ namespace DICUI.Windows
                     break;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     preferred = _options.PreferredDumpSpeedDVD;
                     break;

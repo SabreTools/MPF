@@ -36,7 +36,7 @@ namespace DICUI
                     return cd;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return dvd;
                 case MediaType.BluRay:

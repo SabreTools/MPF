@@ -322,7 +322,7 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
@@ -480,8 +480,6 @@ namespace DICUI.Utilities
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.EnhancedCD:
-                        case KnownSystem.EnhancedDVD:
-                        case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
@@ -608,8 +606,6 @@ namespace DICUI.Utilities
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.EnhancedCD:
-                        case KnownSystem.EnhancedDVD:
-                        case KnownSystem.EnhancedBD:
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
                             mappings[Template.ISBNField] = Template.OptionalValue;
@@ -771,8 +767,6 @@ namespace DICUI.Utilities
                 {
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.EnhancedCD:
-                    case KnownSystem.EnhancedDVD:
-                    case KnownSystem.EnhancedBD:
                     case KnownSystem.IBMPCCompatible:
                     case KnownSystem.RainbowDisc:
                         output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
@@ -820,8 +814,6 @@ namespace DICUI.Utilities
                 {
                     case KnownSystem.AppleMacintosh:
                     case KnownSystem.EnhancedCD:
-                    case KnownSystem.EnhancedDVD:
-                    case KnownSystem.EnhancedBD:
                     case KnownSystem.IBMPCCompatible:
                     case KnownSystem.RainbowDisc:
                         output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");

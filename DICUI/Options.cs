@@ -84,7 +84,7 @@ namespace DICUI
                     return PreferredDumpSpeedCD;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
-                case MediaType.NintendoGameCube:
+                case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return PreferredDumpSpeedDVD;
                 case MediaType.BluRay:

@@ -10,7 +10,7 @@ namespace DICUI.Test.Utilities
         [Theory]
         [InlineData(KnownSystem.BandaiApplePippin, MediaType.CDROM)]
         [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCube)]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc)]
         [InlineData(KnownSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc)]
         [InlineData(KnownSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc)]
         [InlineData(KnownSystem.SonyPlayStationPortable, MediaType.UMD)]
