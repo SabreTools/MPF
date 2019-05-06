@@ -68,13 +68,14 @@
     {
         NONE = 0,
 
-        #region Consoles
+        #region Disc-Based Consoles
 
         AtariJaguarCD,
         BandaiPlaydiaQuickInteractiveSystem,
         BandaiApplePippin,
         CommodoreAmigaCD32,
         CommodoreAmigaCDTV,
+        EnvizionsEVOSmartConsole,
         FujitsuFMTownsMarty,
         HasbroVideoNow,
         HasbroVideoNowColor,
@@ -87,10 +88,12 @@
         NECPCEngineTurboGrafxCD,
         NECPCFX,
         NintendoGameCube,
+        NintendoSonySuperNESCDROMSystem,
         NintendoWii,
         NintendoWiiU,
-        Panasonic3DOInteractiveMultiplayer,
+        Panasonic3DOInteractiveMultiplayer, // The 3DO Company 3DO Interactive Multiplayer
         PhilipsCDi,
+        PioneerLaserActive,
         SegaCDMegaCD,
         SegaDreamcast,
         SegaSaturn,
@@ -105,7 +108,64 @@
         VTechVFlashVSmilePro,
         ZAPiTGamesGameWaveFamilyEntertainmentSystem,
 
-        MarkerConsoleEnd,
+        MarkerDiscBasedConsoleEnd,
+
+        #endregion
+
+        #region Cartridge-Based and Other Consoles
+
+        /*
+        AmstradGX4000,
+        APFMicrocomputerSystem,
+        Atari2600VCS,
+        Atari5200,
+        Atari7800,
+        AtariJaguar,
+        AtariXEVideoGameSystem,
+        Audiosonic1292AdvancedProgrammableVideoSystem,
+        BallyAstrocade,
+        BitCorporationDina,
+        CasioLoopy,
+        CasioPV1000,
+        Commodore64GamesSystem,
+        DaewooElectronicsZemmix,
+        EmersonArcadia2001,
+        EpochCassetteVision,
+        EpochSuperCassetteVision,
+        FairchildChannelF,
+        FuntechSuperACan,
+        GeneralConsumerElectricVectrex,
+        HeberBBCBridgeCompanion,
+        IntertonVC4000,
+        JungleTacVii,
+        LeapFrogClickStart,
+        LJNVideoArt,
+        MagnavoxOdyssey2,
+        MattelIntellivision,
+        NECPCEngineTurboGrafx16,
+        NichibutsuMyVision,
+        Nintendo64,
+        Nintendo64DD,
+        NintendoFamilyComputerNintendoEntertainmentSystem,
+        NintendoFamilyComputerDiskSystem,
+        NintendoSuperFamicomSuperNintendoEntertainmentSystem,
+        NintendoSwitch,
+        PhilipsVideopacPlusG7400,
+        RCAStudioII,
+        Sega32X,
+        SegaMarkIIIMasterSystem,
+        SegaMegaDriveGenesis,
+        SegaSG1000,
+        SNKNeoGeo,
+        SSDCOMPANYLIMITEDXaviXPORT,
+        ViewMasterInteractiveVision,
+        VTechCreatiVision,
+        VTechVSmile,
+        VTechSocrates,
+        WorldsOfWonderActionMax,
+
+        MarkerOtherConsoleEnd,
+        */
 
         #endregion
 
@@ -210,7 +270,8 @@
     /// </summary>
     public enum KnownSystemCategory
     {
-        Console = 0,
+        DiscBasedConsole = 0,
+        OtherConsole,
         Computer,
         Arcade,
         Other,

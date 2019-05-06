@@ -79,8 +79,12 @@ namespace DICUI.Utilities
 
         public static KnownSystemCategory Category(this KnownSystem? system)
         {
-            if (system < KnownSystem.MarkerConsoleEnd)
-                return KnownSystemCategory.Console;
+            if (system < KnownSystem.MarkerDiscBasedConsoleEnd)
+                return KnownSystemCategory.DiscBasedConsole;
+            /*
+            else if (system < KnownSystem.MarkerOtherConsoleEnd)
+                return KnownSystemCategory.OtherConsole;
+            */
             else if (system < KnownSystem.MarkerComputerEnd)
                 return KnownSystemCategory.Computer;
             else if (system < KnownSystem.MarkerArcadeEnd)
@@ -97,7 +101,8 @@ namespace DICUI.Utilities
             {
                 case KnownSystem.MarkerArcadeEnd:
                 case KnownSystem.MarkerComputerEnd:
-                case KnownSystem.MarkerConsoleEnd:
+                case KnownSystem.MarkerDiscBasedConsoleEnd:
+                // case KnownSystem.MarkerOtherConsoleEnd:
                 case KnownSystem.MarkerOtherEnd:
                     return true;
                 default:
@@ -122,8 +127,10 @@ namespace DICUI.Utilities
                     return "Arcade";
                 case KnownSystemCategory.Computer:
                     return "Computers";
-                case KnownSystemCategory.Console:
-                    return "Consoles";
+                case KnownSystemCategory.DiscBasedConsole:
+                    return "Disc-Based Consoles";
+                case KnownSystemCategory.OtherConsole:
+                    return "Other Consoles";
                 case KnownSystemCategory.Other:
                     return "Other";
                 case KnownSystemCategory.Custom:

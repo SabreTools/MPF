@@ -640,6 +640,8 @@ namespace DICUI.Utilities
                     return "Commodore Amiga CD32";
                 case KnownSystem.CommodoreAmigaCDTV:
                     return "Commodore Amiga CDTV";
+                case KnownSystem.EnvizionsEVOSmartConsole:
+                    return "Envizions EVO Smart Console";
                 case KnownSystem.FujitsuFMTownsMarty:
                     return "Fujitsu FM Towns Marty";
                 case KnownSystem.HasbroVideoNow:
@@ -664,6 +666,8 @@ namespace DICUI.Utilities
                     return "NEC PC-FX / PC-FXGA";
                 case KnownSystem.NintendoGameCube:
                     return "Nintendo GameCube";
+                case KnownSystem.NintendoSonySuperNESCDROMSystem:
+                    return "Nintendo-Sony Super NES CD-ROM System";
                 case KnownSystem.NintendoWii:
                     return "Nintendo Wii";
                 case KnownSystem.NintendoWiiU:
@@ -672,6 +676,8 @@ namespace DICUI.Utilities
                     return "Panasonic 3DO Interactive Multiplayer";
                 case KnownSystem.PhilipsCDi:
                     return "Philips CD-i";
+                case KnownSystem.PioneerLaserActive:
+                    return "Pioneer LaserActive";
                 case KnownSystem.SegaCDMegaCD:
                     return "Sega CD / Mega CD";
                 case KnownSystem.SegaDreamcast:
@@ -889,6 +895,8 @@ namespace DICUI.Utilities
                     return "pippin";
                 case KnownSystem.CommodoreAmigaCD32:
                     return "cd32";
+                case KnownSystem.EnvizionsEVOSmartConsole:
+                    return "evosc";
                 case KnownSystem.FujitsuFMTownsMarty:
                     return "fmtm";
                 case KnownSystem.CommodoreAmigaCDTV:
@@ -915,6 +923,8 @@ namespace DICUI.Utilities
                     return "pcfx";
                 case KnownSystem.NintendoGameCube:
                     return "gc";
+                case KnownSystem.NintendoSonySuperNESCDROMSystem:
+                    return "snescd";
                 case KnownSystem.NintendoWii:
                     return "wii";
                 case KnownSystem.NintendoWiiU:
@@ -923,6 +933,8 @@ namespace DICUI.Utilities
                     return "3do";
                 case KnownSystem.PhilipsCDi:
                     return "cdi";
+                case KnownSystem.PioneerLaserActive:
+                    return "laseractive";
                 case KnownSystem.SegaCDMegaCD:
                     return "mcd";
                 case KnownSystem.SegaDreamcast:
@@ -1169,6 +1181,15 @@ namespace DICUI.Utilities
                 case "commodoreamigacdtv":
                 case "commodore amiga cdtv":
                     return KnownSystem.CommodoreAmigaCDTV;
+                case "evosc":
+                case "evo sc":
+                case "evosmartconsole":
+                case "evo smart console":
+                case "envizionsevosc":
+                case "envizion evo sc":
+                case "envizionevosmartconsole":
+                case "envizion evo smart console":
+                    return KnownSystem.EnvizionsEVOSmartConsole;
                 case "fmtm":
                 case "fmtownsmarty":
                 case "fm towns marty":
@@ -1243,6 +1264,34 @@ namespace DICUI.Utilities
                 case "nintendogamecube":
                 case "nintendo gamecube":
                     return KnownSystem.NintendoGameCube;
+                case "snescd":
+                case "snes cd":
+                case "snes-cd":
+                case "supernescd":
+                case "super nes cd":
+                case "super nes-cd":
+                case "supernintendocd":
+                case "super nintendo cd":
+                case "super nintendo-cd":
+                case "nintendosnescd":
+                case "nintendo snes cd":
+                case "nintendosnes-cd":
+                case "nintendosupernescd":
+                case "nintendo super nes cd":
+                case "nintendo super nes-cd":
+                case "nintendosupernintendocd":
+                case "nintendo super nintendo cd":
+                case "nintendo super nintendo-cd":
+                case "sonysnescd":
+                case "sony snes cd":
+                case "sonysnes-cd":
+                case "sonysupernescd":
+                case "sony super nes cd":
+                case "sony super nes-cd":
+                case "sonysupernintendocd":
+                case "sony super nintendo cd":
+                case "sony super nintendo-cd":
+                    return KnownSystem.NintendoSonySuperNESCDROMSystem;
                 case "wii":
                 case "nintendowii":
                 case "nintendo wii":
@@ -1264,6 +1313,10 @@ namespace DICUI.Utilities
                 case "philips cdi":
                 case "philips cd-i":
                     return KnownSystem.PhilipsCDi;
+                case "laseractive":
+                case "pioneerlaseractive":
+                case "pioneer laseractive":
+                    return KnownSystem.PioneerLaserActive;
                 case "scd":
                 case "mcd":
                 case "smcd":

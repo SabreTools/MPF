@@ -27,7 +27,8 @@ namespace DICUI.Test.Utilities
             foreach(var system in values)
             {
                 bool expected = system == KnownSystem.MarkerArcadeEnd || system == KnownSystem.MarkerComputerEnd ||
-                                system == KnownSystem.MarkerOtherEnd || system == KnownSystem.MarkerConsoleEnd;
+                                system == KnownSystem.MarkerOtherEnd || system == KnownSystem.MarkerDiscBasedConsoleEnd;
+                                // || system == KnownSystem.MarkerOtherConsoleEnd;
 
                 bool actual = ((KnownSystem?)system).IsMarker();
 

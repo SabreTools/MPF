@@ -93,7 +93,7 @@ namespace DICUI.Test.Utilities
         public void KnownSystemHasValidCategory()
         {
             var values = Validators.CreateListOfSystems();
-            KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerConsoleEnd, KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
+            KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerDiscBasedConsoleEnd, /* KnownSystem.MarkerOtherConsoleEnd, */ KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
 
             values.ForEach(system => {
                 if (system == KnownSystem.NONE)
@@ -106,7 +106,8 @@ namespace DICUI.Test.Utilities
                 switch (category)
                 {
                     case KnownSystemCategory.Arcade: marker = KnownSystem.MarkerArcadeEnd; break;
-                    case KnownSystemCategory.Console: marker = KnownSystem.MarkerConsoleEnd; break;
+                    case KnownSystemCategory.DiscBasedConsole: marker = KnownSystem.MarkerDiscBasedConsoleEnd; break;
+                    /* case KnownSystemCategory.OtherConsole: marker = KnownSystem.MarkerOtherConsoleEnd; break; */
                     case KnownSystemCategory.Computer: marker = KnownSystem.MarkerComputerEnd; break;
                     case KnownSystemCategory.Other: marker = KnownSystem.MarkerOtherEnd; break;
                 }

@@ -50,6 +50,12 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     break;
 
+                // https://en.wikipedia.org/wiki/EVO_Smart_Console
+                case KnownSystem.EnvizionsEVOSmartConsole:
+                    types.Add(MediaType.CDROM);
+                    types.Add(MediaType.DVD);
+                    break;
+
                 // https://en.wikipedia.org/wiki/FM_Towns_Marty
                 case KnownSystem.FujitsuFMTownsMarty:
                     types.Add(MediaType.CDROM);
@@ -113,6 +119,11 @@ namespace DICUI.Utilities
                     types.Add(MediaType.NintendoGameCubeGameDisc);
                     break;
 
+                // https://en.wikipedia.org/wiki/Super_NES_CD-ROM
+                case KnownSystem.NintendoSonySuperNESCDROMSystem:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://en.wikipedia.org/wiki/Wii
                 case KnownSystem.NintendoWii:
                     types.Add(MediaType.NintendoWiiOpticalDisc);
@@ -131,6 +142,12 @@ namespace DICUI.Utilities
                 // https://en.wikipedia.org/wiki/Philips_CD-i
                 case KnownSystem.PhilipsCDi:
                     types.Add(MediaType.CDROM);
+                    break;
+
+                // https://en.wikipedia.org/wiki/LaserActive
+                case KnownSystem.PioneerLaserActive:
+                    types.Add(MediaType.CDROM);
+                    types.Add(MediaType.LaserDisc);
                     break;
 
                 // https://en.wikipedia.org/wiki/Sega_CD
