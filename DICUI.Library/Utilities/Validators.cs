@@ -618,6 +618,11 @@ namespace DICUI.Utilities
                     break;
 
                 // UNKNOWN
+                case KnownSystem.NavisoftNaviken21:
+                    types.Add(MediaType.CDROM);
+                    break;
+
+                // UNKNOWN
                 case KnownSystem.PalmOS:
                     types.Add(MediaType.CDROM);
                     break;

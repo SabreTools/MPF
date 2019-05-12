@@ -435,6 +435,7 @@ namespace DICUI.Utilities
             Dictionary<string, string> mappings = new Dictionary<string, string>
             {
                 { Template.TitleField, Template.RequiredValue },
+                { Template.ForeignTitleField, Template.OptionalValue },
                 { Template.DiscNumberField, Template.OptionalValue },
                 { Template.DiscTitleField, Template.OptionalValue },
                 { Template.SystemField, System.Name() },
@@ -475,6 +476,10 @@ namespace DICUI.Utilities
                     mappings[Template.CuesheetField] = GetFullFile(combinedBase + ".cue") ?? "";
                     mappings[Template.WriteOffsetField] = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
 
+                    // GD-ROM-specfic options
+                    if (Type == MediaType.GDROM)
+                        mappings[Template.HeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
                     // System-specific options
                     switch (System)
                     {
@@ -498,37 +503,60 @@ namespace DICUI.Utilities
                             }
 
                             break;
+                        case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
+                        case KnownSystem.CommodoreAmiga:
+                        case KnownSystem.CommodoreAmigaCD32:
+                        case KnownSystem.CommodoreAmigaCDTV:
+                        case KnownSystem.FujitsuFMTowns:
+                        case KnownSystem.IncredibleTechnologiesEagle:
+                        case KnownSystem.KonamieAmusement:
+                        case KnownSystem.KonamiFirebeat:
+                        case KnownSystem.KonamiGVSystem:
+                        case KnownSystem.KonamiSystem573:
+                        case KnownSystem.KonamiTwinkle:
+                        case KnownSystem.MattelHyperscan:
+                        case KnownSystem.NamcoSegaNintendoTriforce:
+                        case KnownSystem.NavisoftNaviken21:
+                        case KnownSystem.NECPC98:
+                        case KnownSystem.SegaChihiro:
+                        case KnownSystem.SegaDreamcast:
+                        case KnownSystem.SegaNaomi:
+                        case KnownSystem.SegaNaomi2:
+                        case KnownSystem.SegaTitanVideo:
+                        case KnownSystem.SNKNeoGeoCD:
+                            mappings[Template.EXEDateBuildDate] = Template.RequiredValue;
+                            break;
                         case KnownSystem.SegaCDMegaCD:
-                            mappings[Template.SegaHeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+                            mappings[Template.HeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
 
                             // Take only the last 16 lines for Sega CD
-                            if (!string.IsNullOrEmpty(mappings[Template.SegaHeaderField]))
-                                mappings[Template.SegaHeaderField] = string.Join("\n", mappings[Template.SegaHeaderField].Split('\n').Skip(16));
+                            if (!string.IsNullOrEmpty(mappings[Template.HeaderField]))
+                                mappings[Template.HeaderField] = string.Join("\n", mappings[Template.HeaderField].Split('\n').Skip(16));
 
-                            if (GetSegaCDBuildInfo(mappings[Template.SegaHeaderField], out string scdSerial, out string fixedDate))
+                            if (GetSegaCDBuildInfo(mappings[Template.HeaderField], out string scdSerial, out string fixedDate))
                             {
                                 mappings[Template.DiscSerialField] = scdSerial ?? "";
-                                mappings[Template.SegaBuildDateField] = fixedDate ?? "";
+                                mappings[Template.EXEDateBuildDate] = fixedDate ?? "";
                             }
 
                             break;
                         case KnownSystem.SegaSaturn:
-                            mappings[Template.SegaHeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+                            mappings[Template.HeaderField] = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
 
                             // Take only the first 16 lines for Saturn
-                            if (!string.IsNullOrEmpty(mappings[Template.SegaHeaderField]))
-                                mappings[Template.SegaHeaderField] = string.Join("\n", mappings[Template.SegaHeaderField].Split('\n').Take(16));
+                            if (!string.IsNullOrEmpty(mappings[Template.HeaderField]))
+                                mappings[Template.HeaderField] = string.Join("\n", mappings[Template.HeaderField].Split('\n').Take(16));
 
-                            if (GetSaturnBuildInfo(mappings[Template.SegaHeaderField], out string saturnSerial, out string version, out string buildDate))
+                            if (GetSaturnBuildInfo(mappings[Template.HeaderField], out string saturnSerial, out string version, out string buildDate))
                             {
                                 mappings[Template.DiscSerialField] = saturnSerial ?? "";
                                 mappings[Template.VersionField] = version ?? "";
-                                mappings[Template.SegaBuildDateField] = buildDate ?? "";
+                                mappings[Template.EXEDateBuildDate] = buildDate ?? "";
                             }
 
                             break;
                         case KnownSystem.SonyPlayStation:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
+                            mappings[Template.EXEDateBuildDate] = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             mappings[Template.PlayStationEDCField] = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? "No" : "Yes";
                             mappings[Template.PlayStationAntiModchipField] = GetAntiModchipDetected(combinedBase + "_disc.txt") ? "Yes" : "No";
                             mappings[Template.PlayStationLibCryptField] = "No";
@@ -544,7 +572,8 @@ namespace DICUI.Utilities
 
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
+                            mappings[Template.PlaystationLanguageSelectionViaField] = "Bios settings, Language selector, Options menu";
+                            mappings[Template.EXEDateBuildDate] = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             mappings[Template.VersionField] = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
                     }
@@ -601,6 +630,10 @@ namespace DICUI.Utilities
                         mappings[Template.LayerbreakField] = layerbreak;
                     }
 
+                    // Bluray-specific options
+                    if (Type == MediaType.BluRay)
+                        mappings[Template.PICField] = GetPIC(Path.Combine(OutputDirectory, "PIC.bin")) ?? "";
+
                     // System-specific options
                     switch (System)
                     {
@@ -624,8 +657,16 @@ namespace DICUI.Utilities
                             }
 
                             break;
+
+                        case KnownSystem.BDVideo:
+                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            break;
                         case KnownSystem.DVDVideo:
                             mappings[Template.CopyProtectionField] = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
+                            break;
+                        case KnownSystem.KonamieAmusement:
+                        case KnownSystem.KonamiFirebeat:
+                            mappings[Template.EXEDateBuildDate] = Template.RequiredValue;
                             break;
                         case KnownSystem.MicrosoftXBOX:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
@@ -661,14 +702,29 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            mappings[Template.PlaystationEXEDateField] = GetPlayStationEXEDate(Drive.Letter) ?? "";
+                            mappings[Template.EXEDateBuildDate] = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             mappings[Template.VersionField] = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
+                        case KnownSystem.SonyPlayStation3:
+                            mappings[Template.PlayStation3WiiDiscKeyField] = Template.RequiredValue;
+                            mappings[Template.PlayStation3DiscIDField] = Template.RequiredValue;
+                            break;
                         case KnownSystem.SonyPlayStation4:
-                            mappings[Template.PlayStation4PICField] = GetPlayStation4PIC(Path.Combine(OutputDirectory, "PIC.bin")) ?? "";
                             mappings[Template.VersionField] = GetPlayStation4Version(Drive.Letter) ?? "";
                             break;
+                        case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                            mappings[Template.CopyProtectionField] = Template.RequiredIfExistsValue;
+                            break;
                     }
+                    break;
+
+                case MediaType.NintendoGameCubeGameDisc:
+                    mappings[Template.GameCubeWiiBCAField] = Template.RequiredValue;
+                    break;
+
+                case MediaType.NintendoWiiOpticalDisc:
+                    mappings[Template.PlayStation3WiiDiscKeyField] = Template.RequiredValue;
+                    mappings[Template.GameCubeWiiBCAField] = Template.RequiredValue;
                     break;
 
                 case MediaType.UMD:
@@ -679,7 +735,14 @@ namespace DICUI.Utilities
                         mappings[Template.TitleField] = title ?? "";
                         mappings[Template.VersionField] = umdversion ?? "";
                         if (!String.IsNullOrWhiteSpace(umdlayer))
+                        {
                             mappings[Template.LayerbreakField] = umdlayer ?? "";
+                            mappings[Template.MediaTypeField] += "-DL";
+                        }
+                        else
+                        {
+                            mappings[Template.MediaTypeField] += "-SL";
+                        }
                     }
 
                     break;
@@ -693,7 +756,6 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="info">Information dictionary that should contain normalized values</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
-        /// <remarks>TODO: Get full list of customizable stuff for other systems</remarks>
         private List<string> FormatOutputData(Dictionary<string, string> info)
         {
             // Check to see if the inputs are valid
@@ -708,6 +770,7 @@ namespace DICUI.Utilities
                 List<string> output = new List<string>
                 {
                     Template.TitleField + ": " + info[Template.TitleField],
+                    Template.ForeignTitleField + ": " + info[Template.ForeignTitleField],
                     Template.DiscNumberField + ": " + info[Template.DiscNumberField],
                     Template.DiscTitleField + ": " + info[Template.DiscTitleField],
                     Template.SystemField + ": " + info[Template.SystemField],
@@ -718,146 +781,121 @@ namespace DICUI.Utilities
                     Template.DiscSerialField + ": " + info[Template.DiscSerialField]
                 };
 
-                switch (System)
-                {
-                    case KnownSystem.SegaCDMegaCD:
-                    case KnownSystem.SegaSaturn:
-                        output.Add(Template.SegaBuildDateField + ": " + info[Template.SegaBuildDateField]);
-                        break;
-                    case KnownSystem.SonyPlayStation:
-                    case KnownSystem.SonyPlayStation2:
-                        output.Add(Template.PlaystationEXEDateField + ": " + info[Template.PlaystationEXEDateField]);
-                        break;
-                }
+                // Known as EXE Date and Build Date depending on the form
+                if (info.ContainsKey(Template.EXEDateBuildDate))
+                    output.Add(Template.EXEDateBuildDate + ": " + info[Template.EXEDateBuildDate]);
+
                 output.Add("Ringcode Information:");
-                switch (Type)
+
+                // If we have a dual-layer disc
+                if (info.ContainsKey(Template.LayerbreakField))
                 {
-                    case MediaType.CDROM:
-                    case MediaType.GDROM:
-                    case MediaType.DVD:
-                    case MediaType.HDDVD:
-                    case MediaType.BluRay:
-                        // If we have a dual-layer disc
-                        if (info.ContainsKey(Template.LayerbreakField))
-                        {
-                            output.Add("\tOuter " + Template.MasteringRingField + ": " + info["Outer " + Template.MasteringRingField]);
-                            output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
-                            output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
-                            output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
-                            output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
-                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
-                            output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
-                            output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
-                            output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
-                        }
-                        // If we have a single-layer disc
-                        else
-                        {
-                            output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
-                            output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
-                            output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
-                            output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
-                            output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
-                            output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
-                        }
-                        break;
+                    output.Add("\tOuter " + Template.MasteringRingField + ": " + info["Outer " + Template.MasteringRingField]);
+                    output.Add("\tInner " + Template.MasteringRingField + ": " + info["Inner " + Template.MasteringRingField]);
+                    output.Add("\tOuter " + Template.MasteringSIDField + ": " + info["Outer " + Template.MasteringSIDField]);
+                    output.Add("\tInner " + Template.MasteringSIDField + ": " + info["Inner " + Template.MasteringSIDField]);
+                    output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
+                    output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
+                    output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
+                    output.Add("\tOuter " + Template.ToolstampField + ": " + info["Outer " + Template.ToolstampField]);
+                    output.Add("\tInner " + Template.ToolstampField + ": " + info["Inner " + Template.ToolstampField]);
                 }
+                // If we have a single-layer disc
+                else
+                {
+                    output.Add("\t" + Template.MasteringRingField + ": " + info[Template.MasteringRingField]);
+                    output.Add("\t" + Template.MasteringSIDField + ": " + info[Template.MasteringSIDField]);
+                    output.Add("\tData-Side " + Template.MouldSIDField + ": " + info["Data-Side " + Template.MouldSIDField]);
+                    output.Add("\tLabel-Side " + Template.MouldSIDField + ": " + info["Label-Side " + Template.MouldSIDField]);
+                    output.Add("\t" + Template.AdditionalMouldField + ": " + info[Template.AdditionalMouldField]);
+                    output.Add("\t" + Template.ToolstampField + ": " + info[Template.ToolstampField]);
+                }
+
                 output.Add(Template.BarcodeField + ": " + info[Template.BarcodeField]);
-                switch (System)
-                {
-                    case KnownSystem.AppleMacintosh:
-                    case KnownSystem.EnhancedCD:
-                    case KnownSystem.IBMPCCompatible:
-                    case KnownSystem.RainbowDisc:
-                        output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
-                        break;
-                }
-                switch (Type)
-                {
-                    case MediaType.CDROM:
-                    case MediaType.GDROM:
-                        output.Add(Template.ErrorCountField + ": " + info[Template.ErrorCountField]);
-                        break;
-                }
+                if (info.ContainsKey(Template.ISBNField))
+                    output.Add(Template.ISBNField + ": " + info[Template.ISBNField]);
+
+                if (info.ContainsKey(Template.ErrorCountField))
+                    output.Add(Template.ErrorCountField + ": " + info[Template.ErrorCountField]);
+
                 output.Add(Template.CommentsField + ": " + info[Template.CommentsField]);
                 output.Add(Template.ContentsField + ": " + info[Template.ContentsField]);
                 output.Add(Template.VersionField + ": " + info[Template.VersionField]);
                 output.Add(Template.EditionField + ": " + info[Template.EditionField]);
-                switch (System)
+
+                if (info.ContainsKey(Template.HeaderField))
                 {
-                    case KnownSystem.SegaCDMegaCD:
-                    case KnownSystem.SegaSaturn:
-                        output.Add(Template.SegaHeaderField + ":"); output.Add("");
-                        output.AddRange(info[Template.SegaHeaderField].Split('\n')); output.Add("");
-                        break;
-                    case KnownSystem.SonyPlayStation:
-                        output.Add(Template.PlayStationEDCField + ": " + info[Template.PlayStationEDCField]);
-                        output.Add(Template.PlayStationAntiModchipField + ": " + info[Template.PlayStationAntiModchipField]);
-                        output.Add(Template.PlayStationLibCryptField + ": " + info[Template.PlayStationLibCryptField]);
-                        break;
+                    output.Add(Template.HeaderField + ":"); output.Add("");
+                    output.AddRange(info[Template.HeaderField].Split('\n')); output.Add("");
                 }
-                switch (Type)
+
+                if (info.ContainsKey(Template.PlayStationEDCField))
                 {
-                    case MediaType.DVD:
-                    case MediaType.BluRay:
-                    case MediaType.UMD:
-                        // If we have a dual-layer disc
-                        if (info.ContainsKey(Template.LayerbreakField))
-                        {
-                            output.Add(Template.LayerbreakField + ": " + info[Template.LayerbreakField]);
-                        }
-                        break;
+                    output.Add(Template.PlayStationEDCField + ": " + info[Template.PlayStationEDCField]);
+                    output.Add(Template.PlayStationAntiModchipField + ": " + info[Template.PlayStationAntiModchipField]);
+                    output.Add(Template.PlayStationLibCryptField + ": " + info[Template.PlayStationLibCryptField]);
                 }
+
+                if (info.ContainsKey(Template.LayerbreakField))
+                    output.Add(Template.LayerbreakField + ": " + info[Template.LayerbreakField]);
+
                 output.Add(Template.PVDField + ":"); output.Add("");
                 output.AddRange(info[Template.PVDField].Split('\n'));
-                switch (System)
+
+                if (info.ContainsKey(Template.PlayStation3WiiDiscKeyField))
+                    output.Add(Template.PlayStation3WiiDiscKeyField + ": " + info[Template.PlayStation3WiiDiscKeyField]);
+
+                if (info.ContainsKey(Template.PlayStation3DiscIDField))
+                    output.Add(Template.PlayStation3DiscIDField + ": " + info[Template.PlayStation3DiscIDField]);
+
+                if (info.ContainsKey(Template.PICField))
                 {
-                    case KnownSystem.AppleMacintosh:
-                    case KnownSystem.EnhancedCD:
-                    case KnownSystem.IBMPCCompatible:
-                    case KnownSystem.RainbowDisc:
-                        output.Add(Template.CopyProtectionField + ": " + info[Template.CopyProtectionField]); output.Add("");
-                        break;
-                    case KnownSystem.DVDVideo:
-                        output.Add(Template.CopyProtectionField + ":"); output.Add("");
-                        output.AddRange(info[Template.CopyProtectionField].Split('\n'));
-                        break;
-                    case KnownSystem.MicrosoftXBOX:
-                    case KnownSystem.MicrosoftXBOX360:
-                        if (Type == MediaType.DVD)
-                        {
-                            output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
-                            output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
-                            output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
-                            output.Add(Template.XBOXSSVersion + ": " + info[Template.XBOXSSVersion]);
-                            output.Add(Template.XBOXSSRanges + ":"); output.Add("");
-                            output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
-                        }
-                        break;
-                    case KnownSystem.SonyPlayStation4:
-                        output.Add(Template.PlayStation4PICField + ":"); output.Add("");
-                        output.AddRange(info[Template.PlayStation4PICField].Split('\n'));
-                        break;
+                    output.Add(Template.PICField + ":"); output.Add("");
+                    output.AddRange(info[Template.PICField].Split('\n'));
                 }
+
+                if (info.ContainsKey(Template.GameCubeWiiBCAField))
+                {
+                    output.Add(Template.GameCubeWiiBCAField + ":"); output.Add("");
+                    output.AddRange(info[Template.GameCubeWiiBCAField].Split('\n'));
+                }
+
+                if (info.ContainsKey(Template.CopyProtectionField))
+                {
+                    output.Add(Template.CopyProtectionField + ":"); output.Add("");
+                    output.AddRange(info[Template.CopyProtectionField].Split('\n'));
+                }
+
+                if (info.ContainsKey(Template.XBOXDMIHash))
+                {
+                    output.Add(Template.XBOXDMIHash + ": " + info[Template.XBOXDMIHash]);
+                    output.Add(Template.XBOXPFIHash + ": " + info[Template.XBOXPFIHash]);
+                    output.Add(Template.XBOXSSHash + ": " + info[Template.XBOXSSHash]); output.Add("");
+                    output.Add(Template.XBOXSSVersion + ": " + info[Template.XBOXSSVersion]);
+                    output.Add(Template.XBOXSSRanges + ":"); output.Add("");
+                    output.AddRange(info[Template.XBOXSSRanges].Split('\n'));
+                }
+
                 if (info.ContainsKey(Template.SubIntentionField))
                 {
                     output.Add(Template.SubIntentionField + ":"); output.Add("");
                     output.AddRange(info[Template.SubIntentionField].Split('\n')); output.Add("");
                 }
+
                 if (info.ContainsKey(Template.DATField))
                 {
                     output.Add(Template.DATField + ":"); output.Add("");
                     output.AddRange(info[Template.DATField].Split('\n')); output.Add("");
                 }
-                switch (Type)
+
+                if (info.ContainsKey(Template.CuesheetField))
                 {
-                    case MediaType.CDROM:
-                    case MediaType.GDROM:
-                        output.Add(Template.CuesheetField + ":"); output.Add("");
-                        output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
-                        output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]);
-                        break;
+                    output.Add(Template.CuesheetField + ":"); output.Add("");
+                    output.AddRange(info[Template.CuesheetField].Split('\n')); output.Add("");
                 }
+
+                if (info.ContainsKey(Template.WriteOffsetField))
+                    output.Add(Template.WriteOffsetField + ": " + info[Template.WriteOffsetField]);
 
                 return output;
             }
@@ -1344,7 +1382,7 @@ namespace DICUI.Utilities
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
         /// <returns>PIC data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        private string GetPlayStation4PIC(string picPath)
+        private string GetPIC(string picPath)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))

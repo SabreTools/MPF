@@ -408,41 +408,41 @@ namespace DICUI.Utilities
                 case MediaType.GDROM:
                     return "gdrom";
                 case MediaType.HDDVD:
-                    return "HD-DVD-ROM";
+                    return "hddvd";
                 case MediaType.HardDisk:
-                    return "Hard Disk";
+                    return "hdd";
                 case MediaType.IomegaBernoulliDisk:
-                    return "Iomega Bernoulli Disk";
+                    return "bernoulli";
                 case MediaType.IomegaJaz:
-                    return "Iomega Jaz";
+                    return "jaz";
                 case MediaType.IomegaZip:
-                    return "Iomega Zip";
+                    return "zip";
                 case MediaType.LaserDisc:
-                    return "LD-ROM / LV-ROM";
+                    return "ldrom";
                 case MediaType.Nintendo64DD:
-                    return "64DD Disk";
+                    return "64dd";
                 case MediaType.NintendoFamicomDiskSystem:
-                    return "Famicom Disk System Disk";
+                    return "fds";
                 case MediaType.NintendoGameCubeGameDisc:
-                    return "GameCube Game Disc";
+                    return "gc";
                 case MediaType.NintendoWiiOpticalDisc:
-                    return "Wii Optical Disc";
+                    return "wii";
                 case MediaType.NintendoWiiUOpticalDisc:
-                    return "Wii U Optical Disc";
+                    return "wiiu";
                 case MediaType.UMD:
-                    return "UMD";
+                    return "umd";
 
                 #endregion
 
                 // Unsorted Formats
                 case MediaType.Cartridge:
-                    return "Cartridge";
+                    return "cart";
                 case MediaType.CED:
-                    return "CED";
+                    return "ced";
 
                 case MediaType.NONE:
                 default:
-                    return "Unknown";
+                    return "unknown";
             }
         }
 
@@ -851,6 +851,8 @@ namespace DICUI.Utilities
                     return "Enhanced CD";
                 case KnownSystem.HDDVDVideo:
                     return "HD-DVD-Video";
+                case KnownSystem.NavisoftNaviken21:
+                    return "Navisoft Naviken 2.1";
                 case KnownSystem.PalmOS:
                     return "PalmOS";
                 case KnownSystem.PhilipsCDiDigitalVideo:
@@ -1108,6 +1110,8 @@ namespace DICUI.Utilities
                     return "enhanced cd";
                 case KnownSystem.HDDVDVideo:
                     return "hddvd-video";
+                case KnownSystem.NavisoftNaviken21:
+                    return "naviken";
                 case KnownSystem.PalmOS:
                     return "palmos";
                 case KnownSystem.PhilipsCDiDigitalVideo:
@@ -1787,6 +1791,14 @@ namespace DICUI.Utilities
                 case "hddvd-video":
                 case "hd-dvd-video":
                     return KnownSystem.HDDVDVideo;
+                case "naviken":
+                case "naviken21":
+                case "naviken 2.1":
+                case "navisoftnaviken":
+                case "navisoft naviken":
+                case "navisoftnaviken21":
+                case "navisoft naviken 2.1":
+                    return KnownSystem.NavisoftNaviken21;
                 case "palm":
                 case "palmos":
                     return KnownSystem.PalmOS;

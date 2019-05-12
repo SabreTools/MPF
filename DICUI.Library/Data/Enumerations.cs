@@ -1,6 +1,24 @@
 ﻿namespace DICUI.Data
 {
     /// <summary>
+    /// Category for Redump
+    /// </summary>
+    public enum Category
+    {
+        Games = 1,
+        Demos = 2,
+        Video = 3,
+        Audio = 4,
+        Multimedia = 5,
+        Applications = 6,
+        Coverdiscs = 7,
+        Educational = 8,
+        BonusDiscs = 9,
+        Preproduction = 10,
+        AddOns = 11,
+    }
+
+    /// <summary>
     /// Supported DIC commands
     /// </summary>
     public enum DICCommand
@@ -59,6 +77,16 @@
         SkipSector,
         SubchannelReadLevel,
         VideoNow,
+    }
+
+    /// <summary>
+    /// Dump status for Redump
+    /// </summary>
+    public enum DumpStatus
+    {
+        PossibleBadDumpYellow = 3,
+        OriginalMediaBlue = 4,
+        TwoOrMoreDumpsGreen = 5,
     }
 
     /// <summary>
@@ -251,6 +279,7 @@
         DVDVideo,
         EnhancedCD,
         HDDVDVideo,
+        NavisoftNaviken21,
         PalmOS,
         PhilipsCDiDigitalVideo,
         PhotoCD,
@@ -330,5 +359,14 @@
         // Unsorted Formats
         Cartridge,
         CED,
+    }
+
+    /// <summary>
+    /// Generic yes/no values for Redump
+    /// </summary>
+    public enum RedumpYesNo
+    {
+        No = 1,
+        Yes = 2,
     }
 }
