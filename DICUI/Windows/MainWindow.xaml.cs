@@ -387,6 +387,9 @@ namespace DICUI.Windows
                 ScanForProtection = _options.ScanForProtection,
                 RereadAmountC2 = _options.RereadAmountForC2,
 
+                Username = _options.Username,
+                Password = _options.Password,
+
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
                 Type = MediaTypeComboBox.SelectedItem as MediaType?,
             };

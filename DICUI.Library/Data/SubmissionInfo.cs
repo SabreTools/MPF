@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -238,6 +239,13 @@ namespace DICUI.Data
 
         [JsonProperty(PropertyName = "d_sha1", NullValueHandling = NullValueHandling.Ignore)]
         public string SHA1 { get; set; }
+
+        #endregion
+
+        #region Nonstandard Information
+
+        [JsonIgnore]
+        public List<int> MatchedIDs { get; set; }
 
         #endregion
     }

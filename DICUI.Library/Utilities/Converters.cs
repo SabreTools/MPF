@@ -1466,6 +1466,44 @@ namespace DICUI.Utilities
         #region Convert From String
 
         /// <summary>
+        /// Get the Category enum value for a given string
+        /// </summary>
+        /// <param name="sys">String value to convert</param>
+        /// <returns>Category represented by the string, if possible</returns>
+        public static Category StringToCategory(string category)
+        {
+            switch (category.ToLowerInvariant())
+            {
+                case "games":
+                    return Category.Games;
+                case "demos":
+                    return Category.Demos;
+                case "video":
+                    return Category.Video;
+                case "audio":
+                    return Category.Audio;
+                case "multimedia":
+                    return Category.Multimedia;
+                case "applications":
+                    return Category.Applications;
+                case "coverdiscs":
+                    return Category.Coverdiscs;
+                case "educational":
+                    return Category.Educational;
+                case "bonusdiscs":
+                case "bonus discs":
+                    return Category.BonusDiscs;
+                case "preproduction":
+                    return Category.Preproduction;
+                case "addons":
+                case "add-ons":
+                    return Category.AddOns;
+                default:
+                    return Category.Games;
+            }
+        }
+
+        /// <summary>
         /// Get the KnownSystem enum value for a given string
         /// </summary>
         /// <param name="sys">String value to convert</param>
@@ -2176,6 +2214,92 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the Language enum value for a given string
+        /// </summary>
+        /// <param name="sys">String value to convert</param>
+        /// <returns>Language represented by the string, if possible</returns>
+        public static Language? StringToLanguage(string lang)
+        {
+            switch (lang)
+            {
+                case "afr":
+                    return Language.Afrikaans;
+                case "ara":
+                    return Language.Arabic;
+                case "baq":
+                    return Language.Basque;
+                case "bul":
+                    return Language.Bulgarian;
+                case "cat":
+                    return Language.Catalan;
+                case "chi":
+                    return Language.Chinese;
+                case "hrv":
+                    return Language.Croatian;
+                case "cze":
+                    return Language.Czech;
+                case "dan":
+                    return Language.Danish;
+                case "dut":
+                    return Language.Dutch;
+                case "eng":
+                    return Language.English;
+                case "fin":
+                    return Language.Finnish;
+                case "fre":
+                    return Language.French;
+                case "gla":
+                    return Language.Gaelic;
+                case "ger":
+                    return Language.German;
+                case "gre":
+                    return Language.Greek;
+                case "heb":
+                    return Language.Hebrew;
+                case "hin":
+                    return Language.Hindi;
+                case "hun":
+                    return Language.Hungarian;
+                case "ita":
+                    return Language.Italian;
+                case "jap":
+                    return Language.Japanese;
+                case "kor":
+                    return Language.Korean;
+                case "nor":
+                    return Language.Norwegian;
+                case "pol":
+                    return Language.Polish;
+                case "por":
+                    return Language.Portuguese;
+                case "pan":
+                    return Language.Punjabi;
+                case "ron":
+                    return Language.Romanian;
+                case "rus":
+                    return Language.Russian;
+                case "slk":
+                    return Language.Slovak;
+                case "slv":
+                    return Language.Slovenian;
+                case "spa":
+                    return Language.Spanish;
+                case "swe":
+                    return Language.Swedish;
+                case "tam":
+                    return Language.Tamil;
+                case "tha":
+                    return Language.Thai;
+                case "tur":
+                    return Language.Turkish;
+                case "ukr":
+                    return Language.Ukrainian;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Get the MediaType enum value for a given string
         /// </summary>
         /// <param name="type">String value to convert</param>
@@ -2347,6 +2471,138 @@ namespace DICUI.Utilities
                         return MediaType.NONE;
                 }
             }
+
+        /// <summary>
+        /// Get the Region enum value for a given string
+        /// </summary>
+        /// <param name="type">String value to convert</param>
+        /// <returns>Region represented by the string, if possible</returns>
+        public static Region? StringToRegion(string region)
+        {
+            switch (region)
+            {
+                case "Ar":
+                    return Region.Argentina;
+                case "A":
+                    return Region.Asia;
+                case "A,E":
+                    return Region.AsiaEurope;
+                case "A,U":
+                    return Region.AsiaUSA;
+                case "Au":
+                    return Region.Australia;
+                case "At":
+                    return Region.Austria;
+                case "At,Ch":
+                    return Region.AustriaSwitzerland;
+                case "Be":
+                    return Region.Belgium;
+                case "Be,N":
+                    return Region.BelgiumNetherlands;
+                case "B":
+                    return Region.Brazil;
+                case "Ca":
+                    return Region.Canada;
+                case "C":
+                    return Region.China;
+                case "Hr":
+                    return Region.Croatia;
+                case "Cz":
+                    return Region.Czech;
+                case "Dk":
+                    return Region.Denmark;
+                case "E":
+                    return Region.Europe;
+                case "E,A":
+                    return Region.EuropeAsia;
+                case "E,Au":
+                    return Region.EuropeAustralia;
+                case "Fi":
+                    return Region.Finland;
+                case "F":
+                    return Region.France;
+                case "F,S":
+                    return Region.FranceSpain;
+                case "G":
+                    return Region.Germany;
+                case "Gr":
+                    return Region.Greece;
+                case "H":
+                    return Region.Hungary;
+                case "In":
+                    return Region.India;
+                case "Ie":
+                    return Region.Ireland;
+                case "Il":
+                    return Region.Israel;
+                case "I":
+                    return Region.Italy;
+                case "J":
+                    return Region.Japan;
+                case "J,A":
+                    return Region.JapanAsia;
+                case "J,E":
+                    return Region.JapanEurope;
+                case "J,K":
+                    return Region.JapanKorea;
+                case "J,U":
+                    return Region.JapanUSA;
+                case "K":
+                    return Region.Korea;
+                case "LAm":
+                    return Region.LatinAmerica;
+                case "N":
+                    return Region.Netherlands;
+                case "No":
+                    return Region.Norway;
+                case "P":
+                    return Region.Poland;
+                case "Pt":
+                    return Region.Portugal;
+                case "R":
+                    return Region.Russia;
+                case "Sca":
+                    return Region.Scandinavia;
+                case "Sg":
+                    return Region.Singapore;
+                case "Sk":
+                    return Region.Slovakia;
+                case "Za":
+                    return Region.SouthAfrica;
+                case "S":
+                    return Region.Spain;
+                case "Sw":
+                    return Region.Sweden;
+                case "Ch":
+                    return Region.Switzerland;
+                case "Tw":
+                    return Region.Taiwan;
+                case "Th":
+                    return Region.Thailand;
+                case "Tr":
+                    return Region.Turkey;
+                case "Ae":
+                    return Region.UnitedArabEmirates;
+                case "Uk":
+                    return Region.UK;
+                case "Ue":
+                    return Region.Ukraine;
+                case "U":
+                    return Region.USA;
+                case "U,A":
+                    return Region.USAAsia;
+                case "U,B":
+                    return Region.USABrazil;
+                case "U,E":
+                    return Region.USAEurope;
+                case "U,J":
+                    return Region.USAJapan;
+                case "W":
+                    return Region.World;
+                default:
+                    return null;
+            }
+        }
 
         #endregion
     }

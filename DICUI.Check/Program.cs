@@ -57,12 +57,22 @@ namespace DICUI.Check
                 return;
             }
 
+            // Check for Redump login credentials
+            string username = null, password = null;
+            int startIndex = 2;
+            if (args[2] == "-c" || args[2] == "--credentials")
+            {
+                username = args[3];
+                password = args[4];
+                startIndex = 5;
+            }
+
             // Make a new Progress object
             var progress = new Progress<Result>();
             progress.ProgressChanged += ProgressUpdated;
 
             // Loop through all the rest of the args
-            for (int i = 2; i < args.Length; i++)
+            for (int i = startIndex; i < args.Length; i++)
             {
                 // Check for a file
                 if (!File.Exists(args[i]))
@@ -82,6 +92,9 @@ namespace DICUI.Check
                     System = knownSystem,
                     Type = mediaType,
                     ScanForProtection = false,
+
+                    Username = username,
+                    Password = password,
                 };
                 env.FixOutputPaths();
 
@@ -101,7 +114,7 @@ namespace DICUI.Check
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("DICUI.Check.exe <mediatype> <system> </path/to/output.bin> ...");
+            Console.WriteLine("DICUI.Check.exe <mediatype> <system> [-c username password] </path/to/output.bin> ...");
             Console.WriteLine();
             Console.WriteLine(@"Common Media Types:\r\n
 bd / bluray     - BD-ROM

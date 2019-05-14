@@ -63,6 +63,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Web\CookieAwareWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Enumerations.cs" />
     <Compile Include="Data\SubmissionInfo.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="Utilities\Parameters.cs" />
     <Compile Include="Utilities\Result.cs" />
     <Compile Include="Utilities\Validators.cs" />
+    <Compile Include="Web\RedumpAccess.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="mspack.dll">

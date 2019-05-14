@@ -25,6 +25,9 @@ namespace DICUI
         public bool VerboseLogging { get; set; }
         public bool OpenLogWindowAtStartup { get; set; }
 
+        public string Username { get; set; }
+        public string Password { get; set; }
+
         public void Save()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -60,6 +63,9 @@ namespace DICUI
             this.RereadAmountForC2 = Int32.TryParse(ConfigurationManager.AppSettings["RereadAmountForC2"], out int rereadAmountForC2) ? rereadAmountForC2 : 20;
             this.VerboseLogging = Boolean.TryParse(ConfigurationManager.AppSettings["VerboseLogging"], out bool verboseLogging) ? verboseLogging : true;
             this.OpenLogWindowAtStartup = Boolean.TryParse(ConfigurationManager.AppSettings["OpenLogWindowAtStartup"], out bool openLogWindowAtStartup) ? openLogWindowAtStartup : true;
+
+            this.Username = ConfigurationManager.AppSettings["username"] ?? "";
+            this.Password = ConfigurationManager.AppSettings["password"] ?? "";
         }
 
 

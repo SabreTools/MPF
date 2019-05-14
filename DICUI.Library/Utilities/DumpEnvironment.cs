@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DICUI.Data;
+using DICUI.Web;
 using Newtonsoft.Json;
 
 namespace DICUI.Utilities
@@ -58,6 +59,10 @@ namespace DICUI.Utilities
         public bool ParanoidMode;
         public bool ScanForProtection;
         public int RereadAmountC2;
+
+        // Redump login information
+        public string Username;
+        public string Password;
 
         // External process information
         private Process dicProcess;
@@ -447,6 +452,112 @@ namespace DICUI.Utilities
                 ClrMameProData = GetDatfile(combinedBase + ".dat"),
             };
 
+            // First and foremost, we want to get a list of matching IDs for each line in the DAT
+            if (!string.IsNullOrEmpty(info.ClrMameProData) && !string.IsNullOrWhiteSpace(this.Username) && !string.IsNullOrWhiteSpace(this.Password))
+            {
+                info.MatchedIDs = new List<int>();
+                using (CookieAwareWebClient wc = new CookieAwareWebClient())
+                {
+                    // Login to Redump
+                    RedumpAccess access = new RedumpAccess();
+                    if (access.RedumpLogin(wc, this.Username, this.Password))
+                    {// Loop through all of the hashdata to find matching IDs
+                        progress?.Report(Result.Success("Finding disc matches on Redump..."));
+                        string[] splitData = info.ClrMameProData.Split('\n');
+                        foreach (string hashData in splitData)
+                        {
+                            if (GetISOHashValues(hashData, out long size, out string crc32, out string md5, out string sha1))
+                            {
+                                List<int> newIds = access.ProcessSearch(wc, sha1);
+                                if (info.MatchedIDs.Any())
+                                    info.MatchedIDs = info.MatchedIDs.Intersect(newIds).ToList();
+                                else
+                                    info.MatchedIDs = newIds;
+                            }
+                        }
+
+                        progress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0 ? "Matched IDs: " + string.Join(",", info.MatchedIDs) : "No matches found")));
+
+                        // If we have exactly 1 ID, we can grab a bunch of info from it
+                        if (info.MatchedIDs.Count == 1)
+                        {
+                            progress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
+
+                            string discData = access.DownloadSingleSiteID(wc, info.MatchedIDs[0]);
+
+                            // Title, Disc Number/Letter, Disc Title
+                            var match = Regex.Match(discData, @"<h1>(.*?)</h1>");
+                            if (match.Success)
+                                info.Title = match.Groups[1].Value;
+
+                            // Foreign Title
+                            match = Regex.Match(discData, @"<h2>(.*?)</h2>");
+                            if (match.Success)
+                                info.ForeignTitleNonLatin = match.Groups[1].Value;
+                            else
+                                info.ForeignTitleNonLatin = null;
+
+                            // Category
+                            match = Regex.Match(discData, @"<tr><th>Category</th><td>(.*?)</td></tr>");
+                            if (match.Success)
+                                info.Category = Converters.StringToCategory(match.Groups[1].Value);
+
+                            // Region
+                            match = Regex.Match(discData, @"<tr><th>Region</th><td><a href=""/discs/region/(.*?)/"">");
+                            if (match.Success)
+                                info.Region = Converters.StringToRegion(match.Groups[1].Value);
+
+                            // Languages
+                            var matches = Regex.Matches(discData, @"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
+                            if (matches.Count > 0)
+                            {
+                                List<Language?> tempLanguages = new List<Language?>();
+                                foreach (Match submatch in matches)
+                                    tempLanguages.Add(Converters.StringToLanguage(submatch.Groups[1].Value));
+
+                                info.Languages = tempLanguages.ToArray();
+                            }
+
+                            // Serial
+                            match = Regex.Match(discData, @"<tr><th>Serial</th><td>(.*?)</td></tr>");
+                            if (match.Success)
+                                info.Serial = match.Groups[1].Value;
+
+                            // Version
+                            match = Regex.Match(discData, @"<tr><th>Version</th><td>(.*?)</td></tr>");
+                            if (match.Success)
+                                info.Version = match.Groups[1].Value;
+
+                            // Edition
+                            match = Regex.Match(discData, @"<tr><th>Edition</th><td>(.*?)</td></tr>");
+                            if (match.Success)
+                                info.OtherEditions = match.Groups[1].Value;
+
+                            // Comments
+                            match = Regex.Match(discData, @"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
+                            if (match.Success)
+                            {
+                                info.Comments = match.Groups[1].Value
+                                    .Replace("<br />", "\n")
+                                    .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
+                            }
+
+                            // Contents
+                            match = Regex.Match(discData, @"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
+                            if (match.Success)
+                            {
+                                info.Contents = match.Groups[1].Value
+                                       .Replace("<br />", "\n")
+                                       .Replace("</div>", "");
+                                info.Contents = Regex.Replace(info.Contents, @"<div .*?>", "");
+                            }
+
+                            progress?.Report(Result.Success("Information filling complete!"));
+                        }
+                    }
+                }
+            }
+
             // Now we want to do a check by MediaType and extract all required info
             switch (Type)
             {
@@ -484,7 +595,8 @@ namespace DICUI.Utilities
                         case KnownSystem.EnhancedCD:
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
-                            info.Comments += $"[T:ISBN] {Template.OptionalValue}";
+                            if (string.IsNullOrWhiteSpace(info.Comments))
+                                info.Comments += $"[T:ISBN] {Template.OptionalValue}";
 
                             progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                             info.Protection = GetCopyProtection();
@@ -630,7 +742,8 @@ namespace DICUI.Utilities
                         case KnownSystem.EnhancedCD:
                         case KnownSystem.IBMPCCompatible:
                         case KnownSystem.RainbowDisc:
-                            info.Comments += $"[T:ISBN] {Template.OptionalValue}";
+                            if (string.IsNullOrWhiteSpace(info.Comments))
+                                info.Comments += $"[T:ISBN] {Template.OptionalValue}";
 
                             progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                             info.Protection = GetCopyProtection();
@@ -760,6 +873,7 @@ namespace DICUI.Utilities
                 AddIfExists(output, Template.SystemField, info.System.Name(), 1);
                 AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(info.Media, info.Layerbreak), 1);
                 AddIfExists(output, Template.CategoryField, info.Category.Name(), 1);
+                AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.Region.Name(), 1);
                 AddIfExists(output, Template.LanguagesField, (info.Languages ?? new Language?[] { null }).Select(l => l.Name()).ToArray(), 1);
                 AddIfExists(output, Template.PlaystationLanguageSelectionViaField, info.LanguageSelection, 1);
@@ -945,6 +1059,22 @@ namespace DICUI.Utilities
                 return;
 
             AddIfExists(output, key, string.Join(", ", value), indent);
+        }
+
+        /// <summary>
+        /// Add the properly formatted key and value, if possible
+        /// </summary>
+        /// <param name="output">Output list</param>
+        /// <param name="key">Name of the output key to write</param>
+        /// <param name="value">Name of the output value to write</param>
+        /// <param name="indent">Number of tabs to indent the line</param>
+        private void AddIfExists(List<string> output, string key, List<int> value, int indent)
+        {
+            // If there's no valid value to write
+            if (value == null || value.Count() == 0)
+                return;
+
+            AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
         }
 
         /// <summary>
