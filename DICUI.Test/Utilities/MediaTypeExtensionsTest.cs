@@ -12,7 +12,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.NONE)]
         public void NameTest(MediaType? mediaType)
         {
-            string expected = Converters.MediaTypeToString(mediaType);
+            string expected = Converters.LongName(mediaType);
             string actual = mediaType.Name();
 
             Assert.NotNull(actual);

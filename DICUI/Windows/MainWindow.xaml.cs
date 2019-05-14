@@ -646,7 +646,7 @@ namespace DICUI.Windows
             if (index != -1)
                 MediaTypeComboBox.SelectedIndex = index;
             else
-                StatusLabel.Content = $"Disc of type '{Converters.MediaTypeToString(_currentMediaType)}' found, but the current system does not support it!";
+                StatusLabel.Content = $"Disc of type '{Converters.LongName(_currentMediaType)}' found, but the current system does not support it!";
         }
 
         /// <summary>

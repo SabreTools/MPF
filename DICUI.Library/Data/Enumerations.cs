@@ -308,6 +308,49 @@
     };
 
     /// <summary>
+    /// List of all disc langauges
+    /// </summary>
+    public enum Language
+    {
+        Afrikaans,
+        Arabic,
+        Basque,
+        Bulgarian,
+        Catalan,
+        Chinese,
+        Croatian,
+        Czech,
+        Danish,
+        Dutch,
+        English,
+        Finnish,
+        French,
+        Gaelic,
+        German,
+        Greek,
+        Hebrew,
+        Hindi,
+        Hungarian,
+        Italian,
+        Japanese,
+        Korean,
+        Norwegian,
+        Polish,
+        Portuguese,
+        Punjabi,
+        Romanian,
+        Russian,
+        Slovak,
+        Slovenian,
+        Spanish,
+        Swedish,
+        Tamil,
+        Thai,
+        Turkish,
+        Ukrainian,
+    }
+
+    /// <summary>
     /// Known media types
     /// </summary>
     public enum MediaType
@@ -362,10 +405,77 @@
     }
 
     /// <summary>
+    /// List of all known Redump regions
+    /// </summary>
+    public enum Region
+    {
+        Argentina,
+        Asia,
+        AsiaEurope,
+        AsiaUSA,
+        Australia,
+        Austria,
+        AustriaSwitzerland,
+        Belgium,
+        BelgiumNetherlands,
+        Brazil,
+        Canada,
+        China,
+        Croatia,
+        Czech,
+        Denmark,
+        Europe,
+        EuropeAsia,
+        EuropeAustralia,
+        Finland,
+        France,
+        FranceSpain,
+        Germany,
+        Greece,
+        Hungary,
+        India,
+        Ireland,
+        Israel,
+        Italy,
+        Japan,
+        JapanAsia,
+        JapanEurope,
+        JapanKorea,
+        JapanUSA,
+        Korea,
+        LatinAmerica,
+        Netherlands,
+        Norway,
+        Poland,
+        Portugal,
+        Russia,
+        Scandinavia,
+        Singapore,
+        Slovakia,
+        SouthAfrica,
+        Spain,
+        Sweden,
+        Switzerland,
+        Taiwan,
+        Thailand,
+        Turkey,
+        UnitedArabEmirates,
+        UK,
+        Ukraine,
+        USA,
+        USAAsia,
+        USABrazil,
+        USAEurope,
+        USAJapan,
+        World,
+    }
+
+    /// <summary>
     /// Generic yes/no values for Redump
     /// </summary>
-    public enum RedumpYesNo
+    public enum YesNo
     {
+        NULL = 0,
         No = 1,
         Yes = 2,
     }

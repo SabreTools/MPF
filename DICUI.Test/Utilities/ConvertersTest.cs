@@ -73,7 +73,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.NONE, "Unknown")]
         public void MediaTypeToStringTest(MediaType? mediaType, string expected)
         {
-            string actual = Converters.MediaTypeToString(mediaType);
+            string actual = Converters.LongName(mediaType);
             Assert.Equal(expected, actual);
         }
 
@@ -85,7 +85,7 @@ namespace DICUI.Test.Utilities
         [InlineData(KnownSystem.NONE, "Unknown")]
         public void KnownSystemToStringTest(KnownSystem? knownSystem, string expected)
         {
-            string actual = Converters.KnownSystemToString(knownSystem);
+            string actual = Converters.LongName(knownSystem);
             Assert.Equal(expected, actual);
         }
 

@@ -266,356 +266,41 @@ namespace DICUI.Utilities
             }
         }
 
-        /// <summary>
-        /// Get the string representation of the MediaType enum values
-        /// </summary>
-        /// <param name="type">MediaType value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string MediaTypeToString(MediaType? type)
-        {
-            switch (type)
-            {
-                #region Punched Media
-
-                case MediaType.ApertureCard:
-                    return "Aperture card";
-                case MediaType.JacquardLoomCard:
-                    return "Jacquard Loom card";
-                case MediaType.MagneticStripeCard:
-                    return "Magnetic stripe card";
-                case MediaType.OpticalPhonecard:
-                    return "Optical phonecard";
-                case MediaType.PunchedCard:
-                    return "Punched card";
-                case MediaType.PunchedTape:
-                    return "Punched tape";
-
-                #endregion
-
-                #region Tape
-
-                case MediaType.OpenReel:
-                    return "Open Reel Tape";
-                case MediaType.DataCartridge:
-                    return "Data Tape Cartridge";
-                case MediaType.Cassette:
-                    return "Cassette Tape";
-
-                #endregion
-
-                #region Disc / Disc
-
-                case MediaType.BluRay:
-                    return "BD-ROM";
-                case MediaType.CDROM:
-                    return "CD-ROM";
-                case MediaType.DVD:
-                    return "DVD-ROM";
-                case MediaType.FloppyDisk:
-                    return "Floppy Disk";
-                case MediaType.Floptical:
-                    return "Floptical";
-                case MediaType.GDROM:
-                    return "GD-ROM";
-                case MediaType.HDDVD:
-                    return "HD-DVD-ROM";
-                case MediaType.HardDisk:
-                    return "Hard Disk";
-                case MediaType.IomegaBernoulliDisk:
-                    return "Iomega Bernoulli Disk";
-                case MediaType.IomegaJaz:
-                    return "Iomega Jaz";
-                case MediaType.IomegaZip:
-                    return "Iomega Zip";
-                case MediaType.LaserDisc:
-                    return "LD-ROM / LV-ROM";
-                case MediaType.Nintendo64DD:
-                    return "64DD Disk";
-                case MediaType.NintendoFamicomDiskSystem:
-                    return "Famicom Disk System Disk";
-                case MediaType.NintendoGameCubeGameDisc:
-                    return "GameCube Game Disc";
-                case MediaType.NintendoWiiOpticalDisc:
-                    return "Wii Optical Disc";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return "Wii U Optical Disc";
-                case MediaType.UMD:
-                    return "UMD";
-
-                #endregion
-
-                // Unsorted Formats
-                case MediaType.Cartridge:
-                    return "Cartridge";
-                case MediaType.CED:
-                    return "CED";
-
-                case MediaType.NONE:
-                default:
-                    return "Unknown";
-            }
-        }
+        #region Convert to Long Name
 
         /// <summary>
-        /// Get the short string representation of the MediaType enum values
+        /// Get the string representation of the Category enum values
         /// </summary>
-        /// <param name="type">MediaType value to convert</param>
+        /// <param name="category">Category value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string MediaTypeToShortString(MediaType? type)
+        public static string LongName(Category? category)
         {
-            switch (type)
+            switch (category)
             {
-                #region Punched Media
-
-                case MediaType.ApertureCard:
-                    return "aperture";
-                case MediaType.JacquardLoomCard:
-                    return "jacquard loom card";
-                case MediaType.MagneticStripeCard:
-                    return "magnetic stripe";
-                case MediaType.OpticalPhonecard:
-                    return "optical phonecard";
-                case MediaType.PunchedCard:
-                    return "punchcard";
-                case MediaType.PunchedTape:
-                    return "punchtape";
-
-                #endregion
-
-                #region Tape
-
-                case MediaType.OpenReel:
-                    return "open reel";
-                case MediaType.DataCartridge:
-                    return "data cartridge";
-                case MediaType.Cassette:
-                    return "cassette";
-
-                #endregion
-
-                #region Disc / Disc
-
-                case MediaType.BluRay:
-                    return "bdrom";
-                case MediaType.CDROM:
-                    return "cdrom";
-                case MediaType.DVD:
-                    return "dvd";
-                case MediaType.FloppyDisk:
-                    return "fd";
-                case MediaType.Floptical:
-                    return "floptical";
-                case MediaType.GDROM:
-                    return "gdrom";
-                case MediaType.HDDVD:
-                    return "hddvd";
-                case MediaType.HardDisk:
-                    return "hdd";
-                case MediaType.IomegaBernoulliDisk:
-                    return "bernoulli";
-                case MediaType.IomegaJaz:
-                    return "jaz";
-                case MediaType.IomegaZip:
-                    return "zip";
-                case MediaType.LaserDisc:
-                    return "ldrom";
-                case MediaType.Nintendo64DD:
-                    return "64dd";
-                case MediaType.NintendoFamicomDiskSystem:
-                    return "fds";
-                case MediaType.NintendoGameCubeGameDisc:
-                    return "gc";
-                case MediaType.NintendoWiiOpticalDisc:
-                    return "wii";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return "wiiu";
-                case MediaType.UMD:
-                    return "umd";
-
-                #endregion
-
-                // Unsorted Formats
-                case MediaType.Cartridge:
-                    return "cart";
-                case MediaType.CED:
-                    return "ced";
-
-                case MediaType.NONE:
+                case Category.Games:
+                    return "Games";
+                case Category.Demos:
+                    return "Demos";
+                case Category.Video:
+                    return "Video";
+                case Category.Audio:
+                    return "Audio";
+                case Category.Multimedia:
+                    return "Multimedia";
+                case Category.Applications:
+                    return "Applications";
+                case Category.Coverdiscs:
+                    return "Coverdiscs";
+                case Category.Educational:
+                    return "Educational";
+                case Category.BonusDiscs:
+                    return "Bonus Discs";
+                case Category.Preproduction:
+                    return "Preproduction";
+                case Category.AddOns:
+                    return "Add-Ons";
                 default:
-                    return "unknown";
-            }
-        }
-
-        /// <summary>
-        /// Get the MediaType enum value for a given string
-        /// </summary>
-        /// <param name="type">String value to convert</param>
-        /// <returns>MediaType represented by the string, if possible</returns>
-        public static MediaType StringToMediaType(string type)
-        {
-            switch (type.ToLowerInvariant())
-            {
-                #region Punched Media
-
-                case "aperture":
-                case "aperturecard":
-                case "aperture card":
-                    return MediaType.ApertureCard;
-                case "jacquardloom":
-                case "jacquardloomcard":
-                case "jacquard loom card":
-                    return MediaType.JacquardLoomCard;
-                case "magneticstripe":
-                case "magneticstripecard":
-                case "magnetic stripe card":
-                    return MediaType.MagneticStripeCard;
-                case "opticalphone":
-                case "opticalphonecard":
-                case "optical phonecard":
-                    return MediaType.OpticalPhonecard;
-                case "punchcard":
-                case "punchedcard":
-                case "punched card":
-                    return MediaType.PunchedCard;
-                case "punchtape":
-                case "punchedtape":
-                case "punched tape":
-                    return MediaType.PunchedTape;
-
-                #endregion
-
-                #region Tape
-
-                case "openreel":
-                case "openreeltape":
-                case "open reel tape":
-                    return MediaType.OpenReel;
-                case "datacart":
-                case "datacartridge":
-                case "datatapecartridge":
-                case "data tape cartridge":
-                    return MediaType.DataCartridge;
-                case "cassette":
-                case "cassettetape":
-                case "cassette tape":
-                    return MediaType.Cassette;
-
-                    #endregion
-
-                #region Disc / Disc
-
-                case "bd":
-                case "bdrom":
-                case "bd-rom":
-                case "bluray":
-                    return MediaType.BluRay;
-                case "cd":
-                case "cdrom":
-                case "cd-rom":
-                    return MediaType.CDROM;
-                case "dvd":
-                case "dvd5":
-                case "dvd-5":
-                case "dvd9":
-                case "dvd-9":
-                case "dvdrom":
-                case "dvd-rom":
-                    return MediaType.DVD;
-                case "fd":
-                case "floppy":
-                case "floppydisk":
-                case "floppy disk":
-                case "floppy diskette":
-                    return MediaType.FloppyDisk;
-                case "floptical":
-                    return MediaType.Floptical;
-                case "gd":
-                case "gdrom":
-                case "gd-rom":
-                    return MediaType.GDROM;
-                case "hddvd":
-                case "hd-dvd":
-                case "hddvdrom":
-                case "hd-dvd-rom":
-                    return MediaType.HDDVD;
-                case "hdd":
-                case "harddisk":
-                case "hard disk":
-                    return MediaType.HardDisk;
-                case "bernoullidisk":
-                case "iomegabernoullidisk":
-                case "bernoulli disk":
-                case "iomega bernoulli disk":
-                    return MediaType.IomegaBernoulliDisk;
-                case "jaz":
-                case "iomegajaz":
-                case "iomega jaz":
-                    return MediaType.IomegaJaz;
-                case "zip":
-                case "zipdisk":
-                case "iomegazip":
-                case "iomega zip":
-                    return MediaType.IomegaZip;
-                case "ldrom":
-                case "lvrom":
-                case "ld-rom":
-                case "lv-rom":
-                case "laserdisc":
-                case "laservision":
-                case "ld-rom / lv-rom":
-                    return MediaType.LaserDisc;
-                case "64dd":
-                case "n64dd":
-                case "64dddisk":
-                case "n64dddisk":
-                case "64dd disk":
-                case "n64dd disk":
-                    return MediaType.Nintendo64DD;
-                case "fds":
-                case "famicom":
-                case "nfds":
-                case "nintendofamicom":
-                case "famicomdisksystem":
-                case "famicom disk system":
-                case "famicom disk system disk":
-                    return MediaType.NintendoFamicomDiskSystem;
-                case "gc":
-                case "gamecube":
-                case "nintendogamecube":
-                case "nintendo gamecube":
-                case "gamecube disc":
-                case "gamecube game disc":
-                    return MediaType.NintendoGameCubeGameDisc;
-                case "wii":
-                case "nintendowii":
-                case "nintendo wii":
-                case "nintendo wii disc":
-                case "wii optical disc":
-                    return MediaType.NintendoWiiOpticalDisc;
-                case "wiiu":
-                case "nintendowiiu":
-                case "nintendo wiiu":
-                case "nintendo wiiu disc":
-                case "wiiu optical disc":
-                case "wii u optical disc":
-                    return MediaType.NintendoWiiUOpticalDisc;
-                case "umd":
-                    return MediaType.UMD;
-
-                #endregion
-
-                // Unsorted Formats
-                case "cartridge":
-                    return MediaType.Cartridge;
-                case "ced":
-                case "rcaced":
-                case "rca ced":
-                case "videodisc":
-                case "rca videodisc":
-                    return MediaType.CED;
-
-                default:
-                    return MediaType.NONE;
+                    return null;
             }
         }
 
@@ -624,7 +309,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="sys">KnownSystem value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string KnownSystemToString(KnownSystem? sys)
+        public static string LongName(KnownSystem? sys)
         {
             switch (sys)
             {
@@ -879,11 +564,342 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the string representation of the Language enum values
+        /// </summary>
+        /// <param name="lang">Language value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(Language? lang)
+        {
+            switch (lang)
+            {
+                case Language.Afrikaans:
+                    return "Afrikaans";
+                case Language.Arabic:
+                    return "Arabic";
+                case Language.Basque:
+                    return "Basque";
+                case Language.Bulgarian:
+                    return "Bulgarian";
+                case Language.Catalan:
+                    return "Catalan";
+                case Language.Chinese:
+                    return "Chinese";
+                case Language.Croatian:
+                    return "Croatian";
+                case Language.Czech:
+                    return "Czech";
+                case Language.Danish:
+                    return "Danish";
+                case Language.Dutch:
+                    return "Dutch";
+                case Language.English:
+                    return "English";
+                case Language.Finnish:
+                    return "Finnish";
+                case Language.French:
+                    return "French";
+                case Language.Gaelic:
+                    return "Gaelic";
+                case Language.German:
+                    return "German";
+                case Language.Greek:
+                    return "Greek";
+                case Language.Hebrew:
+                    return "Hebrew";
+                case Language.Hindi:
+                    return "Hindi";
+                case Language.Hungarian:
+                    return "Hungarian";
+                case Language.Italian:
+                    return "Italian";
+                case Language.Japanese:
+                    return "Japanese";
+                case Language.Korean:
+                    return "Korean";
+                case Language.Norwegian:
+                    return "Norwegian";
+                case Language.Polish:
+                    return "Polish";
+                case Language.Portuguese:
+                    return "Portuguese";
+                case Language.Punjabi:
+                    return "Punjabi";
+                case Language.Romanian:
+                    return "Romanian";
+                case Language.Russian:
+                    return "Russian";
+                case Language.Slovak:
+                    return "Slovak";
+                case Language.Slovenian:
+                    return "Slovenian";
+                case Language.Spanish:
+                    return "Spanish";
+                case Language.Swedish:
+                    return "Swedish";
+                case Language.Tamil:
+                    return "Tamil";
+                case Language.Thai:
+                    return "Thai";
+                case Language.Turkish:
+                    return "Turkish";
+                case Language.Ukrainian:
+                    return "Ukrainian";
+                default:
+                    return "Klingon (CHANGE THIS)";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the MediaType enum values
+        /// </summary>
+        /// <param name="type">MediaType value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(MediaType? type)
+        {
+            switch (type)
+            {
+                #region Punched Media
+
+                case MediaType.ApertureCard:
+                    return "Aperture card";
+                case MediaType.JacquardLoomCard:
+                    return "Jacquard Loom card";
+                case MediaType.MagneticStripeCard:
+                    return "Magnetic stripe card";
+                case MediaType.OpticalPhonecard:
+                    return "Optical phonecard";
+                case MediaType.PunchedCard:
+                    return "Punched card";
+                case MediaType.PunchedTape:
+                    return "Punched tape";
+
+                #endregion
+
+                #region Tape
+
+                case MediaType.OpenReel:
+                    return "Open Reel Tape";
+                case MediaType.DataCartridge:
+                    return "Data Tape Cartridge";
+                case MediaType.Cassette:
+                    return "Cassette Tape";
+
+                #endregion
+
+                #region Disc / Disc
+
+                case MediaType.BluRay:
+                    return "BD-ROM";
+                case MediaType.CDROM:
+                    return "CD-ROM";
+                case MediaType.DVD:
+                    return "DVD-ROM";
+                case MediaType.FloppyDisk:
+                    return "Floppy Disk";
+                case MediaType.Floptical:
+                    return "Floptical";
+                case MediaType.GDROM:
+                    return "GD-ROM";
+                case MediaType.HDDVD:
+                    return "HD-DVD-ROM";
+                case MediaType.HardDisk:
+                    return "Hard Disk";
+                case MediaType.IomegaBernoulliDisk:
+                    return "Iomega Bernoulli Disk";
+                case MediaType.IomegaJaz:
+                    return "Iomega Jaz";
+                case MediaType.IomegaZip:
+                    return "Iomega Zip";
+                case MediaType.LaserDisc:
+                    return "LD-ROM / LV-ROM";
+                case MediaType.Nintendo64DD:
+                    return "64DD Disk";
+                case MediaType.NintendoFamicomDiskSystem:
+                    return "Famicom Disk System Disk";
+                case MediaType.NintendoGameCubeGameDisc:
+                    return "GameCube Game Disc";
+                case MediaType.NintendoWiiOpticalDisc:
+                    return "Wii Optical Disc";
+                case MediaType.NintendoWiiUOpticalDisc:
+                    return "Wii U Optical Disc";
+                case MediaType.UMD:
+                    return "UMD";
+
+                #endregion
+
+                // Unsorted Formats
+                case MediaType.Cartridge:
+                    return "Cartridge";
+                case MediaType.CED:
+                    return "CED";
+
+                case MediaType.NONE:
+                default:
+                    return "Unknown";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the Region enum values
+        /// </summary>
+        /// <param name="region">Region value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(Region? region)
+        {
+            switch (region)
+            {
+                case Region.Argentina:
+                    return "Argentina";
+                case Region.Asia:
+                    return "Asia";
+                case Region.AsiaEurope:
+                    return "Asia, Europe";
+                case Region.AsiaUSA:
+                    return "Asia, USA";
+                case Region.Australia:
+                    return "Australia";
+                case Region.Austria:
+                    return "Austria";
+                case Region.AustriaSwitzerland:
+                    return "Austria, Switzerland";
+                case Region.Belgium:
+                    return "Belgium";
+                case Region.BelgiumNetherlands:
+                    return "Belgium, Netherlands";
+                case Region.Brazil:
+                    return "Brazil";
+                case Region.Canada:
+                    return "Canada";
+                case Region.China:
+                    return "China";
+                case Region.Croatia:
+                    return "Croatia";
+                case Region.Czech:
+                    return "Czech";
+                case Region.Denmark:
+                    return "Denmark";
+                case Region.Europe:
+                    return "Europe";
+                case Region.EuropeAsia:
+                    return "Europe, Asia";
+                case Region.EuropeAustralia:
+                    return "Europe, Australia";
+                case Region.Finland:
+                    return "Finland";
+                case Region.France:
+                    return "France";
+                case Region.FranceSpain:
+                    return "France, Spain";
+                case Region.Germany:
+                    return "Germany";
+                case Region.Greece:
+                    return "Greece";
+                case Region.Hungary:
+                    return "Hungary";
+                case Region.India:
+                    return "India";
+                case Region.Ireland:
+                    return "Ireland";
+                case Region.Israel:
+                    return "Israel";
+                case Region.Italy:
+                    return "Italy";
+                case Region.Japan:
+                    return "Japan";
+                case Region.JapanAsia:
+                    return "Japan, Asia";
+                case Region.JapanEurope:
+                    return "Japan, Europe";
+                case Region.JapanKorea:
+                    return "Japan, Korea";
+                case Region.JapanUSA:
+                    return "Japan, USA";
+                case Region.Korea:
+                    return "Korea";
+                case Region.LatinAmerica:
+                    return "Latin America";
+                case Region.Netherlands:
+                    return "Netherlands";
+                case Region.Norway:
+                    return "Norway";
+                case Region.Poland:
+                    return "Poland";
+                case Region.Portugal:
+                    return "Portugal";
+                case Region.Russia:
+                    return "Russia";
+                case Region.Scandinavia:
+                    return "Scandinavia";
+                case Region.Singapore:
+                    return "Singapore";
+                case Region.Slovakia:
+                    return "Slovakia";
+                case Region.SouthAfrica:
+                    return "South Africa";
+                case Region.Spain:
+                    return "Spain";
+                case Region.Sweden:
+                    return "Sweden";
+                case Region.Switzerland:
+                    return "Switzerland";
+                case Region.Taiwan:
+                    return "Taiwan";
+                case Region.Thailand:
+                    return "Thailand";
+                case Region.Turkey:
+                    return "Turkey";
+                case Region.UnitedArabEmirates:
+                    return "United Arab Emirates";
+                case Region.UK:
+                    return "UK";
+                case Region.Ukraine:
+                    return "Ukraine";
+                case Region.USA:
+                    return "USA";
+                case Region.USAAsia:
+                    return "USA, Asia";
+                case Region.USABrazil:
+                    return "USA, Brazil";
+                case Region.USAEurope:
+                    return "USA, Europe";
+                case Region.USAJapan:
+                    return "USA, Japan";
+                case Region.World:
+                    return "World";
+                default:
+                    return "World (CHANGE THIS)";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the YesNo enum values
+        /// </summary>
+        /// <param name="yesno">YesNo value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(YesNo yesno)
+        {
+            switch(yesno)
+            {
+                case YesNo.No:
+                    return "No";
+                case YesNo.Yes:
+                    return "Yes";
+                default:
+                case YesNo.NULL:
+                    return "Yes/No";
+            }
+        }
+
+        #endregion
+
+        #region Convert to Short Name
+
+        /// <summary>
         /// Get the short string representation of the KnownSystem enum values
         /// </summary>
         /// <param name="sys">KnownSystem value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string KnownSystemToShortString(KnownSystem? sys)
+        public static string ShortName(KnownSystem? sys)
         {
             switch (sys)
             {
@@ -1136,6 +1152,318 @@ namespace DICUI.Utilities
                     return "unknown";
             }
         }
+
+        /// <summary>
+        /// Get the short string representation of the Language enum values
+        /// </summary>
+        /// <param name="lang">Language value to convert</param>
+        /// <returns>Short string representing the value, if possible</returns>
+        public static string ShortName(Language? lang)
+        {
+            switch (lang)
+            {
+                case Language.Afrikaans:
+                    return "afr";
+                case Language.Arabic:
+                    return "ara";
+                case Language.Basque:
+                    return "baq";
+                case Language.Bulgarian:
+                    return "bul";
+                case Language.Catalan:
+                    return "cat";
+                case Language.Chinese:
+                    return "chi";
+                case Language.Croatian:
+                    return "hrv";
+                case Language.Czech:
+                    return "cze";
+                case Language.Danish:
+                    return "dan";
+                case Language.Dutch:
+                    return "dut";
+                case Language.English:
+                    return "eng";
+                case Language.Finnish:
+                    return "fin";
+                case Language.French:
+                    return "fre";
+                case Language.Gaelic:
+                    return "gla";
+                case Language.German:
+                    return "ger";
+                case Language.Greek:
+                    return "gre";
+                case Language.Hebrew:
+                    return "heb";
+                case Language.Hindi:
+                    return "hin";
+                case Language.Hungarian:
+                    return "hun";
+                case Language.Italian:
+                    return "ita";
+                case Language.Japanese:
+                    return "jap";
+                case Language.Korean:
+                    return "kor";
+                case Language.Norwegian:
+                    return "nor";
+                case Language.Polish:
+                    return "pol";
+                case Language.Portuguese:
+                    return "por";
+                case Language.Punjabi:
+                    return "pan";
+                case Language.Romanian:
+                    return "ron";
+                case Language.Russian:
+                    return "rus";
+                case Language.Slovak:
+                    return "slk";
+                case Language.Slovenian:
+                    return "slv";
+                case Language.Spanish:
+                    return "spa";
+                case Language.Swedish:
+                    return "swe";
+                case Language.Tamil:
+                    return "tam";
+                case Language.Thai:
+                    return "tha";
+                case Language.Turkish:
+                    return "tur";
+                case Language.Ukrainian:
+                    return "ukr";
+                default:
+                    return "unk";
+            }
+        }
+
+        /// <summary>
+        /// Get the short string representation of the MediaType enum values
+        /// </summary>
+        /// <param name="type">MediaType value to convert</param>
+        /// <returns>Short string representing the value, if possible</returns>
+        public static string ShortName(MediaType? type)
+        {
+            switch (type)
+            {
+                #region Punched Media
+
+                case MediaType.ApertureCard:
+                    return "aperture";
+                case MediaType.JacquardLoomCard:
+                    return "jacquard loom card";
+                case MediaType.MagneticStripeCard:
+                    return "magnetic stripe";
+                case MediaType.OpticalPhonecard:
+                    return "optical phonecard";
+                case MediaType.PunchedCard:
+                    return "punchcard";
+                case MediaType.PunchedTape:
+                    return "punchtape";
+
+                #endregion
+
+                #region Tape
+
+                case MediaType.OpenReel:
+                    return "open reel";
+                case MediaType.DataCartridge:
+                    return "data cartridge";
+                case MediaType.Cassette:
+                    return "cassette";
+
+                #endregion
+
+                #region Disc / Disc
+
+                case MediaType.BluRay:
+                    return "bdrom";
+                case MediaType.CDROM:
+                    return "cdrom";
+                case MediaType.DVD:
+                    return "dvd";
+                case MediaType.FloppyDisk:
+                    return "fd";
+                case MediaType.Floptical:
+                    return "floptical";
+                case MediaType.GDROM:
+                    return "gdrom";
+                case MediaType.HDDVD:
+                    return "hddvd";
+                case MediaType.HardDisk:
+                    return "hdd";
+                case MediaType.IomegaBernoulliDisk:
+                    return "bernoulli";
+                case MediaType.IomegaJaz:
+                    return "jaz";
+                case MediaType.IomegaZip:
+                    return "zip";
+                case MediaType.LaserDisc:
+                    return "ldrom";
+                case MediaType.Nintendo64DD:
+                    return "64dd";
+                case MediaType.NintendoFamicomDiskSystem:
+                    return "fds";
+                case MediaType.NintendoGameCubeGameDisc:
+                    return "gc";
+                case MediaType.NintendoWiiOpticalDisc:
+                    return "wii";
+                case MediaType.NintendoWiiUOpticalDisc:
+                    return "wiiu";
+                case MediaType.UMD:
+                    return "umd";
+
+                #endregion
+
+                // Unsorted Formats
+                case MediaType.Cartridge:
+                    return "cart";
+                case MediaType.CED:
+                    return "ced";
+
+                case MediaType.NONE:
+                default:
+                    return "unknown";
+            }
+        }
+
+        /// <summary>
+        /// Get the short string representation of the Region enum values
+        /// </summary>
+        /// <param name="region">Region value to convert</param>
+        /// <returns>Short string representing the value, if possible</returns>
+        public static string ShortName(Region? region)
+        {
+            switch (region)
+            {
+                case Region.Argentina:
+                    return "Ar";
+                case Region.Asia:
+                    return "A";
+                case Region.AsiaEurope:
+                    return "A,E";
+                case Region.AsiaUSA:
+                    return "A,U";
+                case Region.Australia:
+                    return "Au";
+                case Region.Austria:
+                    return "At";
+                case Region.AustriaSwitzerland:
+                    return "At,Ch";
+                case Region.Belgium:
+                    return "Be";
+                case Region.BelgiumNetherlands:
+                    return "Be,N";
+                case Region.Brazil:
+                    return "B";
+                case Region.Canada:
+                    return "Ca";
+                case Region.China:
+                    return "C";
+                case Region.Croatia:
+                    return "Hr";
+                case Region.Czech:
+                    return "Cz";
+                case Region.Denmark:
+                    return "Dk";
+                case Region.Europe:
+                    return "E";
+                case Region.EuropeAsia:
+                    return "E,A";
+                case Region.EuropeAustralia:
+                    return "E,Au";
+                case Region.Finland:
+                    return "Fi";
+                case Region.France:
+                    return "F";
+                case Region.FranceSpain:
+                    return "F,S";
+                case Region.Germany:
+                    return "G";
+                case Region.Greece:
+                    return "Gr";
+                case Region.Hungary:
+                    return "H";
+                case Region.India:
+                    return "In";
+                case Region.Ireland:
+                    return "Ie";
+                case Region.Israel:
+                    return "Il";
+                case Region.Italy:
+                    return "I";
+                case Region.Japan:
+                    return "J";
+                case Region.JapanAsia:
+                    return "J,A";
+                case Region.JapanEurope:
+                    return "J,E";
+                case Region.JapanKorea:
+                    return "J,K";
+                case Region.JapanUSA:
+                    return "J,U";
+                case Region.Korea:
+                    return "K";
+                case Region.LatinAmerica:
+                    return "LAm";
+                case Region.Netherlands:
+                    return "N";
+                case Region.Norway:
+                    return "No";
+                case Region.Poland:
+                    return "P";
+                case Region.Portugal:
+                    return "Pt";
+                case Region.Russia:
+                    return "R";
+                case Region.Scandinavia:
+                    return "Sca";
+                case Region.Singapore:
+                    return "Sg";
+                case Region.Slovakia:
+                    return "Sk";
+                case Region.SouthAfrica:
+                    return "Za";
+                case Region.Spain:
+                    return "S";
+                case Region.Sweden:
+                    return "Sw";
+                case Region.Switzerland:
+                    return "Ch";
+                case Region.Taiwan:
+                    return "Tw";
+                case Region.Thailand:
+                    return "Th";
+                case Region.Turkey:
+                    return "Tr";
+                case Region.UnitedArabEmirates:
+                    return "Ae";
+                case Region.UK:
+                    return "Uk";
+                case Region.Ukraine:
+                    return "Ue";
+                case Region.USA:
+                    return "U";
+                case Region.USAAsia:
+                    return "U,A";
+                case Region.USABrazil:
+                    return "U,B";
+                case Region.USAEurope:
+                    return "U,E";
+                case Region.USAJapan:
+                    return "U,J";
+                case Region.World:
+                    return "W";
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
+
+        #region Convert From String
 
         /// <summary>
         /// Get the KnownSystem enum value for a given string
@@ -1846,5 +2174,180 @@ namespace DICUI.Utilities
                     return KnownSystem.NONE;
             }
         }
+
+        /// <summary>
+        /// Get the MediaType enum value for a given string
+        /// </summary>
+        /// <param name="type">String value to convert</param>
+        /// <returns>MediaType represented by the string, if possible</returns>
+        public static MediaType StringToMediaType(string type)
+            {
+                switch (type.ToLowerInvariant())
+                {
+                    #region Punched Media
+
+                    case "aperture":
+                    case "aperturecard":
+                    case "aperture card":
+                        return MediaType.ApertureCard;
+                    case "jacquardloom":
+                    case "jacquardloomcard":
+                    case "jacquard loom card":
+                        return MediaType.JacquardLoomCard;
+                    case "magneticstripe":
+                    case "magneticstripecard":
+                    case "magnetic stripe card":
+                        return MediaType.MagneticStripeCard;
+                    case "opticalphone":
+                    case "opticalphonecard":
+                    case "optical phonecard":
+                        return MediaType.OpticalPhonecard;
+                    case "punchcard":
+                    case "punchedcard":
+                    case "punched card":
+                        return MediaType.PunchedCard;
+                    case "punchtape":
+                    case "punchedtape":
+                    case "punched tape":
+                        return MediaType.PunchedTape;
+
+                    #endregion
+
+                    #region Tape
+
+                    case "openreel":
+                    case "openreeltape":
+                    case "open reel tape":
+                        return MediaType.OpenReel;
+                    case "datacart":
+                    case "datacartridge":
+                    case "datatapecartridge":
+                    case "data tape cartridge":
+                        return MediaType.DataCartridge;
+                    case "cassette":
+                    case "cassettetape":
+                    case "cassette tape":
+                        return MediaType.Cassette;
+
+                    #endregion
+
+                    #region Disc / Disc
+
+                    case "bd":
+                    case "bdrom":
+                    case "bd-rom":
+                    case "bluray":
+                        return MediaType.BluRay;
+                    case "cd":
+                    case "cdrom":
+                    case "cd-rom":
+                        return MediaType.CDROM;
+                    case "dvd":
+                    case "dvd5":
+                    case "dvd-5":
+                    case "dvd9":
+                    case "dvd-9":
+                    case "dvdrom":
+                    case "dvd-rom":
+                        return MediaType.DVD;
+                    case "fd":
+                    case "floppy":
+                    case "floppydisk":
+                    case "floppy disk":
+                    case "floppy diskette":
+                        return MediaType.FloppyDisk;
+                    case "floptical":
+                        return MediaType.Floptical;
+                    case "gd":
+                    case "gdrom":
+                    case "gd-rom":
+                        return MediaType.GDROM;
+                    case "hddvd":
+                    case "hd-dvd":
+                    case "hddvdrom":
+                    case "hd-dvd-rom":
+                        return MediaType.HDDVD;
+                    case "hdd":
+                    case "harddisk":
+                    case "hard disk":
+                        return MediaType.HardDisk;
+                    case "bernoullidisk":
+                    case "iomegabernoullidisk":
+                    case "bernoulli disk":
+                    case "iomega bernoulli disk":
+                        return MediaType.IomegaBernoulliDisk;
+                    case "jaz":
+                    case "iomegajaz":
+                    case "iomega jaz":
+                        return MediaType.IomegaJaz;
+                    case "zip":
+                    case "zipdisk":
+                    case "iomegazip":
+                    case "iomega zip":
+                        return MediaType.IomegaZip;
+                    case "ldrom":
+                    case "lvrom":
+                    case "ld-rom":
+                    case "lv-rom":
+                    case "laserdisc":
+                    case "laservision":
+                    case "ld-rom / lv-rom":
+                        return MediaType.LaserDisc;
+                    case "64dd":
+                    case "n64dd":
+                    case "64dddisk":
+                    case "n64dddisk":
+                    case "64dd disk":
+                    case "n64dd disk":
+                        return MediaType.Nintendo64DD;
+                    case "fds":
+                    case "famicom":
+                    case "nfds":
+                    case "nintendofamicom":
+                    case "famicomdisksystem":
+                    case "famicom disk system":
+                    case "famicom disk system disk":
+                        return MediaType.NintendoFamicomDiskSystem;
+                    case "gc":
+                    case "gamecube":
+                    case "nintendogamecube":
+                    case "nintendo gamecube":
+                    case "gamecube disc":
+                    case "gamecube game disc":
+                        return MediaType.NintendoGameCubeGameDisc;
+                    case "wii":
+                    case "nintendowii":
+                    case "nintendo wii":
+                    case "nintendo wii disc":
+                    case "wii optical disc":
+                        return MediaType.NintendoWiiOpticalDisc;
+                    case "wiiu":
+                    case "nintendowiiu":
+                    case "nintendo wiiu":
+                    case "nintendo wiiu disc":
+                    case "wiiu optical disc":
+                    case "wii u optical disc":
+                        return MediaType.NintendoWiiUOpticalDisc;
+                    case "umd":
+                        return MediaType.UMD;
+
+                    #endregion
+
+                    // Unsorted Formats
+                    case "cartridge":
+                        return MediaType.Cartridge;
+                    case "ced":
+                    case "rcaced":
+                    case "rca ced":
+                    case "videodisc":
+                    case "rca videodisc":
+                        return MediaType.CED;
+
+                    default:
+                        return MediaType.NONE;
+                }
+            }
+
+        #endregion
     }
 }

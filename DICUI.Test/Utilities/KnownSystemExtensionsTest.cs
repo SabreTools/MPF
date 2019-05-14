@@ -13,7 +13,7 @@ namespace DICUI.Test.Utilities
             var values = (KnownSystem[])Enum.GetValues(typeof(KnownSystem));
             foreach(var system in values)
             {
-                string expected = Converters.KnownSystemToString(system);
+                string expected = Converters.LongName(system);
                 string actual = ((KnownSystem?)system).Name();
 
                 Assert.Equal(expected, actual);
