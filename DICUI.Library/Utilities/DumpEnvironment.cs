@@ -922,8 +922,8 @@ namespace DICUI.Utilities
                 if (string.IsNullOrEmpty(info.Comments))
                     info.Comments = Template.OptionalValue;
 
-                AddIfExists(output, Template.CommentsField, info.Comments, 1);
-                AddIfExists(output, Template.ContentsField, info.Contents, 1);
+                AddIfExists(output, Template.CommentsField, info.Comments.Trim(), 1);
+                AddIfExists(output, Template.ContentsField, info.Contents.Trim(), 1);
 
                 // Version and editions secion
                 output.Add(""); output.Add("Version and Editions:");
@@ -944,7 +944,7 @@ namespace DICUI.Utilities
                 if (info.PVD != null || info.PIC != null || info.BCA != null)
                 {
                     output.Add(""); output.Add("Extras:");
-                    AddIfExists(output, Template.PVDField, info.PVD, 1);
+                    AddIfExists(output, Template.PVDField, info.PVD.Trim(), 1);
                     AddIfExists(output, Template.PlayStation3WiiDiscKeyField, info.DiscKey, 1);
                     AddIfExists(output, Template.PlayStation3DiscIDField, info.DiscID, 1);
                     AddIfExists(output, Template.PICField, info.PIC, 1);
