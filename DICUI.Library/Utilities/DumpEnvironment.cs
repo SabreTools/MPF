@@ -533,6 +533,11 @@ namespace DICUI.Utilities
                             if (match.Success)
                                 info.OtherEditions = match.Groups[1].Value;
 
+                            // Barcode
+                            match = Regex.Match(discData, @"<tr><th>Barcode</th></tr><tr><td>(.*?)</td></tr>");
+                            if (match.Success)
+                                info.Barcode = match.Groups[1].Value;
+
                             // Comments
                             match = Regex.Match(discData, @"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
                             if (match.Success)
