@@ -1548,7 +1548,7 @@ namespace DICUI.Utilities
                     }
 
                     // Once it finds the "BOOT" line, extract the name
-                    exeName = Regex.Match(line, @"BOOT.? = cdrom.?:\\(.*?);.*").Groups[1].Value;
+                    exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\(.*?);.*").Groups[1].Value;
                 }
             }
             catch
