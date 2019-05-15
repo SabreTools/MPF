@@ -636,7 +636,7 @@ namespace DICUI.Utilities
                         case KnownSystem.SegaNaomi2:
                         case KnownSystem.SegaTitanVideo:
                         case KnownSystem.SNKNeoGeoCD:
-                            info.EXEDateBuildDate = DateTime.MinValue;
+                            info.EXEDateBuildDate = Template.RequiredValue;
                             break;
                         case KnownSystem.SegaCDMegaCD:
                             info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
@@ -648,7 +648,7 @@ namespace DICUI.Utilities
                             if (GetSegaCDBuildInfo(info.Header, out string scdSerial, out string fixedDate))
                             {
                                 info.Serial = scdSerial ?? "";
-                                info.EXEDateBuildDate = DateTime.Parse(fixedDate ?? DateTime.MinValue.ToString());
+                                info.EXEDateBuildDate = fixedDate ?? "";
                             }
 
                             break;
@@ -663,12 +663,12 @@ namespace DICUI.Utilities
                             {
                                 info.Serial = saturnSerial ?? "";
                                 info.Version = version ?? "";
-                                info.EXEDateBuildDate = DateTime.Parse(buildDate ?? DateTime.MinValue.ToString());
+                                info.EXEDateBuildDate = buildDate ?? "";
                             }
 
                             break;
                         case KnownSystem.SonyPlayStation:
-                            info.EXEDateBuildDate = DateTime.Parse(GetPlayStationEXEDate(Drive.Letter) ?? DateTime.MinValue.ToString());
+                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             info.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
                             info.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
                             info.LibCrypt = YesNo.No;
@@ -685,7 +685,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation2:
                             info.LanguageSelection = new string[]{ "Bios settings", "Language selector", "Options menu" };
-                            info.EXEDateBuildDate = DateTime.Parse(GetPlayStationEXEDate(Drive.Letter) ?? DateTime.MinValue.ToString());
+                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             info.Version = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
                     }
@@ -771,7 +771,7 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.KonamieAmusement:
                         case KnownSystem.KonamiFirebeat:
-                            info.EXEDateBuildDate = DateTime.MinValue;
+                            info.EXEDateBuildDate = Template.RequiredValue;
                             break;
                         case KnownSystem.MicrosoftXBOX:
                             if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
@@ -807,7 +807,7 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            info.EXEDateBuildDate = DateTime.Parse(GetPlayStationEXEDate(Drive.Letter) ?? DateTime.MinValue.ToString());
+                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive.Letter) ?? "";
                             info.Version = GetPlayStation2Version(Drive.Letter) ?? "";
                             break;
                         case KnownSystem.SonyPlayStation3:
@@ -912,10 +912,7 @@ namespace DICUI.Utilities
                 }
 
                 AddIfExists(output, Template.BarcodeField, info.Barcode, 1);
-
-                if (info.EXEDateBuildDate != null)
-                    AddIfExists(output, Template.EXEDateBuildDate, ((DateTime)info.EXEDateBuildDate).ToString("yyyy-MM-dd"), 1);
-
+                AddIfExists(output, Template.EXEDateBuildDate, info.EXEDateBuildDate, 1);                    
                 AddIfExists(output, Template.ErrorCountField, info.ErrorsCount, 1);
 
                 // Comments can be handled strangely sometimes

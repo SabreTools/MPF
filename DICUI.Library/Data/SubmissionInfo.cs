@@ -104,7 +104,7 @@ namespace DICUI.Data
         public string Barcode { get; set; }
 
         [JsonProperty(PropertyName = "d_date", NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? EXEDateBuildDate { get; set; }
+        public string EXEDateBuildDate { get; set; }
 
         [JsonProperty(PropertyName = "d_errors", NullValueHandling = NullValueHandling.Ignore)]
         public string ErrorsCount { get; set; }
