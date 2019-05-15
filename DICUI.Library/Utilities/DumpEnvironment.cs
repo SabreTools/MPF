@@ -852,6 +852,10 @@ namespace DICUI.Utilities
                     break;
             }
 
+            // Comments is one of the few fields with odd handling
+            if (string.IsNullOrEmpty(info.Comments))
+                info.Comments = Template.OptionalValue;
+
             return info;
         }
 
@@ -868,9 +872,8 @@ namespace DICUI.Utilities
 
             try
             {
-                // Common disc info section
+                // Common Disc Info section
                 List<string> output = new List<string> { "Common Disc Info:" };
-
                 AddIfExists(output, Template.TitleField, info.Title, 1);
                 AddIfExists(output, Template.ForeignTitleField, info.ForeignTitleNonLatin, 1);
                 AddIfExists(output, Template.DiscNumberField, info.DiscNumberLetter, 1);
@@ -914,25 +917,22 @@ namespace DICUI.Utilities
                 AddIfExists(output, Template.BarcodeField, info.Barcode, 1);
                 AddIfExists(output, Template.EXEDateBuildDate, info.EXEDateBuildDate, 1);                    
                 AddIfExists(output, Template.ErrorCountField, info.ErrorsCount, 1);
-
-                // Comments can be handled strangely sometimes
-                if (string.IsNullOrEmpty(info.Comments))
-                    info.Comments = Template.OptionalValue;
-
                 AddIfExists(output, Template.CommentsField, info.Comments.Trim(), 1);
                 AddIfExists(output, Template.ContentsField, info.Contents.Trim(), 1);
 
-                // Version and editions secion
+                // Version and Editions section
                 output.Add(""); output.Add("Version and Editions:");
                 AddIfExists(output, Template.VersionField, info.Version, 1);
                 AddIfExists(output, Template.EditionField, info.OtherEditions, 1);
 
+                // EDC section
                 if (info.EDC != YesNo.NULL)
                 {
                     output.Add("EDC:");
                     AddIfExists(output, Template.PlayStationEDCField, info.EDC.Name(), 1);
                 }
-
+                
+                // Parent/Clone Relationship section
                 // output.Add(""); output.Add("Parent/Clone Relationship:");
                 // AddIfExists(output, Template.ParentIDField, info.ParentID);
                 // AddIfExists(output, Template.RegionalParentField, info.RegionalParent.ToString());
@@ -950,7 +950,7 @@ namespace DICUI.Utilities
                     AddIfExists(output, Template.XBOXSSRanges, info.SecuritySectorRanges, 1);
                 }
                 
-                // Copy protection section
+                // Copy Protection section
                 if (info.Protection != null || info.EDC != YesNo.NULL)
                 {
                     output.Add(""); output.Add("Copy Protection:");
@@ -965,11 +965,12 @@ namespace DICUI.Utilities
                     AddIfExists(output, Template.SubIntentionField, info.SecuROMData, 1);
                 }
 
+                // Dumpers and Status section
                 // output.Add(""); output.Add("Dumpers and Status");
                 // AddIfExists(output, Template.StatusField, info.Status.Name());
                 // AddIfExists(output, Template.OtherDumpersField, info.OtherDumpers);
 
-                // Tracks and write offsets section
+                // Tracks and Write Offsets section
                 if (!string.IsNullOrWhiteSpace(info.ClrMameProData))
                 {
                     output.Add(""); output.Add("Tracks and Write Offsets:");
@@ -977,7 +978,7 @@ namespace DICUI.Utilities
                     AddIfExists(output, Template.CuesheetField, info.Cuesheet, 1);
                     AddIfExists(output, Template.WriteOffsetField, info.OtherWriteOffsets, 1);
                 }
-                // Size & checksum section
+                // Size & Checksum section
                 else
                 {
                     output.Add(""); output.Add("Size & Checksum:");
