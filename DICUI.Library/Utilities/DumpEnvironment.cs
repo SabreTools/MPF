@@ -2095,7 +2095,7 @@ namespace DICUI.Utilities
 
             progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
             bool success = WriteOutputData(formattedValues);
-            success = WriteOutputData(submissionInfo);
+            success &= WriteOutputData(submissionInfo);
 
             if (success)
                 progress?.Report(Result.Success("Writing complete!"));
