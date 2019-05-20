@@ -1056,6 +1056,152 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the adjusted name of the media baed on layers, if applicable
+        /// </summary>
+        /// <param name="mediaType">MediaType to get the proper name for</param>
+        /// <param name="layerbreak">Layerbreak value, as applicable</param>
+        /// <returns>String representation of the media, including layer specification</returns>
+        private string GetFixedMediaType(MediaType? mediaType, long layerbreak)
+        {
+            switch (mediaType)
+            {
+                case MediaType.DVD:
+                    if (layerbreak != default(long))
+                        return $"{mediaType.Name()}-9";
+                    else
+                        return $"{mediaType.Name()}-5";
+
+                case MediaType.BluRay:
+                    if (layerbreak != default(long))
+                        return $"{mediaType.Name()}-50";
+                    else
+                        return $"{mediaType.Name()}-25";
+
+                case MediaType.UMD:
+                    if (layerbreak != default(long))
+                        return $"{mediaType.Name()}-DL";
+                    else
+                        return $"{mediaType.Name()}-SL";
+
+                default:
+                    return mediaType.Name();
+            }
+        }
+
+        /// <summary>
+        /// Validate the current environment is ready for a dump
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        private Result IsValidForDump()
+        {
+            // Validate that everything is good
+            if (!ParametersValid())
+                return Result.Failure("Error! Current configuration is not supported!");
+
+            FixOutputPaths();
+
+            // Validate that the required program exists
+            if (!File.Exists(DICPath))
+                return Result.Failure("Error! Could not find DiscImageCreator!");
+
+            return Result.Success();
+        }
+
+        /// <summary>
+        /// Verify that the current environment has a complete dump and create submission info is possible
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
+        {
+            // Check to make sure that the output had all the correct files
+            if (!FoundAllFiles())
+                return Result.Failure("Error! Please check output directory as dump may be incomplete!");
+
+            progress?.Report(Result.Success("Extracting output information from output files..."));
+            SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
+            progress?.Report(Result.Success("Extracting information complete!"));
+
+            // TODO: Add UI step here (possibly) to get user info on the disc
+
+            progress?.Report(Result.Success("Formatting extracted information..."));
+            List<string> formattedValues = FormatOutputData(submissionInfo);
+            progress?.Report(Result.Success("Formatting complete!"));
+
+            progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
+            bool success = WriteOutputData(formattedValues);
+            success &= WriteOutputData(submissionInfo);
+
+            if (success)
+                progress?.Report(Result.Success("Writing complete!"));
+            else
+                progress?.Report(Result.Failure("Writing could not complete!"));
+
+            return Result.Success();
+        }
+
+        /// <summary>
+        /// Write the data to the output folder
+        /// </summary>
+        /// <param name="lines">Preformatted list of lines to write out to the file</param>
+        /// <returns>True on success, false on error</returns>
+        private bool WriteOutputData(List<string> lines)
+        {
+            // Check to see if the inputs are valid
+            if (lines == null)
+                return false;
+
+            // Now write out to a generic file
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                {
+                    foreach (string line in lines)
+                        sw.WriteLine(line);
+                }
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Write the data to the output folder
+        /// </summary>
+        /// <param name="info">SubmissionInfo object representign the JSON to write out to the file</param>
+        /// <returns>True on success, false on error</returns>
+        private bool WriteOutputData(SubmissionInfo info)
+        {
+            // Check to see if the input is valid
+            if (info == null)
+                return false;
+
+            // Now write out to a generic file
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.json"), FileMode.Create, FileAccess.Write)))
+                {
+                    string json = JsonConvert.SerializeObject(info, Formatting.Indented);
+                    sw.WriteLine(json);
+                }
+            }
+            catch
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Information Extraction Methods
+
+        /// <summary>
         /// Get the existance of an anti-modchip string from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
@@ -1064,9 +1210,7 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
-            {
                 return false;
-            }
 
             using (StreamReader sr = File.OpenText(disc))
             {
@@ -1077,13 +1221,9 @@ namespace DICUI.Utilities
                     while (!sr.EndOfStream)
                     {
                         if (line.StartsWith("Detected anti-mod string"))
-                        {
                             return true;
-                        }
                         else if (line.StartsWith("No anti-mod string"))
-                        {
                             return false;
-                        }
 
                         line = sr.ReadLine().Trim();
                     }
@@ -1106,6 +1246,7 @@ namespace DICUI.Utilities
         {
             if (ScanForProtection)
                 return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
+
             return "(CHECK WITH PROTECTIONID)";
         }
 
@@ -1118,9 +1259,7 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dat))
-            {
                 return null;
-            }
 
             using (StreamReader sr = File.OpenText(dat))
             {
@@ -1128,13 +1267,9 @@ namespace DICUI.Utilities
                 {
                     // Make sure this file is a .dat
                     if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-                    {
                         return null;
-                    }
                     if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
-                    {
                         return null;
-                    }
 
                     // Fast forward to the rom lines
                     while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
@@ -1169,9 +1304,7 @@ namespace DICUI.Utilities
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(disc))
-            {
                 return null;
-            }
 
             // Setup all of the individual pieces
             string region = null, rceProtection = null, copyrightProtectionSystemType = null, encryptedDiscKey = null, playerKey = null, decryptedDiscKey = null;
@@ -1182,7 +1315,7 @@ namespace DICUI.Utilities
                 try
                 {
                     // Fast forward to the copyright information
-                    while (!sr.ReadLine().Trim().StartsWith("========== CopyrightInformation =========="));
+                    while (!sr.ReadLine().Trim().StartsWith("========== CopyrightInformation ==========")) ;
 
                     // Now read until we hit the manufacturing information
                     string line = sr.ReadLine().Trim();
@@ -1252,9 +1385,7 @@ namespace DICUI.Utilities
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(edcecc))
-            {
                 return -1;
-            }
 
             // First line of defense is the EdcEcc error file
             using (StreamReader sr = File.OpenText(edcecc))
@@ -1267,7 +1398,9 @@ namespace DICUI.Utilities
                         string line = sr.ReadLine().Trim();
 
                         if (line.StartsWith("[NO ERROR]"))
+                        {
                             return 0;
+                        }
                         else if (line.StartsWith("Total errors"))
                         {
                             if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
@@ -1289,39 +1422,6 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the adjusted name of the media baed on layers, if applicable
-        /// </summary>
-        /// <param name="mediaType">MediaType to get the proper name for</param>
-        /// <param name="layerbreak">Layerbreak value, as applicable</param>
-        /// <returns>String representation of the media, including layer specification</returns>
-        private string GetFixedMediaType(MediaType? mediaType, long layerbreak)
-        {
-            switch (mediaType)
-            {
-                case MediaType.DVD:
-                    if (layerbreak != default(long))
-                        return $"{mediaType.Name()}-9";
-                    else
-                        return $"{mediaType.Name()}-5";
-
-                case MediaType.BluRay:
-                    if (layerbreak != default(long))
-                        return $"{mediaType.Name()}-50";
-                    else
-                        return $"{mediaType.Name()}-25";
-
-                case MediaType.UMD:
-                    if (layerbreak != default(long))
-                        return $"{mediaType.Name()}-DL";
-                    else
-                        return $"{mediaType.Name()}-SL";
-
-                default:
-                    return mediaType.Name();
-            }
-        }
-
-        /// <summary>
         /// Get the full lines from the input file, if possible
         /// </summary>
         /// <param name="filename">file location</param>
@@ -1330,9 +1430,7 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
-            {
                 return null;
-            }
 
             return string.Join("\n", File.ReadAllLines(filename));
         }
@@ -1376,9 +1474,7 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
-            {
                 return null;
-            }
 
             using (StreamReader sr = File.OpenText(disc))
             {
@@ -1390,7 +1486,9 @@ namespace DICUI.Utilities
                     {
                         // We definitely found a single-layer disc
                         if (line.Contains("NumberOfLayers: Single Layer"))
+                        {
                             return null;
+                        }
                         else if (line.Trim().StartsWith("========== SectorLength =========="))
                         {
                             // Skip the first one and unset the flag
@@ -1399,6 +1497,7 @@ namespace DICUI.Utilities
                             else
                                 break;
                         }
+
                         line = sr.ReadLine();
                     }
 
@@ -1422,9 +1521,7 @@ namespace DICUI.Utilities
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(edcecc))
-            {
                 return -1;
-            }
 
             // First line of defense is the EdcEcc error file
             using (StreamReader sr = File.OpenText(edcecc))
@@ -1434,9 +1531,7 @@ namespace DICUI.Utilities
                     // Fast forward to the PVD
                     string line = sr.ReadLine();
                     while (!line.StartsWith("[INFO] Number of sector(s) where EDC doesn't exist: "))
-                    {
                         line = sr.ReadLine();
-                    }
 
                     return Int64.Parse(line.Remove(0, "[INFO] Number of sector(s) where EDC doesn't exist: ".Length).Trim());
                 }
@@ -1457,26 +1552,22 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
-            {
                 return null;
-            }
 
             using (StreamReader sr = File.OpenText(mainInfo))
             {
                 try
                 {
                     // Make sure we're in the right sector
-                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel =========="));
+                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel ==========")) ;
 
                     // Fast forward to the PVD
-                    while (!sr.ReadLine().StartsWith("0310"));
+                    while (!sr.ReadLine().StartsWith("0310")) ;
 
                     // Now that we're at the PVD, read each line in and concatenate
                     string pvd = "";
                     for (int i = 0; i < 6; i++)
-                    {
                         pvd += sr.ReadLine() + "\n"; // 320-370
-                    }
 
                     return pvd;
                 }
@@ -1518,9 +1609,7 @@ namespace DICUI.Utilities
                     // Not assuming proper ordering, just in case
                     string line = sr.ReadLine();
                     while (!line.StartsWith("BOOT"))
-                    {
                         line = sr.ReadLine();
-                    }
 
                     // Once it finds the "BOOT" line, extract the name
                     exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\(.*?);.*").Groups[1].Value;
@@ -1535,9 +1624,7 @@ namespace DICUI.Utilities
             // Now that we have the EXE name, try to get the fileinfo for it
             string exePath = Path.Combine(drivePath, exeName);
             if (!File.Exists(exePath))
-            {
                 return null;
-            }
 
             FileInfo fi = new FileInfo(exePath);
             return fi.LastWriteTimeUtc.ToString("yyyy-MM-dd");
@@ -1572,9 +1659,7 @@ namespace DICUI.Utilities
                     // Not assuming proper ordering, just in case
                     string line = sr.ReadLine();
                     while (!line.StartsWith("VER"))
-                    {
                         line = sr.ReadLine();
-                    }
 
                     // Once it finds the "VER" line, extract the version
                     return Regex.Match(line, @"VER\s*=\s*(.*)").Groups[1].Value;
@@ -1597,9 +1682,7 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))
-            {
                 return null;
-            }
 
             try
             {
@@ -1662,9 +1745,7 @@ namespace DICUI.Utilities
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
-            {
                 return null;
-            }
 
             using (StreamReader sr = File.OpenText(mainInfo))
             {
@@ -1679,9 +1760,7 @@ namespace DICUI.Utilities
                     // Now that we're at the Header, read each line in and concatenate
                     string header = "";
                     for (int i = 0; i < 32; i++)
-                    {
                         header += sr.ReadLine() + "\n"; // 0000-01F0
-                    }
 
                     return header;
                 }
@@ -1705,9 +1784,7 @@ namespace DICUI.Utilities
 
             // If the input header is null, we can't do a thing
             if (String.IsNullOrWhiteSpace(segaHeader))
-            {
                 return false;
-            }
 
             // Now read it in cutting it into lines for easier parsing
             try
@@ -1790,9 +1867,7 @@ namespace DICUI.Utilities
 
             // If the input header is null, we can't do a thing
             if (String.IsNullOrWhiteSpace(segaHeader))
-            {
                 return false;
-            }
 
             // Now read it in cutting it into lines for easier parsing
             try
@@ -1823,9 +1898,7 @@ namespace DICUI.Utilities
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
-            {
                 return false;
-            }
 
             using (StreamReader sr = File.OpenText(disc))
             {
@@ -1866,20 +1939,18 @@ namespace DICUI.Utilities
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
-            {
                 return false;
-            }
 
             using (StreamReader sr = File.OpenText(disc))
             {
                 try
                 {
                     // Fast forward to the Security Sector version and read it
-                    while (!sr.ReadLine().Trim().StartsWith("CPR_MAI Key"));
+                    while (!sr.ReadLine().Trim().StartsWith("CPR_MAI Key")) ;
                     ssver = sr.ReadLine().Trim().Split(' ')[4]; // "Version of challenge table: <VER>"
 
                     // Fast forward to the Security Sector Ranges
-                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:"));
+                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
 
                     // Now that we're at the ranges, read each line in and concatenate
                     Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
@@ -1898,9 +1969,7 @@ namespace DICUI.Utilities
 
                     // Fast forward to the aux hashes
                     while (!line.StartsWith("<rom"))
-                    {
                         line = sr.ReadLine().Trim();
-                    }
 
                     // Read in the hashes to the proper parts
                     while (line.StartsWith("<rom"))
@@ -2052,115 +2121,6 @@ namespace DICUI.Utilities
                     return null;
                 }
             }
-        }
-
-        /// <summary>
-        /// Validate the current environment is ready for a dump
-        /// </summary>
-        /// <returns>Result instance with the outcome</returns>
-        private Result IsValidForDump()
-        {
-            // Validate that everything is good
-            if (!ParametersValid())
-                return Result.Failure("Error! Current configuration is not supported!");
-
-            FixOutputPaths();
-
-            // Validate that the required program exists
-            if (!File.Exists(DICPath))
-                return Result.Failure("Error! Could not find DiscImageCreator!");
-
-            return Result.Success();
-        }
-
-        /// <summary>
-        /// Verify that the current environment has a complete dump and create submission info is possible
-        /// </summary>
-        /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
-        {
-            // Check to make sure that the output had all the correct files
-            if (!FoundAllFiles())
-                return Result.Failure("Error! Please check output directory as dump may be incomplete!");
-
-            progress?.Report(Result.Success("Extracting output information from output files..."));
-            SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
-            progress?.Report(Result.Success("Extracting information complete!"));
-
-            // TODO: Add UI step here (possibly) to get user info on the disc
-
-            progress?.Report(Result.Success("Formatting extracted information..."));
-            List<string> formattedValues = FormatOutputData(submissionInfo);
-            progress?.Report(Result.Success("Formatting complete!"));
-
-            progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
-            bool success = WriteOutputData(formattedValues);
-            success &= WriteOutputData(submissionInfo);
-
-            if (success)
-                progress?.Report(Result.Success("Writing complete!"));
-            else
-                progress?.Report(Result.Failure("Writing could not complete!"));
-
-            return Result.Success();
-        }
-
-        /// <summary>
-        /// Write the data to the output folder
-        /// </summary>
-        /// <param name="lines">Preformatted list of lines to write out to the file</param>
-        /// <returns>True on success, false on error</returns>
-        private bool WriteOutputData(List<string> lines)
-        {
-            // Check to see if the inputs are valid
-            if (lines == null)
-                return false;
-
-            // Now write out to a generic file
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
-                {
-                    foreach (string line in lines)
-                        sw.WriteLine(line);
-                }
-            }
-            catch
-            {
-                // We don't care what the error is right now
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Write the data to the output folder
-        /// </summary>
-        /// <param name="info">SubmissionInfo object representign the JSON to write out to the file</param>
-        /// <returns>True on success, false on error</returns>
-        private bool WriteOutputData(SubmissionInfo info)
-        {
-            // Check to see if the input is valid
-            if (info == null)
-                return false;
-
-            // Now write out to a generic file
-            try
-            {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.json"), FileMode.Create, FileAccess.Write)))
-                {
-                    string json = JsonConvert.SerializeObject(info, Formatting.Indented);
-                    sw.WriteLine(json);
-                }
-            }
-            catch
-            {
-                // We don't care what the error is right now
-                return false;
-            }
-
-            return true;
         }
 
         #endregion
