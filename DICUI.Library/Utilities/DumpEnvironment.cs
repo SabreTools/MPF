@@ -246,6 +246,7 @@ namespace DICUI.Utilities
             {
                 // Cache if we had a directory separator or not
                 bool endedWithDirectorySeparator = OutputDirectory.EndsWith(Path.DirectorySeparatorChar.ToString());
+                bool endedWithSpace = OutputDirectory.TrimEnd(Path.DirectorySeparatorChar).EndsWith(" ");
 
                 // Normalize the path so the below filters work better
                 string combinedPath = Path.Combine(OutputDirectory, OutputFilename);
@@ -267,6 +268,10 @@ namespace DICUI.Utilities
                     OutputDirectory = OutputDirectory.Replace(c, '_');
                 foreach (char c in Path.GetInvalidFileNameChars())
                     OutputFilename = OutputFilename.Replace(c, '_');
+
+                // If we had a space at the end before, add it again
+                if (endedWithSpace)
+                    OutputDirectory += " ";
 
                 // If we had a directory separator at the end before, add it again
                 if (endedWithDirectorySeparator)
