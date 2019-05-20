@@ -63,6 +63,7 @@ namespace DICUI.Utilities
         // Redump login information
         public string Username;
         public string Password;
+        public bool HasRedumpLogin { get => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password); }
 
         // External process information
         private Process dicProcess;
@@ -453,7 +454,7 @@ namespace DICUI.Utilities
             };
 
             // First and foremost, we want to get a list of matching IDs for each line in the DAT
-            if (!string.IsNullOrEmpty(info.ClrMameProData) && !string.IsNullOrWhiteSpace(this.Username) && !string.IsNullOrWhiteSpace(this.Password))
+            if (!string.IsNullOrEmpty(info.ClrMameProData) && HasRedumpLogin)
             {
                 // Set the current dumper based on username
                 info.Dumpers = new string[] { this.Username };
@@ -494,7 +495,7 @@ namespace DICUI.Utilities
                 }
             }
 
-            // Now we want to do a check by MediaType and extract all required info
+            // Extract info based generically on MediaType
             switch (Type)
             {
                 case MediaType.CDROM:
@@ -524,104 +525,8 @@ namespace DICUI.Utilities
                     if (Type == MediaType.GDROM)
                         info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
 
-                    // System-specific options
-                    switch (System)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.EnhancedCD:
-                        case KnownSystem.IBMPCCompatible:
-                        case KnownSystem.RainbowDisc:
-                            if (string.IsNullOrWhiteSpace(info.Comments))
-                                info.Comments += $"[T:ISBN] {Template.OptionalValue}";
-
-                            progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                            info.Protection = GetCopyProtection();
-                            progress?.Report(Result.Success("Copy protection scan complete!"));
-
-                            if (File.Exists(combinedBase + "_subIntention.txt"))
-                            {
-                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
-                                if (fi.Length > 0)
-                                    info.SecuROMData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
-                            }
-
-                            break;
-                        case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                        case KnownSystem.CommodoreAmiga:
-                        case KnownSystem.CommodoreAmigaCD32:
-                        case KnownSystem.CommodoreAmigaCDTV:
-                        case KnownSystem.FujitsuFMTowns:
-                        case KnownSystem.IncredibleTechnologiesEagle:
-                        case KnownSystem.KonamieAmusement:
-                        case KnownSystem.KonamiFirebeat:
-                        case KnownSystem.KonamiGVSystem:
-                        case KnownSystem.KonamiSystem573:
-                        case KnownSystem.KonamiTwinkle:
-                        case KnownSystem.MattelHyperscan:
-                        case KnownSystem.NamcoSegaNintendoTriforce:
-                        case KnownSystem.NavisoftNaviken21:
-                        case KnownSystem.NECPC98:
-                        case KnownSystem.SegaChihiro:
-                        case KnownSystem.SegaDreamcast:
-                        case KnownSystem.SegaNaomi:
-                        case KnownSystem.SegaNaomi2:
-                        case KnownSystem.SegaTitanVideo:
-                        case KnownSystem.SNKNeoGeoCD:
-                            info.EXEDateBuildDate = Template.RequiredValue;
-                            break;
-                        case KnownSystem.SegaCDMegaCD:
-                            info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
-
-                            // Take only the last 16 lines for Sega CD
-                            if (!string.IsNullOrEmpty(info.Header))
-                                info.Header = string.Join("\n", info.Header.Split('\n').Skip(16));
-
-                            if (GetSegaCDBuildInfo(info.Header, out string scdSerial, out string fixedDate))
-                            {
-                                info.Serial = scdSerial ?? "";
-                                info.EXEDateBuildDate = fixedDate ?? "";
-                            }
-
-                            break;
-                        case KnownSystem.SegaSaturn:
-                            info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
-
-                            // Take only the first 16 lines for Saturn
-                            if (!string.IsNullOrEmpty(info.Header))
-                                info.Header = string.Join("\n", info.Header.Split('\n').Take(16));
-
-                            if (GetSaturnBuildInfo(info.Header, out string saturnSerial, out string version, out string buildDate))
-                            {
-                                info.Serial = saturnSerial ?? "";
-                                info.Version = version ?? "";
-                                info.EXEDateBuildDate = buildDate ?? "";
-                            }
-
-                            break;
-                        case KnownSystem.SonyPlayStation:
-                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
-                            info.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
-                            info.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
-                            info.LibCrypt = YesNo.No;
-                            if (File.Exists(combinedBase + "_subIntention.txt"))
-                            {
-                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
-                                if (fi.Length > 0)
-                                {
-                                    info.LibCrypt = YesNo.Yes;
-                                    info.LibCryptData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
-                                }
-                            }
-
-                            break;
-                        case KnownSystem.SonyPlayStation2:
-                            info.LanguageSelection = new string[]{ "Bios settings", "Language selector", "Options menu" };
-                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
-                            info.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
-                            break;
-                    }
-
                     break;
+
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
@@ -671,87 +576,6 @@ namespace DICUI.Utilities
                     if (Type == MediaType.BluRay)
                         info.PIC = GetPIC(Path.Combine(OutputDirectory, "PIC.bin")) ?? "";
 
-                    // System-specific options
-                    switch (System)
-                    {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.EnhancedCD:
-                        case KnownSystem.IBMPCCompatible:
-                        case KnownSystem.RainbowDisc:
-                            if (string.IsNullOrWhiteSpace(info.Comments))
-                                info.Comments += $"[T:ISBN] {Template.OptionalValue}";
-
-                            progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                            info.Protection = GetCopyProtection();
-                            progress?.Report(Result.Success("Copy protection scan complete!"));
-
-                            if (File.Exists(combinedBase + "_subIntention.txt"))
-                            {
-                                FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
-                                if (fi.Length > 0)
-                                    info.SecuROMData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
-                            }
-
-                            break;
-
-                        case KnownSystem.BDVideo:
-                            info.Protection = Template.RequiredIfExistsValue;
-                            break;
-                        case KnownSystem.DVDVideo:
-                            info.Protection = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
-                            break;
-                        case KnownSystem.KonamieAmusement:
-                        case KnownSystem.KonamiFirebeat:
-                            info.EXEDateBuildDate = Template.RequiredValue;
-                            break;
-                        case KnownSystem.MicrosoftXBOX:
-                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
-                            {
-                                info.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
-                                    $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
-                                    $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
-                                    $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
-                                info.SecuritySectorRanges = ss ?? "";
-                            }
-                            if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
-                            {
-                                info.Serial = serial ?? Template.RequiredValue;
-                                info.Version = version ?? Template.RequiredValue;
-                                info.Region = region;
-                            }
-
-                            break;
-                        case KnownSystem.MicrosoftXBOX360:
-                            if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
-                            {
-                                info.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
-                                    $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
-                                    $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
-                                    $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
-                                info.SecuritySectorRanges = ss360 ?? "";
-                            }
-                            if (GetXBOX360DMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
-                            {
-                                info.Serial = serial360 ?? Template.RequiredValue;
-                                info.Version = version360 ?? Template.RequiredValue;
-                                info.Region = region360;
-                            }
-                            break;
-                        case KnownSystem.SonyPlayStation2:
-                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
-                            info.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
-                            break;
-                        case KnownSystem.SonyPlayStation3:
-                            info.DiscKey = Template.RequiredValue;
-                            info.DiscID = Template.RequiredValue;
-                            break;
-                        case KnownSystem.SonyPlayStation4:
-                            info.Version = GetPlayStation4Version(Drive?.Letter) ?? "";
-                            break;
-                        case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                            info.Protection = Template.RequiredIfExistsValue;
-                            break;
-                    }
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
@@ -780,6 +604,226 @@ namespace DICUI.Utilities
                             info.Layerbreak = Int64.Parse(umdlayer ?? "-1");
                     }
 
+                    break;
+            }
+
+            // Extract info based specifically on KnownSystem
+            switch (System)
+            {
+                case KnownSystem.AppleMacintosh:
+                case KnownSystem.EnhancedCD:
+                case KnownSystem.IBMPCCompatible:
+                case KnownSystem.RainbowDisc:
+                    if (string.IsNullOrWhiteSpace(info.Comments))
+                        info.Comments += $"[T:ISBN] {Template.OptionalValue}";
+
+                    progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
+                    info.Protection = GetCopyProtection();
+                    progress?.Report(Result.Success("Copy protection scan complete!"));
+
+                    if (File.Exists(combinedBase + "_subIntention.txt"))
+                    {
+                        FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
+                        if (fi.Length > 0)
+                            info.SecuROMData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.BDVideo:
+                    info.Protection = Template.RequiredIfExistsValue;
+                    break;
+
+                case KnownSystem.CommodoreAmiga:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.CommodoreAmigaCD32:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.CommodoreAmigaCDTV:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.DVDVideo:
+                    info.Protection = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
+                    break;
+
+                case KnownSystem.FujitsuFMTowns:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.IncredibleTechnologiesEagle:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.KonamieAmusement:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.KonamiFirebeat:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.KonamiGVSystem:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.KonamiSystem573:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.KonamiTwinkle:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.MattelHyperscan:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.MicrosoftXBOX:
+                    if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    {
+                        info.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
+                        info.SecuritySectorRanges = ss ?? "";
+                    }
+
+                    if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
+                    {
+                        info.Serial = serial ?? Template.RequiredValue;
+                        info.Version = version ?? Template.RequiredValue;
+                        info.Region = region;
+                    }
+
+                    break;
+
+                case KnownSystem.MicrosoftXBOX360:
+                    if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    {
+                        info.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
+                        info.SecuritySectorRanges = ss360 ?? "";
+                    }
+
+                    if (GetXBOX360DMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
+                    {
+                        info.Serial = serial360 ?? Template.RequiredValue;
+                        info.Version = version360 ?? Template.RequiredValue;
+                        info.Region = region360;
+                    }
+                    break;
+
+                case KnownSystem.NamcoSegaNintendoTriforce:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.NavisoftNaviken21:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.NECPC98:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SegaCDMegaCD:
+                    info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
+                    // Take only the last 16 lines for Sega CD
+                    if (!string.IsNullOrEmpty(info.Header))
+                        info.Header = string.Join("\n", info.Header.Split('\n').Skip(16));
+
+                    if (GetSegaCDBuildInfo(info.Header, out string scdSerial, out string fixedDate))
+                    {
+                        info.Serial = scdSerial ?? "";
+                        info.EXEDateBuildDate = fixedDate ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.SegaChihiro:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SegaDreamcast:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SegaNaomi:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SegaNaomi2:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SegaSaturn:
+                    info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
+                    // Take only the first 16 lines for Saturn
+                    if (!string.IsNullOrEmpty(info.Header))
+                        info.Header = string.Join("\n", info.Header.Split('\n').Take(16));
+
+                    if (GetSaturnBuildInfo(info.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
+                    {
+                        info.Serial = saturnSerial ?? "";
+                        info.Version = saturnVersion ?? "";
+                        info.EXEDateBuildDate = buildDate ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.SegaTitanVideo:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SNKNeoGeoCD:
+                    info.EXEDateBuildDate = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SonyPlayStation:
+                    info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                    info.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
+                    info.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
+                    info.LibCrypt = YesNo.No;
+                    if (File.Exists(combinedBase + "_subIntention.txt"))
+                    {
+                        FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
+                        if (fi.Length > 0)
+                        {
+                            info.LibCrypt = YesNo.Yes;
+                            info.LibCryptData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
+                        }
+                    }
+
+                    break;
+
+                case KnownSystem.SonyPlayStation2:
+                    info.LanguageSelection = new string[] { "Bios settings", "Language selector", "Options menu" };
+                    info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                    info.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
+                    break;
+                
+                case KnownSystem.SonyPlayStation3:
+                    info.DiscKey = Template.RequiredValue;
+                    info.DiscID = Template.RequiredValue;
+                    break;
+
+                case KnownSystem.SonyPlayStation4:
+                    info.Version = GetPlayStation4Version(Drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                    info.Protection = Template.RequiredIfExistsValue;
                     break;
             }
 
