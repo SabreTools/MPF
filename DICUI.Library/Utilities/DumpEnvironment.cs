@@ -305,15 +305,15 @@ namespace DICUI.Utilities
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    return File.Exists(combinedBase + ".c2")
-                        && File.Exists(combinedBase + ".ccd")
+                    // return File.Exists(combinedBase + ".c2") // Doesn't output on Linux
+                    return File.Exists(combinedBase + ".ccd")
                         && File.Exists(combinedBase + ".cue")
                         && File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + ".img")
                         && (audioOnly || File.Exists(combinedBase + ".img_EdcEcc.txt") || File.Exists(combinedBase + ".img_EccEdc.txt"))
                         && (audioOnly || File.Exists(combinedBase + ".scm"))
                         && File.Exists(combinedBase + ".sub")
-                        && File.Exists(combinedBase + "_c2Error.txt")
+                        // && File.Exists(combinedBase + "_c2Error.txt") // Doesn't output on Linux
                         && File.Exists(combinedBase + "_cmd.txt")
                         && File.Exists(combinedBase + "_disc.txt")
                         && File.Exists(combinedBase + "_drive.txt")
@@ -322,7 +322,7 @@ namespace DICUI.Utilities
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_subError.txt")
                         && File.Exists(combinedBase + "_subInfo.txt")
-                        // && File.Exists(combinedBase + "_subIntention.txt")
+                        // && File.Exists(combinedBase + "_subIntention.txt") // Not guaranteed output
                         && (File.Exists(combinedBase + "_subReadable.txt") || File.Exists(combinedBase + "_sub.txt"))
                         && File.Exists(combinedBase + "_volDesc.txt");
                 case MediaType.DVD:
@@ -455,13 +455,17 @@ namespace DICUI.Utilities
             // First and foremost, we want to get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.ClrMameProData) && !string.IsNullOrWhiteSpace(this.Username) && !string.IsNullOrWhiteSpace(this.Password))
             {
+                // Set the current dumper based on username
+                info.Dumpers = new string[] { this.Username };
+
                 info.MatchedIDs = new List<int>();
                 using (CookieAwareWebClient wc = new CookieAwareWebClient())
                 {
                     // Login to Redump
                     RedumpAccess access = new RedumpAccess();
                     if (access.RedumpLogin(wc, this.Username, this.Password))
-                    {// Loop through all of the hashdata to find matching IDs
+                    {
+                        // Loop through all of the hashdata to find matching IDs
                         progress?.Report(Result.Success("Finding disc matches on Redump..."));
                         string[] splitData = info.ClrMameProData.Split('\n');
                         foreach (string hashData in splitData)
@@ -482,81 +486,8 @@ namespace DICUI.Utilities
                         if (info.MatchedIDs.Count == 1)
                         {
                             progress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
-
                             string discData = access.DownloadSingleSiteID(wc, info.MatchedIDs[0]);
-
-                            // Title, Disc Number/Letter, Disc Title
-                            var match = Regex.Match(discData, @"<h1>(.*?)</h1>");
-                            if (match.Success)
-                                info.Title = match.Groups[1].Value;
-
-                            // Foreign Title
-                            match = Regex.Match(discData, @"<h2>(.*?)</h2>");
-                            if (match.Success)
-                                info.ForeignTitleNonLatin = match.Groups[1].Value;
-                            else
-                                info.ForeignTitleNonLatin = null;
-
-                            // Category
-                            match = Regex.Match(discData, @"<tr><th>Category</th><td>(.*?)</td></tr>");
-                            if (match.Success)
-                                info.Category = Converters.StringToCategory(match.Groups[1].Value);
-
-                            // Region
-                            match = Regex.Match(discData, @"<tr><th>Region</th><td><a href=""/discs/region/(.*?)/"">");
-                            if (match.Success)
-                                info.Region = Converters.StringToRegion(match.Groups[1].Value);
-
-                            // Languages
-                            var matches = Regex.Matches(discData, @"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
-                            if (matches.Count > 0)
-                            {
-                                List<Language?> tempLanguages = new List<Language?>();
-                                foreach (Match submatch in matches)
-                                    tempLanguages.Add(Converters.StringToLanguage(submatch.Groups[1].Value));
-
-                                info.Languages = tempLanguages.ToArray();
-                            }
-
-                            // Serial
-                            match = Regex.Match(discData, @"<tr><th>Serial</th><td>(.*?)</td></tr>");
-                            if (match.Success)
-                                info.Serial = match.Groups[1].Value;
-
-                            // Version
-                            match = Regex.Match(discData, @"<tr><th>Version</th><td>(.*?)</td></tr>");
-                            if (match.Success)
-                                info.Version = match.Groups[1].Value;
-
-                            // Edition
-                            match = Regex.Match(discData, @"<tr><th>Edition</th><td>(.*?)</td></tr>");
-                            if (match.Success)
-                                info.OtherEditions = match.Groups[1].Value;
-
-                            // Barcode
-                            match = Regex.Match(discData, @"<tr><th>Barcode</th></tr><tr><td>(.*?)</td></tr>");
-                            if (match.Success)
-                                info.Barcode = match.Groups[1].Value;
-
-                            // Comments
-                            match = Regex.Match(discData, @"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
-                            if (match.Success)
-                            {
-                                info.Comments = match.Groups[1].Value
-                                    .Replace("<br />", "\n")
-                                    .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
-                            }
-
-                            // Contents
-                            match = Regex.Match(discData, @"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
-                            if (match.Success)
-                            {
-                                info.Contents = match.Groups[1].Value
-                                       .Replace("<br />", "\n")
-                                       .Replace("</div>", "");
-                                info.Contents = Regex.Replace(info.Contents, @"<div .*?>", "");
-                            }
-
+                            info.FillFromDiscPage(discData);
                             progress?.Report(Result.Success("Information filling complete!"));
                         }
                     }
@@ -668,7 +599,7 @@ namespace DICUI.Utilities
 
                             break;
                         case KnownSystem.SonyPlayStation:
-                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive.Letter) ?? "";
+                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
                             info.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
                             info.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
                             info.LibCrypt = YesNo.No;
@@ -685,8 +616,8 @@ namespace DICUI.Utilities
                             break;
                         case KnownSystem.SonyPlayStation2:
                             info.LanguageSelection = new string[]{ "Bios settings", "Language selector", "Options menu" };
-                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive.Letter) ?? "";
-                            info.Version = GetPlayStation2Version(Drive.Letter) ?? "";
+                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                            info.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                             break;
                     }
 
@@ -807,15 +738,15 @@ namespace DICUI.Utilities
                             }
                             break;
                         case KnownSystem.SonyPlayStation2:
-                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive.Letter) ?? "";
-                            info.Version = GetPlayStation2Version(Drive.Letter) ?? "";
+                            info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                            info.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                             break;
                         case KnownSystem.SonyPlayStation3:
                             info.DiscKey = Template.RequiredValue;
                             info.DiscID = Template.RequiredValue;
                             break;
                         case KnownSystem.SonyPlayStation4:
-                            info.Version = GetPlayStation4Version(Drive.Letter) ?? "";
+                            info.Version = GetPlayStation4Version(Drive?.Letter) ?? "";
                             break;
                         case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
                             info.Protection = Template.RequiredIfExistsValue;
@@ -1518,21 +1449,21 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
-        private string GetPlayStationEXEDate(char driveLetter)
+        private string GetPlayStationEXEDate(char? driveLetter)
         {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
             if (!Directory.Exists(drivePath))
-            {
                 return null;
-            }
 
             // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
             if (!File.Exists(systemCnfPath))
-            {
                 return null;
-            }
 
             // Let's try reading SYSTEM.CNF to find the "BOOT" value
             string exeName = null;
@@ -1573,21 +1504,21 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        private string GetPlayStation2Version(char driveLetter)
+        private string GetPlayStation2Version(char? driveLetter)
         {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
             if (!Directory.Exists(drivePath))
-            {
                 return null;
-            }
 
             // If we can't find SYSTEM.CNF, we don't have a PlayStation 2 disc
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
             if (!File.Exists(systemCnfPath))
-            {
                 return null;
-            }
 
             // Let's try reading SYSTEM.CNF to find the "VER" value
             try
@@ -1646,21 +1577,21 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        private string GetPlayStation4Version(char driveLetter)
+        private string GetPlayStation4Version(char? driveLetter)
         {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
             if (!Directory.Exists(drivePath))
-            {
                 return null;
-            }
 
             // If we can't find param.sfo, we don't have a PlayStation 4 disc
             string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
             if (!File.Exists(paramSfoPath))
-            {
                 return null;
-            }
 
             // Let's try reading param.sfo to find the version at the end of the file
             try
