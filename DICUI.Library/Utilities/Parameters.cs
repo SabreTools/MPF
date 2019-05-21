@@ -8,26 +8,48 @@ using DICUI.Data;
 namespace DICUI.Utilities
 {
     /// <summary>
-    ///  Represents a generic set of DIC parameters
+    ///  Represents a generic set of DiscImageCreator parameters
     /// </summary>
     public class Parameters
     {
-        // DIC Command
-        public DICCommand Command;
+        /// <summary>
+        /// Base DiscImageCreator command to run
+        /// </summary>
+        public DICCommand Command { get; set; }
 
-        // Drive Information
-        public string DriveLetter;
-        public int? DriveSpeed;
+        /// <summary>
+        /// Drive letter or path to pass to DiscImageCreator
+        /// </summary>
+        public string DriveLetter { get; set; }
 
-        // Path Information
-        public string Filename;
-        public string OptiarcFilename;
+        /// <summary>
+        /// Drive speed to set, if applicable
+        /// </summary>
+        public int? DriveSpeed { get; set; }
 
-        // Sector Information
-        public int? StartLBAValue;
-        public int? EndLBAValue;
+        /// <summary>
+        /// Destination filename for DiscImageCreator output
+        /// </summary>
+        public string Filename { get; set; }
 
-        // DIC Flags
+        /// <summary>
+        /// Optiarc drive output filename for merging
+        /// </summary>
+        public string OptiarcFilename { get; set; }
+
+        /// <summary>
+        /// Start LBA value for dumping specific sectors
+        /// </summary>
+        public int? StartLBAValue { get; set; }
+
+        /// <summary>
+        /// End LBA value for dumping specific sectors
+        /// </summary>
+        public int? EndLBAValue { get; set; }
+
+        /// <summary>
+        /// Set of flags to pass to DiscImageCreator
+        /// </summary>
         private Dictionary<DICFlag, bool> _flags = new Dictionary<DICFlag, bool>();
         public bool this[DICFlag key]
         {
@@ -42,27 +64,57 @@ namespace DICUI.Utilities
                 _flags[key] = value;
             }
         }
-        public IEnumerable<DICFlag> Keys => _flags.Keys;
+        internal IEnumerable<DICFlag> Keys => _flags.Keys;
 
-        // DIC Flag Values
-        public int? AddOffsetValue;
-        public string BEOpcodeValue; // raw (default), pack
-        public int?[] C2OpcodeValue = new int?[4];    // Reread Value;
-        //public int? C2OpcodeValue2;   // 0 reread issue sector (default), 1 reread all
-        //public int? C2OpcodeValue3;   // First LBA to reread (default 0)
-        //public int? C2OpcodeValue4;   // Last LBA to reread (default EOS)
-        public int? ForceUnitAccessValue; // Delete per specified (default 1)
-        public int? ScanFileProtectValue; // Timeout value (default 60)
-        public int?[] SkipSectorValue = new int?[2]; // Skip between sectors
-        public int? SubchannelReadLevelValue; // 0 no next sub, 1 next sub (default), 2 next and next next
-        public int? VideoNowValue; // Insert n empty bytes in the head of 1st track
+        #region DIC Flag Values
 
         /// <summary>
-        /// Generic empty constructor for adding things individually
+        /// Manual offset for Audio CD
         /// </summary>
-        public Parameters()
-        {
-        }
+        public int? AddOffsetValue { get; set; }
+
+        /// <summary>
+        /// 0xbe opcode value for dumping
+        /// Possible values: raw (default), pack
+        /// </summary>
+        public string BEOpcodeValue { get; set; }
+
+        /// <summary>
+        /// C2 reread options for dumping
+        /// [0] - Reread value
+        /// [1] - 0 reread issue sector (default), 1 reread all
+        /// [2] - First LBA to reread (default 0)
+        /// [3] - Last LBA to reread (default EOS)
+        /// </summary>
+        public int?[] C2OpcodeValue { get; set; } = new int?[4];
+
+        /// <summary>
+        /// Set the force unit access flag value (default 1)
+        /// </summary>
+        public int? ForceUnitAccessValue { get; set; }
+
+        /// <summary>
+        /// Set scan file timeout value (default 60)
+        /// </summary>
+        public int? ScanFileProtectValue { get; set; }
+
+        /// <summary>
+        /// Beginning and ending sectors to skip for physical protection
+        /// </summary>
+        public int?[] SkipSectorValue { get; set; } = new int?[2];
+
+        /// <summary>
+        /// Set the subchanel read level
+        /// Possible values: 0 no next sub, 1 next sub (default), 2 next and next next
+        /// </summary>
+        public int? SubchannelReadLevelValue { get; set; }
+
+        /// <summary>
+        /// Set number of empty bytes to insert at the head of first track for VideoNow
+        /// </summary>
+        public int? VideoNowValue { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Populate a Parameters object from a param string
@@ -117,7 +169,6 @@ namespace DICUI.Utilities
         /// <summary>
         /// Determine the base flags to use for checking a commandline
         /// </summary>
-        /// <param name="parameters">Parameters as a string to check</param>
         /// <param name="type">Output nullable MediaType containing the found MediaType, if possible</param>
         /// <param name="system">Output nullable KnownSystem containing the found KnownSystem, if possible</param>
         /// <param name="letter">Output string containing the found drive letter</param>
@@ -154,7 +205,7 @@ namespace DICUI.Utilities
                         system = KnownSystem.NintendoGameCube;
                     }
 
-                    // PlaySTation
+                    // PlayStation
                     else if (this[DICFlag.NoFixSubQLibCrypt]
                         || this[DICFlag.ScanAntiMod])
                     {
@@ -610,9 +661,7 @@ namespace DICUI.Utilities
         {
             // The string has to be valid by itself first
             if (String.IsNullOrWhiteSpace(parameters))
-            {
                 return false;
-            }
 
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
@@ -1414,9 +1463,7 @@ namespace DICUI.Utilities
             // First check to see if the combination of system and MediaType is valid
             var validTypes = Validators.GetValidMediaTypes(system);
             if (!validTypes.Contains(type))
-            {
                 return;
-            }
 
             // Set the C2 reread count
             switch (rereadCount)

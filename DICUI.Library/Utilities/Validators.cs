@@ -830,11 +830,11 @@ namespace DICUI.Utilities
 
                 // Specifically unknown type
                 case MediaType.NONE:
-                    return Result.Failure("Please select a valid disc type");
+                    return Result.Failure("Please select a valid media type");
 
                 // Undumpable but recognized types
                 default:
-                    return Result.Failure("{0} discs are not supported for dumping", type.LongName());
+                    return Result.Failure("{0} media are not supported for dumping", type.LongName());
             }
         }
 
@@ -859,7 +859,7 @@ namespace DICUI.Utilities
             }
             catch
             {
-                return "Disc could not be scanned!";
+                return "Path could not be scanned!";
             }
         }
     }
