@@ -26,7 +26,7 @@ namespace DICUI.Test.Utilities
         [InlineData(DICCommand.XBOX, MediaType.DVD)]
         public void BaseCommandToMediaTypeTest(DICCommand command, MediaType? expected)
         {
-            MediaType? actual = Converters.BaseCommmandToMediaType(command);
+            MediaType? actual = command.ToMediaType();
             Assert.Equal(expected, actual);
         }
 
@@ -49,7 +49,7 @@ namespace DICUI.Test.Utilities
         [InlineData(DICCommand.XBOX, KnownSystem.MicrosoftXBOX)]
         public void BaseCommandToKnownSystemTest(DICCommand command, KnownSystem? expected)
         {
-            KnownSystem? actual = Converters.BaseCommandToKnownSystem(command);
+            KnownSystem? actual = Converters.ToKnownSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -63,7 +63,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = Converters.MediaTypeToExtension(mediaType);
+            string actual = Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 

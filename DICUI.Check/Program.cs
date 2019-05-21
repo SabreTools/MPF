@@ -149,7 +149,7 @@ x360            - Microsoft XBOX 360");
                 if (((MediaType)val) == MediaType.NONE)
                     continue;
 
-                Console.WriteLine($"{((MediaType?)val).ShortName()} - {((MediaType?)val).Name()}");
+                Console.WriteLine($"{((MediaType?)val).ShortName()} - {((MediaType?)val).LongName()}");
             }
         }
 
@@ -164,7 +164,7 @@ x360            - Microsoft XBOX 360");
                 if (((KnownSystem)val) == KnownSystem.NONE)
                     continue;
 
-                Console.WriteLine($"{((KnownSystem?)val).ShortName()} - {((KnownSystem?)val).Name()}");
+                Console.WriteLine($"{((KnownSystem?)val).ShortName()} - {((KnownSystem?)val).LongName()}");
             }
         }
 

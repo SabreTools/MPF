@@ -26,9 +26,9 @@ namespace DICUI
             get
             {
                 if (IsHeader())
-                    return "---------- " + (data as KnownSystemCategory?).Name() + " ----------";
+                    return "---------- " + (data as KnownSystemCategory?).LongName() + " ----------";
                 else
-                    return (data as KnownSystem?).Name();
+                    return (data as KnownSystem?).LongName();
             }
         }
     }

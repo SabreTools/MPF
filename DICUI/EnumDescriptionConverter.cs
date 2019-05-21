@@ -14,13 +14,13 @@ namespace DICUI
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value is DICCommand)
-                return ((DICCommand)value).Name();
+                return ((DICCommand)value).LongName();
             else if (value is DICFlag)
-                return ((DICFlag)value).Name();
+                return ((DICFlag)value).LongName();
             else if (value is MediaType?)
-                return ((MediaType?)value).Name();
+                return ((MediaType?)value).LongName();
             else if (value is KnownSystem?)
-                return ((KnownSystem?)value).Name();
+                return ((KnownSystem?)value).LongName();
             else
                 return "";
         }

@@ -291,7 +291,7 @@ namespace DICUI.Windows
                 .ToDictionary(
                     k => k.Key,
                     v => v
-                        .OrderBy(s => s.Name())
+                        .OrderBy(s => s.LongName())
                         .ToList()
                 );
 
@@ -631,7 +631,7 @@ namespace DICUI.Windows
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetDiscType(drive.Letter);
-                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.Name() + "."));
+                ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.LongName() + "."));
             }
         }
 
@@ -681,7 +681,7 @@ namespace DICUI.Windows
             else
                 outputFilename = OutputFilenameTextBox.Text;
 
-            MediaType? mediaType = Converters.BaseCommmandToMediaType(_env.DICParameters.Command);
+            MediaType? mediaType = _env.DICParameters.Command.ToMediaType();
             int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
             if (mediaTypeIndex > -1)
                 MediaTypeComboBox.SelectedIndex = mediaTypeIndex;

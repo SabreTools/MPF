@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utilities\Drive.cs" />
     <Compile Include="Web\CookieAwareWebClient.cs">
       <SubType>Component</SubType>
     </Compile>

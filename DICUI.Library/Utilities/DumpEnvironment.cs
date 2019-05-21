@@ -13,60 +13,113 @@ using Newtonsoft.Json;
 namespace DICUI.Utilities
 {
     /// <summary>
-    /// Represents information for a single drive
-    /// </summary>
-    public class Drive
-    {
-        public char Letter { get; private set; }
-        public bool IsFloppy { get; private set; }
-        public string VolumeLabel { get; private set; }
-        public bool MarkedActive { get; private set; }
-
-        private Drive(char letter, string volumeLabel, bool isFloppy, bool markedActive)
-        {
-            this.Letter = letter;
-            this.IsFloppy = isFloppy;
-            this.VolumeLabel = volumeLabel;
-            this.MarkedActive = markedActive;
-        }
-
-        public static Drive Floppy(char letter) => new Drive(letter, null, true, true);
-        public static Drive Optical(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, false, active);
-    }
-
-    /// <summary>
     /// Represents the state of all settings to be used during dumping
     /// </summary>
     public class DumpEnvironment
     {
-        // Tool paths
-        public string DICPath;
-        public string SubdumpPath;
+        #region Tool paths
 
-        // Output paths
-        public string OutputDirectory;
-        public string OutputFilename;
+        /// <summary>
+        /// Path to DiscImageCreator executable
+        /// </summary>
+        public string DICPath { get; set; }
 
-        // UI information
-        public Drive Drive;
-        public KnownSystem? System;
-        public MediaType? Type;
-        public bool IsFloppy { get => Drive.IsFloppy; }
-        public Parameters DICParameters;
+        /// <summary>
+        /// Path to Subdump executable
+        /// </summary>
+        public string SubdumpPath { get; set; }
 
-        // extra DIC arguments
-        public bool QuietMode;
-        public bool ParanoidMode;
-        public bool ScanForProtection;
-        public int RereadAmountC2;
+        #endregion
 
-        // Redump login information
-        public string Username;
-        public string Password;
+        #region Output paths
+
+        /// <summary>
+        /// Base output directory to write files to
+        /// </summary>
+        public string OutputDirectory { get; set; }
+
+        /// <summary>
+        /// Base output filename for DiscImageCreator
+        /// </summary>
+        public string OutputFilename { get; set; }
+
+        #endregion
+
+        #region UI information
+
+        /// <summary>
+        /// Drive object representing the current drive
+        /// </summary>
+        public Drive Drive { get; set; }
+
+        /// <summary>
+        /// Currently selected system
+        /// </summary>
+        public KnownSystem? System { get; set; }
+
+        /// <summary>
+        /// Currently selected media type
+        /// </summary>
+        public MediaType? Type { get; set; }
+
+        /// <summary>
+        /// Parameters object representing what to send to DiscImageCreator
+        /// </summary>
+        public Parameters DICParameters { get; set; }
+
+        #endregion
+
+        #region Extra DIC arguments
+
+        /// <summary>
+        /// Enable quiet mode (no beeps)
+        /// </summary>
+        public bool QuietMode { get; set; }
+
+        /// <summary>
+        /// Enable paranoid mode (extra flags)
+        /// </summary>
+        public bool ParanoidMode { get; set; }
+
+        /// <summary>
+        /// Scan for copy protection, where applicable
+        /// </summary>
+        public bool ScanForProtection { get; set; }
+
+        /// <summary>
+        /// Number of C2 error reread attempts
+        /// </summary>
+        public int RereadAmountC2 { get; set; }
+
+        #endregion
+
+        #region Redump login information
+
+        /// <summary>
+        /// Redump.org username for pulling existing disc data
+        /// </summary>
+        public string Username { get; set; }
+
+        /// <summary>
+        /// Redump.org password for pulling existing disc data
+        /// </summary>
+        public string Password { get; set; }
+
+        /// <summary>
+        /// Determine if a complete set of Redump credentials might exist
+        /// </summary>
         public bool HasRedumpLogin { get => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password); }
+        
+        #endregion
 
-        // External process information
+        #region External process information
+
+        /// <summary>
+        /// Process to track DiscImageCreator instances
+        /// </summary>
         private Process dicProcess;
+
+        #endregion
 
         #region Public Functionality
 
@@ -82,47 +135,6 @@ namespace DICUI.Utilities
             }
             catch
             { }
-        }
-
-        /// <summary>
-        /// Eject the disc using DIC
-        /// </summary>
-        public async void EjectDisc()
-        {
-            // Validate that the required program exists
-            if (!File.Exists(DICPath))
-                return;
-
-            CancelDumping();
-
-            // Validate we're not trying to eject a floppy disk
-            if (IsFloppy)
-                return;
-
-            Process childProcess;
-            await Task.Run(() =>
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = DICPath,
-                        Arguments = DICCommandStrings.Eject + " " + Drive.Letter,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit(1000);
-
-                // Just in case, we want to push a button 5 times to clear any errors
-                for (int i = 0; i < 5; i++)
-                    childProcess.StandardInput.WriteLine("Y");
-
-                childProcess.Dispose();
-            });
         }
 
         /// <summary>
@@ -172,70 +184,45 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the full parameter string for DIC
+        /// Eject the disc using DIC
         /// </summary>
-        /// <param name="driveSpeed">Nullable int representing the drive speed</param>
-        /// <returns>String representing the params, null on error</returns>
-        public string GetFullParameters(int? driveSpeed)
+        public async void EjectDisc()
         {
-            // Populate with the correct params for inputs (if we're not on the default option)
-            if (System != KnownSystem.NONE && Type != MediaType.NONE)
+            // Validate that the required program exists
+            if (!File.Exists(DICPath))
+                return;
+
+            CancelDumping();
+
+            // Validate we're not trying to eject a floppy disk
+            if (Drive.IsFloppy)
+                return;
+
+            Process childProcess;
+            await Task.Run(() =>
             {
-                // If drive letter is invalid, skip this
-                if (Drive == null)
-                    return null;
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = DICPath,
+                        Arguments = DICCommandStrings.Eject + " " + Drive.Letter,
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit(1000);
 
-                FixOutputPaths();
+                // Just in case, we want to push a button 5 times to clear any errors
+                for (int i = 0; i < 5; i++)
+                    childProcess.StandardInput.WriteLine("Y");
 
-                // Set the proper parameters
-                DICParameters = new Parameters(System, Type, Drive.Letter, Path.Combine(OutputDirectory, OutputFilename), driveSpeed, ParanoidMode, RereadAmountC2);
-                if (QuietMode)
-                    DICParameters[DICFlag.DisableBeep] = true;
-
-                // Generate and return the param string
-                return DICParameters.GenerateParameters();
-            }
-
-            return null;
+                childProcess.Dispose();
+            });
         }
-
-        /// <summary>
-        /// Execute a complete dump workflow
-        /// </summary>
-        public async Task<Result> StartDumping(IProgress<Result> progress)
-        {
-            Result result = IsValidForDump();
-
-            // Execute DIC and external tools, if needed
-            if (Validators.GetSupportStatus(System, Type)
-                && !result.Message.Contains("not supported") // Completely unsupported media
-                && !result.Message.Contains("submission info")) // Submission info-only media
-            {
-                // If the environment is invalid, return
-                if (!result)
-                    return result;
-
-                progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
-                await Task.Run(() => ExecuteDiskImageCreator());
-                progress?.Report(Result.Success("DiscImageCreator has finished!"));
-
-                // Execute additional tools
-                progress?.Report(Result.Success("Running any additional tools... please wait!"));
-                result = await Task.Run(() => ExecuteAdditionalToolsAfterDIC());
-                progress?.Report(result);
-            }
-
-            // Verify dump output and save it
-            progress?.Report(Result.Success("Gathering submission information... please wait!"));
-            result = await Task.Run(() => VerifyAndSaveDumpOutput(progress));
-            progress?.Report(Result.Success("All submission information gathered!"));
-
-            return result;
-        }
-
-        #endregion
-
-        #region Public for Testing Purposes
 
         /// <summary>
         /// Fix output paths to strip out any invalid characters
@@ -282,15 +269,6 @@ namespace DICUI.Utilities
                 // We don't care what the error was
                 return;
             }
-        }
-
-        /// <summary>
-        /// Checks if the parameters are valid
-        /// </summary>
-        /// <returns>True if the configuration is valid, false otherwise</returns>
-        public bool ParametersValid()
-        {
-            return DICParameters.IsValid() && !(IsFloppy ^ Type == MediaType.FloppyDisk);
         }
 
         /// <summary>
@@ -356,6 +334,113 @@ namespace DICUI.Utilities
                     // Non-dumping commands will usually produce no output, so this is irrelevant
                     return true;
             }
+        }
+
+        /// <summary>
+        /// Get the full parameter string for DIC
+        /// </summary>
+        /// <param name="driveSpeed">Nullable int representing the drive speed</param>
+        /// <returns>String representing the params, null on error</returns>
+        public string GetFullParameters(int? driveSpeed)
+        {
+            // Populate with the correct params for inputs (if we're not on the default option)
+            if (System != KnownSystem.NONE && Type != MediaType.NONE)
+            {
+                // If drive letter is invalid, skip this
+                if (Drive == null)
+                    return null;
+
+                FixOutputPaths();
+
+                // Set the proper parameters
+                DICParameters = new Parameters(System, Type, Drive.Letter, Path.Combine(OutputDirectory, OutputFilename), driveSpeed, ParanoidMode, RereadAmountC2);
+                if (QuietMode)
+                    DICParameters[DICFlag.DisableBeep] = true;
+
+                // Generate and return the param string
+                return DICParameters.GenerateParameters();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Execute a complete dump workflow
+        /// </summary>
+        public async Task<Result> StartDumping(IProgress<Result> progress)
+        {
+            Result result = IsValidForDump();
+
+            // Execute DIC and external tools, if needed
+            if (Validators.GetSupportStatus(System, Type)
+                && !result.Message.Contains("not supported") // Completely unsupported media
+                && !result.Message.Contains("submission info")) // Submission info-only media
+            {
+                // If the environment is invalid, return
+                if (!result)
+                    return result;
+
+                progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
+                await Task.Run(() => ExecuteDiskImageCreator());
+                progress?.Report(Result.Success("DiscImageCreator has finished!"));
+
+                // Execute additional tools
+                progress?.Report(Result.Success("Running any additional tools... please wait!"));
+                result = await Task.Run(() => ExecuteAdditionalToolsAfterDIC());
+                progress?.Report(result);
+            }
+
+            // Verify dump output and save it
+            progress?.Report(Result.Success("Gathering submission information... please wait!"));
+            result = await Task.Run(() => VerifyAndSaveDumpOutput(progress));
+            progress?.Report(Result.Success("All submission information gathered!"));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Verify that the current environment has a complete dump and create submission info is possible
+        /// </summary>
+        /// <returns>Result instance with the outcome</returns>
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
+        {
+            // Check to make sure that the output had all the correct files
+            if (!FoundAllFiles())
+                return Result.Failure("Error! Please check output directory as dump may be incomplete!");
+
+            progress?.Report(Result.Success("Extracting output information from output files..."));
+            SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
+            progress?.Report(Result.Success("Extracting information complete!"));
+
+            // TODO: Add UI step here (possibly) to get user info on the disc
+
+            progress?.Report(Result.Success("Formatting extracted information..."));
+            List<string> formattedValues = FormatOutputData(submissionInfo);
+            progress?.Report(Result.Success("Formatting complete!"));
+
+            progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
+            bool success = WriteOutputData(formattedValues);
+            success &= WriteOutputData(submissionInfo);
+
+            if (success)
+                progress?.Report(Result.Success("Writing complete!"));
+            else
+                progress?.Report(Result.Failure("Writing could not complete!"));
+
+            return Result.Success();
+        }
+
+        #endregion
+
+        #region Internal for Testing Purposes
+
+        /// <summary>
+        /// Checks if the parameters are valid
+        /// </summary>
+        /// <returns>True if the configuration is valid, false otherwise</returns>
+        internal bool ParametersValid()
+        {
+            return DICParameters.IsValid() && !(Drive.IsFloppy ^ Type == MediaType.FloppyDisk);
         }
 
         #endregion
@@ -858,12 +943,12 @@ namespace DICUI.Utilities
                 AddIfExists(output, Template.ForeignTitleField, info.ForeignTitleNonLatin, 1);
                 AddIfExists(output, Template.DiscNumberField, info.DiscNumberLetter, 1);
                 AddIfExists(output, Template.DiscTitleField, info.DiscTitle, 1);
-                AddIfExists(output, Template.SystemField, info.System.Name(), 1);
+                AddIfExists(output, Template.SystemField, info.System.LongName(), 1);
                 AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(info.Media, info.Layerbreak), 1);
-                AddIfExists(output, Template.CategoryField, info.Category.Name(), 1);
+                AddIfExists(output, Template.CategoryField, info.Category.LongName(), 1);
                 AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
-                AddIfExists(output, Template.RegionField, info.Region.Name(), 1);
-                AddIfExists(output, Template.LanguagesField, (info.Languages ?? new Language?[] { null }).Select(l => l.Name()).ToArray(), 1);
+                AddIfExists(output, Template.RegionField, info.Region.LongName(), 1);
+                AddIfExists(output, Template.LanguagesField, (info.Languages ?? new Language?[] { null }).Select(l => l.LongName()).ToArray(), 1);
                 AddIfExists(output, Template.PlaystationLanguageSelectionViaField, info.LanguageSelection, 1);
                 AddIfExists(output, Template.DiscSerialField, info.Serial, 1);
 
@@ -909,7 +994,7 @@ namespace DICUI.Utilities
                 if (info.EDC != YesNo.NULL)
                 {
                     output.Add("EDC:");
-                    AddIfExists(output, Template.PlayStationEDCField, info.EDC.Name(), 1);
+                    AddIfExists(output, Template.PlayStationEDCField, info.EDC.LongName(), 1);
                 }
                 
                 // Parent/Clone Relationship section
@@ -936,8 +1021,8 @@ namespace DICUI.Utilities
                     output.Add(""); output.Add("Copy Protection:");
                     if (info.EDC != YesNo.NULL)
                     {
-                        AddIfExists(output, Template.PlayStationAntiModchipField, info.AntiModchip.Name(), 1);
-                        AddIfExists(output, Template.PlayStationLibCryptField, info.LibCrypt.Name(), 1);
+                        AddIfExists(output, Template.PlayStationAntiModchipField, info.AntiModchip.LongName(), 1);
+                        AddIfExists(output, Template.PlayStationLibCryptField, info.LibCrypt.LongName(), 1);
                         AddIfExists(output, Template.SubIntentionField, info.LibCryptData, 1);
                     }
 
@@ -1072,24 +1157,24 @@ namespace DICUI.Utilities
             {
                 case MediaType.DVD:
                     if (layerbreak != default(long))
-                        return $"{mediaType.Name()}-9";
+                        return $"{mediaType.LongName()}-9";
                     else
-                        return $"{mediaType.Name()}-5";
+                        return $"{mediaType.LongName()}-5";
 
                 case MediaType.BluRay:
                     if (layerbreak != default(long))
-                        return $"{mediaType.Name()}-50";
+                        return $"{mediaType.LongName()}-50";
                     else
-                        return $"{mediaType.Name()}-25";
+                        return $"{mediaType.LongName()}-25";
 
                 case MediaType.UMD:
                     if (layerbreak != default(long))
-                        return $"{mediaType.Name()}-DL";
+                        return $"{mediaType.LongName()}-DL";
                     else
-                        return $"{mediaType.Name()}-SL";
+                        return $"{mediaType.LongName()}-SL";
 
                 default:
-                    return mediaType.Name();
+                    return mediaType.LongName();
             }
         }
 
@@ -1108,38 +1193,6 @@ namespace DICUI.Utilities
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
-
-            return Result.Success();
-        }
-
-        /// <summary>
-        /// Verify that the current environment has a complete dump and create submission info is possible
-        /// </summary>
-        /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
-        {
-            // Check to make sure that the output had all the correct files
-            if (!FoundAllFiles())
-                return Result.Failure("Error! Please check output directory as dump may be incomplete!");
-
-            progress?.Report(Result.Success("Extracting output information from output files..."));
-            SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
-            progress?.Report(Result.Success("Extracting information complete!"));
-
-            // TODO: Add UI step here (possibly) to get user info on the disc
-
-            progress?.Report(Result.Success("Formatting extracted information..."));
-            List<string> formattedValues = FormatOutputData(submissionInfo);
-            progress?.Report(Result.Success("Formatting complete!"));
-
-            progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
-            bool success = WriteOutputData(formattedValues);
-            success &= WriteOutputData(submissionInfo);
-
-            if (success)
-                progress?.Report(Result.Success("Writing complete!"));
-            else
-                progress?.Report(Result.Failure("Writing could not complete!"));
 
             return Result.Success();
         }

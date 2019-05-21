@@ -788,7 +788,7 @@ namespace DICUI.Utilities
                 dataWriter.Recorder = recorder;
                 var media = dataWriter.CurrentPhysicalMediaType;
                 if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-                    return Converters.IMAPIDiskTypeToMediaType(media);
+                    return Converters.ToMediaType(media);
             }
             catch
             {
@@ -816,17 +816,17 @@ namespace DICUI.Utilities
                 case MediaType.DVD:
                 case MediaType.FloppyDisk:
                 case MediaType.HDDVD:
-                    return Result.Success("{0} ready to dump", type.Name());
+                    return Result.Success("{0} ready to dump", type.LongName());
 
                 // Partially supported types
                 case MediaType.GDROM:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    return Result.Success("{0} partially supported for dumping", type.Name());
+                    return Result.Success("{0} partially supported for dumping", type.LongName());
 
                 // Special case for other supported tools
                 case MediaType.UMD:
-                    return Result.Success("{0} supported for submission info parsing", type.Name());
+                    return Result.Success("{0} supported for submission info parsing", type.LongName());
 
                 // Specifically unknown type
                 case MediaType.NONE:
@@ -834,7 +834,7 @@ namespace DICUI.Utilities
 
                 // Undumpable but recognized types
                 default:
-                    return Result.Failure("{0} discs are not supported for dumping", type.Name());
+                    return Result.Failure("{0} discs are not supported for dumping", type.LongName());
             }
         }
 

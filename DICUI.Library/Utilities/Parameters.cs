@@ -133,8 +133,8 @@ namespace DICUI.Utilities
                 return false;
 
             // Set the default outputs
-            type = Converters.BaseCommmandToMediaType(Command);
-            system = Converters.BaseCommandToKnownSystem(Command);
+            type = Converters.ToMediaType(Command);
+            system = Converters.ToKnownSystem(Command);
             letter = DriveLetter;
             path = Filename;
 
@@ -184,7 +184,7 @@ namespace DICUI.Utilities
             List<string> parameters = new List<string>();
 
             if (Command != DICCommand.NONE)
-                parameters.Add(Command.Name());
+                parameters.Add(Command.LongName());
             else
                 return null;
 
@@ -285,7 +285,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.AddOffset])
                 {
-                    parameters.Add(DICFlag.AddOffset.Name());
+                    parameters.Add(DICFlag.AddOffset.LongName());
                     if (AddOffsetValue != null)
                         parameters.Add(AddOffsetValue.ToString());
                     else
@@ -297,7 +297,7 @@ namespace DICUI.Utilities
             if (Command == DICCommand.CompactDisc)
             {
                 if (this[DICFlag.AMSF])
-                    parameters.Add(DICFlag.AMSF.Name());
+                    parameters.Add(DICFlag.AMSF.LongName());
             }
 
             // BE Opcode
@@ -309,7 +309,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.BEOpcode] && !this[DICFlag.D8Opcode])
                 {
-                    parameters.Add(DICFlag.BEOpcode.Name());
+                    parameters.Add(DICFlag.BEOpcode.LongName());
                     if (BEOpcodeValue != null
                         && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
                         parameters.Add(BEOpcodeValue);
@@ -325,7 +325,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.C2Opcode])
                 {
-                    parameters.Add(DICFlag.C2Opcode.Name());
+                    parameters.Add(DICFlag.C2Opcode.LongName());
                     if (C2OpcodeValue[0] != null)
                     {
                         if (C2OpcodeValue[0] > 0)
@@ -361,7 +361,7 @@ namespace DICUI.Utilities
             if (Command == DICCommand.DigitalVideoDisc)
             {
                 if (this[DICFlag.CopyrightManagementInformation])
-                    parameters.Add(DICFlag.CopyrightManagementInformation.Name());
+                    parameters.Add(DICFlag.CopyrightManagementInformation.LongName());
             }
 
             // D8 Opcode
@@ -372,7 +372,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.D8Opcode])
-                    parameters.Add(DICFlag.D8Opcode.Name());
+                    parameters.Add(DICFlag.D8Opcode.LongName());
             }
 
             // Disable Beep
@@ -386,7 +386,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.XBOX)
             {
                 if (this[DICFlag.DisableBeep])
-                    parameters.Add(DICFlag.DisableBeep.Name());
+                    parameters.Add(DICFlag.DisableBeep.LongName());
             }
 
             // Force Unit Access
@@ -398,7 +398,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.ForceUnitAccess])
                 {
-                    parameters.Add(DICFlag.ForceUnitAccess.Name());
+                    parameters.Add(DICFlag.ForceUnitAccess.LongName());
                     if (ForceUnitAccessValue != null)
                         parameters.Add(ForceUnitAccessValue.ToString());
                 }
@@ -408,14 +408,14 @@ namespace DICUI.Utilities
             if (Command == DICCommand.CompactDisc)
             {
                 if (this[DICFlag.MCN])
-                    parameters.Add(DICFlag.MCN.Name());
+                    parameters.Add(DICFlag.MCN.LongName());
             }
 
             // Multi-Session
             if (Command == DICCommand.CompactDisc)
             {
                 if (this[DICFlag.MultiSession])
-                    parameters.Add(DICFlag.MultiSession.Name());
+                    parameters.Add(DICFlag.MultiSession.LongName());
             }
 
             // Not fix SubP
@@ -426,7 +426,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.NoFixSubP])
-                    parameters.Add(DICFlag.NoFixSubP.Name());
+                    parameters.Add(DICFlag.NoFixSubP.LongName());
             }
 
             // Not fix SubQ
@@ -437,7 +437,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.NoFixSubQ])
-                    parameters.Add(DICFlag.NoFixSubQ.Name());
+                    parameters.Add(DICFlag.NoFixSubQ.LongName());
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
@@ -448,7 +448,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.NoFixSubQLibCrypt])
-                    parameters.Add(DICFlag.NoFixSubQLibCrypt.Name());
+                    parameters.Add(DICFlag.NoFixSubQLibCrypt.LongName());
             }
             
             // Not fix SubQ (SecuROM)
@@ -459,7 +459,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.NoFixSubQSecuROM])
-                    parameters.Add(DICFlag.NoFixSubQSecuROM.Name());
+                    parameters.Add(DICFlag.NoFixSubQSecuROM.LongName());
             }
 
             // Not fix SubRtoW
@@ -470,14 +470,14 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.NoFixSubRtoW])
-                    parameters.Add(DICFlag.NoFixSubRtoW.Name());
+                    parameters.Add(DICFlag.NoFixSubRtoW.LongName());
             }
 
             // Raw read (2064 byte/sector)
             if (Command == DICCommand.DigitalVideoDisc)
             {
                 if (this[DICFlag.Raw])
-                    parameters.Add(DICFlag.Raw.Name());
+                    parameters.Add(DICFlag.Raw.LongName());
             }
 
             // Reverse read
@@ -485,7 +485,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Data)
             {
                 if (this[DICFlag.Reverse])
-                    parameters.Add(DICFlag.Reverse.Name());
+                    parameters.Add(DICFlag.Reverse.LongName());
             }
 
             // Scan PlayStation anti-mod strings
@@ -493,7 +493,7 @@ namespace DICUI.Utilities
                || Command == DICCommand.Data)
             {
                 if (this[DICFlag.ScanAntiMod])
-                    parameters.Add(DICFlag.ScanAntiMod.Name());
+                    parameters.Add(DICFlag.ScanAntiMod.LongName());
             }
 
             // Scan file to detect protect
@@ -505,7 +505,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.ScanFileProtect])
                 {
-                    parameters.Add(DICFlag.ScanFileProtect.Name());
+                    parameters.Add(DICFlag.ScanFileProtect.LongName());
                     if (ScanFileProtectValue != null)
                     {
                         if (ScanFileProtectValue > 0)
@@ -522,14 +522,14 @@ namespace DICUI.Utilities
                || Command == DICCommand.Swap)
             {
                 if (this[DICFlag.ScanSectorProtect])
-                    parameters.Add(DICFlag.ScanSectorProtect.Name());
+                    parameters.Add(DICFlag.ScanSectorProtect.LongName());
             }
 
             // Scan 74:00:00 (Saturn)
             if (Command == DICCommand.Swap)
             {
                 if (this[DICFlag.SeventyFour])
-                    parameters.Add(DICFlag.SeventyFour.Name());
+                    parameters.Add(DICFlag.SeventyFour.LongName());
             }
 
             // Skip sectors
@@ -539,7 +539,7 @@ namespace DICUI.Utilities
                 {
                     if (SkipSectorValue[0] != null && SkipSectorValue[1] != null)
                     {
-                        parameters.Add(DICFlag.SkipSector.Name());
+                        parameters.Add(DICFlag.SkipSector.LongName());
                         if (SkipSectorValue[0] >= 0 && SkipSectorValue[1] >= 0)
                         {
                             parameters.Add(SkipSectorValue[0].ToString());
@@ -562,7 +562,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.SubchannelReadLevel])
                 {
-                    parameters.Add(DICFlag.SubchannelReadLevel.Name());
+                    parameters.Add(DICFlag.SubchannelReadLevel.LongName());
                     if (SubchannelReadLevelValue != null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
@@ -578,7 +578,7 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.VideoNow])
                 {
-                    parameters.Add(DICFlag.VideoNow.Name());
+                    parameters.Add(DICFlag.VideoNow.LongName());
                     if (VideoNowValue != null)
                     {
                         if (VideoNowValue >= 0)

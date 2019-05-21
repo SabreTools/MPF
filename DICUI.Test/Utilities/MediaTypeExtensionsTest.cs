@@ -7,27 +7,25 @@ namespace DICUI.Test.Utilities
     public class MediaTypeExtensionsTest
     {
         [Theory]
-        [InlineData(MediaType.CDROM)]
-        [InlineData(MediaType.LaserDisc)]
-        [InlineData(MediaType.NONE)]
-        public void NameTest(MediaType? mediaType)
+        [InlineData(MediaType.CDROM, "CD-ROM")]
+        [InlineData(MediaType.LaserDisc, "LD-ROM / LV-ROM")]
+        [InlineData(MediaType.NONE, "Unknown")]
+        public void NameTest(MediaType? mediaType, string expected)
         {
-            string expected = Converters.LongName(mediaType);
-            string actual = mediaType.Name();
+            string actual = mediaType.LongName();
 
             Assert.NotNull(actual);
             Assert.Equal(expected, actual);
         }
 
         [Theory]
-        [InlineData(MediaType.CDROM)]
-        [InlineData(MediaType.DVD)]
-        [InlineData(MediaType.LaserDisc)]
-        [InlineData(MediaType.FloppyDisk)]
-        [InlineData(MediaType.NONE)]
-        public void ExtensionTest(MediaType? mediaType)
+        [InlineData(MediaType.CDROM, ".bin")]
+        [InlineData(MediaType.DVD, ".iso")]
+        [InlineData(MediaType.LaserDisc, ".raw")]
+        [InlineData(MediaType.FloppyDisk, ".img")]
+        [InlineData(MediaType.NONE, null)]
+        public void ExtensionTest(MediaType? mediaType, string expected)
         {
-            string expected = Converters.MediaTypeToExtension(mediaType);
             string actual = mediaType.Extension();
 
             Assert.Equal(expected, actual);

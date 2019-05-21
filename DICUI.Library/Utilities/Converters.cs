@@ -5,13 +5,47 @@ namespace DICUI.Utilities
 {
     public static class Converters
     {
+        #region Cross-enumeration conversions
+
+        /// <summary>
+        /// Get the most common known system for a given MediaType
+        /// </summary>
+        /// <param name="baseCommand">DICCommand value to check</param>
+        /// <returns>KnownSystem if possible, null on error</returns>
+        public static KnownSystem? ToKnownSystem(this DICCommand baseCommand)
+        {
+            switch (baseCommand)
+            {
+                case DICCommand.Audio:
+                    return KnownSystem.AudioCD;
+                case DICCommand.CompactDisc:
+                case DICCommand.Data:
+                case DICCommand.DigitalVideoDisc:
+                case DICCommand.Floppy:
+                    return KnownSystem.IBMPCCompatible;
+                case DICCommand.GDROM:
+                case DICCommand.Swap:
+                    return KnownSystem.SegaDreamcast;
+                case DICCommand.BluRay:
+                    return KnownSystem.SonyPlayStation3;
+                case DICCommand.XBOX:
+                case DICCommand.XBOXSwap:
+                    return KnownSystem.MicrosoftXBOX;
+                case DICCommand.XGD2Swap:
+                case DICCommand.XGD3Swap:
+                    return KnownSystem.MicrosoftXBOX360;
+                default:
+                    return null;
+            }
+        }
+
         /// <summary>
         /// Get the MediaType associated with a given base command
         /// </summary>
         /// <param name="baseCommand">DICCommand value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static MediaType? BaseCommmandToMediaType(DICCommand baseCommand)
+        public static MediaType? ToMediaType(this DICCommand baseCommand)
         {
             switch (baseCommand)
             {
@@ -40,32 +74,113 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the most common known system for a given MediaType
+        /// Convert IMAPI physical media type to a MediaType
         /// </summary>
-        /// <param name="baseCommand">DICCommand value to check</param>
-        /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? BaseCommandToKnownSystem(DICCommand baseCommand)
+        /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
+        /// <returns>MediaType if possible, null on error</returns>
+        public static MediaType? ToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
         {
-            switch (baseCommand)
+            switch (type)
             {
-                case DICCommand.Audio:
-                    return KnownSystem.AudioCD;
-                case DICCommand.CompactDisc:
-                case DICCommand.Data:
-                case DICCommand.DigitalVideoDisc:
-                case DICCommand.Floppy:
-                    return KnownSystem.IBMPCCompatible;
-                case DICCommand.GDROM:
-                case DICCommand.Swap:
-                    return KnownSystem.SegaDreamcast;
-                case DICCommand.BluRay:
-                    return KnownSystem.SonyPlayStation3;
-                case DICCommand.XBOX:
-                case DICCommand.XBOXSwap:
-                    return KnownSystem.MicrosoftXBOX;
-                case DICCommand.XGD2Swap:
-                case DICCommand.XGD3Swap:
-                    return KnownSystem.MicrosoftXBOX360;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+                    return MediaType.NONE;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+                    return MediaType.CDROM;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+                    return MediaType.DVD;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+                    return MediaType.HDDVD;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+                    return MediaType.BluRay;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the default extension for a given disc type
+        /// </summary>
+        /// <param name="type">MediaType value to check</param>
+        /// <returns>Valid extension (with leading '.'), null on error</returns>
+        public static string Extension(this MediaType? type)
+        {
+            switch (type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM:
+                case MediaType.Cartridge:
+                    return ".bin";
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoWiiOpticalDisc:
+                case MediaType.UMD:
+                    return ".iso";
+                case MediaType.LaserDisc:
+                case MediaType.NintendoGameCubeGameDisc:
+                    return ".raw";
+                case MediaType.NintendoWiiUOpticalDisc:
+                    return ".wud";
+                case MediaType.FloppyDisk:
+                    return ".img";
+                case MediaType.Cassette:
+                    return ".wav";
+                case MediaType.NONE:
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
+
+        #region Convert to Long Name
+
+        /// <summary>
+        /// Get the string representation of the Category enum values
+        /// </summary>
+        /// <param name="category">Category value to convert</param>
+        /// <returns>Short string representing the value, if possible</returns>
+        public static string LongName(this Category? category)
+        {
+            switch (category)
+            {
+                case Category.Games:
+                    return "Games";
+                case Category.Demos:
+                    return "Demos";
+                case Category.Video:
+                    return "Video";
+                case Category.Audio:
+                    return "Audio";
+                case Category.Multimedia:
+                    return "Multimedia";
+                case Category.Applications:
+                    return "Applications";
+                case Category.Coverdiscs:
+                    return "Coverdiscs";
+                case Category.Educational:
+                    return "Educational";
+                case Category.BonusDiscs:
+                    return "Bonus Discs";
+                case Category.Preproduction:
+                    return "Preproduction";
+                case Category.AddOns:
+                    return "Add-Ons";
                 default:
                     return null;
             }
@@ -76,7 +191,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="command">DICCommand value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string DICCommandToString(DICCommand command)
+        public static string LongName(this DICCommand command)
         {
             switch (command)
             {
@@ -134,7 +249,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="command">DICFlag value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string DICFlagToString(DICFlag flag)
+        public static string LongName(this DICFlag flag)
         {
             switch (flag)
             {
@@ -194,122 +309,11 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Convert IMAPI physical media type to a MediaType
-        /// </summary>
-        /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
-        /// <returns>MediaType if possible, null on error</returns>
-        public static MediaType? IMAPIDiskTypeToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
-        {
-            switch (type)
-            {
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
-                    return MediaType.NONE;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
-                    return MediaType.CDROM;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
-                    return MediaType.DVD;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
-                    return MediaType.HDDVD;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
-                    return MediaType.BluRay;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the default extension for a given disc type
-        /// </summary>
-        /// <param name="type">MediaType value to check</param>
-        /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string MediaTypeToExtension(MediaType? type)
-        {
-            switch (type)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                case MediaType.Cartridge:
-                    return ".bin";
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoWiiOpticalDisc:
-                case MediaType.UMD:
-                    return ".iso";
-                case MediaType.LaserDisc:
-                case MediaType.NintendoGameCubeGameDisc:
-                    return ".raw";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return ".wud";
-                case MediaType.FloppyDisk:
-                    return ".img";
-                case MediaType.Cassette:
-                    return ".wav";
-                case MediaType.NONE:
-                default:
-                    return null;
-            }
-        }
-
-        #region Convert to Long Name
-
-        /// <summary>
-        /// Get the string representation of the Category enum values
-        /// </summary>
-        /// <param name="category">Category value to convert</param>
-        /// <returns>Short string representing the value, if possible</returns>
-        public static string LongName(Category? category)
-        {
-            switch (category)
-            {
-                case Category.Games:
-                    return "Games";
-                case Category.Demos:
-                    return "Demos";
-                case Category.Video:
-                    return "Video";
-                case Category.Audio:
-                    return "Audio";
-                case Category.Multimedia:
-                    return "Multimedia";
-                case Category.Applications:
-                    return "Applications";
-                case Category.Coverdiscs:
-                    return "Coverdiscs";
-                case Category.Educational:
-                    return "Educational";
-                case Category.BonusDiscs:
-                    return "Bonus Discs";
-                case Category.Preproduction:
-                    return "Preproduction";
-                case Category.AddOns:
-                    return "Add-Ons";
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get the string representation of the KnownSystem enum values
         /// </summary>
         /// <param name="sys">KnownSystem value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(KnownSystem? sys)
+        public static string LongName(this KnownSystem? sys)
         {
             switch (sys)
             {
@@ -564,11 +568,37 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the string representation of the KnownSystemCategory enum values
+        /// </summary>
+        /// <param name="category">KnownSystemCategory value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this KnownSystemCategory? category)
+        {
+            switch (category)
+            {
+                case KnownSystemCategory.Arcade:
+                    return "Arcade";
+                case KnownSystemCategory.Computer:
+                    return "Computers";
+                case KnownSystemCategory.DiscBasedConsole:
+                    return "Disc-Based Consoles";
+                case KnownSystemCategory.OtherConsole:
+                    return "Other Consoles";
+                case KnownSystemCategory.Other:
+                    return "Other";
+                case KnownSystemCategory.Custom:
+                    return "Custom";
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
         /// Get the string representation of the Language enum values
         /// </summary>
         /// <param name="lang">Language value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(Language? lang)
+        public static string LongName(this Language? lang)
         {
             switch (lang)
             {
@@ -654,7 +684,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="type">MediaType value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(MediaType? type)
+        public static string LongName(this MediaType? type)
         {
             switch (type)
             {
@@ -744,7 +774,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="region">Region value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(Region? region)
+        public static string LongName(this Region? region)
         {
             switch (region)
             {
@@ -876,7 +906,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="yesno">YesNo value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(YesNo yesno)
+        public static string LongName(this YesNo yesno)
         {
             switch(yesno)
             {
@@ -899,7 +929,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="sys">KnownSystem value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(KnownSystem? sys)
+        public static string ShortName(this KnownSystem? sys)
         {
             switch (sys)
             {
@@ -1158,7 +1188,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="lang">Language value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(Language? lang)
+        public static string ShortName(this Language? lang)
         {
             switch (lang)
             {
@@ -1244,7 +1274,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="type">MediaType value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(MediaType? type)
+        public static string ShortName(this MediaType? type)
         {
             switch (type)
             {
@@ -1334,7 +1364,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="region">Region value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(Region? region)
+        public static string ShortName(this Region? region)
         {
             switch (region)
             {

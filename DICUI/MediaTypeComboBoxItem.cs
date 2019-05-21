@@ -14,7 +14,7 @@ namespace DICUI
 
         public static implicit operator MediaType? (MediaTypeComboBoxItem item) => item.data;
 
-        public string Name { get { return data.Name(); }
+        public string Name { get { return data.LongName(); }
         }
     }
 }

@@ -62,13 +62,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="UI\AllowedSpeedsTest.cs" />
-    <Compile Include="Utilities\DICFlagExtensionsTest.cs" />
     <Compile Include="Utilities\DumpEnvironmentTest.cs" />
     <Compile Include="ResultTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DriveTest.cs" />
     <Compile Include="Utilities\ConvertersTest.cs" />
-    <Compile Include="Utilities\DICCommandExtensionsTest.cs" />
     <Compile Include="Utilities\KnownSystemExtensionsTest.cs" />
     <Compile Include="Utilities\MediaTypeExtensionsTest.cs" />
     <Compile Include="Utilities\ParametersTest.cs" />

@@ -8,19 +8,6 @@ namespace DICUI.Test.Utilities
     public class KnownSystemExtensionsTest
     {
         [Fact]
-        public void NameTest()
-        {
-            var values = (KnownSystem[])Enum.GetValues(typeof(KnownSystem));
-            foreach(var system in values)
-            {
-                string expected = Converters.LongName(system);
-                string actual = ((KnownSystem?)system).Name();
-
-                Assert.Equal(expected, actual);
-            }
-        }
-
-        [Fact]
         public void IsMarkerTest()
         {
             var values = (KnownSystem[])Enum.GetValues(typeof(KnownSystem));
@@ -42,7 +29,7 @@ namespace DICUI.Test.Utilities
             var values = (KnownSystemCategory[])Enum.GetValues(typeof(KnownSystemCategory));
             foreach (var system in values)
             {
-                string actual = ((KnownSystem?)system).Name();
+                string actual = ((KnownSystem?)system).LongName();
                 Assert.NotEqual("", actual);
             }
         }
