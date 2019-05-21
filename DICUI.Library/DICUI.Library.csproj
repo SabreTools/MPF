@@ -7,7 +7,7 @@
     <ProjectGuid>{51AB0928-13F9-44BF-A407-B6957A43A056}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DICUI.Library</RootNamespace>
+    <RootNamespace>DICUI</RootNamespace>
     <AssemblyName>DICUI.Library</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
