@@ -275,9 +275,11 @@ namespace DICUI.Data
         private Regex editionRegex = new Regex(@"<tr><th>Edition</th><td>(.*?)</td></tr>");
         private Regex errorCountRegex = new Regex(@"<tr><th>Errors count</th><td>(.*?)</td></tr>");
         private Regex foreignTitleRegex = new Regex(@"<h2>(.*?)</h2>");
+        private Regex fullMatchRegex = new Regex(@"<td class=""static"">full match ids: (.*?)</td>");
         private Regex languagesRegex = new Regex(@"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
         private Regex lastModifiedRegex = new Regex(@"<tr><th>Last modified</th><td>(.*?)</td></tr>");
         private Regex mediaRegex = new Regex(@"<tr><th>Media</th><td>(.*?)</td></tr>");
+        private Regex partialMatchRegex = new Regex(@"<td class=""static"">partial match ids: (.*?)</td>");
         private Regex pvdRegex = new Regex(@"<h3>Primary Volume Descriptor (PVD) <img .*?/></h3></td><td .*?></td></tr>"
             + @"<tr><th>Record / Entry</th><th>Contents</th><th>Date</th><th>Time</th><th>GMT</th></tr>"
             + @"<tr><td>Creation</td><td>(?<creationbytes>.*?)</td><td>(?<creationdate>.*?)</td><td>(?<creationtime>.*?)</td><td>(?<creationtimezone>.*?)</td></tr>"

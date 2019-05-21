@@ -17,18 +17,43 @@ namespace DICUI.Web
         #region Disc URLs and Extensions
 
         private const string discPageUrl = @"http://redump.org/disc/{0}/";
+        private const string wipDiscPageUrl = @"http://redump.org/newdisc/{0}/";
+
+        private const string changesExt = "/changes/";
+        private const string cueExt = "cue/";
+        private const string gdiExt = "gdi/";
+        private const string keyExt = "key/";
+        private const string md5Ext = "md5/";
+        private const string sbiExt = "sbi/";
+        private const string sfvExt = "sfv/";
+        private const string sha1Ext = "sha1/";
 
         #endregion
 
         #region List URLs
 
+        private const string lastModifiedUrl = @"http://redump.org/discs/sort/modified/dir/desc?page={0}";
         private const string quickSearchUrl = @"http://redump.org/discs/quicksearch/{0}/?page={1}";
+        private const string userDumpsUrl = @"http://redump.org/discs/dumper/{0}/?page={1}";
+        private const string wipDumpsUrl = @"http://redump.org/discs-wip/";
+
+        #endregion
+
+        #region Pack URLs
+
+        private const string packCuesUrl = @"http://redump.org/cues/{0}/";
+        private const string packDatfileUrl = @"http://redump.org/datfile/{0}/";
+        private const string packDkeysUrl = @"http://redump.org/dkeys/{0}/";
+        private const string packGdiUrl = @"http://redump.org/gdi/{0}/";
+        private const string packKeysUrl = @"http://redump.org/keys/{0}/";
+        private const string packSbiUrl = @"http://redump.org/sbi/{0}/";
 
         #endregion
 
         #region Regexes
 
         private Regex discRegex = new Regex(@"<a href=""/disc/(\d+)/"">");
+        private Regex newDiscRegex = new Regex(@"<a href=""/newdisc/(\d+)/"">");
         private Regex tokenRegex = new Regex(@"<input type=""hidden"" name=""csrf_token"" value=""(.*?)"" />");
 
         #endregion
