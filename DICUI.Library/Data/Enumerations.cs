@@ -84,6 +84,7 @@
     /// </summary>
     public enum DumpStatus
     {
+        BadDumpRed = 2,
         PossibleBadDumpYellow = 3,
         OriginalMediaBlue = 4,
         TwoOrMoreDumpsGreen = 5,
