@@ -621,7 +621,6 @@ namespace DICUI.Utilities
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                     bool isXbox = (System == KnownSystem.MicrosoftXBOX || System == KnownSystem.MicrosoftXBOX360);
-                    string layerbreak = GetLayerbreak(combinedBase + "_disc.txt", isXbox) ?? "";
 
                     // Get the individual hash data, as per internal
                     if (GetISOHashValues(info.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
@@ -632,6 +631,13 @@ namespace DICUI.Utilities
                         info.SHA1 = sha1;
                         info.ClrMameProData = null;
                     }
+
+                    // Deal with the layerbreak
+                    string layerbreak = null;
+                    if (Type == MediaType.DVD)
+                        layerbreak = GetLayerbreak(combinedBase + "_disc.txt", isXbox) ?? "";
+                    else if (Type == MediaType.BluRay)
+                        layerbreak = (info.Size > 25025314816 ? "25025314816" : null);
 
                     // If we have a single-layer disc
                     if (String.IsNullOrWhiteSpace(layerbreak))
@@ -1505,7 +1511,6 @@ namespace DICUI.Utilities
             if (string.IsNullOrWhiteSpace(hashData))
                 return false;
 
-            // <rom name="DMI.bin" size="2048" crc="49e4f2fe" md5="843d1e6252d128bed8eff88a8855aff0" sha1="494f54aeeb1c72524440267c783a13ed2d424fea"/>
             Regex hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
             Match m = hashreg.Match(hashData);
             if (m.Success)
