@@ -1,3 +1,12 @@
+### 1.12.2 (2019-04-19)
+- Added DICUI Check, a new standalone tool for parsing DIC output from platforms unsupported by DICUI
+- Added a few machines/formats
+- Updated to DIC version 20190326
+- Added DMI data extraction for Xbox and X360
+
+### 1.12.1 (2019-01-28)
+- Fixed !submissionInfo.txt output for CD-ROM and GD-ROM
+
 ### 1.12 (2019-01-27)
 - Added a few new systems and formats
 - Added new DIC commands and flags
