@@ -63,20 +63,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Utilities\Drive.cs" />
-    <Compile Include="Web\CookieAwareWebClient.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Data\Constants.cs" />
     <Compile Include="Data\Enumerations.cs" />
     <Compile Include="Data\SubmissionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Converters.cs" />
+    <Compile Include="Utilities\Drive.cs" />
     <Compile Include="Utilities\DumpEnvironment.cs" />
     <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\Parameters.cs" />
     <Compile Include="Utilities\Result.cs" />
     <Compile Include="Utilities\Validators.cs" />
+    <Compile Include="Web\CookieAwareWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Web\RedumpAccess.cs" />
   </ItemGroup>
   <ItemGroup>
