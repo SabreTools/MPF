@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -118,14 +119,42 @@ namespace DICUI.Web
         /// Retrieve premade packs from Redump
         /// </summary>
         /// <param name="wc">CookieAwareWebClient to hold the login state</param>
-        private void ProcessPacks(CookieAwareWebClient wc)
+        private void ProcessAllPacks(CookieAwareWebClient wc)
         {
-            var cuesPacks = this.DownloadPack(wc, packCuesUrl, Extensions.HasCues, "CUEs");
-            var datPacks = this.DownloadPack(wc, packDatfileUrl, Extensions.HasDat, "DATs");
-            var dkeyPacks = this.DownloadPack(wc, packDkeysUrl, Extensions.HasDkeys, "Decrypted KEYS");
-            var gdiPacks = this.DownloadPack(wc, packGdiUrl, Extensions.HasGdi, "GDIs");
-            var keysPacks = this.DownloadPack(wc, packKeysUrl, Extensions.HasKeys, "KEYS");
-            var sbiPacks = this.DownloadPack(wc, packSbiUrl, Extensions.HasSbi, "SBIs");
+            var cuesPacks = this.DownloadPacks(wc, packCuesUrl, Extensions.HasCues, "CUEs");
+            var datPacks = this.DownloadPacks(wc, packDatfileUrl, Extensions.HasDat, "DATs");
+            var dkeyPacks = this.DownloadPacks(wc, packDkeysUrl, Extensions.HasDkeys, "Decrypted KEYS");
+            var gdiPacks = this.DownloadPacks(wc, packGdiUrl, Extensions.HasGdi, "GDIs");
+            var keysPacks = this.DownloadPacks(wc, packKeysUrl, Extensions.HasKeys, "KEYS");
+            var sbiPacks = this.DownloadPacks(wc, packSbiUrl, Extensions.HasSbi, "SBIs");
+        }
+
+        /// <summary>
+        /// Retrieve premade packs from Redump
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to hold the login state</param>
+        /// <param name="system">RedumpSystem to get all possible packs for</param>
+        private void ProcessPacksForSystem(CookieAwareWebClient wc, RedumpSystem system)
+        {
+            var packs = new Dictionary<string, byte[]>();
+
+            if (Extensions.HasCues.Contains(system))
+                packs.Add("cues", this.DownloadPack(wc, packCuesUrl, system, "CUEs"));
+
+            if (Extensions.HasDat.Contains(system))
+                packs.Add("dat", this.DownloadPack(wc, packDatfileUrl, system, "DATs"));
+
+            if (Extensions.HasDkeys.Contains(system))
+                packs.Add("dkeys", this.DownloadPack(wc, packDkeysUrl, system, "Decrypted KEYS"));
+
+            if (Extensions.HasGdi.Contains(system))
+                packs.Add("gdi", this.DownloadPack(wc, packGdiUrl, system, "GDIs"));
+
+            if (Extensions.HasKeys.Contains(system))
+                packs.Add("keys", this.DownloadPack(wc, packKeysUrl, system, "KEYS"));
+
+            if (Extensions.HasSbi.Contains(system))
+                packs.Add("sbi", this.DownloadPack(wc, packSbiUrl, system, "SBIs"));
         }
 
         /// <summary>
@@ -259,13 +288,32 @@ namespace DICUI.Web
         }
 
         /// <summary>
+        /// Download an individual pack
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to access the packs</param>
+        /// <param name="url">Base URL to download using</param>
+        /// <param name="system">System to download packs for</param>
+        /// <param name="title">Name of the pack that is downloading</param>
+        private byte[] DownloadPack(CookieAwareWebClient wc, string url, RedumpSystem system, string title)
+        {
+            Console.WriteLine($"Downloading {title}");
+            Console.Write($"\r{system.LongName()}{new string(' ', Console.BufferWidth - system.LongName().Length - 1)}");
+            var pack = wc.DownloadData(string.Format(url, system.ShortName()));
+
+            Console.Write($"\rComplete!{new string(' ', Console.BufferWidth - 10)}");
+            Console.WriteLine();
+
+            return pack;
+        }
+
+        /// <summary>
         /// Download a set of packs
         /// </summary>
         /// <param name="wc">CookieAwareWebClient to access the packs</param>
         /// <param name="url">Base URL to download using</param>
         /// <param name="systems">List of systems to download packs for</param>
         /// <param name="title">Name of the pack that is downloading</param>
-        private Dictionary<RedumpSystem, byte[]> DownloadPack(CookieAwareWebClient wc, string url, RedumpSystem[] systems, string title)
+        private Dictionary<RedumpSystem, byte[]> DownloadPacks(CookieAwareWebClient wc, string url, RedumpSystem[] systems, string title)
         {
             var dict = new Dictionary<RedumpSystem, byte[]>();
 
