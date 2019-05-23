@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using DICUI.Data;
+using DICUI.Utilities;
 
 namespace DICUI.Web
 {
@@ -83,6 +85,49 @@ namespace DICUI.Web
                 return true;
         }
 
+        #region Process IDs and Pages
+
+        /// <summary>
+        /// Get the list of the last modified IDs, in order of appearance
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to hold the login state</param>
+        /// <param name="pageCount">Number of pages to grab until stopping; -1 means continue until end</param>
+        /// <returns>A list of IDs in order of last modified</returns>
+        private List<int> ProcessLastModified(CookieAwareWebClient wc, int pageCount = -1)
+        {
+            List<int> ids = new List<int>();
+
+            // If we have a -1 page count, set the maximum page limit
+            if (pageCount == -1)
+                pageCount = Int32.MaxValue;
+
+            // Keep getting last modified pages until there are none left
+            int pageNumber = 1;
+            while (pageNumber < pageCount)
+            {
+                List<int> pageIds = CheckSingleSitePage(wc, string.Format(lastModifiedUrl, pageNumber++));
+                ids.AddRange(pageIds);
+                if (pageIds.Count < 2)
+                    break;
+            }
+
+            return ids;
+        }
+
+        /// <summary>
+        /// Retrieve premade packs from Redump
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to hold the login state</param>
+        private void ProcessPacks(CookieAwareWebClient wc)
+        {
+            var cuesPacks = this.DownloadPack(wc, packCuesUrl, Extensions.HasCues, "CUEs");
+            var datPacks = this.DownloadPack(wc, packDatfileUrl, Extensions.HasDat, "DATs");
+            var dkeyPacks = this.DownloadPack(wc, packDkeysUrl, Extensions.HasDkeys, "Decrypted KEYS");
+            var gdiPacks = this.DownloadPack(wc, packGdiUrl, Extensions.HasGdi, "GDIs");
+            var keysPacks = this.DownloadPack(wc, packKeysUrl, Extensions.HasKeys, "KEYS");
+            var sbiPacks = this.DownloadPack(wc, packSbiUrl, Extensions.HasSbi, "SBIs");
+        }
+
         /// <summary>
         /// Get the list of IDs that associate with a given string
         /// </summary>
@@ -105,6 +150,33 @@ namespace DICUI.Web
 
             return ids;
         }
+
+        /// <summary>
+        /// Get the list of IDs associated with the given user
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to hold the login state</param>
+        /// <param name="username">Redump username to get the list of IDs for</param>
+        /// <returns>A list of IDs associated with that user</returns>
+        private List<int> ProcessUser(CookieAwareWebClient wc, string username)
+        {
+            List<int> ids = new List<int>();
+
+            // Keep getting user pages until there are none left
+            int pageNumber = 1;
+            while (true)
+            {
+                List<int> pageIds = CheckSingleSitePage(wc, string.Format(userDumpsUrl, username, pageNumber++));
+                ids.AddRange(pageIds);
+                if (pageIds.Count < 2)
+                    break;
+            }
+
+            return ids;
+        }
+
+        #endregion
+
+        #region Single item processing
 
         /// <summary>
         /// Process a Redump site page as a list of possible IDs or disc page
@@ -152,6 +224,30 @@ namespace DICUI.Web
         }
 
         /// <summary>
+        /// Download a set of packs
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to access the packs</param>
+        /// <param name="url">Base URL to download using</param>
+        /// <param name="systems">List of systems to download packs for</param>
+        /// <param name="title">Name of the pack that is downloading</param>
+        private Dictionary<RedumpSystem, byte[]> DownloadPack(CookieAwareWebClient wc, string url, RedumpSystem[] systems, string title)
+        {
+            var dict = new Dictionary<RedumpSystem, byte[]>();
+
+            Console.WriteLine($"Downloading {title}");
+            foreach (var system in systems)
+            {
+                Console.Write($"\r{system.LongName()}{new string(' ', Console.BufferWidth - system.LongName().Length - 1)}");
+                dict.Add(system, wc.DownloadData(string.Format(url, system.ShortName())));
+            }
+
+            Console.Write($"\rComplete!{new string(' ', Console.BufferWidth - 10)}");
+            Console.WriteLine();
+
+            return dict;
+        }
+
+        /// <summary>
         /// Download an individual site ID page as a string, if possible
         /// </summary>
         /// <param name="wc">CookieAwareWebClient to access the pages</param>
@@ -175,5 +271,7 @@ namespace DICUI.Web
                 return null;
             }
         }
+
+        #endregion
     }
 }

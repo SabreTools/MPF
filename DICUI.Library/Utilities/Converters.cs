@@ -40,6 +40,171 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Convert currently known Redump systems to the master list of systems
+        /// </summary>
+        /// <param name="system">Redump system value to check</param>
+        /// <returns>KnownSystem if possible, null on error</returns>
+        public static KnownSystem? ToKnownSystem(this RedumpSystem system)
+        {
+            switch (system)
+            {
+                // Special BIOS sets
+                case RedumpSystem.MicrosoftXboxBIOS:
+                    return KnownSystem.MicrosoftXBOX;
+                case RedumpSystem.NintendoGameCubeBIOS:
+                    return KnownSystem.NintendoGameCube;
+                case RedumpSystem.SonyPlayStationBIOS:
+                    return KnownSystem.SonyPlayStation;
+                case RedumpSystem.SonyPlayStation2BIOS:
+                    return KnownSystem.SonyPlayStation2;
+
+                // Regular systems
+                case RedumpSystem.AcornArchimedes:
+                    return KnownSystem.AcornArchimedes;
+                case RedumpSystem.AppleMacintosh:
+                    return KnownSystem.AppleMacintosh;
+                case RedumpSystem.AudioCD:
+                    return KnownSystem.AudioCD;
+                case RedumpSystem.BDVideo:
+                    return KnownSystem.BDVideo;
+                case RedumpSystem.BandaiPippin:
+                    return KnownSystem.BandaiApplePippin;
+                case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
+                    return KnownSystem.BandaiPlaydiaQuickInteractiveSystem;
+                case RedumpSystem.CommodoreAmigaCD:
+                    return KnownSystem.CommodoreAmiga;
+                case RedumpSystem.CommodoreAmigaCD32:
+                    return KnownSystem.CommodoreAmigaCD32;
+                case RedumpSystem.CommodoreAmigaCDTV:
+                    return KnownSystem.CommodoreAmigaCDTV;
+                case RedumpSystem.DVDVideo:
+                    return KnownSystem.DVDVideo;
+                case RedumpSystem.FujitsuFMTownsseries:
+                    return KnownSystem.FujitsuFMTowns;
+                case RedumpSystem.HasbroVideoNow:
+                    return KnownSystem.HasbroVideoNow;
+                case RedumpSystem.HasbroVideoNowColor:
+                    return KnownSystem.HasbroVideoNowColor;
+                case RedumpSystem.HasbroVideoNowJr:
+                    return KnownSystem.HasbroVideoNowJr;
+                case RedumpSystem.HasbroVideoNowXP:
+                    return KnownSystem.HasbroVideoNowXP;
+                case RedumpSystem.IBMPCcompatible:
+                    return KnownSystem.IBMPCCompatible;
+                case RedumpSystem.IncredibleTechnologiesEagle:
+                    return KnownSystem.IncredibleTechnologiesEagle;
+                case RedumpSystem.KonamieAmusement:
+                    return KnownSystem.KonamieAmusement;
+                case RedumpSystem.KonamiFireBeat:
+                    return KnownSystem.KonamiFirebeat;
+                case RedumpSystem.KonamiM2:
+                    return KnownSystem.KonamiM2;
+                case RedumpSystem.KonamiSystem573:
+                    return KnownSystem.KonamiSystem573;
+                case RedumpSystem.KonamiSystemGV:
+                    return KnownSystem.KonamiGVSystem;
+                case RedumpSystem.KonamiTwinkle:
+                    return KnownSystem.KonamiTwinkle;
+                case RedumpSystem.MattelHyperScan:
+                    return KnownSystem.MattelHyperscan;
+                case RedumpSystem.MemorexVisualInformationSystem:
+                    return KnownSystem.TandyMemorexVisualInformationSystem;
+                case RedumpSystem.MicrosoftXbox:
+                    return KnownSystem.MicrosoftXBOX;
+                case RedumpSystem.MicrosoftXbox360:
+                    return KnownSystem.MicrosoftXBOX360;
+                case RedumpSystem.MicrosoftXboxOne:
+                    return KnownSystem.MicrosoftXBOXOne;
+                case RedumpSystem.NECPC88series:
+                    return KnownSystem.NECPC88;
+                case RedumpSystem.NECPC98series:
+                    return KnownSystem.NECPC98;
+                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
+                    return KnownSystem.NECPCEngineTurboGrafxCD;
+                case RedumpSystem.NECPCFXPCFXGA:
+                    return KnownSystem.NECPCFX;
+                case RedumpSystem.NamcoSystem12:
+                    return KnownSystem.NamcoSystem12;
+                case RedumpSystem.NamcoSystem246:
+                    return KnownSystem.NamcoCapcomTaitoSystem246;
+                case RedumpSystem.NavisoftNaviken21:
+                    return KnownSystem.NavisoftNaviken21;
+                case RedumpSystem.NinendoGameCube:
+                    return KnownSystem.NintendoGameCube;
+                case RedumpSystem.NintendoWii:
+                    return KnownSystem.NintendoWii;
+                case RedumpSystem.NintendoWiiU:
+                    return KnownSystem.NintendoWiiU;
+                case RedumpSystem.PalmOS:
+                    return KnownSystem.PalmOS;
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
+                    return KnownSystem.Panasonic3DOInteractiveMultiplayer;
+                case RedumpSystem.PanasonicM2:
+                    return KnownSystem.PanasonicM2;
+                case RedumpSystem.PhilipsCDi:
+                    return KnownSystem.PhilipsCDi;
+                case RedumpSystem.PhilipsCDiDigitalVideo:
+                    return KnownSystem.PhilipsCDiDigitalVideo;
+                case RedumpSystem.PhotoCD:
+                    return KnownSystem.PhotoCD;
+                case RedumpSystem.PlayStationGameSharkUpdates:
+                    return KnownSystem.PlayStationGameSharkUpdates;
+                case RedumpSystem.SegaChihiro:
+                    return KnownSystem.SegaChihiro;
+                case RedumpSystem.SegaDreamcast:
+                    return KnownSystem.SegaDreamcast;
+                case RedumpSystem.SegaLindbergh:
+                    return KnownSystem.SegaLindbergh;
+                case RedumpSystem.SegaMegaCDSegaCD:
+                    return KnownSystem.SegaCDMegaCD;
+                case RedumpSystem.SegaNaomi:
+                    return KnownSystem.SegaNaomi;
+                case RedumpSystem.SegaNaomi2:
+                    return KnownSystem.SegaNaomi2;
+                case RedumpSystem.SegaRingEdge:
+                    return KnownSystem.SegaRingEdge;
+                case RedumpSystem.SegaRingEdge2:
+                    return KnownSystem.SegaRingEdge2;
+                case RedumpSystem.SegaSaturn:
+                    return KnownSystem.SegaSaturn;
+                case RedumpSystem.SegaTitanVideo:
+                    return KnownSystem.SegaTitanVideo;
+                case RedumpSystem.SegaTriforce:
+                    return KnownSystem.NamcoSegaNintendoTriforce;
+                case RedumpSystem.SharpX68000:
+                    return KnownSystem.SharpX68000;
+                case RedumpSystem.SNKNeoGeoCD:
+                    return KnownSystem.SNKNeoGeoCD;
+                case RedumpSystem.SonyPlayStation:
+                    return KnownSystem.SonyPlayStation;
+                case RedumpSystem.SonyPlayStation2:
+                    return KnownSystem.SonyPlayStation2;
+                case RedumpSystem.SonyPlayStation3:
+                    return KnownSystem.SonyPlayStation3;
+                case RedumpSystem.SonyPlayStation4:
+                    return KnownSystem.SonyPlayStation4;
+                case RedumpSystem.SonyPlayStationPortable:
+                    return KnownSystem.SonyPlayStationPortable;
+                case RedumpSystem.TABAustriaQuizard:
+                    return KnownSystem.TABAustriaQuizard;
+                case RedumpSystem.TaoiKTV:
+                    return KnownSystem.TaoiKTV;
+                case RedumpSystem.TomyKissSite:
+                    return KnownSystem.TomyKissSite;
+                case RedumpSystem.VideoCD:
+                    return KnownSystem.VideoCD;
+                case RedumpSystem.VMLabsNUON:
+                    return KnownSystem.VMLabsNuon;
+                case RedumpSystem.VTechVFlashVSmilePro:
+                    return KnownSystem.VTechVFlashVSmilePro;
+                case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                    return KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Get the MediaType associated with a given base command
         /// </summary>
         /// <param name="baseCommand">DICCommand value to check</param>
@@ -107,6 +272,160 @@ namespace DICUI.Utilities
                 case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
                 case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
                     return MediaType.BluRay;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Convert master list of all systems to currently known Redump systems
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <returns>RedumpSystem if possible, null on error</returns>
+        public static RedumpSystem? ToRedumpSystem(this KnownSystem system)
+        {
+            switch (system)
+            {
+                case KnownSystem.AcornArchimedes:
+                    return RedumpSystem.AcornArchimedes;
+                case KnownSystem.AppleMacintosh:
+                    return RedumpSystem.AppleMacintosh;
+                case KnownSystem.AudioCD:
+                    return RedumpSystem.AudioCD;
+                case KnownSystem.BDVideo:
+                    return RedumpSystem.BDVideo;
+                case KnownSystem.BandaiApplePippin:
+                    return RedumpSystem.BandaiPippin;
+                case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
+                    return RedumpSystem.BandaiPlaydiaQuickInteractiveSystem;
+                case KnownSystem.CommodoreAmiga:
+                    return RedumpSystem.CommodoreAmigaCD;
+                case KnownSystem.CommodoreAmigaCD32:
+                    return RedumpSystem.CommodoreAmigaCD32;
+                case KnownSystem.CommodoreAmigaCDTV:
+                    return RedumpSystem.CommodoreAmigaCDTV;
+                case KnownSystem.DVDVideo:
+                    return RedumpSystem.DVDVideo;
+                case KnownSystem.FujitsuFMTowns:
+                    return RedumpSystem.FujitsuFMTownsseries;
+                case KnownSystem.HasbroVideoNow:
+                    return RedumpSystem.HasbroVideoNow;
+                case KnownSystem.HasbroVideoNowColor:
+                    return RedumpSystem.HasbroVideoNowColor;
+                case KnownSystem.HasbroVideoNowJr:
+                    return RedumpSystem.HasbroVideoNowJr;
+                case KnownSystem.HasbroVideoNowXP:
+                    return RedumpSystem.HasbroVideoNowXP;
+                case KnownSystem.IBMPCCompatible:
+                    return RedumpSystem.IBMPCcompatible;
+                case KnownSystem.IncredibleTechnologiesEagle:
+                    return RedumpSystem.IncredibleTechnologiesEagle;
+                case KnownSystem.KonamieAmusement:
+                    return RedumpSystem.KonamieAmusement;
+                case KnownSystem.KonamiFirebeat:
+                    return RedumpSystem.KonamiFireBeat;
+                case KnownSystem.KonamiM2:
+                    return RedumpSystem.KonamiM2;
+                case KnownSystem.KonamiSystem573:
+                    return RedumpSystem.KonamiSystem573;
+                case KnownSystem.KonamiGVSystem:
+                    return RedumpSystem.KonamiSystemGV;
+                case KnownSystem.KonamiTwinkle:
+                    return RedumpSystem.KonamiTwinkle;
+                case KnownSystem.MattelHyperscan:
+                    return RedumpSystem.MattelHyperScan;
+                case KnownSystem.TandyMemorexVisualInformationSystem:
+                    return RedumpSystem.MemorexVisualInformationSystem;
+                case KnownSystem.MicrosoftXBOX:
+                    return RedumpSystem.MicrosoftXbox; // RedumpSystem.MicrosoftXboxBIOS
+                case KnownSystem.MicrosoftXBOX360:
+                    return RedumpSystem.MicrosoftXbox360;
+                case KnownSystem.MicrosoftXBOXOne:
+                    return RedumpSystem.MicrosoftXboxOne;
+                case KnownSystem.NECPC88:
+                    return RedumpSystem.NECPC88series;
+                case KnownSystem.NECPC98:
+                    return RedumpSystem.NECPC98series;
+                case KnownSystem.NECPCEngineTurboGrafxCD:
+                    return RedumpSystem.NECPCEngineCDTurboGrafxCD;
+                case KnownSystem.NECPCFX:
+                    return RedumpSystem.NECPCFXPCFXGA;
+                case KnownSystem.NamcoSystem12:
+                    return RedumpSystem.NamcoSystem12;
+                case KnownSystem.NamcoCapcomTaitoSystem246:
+                    return RedumpSystem.NamcoSystem246;
+                case KnownSystem.NavisoftNaviken21:
+                    return RedumpSystem.NavisoftNaviken21;
+                case KnownSystem.NintendoGameCube:
+                    return RedumpSystem.NinendoGameCube; // RedumpSystem.NintendoGameCubeBIOS;
+                case KnownSystem.NintendoWii:
+                    return RedumpSystem.NintendoWii;
+                case KnownSystem.NintendoWiiU:
+                    return RedumpSystem.NintendoWiiU;
+                case KnownSystem.PalmOS:
+                    return RedumpSystem.PalmOS;
+                case KnownSystem.Panasonic3DOInteractiveMultiplayer:
+                    return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
+                case KnownSystem.PanasonicM2:
+                    return RedumpSystem.PanasonicM2;
+                case KnownSystem.PhilipsCDi:
+                    return RedumpSystem.PhilipsCDi;
+                case KnownSystem.PhilipsCDiDigitalVideo:
+                    return RedumpSystem.PhilipsCDiDigitalVideo;
+                case KnownSystem.PhotoCD:
+                    return RedumpSystem.PhotoCD;
+                case KnownSystem.PlayStationGameSharkUpdates:
+                    return RedumpSystem.PlayStationGameSharkUpdates;
+                case KnownSystem.SegaChihiro:
+                    return RedumpSystem.SegaChihiro;
+                case KnownSystem.SegaDreamcast:
+                    return RedumpSystem.SegaDreamcast;
+                case KnownSystem.SegaLindbergh:
+                    return RedumpSystem.SegaLindbergh;
+                case KnownSystem.SegaCDMegaCD:
+                    return RedumpSystem.SegaMegaCDSegaCD;
+                case KnownSystem.SegaNaomi:
+                    return RedumpSystem.SegaNaomi;
+                case KnownSystem.SegaNaomi2:
+                    return RedumpSystem.SegaNaomi2;
+                case KnownSystem.SegaRingEdge:
+                    return RedumpSystem.SegaRingEdge;
+                case KnownSystem.SegaRingEdge2:
+                    return RedumpSystem.SegaRingEdge2;
+                case KnownSystem.SegaSaturn:
+                    return RedumpSystem.SegaSaturn;
+                case KnownSystem.SegaTitanVideo:
+                    return RedumpSystem.SegaTitanVideo;
+                case KnownSystem.NamcoSegaNintendoTriforce:
+                    return RedumpSystem.SegaTriforce;
+                case KnownSystem.SharpX68000:
+                    return RedumpSystem.SharpX68000;
+                case KnownSystem.SNKNeoGeoCD:
+                    return RedumpSystem.SNKNeoGeoCD;
+                case KnownSystem.SonyPlayStation:
+                    return RedumpSystem.SonyPlayStation; // RedumpSystem.SonyPlayStationBIOS;
+                case KnownSystem.SonyPlayStation2:
+                    return RedumpSystem.SonyPlayStation2; // RedumpSystem.SonyPlayStation2BIOS;
+                case KnownSystem.SonyPlayStation3:
+                    return RedumpSystem.SonyPlayStation3;
+                case KnownSystem.SonyPlayStation4:
+                    return RedumpSystem.SonyPlayStation4;
+                case KnownSystem.SonyPlayStationPortable:
+                    return RedumpSystem.SonyPlayStationPortable;
+                case KnownSystem.TABAustriaQuizard:
+                    return RedumpSystem.TABAustriaQuizard;
+                case KnownSystem.TaoiKTV:
+                    return RedumpSystem.TaoiKTV;
+                case KnownSystem.TomyKissSite:
+                    return RedumpSystem.TomyKissSite;
+                case KnownSystem.VideoCD:
+                    return RedumpSystem.VideoCD;
+                case KnownSystem.VMLabsNuon:
+                    return RedumpSystem.VMLabsNUON;
+                case KnownSystem.VTechVFlashVSmilePro:
+                    return RedumpSystem.VTechVFlashVSmilePro;
+                case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                    return RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
                 default:
                     return null;
             }
@@ -770,6 +1089,171 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the Redump longnames for each known system
+        /// </summary>
+        /// <param name="system"></param>
+        /// <returns></returns>
+        public static string LongName(this RedumpSystem system)
+        {
+            switch (system)
+            {
+                // Special BIOS sets
+                case RedumpSystem.MicrosoftXboxBIOS:
+                    return "Microsoft Xbox (BIOS)";
+                case RedumpSystem.NintendoGameCubeBIOS:
+                    return "Nintendo GameCube (BIOS)";
+                case RedumpSystem.SonyPlayStationBIOS:
+                    return "Sony PlayStation (BIOS)";
+                case RedumpSystem.SonyPlayStation2BIOS:
+                    return "Sony PlayStation 2 (BIOS)";
+
+                // Regular systems
+                case RedumpSystem.AcornArchimedes:
+                    return "Acorn Archimedes";
+                case RedumpSystem.AppleMacintosh:
+                    return "Apple Macintosh";
+                case RedumpSystem.AudioCD:
+                    return "Audio CD";
+                case RedumpSystem.BDVideo:
+                    return "BD-Video";
+                case RedumpSystem.BandaiPippin:
+                    return "Bandai Pippin";
+                case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
+                    return "Bandai Playdia Quick Interactive System";
+                case RedumpSystem.CommodoreAmigaCD:
+                    return "Commodore Amiga CD";
+                case RedumpSystem.CommodoreAmigaCD32:
+                    return "Commodore Amiga CD32";
+                case RedumpSystem.CommodoreAmigaCDTV:
+                    return "Commodore Amiga CDTV";
+                case RedumpSystem.DVDVideo:
+                    return "DVD-Video";
+                case RedumpSystem.FujitsuFMTownsseries:
+                    return "Fujitsu FM Towns series";
+                case RedumpSystem.HasbroVideoNow:
+                    return "Hasbro VideoNow";
+                case RedumpSystem.HasbroVideoNowColor:
+                    return "Hasbro VideoNow Color";
+                case RedumpSystem.HasbroVideoNowJr:
+                    return "Hasbro VideoNow Jr.";
+                case RedumpSystem.HasbroVideoNowXP:
+                    return "Hasbro VideoNow XP";
+                case RedumpSystem.IBMPCcompatible:
+                    return "IBM PC compatible";
+                case RedumpSystem.IncredibleTechnologiesEagle:
+                    return "Incredible Technologies Eagle";
+                case RedumpSystem.KonamieAmusement:
+                    return "Konami e-Amusement";
+                case RedumpSystem.KonamiFireBeat:
+                    return "Konami FireBeat";
+                case RedumpSystem.KonamiM2:
+                    return "Konami M2";
+                case RedumpSystem.KonamiSystem573:
+                    return "Konami System 573";
+                case RedumpSystem.KonamiSystemGV:
+                    return "Konami System GV";
+                case RedumpSystem.KonamiTwinkle:
+                    return "Konami Twinkle";
+                case RedumpSystem.MattelHyperScan:
+                    return "Mattel HyperScan";
+                case RedumpSystem.MemorexVisualInformationSystem:
+                    return "Memorex Visual Information System";
+                case RedumpSystem.MicrosoftXbox:
+                    return "Microsoft Xbox";
+                case RedumpSystem.MicrosoftXbox360:
+                    return "Microsoft Xbox 360";
+                case RedumpSystem.MicrosoftXboxOne:
+                    return "Microsoft Xbox One";
+                case RedumpSystem.NECPC88series:
+                    return "NEC PC-88 series";
+                case RedumpSystem.NECPC98series:
+                    return "NEC PC-98 series";
+                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
+                    return "NEC PC Engine CD & TurboGrafx CD";
+                case RedumpSystem.NECPCFXPCFXGA:
+                    return "NEC PC-FX & PC-FXGA";
+                case RedumpSystem.NamcoSystem12:
+                    return "Namco System 12";
+                case RedumpSystem.NamcoSystem246:
+                    return "Namco System 246";
+                case RedumpSystem.NavisoftNaviken21:
+                    return "Navisoft Naviken 2.1";
+                case RedumpSystem.NinendoGameCube:
+                    return "Nintendo GameCube";
+                case RedumpSystem.NintendoWii:
+                    return "Nintendo Wii";
+                case RedumpSystem.NintendoWiiU:
+                    return "Nintendo Wii U";
+                case RedumpSystem.PalmOS:
+                    return "Palm OS";
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
+                    return "Panasonic 3DO Interactive Multiplayer";
+                case RedumpSystem.PanasonicM2:
+                    return "Panasonic M2";
+                case RedumpSystem.PhilipsCDi:
+                    return "Philips CD-i";
+                case RedumpSystem.PhilipsCDiDigitalVideo:
+                    return "Philips CD-i Digital Video";
+                case RedumpSystem.PhotoCD:
+                    return "Photo CD";
+                case RedumpSystem.PlayStationGameSharkUpdates:
+                    return "PlayStation GameShark Updates";
+                case RedumpSystem.SegaChihiro:
+                    return "Sega Chihiro";
+                case RedumpSystem.SegaDreamcast:
+                    return "Sega Dreamcast";
+                case RedumpSystem.SegaLindbergh:
+                    return "Sega Lindbergh";
+                case RedumpSystem.SegaMegaCDSegaCD:
+                    return "Sega Mega CD & Sega CD";
+                case RedumpSystem.SegaNaomi:
+                    return "Sega Naomi";
+                case RedumpSystem.SegaNaomi2:
+                    return "Sega Naomi 2";
+                case RedumpSystem.SegaRingEdge:
+                    return "Sega RingEdge";
+                case RedumpSystem.SegaRingEdge2:
+                    return "Sega RingEdge 2";
+                case RedumpSystem.SegaSaturn:
+                    return "Sega Saturn";
+                case RedumpSystem.SegaTitanVideo:
+                    return "Sega Titan Video";
+                case RedumpSystem.SegaTriforce:
+                    return "Sega Triforce";
+                case RedumpSystem.SharpX68000:
+                    return "Sharp X68000";
+                case RedumpSystem.SNKNeoGeoCD:
+                    return "Neo Geo CD";
+                case RedumpSystem.SonyPlayStation:
+                    return "Sony PlayStation";
+                case RedumpSystem.SonyPlayStation2:
+                    return "Sony PlayStation 2";
+                case RedumpSystem.SonyPlayStation3:
+                    return "Sony PlayStation 3";
+                case RedumpSystem.SonyPlayStation4:
+                    return "Sony PlayStation 4";
+                case RedumpSystem.SonyPlayStationPortable:
+                    return "Sony PlayStation Portable";
+                case RedumpSystem.TABAustriaQuizard:
+                    return "TAB-Austria Quizard";
+                case RedumpSystem.TaoiKTV:
+                    return "Tao iKTV";
+                case RedumpSystem.TomyKissSite:
+                    return "Tomy Kiss-Site";
+                case RedumpSystem.VideoCD:
+                    return "Video CD";
+                case RedumpSystem.VMLabsNUON:
+                    return "VM Labs NUON";
+                case RedumpSystem.VTechVFlashVSmilePro:
+                    return "VTech V.Flash & V.Smile Pro";
+                case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                    return "ZAPiT Games Game Wave Family Entertainment System";
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Get the string representation of the Region enum values
         /// </summary>
         /// <param name="region">Region value to convert</param>
@@ -1356,6 +1840,171 @@ namespace DICUI.Utilities
                 case MediaType.NONE:
                 default:
                     return "unknown";
+            }
+        }
+
+        /// <summary>
+        /// Get the Redump shortnames for each known system
+        /// </summary>
+        /// <param name="system"></param>
+        /// <returns></returns>
+        public static string ShortName(this RedumpSystem system)
+        {
+            switch (system)
+            {
+                // Special BIOS sets
+                case RedumpSystem.MicrosoftXboxBIOS:
+                    return "xbox-bios";
+                case RedumpSystem.NintendoGameCubeBIOS:
+                    return "gc-bios";
+                case RedumpSystem.SonyPlayStationBIOS:
+                    return "psx-bios";
+                case RedumpSystem.SonyPlayStation2BIOS:
+                    return "ps2-bios";
+
+                // Regular systems
+                case RedumpSystem.AcornArchimedes:
+                    return "archcd";
+                case RedumpSystem.AppleMacintosh:
+                    return "mac";
+                case RedumpSystem.AudioCD:
+                    return "audio-cd";
+                case RedumpSystem.BDVideo:
+                    return "bd-video";
+                case RedumpSystem.BandaiPippin:
+                    return "pippin";
+                case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
+                    return "qis";
+                case RedumpSystem.CommodoreAmigaCD:
+                    return "acd";
+                case RedumpSystem.CommodoreAmigaCD32:
+                    return "cd32";
+                case RedumpSystem.CommodoreAmigaCDTV:
+                    return "cdtv";
+                case RedumpSystem.DVDVideo:
+                    return "dvd-video";
+                case RedumpSystem.FujitsuFMTownsseries:
+                    return "fmt";
+                case RedumpSystem.HasbroVideoNow:
+                    return "hvn";
+                case RedumpSystem.HasbroVideoNowColor:
+                    return "hvnc";
+                case RedumpSystem.HasbroVideoNowJr:
+                    return "hvnjr";
+                case RedumpSystem.HasbroVideoNowXP:
+                    return "hvnxp";
+                case RedumpSystem.IBMPCcompatible:
+                    return "pc";
+                case RedumpSystem.IncredibleTechnologiesEagle:
+                    return "ite";
+                case RedumpSystem.KonamieAmusement:
+                    return "kea";
+                case RedumpSystem.KonamiFireBeat:
+                    return "kfb";
+                case RedumpSystem.KonamiM2:
+                    return "km2";
+                case RedumpSystem.KonamiSystem573:
+                    return "ks573";
+                case RedumpSystem.KonamiSystemGV:
+                    return "ksgv";
+                case RedumpSystem.KonamiTwinkle:
+                    return "kt";
+                case RedumpSystem.MattelHyperScan:
+                    return "hs";
+                case RedumpSystem.MemorexVisualInformationSystem:
+                    return "vis";
+                case RedumpSystem.MicrosoftXbox:
+                    return "xbox";
+                case RedumpSystem.MicrosoftXbox360:
+                    return "xbox360";
+                case RedumpSystem.MicrosoftXboxOne:
+                    return "xboxone";
+                case RedumpSystem.NECPC88series:
+                    return "pc-88";
+                case RedumpSystem.NECPC98series:
+                    return "pc-98";
+                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
+                    return "pce";
+                case RedumpSystem.NECPCFXPCFXGA:
+                    return "pc-fx";
+                case RedumpSystem.NamcoSystem12:
+                    return "ns12";
+                case RedumpSystem.NamcoSystem246:
+                    return "ns246";
+                case RedumpSystem.NavisoftNaviken21:
+                    return "navi21";
+                case RedumpSystem.NinendoGameCube:
+                    return "gc";
+                case RedumpSystem.NintendoWii:
+                    return "wii";
+                case RedumpSystem.NintendoWiiU:
+                    return "wiiu";
+                case RedumpSystem.PalmOS:
+                    return "palm";
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
+                    return "3do";
+                case RedumpSystem.PanasonicM2:
+                    return "m2";
+                case RedumpSystem.PhilipsCDi:
+                    return "cdi";
+                case RedumpSystem.PhilipsCDiDigitalVideo:
+                    return "cdi-video";
+                case RedumpSystem.PhotoCD:
+                    return "photo-cd";
+                case RedumpSystem.PlayStationGameSharkUpdates:
+                    return "psxgs";
+                case RedumpSystem.SegaChihiro:
+                    return "chihiro";
+                case RedumpSystem.SegaDreamcast:
+                    return "dc";
+                case RedumpSystem.SegaLindbergh:
+                    return "lindbergh";
+                case RedumpSystem.SegaMegaCDSegaCD:
+                    return "mcd";
+                case RedumpSystem.SegaNaomi:
+                    return "naomi";
+                case RedumpSystem.SegaNaomi2:
+                    return "naomi2";
+                case RedumpSystem.SegaRingEdge:
+                    return "sre";
+                case RedumpSystem.SegaRingEdge2:
+                    return "sre2";
+                case RedumpSystem.SegaSaturn:
+                    return "ss";
+                case RedumpSystem.SegaTitanVideo:
+                    return "stv";
+                case RedumpSystem.SegaTriforce:
+                    return "triforce";
+                case RedumpSystem.SharpX68000:
+                    return "x86kcd";
+                case RedumpSystem.SNKNeoGeoCD:
+                    return "ngcd";
+                case RedumpSystem.SonyPlayStation:
+                    return "psx";
+                case RedumpSystem.SonyPlayStation2:
+                    return "ps2";
+                case RedumpSystem.SonyPlayStation3:
+                    return "ps3";
+                case RedumpSystem.SonyPlayStation4:
+                    return "ps4";
+                case RedumpSystem.SonyPlayStationPortable:
+                    return "psp";
+                case RedumpSystem.TABAustriaQuizard:
+                    return "quizard";
+                case RedumpSystem.TaoiKTV:
+                    return "iktv";
+                case RedumpSystem.TomyKissSite:
+                    return "ksite";
+                case RedumpSystem.VideoCD:
+                    return "vcd";
+                case RedumpSystem.VMLabsNUON:
+                    return "nuon";
+                case RedumpSystem.VTechVFlashVSmilePro:
+                    return "vflash";
+                case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                    return "gamewave";
+                default:
+                    return null;
             }
         }
 
