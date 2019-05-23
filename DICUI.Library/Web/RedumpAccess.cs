@@ -224,6 +224,41 @@ namespace DICUI.Web
         }
 
         /// <summary>
+        /// Process a Redump WIP page as a list of possible IDs or disc page
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to access the pages</param>
+        /// <param name="url">Page URL to check and parse</param>
+        /// <returns>List of matching IDs</returns>
+        private List<int> CheckSingleWIPPage(CookieAwareWebClient wc, string url)
+        {
+            List<int> ids = new List<int>();
+
+            var wipDumpsPage = wc.DownloadString(url);
+
+            // If we have no WIP dumps left
+            if (wipDumpsPage.Contains("No WIP discs found."))
+                return ids;
+
+            // Otherwise, traverse each dump on the page
+            var matches = newDiscRegex.Matches(wipDumpsPage);
+            foreach (Match match in matches)
+            {
+                try
+                {
+                    if (Int32.TryParse(match.Groups[1].Value, out int value))
+                        ids.Add(value);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An exception has occurred: {ex}");
+                    continue;
+                }
+            }
+
+            return ids;
+        }
+
+        /// <summary>
         /// Download a set of packs
         /// </summary>
         /// <param name="wc">CookieAwareWebClient to access the packs</param>
@@ -252,7 +287,7 @@ namespace DICUI.Web
         /// </summary>
         /// <param name="wc">CookieAwareWebClient to access the pages</param>
         /// <param name="id">Redump disc ID to retrieve</param>
-        /// <returns></returns>
+        /// <returns>Disc page as a string, null on error</returns>
         public string DownloadSingleSiteID(CookieAwareWebClient wc, int id)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
@@ -261,6 +296,31 @@ namespace DICUI.Web
             {
                 string discPage = wc.DownloadString(string.Format(discPageUrl, +id));
                 if (discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
+                    return null;
+                else
+                    return discPage;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An exception has occurred: {ex}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Download an individual WIP ID page as a string, if possible
+        /// </summary>
+        /// <param name="wc">CookieAwareWebClient to access the pages</param>
+        /// <param name="id">Redump disc ID to retrieve</param>
+        /// <returns>WIP disc page as a string, null on error</returns>
+        private string DownloadSingleWIPID(CookieAwareWebClient wc, int id)
+        {
+            string paddedId = id.ToString().PadLeft(5, '0');
+            Console.WriteLine($"Processing WIP ID: {paddedId}");
+            try
+            {
+                string discPage = wc.DownloadString(string.Format(wipDiscPageUrl, +id));
+                if (discPage.Contains($"WIP Disc with ID \"{id}\" doesn't exist"))
                     return null;
                 else
                     return discPage;
