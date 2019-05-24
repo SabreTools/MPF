@@ -55,9 +55,9 @@ namespace DICUI.Web
 
         #region Regexes
 
-        private Regex discRegex = new Regex(@"<a href=""/disc/(\d+)/"">");
-        private Regex newDiscRegex = new Regex(@"<a href=""/newdisc/(\d+)/"">");
-        private Regex tokenRegex = new Regex(@"<input type=""hidden"" name=""csrf_token"" value=""(.*?)"" />");
+        private readonly Regex discRegex = new Regex(@"<a href=""/disc/(\d+)/"">");
+        private readonly Regex newDiscRegex = new Regex(@"<a href=""/newdisc/(\d+)/"">");
+        private readonly Regex tokenRegex = new Regex(@"<input type=""hidden"" name=""csrf_token"" value=""(.*?)"" />");
 
         #endregion
 

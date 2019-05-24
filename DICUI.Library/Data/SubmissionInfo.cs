@@ -259,43 +259,43 @@ namespace DICUI.Data
 
         #region Regexes
 
-        private Regex addedRegex = new Regex(@"<tr><th>Added</th><td>(.*?)</td></tr>");
-        private Regex barcodeRegex = new Regex(@"<tr><th>Barcode</th></tr><tr><td>(.*?)</td></tr>");
-        private Regex bcaRegex = new Regex(@"<h3>BCA .*?/></h3></td><td .*?></td></tr>"
+        private readonly Regex addedRegex = new Regex(@"<tr><th>Added</th><td>(.*?)</td></tr>");
+        private readonly Regex barcodeRegex = new Regex(@"<tr><th>Barcode</th></tr><tr><td>(.*?)</td></tr>");
+        private readonly Regex bcaRegex = new Regex(@"<h3>BCA .*?/></h3></td><td .*?></td></tr>"
             + "<tr><th>Row</th><th>Contents</th><th>ASCII</th></tr>"
             + "<tr><td>(?<row1number>.*?)</td><td>(?<row1contents>.*?)</td><td>(?<row1ascii>.*?)</td></tr>"
             + "<tr><td>(?<row2number>.*?)</td><td>(?<row2contents>.*?)</td><td>(?<row2ascii>.*?)</td></tr>"
             + "<tr><td>(?<row3number>.*?)</td><td>(?<row3contents>.*?)</td><td>(?<row3ascii>.*?)</td></tr>"
             + "<tr><td>(?<row4number>.*?)</td><td>(?<row4contents>.*?)</td><td>(?<row4ascii>.*?)</td></tr>");
-        private Regex categoryRegex = new Regex(@"<tr><th>Category</th><td>(.*?)</td></tr>");
-        private Regex commentsRegex = new Regex(@"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
-        private Regex contentsRegex = new Regex(@"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
-        private Regex discNumberLetterRegex = new Regex(@"\((.*?)\)");
-        private Regex dumpersRegex = new Regex(@"<a href=""/discs/dumper/(.*?)/"">");
-        private Regex editionRegex = new Regex(@"<tr><th>Edition</th><td>(.*?)</td></tr>");
-        private Regex errorCountRegex = new Regex(@"<tr><th>Errors count</th><td>(.*?)</td></tr>");
-        private Regex foreignTitleRegex = new Regex(@"<h2>(.*?)</h2>");
-        private Regex fullMatchRegex = new Regex(@"<td class=""static"">full match ids: (.*?)</td>");
-        private Regex languagesRegex = new Regex(@"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
-        private Regex lastModifiedRegex = new Regex(@"<tr><th>Last modified</th><td>(.*?)</td></tr>");
-        private Regex mediaRegex = new Regex(@"<tr><th>Media</th><td>(.*?)</td></tr>");
-        private Regex partialMatchRegex = new Regex(@"<td class=""static"">partial match ids: (.*?)</td>");
-        private Regex pvdRegex = new Regex(@"<h3>Primary Volume Descriptor (PVD) <img .*?/></h3></td><td .*?></td></tr>"
+        private readonly Regex categoryRegex = new Regex(@"<tr><th>Category</th><td>(.*?)</td></tr>");
+        private readonly Regex commentsRegex = new Regex(@"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
+        private readonly Regex contentsRegex = new Regex(@"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
+        private readonly Regex discNumberLetterRegex = new Regex(@"\((.*?)\)");
+        private readonly Regex dumpersRegex = new Regex(@"<a href=""/discs/dumper/(.*?)/"">");
+        private readonly Regex editionRegex = new Regex(@"<tr><th>Edition</th><td>(.*?)</td></tr>");
+        private readonly Regex errorCountRegex = new Regex(@"<tr><th>Errors count</th><td>(.*?)</td></tr>");
+        private readonly Regex foreignTitleRegex = new Regex(@"<h2>(.*?)</h2>");
+        private readonly Regex fullMatchRegex = new Regex(@"<td class=""static"">full match ids: (.*?)</td>");
+        private readonly Regex languagesRegex = new Regex(@"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
+        private readonly Regex lastModifiedRegex = new Regex(@"<tr><th>Last modified</th><td>(.*?)</td></tr>");
+        private readonly Regex mediaRegex = new Regex(@"<tr><th>Media</th><td>(.*?)</td></tr>");
+        private readonly Regex partialMatchRegex = new Regex(@"<td class=""static"">partial match ids: (.*?)</td>");
+        private readonly Regex pvdRegex = new Regex(@"<h3>Primary Volume Descriptor (PVD) <img .*?/></h3></td><td .*?></td></tr>"
             + @"<tr><th>Record / Entry</th><th>Contents</th><th>Date</th><th>Time</th><th>GMT</th></tr>"
             + @"<tr><td>Creation</td><td>(?<creationbytes>.*?)</td><td>(?<creationdate>.*?)</td><td>(?<creationtime>.*?)</td><td>(?<creationtimezone>.*?)</td></tr>"
             + @"<tr><td>Modification</td><td>(?<modificationbytes>.*?)</td><td>(?<modificationdate>.*?)</td><td>(?<modificationtime>.*?)</td><td>(?<modificationtimezone>.*?)</td></tr>"
             + @"<tr><td>Expiration</td><td>(?<expirationbytes>.*?)</td><td>(?<expirationdate>.*?)</td><td>(?<expirationtime>.*?)</td><td>(?<expirationtimezone>.*?)</td></tr>"
             + @"<tr><td>Effective</td><td>(?<effectivebytes>.*?)</td><td>(?<effectivedate>.*?)</td><td>(?<effectivetime>.*?)</td><td>(?<effectivetimezone>.*?)</td></tr>");
-        private Regex regionRegex = new Regex(@"<tr><th>Region</th><td><a href=""/discs/region/(.*?)/"">");
-        private Regex ringCodeDoubleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
-        private Regex ringCodeSingleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
-        private Regex serialRegex = new Regex(@"<tr><th>Serial</th><td>(.*?)</td></tr>");
-        private Regex systemRegex = new Regex(@"<tr><th>System</th><td><a href=""/discs/system/(.*?)/"">");
-        private Regex titleRegex = new Regex(@"<h1>(.*?)</h1>");
-        private Regex trackRegex = new Regex(@"<tr><td>(?<number>.*?)</td><td>(?<type>.*?)</td><td>(?<pregap>.*?)</td><td>(?<length>.*?)</td><td>(?<sectors>.*?)</td><td>(?<size>.*?)</td><td>(?<crc32>.*?)</td><td>(?<md5>.*?)</td><td>(?<sha1>.*?)</td></tr>");
-        private Regex trackCountRegex = new Regex(@"<tr><th>Number of tracks</th><td>(.*?)</td></tr>");
-        private Regex versionRegex = new Regex(@"<tr><th>Version</th><td>(.*?)</td></tr>");
-        private Regex writeOffsetRegex = new Regex(@"<tr><th>Write offset</th><td>(.*?)</td></tr>");
+        private readonly Regex regionRegex = new Regex(@"<tr><th>Region</th><td><a href=""/discs/region/(.*?)/"">");
+        private readonly Regex ringCodeDoubleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
+        private readonly Regex ringCodeSingleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
+        private readonly Regex serialRegex = new Regex(@"<tr><th>Serial</th><td>(.*?)</td></tr>");
+        private readonly Regex systemRegex = new Regex(@"<tr><th>System</th><td><a href=""/discs/system/(.*?)/"">");
+        private readonly Regex titleRegex = new Regex(@"<h1>(.*?)</h1>");
+        private readonly Regex trackRegex = new Regex(@"<tr><td>(?<number>.*?)</td><td>(?<type>.*?)</td><td>(?<pregap>.*?)</td><td>(?<length>.*?)</td><td>(?<sectors>.*?)</td><td>(?<size>.*?)</td><td>(?<crc32>.*?)</td><td>(?<md5>.*?)</td><td>(?<sha1>.*?)</td></tr>");
+        private readonly Regex trackCountRegex = new Regex(@"<tr><th>Number of tracks</th><td>(.*?)</td></tr>");
+        private readonly Regex versionRegex = new Regex(@"<tr><th>Version</th><td>(.*?)</td></tr>");
+        private readonly Regex writeOffsetRegex = new Regex(@"<tr><th>Write offset</th><td>(.*?)</td></tr>");
 
         #endregion
 
