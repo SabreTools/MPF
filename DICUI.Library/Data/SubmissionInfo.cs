@@ -323,7 +323,7 @@ namespace DICUI.Data
 
                         // Disc number or letter
                         if (subMatch.StartsWith("Disc"))
-                            this.DiscNumberLetter = subMatch.Remove("Disc ".Length);
+                            this.DiscNumberLetter = subMatch.Remove(0, "Disc ".Length);
 
                         // Disc title
                         else
