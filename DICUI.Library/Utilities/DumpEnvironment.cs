@@ -685,16 +685,17 @@ namespace DICUI.Utilities
 
                 case MediaType.UMD:
                     info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
-                    info.Size = -1;
                     info.CRC32 = Template.RequiredValue + " [Not automatically generated for UMD]";
                     info.MD5 = Template.RequiredValue + " [Not automatically generated for UMD]";
                     info.SHA1 = Template.RequiredValue + " [Not automatically generated for UMD]";
                     info.ClrMameProData = null;
 
-                    if (GetUMDAuxInfo(combinedBase + "_disc.txt", out string title, out string umdversion, out string umdlayer))
+                    if (GetUMDAuxInfo(combinedBase + "_disc.txt", out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize))
                     {
                         info.Title = title ?? "";
+                        info.Category = umdcat ?? Category.Games;
                         info.Version = umdversion ?? "";
+                        info.Size = umdsize;
 
                         if (!String.IsNullOrWhiteSpace(umdlayer))
                             info.Layerbreak = Int64.Parse(umdlayer ?? "-1");
@@ -1955,9 +1956,9 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetUMDAuxInfo(string disc, out string title, out string umdversion, out string umdlayer)
+        private bool GetUMDAuxInfo(string disc, out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize)
         {
-            title = null; umdversion = null; umdlayer = null;
+            title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -1977,9 +1978,17 @@ namespace DICUI.Utilities
                             title = line.Substring("TITLE: ".Length);
                         else if (line.StartsWith("version") && umdversion == null)
                             umdversion = line.Substring("version: ".Length);
+                        else if (line.StartsWith("pspUmdTypes"))
+                            umdcat = GetUMDCategory(line.Split(' ')[1]);
                         else if (line.StartsWith("L0 length"))
                             umdlayer = line.Split(' ')[2];
+                        else if (line.StartsWith("FileSize:"))
+                            umdsize = Int64.Parse(line.Split(' ')[1]);
                     }
+
+                    // If the L0 length is the size of the full disc, there's no layerbreak
+                    if (Int64.Parse(umdlayer) * 2048 == umdsize)
+                        umdlayer = null;
 
                     return true;
                 }
@@ -1988,6 +1997,26 @@ namespace DICUI.Utilities
                     // We don't care what the exception is right now
                     return false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Determine the category based on the UMDImageCreator string
+        /// </summary>
+        /// <param name="region">String representing the category</param>
+        /// <returns>Category, if possible</returns>
+        private Category? GetUMDCategory(string category)
+        {
+            switch (category)
+            {
+                case "GAME":
+                    return Category.Games;
+                case "VIDEO":
+                    return Category.Video;
+                case "AUDIO":
+                    return Category.Audio;
+                default:
+                    return null;
             }
         }
 
