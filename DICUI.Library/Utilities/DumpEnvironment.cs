@@ -1054,7 +1054,7 @@ namespace DICUI.Utilities
                 else
                 {
                     output.Add(""); output.Add("Size & Checksum:");
-                    AddIfExists(output, Template.LayerbreakField, info.Layerbreak.ToString(), 1);
+                    AddIfExists(output, Template.LayerbreakField, (info.Layerbreak == default(long) ? null : info.Layerbreak.ToString()), 1);
                     AddIfExists(output, Template.SizeField, info.Size.ToString(), 1);
                     AddIfExists(output, Template.CRC32Field, info.CRC32, 1);
                     AddIfExists(output, Template.MD5Field, info.MD5, 1);
