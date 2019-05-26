@@ -67,6 +67,11 @@ namespace DICUI.Utilities
         /// </summary>
         public Parameters DICParameters { get; set; }
 
+        /// <summary>
+        /// Determines if placeholder values should be set for fields
+        /// </summary>
+        public bool AddPlaceholders { get; set; }
+
         #endregion
 
         #region Extra DIC arguments
@@ -528,18 +533,18 @@ namespace DICUI.Utilities
             {
                 System = this.System,
                 Media = this.Type,
-                Title = Template.RequiredValue,
-                ForeignTitleNonLatin = Template.OptionalValue,
-                DiscNumberLetter = Template.OptionalValue,
-                DiscTitle = Template.OptionalValue,
+                Title = (this.AddPlaceholders ? Template.RequiredValue : ""),
+                ForeignTitleNonLatin = (AddPlaceholders ? Template.OptionalValue : ""),
+                DiscNumberLetter = (AddPlaceholders ? Template.OptionalValue : ""),
+                DiscTitle = (AddPlaceholders ? Template.OptionalValue : ""),
                 Category = Category.Games,
                 Region = null,
                 Languages = null,
-                Serial = Template.RequiredIfExistsValue,
-                Barcode = Template.OptionalValue,
-                Contents = Template.OptionalValue,
-                Version = Template.RequiredIfExistsValue,
-                OtherEditions = "Original (VERIFY THIS)",
+                Serial = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
+                Barcode = (AddPlaceholders ? Template.OptionalValue : ""),
+                Contents = (AddPlaceholders ? Template.OptionalValue : ""),
+                Version = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
+                OtherEditions = (AddPlaceholders ? "Original (VERIFY THIS)" : ""),
                 ClrMameProData = GetDatfile(combinedBase + ".dat"),
             };
 
@@ -590,12 +595,12 @@ namespace DICUI.Utilities
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.MasteringRingFirstLayerDataSide = Template.RequiredIfExistsValue;
-                    info.MasteringSIDCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                    info.ToolstampMasteringCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                    info.MouldSIDCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                    info.MouldSIDCodeSecondLayerLabelSide = Template.RequiredIfExistsValue;
-                    info.AdditionalMouldFirstLayerDataSide = Template.RequiredIfExistsValue;
+                    info.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     long errorCount = -1;
@@ -642,27 +647,27 @@ namespace DICUI.Utilities
                     // If we have a single-layer disc
                     if (String.IsNullOrWhiteSpace(layerbreak))
                     {
-                        info.MasteringRingFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.MasteringSIDCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.ToolstampMasteringCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.MouldSIDCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.MouldSIDCodeSecondLayerLabelSide = Template.RequiredIfExistsValue;
-                        info.AdditionalMouldFirstLayerDataSide = Template.RequiredIfExistsValue;
+                        info.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                         info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.MasteringRingFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.MasteringSIDCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.ToolstampMasteringCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.MouldSIDCodeFirstLayerDataSide = Template.RequiredIfExistsValue;
-                        info.AdditionalMouldFirstLayerDataSide = Template.RequiredIfExistsValue;
+                        info.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
-                        info.MasteringRingSecondLayerLabelSide = Template.RequiredIfExistsValue;
-                        info.MasteringSIDCodeSecondLayerLabelSide = Template.RequiredIfExistsValue;
-                        info.ToolstampMasteringCodeSecondLayerLabelSide = Template.RequiredIfExistsValue;
-                        info.MouldSIDCodeSecondLayerLabelSide = Template.RequiredIfExistsValue;
+                        info.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
                         info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                         info.Layerbreak = Int64.Parse(layerbreak);
@@ -675,19 +680,19 @@ namespace DICUI.Utilities
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.BCA = Template.RequiredValue;
+                    info.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
-                    info.DiscKey = Template.RequiredValue;
-                    info.BCA = Template.RequiredValue;
+                    info.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case MediaType.UMD:
                     info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
-                    info.CRC32 = Template.RequiredValue + " [Not automatically generated for UMD]";
-                    info.MD5 = Template.RequiredValue + " [Not automatically generated for UMD]";
-                    info.SHA1 = Template.RequiredValue + " [Not automatically generated for UMD]";
+                    info.CRC32 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.MD5 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.SHA1 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
                     info.ClrMameProData = null;
 
                     if (GetUMDAuxInfo(combinedBase + "_disc.txt", out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize))
@@ -712,7 +717,7 @@ namespace DICUI.Utilities
                 case KnownSystem.IBMPCCompatible:
                 case KnownSystem.RainbowDisc:
                     if (string.IsNullOrWhiteSpace(info.Comments))
-                        info.Comments += $"[T:ISBN] {Template.OptionalValue}";
+                        info.Comments += $"[T:ISBN] {(AddPlaceholders ? Template.OptionalValue : "")}";
 
                     progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     info.Protection = GetCopyProtection();
@@ -728,23 +733,23 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.BDVideo:
-                    info.Protection = Template.RequiredIfExistsValue;
+                    info.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
                 case KnownSystem.CommodoreAmiga:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.CommodoreAmigaCD32:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.CommodoreAmigaCDTV:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.DVDVideo:
@@ -752,35 +757,35 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.FujitsuFMTowns:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.IncredibleTechnologiesEagle:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamieAmusement:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiFirebeat:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiGVSystem:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiSystem573:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiTwinkle:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.MattelHyperscan:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.MicrosoftXBOX:
@@ -795,8 +800,8 @@ namespace DICUI.Utilities
 
                     if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
                     {
-                        info.Serial = serial ?? Template.RequiredValue;
-                        info.Version = version ?? Template.RequiredValue;
+                        info.Serial = serial ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+                        info.Version = version ?? (this.AddPlaceholders ? Template.RequiredValue : "");
                         info.Region = region;
                     }
 
@@ -814,22 +819,22 @@ namespace DICUI.Utilities
 
                     if (GetXBOX360DMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
                     {
-                        info.Serial = serial360 ?? Template.RequiredValue;
-                        info.Version = version360 ?? Template.RequiredValue;
+                        info.Serial = serial360 ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+                        info.Version = version360 ?? (this.AddPlaceholders ? Template.RequiredValue : "");
                         info.Region = region360;
                     }
                     break;
 
                 case KnownSystem.NamcoSegaNintendoTriforce:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.NavisoftNaviken21:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.NECPC98:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaCDMegaCD:
@@ -848,19 +853,19 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.SegaChihiro:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaDreamcast:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaNaomi:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaNaomi2:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaSaturn:
@@ -880,11 +885,11 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.SegaTitanVideo:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SNKNeoGeoCD:
-                    info.EXEDateBuildDate = Template.RequiredValue;
+                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SonyPlayStation:
@@ -911,8 +916,8 @@ namespace DICUI.Utilities
                     break;
                 
                 case KnownSystem.SonyPlayStation3:
-                    info.DiscKey = Template.RequiredValue;
-                    info.DiscID = Template.RequiredValue;
+                    info.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.DiscID = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SonyPlayStation4:
@@ -920,13 +925,13 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.Protection = Template.RequiredIfExistsValue;
+                    info.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
             }
 
             // Comments is one of the few fields with odd handling
             if (string.IsNullOrEmpty(info.Comments))
-                info.Comments = Template.OptionalValue;
+                info.Comments = (AddPlaceholders ? Template.OptionalValue : "");
 
             return info;
         }
@@ -1976,8 +1981,8 @@ namespace DICUI.Utilities
 
                         if (line.StartsWith("TITLE") && title == null)
                             title = line.Substring("TITLE: ".Length);
-                        else if (line.StartsWith("version") && umdversion == null)
-                            umdversion = line.Substring("version: ".Length);
+                        else if (line.StartsWith("DISC_VERSION") && umdversion == null)
+                            umdversion = line.Split(' ')[1];
                         else if (line.StartsWith("pspUmdTypes"))
                             umdcat = GetUMDCategory(line.Split(' ')[1]);
                         else if (line.StartsWith("L0 length"))

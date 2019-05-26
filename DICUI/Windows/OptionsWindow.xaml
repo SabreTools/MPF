@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Options" Height="480" Width="515.132">
+        Title="Options" Height="580" Width="515.132">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="150"/>
             <RowDefinition Height="100"/>
+            <RowDefinition Height="80"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
@@ -30,7 +31,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DicImageCreator Path" />
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
             <TextBox x:Name="DICPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
             <Button x:Name="DICPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
@@ -112,22 +113,49 @@
                              />
                 </Grid>
 
-                <CheckBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" Content="Automatically Scan for Protection" 
+                <CheckBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" Content="Protection Scan" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=ScanForProtection}"
                           ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                           />
 
-                <CheckBox Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Content="Skip Media Type Detection" 
+                <CheckBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Content="Skip Media Type Detection" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=SkipMediaTypeDetection}"
                           ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" 
+                          />
+
+                <CheckBox Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Content="Add Placeholders" 
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+                          IsChecked="{Binding Path=AddPlaceholders}"
+                          ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" 
                           />
             </Grid>
 
         </GroupBox>
 
-        <Grid Height="22" Grid.Row="3" Grid.Column="0">
+        <GroupBox Grid.Row="3" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redump Login" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
+                <TextBox x:Name="RedumpUsernameTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                
+                <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
+                <TextBox x:Name="RedumpPasswordTextBox" Grid.Row="0" Grid.Column="3" Height="22" HorizontalAlignment="Stretch" />
+            </Grid>
+        </GroupBox>
+                  
+        <Grid Height="22" Grid.Row="4" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="1*"/>

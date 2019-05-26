@@ -386,6 +386,7 @@ namespace DICUI.Windows
                 ParanoidMode = _options.ParanoidMode,
                 ScanForProtection = _options.ScanForProtection,
                 RereadAmountC2 = _options.RereadAmountForC2,
+                AddPlaceholders = _options.AddPlaceholders,
 
                 Username = _options.Username,
                 Password = _options.Password,

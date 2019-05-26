@@ -19,6 +19,7 @@ namespace DICUI
         public bool ParanoidMode { get; set; }
         public bool ScanForProtection { get; set; }
         public int RereadAmountForC2 { get; set; }
+        public bool AddPlaceholders { get; set; }
 
         public bool SkipMediaTypeDetection { get; set; }
 
@@ -47,25 +48,28 @@ namespace DICUI
 
         public void Load()
         {
+            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
             //TODO: hardcoded, we should find a better way
-            DICPath = ConfigurationManager.AppSettings["DICPath"] ?? @"Programs\DiscImageCreator.exe";
-            SubDumpPath = ConfigurationManager.AppSettings["SubDumpPath"] ?? "subdump.exe";
-            DefaultOutputPath = ConfigurationManager.AppSettings["DefaultOutputPath"] ?? "ISO";
+            DICPath = configFile.AppSettings.Settings["DICPath"].Value ?? @"Programs\DiscImageCreator.exe";
+            SubDumpPath = configFile.AppSettings.Settings["SubDumpPath"].Value ?? "subdump.exe";
+            DefaultOutputPath = configFile.AppSettings.Settings["DefaultOutputPath"].Value ?? "ISO";
 
-            this.PreferredDumpSpeedCD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedCD"], out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
-            this.PreferredDumpSpeedDVD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedDVD"], out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 24;
-            this.PreferredDumpSpeedBD = Int32.TryParse(ConfigurationManager.AppSettings["preferredDumpSpeedBD"], out int maxDumpSpeedBD) ? maxDumpSpeedBD : 16;
+            this.PreferredDumpSpeedCD = Int32.TryParse(configFile.AppSettings.Settings["PreferredDumpSpeedCD"].Value, out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
+            this.PreferredDumpSpeedDVD = Int32.TryParse(configFile.AppSettings.Settings["PreferredDumpSpeedDVD"].Value, out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 24;
+            this.PreferredDumpSpeedBD = Int32.TryParse(configFile.AppSettings.Settings["PreferredDumpSpeedBD"].Value, out int maxDumpSpeedBD) ? maxDumpSpeedBD : 16;
 
-            this.QuietMode = Boolean.TryParse(ConfigurationManager.AppSettings["QuietMode"], out bool quietMode) ? quietMode : false;
-            this.ParanoidMode = Boolean.TryParse(ConfigurationManager.AppSettings["ParanoidMode"], out bool paranoidMode) ? paranoidMode : false;
-            this.ScanForProtection = Boolean.TryParse(ConfigurationManager.AppSettings["ScanForProtection"], out bool scanForProtection) ? scanForProtection : true;
-            this.SkipMediaTypeDetection = Boolean.TryParse(ConfigurationManager.AppSettings["SkipMediaTypeDetection"], out bool skipMediaTypeDetection) ? skipMediaTypeDetection : false;
-            this.RereadAmountForC2 = Int32.TryParse(ConfigurationManager.AppSettings["RereadAmountForC2"], out int rereadAmountForC2) ? rereadAmountForC2 : 20;
-            this.VerboseLogging = Boolean.TryParse(ConfigurationManager.AppSettings["VerboseLogging"], out bool verboseLogging) ? verboseLogging : true;
-            this.OpenLogWindowAtStartup = Boolean.TryParse(ConfigurationManager.AppSettings["OpenLogWindowAtStartup"], out bool openLogWindowAtStartup) ? openLogWindowAtStartup : true;
+            this.QuietMode = Boolean.TryParse(configFile.AppSettings.Settings["QuietMode"].Value, out bool quietMode) ? quietMode : false;
+            this.ParanoidMode = Boolean.TryParse(configFile.AppSettings.Settings["ParanoidMode"].Value, out bool paranoidMode) ? paranoidMode : false;
+            this.ScanForProtection = Boolean.TryParse(configFile.AppSettings.Settings["ScanForProtection"].Value, out bool scanForProtection) ? scanForProtection : true;
+            this.SkipMediaTypeDetection = Boolean.TryParse(configFile.AppSettings.Settings["SkipMediaTypeDetection"].Value, out bool skipMediaTypeDetection) ? skipMediaTypeDetection : false;
+            this.RereadAmountForC2 = Int32.TryParse(configFile.AppSettings.Settings["RereadAmountForC2"].Value, out int rereadAmountForC2) ? rereadAmountForC2 : 20;
+            this.VerboseLogging = Boolean.TryParse(configFile.AppSettings.Settings["VerboseLogging"].Value, out bool verboseLogging) ? verboseLogging : true;
+            this.OpenLogWindowAtStartup = Boolean.TryParse(configFile.AppSettings.Settings["OpenLogWindowAtStartup"].Value, out bool openLogWindowAtStartup) ? openLogWindowAtStartup : true;
+            this.AddPlaceholders = Boolean.TryParse(configFile.AppSettings.Settings["AddPlaceholders"].Value, out bool addPlaceholders) ? addPlaceholders : true;
 
-            this.Username = ConfigurationManager.AppSettings["username"] ?? "";
-            this.Password = ConfigurationManager.AppSettings["password"] ?? "";
+            this.Username = configFile.AppSettings.Settings["Username"].Value ?? "";
+            this.Password = configFile.AppSettings.Settings["Password"].Value ?? "";
         }
 
 
