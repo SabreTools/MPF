@@ -1051,7 +1051,7 @@ namespace DICUI.Utilities
                 if (!string.IsNullOrWhiteSpace(info.ClrMameProData))
                 {
                     output.Add(""); output.Add("Tracks and Write Offsets:");
-                    AddIfExists(output, Template.DATField, info.ClrMameProData, 1);
+                    AddIfExists(output, Template.DATField, info.ClrMameProData + "\n", 1);
                     AddIfExists(output, Template.CuesheetField, info.Cuesheet, 1);
                     AddIfExists(output, Template.WriteOffsetField, info.OtherWriteOffsets, 1);
                 }
@@ -1113,7 +1113,7 @@ namespace DICUI.Utilities
                 output.Add(prefix + key + ":"); output.Add("");
                 string[] values = value.Split('\n');
                 foreach (string val in values)
-                    output.Add(prefix + val);
+                    output.Add(val);
 
                 output.Add("");
             }
