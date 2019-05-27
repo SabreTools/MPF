@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
 using System.Reflection;
 using DICUI.Data;
 
@@ -51,27 +52,114 @@ namespace DICUI
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             //TODO: hardcoded, we should find a better way
-            DICPath = configFile.AppSettings.Settings["DICPath"].Value ?? @"Programs\DiscImageCreator.exe";
-            SubDumpPath = configFile.AppSettings.Settings["SubDumpPath"].Value ?? "subdump.exe";
-            DefaultOutputPath = configFile.AppSettings.Settings["DefaultOutputPath"].Value ?? "ISO";
+            this.DICPath = GetStringSetting(configFile, "DICPath", "Programs\\DiscImageCreator.exe");
+            this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "subdump.exe");
+            this.DefaultOutputPath = GetStringSetting(configFile, "DefaultOutputPath", "ISO");
 
-            this.PreferredDumpSpeedCD = Int32.TryParse(configFile.AppSettings.Settings["PreferredDumpSpeedCD"].Value, out int maxDumpSpeedCD) ? maxDumpSpeedCD : 72;
-            this.PreferredDumpSpeedDVD = Int32.TryParse(configFile.AppSettings.Settings["PreferredDumpSpeedDVD"].Value, out int maxDumpSpeedDVD) ? maxDumpSpeedDVD : 24;
-            this.PreferredDumpSpeedBD = Int32.TryParse(configFile.AppSettings.Settings["PreferredDumpSpeedBD"].Value, out int maxDumpSpeedBD) ? maxDumpSpeedBD : 16;
+            this.PreferredDumpSpeedCD = GetInt32Setting(configFile, "PreferredDumpSpeedCD", 72);
+            this.PreferredDumpSpeedDVD = GetInt32Setting(configFile, "PreferredDumpSpeedDVD", 24);
+            this.PreferredDumpSpeedBD = GetInt32Setting(configFile, "PreferredDumpSpeedBD", 16);
 
-            this.QuietMode = Boolean.TryParse(configFile.AppSettings.Settings["QuietMode"].Value, out bool quietMode) ? quietMode : false;
-            this.ParanoidMode = Boolean.TryParse(configFile.AppSettings.Settings["ParanoidMode"].Value, out bool paranoidMode) ? paranoidMode : false;
-            this.ScanForProtection = Boolean.TryParse(configFile.AppSettings.Settings["ScanForProtection"].Value, out bool scanForProtection) ? scanForProtection : true;
-            this.SkipMediaTypeDetection = Boolean.TryParse(configFile.AppSettings.Settings["SkipMediaTypeDetection"].Value, out bool skipMediaTypeDetection) ? skipMediaTypeDetection : false;
-            this.RereadAmountForC2 = Int32.TryParse(configFile.AppSettings.Settings["RereadAmountForC2"].Value, out int rereadAmountForC2) ? rereadAmountForC2 : 20;
-            this.VerboseLogging = Boolean.TryParse(configFile.AppSettings.Settings["VerboseLogging"].Value, out bool verboseLogging) ? verboseLogging : true;
-            this.OpenLogWindowAtStartup = Boolean.TryParse(configFile.AppSettings.Settings["OpenLogWindowAtStartup"].Value, out bool openLogWindowAtStartup) ? openLogWindowAtStartup : true;
-            this.AddPlaceholders = Boolean.TryParse(configFile.AppSettings.Settings["AddPlaceholders"].Value, out bool addPlaceholders) ? addPlaceholders : true;
+            this.QuietMode = GetBooleanSetting(configFile, "QuietMode", false);
+            this.ParanoidMode = GetBooleanSetting(configFile, "ParanoidMode", false);
+            this.ScanForProtection = GetBooleanSetting(configFile, "ScanForProtection", true);
+            this.SkipMediaTypeDetection = GetBooleanSetting(configFile, "SkipMediaTypeDetection", false);
+            this.RereadAmountForC2 = GetInt32Setting(configFile, "RereadAmountForC2", 20);
+            this.VerboseLogging = GetBooleanSetting(configFile, "VerboseLogging", true);
+            this.OpenLogWindowAtStartup = GetBooleanSetting(configFile, "OpenLogWindowAtStartup", true);
+            this.AddPlaceholders = GetBooleanSetting(configFile, "AddPlaceholders", true);
 
-            this.Username = configFile.AppSettings.Settings["Username"].Value ?? "";
-            this.Password = configFile.AppSettings.Settings["Password"].Value ?? "";
+            this.Username = GetStringSetting(configFile, "Username", "");
+            this.Password = GetStringSetting(configFile, "Password", "");
         }
 
+        /// <summary>
+        /// Get a boolean setting from a configuration
+        /// </summary>
+        /// <param name="configFile">Current configuration file</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        public bool GetBooleanSetting(Configuration configFile, string key, bool defaultValue)
+        {
+            var settings = configFile.AppSettings.Settings;
+            if (settings.AllKeys.Contains(key))
+            {
+                if (Boolean.TryParse(settings[key].Value, out bool value))
+                    return value;
+                else
+                    return defaultValue;
+
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Get a boolean setting from a configuration
+        /// </summary>
+        /// <param name="configFile">Current configuration file</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        public int GetInt32Setting(Configuration configFile, string key, int defaultValue)
+        {
+            var settings = configFile.AppSettings.Settings;
+            if (settings.AllKeys.Contains(key))
+            {
+                if (Int32.TryParse(settings[key].Value, out int value))
+                    return value;
+                else
+                    return defaultValue;
+
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Get a boolean setting from a configuration
+        /// </summary>
+        /// <param name="configFile">Current configuration file</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        public long GetInt64Setting(Configuration configFile, string key, long defaultValue)
+        {
+            var settings = configFile.AppSettings.Settings;
+            if (settings.AllKeys.Contains(key))
+            {
+                if (Int64.TryParse(settings[key].Value, out long value))
+                    return value;
+                else
+                    return defaultValue;
+
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Get a boolean setting from a configuration
+        /// </summary>
+        /// <param name="configFile">Current configuration file</param>
+        /// <param name="key">Setting key to get a value for</param>
+        /// <param name="defaultValue">Default value to return if no value is found</param>
+        /// <returns>Setting value if possible, default value otherwise</returns>
+        public string GetStringSetting(Configuration configFile, string key, string defaultValue)
+        {
+            var settings = configFile.AppSettings.Settings;
+            if (settings.AllKeys.Contains(key))
+                return settings[key].Value;
+            else
+                return defaultValue;
+        }
 
         //TODO: probably should be generic for non-string options
         //TODO: using reflection for Set and Get is orthodox but it works, should be changed to a key,value map probably
