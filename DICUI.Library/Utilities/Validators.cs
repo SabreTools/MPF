@@ -734,14 +734,14 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the current disc type from drive letter
+        /// Get the current media type from drive letter
         /// </summary>
         /// <param name="driveLetter"></param>
         /// <returns></returns>
         /// <remarks>
         /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
         /// </remarks>
-        public static MediaType? GetDiscType(char? driveLetter)
+        public static MediaType? GetMediaType(char? driveLetter)
         {
             // Get the DeviceID from the current drive letter
             string deviceId = null;
@@ -796,6 +796,74 @@ namespace DICUI.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get the current system from drive letter
+        /// </summary>
+        /// <param name="driveLetter"></param>
+        /// <returns></returns>
+        public static KnownSystem? GetKnownSystem(char? driveLetter)
+        {
+            // If no letter is provided, then we can't do anything
+            if (driveLetter == null)
+                return null;
+
+            string drivePath = $"{driveLetter}:\\";
+
+            // If we can't read the media in that drive, we can't do anything
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // Sega Dreamcast
+            if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
+            {
+                return KnownSystem.SegaDreamcast;
+            }
+
+            // Sega Mega-CD / Sega-CD
+            if (File.Exists(Path.Combine(drivePath, "_BOOT", "IP.BIN"))
+                || File.Exists(Path.Combine(drivePath, "_BOOT", "SP.BIN"))
+                || File.Exists(Path.Combine(drivePath, "_BOOT", "SP_AS.BIN"))
+                || File.Exists(Path.Combine(drivePath, "FILESYSTEM.BIN")))
+            {
+                return KnownSystem.SegaCDMegaCD;
+            }
+
+            // Sony PlayStation and Sony PlayStation 2
+            if (File.Exists(Path.Combine(drivePath, "SYSTEM.CNF")))
+            {
+                // Check for either BOOT or BOOT2
+                using (StreamReader reader = File.OpenText(Path.Combine(drivePath, "SYSTEM.CNF")))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        if (line.Contains("BOOT2"))
+                            return KnownSystem.SonyPlayStation2;
+                        else if (line.Contains("BOOT"))
+                            return KnownSystem.SonyPlayStation;
+                    }
+                }
+
+                // If we have a weird disc, just assume PS1
+                return KnownSystem.SonyPlayStation;
+            }
+            
+            // Sony PlayStation 4
+            if (File.Exists(Path.Combine(drivePath, "PSLogo.ico")))
+            {
+                return KnownSystem.SonyPlayStation4;
+            }
+
+            // V.Tech V.Flash / V.Smile Pro
+            if (File.Exists(Path.Combine(drivePath, "0SYSTEM")))
+            {
+                return KnownSystem.VTechVFlashVSmilePro;
+            }
+
+            // Default return
+            return KnownSystem.NONE;
         }
 
         /// <summary>

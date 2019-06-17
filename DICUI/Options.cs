@@ -23,6 +23,7 @@ namespace DICUI
         public bool AddPlaceholders { get; set; }
 
         public bool SkipMediaTypeDetection { get; set; }
+        public bool SkipSystemDetection { get; set; }
 
         public bool VerboseLogging { get; set; }
         public bool OpenLogWindowAtStartup { get; set; }
@@ -64,6 +65,7 @@ namespace DICUI
             this.ParanoidMode = GetBooleanSetting(configFile, "ParanoidMode", false);
             this.ScanForProtection = GetBooleanSetting(configFile, "ScanForProtection", true);
             this.SkipMediaTypeDetection = GetBooleanSetting(configFile, "SkipMediaTypeDetection", false);
+            this.SkipSystemDetection = GetBooleanSetting(configFile, "SkipSystemDetection", false);
             this.RereadAmountForC2 = GetInt32Setting(configFile, "RereadAmountForC2", 20);
             this.VerboseLogging = GetBooleanSetting(configFile, "VerboseLogging", true);
             this.OpenLogWindowAtStartup = GetBooleanSetting(configFile, "OpenLogWindowAtStartup", true);

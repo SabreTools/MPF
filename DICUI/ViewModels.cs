@@ -37,6 +37,12 @@ namespace DICUI
             set { _options.SkipMediaTypeDetection = value; }
         }
 
+        public bool SkipSystemDetection
+        {
+            get { return _options.SkipSystemDetection; }
+            set { _options.SkipSystemDetection = value; }
+        }
+
         public string RereadAmountForC2
         {
             get { return Convert.ToString(_options.RereadAmountForC2); }

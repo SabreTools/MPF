@@ -16,7 +16,7 @@ namespace DICUI.Windows
         // Private UI-related variables
         private List<Drive> _drives;
         private MediaType? _currentMediaType;
-        private List<KnownSystem?> _systems;
+        private List<KnownSystemComboBoxItem> _systems;
         private List<MediaType?> _mediaTypes;
         private bool _alreadyShown;
 
@@ -282,11 +282,11 @@ namespace DICUI.Windows
         /// </summary>
         private void PopulateSystems()
         {
-            _systems = Validators.CreateListOfSystems();
+            var knownSystems = Validators.CreateListOfSystems();
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Populating systems, {0} systems found.", _systems.Count);
+            ViewModels.LoggerViewModel.VerboseLogLn("Populating systems, {0} systems found.", knownSystems.Count);
 
-            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = _systems
+            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = knownSystems
                 .GroupBy(s => s.Category())
                 .ToDictionary(
                     k => k.Key,
@@ -295,17 +295,16 @@ namespace DICUI.Windows
                         .ToList()
                 );
 
-            List<KnownSystemComboBoxItem> comboBoxItems = new List<KnownSystemComboBoxItem>();
-
-            comboBoxItems.Add(new KnownSystemComboBoxItem(KnownSystem.NONE));
+            _systems = new List<KnownSystemComboBoxItem>();
+            _systems.Add(new KnownSystemComboBoxItem(KnownSystem.NONE));
 
             foreach (var group in mapping)
             {
-                comboBoxItems.Add(new KnownSystemComboBoxItem(group.Key));
-                group.Value.ForEach(system => comboBoxItems.Add(new KnownSystemComboBoxItem(system)));
+                _systems.Add(new KnownSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => _systems.Add(new KnownSystemComboBoxItem(system)));
             }
 
-            SystemTypeComboBox.ItemsSource = comboBoxItems;
+            SystemTypeComboBox.ItemsSource = _systems;
             SystemTypeComboBox.SelectedIndex = 0;
 
             StartStopButton.IsEnabled = false;
@@ -331,8 +330,24 @@ namespace DICUI.Windows
                 int index = _drives.FindIndex(d => d.MarkedActive);
                 DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
                 StatusLabel.Content = "Valid drive found! Choose your Media Type";
-                StartStopButton.IsEnabled = true;
-                CopyProtectScanButton.IsEnabled = true;
+                                CopyProtectScanButton.IsEnabled = true;
+
+                // Get the current optical disc type
+                if (!_options.SkipSystemDetection && index != -1)
+                {
+                    ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", _drives[index].Letter);
+                    var currentSystem = Validators.GetKnownSystem(_drives[index].Letter);
+                    ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
+
+                    if (currentSystem != null && currentSystem != KnownSystem.NONE)
+                    {
+                        int sysIndex = _systems.FindIndex(s => s == currentSystem);
+                        SystemTypeComboBox.SelectedIndex = sysIndex;
+                    }
+                }
+
+                // Only enable the start/stop if we don't have the default selected
+                StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
 
                 ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", _drives.Count, String.Join(", ", _drives.Select(d => d.Letter)));
             }
@@ -631,7 +646,7 @@ namespace DICUI.Windows
             if (!_options.SkipMediaTypeDetection)
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
-                _currentMediaType = Validators.GetDiscType(drive.Letter);
+                _currentMediaType = Validators.GetMediaType(drive.Letter);
                 ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.LongName() + "."));
             }
         }
