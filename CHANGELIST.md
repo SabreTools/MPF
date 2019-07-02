@@ -1,3 +1,12 @@
+### 1.13 (2019-07-02)
+- Added new DIC commands and flags
+- Made DICUI Check more robust
+- Added and updated systems along with format cleanup
+- Created a new SubmissionInfo template (and internals)
+- Added automatic grabbing of Redump information, if possible
+- Better media format support (BD, UMD)
+- Initial disc type detection
+
 ### 1.12.2 (2019-04-19)
 - Added DICUI Check, a new standalone tool for parsing DIC output from platforms unsupported by DICUI
 - Added a few machines/formats

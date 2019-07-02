@@ -251,6 +251,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.Floppy
                 || Command == DICCommand.GDROM
                 || Command == DICCommand.Reset
+                || Command == DICCommand.SACD
                 || Command == DICCommand.Start
                 || Command == DICCommand.Stop
                 || Command == DICCommand.Swap
@@ -275,6 +276,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.GDROM
                 || Command == DICCommand.MDS
                 || Command == DICCommand.Merge
+                || Command == DICCommand.SACD
                 || Command == DICCommand.Swap
                 || Command == DICCommand.Sub
                 || Command == DICCommand.XBOX
@@ -304,6 +306,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.Data
                 || Command == DICCommand.DigitalVideoDisc
                 || Command == DICCommand.GDROM
+                || Command == DICCommand.SACD
                 || Command == DICCommand.Swap
                 || Command == DICCommand.XBOX
                 || Command == DICCommand.XBOXSwap
@@ -522,6 +525,16 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.NoFixSubRtoW])
                     parameters.Add(DICFlag.NoFixSubRtoW.LongName());
+            }
+
+            // Not skip security sectors
+            if (Command == DICCommand.XBOX
+                || Command == DICCommand.XBOXSwap
+                || Command == DICCommand.XGD2Swap
+                || Command == DICCommand.XGD3Swap)
+            {
+                if (this[DICFlag.NoSkipSS])
+                    parameters.Add(DICFlag.NoSkipSS.LongName());
             }
 
             // Raw read (2064 byte/sector)
@@ -909,6 +922,28 @@ namespace DICUI.Utilities
                     Command = DICCommand.Reset;
                     break;
 
+                case DICCommandStrings.SACD:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else
+                        DriveLetter = parts[1];
+
+                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else
+                        Filename = parts[2];
+
+                    if (!DoesExist(parts, 3) || !IsValidNumber(parts[3], lowerBound: 0, upperBound: 16))
+                        return false;
+                    else
+                        DriveSpeed = Int32.Parse(parts[3]);
+
+                    if (parts.Count > 4)
+                        return false;
+
+                    Command = DICCommand.SACD;
+                    break;
+
                 case DICCommandStrings.Start:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
@@ -1189,6 +1224,16 @@ namespace DICUI.Utilities
                             this[DICFlag.NoFixSubQLibCrypt] = true;
                             break;
 
+                        case DICFlagStrings.NoFixSubRtoW:
+                            if (parts[0] != DICCommandStrings.Audio
+                                && parts[0] != DICCommandStrings.CompactDisc
+                                && parts[0] != DICCommandStrings.Data
+                                && parts[0] != DICCommandStrings.GDROM)
+                                return false;
+
+                            this[DICFlag.NoFixSubRtoW] = true;
+                            break;
+
                         case DICFlagStrings.NoFixSubQSecuROM:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
@@ -1199,14 +1244,14 @@ namespace DICUI.Utilities
                             this[DICFlag.NoFixSubQSecuROM] = true;
                             break;
 
-                        case DICFlagStrings.NoFixSubRtoW:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case DICFlagStrings.NoSkipSS:
+                            if (parts[0] != DICCommandStrings.XBOX
+                                && parts[0] != DICCommandStrings.XBOXSwap
+                                && parts[0] != DICCommandStrings.XGD2Swap
+                                && parts[0] != DICCommandStrings.XGD3Swap)
                                 return false;
 
-                            this[DICFlag.NoFixSubRtoW] = true;
+                            this[DICFlag.NoSkipSS] = true;
                             break;
 
                         case DICFlagStrings.Raw:
@@ -1415,7 +1460,10 @@ namespace DICUI.Utilities
             switch (type)
             {
                 case MediaType.CDROM:
-                    Command = DICCommand.CompactDisc;
+                    if (system == KnownSystem.SuperAudioCD)
+                        Command = DICCommand.SACD;
+                    else
+                        Command = DICCommand.CompactDisc;
                     return;
                 case MediaType.DVD:
                     if (system == KnownSystem.MicrosoftXBOX

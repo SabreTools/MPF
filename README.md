@@ -23,8 +23,10 @@ Ensure that your operating system is as up-to-date as possible, since some featu
 
 ## Releases
 
-Download the latest release here:
-[https://github.com/SabreTools/DICUI/releases](https://github.com/SabreTools/DICUI/releases)
+For those who would rather the most recently stable build, ownload the latest release here:
+[Releases Page](https://github.com/SabreTools/DICUI/releases)
+
+For those who like to test the newest features, download the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts)
 
 ## Changelist
 

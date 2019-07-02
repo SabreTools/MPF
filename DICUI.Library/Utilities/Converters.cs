@@ -28,6 +28,8 @@ namespace DICUI.Utilities
                     return KnownSystem.SegaDreamcast;
                 case DICCommand.BluRay:
                     return KnownSystem.SonyPlayStation3;
+                case DICCommand.SACD:
+                    return KnownSystem.SuperAudioCD;
                 case DICCommand.XBOX:
                 case DICCommand.XBOXSwap:
                     return KnownSystem.MicrosoftXBOX;
@@ -217,6 +219,7 @@ namespace DICUI.Utilities
                 case DICCommand.Audio:
                 case DICCommand.CompactDisc:
                 case DICCommand.Data:
+                case DICCommand.SACD:
                     return MediaType.CDROM;
                 case DICCommand.GDROM:
                 case DICCommand.Swap:
@@ -540,6 +543,8 @@ namespace DICUI.Utilities
                     return DICCommandStrings.Merge;
                 case DICCommand.Reset:
                     return DICCommandStrings.Reset;
+                case DICCommand.SACD:
+                    return DICCommandStrings.SACD;
                 case DICCommand.Start:
                     return DICCommandStrings.Start;
                 case DICCommand.Stop:
@@ -598,10 +603,12 @@ namespace DICUI.Utilities
                     return DICFlagStrings.NoFixSubQ;
                 case DICFlag.NoFixSubQLibCrypt:
                     return DICFlagStrings.NoFixSubQLibCrypt;
-                case DICFlag.NoFixSubQSecuROM:
-                    return DICFlagStrings.NoFixSubQSecuROM;
                 case DICFlag.NoFixSubRtoW:
                     return DICFlagStrings.NoFixSubRtoW;
+                case DICFlag.NoFixSubQSecuROM:
+                    return DICFlagStrings.NoFixSubQSecuROM;
+                case DICFlag.NoSkipSS:
+                    return DICFlagStrings.NoSkipSS;
                 case DICFlag.Raw:
                     return DICFlagStrings.Raw;
                 case DICFlag.Reverse:
@@ -871,6 +878,8 @@ namespace DICUI.Utilities
                     return "PlayStation GameShark Updates";
                 case KnownSystem.RainbowDisc:
                     return "Rainbow Disc";
+                case KnownSystem.SuperAudioCD:
+                    return "Super Audio CD";
                 case KnownSystem.TaoiKTV:
                     return "Tao iKTV";
                 case KnownSystem.TomyKissSite:
@@ -1652,6 +1661,8 @@ namespace DICUI.Utilities
                     return "gameshark";
                 case KnownSystem.RainbowDisc:
                     return "rainbow";
+                case KnownSystem.SuperAudioCD:
+                    return "sacd";
                 case KnownSystem.TaoiKTV:
                     return "iktv";
                 case KnownSystem.TomyKissSite:
@@ -2870,6 +2881,10 @@ namespace DICUI.Utilities
                 case "rainbowdisc":
                 case "rainbow disc":
                     return KnownSystem.RainbowDisc;
+                case "sacd":
+                case "superaudiocd":
+                case "super audio cd":
+                    return KnownSystem.SuperAudioCD;
                 case "iktv":
                 case "taoiktv":
                 case "tao iktv":

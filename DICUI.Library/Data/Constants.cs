@@ -18,6 +18,7 @@
         public const string MDS = "mds";
         public const string Merge = "merge";
         public const string Reset = "reset";
+        public const string SACD = "sacd";
         public const string Start = "start";
         public const string Stop = "stop";
         public const string Sub = "sub";
@@ -46,8 +47,9 @@
         public const string NoFixSubP = "/np";
         public const string NoFixSubQ = "/nq";
         public const string NoFixSubQLibCrypt = "/nl";
-        public const string NoFixSubQSecuROM = "/ns";
         public const string NoFixSubRtoW = "/nr";
+        public const string NoFixSubQSecuROM = "/ns";
+        public const string NoSkipSS = "/nss";
         public const string Raw = "/raw";
         public const string Reverse = "/r";
         public const string ScanAntiMod = "/am";

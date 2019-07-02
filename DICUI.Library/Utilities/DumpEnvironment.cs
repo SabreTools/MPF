@@ -286,7 +286,9 @@ namespace DICUI.Utilities
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
             // Some disc types are audio-only
-            bool audioOnly = (System == KnownSystem.AtariJaguarCD) || (System == KnownSystem.AudioCD);
+            bool audioOnly = (System == KnownSystem.AtariJaguarCD)
+                || (System == KnownSystem.AudioCD)
+                || (System == KnownSystem.SuperAudioCD);
 
             // Now ensure that all required files exist
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);

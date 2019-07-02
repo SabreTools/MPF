@@ -647,6 +647,11 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     break;
 
+                // https://en.wikipedia.org/wiki/Super_Audio_CD
+                case KnownSystem.SuperAudioCD:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://www.cnet.com/products/tao-music-iktv-karaoke-station-karaoke-system-series/
                 case KnownSystem.TaoiKTV:
                     types.Add(MediaType.CDROM);
