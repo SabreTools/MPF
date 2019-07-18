@@ -94,6 +94,11 @@ namespace DICUI.Utilities
         public int? ForceUnitAccessValue { get; set; }
 
         /// <summary>
+        /// Set the no skip security sector flag value (default 100)
+        /// </summary>
+        public int? NoSkipSecuritySectorValue { get; set; }
+
+        /// <summary>
         /// Set scan file timeout value (default 60)
         /// </summary>
         public int? ScanFileProtectValue { get; set; }
@@ -141,6 +146,7 @@ namespace DICUI.Utilities
                 BEOpcodeValue = null;
                 C2OpcodeValue = new int?[4];
                 ForceUnitAccessValue = null;
+                NoSkipSecuritySectorValue = null;
                 ScanFileProtectValue = null;
                 SubchannelReadLevelValue = null;
                 VideoNowValue = null;
@@ -534,7 +540,11 @@ namespace DICUI.Utilities
                 || Command == DICCommand.XGD3Swap)
             {
                 if (this[DICFlag.NoSkipSS])
+                {
                     parameters.Add(DICFlag.NoSkipSS.LongName());
+                    if (NoSkipSecuritySectorValue != null)
+                        parameters.Add(NoSkipSecuritySectorValue.ToString());
+                }
             }
 
             // Raw read (2064 byte/sector)
@@ -1250,8 +1260,22 @@ namespace DICUI.Utilities
                                 && parts[0] != DICCommandStrings.XGD2Swap
                                 && parts[0] != DICCommandStrings.XGD3Swap)
                                 return false;
+                            else if (!DoesExist(parts, i + 1))
+                            {
+                                this[DICFlag.NoSkipSS] = true;
+                                break;
+                            }
+                            else if (IsFlag(parts[i + 1]))
+                            {
+                                this[DICFlag.NoSkipSS] = true;
+                                break;
+                            }
+                            else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
+                                return false;
 
                             this[DICFlag.NoSkipSS] = true;
+                            ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
+                            i++;
                             break;
 
                         case DICFlagStrings.Raw:
@@ -1550,8 +1574,12 @@ namespace DICUI.Utilities
                         case KnownSystem.HasbroVideoNow:
                         case KnownSystem.HasbroVideoNowColor:
                         case KnownSystem.HasbroVideoNowJr:
+                            this[DICFlag.VideoNow] = true;
+                            this.VideoNowValue = 18032;
+                            break;
                         case KnownSystem.HasbroVideoNowXP:
                             this[DICFlag.VideoNow] = true;
+                            this.VideoNowValue = 20832;
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
                             this[DICFlag.MCN] = true;
