@@ -33,7 +33,7 @@ build:
 # post-build step
 after_build:
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/3341769/DiscImageCreator_20190627.zip
-- ps: appveyor DownloadFile https://1fichier.com/?5ooj4mhyxj6qq8vhifox/subdump_fua_0x28.zip
+- ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 - 7z e DiscImageCreator_20190627.zip -oDICUI\bin\Debug\Programs Release_ANSI\*
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug *
 - mv DICUI\bin\Debug\subdump_fua_0x28.exe DICUI\bin\Debug\subdump.exe
