@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Net;
 using DICUI.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -309,7 +310,7 @@ namespace DICUI.Data
             var match = titleRegex.Match(discData);
             if (match.Success)
             {
-                string title = match.Groups[1].Value;
+                string title = WebUtility.HtmlDecode(match.Groups[1].Value);
 
                 // If we have parenthesis, title is everything before the first one
                 int firstParenLocation = title.IndexOf(" (");
@@ -340,7 +341,7 @@ namespace DICUI.Data
             // Foreign Title
             match = foreignTitleRegex.Match(discData);
             if (match.Success)
-                this.ForeignTitleNonLatin = match.Groups[1].Value;
+                this.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
             else
                 this.ForeignTitleNonLatin = null;
 
@@ -370,7 +371,7 @@ namespace DICUI.Data
             // Serial
             match = serialRegex.Match(discData);
             if (match.Success)
-                this.Serial = match.Groups[1].Value;
+                this.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Error count
             match = errorCountRegex.Match(discData);
@@ -384,12 +385,12 @@ namespace DICUI.Data
             // Version
             match = versionRegex.Match(discData);
             if (match.Success)
-                this.Version = match.Groups[1].Value;
+                this.Version = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Edition
             match = editionRegex.Match(discData);
             if (match.Success)
-                this.OtherEditions = match.Groups[1].Value;
+                this.OtherEditions = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Dumpers
             matches = dumpersRegex.Matches(discData);
@@ -404,7 +405,7 @@ namespace DICUI.Data
                 }
 
                 foreach (Match submatch in matches)
-                    tempDumpers.Add(submatch.Groups[1].Value);
+                    tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
 
                 this.Dumpers = tempDumpers.ToArray();
             }
@@ -412,13 +413,13 @@ namespace DICUI.Data
             // Barcode
             match = barcodeRegex.Match(discData);
             if (match.Success)
-                this.Barcode = match.Groups[1].Value;
+                this.Barcode = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Comments
             match = commentsRegex.Match(discData);
             if (match.Success)
             {
-                this.Comments = match.Groups[1].Value
+                this.Comments = WebUtility.HtmlDecode(match.Groups[1].Value)
                     .Replace("<br />", "\n")
                     .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
             }
@@ -427,7 +428,7 @@ namespace DICUI.Data
             match = contentsRegex.Match(discData);
             if (match.Success)
             {
-                this.Contents = match.Groups[1].Value
+                this.Contents = WebUtility.HtmlDecode(match.Groups[1].Value)
                        .Replace("<br />", "\n")
                        .Replace("</div>", "");
                 this.Contents = Regex.Replace(this.Contents, @"<div .*?>", "");
