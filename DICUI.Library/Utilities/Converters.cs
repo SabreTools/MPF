@@ -1315,6 +1315,8 @@ namespace DICUI.Utilities
                     return "France, Spain";
                 case Region.Germany:
                     return "Germany";
+                case Region.GreaterChina:
+                    return "Greater China";
                 case Region.Greece:
                     return "Greece";
                 case Region.Hungary:
@@ -1375,6 +1377,8 @@ namespace DICUI.Utilities
                     return "United Arab Emirates";
                 case Region.UK:
                     return "UK";
+                case Region.UKAustralia:
+                    return "UK, Australia";
                 case Region.Ukraine:
                     return "Ukraine";
                 case Region.USA:
@@ -1383,6 +1387,8 @@ namespace DICUI.Utilities
                     return "USA, Asia";
                 case Region.USABrazil:
                     return "USA, Brazil";
+                case Region.USACanada:
+                    return "USA, Canada";
                 case Region.USAEurope:
                     return "USA, Europe";
                 case Region.USAJapan:
@@ -2072,6 +2078,8 @@ namespace DICUI.Utilities
                     return "F,S";
                 case Region.Germany:
                     return "G";
+                case Region.GreaterChina:
+                    return "GC";
                 case Region.Greece:
                     return "Gr";
                 case Region.Hungary:
@@ -2132,6 +2140,8 @@ namespace DICUI.Utilities
                     return "Ae";
                 case Region.UK:
                     return "Uk";
+                case Region.UKAustralia:
+                    return "Uk,Au";
                 case Region.Ukraine:
                     return "Ue";
                 case Region.USA:
@@ -2140,6 +2150,8 @@ namespace DICUI.Utilities
                     return "U,A";
                 case Region.USABrazil:
                     return "U,B";
+                case Region.USACanada:
+                    return "U,Ca";
                 case Region.USAEurope:
                     return "U,E";
                 case Region.USAJapan:
@@ -3219,6 +3231,8 @@ namespace DICUI.Utilities
                     return Region.FranceSpain;
                 case "G":
                     return Region.Germany;
+                case "GC":
+                    return Region.GreaterChina;
                 case "Gr":
                     return Region.Greece;
                 case "H":
@@ -3279,6 +3293,8 @@ namespace DICUI.Utilities
                     return Region.UnitedArabEmirates;
                 case "Uk":
                     return Region.UK;
+                case "Uk,Au":
+                    return Region.UKAustralia;
                 case "Ue":
                     return Region.Ukraine;
                 case "U":
@@ -3287,6 +3303,8 @@ namespace DICUI.Utilities
                     return Region.USAAsia;
                 case "U,B":
                     return Region.USABrazil;
+                case "U,Ca":
+                    return Region.USACanada;
                 case "U,E":
                     return Region.USAEurope;
                 case "U,J":
