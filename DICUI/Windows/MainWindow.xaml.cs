@@ -132,6 +132,7 @@ namespace DICUI.Windows
 
             ViewModels.LoggerViewModel.VerboseLogLn("Changed system to: {0}", (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name);
             PopulateMediaType();
+            GetOutputNames(false);
             EnsureDiscInformation();
         }
 
@@ -144,7 +145,7 @@ namespace DICUI.Windows
                 SetSupportedDriveSpeed();
             }
 
-            GetOutputNames();
+            GetOutputNames(false);
             EnsureDiscInformation();
         }
 
@@ -152,7 +153,7 @@ namespace DICUI.Windows
         {
             CacheCurrentDiscType();
             SetCurrentDiscType();
-            GetOutputNames();
+            GetOutputNames(true);
             SetSupportedDriveSpeed();
         }
 
@@ -245,7 +246,7 @@ namespace DICUI.Windows
 
         public void OnOptionsUpdated()
         {
-            GetOutputNames();
+            GetOutputNames(false);
             SetSupportedDriveSpeed();
             EnsureDiscInformation();
         }
@@ -548,14 +549,24 @@ namespace DICUI.Windows
         /// <summary>
         /// Get the default output directory name from the currently selected drive
         /// </summary>
-        private void GetOutputNames()
+        /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
+        private void GetOutputNames(bool driveChanged)
         {
             Drive drive = DriveLetterComboBox.SelectedItem as Drive;
             KnownSystem? systemType = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
             MediaType? mediaType = MediaTypeComboBox.SelectedItem as MediaType?;
 
-            OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
-            OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? "disc") + (mediaType.Extension() ?? ".bin");
+            // Set the output directory, if we changed drives or it's not already
+            if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
+                OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
+
+            // Set the output filename, if we changed drives or it's not already
+            if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
+                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension() ?? ".bin");
+
+            // If the extension for the file changed, update that automatically
+            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension())
+                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension() ?? ".bin");
         }
 
         /// <summary>
