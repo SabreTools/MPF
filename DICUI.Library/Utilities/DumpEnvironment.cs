@@ -250,8 +250,10 @@ namespace DICUI.Utilities
                     return;
 
                 // Take care of extra path characters
-                OutputDirectory = new StringBuilder(OutputDirectory)
+                OutputDirectory = new StringBuilder(OutputDirectory.Replace('.', '_').Replace('&', '_'))
                     .Replace(':', '_', 0, OutputDirectory.LastIndexOf(':') == -1 ? 0 : OutputDirectory.LastIndexOf(':')).ToString();
+                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_'))
+                    .Replace('.', '_', 0, OutputFilename.LastIndexOf('.') == -1 ? 0 : OutputFilename.LastIndexOf('.')).ToString();
 
                 // Sanitize everything else
                 foreach (char c in Path.GetInvalidPathChars())
