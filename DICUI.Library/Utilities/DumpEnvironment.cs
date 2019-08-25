@@ -1700,8 +1700,8 @@ namespace DICUI.Utilities
             FileInfo fi = new FileInfo(exePath);
 
             // fix year 200x reported as 190x, not elegant but this is Windows ISO9660 issue so this is the best we can do unless we parse output data track manually
-            DateTime dt = new DateTime(fi.LastWriteTime.Year >= 1900 && fi.LastWriteTime.Year < 1920 ? 2000 + fi.LastWriteTime.Year % 100 : fi.LastWriteTime.Year,
-                fi.LastWriteTime.Month, fi.LastWriteTime.Day);
+            DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
+                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
             return dt.ToString("yyyy-MM-dd");
         }
 
