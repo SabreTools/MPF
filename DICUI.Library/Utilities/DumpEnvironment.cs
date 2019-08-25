@@ -250,10 +250,8 @@ namespace DICUI.Utilities
                     return;
 
                 // Take care of extra path characters
-                OutputDirectory = new StringBuilder(OutputDirectory.Replace('.', '_').Replace('&', '_'))
+                OutputDirectory = new StringBuilder(OutputDirectory)
                     .Replace(':', '_', 0, OutputDirectory.LastIndexOf(':') == -1 ? 0 : OutputDirectory.LastIndexOf(':')).ToString();
-                OutputFilename = new StringBuilder(OutputFilename.Replace('&', '_'))
-                    .Replace('.', '_', 0, OutputFilename.LastIndexOf('.') == -1 ? 0 : OutputFilename.LastIndexOf('.')).ToString();
 
                 // Sanitize everything else
                 foreach (char c in Path.GetInvalidPathChars())
@@ -1683,7 +1681,7 @@ namespace DICUI.Utilities
                         line = sr.ReadLine();
 
                     // Once it finds the "BOOT" line, extract the name
-                    exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\(.*?);.*").Groups[1].Value;
+                    exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?);.*").Groups[1].Value;
                 }
             }
             catch
@@ -1698,7 +1696,11 @@ namespace DICUI.Utilities
                 return null;
 
             FileInfo fi = new FileInfo(exePath);
-            return fi.LastWriteTimeUtc.ToString("yyyy-MM-dd");
+
+            // fix year 200x reported as 190x, not elegant but this is Windows ISO9660 issue so this is the best we can do unless we parse output data track manually
+            DateTime dt = new DateTime(fi.LastWriteTime.Year >= 1900 && fi.LastWriteTime.Year < 1920 ? 2000 + fi.LastWriteTime.Year % 100 : fi.LastWriteTime.Year,
+                fi.LastWriteTime.Month, fi.LastWriteTime.Day);
+            return dt.ToString("yyyy-MM-dd");
         }
 
         /// <summary>
