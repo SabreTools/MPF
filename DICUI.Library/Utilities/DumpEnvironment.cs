@@ -1683,7 +1683,7 @@ namespace DICUI.Utilities
                         line = sr.ReadLine();
 
                     // Once it finds the "BOOT" line, extract the name
-                    exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\(.*?);.*").Groups[1].Value;
+                    exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?);.*").Groups[1].Value;
                 }
             }
             catch
@@ -1698,7 +1698,11 @@ namespace DICUI.Utilities
                 return null;
 
             FileInfo fi = new FileInfo(exePath);
-            return fi.LastWriteTimeUtc.ToString("yyyy-MM-dd");
+
+            // fix year 200x reported as 190x, not elegant but this is Windows ISO9660 issue so this is the best we can do unless we parse output data track manually
+            DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
+                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
+            return dt.ToString("yyyy-MM-dd");
         }
 
         /// <summary>
