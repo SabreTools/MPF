@@ -71,6 +71,11 @@ namespace DICUI.Utilities
         /// Determines if placeholder values should be set for fields
         /// </summary>
         public bool AddPlaceholders { get; set; }
+        
+        /// <summary>
+        /// Determines if the user should be prompted to input or fix submission data
+        /// </summary>
+        public bool PromptForDiscInformation { get; set; }
 
         #endregion
 
@@ -397,11 +402,6 @@ namespace DICUI.Utilities
                 progress?.Report(result);
             }
 
-            // Verify dump output and save it
-            progress?.Report(Result.Success("Gathering submission information... please wait!"));
-            result = await Task.Run(() => VerifyAndSaveDumpOutput(progress));
-            progress?.Report(Result.Success("All submission information gathered!"));
-
             return result;
         }
 
@@ -409,8 +409,10 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress)
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
         {
+            progress.Report(Result.Success("Gathering submission information... please wait!"));
+
             // Check to make sure that the output had all the correct files
             if (!FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
@@ -419,7 +421,12 @@ namespace DICUI.Utilities
             SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
             progress?.Report(Result.Success("Extracting information complete!"));
 
-            // TODO: Add UI step here (possibly) to get user info on the disc
+            if (PromptForDiscInformation && ShowUserPrompt != null)
+            {
+                progress?.Report(Result.Success("Waiting for additional disc information..."));
+                bool? filledInfo = ShowUserPrompt(submissionInfo);
+                progress?.Report(Result.Success("Additional disc information added!"));
+            }
 
             progress?.Report(Result.Success("Formatting extracted information..."));
             List<string> formattedValues = FormatOutputData(submissionInfo);
@@ -433,6 +440,8 @@ namespace DICUI.Utilities
                 progress?.Report(Result.Success("Writing complete!"));
             else
                 progress?.Report(Result.Failure("Writing could not complete!"));
+
+            progress.Report(Result.Success("All submission information gathered!"));
 
             return Result.Success();
         }
@@ -533,28 +542,37 @@ namespace DICUI.Utilities
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);
             SubmissionInfo info = new SubmissionInfo()
             {
-                System = this.System,
-                Media = this.Type,
-                Title = (this.AddPlaceholders ? Template.RequiredValue : ""),
-                ForeignTitleNonLatin = (AddPlaceholders ? Template.OptionalValue : ""),
-                DiscNumberLetter = (AddPlaceholders ? Template.OptionalValue : ""),
-                DiscTitle = (AddPlaceholders ? Template.OptionalValue : ""),
-                Category = Category.Games,
-                Region = null,
-                Languages = null,
-                Serial = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
-                Barcode = (AddPlaceholders ? Template.OptionalValue : ""),
-                Contents = (AddPlaceholders ? Template.OptionalValue : ""),
-                Version = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
-                OtherEditions = (AddPlaceholders ? "Original (VERIFY THIS)" : ""),
-                ClrMameProData = GetDatfile(combinedBase + ".dat"),
+                CommonDiscInfo = new CommonDiscInfoSection()
+                {
+                    System = this.System,
+                    Media = this.Type,
+                    Title = (this.AddPlaceholders ? Template.RequiredValue : ""),
+                    ForeignTitleNonLatin = (AddPlaceholders ? Template.OptionalValue : ""),
+                    DiscNumberLetter = (AddPlaceholders ? Template.OptionalValue : ""),
+                    DiscTitle = (AddPlaceholders ? Template.OptionalValue : ""),
+                    Category = Category.Games,
+                    Region = null,
+                    Languages = null,
+                    Serial = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
+                    Barcode = (AddPlaceholders ? Template.OptionalValue : ""),
+                    Contents = (AddPlaceholders ? Template.OptionalValue : ""),
+                },
+                VersionAndEditions = new VersionAndEditionsSection()
+                {
+                    Version = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
+                    OtherEditions = (AddPlaceholders ? "Original (VERIFY THIS)" : ""),
+                },
+                TracksAndWriteOffsets = new TracksAndWriteOffsetsSection()
+                {
+                    ClrMameProData = GetDatfile(combinedBase + ".dat"),
+                },
             };
 
             // First and foremost, we want to get a list of matching IDs for each line in the DAT
-            if (!string.IsNullOrEmpty(info.ClrMameProData) && HasRedumpLogin)
+            if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && HasRedumpLogin)
             {
                 // Set the current dumper based on username
-                info.Dumpers = new string[] { this.Username };
+                info.DumpersAndStatus.Dumpers = new string[] { this.Username };
 
                 info.MatchedIDs = new List<int>();
                 using (CookieAwareWebClient wc = new CookieAwareWebClient())
@@ -565,7 +583,7 @@ namespace DICUI.Utilities
                     {
                         // Loop through all of the hashdata to find matching IDs
                         progress?.Report(Result.Success("Finding disc matches on Redump..."));
-                        string[] splitData = info.ClrMameProData.Split('\n');
+                        string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
                         foreach (string hashData in splitData)
                         {
                             if (GetISOHashValues(hashData, out long size, out string crc32, out string md5, out string sha1))
@@ -597,13 +615,13 @@ namespace DICUI.Utilities
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "Disc has no PVD"; ;
+                    info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.Extras.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     long errorCount = -1;
                     if (File.Exists(combinedBase + ".img_EdcEcc.txt"))
@@ -611,16 +629,16 @@ namespace DICUI.Utilities
                     else if (File.Exists(combinedBase + ".img_EccEdc.txt"))
                         errorCount = GetErrorCount(combinedBase + ".img_EccEdc.txt");
 
-                    info.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-                    info.Cuesheet = GetFullFile(combinedBase + ".cue") ?? ""; ;
+                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile(combinedBase + ".cue") ?? ""; ;
 
                     string cdWriteOffset = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
-                    info.RingWriteOffset = cdWriteOffset;
-                    info.OtherWriteOffsets = cdWriteOffset;
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     // GD-ROM-specfic options
                     if (Type == MediaType.GDROM)
-                        info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
 
                     break;
 
@@ -630,13 +648,13 @@ namespace DICUI.Utilities
                     bool isXbox = (System == KnownSystem.MicrosoftXBOX || System == KnownSystem.MicrosoftXBOX360);
 
                     // Get the individual hash data, as per internal
-                    if (GetISOHashValues(info.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
                     {
-                        info.Size = size;
-                        info.CRC32 = crc32;
-                        info.MD5 = md5;
-                        info.SHA1 = sha1;
-                        info.ClrMameProData = null;
+                        info.SizeAndChecksums.Size = size;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                        info.TracksAndWriteOffsets.ClrMameProData = null;
                     }
 
                     // Deal with the layerbreak
@@ -644,68 +662,68 @@ namespace DICUI.Utilities
                     if (Type == MediaType.DVD)
                         layerbreak = GetLayerbreak(combinedBase + "_disc.txt", isXbox) ?? "";
                     else if (Type == MediaType.BluRay)
-                        layerbreak = (info.Size > 25025314816 ? "25025314816" : null);
+                        layerbreak = (info.SizeAndChecksums.Size > 25025314816 ? "25025314816" : null);
 
                     // If we have a single-layer disc
                     if (String.IsNullOrWhiteSpace(layerbreak))
                     {
-                        info.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
+                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.Extras.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
-                        info.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
-                        info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
-                        info.Layerbreak = Int64.Parse(layerbreak);
+                        info.Extras.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
+                        info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
                     }
 
                     // Bluray-specific options
                     if (Type == MediaType.BluRay)
-                        info.PIC = GetPIC(Path.Combine(OutputDirectory, "PIC.bin")) ?? "";
+                        info.Extras.PIC = GetPIC(Path.Combine(OutputDirectory, "PIC.bin")) ?? "";
 
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
-                    info.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case MediaType.UMD:
-                    info.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
-                    info.CRC32 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.MD5 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.SHA1 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.ClrMameProData = null;
+                    info.Extras.PVD = GetPVD(combinedBase + "_mainInfo.txt") ?? "";
+                    info.SizeAndChecksums.CRC32 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.SizeAndChecksums.MD5 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.SizeAndChecksums.SHA1 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.TracksAndWriteOffsets.ClrMameProData = null;
 
                     if (GetUMDAuxInfo(combinedBase + "_disc.txt", out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize))
                     {
-                        info.Title = title ?? "";
-                        info.Category = umdcat ?? Category.Games;
-                        info.Version = umdversion ?? "";
-                        info.Size = umdsize;
+                        info.CommonDiscInfo.Title = title ?? "";
+                        info.CommonDiscInfo.Category = umdcat ?? Category.Games;
+                        info.VersionAndEditions.Version = umdversion ?? "";
+                        info.SizeAndChecksums.Size = umdsize;
 
                         if (!String.IsNullOrWhiteSpace(umdlayer))
-                            info.Layerbreak = Int64.Parse(umdlayer ?? "-1");
+                            info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
                     }
 
                     break;
@@ -718,93 +736,93 @@ namespace DICUI.Utilities
                 case KnownSystem.EnhancedCD:
                 case KnownSystem.IBMPCCompatible:
                 case KnownSystem.RainbowDisc:
-                    if (string.IsNullOrWhiteSpace(info.Comments))
-                        info.Comments += $"[T:ISBN] {(AddPlaceholders ? Template.OptionalValue : "")}";
+                    if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
+                        info.CommonDiscInfo.Comments += $"[T:ISBN] {(AddPlaceholders ? Template.OptionalValue : "")}";
 
                     progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    info.Protection = GetCopyProtection();
+                    info.CopyProtection.Protection = GetCopyProtection();
                     progress?.Report(Result.Success("Copy protection scan complete!"));
 
                     if (File.Exists(combinedBase + "_subIntention.txt"))
                     {
                         FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                         if (fi.Length > 0)
-                            info.SecuROMData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
+                            info.CopyProtection.SecuROMData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                     }
 
                     break;
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.BDVideo:
-                    info.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CopyProtection.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
                 case KnownSystem.CommodoreAmiga:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.CommodoreAmigaCD32:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.CommodoreAmigaCDTV:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.DVDVideo:
-                    info.Protection = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
+                    info.CopyProtection.Protection = GetDVDProtection(combinedBase + "_CSSKey.txt", combinedBase + "_disc.txt") ?? "";
                     break;
 
                 case KnownSystem.FujitsuFMTowns:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.IncredibleTechnologiesEagle:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamieAmusement:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiFirebeat:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiGVSystem:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiSystem573:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.KonamiTwinkle:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.MattelHyperscan:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.MicrosoftXBOX:
                     if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
                     {
-                        info.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
                             $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
                             $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
                             $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
-                        info.SecuritySectorRanges = ss ?? "";
+                        info.Extras.SecuritySectorRanges = ss ?? "";
                     }
 
                     if (GetXBOXDMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
                     {
-                        info.Serial = serial ?? (this.AddPlaceholders ? Template.RequiredValue : "");
-                        info.Version = version ?? (this.AddPlaceholders ? Template.RequiredValue : "");
-                        info.Region = region;
+                        info.CommonDiscInfo.Serial = serial ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+                        info.VersionAndEditions.Version = version ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+                        info.CommonDiscInfo.Region = region;
                     }
 
                     break;
@@ -812,128 +830,128 @@ namespace DICUI.Utilities
                 case KnownSystem.MicrosoftXBOX360:
                     if (GetXBOXAuxInfo(combinedBase + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
                     {
-                        info.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
                             $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
                             $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
                             $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
-                        info.SecuritySectorRanges = ss360 ?? "";
+                        info.Extras.SecuritySectorRanges = ss360 ?? "";
                     }
 
                     if (GetXBOX360DMIInfo(Path.Combine(OutputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
                     {
-                        info.Serial = serial360 ?? (this.AddPlaceholders ? Template.RequiredValue : "");
-                        info.Version = version360 ?? (this.AddPlaceholders ? Template.RequiredValue : "");
-                        info.Region = region360;
+                        info.CommonDiscInfo.Serial = serial360 ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+                        info.VersionAndEditions.Version = version360 ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+                        info.CommonDiscInfo.Region = region360;
                     }
                     break;
 
                 case KnownSystem.NamcoSegaNintendoTriforce:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.NavisoftNaviken21:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.NECPC98:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaCDMegaCD:
-                    info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+                    info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
 
                     // Take only the last 16 lines for Sega CD
-                    if (!string.IsNullOrEmpty(info.Header))
-                        info.Header = string.Join("\n", info.Header.Split('\n').Skip(16));
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16));
 
-                    if (GetSegaCDBuildInfo(info.Header, out string scdSerial, out string fixedDate))
+                    if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
                     {
-                        info.Serial = scdSerial ?? "";
-                        info.EXEDateBuildDate = fixedDate ?? "";
+                        info.CommonDiscInfo.Serial = scdSerial ?? "";
+                        info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
                     }
 
                     break;
 
                 case KnownSystem.SegaChihiro:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaDreamcast:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaNaomi:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaNaomi2:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaSaturn:
-                    info.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+                    info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
 
                     // Take only the first 16 lines for Saturn
-                    if (!string.IsNullOrEmpty(info.Header))
-                        info.Header = string.Join("\n", info.Header.Split('\n').Take(16));
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
 
-                    if (GetSaturnBuildInfo(info.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
+                    if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
                     {
-                        info.Serial = saturnSerial ?? "";
-                        info.Version = saturnVersion ?? "";
-                        info.EXEDateBuildDate = buildDate ?? "";
+                        info.CommonDiscInfo.Serial = saturnSerial ?? "";
+                        info.VersionAndEditions.Version = saturnVersion ?? "";
+                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
                     }
 
                     break;
 
                 case KnownSystem.SegaTitanVideo:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SNKNeoGeoCD:
-                    info.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SonyPlayStation:
-                    info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
-                    info.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
-                    info.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
-                    info.LibCrypt = YesNo.No;
+                    info.CommonDiscInfo.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                    info.EDC.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
+                    info.CopyProtection.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
+                    info.CopyProtection.LibCrypt = YesNo.No;
                     if (File.Exists(combinedBase + "_subIntention.txt"))
                     {
                         FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
                         if (fi.Length > 0)
                         {
-                            info.LibCrypt = YesNo.Yes;
-                            info.LibCryptData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
+                            info.CopyProtection.LibCrypt = YesNo.Yes;
+                            info.CopyProtection.LibCryptData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
                         }
                     }
 
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    info.LanguageSelection = new string[] { "Bios settings", "Language selector", "Options menu" };
-                    info.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
-                    info.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
+                    info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
+                    info.CommonDiscInfo.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                     break;
                 
                 case KnownSystem.SonyPlayStation3:
-                    info.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.DiscID = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.DiscID = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SonyPlayStation4:
-                    info.Version = GetPlayStation4Version(Drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation4Version(Drive?.Letter) ?? "";
                     break;
 
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CopyProtection.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
             }
 
             // Comments is one of the few fields with odd handling
-            if (string.IsNullOrEmpty(info.Comments))
-                info.Comments = (AddPlaceholders ? Template.OptionalValue : "");
+            if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
+                info.CommonDiscInfo.Comments = (AddPlaceholders ? Template.OptionalValue : "");
 
             return info;
         }
@@ -953,62 +971,62 @@ namespace DICUI.Utilities
             {
                 // Common Disc Info section
                 List<string> output = new List<string> { "Common Disc Info:" };
-                AddIfExists(output, Template.TitleField, info.Title, 1);
-                AddIfExists(output, Template.ForeignTitleField, info.ForeignTitleNonLatin, 1);
-                AddIfExists(output, Template.DiscNumberField, info.DiscNumberLetter, 1);
-                AddIfExists(output, Template.DiscTitleField, info.DiscTitle, 1);
-                AddIfExists(output, Template.SystemField, info.System.LongName(), 1);
-                AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(info.Media, info.Layerbreak), 1);
-                AddIfExists(output, Template.CategoryField, info.Category.LongName(), 1);
+                AddIfExists(output, Template.TitleField, info.CommonDiscInfo.Title, 1);
+                AddIfExists(output, Template.ForeignTitleField, info.CommonDiscInfo.ForeignTitleNonLatin, 1);
+                AddIfExists(output, Template.DiscNumberField, info.CommonDiscInfo.DiscNumberLetter, 1);
+                AddIfExists(output, Template.DiscTitleField, info.CommonDiscInfo.DiscTitle, 1);
+                AddIfExists(output, Template.SystemField, info.CommonDiscInfo.System.LongName(), 1);
+                AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(info.CommonDiscInfo.Media, info.SizeAndChecksums.Layerbreak), 1);
+                AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
                 AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
-                AddIfExists(output, Template.RegionField, info.Region.LongName(), 1);
-                AddIfExists(output, Template.LanguagesField, (info.Languages ?? new Language?[] { null }).Select(l => l.LongName()).ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, info.LanguageSelection, 1);
-                AddIfExists(output, Template.DiscSerialField, info.Serial, 1);
+                AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName(), 1);
+                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName()).ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { null }).Select(l => l.ToString()).ToArray(), 1);
+                AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo.Serial, 1);
 
                 // All ringcode information goes in an indented area
                 output.Add(""); output.Add("\tRingcode Information:");
 
                 // If we have a dual-layer disc
-                if (info.Layerbreak != default(long))
+                if (info.SizeAndChecksums.Layerbreak != default(long))
                 {
-                    AddIfExists(output, "Inner " + Template.MasteringRingField, info.MasteringRingFirstLayerDataSide, 2);
-                    AddIfExists(output, "Inner " + Template.MasteringSIDField, info.MasteringSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Inner " + Template.ToolstampField, info.ToolstampMasteringCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Outer " + Template.MasteringRingField, info.MasteringRingSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Outer " + Template.MasteringSIDField, info.MasteringSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Outer " + Template.ToolstampField, info.ToolstampMasteringCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.MouldSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.MouldSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, Template.AdditionalMouldField, info.AdditionalMouldFirstLayerDataSide, 2);
+                    AddIfExists(output, "Inner " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
+                    AddIfExists(output, "Inner " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Inner " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Outer " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingSecondLayerLabelSide, 2);
+                    AddIfExists(output, "Outer " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, "Outer " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
                 }
                 // If we have a single-layer disc
                 else
                 {
-                    AddIfExists(output, Template.MasteringRingField, info.MasteringRingFirstLayerDataSide, 2);
-                    AddIfExists(output, Template.MasteringSIDField, info.MasteringSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.MouldSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.MouldSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, Template.AdditionalMouldField, info.AdditionalMouldFirstLayerDataSide, 2);
-                    AddIfExists(output, Template.ToolstampField, info.ToolstampMasteringCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
+                    AddIfExists(output, Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
+                    AddIfExists(output, Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
                 }
 
-                AddIfExists(output, Template.BarcodeField, info.Barcode, 1);
-                AddIfExists(output, Template.EXEDateBuildDate, info.EXEDateBuildDate, 1);                    
-                AddIfExists(output, Template.ErrorCountField, info.ErrorsCount, 1);
-                AddIfExists(output, Template.CommentsField, info.Comments.Trim(), 1);
-                AddIfExists(output, Template.ContentsField, info.Contents.Trim(), 1);
+                AddIfExists(output, Template.BarcodeField, info.CommonDiscInfo.Barcode, 1);
+                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo.EXEDateBuildDate, 1);                    
+                AddIfExists(output, Template.ErrorCountField, info.CommonDiscInfo.ErrorsCount, 1);
+                AddIfExists(output, Template.CommentsField, info.CommonDiscInfo.Comments.Trim(), 1);
+                AddIfExists(output, Template.ContentsField, info.CommonDiscInfo.Contents.Trim(), 1);
 
                 // Version and Editions section
                 output.Add(""); output.Add("Version and Editions:");
-                AddIfExists(output, Template.VersionField, info.Version, 1);
-                AddIfExists(output, Template.EditionField, info.OtherEditions, 1);
+                AddIfExists(output, Template.VersionField, info.VersionAndEditions.Version, 1);
+                AddIfExists(output, Template.EditionField, info.VersionAndEditions.OtherEditions, 1);
 
                 // EDC section
-                if (info.EDC != YesNo.NULL)
+                if (info.EDC.EDC != YesNo.NULL)
                 {
                     output.Add("EDC:");
-                    AddIfExists(output, Template.PlayStationEDCField, info.EDC.LongName(), 1);
+                    AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
                 }
                 
                 // Parent/Clone Relationship section
@@ -1017,31 +1035,31 @@ namespace DICUI.Utilities
                 // AddIfExists(output, Template.RegionalParentField, info.RegionalParent.ToString());
 
                 // Extras section
-                if (info.PVD != null || info.PIC != null || info.BCA != null)
+                if (info.Extras.PVD != null || info.Extras.PIC != null || info.Extras.BCA != null)
                 {
                     output.Add(""); output.Add("Extras:");
-                    AddIfExists(output, Template.PVDField, info.PVD.Trim(), 1);
-                    AddIfExists(output, Template.PlayStation3WiiDiscKeyField, info.DiscKey, 1);
-                    AddIfExists(output, Template.PlayStation3DiscIDField, info.DiscID, 1);
-                    AddIfExists(output, Template.PICField, info.PIC, 1);
-                    AddIfExists(output, Template.HeaderField, info.Header, 1);
-                    AddIfExists(output, Template.GameCubeWiiBCAField, info.BCA, 1);
-                    AddIfExists(output, Template.XBOXSSRanges, info.SecuritySectorRanges, 1);
+                    AddIfExists(output, Template.PVDField, info.Extras.PVD.Trim(), 1);
+                    AddIfExists(output, Template.PlayStation3WiiDiscKeyField, info.Extras.DiscKey, 1);
+                    AddIfExists(output, Template.PlayStation3DiscIDField, info.Extras.DiscID, 1);
+                    AddIfExists(output, Template.PICField, info.Extras.PIC, 1);
+                    AddIfExists(output, Template.HeaderField, info.Extras.Header, 1);
+                    AddIfExists(output, Template.GameCubeWiiBCAField, info.Extras.BCA, 1);
+                    AddIfExists(output, Template.XBOXSSRanges, info.Extras.SecuritySectorRanges, 1);
                 }
                 
                 // Copy Protection section
-                if (info.Protection != null || info.EDC != YesNo.NULL)
+                if (info.CopyProtection.Protection != null || info.EDC.EDC != YesNo.NULL)
                 {
                     output.Add(""); output.Add("Copy Protection:");
-                    if (info.EDC != YesNo.NULL)
+                    if (info.EDC.EDC != YesNo.NULL)
                     {
-                        AddIfExists(output, Template.PlayStationAntiModchipField, info.AntiModchip.LongName(), 1);
-                        AddIfExists(output, Template.PlayStationLibCryptField, info.LibCrypt.LongName(), 1);
-                        AddIfExists(output, Template.SubIntentionField, info.LibCryptData, 1);
+                        AddIfExists(output, Template.PlayStationAntiModchipField, info.CopyProtection.AntiModchip.LongName(), 1);
+                        AddIfExists(output, Template.PlayStationLibCryptField, info.CopyProtection.LibCrypt.LongName(), 1);
+                        AddIfExists(output, Template.SubIntentionField, info.CopyProtection.LibCryptData, 1);
                     }
 
-                    AddIfExists(output, Template.CopyProtectionField, info.Protection, 1);
-                    AddIfExists(output, Template.SubIntentionField, info.SecuROMData, 1);
+                    AddIfExists(output, Template.CopyProtectionField, info.CopyProtection.Protection, 1);
+                    AddIfExists(output, Template.SubIntentionField, info.CopyProtection.SecuROMData, 1);
                 }
 
                 // Dumpers and Status section
@@ -1050,22 +1068,22 @@ namespace DICUI.Utilities
                 // AddIfExists(output, Template.OtherDumpersField, info.OtherDumpers);
 
                 // Tracks and Write Offsets section
-                if (!string.IsNullOrWhiteSpace(info.ClrMameProData))
+                if (!string.IsNullOrWhiteSpace(info.TracksAndWriteOffsets.ClrMameProData))
                 {
                     output.Add(""); output.Add("Tracks and Write Offsets:");
-                    AddIfExists(output, Template.DATField, info.ClrMameProData + "\n", 1);
-                    AddIfExists(output, Template.CuesheetField, info.Cuesheet, 1);
-                    AddIfExists(output, Template.WriteOffsetField, info.OtherWriteOffsets, 1);
+                    AddIfExists(output, Template.DATField, info.TracksAndWriteOffsets.ClrMameProData + "\n", 1);
+                    AddIfExists(output, Template.CuesheetField, info.TracksAndWriteOffsets.Cuesheet, 1);
+                    AddIfExists(output, Template.WriteOffsetField, info.TracksAndWriteOffsets.OtherWriteOffsets, 1);
                 }
                 // Size & Checksum section
                 else
                 {
                     output.Add(""); output.Add("Size & Checksum:");
-                    AddIfExists(output, Template.LayerbreakField, (info.Layerbreak == default(long) ? null : info.Layerbreak.ToString()), 1);
-                    AddIfExists(output, Template.SizeField, info.Size.ToString(), 1);
-                    AddIfExists(output, Template.CRC32Field, info.CRC32, 1);
-                    AddIfExists(output, Template.MD5Field, info.MD5, 1);
-                    AddIfExists(output, Template.SHA1Field, info.SHA1, 1);
+                    AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default(long) ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
+                    AddIfExists(output, Template.SizeField, info.SizeAndChecksums.Size.ToString(), 1);
+                    AddIfExists(output, Template.CRC32Field, info.SizeAndChecksums.CRC32, 1);
+                    AddIfExists(output, Template.MD5Field, info.SizeAndChecksums.MD5, 1);
+                    AddIfExists(output, Template.SHA1Field, info.SizeAndChecksums.SHA1, 1);
                 }
 
                 // Make sure there aren't any instances of two blank lines in a row

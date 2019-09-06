@@ -21,6 +21,7 @@ namespace DICUI
         public bool ScanForProtection { get; set; }
         public int RereadAmountForC2 { get; set; }
         public bool AddPlaceholders { get; set; }
+        public bool PromptForDiscInformation { get; set; }
 
         public bool SkipMediaTypeDetection { get; set; }
         public bool SkipSystemDetection { get; set; }
@@ -70,6 +71,7 @@ namespace DICUI
             this.VerboseLogging = GetBooleanSetting(configFile, "VerboseLogging", true);
             this.OpenLogWindowAtStartup = GetBooleanSetting(configFile, "OpenLogWindowAtStartup", true);
             this.AddPlaceholders = GetBooleanSetting(configFile, "AddPlaceholders", true);
+            this.PromptForDiscInformation = GetBooleanSetting(configFile, "PromptForDiscInformation", true);
 
             this.Username = GetStringSetting(configFile, "Username", "");
             this.Password = GetStringSetting(configFile, "Password", "");

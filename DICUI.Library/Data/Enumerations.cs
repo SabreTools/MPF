@@ -355,6 +355,16 @@
     }
 
     /// <summary>
+    /// All possible language selections
+    /// </summary>
+    public enum LanguageSelection
+    {
+        BiosSettings,
+        LanguageSelector,
+        OptionsMenu,
+    }
+
+    /// <summary>
     /// Known media types
     /// </summary>
     public enum MediaType
