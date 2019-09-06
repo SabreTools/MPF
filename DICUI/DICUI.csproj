@@ -89,9 +89,9 @@
     </ApplicationDefinition>
     <Compile Include="Constants.cs" />
     <Compile Include="EnumDescriptionConverter.cs" />
-    <Compile Include="LanguageComboBoxItem.cs" />
-    <Compile Include="RegionComboBoxItem.cs" />
-    <Compile Include="MediaTypeComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\LanguageComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\RegionComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\MediaTypeComboBoxItem.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Windows\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
@@ -102,7 +102,7 @@
     <Compile Include="Windows\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="KnownSystemComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\KnownSystemComboBoxItem.cs" />
     <Compile Include="ViewModels.cs" />
     <Page Include="Windows\LogWindow.xaml">
       <SubType>Designer</SubType>
