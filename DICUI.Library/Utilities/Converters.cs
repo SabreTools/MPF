@@ -1,5 +1,8 @@
-﻿using IMAPI2;
+﻿using System;
+using IMAPI2;
 using DICUI.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DICUI.Utilities
 {
@@ -46,7 +49,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="system">Redump system value to check</param>
         /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? ToKnownSystem(this RedumpSystem system)
+        public static KnownSystem? ToKnownSystem(this RedumpSystem? system)
         {
             switch (system)
             {
@@ -285,7 +288,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="system">KnownSystem value to check</param>
         /// <returns>RedumpSystem if possible, null on error</returns>
-        public static RedumpSystem? ToRedumpSystem(this KnownSystem system)
+        public static RedumpSystem? ToRedumpSystem(this KnownSystem? system)
         {
             switch (system)
             {
@@ -1004,6 +1007,26 @@ namespace DICUI.Utilities
                     return "Ukrainian";
                 default:
                     return "Klingon (CHANGE THIS)";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the LanguageSelection enum values
+        /// </summary>
+        /// <param name="lang">LanguageSelection value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this LanguageSelection? langSelect)
+        {
+            switch (langSelect)
+            {
+                case LanguageSelection.BiosSettings:
+                    return "Bios settings";
+                case LanguageSelection.LanguageSelector:
+                    return "Language selector";
+                case LanguageSelection.OptionsMenu:
+                    return "Options menu";
+                default:
+                    return string.Empty;
             }
         }
 
@@ -3317,5 +3340,112 @@ namespace DICUI.Utilities
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Serialize KnownSystem enum values
+    /// </summary>
+    public class KnownSystemConverter : JsonConverter<KnownSystem?>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override KnownSystem? ReadJson(JsonReader reader, Type objectType, KnownSystem? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, KnownSystem? value, JsonSerializer serializer)
+        {
+            JToken t = JToken.FromObject(value.ToRedumpSystem()?.ShortName() ?? value.ShortName());
+            t.WriteTo(writer);
+        }
+    }
+
+    /// <summary>
+    /// Serialize Language enum values
+    /// </summary>
+    public class LanguagesConverter : JsonConverter<Language?[]>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override Language?[] ReadJson(JsonReader reader, Type objectType, Language?[] existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, Language?[] value, JsonSerializer serializer)
+        {
+            JArray array = new JArray();
+            foreach (var val in value)
+            {
+                JToken t = JToken.FromObject(val.ShortName());
+                array.Add(t);
+            }
+
+            array.WriteTo(writer);
+        }
+    }
+
+    /// <summary>
+    /// Serialize Language enum values
+    /// </summary>
+    public class LanguageSelectionConverter : JsonConverter<LanguageSelection?[]>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override LanguageSelection?[] ReadJson(JsonReader reader, Type objectType, LanguageSelection?[] existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, LanguageSelection?[] value, JsonSerializer serializer)
+        {
+            JArray array = new JArray();
+            foreach (var val in value)
+            {
+                JToken t = JToken.FromObject(val.LongName());
+                array.Add(t);
+            }
+
+            array.WriteTo(writer);
+        }
+    }
+
+    /// <summary>
+    /// Serialize MediaType enum values
+    /// </summary>
+    public class MediaTypeConverter : JsonConverter<MediaType?>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override MediaType? ReadJson(JsonReader reader, Type objectType, MediaType? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, MediaType? value, JsonSerializer serializer)
+        {
+            JToken t = JToken.FromObject(value.ShortName());
+            t.WriteTo(writer);
+        }
+    }
+
+    /// <summary>
+    /// Serialize Region enum values
+    /// </summary>
+    public class RegionConverter : JsonConverter<Region?>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override Region? ReadJson(JsonReader reader, Type objectType, Region? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, Region? value, JsonSerializer serializer)
+        {
+            JToken t = JToken.FromObject(value.ShortName());
+            t.WriteTo(writer);
+        }
     }
 }

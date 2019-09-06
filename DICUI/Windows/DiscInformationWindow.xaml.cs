@@ -104,7 +104,7 @@ namespace DICUI.Windows
             _submissionInfo.CommonDiscInfo.ForeignTitleNonLatin = ForeignTitleTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.DiscNumberLetter = DiscNumberLetterTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.DiscTitle = DiscTitleTextBox.Text ?? "";
-            _submissionInfo.CommonDiscInfo.Region = RegionComboBox.SelectedItem as Region?;
+            _submissionInfo.CommonDiscInfo.Region = (RegionComboBox.SelectedItem as RegionComboBoxItem)?.Value ?? Region.World;
             var languages = new List<Language?>();
             foreach (var language in _languages)
             {

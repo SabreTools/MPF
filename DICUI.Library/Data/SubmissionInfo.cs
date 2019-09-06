@@ -250,17 +250,14 @@ namespace DICUI.Data
     public class CommonDiscInfoSection
     {
         // TODO: Name not defined
-        // TODO: This should really use the Redump shortnames for systems
-        // TODO: Have this convert to `RedumpSystem?` if possible, for submission
         [JsonProperty(PropertyName = "d_system", Required = Required.AllowNull)]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(KnownSystemConverter))]
         public KnownSystem? System { get; set; }
 
         // TODO: Name not defined
-        // TODO: This should really use the Redump shortnames for media
         // TODO: Have this convert to a new `RedumpMedia?` if possible, for submission
         [JsonProperty(PropertyName = "d_media", Required = Required.AllowNull)]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(MediaTypeConverter))]
         public MediaType? Media { get; set; }
 
         [JsonProperty(PropertyName = "d_title", Required = Required.AllowNull)]
@@ -278,17 +275,16 @@ namespace DICUI.Data
         [JsonProperty(PropertyName = "d_category", Required = Required.AllowNull)]
         public Category? Category { get; set; }
 
-        // TODO: Ensure that this outputs the shortname for the region
         [JsonProperty(PropertyName = "d_region", Required = Required.AllowNull)]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(RegionConverter))]
         public Region? Region { get; set; }
 
-        // TODO: Ensure that this uses the shortname for the langauges
         [JsonProperty(PropertyName = "d_languages", Required = Required.AllowNull)]
+        [JsonConverter(typeof(LanguagesConverter))]
         public Language?[] Languages { get; set; }
 
         // TODO: Ensure names from new disc form are used here
-        [JsonProperty(PropertyName = "d_languages_selection", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "d_languages_selection", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
         [JsonConverter(typeof(StringEnumConverter))]
         public LanguageSelection?[] LanguageSelection { get; set; }
 

@@ -21,5 +21,10 @@ namespace DICUI
                 return (data as Region?).LongName();
             }
         }
+
+        public Region? Value
+        {
+            get { return data as Region?; }
+        }
     }
 }

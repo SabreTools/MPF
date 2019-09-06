@@ -981,7 +981,7 @@ namespace DICUI.Utilities
                 AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName(), 1);
                 AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName()).ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { null }).Select(l => l.ToString()).ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { }).Select(l => l.ToString()).ToArray(), 1);
                 AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo.Serial, 1);
 
                 // All ringcode information goes in an indented area
@@ -1120,7 +1120,7 @@ namespace DICUI.Utilities
         private void AddIfExists(List<string> output, string key, string value, int indent)
         {
             // If there's no valid value to write
-            if (string.IsNullOrWhiteSpace(value))
+            if (value == null)
                 return;
 
             string prefix = "";
