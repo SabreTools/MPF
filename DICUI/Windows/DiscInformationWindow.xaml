@@ -115,11 +115,11 @@
 
                 <!-- This needs to be a multiline textbox -->
                 <Label Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Comments" />
-                <TextBox x:Name="CommentsTextBox" Grid.Row="18" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <TextBox x:Name="CommentsTextBox" Grid.Row="18" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
 
                 <!-- This needs to be a multiline textbox -->
                 <Label Grid.Row="19" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Contents" />
-                <TextBox x:Name="ContentsTextBox" Grid.Row="19" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <TextBox x:Name="ContentsTextBox" Grid.Row="19" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"/>
             </Grid>
         </GroupBox>
 
