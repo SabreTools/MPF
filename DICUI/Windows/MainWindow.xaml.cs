@@ -499,7 +499,7 @@ namespace DICUI.Windows
                 if (result)
                 {
                     // Verify dump output and save it
-                    result = await Task.Run(() => _env.VerifyAndSaveDumpOutput(progress,
+                    result = _env.VerifyAndSaveDumpOutput(progress,
                         (si) =>
                         {
                             // lazy initialization
@@ -517,7 +517,7 @@ namespace DICUI.Windows
                             _discInformationWindow.Refresh();
                             return _discInformationWindow.ShowDialog();
                         }
-                    ));
+                    );
                 }
 
                 StatusLabel.Content = result ? "Dumping complete!" : result.Message;
