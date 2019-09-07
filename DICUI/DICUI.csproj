@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ComboBoxItems\CategoryComboBoxItem.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EnumDescriptionConverter.cs" />
     <Compile Include="ComboBoxItems\LanguageComboBoxItem.cs" />

@@ -14,6 +14,7 @@ namespace DICUI.Windows
         private readonly MainWindow _mainWindow;
         private readonly SubmissionInfo _submissionInfo;
 
+        private List<CategoryComboBoxItem> _categories;
         private List<RegionComboBoxItem> _regions;
         private List<LanguageComboBoxItem> _languages;
 
@@ -23,6 +24,7 @@ namespace DICUI.Windows
             _mainWindow = mainWindow;
             _submissionInfo = submissionInfo;
 
+            PopulateCategories();
             PopulateRegions();
             PopulateLanguages();
         }
@@ -33,6 +35,7 @@ namespace DICUI.Windows
             ForeignTitleTextBox.Text = _submissionInfo.CommonDiscInfo.ForeignTitleNonLatin ?? "";
             DiscNumberLetterTextBox.Text = _submissionInfo.CommonDiscInfo.DiscNumberLetter ?? "";
             DiscTitleTextBox.Text = _submissionInfo.CommonDiscInfo.DiscTitle ?? "";
+            CategoryComboBox.SelectedIndex = _categories.FindIndex(r => r == _submissionInfo.CommonDiscInfo.Category);
             RegionComboBox.SelectedIndex = _regions.FindIndex(r => r == _submissionInfo.CommonDiscInfo.Region);
             if (_submissionInfo.CommonDiscInfo.Languages != null)
             {
@@ -56,6 +59,25 @@ namespace DICUI.Windows
 
             VersionTextBox.Text = _submissionInfo.VersionAndEditions.Version ?? "";
             EditionTextBox.Text = _submissionInfo.VersionAndEditions.OtherEditions ?? "";
+        }
+
+        /// <summary>
+        /// Get a complete list of categories and fill the combo box
+        /// </summary>
+        private void PopulateCategories()
+        {
+            var categories = Enum.GetValues(typeof(Category)).OfType<Category?>().ToList();
+
+            ViewModels.LoggerViewModel.VerboseLogLn("Populating categories, {0} categories found.", categories.Count);
+
+            _categories = new List<CategoryComboBoxItem>();
+            foreach (var category in categories)
+            {
+                _categories.Add(new CategoryComboBoxItem(category));
+            }
+
+            CategoryComboBox.ItemsSource = _categories;
+            CategoryComboBox.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -104,6 +126,7 @@ namespace DICUI.Windows
             _submissionInfo.CommonDiscInfo.ForeignTitleNonLatin = ForeignTitleTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.DiscNumberLetter = DiscNumberLetterTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.DiscTitle = DiscTitleTextBox.Text ?? "";
+            _submissionInfo.CommonDiscInfo.Category = (CategoryComboBox.SelectedItem as CategoryComboBoxItem)?.Value ?? Category.Games;
             _submissionInfo.CommonDiscInfo.Region = (RegionComboBox.SelectedItem as RegionComboBoxItem)?.Value ?? Region.World;
             var languages = new List<Language?>();
             foreach (var language in _languages)
@@ -111,6 +134,8 @@ namespace DICUI.Windows
                 if (language.IsChecked)
                     languages.Add(language.Value);
             }
+            if (languages.Count == 0)
+                languages.Add(null);
             _submissionInfo.CommonDiscInfo.Languages = languages.ToArray();
             _submissionInfo.CommonDiscInfo.Serial = SerialTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.MasteringRingFirstLayerDataSide = L0MasteringRingTextBox.Text ?? "";

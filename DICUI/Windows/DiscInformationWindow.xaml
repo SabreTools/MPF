@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Disc Information" Height="680" Width="515.132" ResizeMode="NoResize"
+        Title="Disc Information" Height="705" Width="515.132" ResizeMode="NoResize"
         Closed="OnClosed">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="560"/>
+            <RowDefinition Height="585"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
 
@@ -22,6 +22,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
@@ -57,17 +58,26 @@
                 <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Title" />
                 <TextBox x:Name="DiscTitleTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                <ComboBox x:Name="RegionComboBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                <ComboBox x:Name="CategoryComboBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" />
+                            <TextBlock Text="{Binding Path=Name}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                <ListBox x:Name="LanguagesComboBox" Grid.Row="5" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" SelectionMode="Multiple">
+                <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                <ComboBox x:Name="RegionComboBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Path=Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                <ListBox x:Name="LanguagesComboBox" Grid.Row="6" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" SelectionMode="Multiple">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
@@ -75,51 +85,51 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Serial" />
-                <TextBox x:Name="SerialTextBox" Grid.Row="6" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Serial" />
+                <TextBox x:Name="SerialTextBox" Grid.Row="7" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
                 <!-- Layer 0 / Data Side -->
-                <Label Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering Ring" />
-                <TextBox x:Name="L0MasteringRingTextBox" Grid.Row="7" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering Ring" />
+                <TextBox x:Name="L0MasteringRingTextBox" Grid.Row="8" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering SID" />
-                <TextBox x:Name="L0MasteringSIDTextBox" Grid.Row="8" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering SID" />
+                <TextBox x:Name="L0MasteringSIDTextBox" Grid.Row="9" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Toolstamp/Mastering Code" />
-                <TextBox x:Name="L0ToolstampTextBox" Grid.Row="9" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Toolstamp/Mastering Code" />
+                <TextBox x:Name="L0ToolstampTextBox" Grid.Row="10" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mould SID" />
-                <TextBox x:Name="L0MouldSIDTextBox" Grid.Row="10" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mould SID" />
+                <TextBox x:Name="L0MouldSIDTextBox" Grid.Row="11" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Additional Mould" />
-                <TextBox x:Name="L0AdditionalMouldTextBox" Grid.Row="11" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Additional Mould" />
+                <TextBox x:Name="L0AdditionalMouldTextBox" Grid.Row="12" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
                 <!-- Layer 1 / Label Side -->
-                <Label Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering Ring" />
-                <TextBox x:Name="L1MasteringRingTextBox" Grid.Row="12" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="13" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering Ring" />
+                <TextBox x:Name="L1MasteringRingTextBox" Grid.Row="13" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="13" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering SID" />
-                <TextBox x:Name="L1MasteringSIDTextBox" Grid.Row="13" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering SID" />
+                <TextBox x:Name="L1MasteringSIDTextBox" Grid.Row="14" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Toolstamp/Mastering Code" />
-                <TextBox x:Name="L1ToolstampTextBox" Grid.Row="14" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="15" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Toolstamp/Mastering Code" />
+                <TextBox x:Name="L1ToolstampTextBox" Grid.Row="15" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="15" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mould SID" />
-                <TextBox x:Name="L1MouldSIDTextBox" Grid.Row="15" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mould SID" />
+                <TextBox x:Name="L1MouldSIDTextBox" Grid.Row="16" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Additional Mould" />
-                <TextBox x:Name="L1AdditionalMouldTextBox" Grid.Row="16" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <Label Grid.Row="17" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Additional Mould" />
+                <TextBox x:Name="L1AdditionalMouldTextBox" Grid.Row="17" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="17" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Barcode" />
-                <TextBox x:Name="BarcodeTextBox" Grid.Row="17" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <!-- This needs to be a multiline textbox -->
-                <Label Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Comments" />
-                <TextBox x:Name="CommentsTextBox" Grid.Row="18" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
+                <Label Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Barcode" />
+                <TextBox x:Name="BarcodeTextBox" Grid.Row="18" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
                 <!-- This needs to be a multiline textbox -->
-                <Label Grid.Row="19" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Contents" />
-                <TextBox x:Name="ContentsTextBox" Grid.Row="19" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"/>
+                <Label Grid.Row="19" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Comments" />
+                <TextBox x:Name="CommentsTextBox" Grid.Row="19" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
+
+                <!-- This needs to be a multiline textbox -->
+                <Label Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Contents" />
+                <TextBox x:Name="ContentsTextBox" Grid.Row="20" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"/>
             </Grid>
         </GroupBox>
 
