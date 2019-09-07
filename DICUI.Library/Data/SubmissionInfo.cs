@@ -283,9 +283,8 @@ namespace DICUI.Data
         [JsonConverter(typeof(LanguagesConverter))]
         public Language?[] Languages { get; set; }
 
-        // TODO: Ensure names from new disc form are used here
         [JsonProperty(PropertyName = "d_languages_selection", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [JsonConverter(typeof(StringEnumConverter))]
+        [JsonConverter(typeof(LanguageSelectionConverter))]
         public LanguageSelection?[] LanguageSelection { get; set; }
 
         [JsonProperty(PropertyName = "d_serial", NullValueHandling = NullValueHandling.Ignore)]
