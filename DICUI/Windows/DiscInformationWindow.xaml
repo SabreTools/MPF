@@ -90,7 +90,7 @@
 
                 <!-- Layer 0 / Data Side -->
                 <Label Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering Ring" />
-                <TextBox x:Name="L0MasteringRingTextBox" Grid.Row="8" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <TextBox x:Name="L0MasteringRingTextBox" Grid.Row="8" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsTab="True" />
 
                 <Label Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering SID" />
                 <TextBox x:Name="L0MasteringSIDTextBox" Grid.Row="9" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
@@ -106,7 +106,7 @@
 
                 <!-- Layer 1 / Label Side -->
                 <Label Grid.Row="13" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering Ring" />
-                <TextBox x:Name="L1MasteringRingTextBox" Grid.Row="13" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <TextBox x:Name="L1MasteringRingTextBox" Grid.Row="13" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsTab="True" />
 
                 <Label Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering SID" />
                 <TextBox x:Name="L1MasteringSIDTextBox" Grid.Row="14" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
