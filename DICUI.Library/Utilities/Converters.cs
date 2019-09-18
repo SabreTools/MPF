@@ -584,6 +584,8 @@ namespace DICUI.Utilities
                     return DICFlagStrings.AddOffset;
                 case DICFlag.AMSF:
                     return DICFlagStrings.AMSF;
+                case DICFlag.AtariJaguar:
+                    return DICFlagStrings.AtariJaguar;
                 case DICFlag.BEOpcode:
                     return DICFlagStrings.BEOpcode;
                 case DICFlag.C2Opcode:
@@ -630,6 +632,8 @@ namespace DICUI.Utilities
                     return DICFlagStrings.SubchannelReadLevel;
                 case DICFlag.VideoNow:
                     return DICFlagStrings.VideoNow;
+                case DICFlag.VideoNowColor:
+                    return DICFlagStrings.VideoNowColor;
 
                 case DICFlag.NONE:
                 default:
