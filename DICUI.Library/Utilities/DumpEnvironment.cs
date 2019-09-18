@@ -1684,29 +1684,40 @@ namespace DICUI.Utilities
             if (!Directory.Exists(drivePath))
                 return null;
 
-            // If we can't find SYSTEM.CNF, we don't have a PlayStation disc
+            // Get the two paths that we will need to check
+            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
-            if (!File.Exists(systemCnfPath))
-                return null;
 
-            // Let's try reading SYSTEM.CNF to find the "BOOT" value
+            // Try both of the common paths that contain information
             string exeName = null;
-            try
+            if (File.Exists(psxExePath))
             {
-                using (StreamReader sr = File.OpenText(systemCnfPath))
+                exeName = "PSX.EXE";
+            }
+            else if (File.Exists(systemCnfPath))
+            {
+                // Let's try reading SYSTEM.CNF to find the "BOOT" value
+                try
                 {
-                    // Not assuming proper ordering, just in case
-                    string line = sr.ReadLine();
-                    while (!line.StartsWith("BOOT"))
-                        line = sr.ReadLine();
+                    using (StreamReader sr = File.OpenText(systemCnfPath))
+                    {
+                        // Not assuming proper ordering, just in case
+                        string line = sr.ReadLine();
+                        while (!line.StartsWith("BOOT"))
+                            line = sr.ReadLine();
 
-                    // Once it finds the "BOOT" line, extract the name
-                    exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?);.*").Groups[1].Value;
+                        // Once it finds the "BOOT" line, extract the name
+                        exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?);.*").Groups[1].Value;
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return null;
                 }
             }
-            catch
+            else
             {
-                // We don't care what the error was
                 return null;
             }
 
@@ -1715,9 +1726,8 @@ namespace DICUI.Utilities
             if (!File.Exists(exePath))
                 return null;
 
+            // Fix the Y2K timestamp issue
             FileInfo fi = new FileInfo(exePath);
-
-            // fix year 200x reported as 190x, not elegant but this is Windows ISO9660 issue so this is the best we can do unless we parse output data track manually
             DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
                 fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
             return dt.ToString("yyyy-MM-dd");
