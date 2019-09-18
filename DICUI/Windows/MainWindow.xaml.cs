@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
@@ -25,6 +26,9 @@ namespace DICUI.Windows
         // Option related
         private Options _options;
         private OptionsWindow _optionsWindow;
+
+        // User input related
+        private DiscInformationWindow _discInformationWindow;
 
         private LogWindow _logWindow;
 
@@ -403,6 +407,7 @@ namespace DICUI.Windows
                 ScanForProtection = _options.ScanForProtection,
                 RereadAmountC2 = _options.RereadAmountForC2,
                 AddPlaceholders = _options.AddPlaceholders,
+                PromptForDiscInformation = _options.PromptForDiscInformation,
 
                 Username = _options.Username,
                 Password = _options.Password,
@@ -490,6 +495,30 @@ namespace DICUI.Windows
                 var progress = new Progress<Result>();
                 progress.ProgressChanged += ProgressUpdated;
                 Result result = await _env.StartDumping(progress);
+
+                if (result)
+                {
+                    // Verify dump output and save it
+                    result = _env.VerifyAndSaveDumpOutput(progress,
+                        (si) =>
+                        {
+                            // lazy initialization
+                            if (_discInformationWindow == null)
+                            {
+                                _discInformationWindow = new DiscInformationWindow(this, si);
+                                _discInformationWindow.Closed += delegate
+                                {
+                                    _discInformationWindow = null;
+                                };
+                            }
+
+                            _discInformationWindow.Owner = this;
+                            _discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                            _discInformationWindow.Refresh();
+                            return _discInformationWindow.ShowDialog();
+                        }
+                    );
+                }
 
                 StatusLabel.Content = result ? "Dumping complete!" : result.Message;
                 ViewModels.LoggerViewModel.VerboseLogLn(result ? "Dumping complete!" : result.Message);

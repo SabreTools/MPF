@@ -87,17 +87,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ComboBoxItems\CategoryComboBoxItem.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="EnumDescriptionConverter.cs" />
-    <Compile Include="MediaTypeComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\LanguageComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\RegionComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\MediaTypeComboBoxItem.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Windows\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\DiscInformationWindow.xaml.cs">
+      <DependentUpon>DiscInformationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="KnownSystemComboBoxItem.cs" />
+    <Compile Include="ComboBoxItems\KnownSystemComboBoxItem.cs" />
     <Compile Include="ViewModels.cs" />
     <Page Include="Windows\LogWindow.xaml">
       <SubType>Designer</SubType>
@@ -115,6 +121,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\DiscInformationWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Windows\OptionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

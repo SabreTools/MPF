@@ -92,6 +92,7 @@ namespace DICUI.Check
                     System = knownSystem,
                     Type = mediaType,
                     ScanForProtection = false,
+                    PromptForDiscInformation = false,
 
                     Username = username,
                     Password = password,
