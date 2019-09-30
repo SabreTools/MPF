@@ -1837,7 +1837,7 @@ namespace DICUI.Utilities
             {
                 using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
                 {
-                    br.BaseStream.Seek(0x9A4, SeekOrigin.Begin);
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
                     return new string(br.ReadChars(5));
                 }
             }
