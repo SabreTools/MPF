@@ -273,6 +273,16 @@ namespace DICUI.Utilities
                 // If we had a directory separator at the end before, add it again
                 if (endedWithDirectorySeparator)
                     OutputDirectory += Path.DirectorySeparatorChar;
+
+                // If we have a root directory, sanitize
+                if (Directory.Exists(OutputDirectory))
+                {
+                    var possibleRootDir = new DirectoryInfo(OutputDirectory);
+                    if (possibleRootDir.Parent == null)
+                    {
+                        OutputDirectory = OutputDirectory.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
+                    }
+                }
             }
             catch
             {
