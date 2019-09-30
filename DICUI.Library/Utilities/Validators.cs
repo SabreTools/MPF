@@ -804,17 +804,17 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the current system from drive letter
+        /// Get the current system from drive
         /// </summary>
-        /// <param name="driveLetter"></param>
+        /// <param name="drive"></param>
         /// <returns></returns>
-        public static KnownSystem? GetKnownSystem(char? driveLetter)
+        public static KnownSystem? GetKnownSystem(Drive drive)
         {
-            // If no letter is provided, then we can't do anything
-            if (driveLetter == null)
+            // If drive or drive letter are provided, we can't do anything
+            if (drive?.Letter == null)
                 return null;
 
-            string drivePath = $"{driveLetter}:\\";
+            string drivePath = $"{drive.Letter}:\\";
 
             // If we can't read the media in that drive, we can't do anything
             if (!Directory.Exists(drivePath))
@@ -856,7 +856,7 @@ namespace DICUI.Utilities
             }
             
             // Sony PlayStation 4
-            if (File.Exists(Path.Combine(drivePath, "PSLogo.ico")))
+            if (drive.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {
                 return KnownSystem.SonyPlayStation4;
             }
