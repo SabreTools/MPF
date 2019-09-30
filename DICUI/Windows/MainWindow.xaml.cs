@@ -341,7 +341,7 @@ namespace DICUI.Windows
                 if (!_options.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", _drives[index].Letter);
-                    var currentSystem = Validators.GetKnownSystem(_drives[index].Letter);
+                    var currentSystem = Validators.GetKnownSystem(_drives[index]);
                     ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
 
                     if (currentSystem != null && currentSystem != KnownSystem.NONE)
