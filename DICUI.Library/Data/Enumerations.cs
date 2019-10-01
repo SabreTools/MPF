@@ -30,6 +30,7 @@
         CompactDisc,
         Data,
         DigitalVideoDisc,
+        Disk,
         DriveSpeed,
         Eject,
         Floppy,
@@ -56,6 +57,7 @@
         NONE = 0,
         AddOffset,
         AMSF,
+        AtariJaguar,
         BEOpcode,
         C2Opcode,
         CopyrightManagementInformation,
@@ -79,6 +81,7 @@
         SkipSector,
         SubchannelReadLevel,
         VideoNow,
+        VideoNowColor,
     }
 
     /// <summary>

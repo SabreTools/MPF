@@ -11,6 +11,7 @@
         public const string CompactDisc = "cd";
         public const string Data = "data";
         public const string DigitalVideoDisc = "dvd";
+        public const string Disk = "disk";
         public const string DriveSpeed = "ls";
         public const string Eject = "eject";
         public const string Floppy = "fd";
@@ -36,6 +37,7 @@
     {
         public const string AddOffset = "/a";
         public const string AMSF = "/p";
+        public const string AtariJaguar = "/aj";
         public const string BEOpcode = "/be";
         public const string C2Opcode = "/c2";
         public const string CopyrightManagementInformation = "/c";
@@ -59,6 +61,7 @@
         public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
         public const string VideoNow = "/vn";
+        public const string VideoNowColor = "/vnc";
     }
 
     /// <summary>

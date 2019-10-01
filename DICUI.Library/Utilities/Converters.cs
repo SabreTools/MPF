@@ -24,6 +24,7 @@ namespace DICUI.Utilities
                 case DICCommand.CompactDisc:
                 case DICCommand.Data:
                 case DICCommand.DigitalVideoDisc:
+                case DICCommand.Disk:
                 case DICCommand.Floppy:
                     return KnownSystem.IBMPCCompatible;
                 case DICCommand.GDROM:
@@ -239,6 +240,8 @@ namespace DICUI.Utilities
                 // Non-optical
                 case DICCommand.Floppy:
                     return MediaType.FloppyDisk;
+                case DICCommand.Disk:
+                    return MediaType.HardDisk;
                 default:
                     return null;
             }
@@ -532,6 +535,8 @@ namespace DICUI.Utilities
                     return DICCommandStrings.Data;
                 case DICCommand.DigitalVideoDisc:
                     return DICCommandStrings.DigitalVideoDisc;
+                case DICCommand.Disk:
+                    return DICCommandStrings.Disk;
                 case DICCommand.DriveSpeed:
                     return DICCommandStrings.DriveSpeed;
                 case DICCommand.Eject:
@@ -584,6 +589,8 @@ namespace DICUI.Utilities
                     return DICFlagStrings.AddOffset;
                 case DICFlag.AMSF:
                     return DICFlagStrings.AMSF;
+                case DICFlag.AtariJaguar:
+                    return DICFlagStrings.AtariJaguar;
                 case DICFlag.BEOpcode:
                     return DICFlagStrings.BEOpcode;
                 case DICFlag.C2Opcode:
@@ -630,6 +637,8 @@ namespace DICUI.Utilities
                     return DICFlagStrings.SubchannelReadLevel;
                 case DICFlag.VideoNow:
                     return DICFlagStrings.VideoNow;
+                case DICFlag.VideoNowColor:
+                    return DICFlagStrings.VideoNowColor;
 
                 case DICFlag.NONE:
                 default:

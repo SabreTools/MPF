@@ -252,6 +252,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.CompactDisc
                 || Command == DICCommand.Data
                 || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.Disk
                 || Command == DICCommand.DriveSpeed
                 || Command == DICCommand.Eject
                 || Command == DICCommand.Floppy
@@ -278,6 +279,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.CompactDisc
                 || Command == DICCommand.Data
                 || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.Disk
                 || Command == DICCommand.Floppy
                 || Command == DICCommand.GDROM
                 || Command == DICCommand.MDS
@@ -358,6 +360,13 @@ namespace DICUI.Utilities
             {
                 if (this[DICFlag.AMSF])
                     parameters.Add(DICFlag.AMSF.LongName());
+            }
+
+            // Atari Jaguar CD
+            if (Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.AtariJaguar])
+                    parameters.Add(DICFlag.AtariJaguar.LongName());
             }
 
             // BE Opcode
@@ -556,7 +565,8 @@ namespace DICUI.Utilities
 
             // Reverse read
             if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data)
+               || Command == DICCommand.Data
+               || Command == DICCommand.DigitalVideoDisc)
             {
                 if (this[DICFlag.Reverse])
                     parameters.Add(DICFlag.Reverse.LongName());
@@ -661,6 +671,13 @@ namespace DICUI.Utilities
                             return null;
                     }
                 }
+            }
+
+            // VideoNow Color
+            if (Command == DICCommand.CompactDisc)
+            {
+                if (this[DICFlag.VideoNowColor])
+                    parameters.Add(DICFlag.VideoNowColor.LongName());
             }
 
             return string.Join(" ", parameters);
@@ -828,6 +845,23 @@ namespace DICUI.Utilities
 
                     Command = DICCommand.DigitalVideoDisc;
                     index = 4;
+                    break;
+
+                case DICCommandStrings.Disk:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else
+                        DriveLetter = parts[1];
+
+                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else
+                        Filename = parts[2];
+
+                    if (parts.Count > 3)
+                        return false;
+
+                    Command = DICCommand.Disk;
                     break;
 
                 case DICCommandStrings.DriveSpeed:
@@ -1087,6 +1121,13 @@ namespace DICUI.Utilities
                             this[DICFlag.AMSF] = true;
                             break;
 
+                        case DICFlagStrings.AtariJaguar:
+                            if (parts[0] != DICCommandStrings.CompactDisc)
+                                return false;
+
+                            this[DICFlag.AtariJaguar] = true;
+                            break;
+
                         case DICFlagStrings.BEOpcode:
                             if (parts[0] != DICCommandStrings.Audio
                                 && parts[0] != DICCommandStrings.CompactDisc
@@ -1287,7 +1328,8 @@ namespace DICUI.Utilities
 
                         case DICFlagStrings.Reverse:
                             if (parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data)
+                                && parts[0] != DICCommandStrings.Data
+                                && parts[0] != DICCommandStrings.DigitalVideoDisc)
                                 return false;
 
                             this[DICFlag.Reverse] = true;
@@ -1397,6 +1439,13 @@ namespace DICUI.Utilities
                             this[DICFlag.VideoNow] = true;
                             VideoNowValue = Int32.Parse(parts[i + 1]);
                             i++;
+                            break;
+
+                        case DICFlagStrings.VideoNowColor:
+                            if (parts[0] != DICCommandStrings.CompactDisc)
+                                return false;
+
+                            this[DICFlag.VideoNowColor] = true;
                             break;
 
                         default:
@@ -1516,6 +1565,9 @@ namespace DICUI.Utilities
                 case MediaType.FloppyDisk:
                     Command = DICCommand.Floppy;
                     return;
+                case MediaType.HardDisk:
+                    Command = DICCommand.Disk;
+                    return;
 
                 default:
                     Command = DICCommand.NONE;
@@ -1571,11 +1623,16 @@ namespace DICUI.Utilities
                                 SubchannelReadLevelValue = 2;
                             }
                             break;
+                        case KnownSystem.AtariJaguarCD:
+                            this[DICFlag.AtariJaguar] = true;
+                            break;
                         case KnownSystem.HasbroVideoNow:
-                        case KnownSystem.HasbroVideoNowColor:
                         case KnownSystem.HasbroVideoNowJr:
                             this[DICFlag.VideoNow] = true;
                             this.VideoNowValue = 18032;
+                            break;
+                        case KnownSystem.HasbroVideoNowColor:
+                            this[DICFlag.VideoNowColor] = true;
                             break;
                         case KnownSystem.HasbroVideoNowXP:
                             this[DICFlag.VideoNow] = true;
