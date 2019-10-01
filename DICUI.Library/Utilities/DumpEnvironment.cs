@@ -245,14 +245,16 @@ namespace DICUI.Utilities
                 bool endedWithDirectorySeparator = OutputDirectory.EndsWith(Path.DirectorySeparatorChar.ToString());
                 bool endedWithSpace = OutputDirectory.EndsWith(" ");
 
-                // Normalize the path so the below filters work better
+                // Combine the path to make things separate easier
                 string combinedPath = Path.Combine(OutputDirectory, OutputFilename);
-                OutputDirectory = Path.GetDirectoryName(combinedPath);
-                OutputFilename = Path.GetFileName(combinedPath);
 
-                // If we have either a blank filename or path, just exit
-                if (String.IsNullOrWhiteSpace(OutputFilename) || String.IsNullOrWhiteSpace(OutputDirectory))
+                // If we have have a blank path, just return
+                if (string.IsNullOrWhiteSpace(combinedPath))
                     return;
+
+                // Now get the normalized paths
+                OutputDirectory = Path.GetDirectoryName(combinedPath);
+                OutputFilename = Path.GetFileName(combinedPath);                
 
                 // Take care of extra path characters
                 OutputDirectory = new StringBuilder(OutputDirectory.Replace('.', '_').Replace('&', '_'))
