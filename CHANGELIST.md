@@ -1,4 +1,14 @@
+### 1.14 (2019-10-01)
+
+- Updated to DIC version 20191001
+- Added builds for .NET 4.6.2, .NET 4.7.2, and .NET Core 3.0
+- Updated and fixed a bunch of things related to Redump
+- Fixed path persistence when changing system and media type
+- Added more system autodetects
+- Added new, optional, disc information filling window (WIP)
+
 ### 1.13 (2019-07-02)
+
 - Added new DIC commands and flags
 - Made DICUI Check more robust
 - Added and updated systems along with format cleanup
@@ -8,15 +18,18 @@
 - Initial disc type detection
 
 ### 1.12.2 (2019-04-19)
+
 - Added DICUI Check, a new standalone tool for parsing DIC output from platforms unsupported by DICUI
 - Added a few machines/formats
 - Updated to DIC version 20190326
 - Added DMI data extraction for Xbox and X360
 
 ### 1.12.1 (2019-01-28)
+
 - Fixed !submissionInfo.txt output for CD-ROM and GD-ROM
 
 ### 1.12 (2019-01-27)
+
 - Added a few new systems and formats
 - Added new DIC commands and flags
 - Updated the `!submissionInfo.txt` file order
