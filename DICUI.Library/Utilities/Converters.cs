@@ -24,6 +24,7 @@ namespace DICUI.Utilities
                 case DICCommand.CompactDisc:
                 case DICCommand.Data:
                 case DICCommand.DigitalVideoDisc:
+                case DICCommand.Disk:
                 case DICCommand.Floppy:
                     return KnownSystem.IBMPCCompatible;
                 case DICCommand.GDROM:
@@ -239,6 +240,8 @@ namespace DICUI.Utilities
                 // Non-optical
                 case DICCommand.Floppy:
                     return MediaType.FloppyDisk;
+                case DICCommand.Disk:
+                    return MediaType.HardDisk;
                 default:
                     return null;
             }
@@ -532,6 +535,8 @@ namespace DICUI.Utilities
                     return DICCommandStrings.Data;
                 case DICCommand.DigitalVideoDisc:
                     return DICCommandStrings.DigitalVideoDisc;
+                case DICCommand.Disk:
+                    return DICCommandStrings.Disk;
                 case DICCommand.DriveSpeed:
                     return DICCommandStrings.DriveSpeed;
                 case DICCommand.Eject:

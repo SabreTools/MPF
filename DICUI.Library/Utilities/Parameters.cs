@@ -252,6 +252,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.CompactDisc
                 || Command == DICCommand.Data
                 || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.Disk
                 || Command == DICCommand.DriveSpeed
                 || Command == DICCommand.Eject
                 || Command == DICCommand.Floppy
@@ -278,6 +279,7 @@ namespace DICUI.Utilities
                 || Command == DICCommand.CompactDisc
                 || Command == DICCommand.Data
                 || Command == DICCommand.DigitalVideoDisc
+                || Command == DICCommand.Disk
                 || Command == DICCommand.Floppy
                 || Command == DICCommand.GDROM
                 || Command == DICCommand.MDS
@@ -843,6 +845,23 @@ namespace DICUI.Utilities
 
                     Command = DICCommand.DigitalVideoDisc;
                     index = 4;
+                    break;
+
+                case DICCommandStrings.Disk:
+                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                        return false;
+                    else
+                        DriveLetter = parts[1];
+
+                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                        return false;
+                    else
+                        Filename = parts[2];
+
+                    if (parts.Count > 3)
+                        return false;
+
+                    Command = DICCommand.Disk;
                     break;
 
                 case DICCommandStrings.DriveSpeed:
@@ -1545,6 +1564,9 @@ namespace DICUI.Utilities
                     return;
                 case MediaType.FloppyDisk:
                     Command = DICCommand.Floppy;
+                    return;
+                case MediaType.HardDisk:
+                    Command = DICCommand.Disk;
                     return;
 
                 default:

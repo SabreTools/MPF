@@ -11,6 +11,7 @@
         public const string CompactDisc = "cd";
         public const string Data = "data";
         public const string DigitalVideoDisc = "dvd";
+        public const string Disk = "disk";
         public const string DriveSpeed = "ls";
         public const string Eject = "eject";
         public const string Floppy = "fd";

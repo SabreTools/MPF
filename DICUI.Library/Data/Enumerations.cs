@@ -30,6 +30,7 @@
         CompactDisc,
         Data,
         DigitalVideoDisc,
+        Disk,
         DriveSpeed,
         Eject,
         Floppy,
