@@ -204,8 +204,8 @@ namespace DICUI.Utilities
 
             CancelDumping();
 
-            // Validate we're not trying to eject a floppy disk
-            if (Drive.IsFloppy)
+            // Validate we're not trying to eject a non-optical
+            if (Drive.DriveType != InternalDriveType.Optical)
                 return;
 
             Process childProcess;
@@ -467,7 +467,10 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return DICParameters.IsValid() && !(Drive.IsFloppy ^ Type == MediaType.FloppyDisk);
+            return DICParameters.IsValid()
+                && !(Drive.DriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
+                && !(Drive.DriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
+                && !(Drive.DriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
         }
 
         #endregion

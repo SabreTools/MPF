@@ -337,7 +337,7 @@ namespace DICUI.Windows
                 StatusLabel.Content = "Valid drive found! Choose your Media Type";
                                 CopyProtectScanButton.IsEnabled = true;
 
-                // Get the current optical disc type
+                // Get the current mediac type
                 if (!_options.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", _drives[index].Letter);
@@ -679,14 +679,14 @@ namespace DICUI.Windows
         {
             // Get the drive letter from the selected item
             Drive drive = DriveLetterComboBox.SelectedItem as Drive;
-            if (drive == null || drive.IsFloppy)
+            if (drive == null)
                 return;
 
-            // Get the current optical disc type
+            // Get the current media type
             if (!_options.SkipMediaTypeDetection)
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
-                _currentMediaType = Validators.GetMediaType(drive.Letter);
+                _currentMediaType = Validators.GetMediaType(drive);
                 ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.LongName() + "."));
             }
         }

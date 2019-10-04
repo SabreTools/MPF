@@ -452,6 +452,11 @@ namespace DICUI.Utilities
                 case MediaType.CDROM:
                 case MediaType.GDROM:
                 case MediaType.Cartridge:
+                case MediaType.HardDisk:
+                case MediaType.CompactFlash:
+                case MediaType.MMC:
+                case MediaType.SDCard:
+                case MediaType.FlashDrive:
                     return ".bin";
                 case MediaType.DVD:
                 case MediaType.HDDVD:

@@ -1,4 +1,6 @@
-﻿namespace DICUI.Utilities
+﻿using DICUI.Data;
+
+namespace DICUI.Utilities
 {
     /// <summary>
     /// Represents information for a single drive
@@ -11,9 +13,9 @@
         public char Letter { get; private set; }
 
         /// <summary>
-        /// Represents if it is a floppy drive
+        /// Represents drive type
         /// </summary>
-        public bool IsFloppy { get; private set; }
+        public InternalDriveType DriveType { get; private set; }
 
         /// <summary>
         /// Media label as read by Windows
@@ -25,28 +27,45 @@
         /// </summary>
         public bool MarkedActive { get; private set; }
 
-        private Drive(char letter, string volumeLabel, bool isFloppy, bool markedActive)
+        private Drive(char letter, string volumeLabel, InternalDriveType driveType, bool markedActive)
         {
             this.Letter = letter;
-            this.IsFloppy = isFloppy;
+            this.DriveType = driveType;
             this.VolumeLabel = volumeLabel;
             this.MarkedActive = markedActive;
         }
 
         /// <summary>
-        /// Create a new Floppy drive instance
+        /// Create a new floppy drive instance
         /// </summary>
         /// <param name="letter">Drive letter to use</param>
-        /// <returns>Drive object for a Floppy drive</returns>
-        public static Drive Floppy(char letter) => new Drive(letter, null, true, true);
+        /// <returns>Drive object for a floppy drive</returns>
+        public static Drive Floppy(char letter) => new Drive(letter, null, InternalDriveType.Floppy, true);
 
         /// <summary>
-        /// Create a new Optical drive instance
+        /// generate a new hard disk drive instance
+        /// </summary>
+        /// <param name="letter">Drive letter to use</param>
+        /// <param name="volumeLabel">Media label, if it exists</param>
+        /// <returns>Drive object for a hard disk drive</returns>
+        public static Drive HardDisk(char letter, string volumeLabel) => new Drive(letter, volumeLabel, InternalDriveType.HardDisk, true);
+
+        /// <summary>
+        /// Create a new optical drive instance
         /// </summary>
         /// <param name="letter">Drive letter to use</param>
         /// <param name="volumeLabel">Media label, if it exists</param>
         /// <param name="active">True if the drive is marked active, false otherwise</param>
-        /// <returns>Drive object for an Optical drive</returns>
-        public static Drive Optical(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, false, active);
+        /// <returns>Drive object for an optical drive</returns>
+        public static Drive Optical(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, InternalDriveType.Optical, active);
+
+        /// <summary>
+        /// Create a new removable drive instance
+        /// </summary>
+        /// <param name="letter">Drive letter to use</param>
+        /// <param name="volumeLabel">Media label, if it exists</param>
+        /// <param name="active">True if the drive is marked active, false otherwise</param>
+        /// <returns>Drive object for a removable drive</returns>
+        public static Drive Removable(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, InternalDriveType.Removable, active);
     }
 }

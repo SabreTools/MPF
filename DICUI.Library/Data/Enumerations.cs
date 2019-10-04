@@ -85,6 +85,17 @@
     }
 
     /// <summary>
+    /// Drive type for dumpign
+    /// </summary>
+    public enum InternalDriveType
+    {
+        Optical,
+        Floppy,
+        HardDisk,
+        Removable,
+    }
+
+    /// <summary>
     /// Dump status for Redump
     /// </summary>
     public enum DumpStatus
@@ -419,6 +430,10 @@
         // Unsorted Formats
         Cartridge,
         CED,
+        CompactFlash,
+        MMC,
+        SDCard,
+        FlashDrive,
     }
 
     /// <summary>
