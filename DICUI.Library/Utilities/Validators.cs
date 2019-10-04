@@ -769,6 +769,7 @@ namespace DICUI.Utilities
         public static MediaType? GetMediaType(Drive drive)
         {
             // Take care of the non-optical stuff first
+            // TODO: See if any of these can be more granular, like Optical is
             if (drive.DriveType == InternalDriveType.Floppy)
                 return MediaType.FloppyDisk;
             else if (drive.DriveType == InternalDriveType.HardDisk)

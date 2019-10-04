@@ -85,7 +85,7 @@
     }
 
     /// <summary>
-    /// Drive type for dumpign
+    /// Drive type for dumping
     /// </summary>
     public enum InternalDriveType
     {
