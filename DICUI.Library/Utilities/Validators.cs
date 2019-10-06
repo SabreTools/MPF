@@ -730,23 +730,22 @@ namespace DICUI.Utilities
             // Get the optical disc drives
             List<Drive> discDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.CDRom)
-                .Select(d => Drive.Optical(d.Name[0], (d.IsReady ? (string.IsNullOrWhiteSpace(d.VolumeLabel) ? "disc" : d.VolumeLabel) : Template.DiscNotDetected), d.IsReady))                
+                .Select(d => Drive.Optical(d))                
                 .ToList();
 
             // Get the hard disk drives
-            // TODO: Ensure DICUI isn't running on drive
-            // TODO: Ensure output directory is not on drive
             List<Drive> hardDiskDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.Fixed)
-                .Select(d => Drive.HardDisk(d.Name[0], string.IsNullOrWhiteSpace(d.VolumeLabel) ? "hdd" : d.VolumeLabel))
+                .Select(d => Drive.HardDisk(d))
                 .ToList();
 
-            // Get the removable disk drives
-            // TODO: Ensure DICUI isn't running on drive
-            // TODO: Ensure output directory is not on drive
+            // Get the non-floppy, removable disk drives
+            // TODO: Can we figure out if it's a floppy disk from here?
+            // TODO: Removable is way too broad, differentiate things like SD cards
             List<Drive> removableDrives = DriveInfo.GetDrives()
                 .Where(d => d.DriveType == DriveType.Removable)
-                .Select(d => Drive.Removable(d.Name[0], (d.IsReady ? (string.IsNullOrWhiteSpace(d.VolumeLabel) ? "disc" : d.VolumeLabel) : Template.DiscNotDetected), d.IsReady))
+                .Select(d => Drive.Removable(d))
+                .Where(d => !drives.Select(f => f.Letter).Contains(d.Letter))
                 .ToList();
 
             // Add the lists together and order
@@ -770,11 +769,11 @@ namespace DICUI.Utilities
         {
             // Take care of the non-optical stuff first
             // TODO: See if any of these can be more granular, like Optical is
-            if (drive.DriveType == InternalDriveType.Floppy)
+            if (drive.InternalDriveType == InternalDriveType.Floppy)
                 return MediaType.FloppyDisk;
-            else if (drive.DriveType == InternalDriveType.HardDisk)
+            else if (drive.InternalDriveType == InternalDriveType.HardDisk)
                 return MediaType.HardDisk;
-            else if (drive.DriveType == InternalDriveType.Removable)
+            else if (drive.InternalDriveType == InternalDriveType.Removable)
                 return MediaType.FlashDrive;
 
             // Get the DeviceID from the current drive letter
@@ -851,7 +850,7 @@ namespace DICUI.Utilities
 
             // We're going to assume for floppies, HDDs, and removable drives
             // TODO: Try to be smarter about this
-            if (drive.DriveType != InternalDriveType.Optical)
+            if (drive.InternalDriveType != InternalDriveType.Optical)
                 return KnownSystem.IBMPCCompatible;
 
             // Sega Dreamcast

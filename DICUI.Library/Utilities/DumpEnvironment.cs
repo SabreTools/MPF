@@ -205,7 +205,7 @@ namespace DICUI.Utilities
             CancelDumping();
 
             // Validate we're not trying to eject a non-optical
-            if (Drive.DriveType != InternalDriveType.Optical)
+            if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
             Process childProcess;
@@ -468,9 +468,9 @@ namespace DICUI.Utilities
         internal bool ParametersValid()
         {
             return DICParameters.IsValid()
-                && !(Drive.DriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
-                && !(Drive.DriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
-                && !(Drive.DriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
+                && !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
+                && !(Drive.InternalDriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
+                && !(Drive.InternalDriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
         }
 
         #endregion
@@ -1239,6 +1239,8 @@ namespace DICUI.Utilities
             // Validate that the required program exists
             if (!File.Exists(DICPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
+
+            // TODO: Ensure output path not the same as input drive OR DIC/DICUI location
 
             return Result.Success();
         }
