@@ -702,9 +702,13 @@ namespace DICUI.Utilities
         /// </remarks>
         public static List<Drive> CreateListOfDrives()
         {
-            var drives = new List<Drive>();
+            // Get all supported drive types
+            var drives = DriveInfo.GetDrives()
+                .Where(d => d.DriveType == DriveType.CDRom || d.DriveType == DriveType.Fixed || d.DriveType == DriveType.Removable)
+                .Select(d => new Drive(Converters.ToInternalDriveType(d.DriveType), d))
+                .ToList();
 
-            // Get the floppy drives
+            // Get the floppy drives and set the flag from removable
             try
             {
                 ManagementObjectSearcher searcher =
@@ -718,7 +722,7 @@ namespace DICUI.Utilities
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = queryObj["DeviceID"].ToString()[0];
-                        drives.Add(Drive.Floppy(devId));
+                        drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = InternalDriveType.Floppy; } });
                     }
                 }
             }
@@ -727,31 +731,7 @@ namespace DICUI.Utilities
                 // No-op
             }
 
-            // Get the optical disc drives
-            List<Drive> discDrives = DriveInfo.GetDrives()
-                .Where(d => d.DriveType == DriveType.CDRom)
-                .Select(d => Drive.Optical(d))                
-                .ToList();
-
-            // Get the hard disk drives
-            List<Drive> hardDiskDrives = DriveInfo.GetDrives()
-                .Where(d => d.DriveType == DriveType.Fixed)
-                .Select(d => Drive.HardDisk(d))
-                .ToList();
-
-            // Get the non-floppy, removable disk drives
-            // TODO: Can we figure out if it's a floppy disk from here?
-            // TODO: Removable is way too broad, differentiate things like SD cards
-            List<Drive> removableDrives = DriveInfo.GetDrives()
-                .Where(d => d.DriveType == DriveType.Removable)
-                .Select(d => Drive.Removable(d))
-                .Where(d => !drives.Select(f => f.Letter).Contains(d.Letter))
-                .ToList();
-
-            // Add the lists together and order
-            drives.AddRange(discDrives);
-            drives.AddRange(hardDiskDrives);
-            drives.AddRange(removableDrives);
+            // Order the drives by drive letter
             drives = drives.OrderBy(i => i.Letter).ToList();
 
             return drives;

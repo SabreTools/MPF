@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using IMAPI2;
 using DICUI.Data;
 using Newtonsoft.Json;
@@ -9,6 +10,26 @@ namespace DICUI.Utilities
     public static class Converters
     {
         #region Cross-enumeration conversions
+
+        /// <summary>
+        /// Convert drive type to internal version, if possible
+        /// </summary>
+        /// <param name="driveType">DriveType value to check</param>
+        /// <returns>InternalDriveType, if possible, null on error</returns>
+        public static InternalDriveType? ToInternalDriveType(this DriveType driveType)
+        {
+            switch(driveType)
+            {
+                case DriveType.CDRom:
+                    return InternalDriveType.Optical;
+                case DriveType.Fixed:
+                    return InternalDriveType.HardDisk;
+                case DriveType.Removable:
+                    return InternalDriveType.Removable;
+                default:
+                    return null;
+            }
+        }
 
         /// <summary>
         /// Get the most common known system for a given MediaType
