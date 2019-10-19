@@ -6,6 +6,7 @@
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
+    <Prefer32Bit>true</Prefer32Bit>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
 
