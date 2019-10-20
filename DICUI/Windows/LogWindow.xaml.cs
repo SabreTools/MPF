@@ -192,12 +192,12 @@ namespace DICUI.Windows
         // this is used to optimize the work since we need to process A LOT of text
         struct Matcher
         {
-            private readonly String prefix;
+            private readonly string prefix;
             private readonly Regex regex;
             private readonly int start;
             private readonly Action<Match> lambda;
 
-            public Matcher(String prefix, String regex, Action<Match> lambda)
+            public Matcher(string prefix, string regex, Action<Match> lambda)
             {
                 this.prefix = prefix;
                 this.regex = new Regex(regex);

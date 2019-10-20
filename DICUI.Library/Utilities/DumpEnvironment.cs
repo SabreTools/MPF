@@ -679,7 +679,7 @@ namespace DICUI.Utilities
                         layerbreak = (info.SizeAndChecksums.Size > 25025314816 ? "25025314816" : null);
 
                     // If we have a single-layer disc
-                    if (String.IsNullOrWhiteSpace(layerbreak))
+                    if (string.IsNullOrWhiteSpace(layerbreak))
                     {
                         info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                         info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
@@ -736,7 +736,7 @@ namespace DICUI.Utilities
                         info.VersionAndEditions.Version = umdversion ?? "";
                         info.SizeAndChecksums.Size = umdsize;
 
-                        if (!String.IsNullOrWhiteSpace(umdlayer))
+                        if (!string.IsNullOrWhiteSpace(umdlayer))
                             info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
                     }
 
@@ -1464,17 +1464,17 @@ namespace DICUI.Utilities
 
             // Now we format everything we can
             string protection = "";
-            if (!String.IsNullOrEmpty(region))
+            if (!string.IsNullOrEmpty(region))
                 protection += $"Region: {region}\n";
-            if (!String.IsNullOrEmpty(rceProtection))
+            if (!string.IsNullOrEmpty(rceProtection))
                 protection += $"RCE Protection: {rceProtection}\n";
-            if (!String.IsNullOrEmpty(copyrightProtectionSystemType))
+            if (!string.IsNullOrEmpty(copyrightProtectionSystemType))
                 protection += $"Copyright Protection System Type: {copyrightProtectionSystemType}\n";
-            if (!String.IsNullOrEmpty(encryptedDiscKey))
+            if (!string.IsNullOrEmpty(encryptedDiscKey))
                 protection += $"Encrypted Disc Key: {encryptedDiscKey}\n";
-            if (!String.IsNullOrEmpty(playerKey))
+            if (!string.IsNullOrEmpty(playerKey))
                 protection += $"Player Key: {playerKey}\n";
-            if (!String.IsNullOrEmpty(decryptedDiscKey))
+            if (!string.IsNullOrEmpty(decryptedDiscKey))
                 protection += $"Decrypted Disc Key: {decryptedDiscKey}\n";
 
             return protection;
@@ -1902,7 +1902,7 @@ namespace DICUI.Utilities
             serial = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (String.IsNullOrWhiteSpace(segaHeader))
+            if (string.IsNullOrWhiteSpace(segaHeader))
                 return false;
 
             // Now read it in cutting it into lines for easier parsing
@@ -1985,7 +1985,7 @@ namespace DICUI.Utilities
             serial = null; version = null; date = null;
 
             // If the input header is null, we can't do a thing
-            if (String.IsNullOrWhiteSpace(segaHeader))
+            if (string.IsNullOrWhiteSpace(segaHeader))
                 return false;
 
             // Now read it in cutting it into lines for easier parsing

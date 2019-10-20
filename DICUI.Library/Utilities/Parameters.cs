@@ -700,7 +700,7 @@ namespace DICUI.Utilities
         private bool ValidateAndSetParameters(string parameters)
         {
             // The string has to be valid by itself first
-            if (String.IsNullOrWhiteSpace(parameters))
+            if (string.IsNullOrWhiteSpace(parameters))
                 return false;
 
             // Now split the string into parts for easier validation
