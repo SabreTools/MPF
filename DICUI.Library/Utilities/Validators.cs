@@ -947,9 +947,9 @@ namespace DICUI.Utilities
 
                 return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
             }
-            catch
+            catch (Exception ex)
             {
-                return "Path could not be scanned!";
+                return $"Path could not be scanned! {ex}";
             }
         }
     }
