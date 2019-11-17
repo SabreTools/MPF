@@ -332,12 +332,23 @@ namespace DICUI.Windows
 
             if (DriveLetterComboBox.Items.Count > 0)
             {
-                int index = _drives.FindIndex(d => d.MarkedActive);
+                // Check for active optical drives first
+                int index = _drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
+
+                // Then we check for floppy drives
+                if (index == -1)
+                    index = _drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Floppy);
+
+                // Then we try all other drive types
+                if (index == -1)
+                    index = _drives.FindIndex(d => d.MarkedActive);
+
+                // Set the selected index
                 DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
                 StatusLabel.Content = "Valid drive found! Choose your Media Type";
                                 CopyProtectScanButton.IsEnabled = true;
 
-                // Get the current optical disc type
+                // Get the current media type
                 if (!_options.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", _drives[index].Letter);
@@ -354,7 +365,7 @@ namespace DICUI.Windows
                 // Only enable the start/stop if we don't have the default selected
                 StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
 
-                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", _drives.Count, String.Join(", ", _drives.Select(d => d.Letter)));
+                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", _drives.Count, string.Join(", ", _drives.Select(d => d.Letter)));
             }
             else
             {
@@ -679,14 +690,14 @@ namespace DICUI.Windows
         {
             // Get the drive letter from the selected item
             Drive drive = DriveLetterComboBox.SelectedItem as Drive;
-            if (drive == null || drive.IsFloppy)
+            if (drive == null)
                 return;
 
-            // Get the current optical disc type
+            // Get the current media type
             if (!_options.SkipMediaTypeDetection)
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
-                _currentMediaType = Validators.GetMediaType(drive.Letter);
+                _currentMediaType = Validators.GetMediaType(drive);
                 ViewModels.LoggerViewModel.VerboseLogLn(_currentMediaType == null ? "unable to detect." : ("detected " + _currentMediaType.LongName() + "."));
             }
         }
@@ -728,11 +739,11 @@ namespace DICUI.Windows
             string trimmedPath = _env.DICParameters.Filename?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
-            if (!String.IsNullOrWhiteSpace(outputDirectory))
+            if (!string.IsNullOrWhiteSpace(outputDirectory))
                 OutputDirectoryTextBox.Text = outputDirectory;
             else
                 outputDirectory = OutputDirectoryTextBox.Text;
-            if (!String.IsNullOrWhiteSpace(outputFilename))
+            if (!string.IsNullOrWhiteSpace(outputFilename))
                 OutputFilenameTextBox.Text = outputFilename;
             else
                 outputFilename = OutputFilenameTextBox.Text;

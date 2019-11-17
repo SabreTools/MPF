@@ -1,3 +1,9 @@
+### 1.15 (2019-11-16)
+
+- Updated to DIC version 20191116
+- Support non-optical, non-floppy stuff better
+- Update protection scanning and fix some things
+
 ### 1.14 (2019-10-01)
 
 - Updated to DIC version 20191001

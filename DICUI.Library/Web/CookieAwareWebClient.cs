@@ -27,7 +27,7 @@ namespace DICUI.Web
         public string GetLastFilename()
         {
             // Try to extract the filename from the Content-Disposition header
-            if (!String.IsNullOrEmpty(this.ResponseHeaders["Content-Disposition"]))
+            if (!string.IsNullOrEmpty(this.ResponseHeaders["Content-Disposition"]))
                 return this.ResponseHeaders["Content-Disposition"].Substring(this.ResponseHeaders["Content-Disposition"].IndexOf("filename=") + 9).Replace("\"", "");
 
             return null;

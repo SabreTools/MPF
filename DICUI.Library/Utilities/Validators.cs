@@ -236,6 +236,7 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.FloppyDisk);
+                    types.Add(MediaType.HardDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/Amiga
@@ -254,6 +255,7 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.FloppyDisk);
+                    types.Add(MediaType.HardDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/PC-8800_series
@@ -700,9 +702,13 @@ namespace DICUI.Utilities
         /// </remarks>
         public static List<Drive> CreateListOfDrives()
         {
-            var drives = new List<Drive>();
+            // Get all supported drive types
+            var drives = DriveInfo.GetDrives()
+                .Where(d => d.DriveType == DriveType.CDRom || d.DriveType == DriveType.Fixed || d.DriveType == DriveType.Removable)
+                .Select(d => new Drive(Converters.ToInternalDriveType(d.DriveType), d))
+                .ToList();
 
-            // Get the floppy drives
+            // Get the floppy drives and set the flag from removable
             try
             {
                 ManagementObjectSearcher searcher =
@@ -716,7 +722,7 @@ namespace DICUI.Utilities
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
                         char devId = queryObj["DeviceID"].ToString()[0];
-                        drives.Add(Drive.Floppy(devId));
+                        drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = InternalDriveType.Floppy; } });
                     }
                 }
             }
@@ -725,14 +731,7 @@ namespace DICUI.Utilities
                 // No-op
             }
 
-            // Get the optical disc drives
-            List<Drive> discDrives = DriveInfo.GetDrives()
-                .Where(d => d.DriveType == DriveType.CDRom)
-                .Select(d => Drive.Optical(d.Name[0], (d.IsReady ? (string.IsNullOrWhiteSpace(d.VolumeLabel) ? "disc" : d.VolumeLabel) : Template.DiscNotDetected), d.IsReady))                
-                .ToList();
-
-            // Add the two lists together and order
-            drives.AddRange(discDrives);
+            // Order the drives by drive letter
             drives = drives.OrderBy(i => i.Letter).ToList();
 
             return drives;
@@ -741,20 +740,29 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the current media type from drive letter
         /// </summary>
-        /// <param name="driveLetter"></param>
+        /// <param name="drive"></param>
         /// <returns></returns>
         /// <remarks>
         /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
         /// </remarks>
-        public static MediaType? GetMediaType(char? driveLetter)
+        public static MediaType? GetMediaType(Drive drive)
         {
+            // Take care of the non-optical stuff first
+            // TODO: See if any of these can be more granular, like Optical is
+            if (drive.InternalDriveType == InternalDriveType.Floppy)
+                return MediaType.FloppyDisk;
+            else if (drive.InternalDriveType == InternalDriveType.HardDisk)
+                return MediaType.HardDisk;
+            else if (drive.InternalDriveType == InternalDriveType.Removable)
+                return MediaType.FlashDrive;
+
             // Get the DeviceID from the current drive letter
             string deviceId = null;
             try
             {
                 ManagementObjectSearcher searcher =
                     new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + driveLetter + ":\'");
+                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + drive.Letter + ":\'");
 
                 var collection = searcher.Get();
                 foreach (ManagementObject queryObj in collection)
@@ -819,6 +827,11 @@ namespace DICUI.Utilities
             // If we can't read the media in that drive, we can't do anything
             if (!Directory.Exists(drivePath))
                 return null;
+
+            // We're going to assume for floppies, HDDs, and removable drives
+            // TODO: Try to be smarter about this
+            if (drive.InternalDriveType != InternalDriveType.Optical)
+                return KnownSystem.IBMPCCompatible;
 
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
@@ -888,6 +901,10 @@ namespace DICUI.Utilities
                 case MediaType.CDROM:
                 case MediaType.DVD:
                 case MediaType.FloppyDisk:
+                case MediaType.HardDisk:
+                case MediaType.CompactFlash:
+                case MediaType.SDCard:
+                case MediaType.FlashDrive:
                 case MediaType.HDDVD:
                     return Result.Success("{0} ready to dump", type.LongName());
 
@@ -930,9 +947,9 @@ namespace DICUI.Utilities
 
                 return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
             }
-            catch
+            catch (Exception ex)
             {
-                return "Path could not be scanned!";
+                return $"Path could not be scanned! {ex}";
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using DICUI.Data;
+﻿using System.IO;
+using DICUI.Data;
 using DICUI.Utilities;
 using Xunit;
 
@@ -18,7 +19,9 @@ namespace DICUI.Test
             var env = new DumpEnvironment
             {
                 DICParameters = new Parameters(parameters),
-                Drive = isFloppy ? Drive.Floppy(letter) : Drive.Optical(letter, "", true),
+                Drive = isFloppy
+                    ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
+                    : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString())),
                 Type = mediaType,
             };
 

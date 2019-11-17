@@ -1,4 +1,7 @@
-﻿namespace DICUI.Utilities
+﻿using System.IO;
+using DICUI.Data;
+
+namespace DICUI.Utilities
 {
     /// <summary>
     /// Represents information for a single drive
@@ -6,47 +9,55 @@
     public class Drive
     {
         /// <summary>
-        /// Windows drive letter
+        /// Represents drive type
         /// </summary>
-        public char Letter { get; private set; }
+        public InternalDriveType? InternalDriveType { get; set; }
 
         /// <summary>
-        /// Represents if it is a floppy drive
+        /// DriveInfo object representing the drive, if possible
         /// </summary>
-        public bool IsFloppy { get; private set; }
+        public DriveInfo DriveInfo { get; private set; }
+
+        /// <summary>
+        /// Windows drive letter
+        /// </summary>
+        public char Letter { get { return DriveInfo?.Name[0] ?? '\0'; } }
 
         /// <summary>
         /// Media label as read by Windows
         /// </summary>
-        public string VolumeLabel { get; private set; }
+        public string VolumeLabel
+        {
+            get
+            {
+                if (DriveInfo.IsReady)
+                {
+                    if (string.IsNullOrWhiteSpace(DriveInfo.VolumeLabel))
+                        return "track";
+                    else
+                        return DriveInfo.VolumeLabel;
+                }
+                else
+                {
+                    return Template.DiscNotDetected;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Drive partition format
+        /// </summary>
+        public string DriveFormat { get { return DriveInfo.DriveFormat; } }
 
         /// <summary>
         /// Represents if Windows has marked the drive as active
         /// </summary>
-        public bool MarkedActive { get; private set; }
+        public bool MarkedActive { get { return DriveInfo.IsReady; } }
 
-        private Drive(char letter, string volumeLabel, bool isFloppy, bool markedActive)
+        public Drive(InternalDriveType? driveType, DriveInfo driveInfo)
         {
-            this.Letter = letter;
-            this.IsFloppy = isFloppy;
-            this.VolumeLabel = volumeLabel;
-            this.MarkedActive = markedActive;
+            this.InternalDriveType = driveType;
+            this.DriveInfo = driveInfo;
         }
-
-        /// <summary>
-        /// Create a new Floppy drive instance
-        /// </summary>
-        /// <param name="letter">Drive letter to use</param>
-        /// <returns>Drive object for a Floppy drive</returns>
-        public static Drive Floppy(char letter) => new Drive(letter, null, true, true);
-
-        /// <summary>
-        /// Create a new Optical drive instance
-        /// </summary>
-        /// <param name="letter">Drive letter to use</param>
-        /// <param name="volumeLabel">Media label, if it exists</param>
-        /// <param name="active">True if the drive is marked active, false otherwise</param>
-        /// <returns>Drive object for an Optical drive</returns>
-        public static Drive Optical(char letter, string volumeLabel, bool active) => new Drive(letter, volumeLabel, false, active);
     }
 }
