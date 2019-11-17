@@ -459,8 +459,10 @@ namespace DICUI.Utilities
             }
 
             // Force Unit Access
-            if (Command == DICCommand.BluRay
+            if (Command == DICCommand.Audio
+               || Command == DICCommand.BluRay
                || Command == DICCommand.CompactDisc
+               || Command == DICCommand.Data
                || Command == DICCommand.DigitalVideoDisc
                || Command == DICCommand.Swap
                || Command == DICCommand.XBOX)
@@ -1209,12 +1211,12 @@ namespace DICUI.Utilities
 
                         case DICFlagStrings.ForceUnitAccess:
                             if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.BluRay
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.DigitalVideoDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM
-                                && parts[0] != DICCommandStrings.XBOX)
+                               && parts[0] != DICCommandStrings.BluRay
+                               && parts[0] != DICCommandStrings.CompactDisc
+                               && parts[0] != DICCommandStrings.DigitalVideoDisc
+                               && parts[0] != DICCommandStrings.Data
+                               && parts[0] != DICCommandStrings.GDROM
+                               && parts[0] != DICCommandStrings.XBOX)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
