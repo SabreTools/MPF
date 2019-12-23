@@ -650,10 +650,6 @@ namespace DICUI.Utilities
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
-                    // GD-ROM-specfic options
-                    if (Type == MediaType.GDROM)
-                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
-
                     break;
 
                 case MediaType.DVD:
@@ -860,6 +856,9 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.NamcoSegaNintendoTriforce:
+                    if (Type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
@@ -887,18 +886,30 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.SegaChihiro:
+                    if (Type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaDreamcast:
+                    if (Type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaNaomi:
+                    if (Type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.SegaNaomi2:
+                    if (Type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(combinedBase + "_mainInfo.txt") ?? "";
+
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
@@ -1856,7 +1867,7 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the header from a Sega Saturn or Sega CD / Mega CD disc, if possible
+        /// Get the header from a Sega CD / Mega CD, Saturn, or Dreamcast Low-Density region, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
