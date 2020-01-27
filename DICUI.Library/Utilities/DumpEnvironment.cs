@@ -337,13 +337,16 @@ namespace DICUI.Utilities
                 case MediaType.BluRay:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    return File.Exists(combinedBase + ".dat")
+                    bool dicDump = File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
                         && File.Exists(combinedBase + "_disc.txt")
                         && File.Exists(combinedBase + "_drive.txt")
                         && File.Exists(combinedBase + "_mainError.txt")
                         && File.Exists(combinedBase + "_mainInfo.txt")
                         && File.Exists(combinedBase + "_volDesc.txt");
+                    bool cleanRipDump = File.Exists(combinedBase + "-dumpinfo.txt")
+                        && File.Exists(combinedBase + ".bca");
+                    return dicDump | cleanRipDump;
                 case MediaType.FloppyDisk:
                     return File.Exists(combinedBase + ".dat")
                         && File.Exists(combinedBase + "_cmd.txt")
@@ -587,6 +590,12 @@ namespace DICUI.Utilities
                 },
             };
 
+            // Special case for CleanRip outputs
+            if (File.Exists(combinedBase + ".bca"))
+            {
+                info.TracksAndWriteOffsets.ClrMameProData = GetCleanripDatfile(combinedBase + ".iso", combinedBase + "-dumpinfo.txt");
+            }
+
             // First and foremost, we want to get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && HasRedumpLogin)
             {
@@ -715,12 +724,31 @@ namespace DICUI.Utilities
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.Extras.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    if (File.Exists(combinedBase + ".bca"))
+                        info.Extras.BCA = GetFullFile(combinedBase + ".bca", true);
+                    info.Extras.BCA = info.Extras.BCA ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+
+                    if (GetGameCubeWiiInformation(combinedBase + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? gcRegion;
+                        info.VersionAndEditions.Version = string.IsNullOrEmpty(info.VersionAndEditions.Version) ? gcVersion : info.VersionAndEditions.Version;
+                    }
+
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
                     info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.Extras.BCA = (this.AddPlaceholders ? Template.RequiredValue : "");
+
+                    if (File.Exists(combinedBase + ".bca"))
+                        info.Extras.BCA = GetFullFile(combinedBase + ".bca", true);
+                    info.Extras.BCA = info.Extras.BCA ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+
+                    if (GetGameCubeWiiInformation(combinedBase + "-dumpinfo.txt", out Region? wiiRegion, out string wiiVersion))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? wiiRegion;
+                        info.VersionAndEditions.Version = string.IsNullOrEmpty(info.VersionAndEditions.Version) ? wiiVersion : info.VersionAndEditions.Version;
+                    }
+
                     break;
 
                 case MediaType.UMD:
@@ -1076,7 +1104,7 @@ namespace DICUI.Utilities
                 if (info.Extras.PVD != null || info.Extras.PIC != null || info.Extras.BCA != null)
                 {
                     output.Add(""); output.Add("Extras:");
-                    AddIfExists(output, Template.PVDField, info.Extras.PVD.Trim(), 1);
+                    AddIfExists(output, Template.PVDField, info.Extras.PVD?.Trim(), 1);
                     AddIfExists(output, Template.PlayStation3WiiDiscKeyField, info.Extras.DiscKey, 1);
                     AddIfExists(output, Template.PlayStation3DiscIDField, info.Extras.DiscID, 1);
                     AddIfExists(output, Template.PICField, info.Extras.PIC, 1);
@@ -1369,6 +1397,53 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get a formatted datfile from the cleanrip output, if possible
+        /// </summary>
+        /// <param name="iso">Path to ISO file</param>
+        /// <param name="dumpinfo">Path to discinfo file</param>
+        /// <returns></returns>
+        private string GetCleanripDatfile(string iso, string dumpinfo)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(dumpinfo))
+                return null;
+
+            using (StreamReader sr = File.OpenText(dumpinfo))
+            {
+                long size = new FileInfo(iso).Length;
+                string crc = string.Empty;
+                string md5 = string.Empty;
+                string sha1 = string.Empty;
+
+                try
+                {
+                    // Make sure this file is a dumpinfo
+                    if (!sr.ReadLine().Contains("--File Generated by CleanRip"))
+                        return null;
+
+                    // Read all lines and gather dat information
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+                        if (line.StartsWith("CRC32"))
+                            crc = line.Substring(7).ToLowerInvariant();
+                        else if (line.StartsWith("MD5"))
+                            md5 = line.Substring(5);
+                        else if (line.StartsWith("SHA-1"))
+                            sha1 = line.Substring(7);
+                    }
+
+                    return $"<rom name=\"{Path.GetFileName(iso)}\" size=\"{size}\" crc=\"{crc}\" md5=\"{md5}\" sha1=\"{sha1}\" />";
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the current copy protection scheme, if possible
         /// </summary>
         /// <returns>Copy protection scheme if possible, null on error</returns>
@@ -1555,14 +1630,132 @@ namespace DICUI.Utilities
         /// Get the full lines from the input file, if possible
         /// </summary>
         /// <param name="filename">file location</param>
+        /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
-        private string GetFullFile(string filename)
+        private string GetFullFile(string filename, bool binary = false)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
                 return null;
 
+            // If we're reading as binary
+            if (binary)
+            {
+                string hex = string.Empty;
+                using (BinaryReader br = new BinaryReader(File.OpenRead(filename)))
+                {
+                    while (br.BaseStream.Position < br.BaseStream.Length)
+                    {
+                        hex += Convert.ToString(br.ReadByte(), 16);
+                    }
+                }
+                return hex;
+            }
+
             return string.Join("\n", File.ReadAllLines(filename));
+        }
+
+        /// <summary>
+        /// Get the extracted GC and Wii version
+        /// </summary>
+        /// <param name="dumpinfo">Path to discinfo file</param>
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="version">Output internal version of the game</param>
+        /// <returns></returns>
+        private bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version)
+        {
+            region = null; version = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(dumpinfo))
+                return false;
+
+            using (StreamReader sr = File.OpenText(dumpinfo))
+            {
+                try
+                {
+                    // Make sure this file is a dumpinfo
+                    if (!sr.ReadLine().Contains("--File Generated by CleanRip"))
+                        return false;
+
+                    // Read all lines and gather dat information
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+                        if (line.StartsWith("Version"))
+                        {
+                            version = line.Substring(9);
+                        }
+                        else if (line.StartsWith("Filename"))
+                        {
+                            string serial = line.Substring(10);
+
+                            // char gameType = serial[0];
+                            // string gameid = serial[1] + serial[2];
+                            // string version = serial[4] + serial[5]
+
+                            switch (serial[3])
+                            {
+                                case 'A':
+                                    region = Region.World;
+                                    break;
+                                case 'D':
+                                    region = Region.Germany;
+                                    break;
+                                case 'E':
+                                    region = Region.USA;
+                                    break;
+                                case 'F':
+                                    region = Region.France;
+                                    break;
+                                case 'I':
+                                    region = Region.Italy;
+                                    break;
+                                case 'J':
+                                    region = Region.Japan;
+                                    break;
+                                case 'K':
+                                    region = Region.Korea;
+                                    break;
+                                case 'L':
+                                    region = Region.Europe; // Japanese import to Europe
+                                    break;
+                                case 'M':
+                                    region = Region.Europe; // American import to Europe
+                                    break;
+                                case 'N':
+                                    region = Region.USA; // Japanese import to USA
+                                    break;
+                                case 'P':
+                                    region = Region.Europe;
+                                    break;
+                                case 'R':
+                                    region = Region.Russia;
+                                    break;
+                                case 'S':
+                                    region = Region.Spain;
+                                    break;
+                                case 'Q':
+                                    region = Region.Korea; // Korea with Japanese language
+                                    break;
+                                case 'T':
+                                    region = Region.Korea; // Korea with English language
+                                    break;
+                                case 'X':
+                                    region = null; // Not a real region code
+                                    break;
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
         }
 
         /// <summary>
