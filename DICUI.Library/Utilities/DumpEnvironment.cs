@@ -945,7 +945,7 @@ namespace DICUI.Utilities
                 case KnownSystem.SonyPlayStation:
                     if (GetPlaystationExecutableInfo(Drive?.Letter, out Region? playstationRegion, out string playstationDate))
                     {
-                        info.CommonDiscInfo.Region = playstationRegion;
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
                     info.EDC.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
@@ -967,7 +967,7 @@ namespace DICUI.Utilities
                     info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
                     if (GetPlaystationExecutableInfo(Drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
-                        info.CommonDiscInfo.Region = playstationTwoRegion;
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
                     info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
