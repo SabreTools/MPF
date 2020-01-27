@@ -1958,38 +1958,35 @@ namespace DICUI.Utilities
                 return false;
             }
 
-            // Try to get the region fro mthe name
-            string lowerExeName = exeName.ToLowerInvariant();
-            if (lowerExeName.Contains("scus")
-                || lowerExeName.Contains("slus"))
+            // Standardized "S" serials
+            if (exeName.StartsWith("S"))
             {
-                region = Region.USA;
-            }
-            else if (lowerExeName.Contains("sces")
-                || lowerExeName.Contains("sles"))
-            {
-                region = Region.Europe;
-            }
-            else if (lowerExeName.Contains("scps")
-                || lowerExeName.Contains("scpm")
-                || lowerExeName.Contains("slps")
-                || lowerExeName.Contains("slpm")
-                || lowerExeName.Contains("pbgp")
-                || lowerExeName.Contains("czp2")
-                || lowerExeName.Contains("hsn")
-                || lowerExeName.Contains("gn"))
-            {
-                region = Region.Japan;
-            }
-            else if (lowerExeName.Contains("scka")
-                || lowerExeName.Contains("slka"))
-            {
-                region = Region.Korea;
-            }
-            else if (lowerExeName.Contains("scaj")
-                || lowerExeName.Contains("sccs"))
-            {
-                region = Region.China;
+                // string publisher = exeName[0] + exeName[1];
+                // char secondRegion = exeName[3];
+                switch (exeName[2])
+                {
+                    case 'A':
+                        region = Region.Asia;
+                        break;
+                    case 'C':
+                        region = Region.China;
+                        break;
+                    case 'E':
+                        region = Region.Europe;
+                        break;
+                    case 'J':
+                        region = Region.JapanKorea;
+                        break;
+                    case 'K':
+                        region = Region.Korea;
+                        break;
+                    case 'P':
+                        region = Region.Japan;
+                        break;
+                    case 'U':
+                        region = Region.USA;
+                        break;
+                }
             }
 
             // Now that we have the EXE name, try to get the fileinfo for it
