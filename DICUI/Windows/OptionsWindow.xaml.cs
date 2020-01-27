@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using DICUI.Web;
 using Button = System.Windows.Controls.Button;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -105,7 +106,7 @@ namespace DICUI.Windows
             DumpSpeedBDSlider.Value = _options.PreferredDumpSpeedBD;
 
             RedumpUsernameTextBox.Text = _options.Username;
-            RedumpPasswordTextBox.Text = _options.Password;
+            RedumpPasswordBox.Password = _options.Password;
         }
 
         #region Event Handlers
@@ -119,7 +120,7 @@ namespace DICUI.Windows
             _options.PreferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
 
             _options.Username = RedumpUsernameTextBox.Text;
-            _options.Password = RedumpPasswordTextBox.Text;
+            _options.Password = RedumpPasswordBox.Password;
 
             _options.Save();
             Hide();
@@ -131,6 +132,18 @@ namespace DICUI.Windows
         {
             // just hide the window and don't care
             Hide();
+        }
+
+        private void OnRedumpTestClick(object sender, EventArgs e)
+        {
+            using (CookieAwareWebClient wc = new CookieAwareWebClient())
+            {
+                RedumpAccess access = new RedumpAccess();
+                if (access.RedumpLogin(wc, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password))
+                    System.Windows.MessageBox.Show("Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    System.Windows.MessageBox.Show("Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion
