@@ -943,7 +943,11 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.SonyPlayStation:
-                    info.CommonDiscInfo.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                    if (GetPlaystationExecutableInfo(Drive?.Letter, out Region? playstationRegion, out string playstationDate))
+                    {
+                        info.CommonDiscInfo.Region = playstationRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                    }
                     info.EDC.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
                     info.CopyProtection.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
                     info.CopyProtection.LibCrypt = YesNo.No;
@@ -961,7 +965,11 @@ namespace DICUI.Utilities
 
                 case KnownSystem.SonyPlayStation2:
                     info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
-                    info.CommonDiscInfo.EXEDateBuildDate = GetPlayStationEXEDate(Drive?.Letter) ?? "";
+                    if (GetPlaystationExecutableInfo(Drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    {
+                        info.CommonDiscInfo.Region = playstationTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                    }
                     info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                     break;
                 
@@ -1704,17 +1712,21 @@ namespace DICUI.Utilities
         /// Get the EXE date from a PlayStation disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
-        /// <returns>EXE date in "yyyy-mm-dd" format if possible, null on error</returns>
-        private string GetPlayStationEXEDate(char? driveLetter)
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
+        /// <returns></returns>
+        private bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
         {
+            region = null; date = null;
+
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
-                return null;
+                return false;
 
             // If the folder no longer exists, we can't do this part
             string drivePath = driveLetter + ":\\";
             if (!Directory.Exists(drivePath))
-                return null;
+                return false;
 
             // Get the two paths that we will need to check
             string psxExePath = Path.Combine(drivePath, "PSX.EXE");
@@ -1745,24 +1757,59 @@ namespace DICUI.Utilities
                 catch
                 {
                     // We don't care what the error was
-                    return null;
+                    return false;
                 }
             }
             else
             {
-                return null;
+                return false;
+            }
+
+            // Try to get the region fro mthe name
+            string lowerExeName = exeName.ToLowerInvariant();
+            if (lowerExeName.Contains("scus")
+                || lowerExeName.Contains("slus"))
+            {
+                region = Region.USA;
+            }
+            else if (lowerExeName.Contains("sces")
+                || lowerExeName.Contains("sles"))
+            {
+                region = Region.Europe;
+            }
+            else if (lowerExeName.Contains("scps")
+                || lowerExeName.Contains("scpm")
+                || lowerExeName.Contains("slps")
+                || lowerExeName.Contains("slpm")
+                || lowerExeName.Contains("pbgp")
+                || lowerExeName.Contains("czp2")
+                || lowerExeName.Contains("hsn")
+                || lowerExeName.Contains("gn"))
+            {
+                region = Region.Japan;
+            }
+            else if (lowerExeName.Contains("scka")
+                || lowerExeName.Contains("slka"))
+            {
+                region = Region.Korea;
+            }
+            else if (lowerExeName.Contains("scaj")
+                || lowerExeName.Contains("sccs"))
+            {
+                region = Region.China;
             }
 
             // Now that we have the EXE name, try to get the fileinfo for it
             string exePath = Path.Combine(drivePath, exeName);
             if (!File.Exists(exePath))
-                return null;
+                return false;
 
             // Fix the Y2K timestamp issue
             FileInfo fi = new FileInfo(exePath);
             DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
                 fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
-            return dt.ToString("yyyy-MM-dd");
+            date = dt.ToString("yyyy-MM-dd");
+            return true;
         }
 
         /// <summary>
