@@ -670,16 +670,9 @@ namespace DICUI.Windows
                     break;
             }
 
-            // Choose the lower of the two speeds between the allowed speeds and the user-defined one
-            // TODO: Inform more users about setting preferences in the settings so this comparison doesn't need to happen
-            int chosenSpeed = Math.Min(
-                values.Where(s => s <= values[values.Count / 2]).Last(),
-                preferred
-            );
-
             // Set the selected speed
-            ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", chosenSpeed);
-            DriveSpeedComboBox.SelectedValue = chosenSpeed;
+            ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", preferred);
+            DriveSpeedComboBox.SelectedValue = preferred;
         }
 
         /// <summary>
