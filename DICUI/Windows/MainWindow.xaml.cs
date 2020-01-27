@@ -508,14 +508,8 @@ namespace DICUI.Windows
 
                 if (result)
                 {
-                    if (EjectWhenDoneCheckBox.IsChecked == true)
-                    {
-                        ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {_env.Drive.Letter}");
-                        _env.EjectDisc();
-                    }
-
                     // Verify dump output and save it
-                    result = _env.VerifyAndSaveDumpOutput(progress,
+                    result = _env.VerifyAndSaveDumpOutput(progress, EjectWhenDoneCheckBox.IsChecked,
                         (si) =>
                         {
                             // lazy initialization

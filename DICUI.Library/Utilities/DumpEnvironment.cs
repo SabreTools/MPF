@@ -419,7 +419,7 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
         {
             progress.Report(Result.Success("Gathering submission information... please wait!"));
 
@@ -430,6 +430,12 @@ namespace DICUI.Utilities
             progress?.Report(Result.Success("Extracting output information from output files..."));
             SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
             progress?.Report(Result.Success("Extracting information complete!"));
+
+            if (ejectDisc == true)
+            {
+                progress.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
+                EjectDisc();
+            }
 
             if (PromptForDiscInformation && ShowUserPrompt != null)
             {
