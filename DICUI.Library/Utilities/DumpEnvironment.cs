@@ -157,33 +157,13 @@ namespace DICUI.Utilities
             if (!File.Exists(DICPath))
                 return false;
 
-            // Use the drive speed command as a quick test
-            Process childProcess;
-            string output = await Task.Run(() =>
+            Parameters parameters = new Parameters(string.Empty)
             {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = DICPath,
-                        Arguments = DICCommandStrings.DriveSpeed + " " + Drive.Letter,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit(1000);
+                Command = DICCommand.DriveSpeed,
+                DriveLetter = Drive.Letter.ToString(),
+            };
 
-                // Just in case, we want to push a button 5 times to clear any errors
-                for (int i = 0; i < 5; i++)
-                    childProcess.StandardInput.WriteLine("Y");
-
-                string stdout = childProcess.StandardOutput.ReadToEnd();
-                childProcess.Dispose();
-                return stdout;
-            });
+            string output = await ExecuteDiscImageCreatorWithParameters(parameters);
 
             // If we get the firmware message
             if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
@@ -208,30 +188,13 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            Process childProcess;
-            await Task.Run(() =>
+            Parameters parameters = new Parameters(string.Empty)
             {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = DICPath,
-                        Arguments = DICCommandStrings.Eject + " " + Drive.Letter,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit(1000);
+                Command = DICCommand.Eject,
+                DriveLetter = Drive.Letter.ToString(),
+            };
 
-                // Just in case, we want to push a button 5 times to clear any errors
-                for (int i = 0; i < 5; i++)
-                    childProcess.StandardInput.WriteLine("Y");
-
-                childProcess.Dispose();
-            });
+            await ExecuteDiscImageCreatorWithParameters(parameters);
         }
 
         /// <summary>
@@ -390,6 +353,31 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Reset the current drive using DIC
+        /// </summary>
+        public async void ResetDrive()
+        {
+            // Validate that the required program exists
+            if (!File.Exists(DICPath))
+                return;
+
+            // Precautionary check for dumping, just in case
+            CancelDumping();
+
+            // Validate we're not trying to reset a non-optical
+            if (Drive.InternalDriveType != InternalDriveType.Optical)
+                return;
+
+            Parameters parameters = new Parameters(string.Empty)
+            {
+                Command = DICCommand.Reset,
+                DriveLetter = Drive.Letter.ToString(),
+            };
+
+            await ExecuteDiscImageCreatorWithParameters(parameters);
+        }
+
+        /// <summary>
         /// Execute a complete dump workflow
         /// </summary>
         public async Task<Result> StartDumping(IProgress<Result> progress)
@@ -422,7 +410,7 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc = null, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc = null, bool resetDrive = false, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
         {
             progress.Report(Result.Success("Gathering submission information... please wait!"));
 
@@ -438,6 +426,12 @@ namespace DICUI.Utilities
             {
                 progress.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
                 EjectDisc();
+            }
+
+            if (resetDrive)
+            {
+                progress.Report(Result.Success($"Resetting drive {Drive.Letter}"));
+                ResetDrive();
             }
 
             if (PromptForDiscInformation && ShowUserPrompt != null)
@@ -520,6 +514,43 @@ namespace DICUI.Utilities
             };
             dicProcess.Start();
             dicProcess.WaitForExit();
+        }
+
+        /// <summary>
+        /// Run DIC async with an input set of parameters
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns>Standard output from commandline window</returns>
+        private async Task<string> ExecuteDiscImageCreatorWithParameters(Parameters parameters)
+        {
+            Process childProcess;
+            string output = await Task.Run(() =>
+            {
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = DICPath,
+                        Arguments = parameters.GenerateParameters(),
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit(1000);
+
+                // Just in case, we want to push a button 5 times to clear any errors
+                for (int i = 0; i < 5; i++)
+                    childProcess.StandardInput.WriteLine("Y");
+
+                string stdout = childProcess.StandardOutput.ReadToEnd();
+                childProcess.Dispose();
+                return stdout;
+            });
+
+            return output;
         }
 
         /// <summary>

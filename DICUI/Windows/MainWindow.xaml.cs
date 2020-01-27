@@ -105,6 +105,12 @@ namespace DICUI.Windows
                     ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {_env.Drive.Letter}");
                     _env.EjectDisc();
                 }
+
+                if (_options.ResetDriveAfterDump)
+                {
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Resetting drive {_env.Drive.Letter}");
+                    _env.ResetDrive();
+                }
             }
         }
 
@@ -510,7 +516,9 @@ namespace DICUI.Windows
                 if (result)
                 {
                     // Verify dump output and save it
-                    result = _env.VerifyAndSaveDumpOutput(progress, EjectWhenDoneCheckBox.IsChecked,
+                    result = _env.VerifyAndSaveDumpOutput(progress,
+                        EjectWhenDoneCheckBox.IsChecked,
+                        _options.ResetDriveAfterDump,
                         (si) =>
                         {
                             // lazy initialization

@@ -23,6 +23,7 @@ namespace DICUI
         public bool AddPlaceholders { get; set; }
         public bool PromptForDiscInformation { get; set; }
         public bool IgnoreFixedDrives { get; set; }
+        public bool ResetDriveAfterDump { get; set; }
 
         public bool SkipMediaTypeDetection { get; set; }
         public bool SkipSystemDetection { get; set; }
@@ -74,6 +75,7 @@ namespace DICUI
             this.AddPlaceholders = GetBooleanSetting(configFile, "AddPlaceholders", true);
             this.PromptForDiscInformation = GetBooleanSetting(configFile, "PromptForDiscInformation", true);
             this.IgnoreFixedDrives = GetBooleanSetting(configFile, "IgnoreFixedDrives", false);
+            this.ResetDriveAfterDump = GetBooleanSetting(configFile, "ResetDriveAfterDump", false);
 
             this.Username = GetStringSetting(configFile, "Username", "");
             this.Password = GetStringSetting(configFile, "Password", "");

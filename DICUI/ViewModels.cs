@@ -59,6 +59,12 @@ namespace DICUI
             set { _options.IgnoreFixedDrives = value; }
         }
 
+        public bool ResetDriveAfterDump
+        {
+            get { return _options.ResetDriveAfterDump; }
+            set { _options.ResetDriveAfterDump = value; }
+        }
+
         public bool SkipMediaTypeDetection
         {
             get { return _options.SkipMediaTypeDetection; }
