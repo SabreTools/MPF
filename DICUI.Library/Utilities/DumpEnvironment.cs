@@ -242,7 +242,8 @@ namespace DICUI.Utilities
             try
             {
                 // Cache if we had a directory separator or not
-                bool endedWithDirectorySeparator = OutputDirectory.EndsWith(Path.DirectorySeparatorChar.ToString());
+                bool endedWithDirectorySeparator = OutputDirectory.EndsWith(Path.DirectorySeparatorChar.ToString())
+                    || OutputDirectory.EndsWith(Path.AltDirectorySeparatorChar.ToString());
                 bool endedWithSpace = OutputDirectory.EndsWith(" ");
 
                 // Combine the path to make things separate easier
@@ -372,10 +373,9 @@ namespace DICUI.Utilities
                 if (Drive == null)
                     return null;
 
-                FixOutputPaths();
-
                 // Set the proper parameters
-                DICParameters = new Parameters(System, Type, Drive.Letter, Path.Combine(OutputDirectory, OutputFilename), driveSpeed, ParanoidMode, RereadAmountC2);
+                string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
+                DICParameters = new Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
                 if (QuietMode)
                     DICParameters[DICFlag.DisableBeep] = true;
 

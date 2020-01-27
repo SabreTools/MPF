@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
@@ -427,9 +426,6 @@ namespace DICUI.Windows
                 Type = MediaTypeComboBox.SelectedItem as MediaType?,
             };
 
-            // Fix the output paths
-            env.FixOutputPaths();
-
             // Disable automatic reprocessing of the textboxes until we're done
             OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
             OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
@@ -465,6 +461,9 @@ namespace DICUI.Windows
                     return;
                 // If "No", then we continue with the current known environment
             }
+
+            // Fix the output paths
+            _env.FixOutputPaths();
 
             try
             {
