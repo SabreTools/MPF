@@ -77,13 +77,13 @@
                 </ComboBox>
 
                 <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                <ListBox x:Name="LanguagesComboBox" Grid.Row="6" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" SelectionMode="Multiple">
-                    <ListBox.ItemTemplate>
+                <ComboBox x:Name="LanguagesComboBox" Grid.Row="6" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
+                    <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
                         </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <Label Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Serial" />
                 <TextBox x:Name="SerialTextBox" Grid.Row="7" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
