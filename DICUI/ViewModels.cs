@@ -31,6 +31,34 @@ namespace DICUI
             set { _options.ScanForProtection = value; }
         }
 
+        public string RereadAmountForC2
+        {
+            get { return Convert.ToString(_options.RereadAmountForC2); }
+            set
+            {
+                if (Int32.TryParse(value, out int result))
+                    _options.RereadAmountForC2 = result;
+            }
+        }
+
+        public bool AddPlaceholders
+        {
+            get { return _options.AddPlaceholders; }
+            set { _options.AddPlaceholders = value; }
+        }
+
+        public bool PromptForDiscInformation
+        {
+            get { return _options.PromptForDiscInformation; }
+            set { _options.PromptForDiscInformation = value; }
+        }
+
+        public bool IgnoreFixedDrives
+        {
+            get { return _options.IgnoreFixedDrives; }
+            set { _options.IgnoreFixedDrives = value; }
+        }
+
         public bool SkipMediaTypeDetection
         {
             get { return _options.SkipMediaTypeDetection; }
@@ -41,16 +69,6 @@ namespace DICUI
         {
             get { return _options.SkipSystemDetection; }
             set { _options.SkipSystemDetection = value; }
-        }
-
-        public string RereadAmountForC2
-        {
-            get { return Convert.ToString(_options.RereadAmountForC2); }
-            set
-            {
-                if (Int32.TryParse(value, out int result))
-                    _options.RereadAmountForC2 = result;
-            }
         }
 
         public bool VerboseLogging
@@ -71,6 +89,18 @@ namespace DICUI
                 _options.OpenLogWindowAtStartup = value;
                 _options.Save();
             }
+        }
+
+        public string Username
+        {
+            get { return _options.Username; }
+            set { _options.Username = value; }
+        }
+
+        public string Password
+        {
+            get { return _options.Password; }
+            set { _options.Password = value; }
         }
     }
 

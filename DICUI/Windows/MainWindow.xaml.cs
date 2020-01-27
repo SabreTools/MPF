@@ -249,6 +249,7 @@ namespace DICUI.Windows
 
         public void OnOptionsUpdated()
         {
+            PopulateDrives();
             GetOutputNames(false);
             SetSupportedDriveSpeed();
             EnsureDiscInformation();
@@ -326,7 +327,7 @@ namespace DICUI.Windows
             DiskScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            _drives = Validators.CreateListOfDrives();
+            _drives = Validators.CreateListOfDrives(_options.IgnoreFixedDrives);
             DriveLetterComboBox.ItemsSource = _drives;
 
             if (DriveLetterComboBox.Items.Count > 0)

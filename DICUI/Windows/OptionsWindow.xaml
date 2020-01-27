@@ -5,13 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Options" Height="580" Width="515.132">
+        Title="Options" Width="515.132" Height="552">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition Height="150"/>
             <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="80"/>
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
@@ -84,58 +84,58 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="24*" />
-                    <RowDefinition Height="13*" />
-                    <RowDefinition Height="11*"/>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
-
-                <CheckBox Grid.Column="0" VerticalAlignment="Center" Content="Quiet Mode" 
+                <CheckBox Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Quiet Mode" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=QuietMode}" 
                           ToolTip="Disable DiscImageCreator sounds" Margin="0,4" 
                           />
-                <CheckBox Grid.Column="1" VerticalAlignment="Center" Content="Paranoid Mode" 
+                
+                <CheckBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Paranoid Mode" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=ParanoidMode}"
                           ToolTip="Enable pedantic and super-safe flags" Margin="0,4" 
                           />
-                <Grid Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
 
-                    <Label Grid.Column="0" Content="C2 Reread Tries:" />
-                    <TextBox Grid.Column="1" VerticalAlignment="Center"
+                <Label Grid.Row="0" Grid.Column="2" Content="C2 Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <TextBox Grid.Row="0" Grid.Column="3" VerticalAlignment="Center"
                              DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                              Text="{Binding Path=RereadAmountForC2}"
                              ToolTip="Specifies how many rereads are attempted on C2 error"
                              />
-                </Grid>
 
-                <CheckBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Top" Content="Protection Scan" 
+                <CheckBox Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Content="Protection Scan" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=ScanForProtection}"
-                          ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0" Grid.RowSpan="2"
+                          ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                           />
 
                 <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Content="Skip Type Detect" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=SkipMediaTypeDetection}"
-                          ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4" Grid.RowSpan="2" 
+                          ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
                           />
 
-                <CheckBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Content="Add Placeholders" 
+                <CheckBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Add Placeholders" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=AddPlaceholders}"
-                          ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4" Grid.RowSpan="2" 
+                          ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
                           />
 
-                <CheckBox Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Content="Show Disc Info" 
+                <CheckBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Show Disc Info" 
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
                           IsChecked="{Binding Path=PromptForDiscInformation}"
-                          ToolTip="Enable showing the disc information output after dumping" Margin="0,4" Grid.RowSpan="2" 
+                          ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
+                          />
+
+                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="No Fixed Drives" 
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+                          IsChecked="{Binding Path=IgnoreFixedDrives}" 
+                          ToolTip="Ignore hard drives and other fixed drives" Margin="0,4" 
                           />
             </Grid>
 

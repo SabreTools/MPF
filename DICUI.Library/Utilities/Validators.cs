@@ -695,16 +695,24 @@ namespace DICUI.Utilities
         /// <summary>
         /// Create a list of active drives matched to their volume labels
         /// </summary>
+        /// <param name="ignoreFixedDrives">Ture to ignore fixed drives from population, false otherwise</param>
         /// <returns>Active drives, matched to labels, if possible</returns>
         /// <remarks>
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// </remarks>
-        public static List<Drive> CreateListOfDrives()
+        public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
+            var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
+            if (!ignoreFixedDrives)
+            {
+                desiredDriveTypes.Add(DriveType.Fixed);
+                desiredDriveTypes.Add(DriveType.Removable);
+            }
+
             // Get all supported drive types
             var drives = DriveInfo.GetDrives()
-                .Where(d => d.DriveType == DriveType.CDRom || d.DriveType == DriveType.Fixed || d.DriveType == DriveType.Removable)
+                .Where(d => desiredDriveTypes.Contains(d.DriveType))
                 .Select(d => new Drive(Converters.ToInternalDriveType(d.DriveType), d))
                 .ToList();
 
