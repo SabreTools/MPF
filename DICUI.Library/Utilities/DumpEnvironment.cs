@@ -419,7 +419,7 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
+        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc = null, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
         {
             progress.Report(Result.Success("Gathering submission information... please wait!"));
 
