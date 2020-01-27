@@ -36,8 +36,8 @@ namespace DICUI.Test
         [InlineData("super\\hero", "blah.bin", "super\\hero", "blah.bin")]
         [InlineData("super.hero", "blah.bin", "super.hero", "blah.bin")]
         [InlineData("superhero", "blah.rev.bin", "superhero", "blah.rev.bin")]
-        [InlineData("super&hero", "blah.bin", "super_hero", "blah.bin")]
-        [InlineData("superhero", "blah&foo.bin", "superhero", "blah_foo.bin")]
+        [InlineData("super&hero", "blah.bin", "super&hero", "blah.bin")]
+        [InlineData("superhero", "blah&foo.bin", "superhero", "blah&foo.bin")]
         public void FixOutputPathsTest(string outputDirectory, string outputFilename, string expectedOutputDirectory, string expectedOutputFilename)
         {
             var env = new DumpEnvironment
