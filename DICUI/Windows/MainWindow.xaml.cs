@@ -508,6 +508,12 @@ namespace DICUI.Windows
 
                 if (result)
                 {
+                    if (EjectWhenDoneCheckBox.IsChecked == true)
+                    {
+                        ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {_env.Drive.Letter}");
+                        _env.EjectDisc();
+                    }
+
                     // Verify dump output and save it
                     result = _env.VerifyAndSaveDumpOutput(progress,
                         (si) =>
@@ -541,12 +547,6 @@ namespace DICUI.Windows
             {
                 StartStopButton.Content = Constants.StartDumping;
                 CopyProtectScanButton.IsEnabled = true;
-            }
-
-            if (EjectWhenDoneCheckBox.IsChecked == true)
-            {
-                ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {_env.Drive.Letter}");
-                _env.EjectDisc();
             }
         }
 
