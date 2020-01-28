@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using DICUI.Data;
 using DICUI.Utilities;
+using DICUI.Web;
+using Newtonsoft.Json.Linq;
 
 namespace DICUI.Windows
 {
@@ -228,11 +231,10 @@ namespace DICUI.Windows
 
         private void AboutClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show($"ReignStumble - Project Lead / UI Design{Environment.NewLine}" +
-                $"darksabre76 - Project Co-Lead / Backend Design{Environment.NewLine}" +
-                $"Jakz - Feature Contributor{Environment.NewLine}" +
-                $"NHellFire - Feature Contributor{Environment.NewLine}" +
-                $"Dizzzy - Concept/Ideas/Beta tester{Environment.NewLine}", "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"darksabre76 - Project Lead / Backend Design"
+                + $"{Environment.NewLine}ReignStumble - Former Project Lead / UI Design"
+                + $"{Environment.NewLine}Jakz - Primary Feature Contributor"
+                + $"{Environment.NewLine}NHellFire - Feature Contributor", "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void OptionsClick(object sender, RoutedEventArgs e)
@@ -251,6 +253,40 @@ namespace DICUI.Windows
             _optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             _optionsWindow.Refresh();
             _optionsWindow.Show();
+        }
+
+        private void CheckForUpdatesClick(object sender, RoutedEventArgs e)
+        {
+            // Get the current internal version
+            var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
+            string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.MajorRevision != 0 ? $".{assemblyVersion.MajorRevision}" : string.Empty);
+
+            // Get the latest tag from GitHub
+            using (var client = new CookieAwareWebClient())
+            {
+                client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
+
+                // TODO: Figure out a better way than having this hardcoded...
+                string url = "https://api.github.com/repos/SabreTools/DICUI/releases/latest";
+                string latestReleaseJsonString = client.DownloadString(url);
+                var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
+                string latestTag = latestReleaseJson["tag_name"].ToString();
+                string releaseUrl = latestReleaseJson["html_url"].ToString();
+
+                bool different = version != latestTag;
+
+                string message = $"Local version: {version}"
+                    + $"{Environment.NewLine}Remote version: {latestTag}"
+                    + (different
+                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
+                        : $"{Environment.NewLine}You have the newest version!");
+                
+                // If we have a new version, put it in the clipboard
+                if (different)
+                    Clipboard.SetText(releaseUrl);
+
+                MessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+            }
         }
 
         public void OnOptionsUpdated()
