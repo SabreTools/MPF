@@ -2020,6 +2020,28 @@ namespace DICUI.Utilities
                 }
             }
 
+            // Special cases
+            else if (exeName.StartsWith("PAPX"))
+            {
+                region = Region.Japan;
+            }
+            else if (exeName.StartsWith("PABX"))
+            {
+                // Region appears entirely random
+            }
+            else if (exeName.StartsWith("PCBX"))
+            {
+                region = Region.Japan;
+            }
+            else if (exeName.StartsWith("PDBX"))
+            {
+                // Single disc known, Japan
+            }
+            else if (exeName.StartsWith("PEBX"))
+            {
+                // Single disc known, Europe
+            }
+
             // Now that we have the EXE name, try to get the fileinfo for it
             string exePath = Path.Combine(drivePath, exeName);
             if (!File.Exists(exePath))
