@@ -666,6 +666,14 @@ namespace DICUI.Windows
                 CopyProtectScanButton.IsEnabled = false;
 
                 string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\");
+
+                // If SmartE is detected on the current disc, remove `/sf` from the flags
+                if (protections.Contains("SmartE"))
+                {
+                    _env.DICParameters[DICFlag.ScanFileProtect] = false;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DICFlagStrings.ScanFileProtect} from parameters");
+                }
+
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
                 ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", _env.Drive.Letter, protections);
