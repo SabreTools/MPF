@@ -1007,7 +1007,15 @@ namespace DICUI.Utilities
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
-                    info.EDC.EDC = GetMissingEDCCount(combinedBase + ".img_EdcEcc.txt") > 0 ? YesNo.No : YesNo.Yes;
+
+                    bool? psEdcStatus = GetPlayStationEDCStatus(combinedBase + ".img_EdcEcc.txt");
+                    if (psEdcStatus == true)
+                        info.EDC.EDC = YesNo.Yes;
+                    else if (psEdcStatus == false)
+                        info.EDC.EDC = YesNo.No;
+                    else
+                        info.EDC.EDC = YesNo.NULL;
+
                     info.CopyProtection.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
                     info.CopyProtection.LibCrypt = YesNo.No;
                     if (File.Exists(combinedBase + "_subIntention.txt"))
@@ -1866,63 +1874,77 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the detected missing EDC count from the input files, if possible
+        /// Get the hex contents of the PIC file
         /// </summary>
-        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
-        /// <returns>Missing EDC count if possible, -1 on error</returns>
-        private long GetMissingEDCCount(string edcecc)
+        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
+        /// <returns>PIC data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        private string GetPIC(string picPath)
         {
-            // If one of the files doesn't exist, we can't get info from them
-            if (!File.Exists(edcecc))
-                return -1;
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(picPath))
+                return null;
 
-            // First line of defense is the EdcEcc error file
-            using (StreamReader sr = File.OpenText(edcecc))
+            try
             {
-                try
+                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
                 {
-                    // Fast forward to the PVD
-                    string line = sr.ReadLine();
-                    while (!line.StartsWith("[INFO] Number of sector(s) where EDC doesn't exist: "))
-                        line = sr.ReadLine();
-
-                    return Int64.Parse(line.Remove(0, "[INFO] Number of sector(s) where EDC doesn't exist: ".Length).Trim());
+                    string hex = BitConverter.ToString(br.ReadBytes(140)).Replace("-", string.Empty);
+                    return Regex.Replace(hex, ".{32}", "$0\n");
                 }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return -1;
-                }
+            }
+            catch
+            {
+                // We don't care what the error was right now
+                return null;
             }
         }
 
         /// <summary>
-        /// Get the PVD from the input file, if possible
+        /// Get the detected missing EDC count from the input files, if possible
         /// </summary>
-        /// <param name="mainInfo">_mainInfo.txt file location</param>
-        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
-        private string GetPVD(string mainInfo)
+        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <returns>Status of PS1 EDC, if possible</returns>
+        private bool? GetPlayStationEDCStatus(string edcecc)
         {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(mainInfo))
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(edcecc))
                 return null;
 
-            using (StreamReader sr = File.OpenText(mainInfo))
+            // First line of defense is the EdcEcc error file
+            int modeTwoNoEdc = 0;
+            int modeTwoFormTwo = 0;
+            using (StreamReader sr = File.OpenText(edcecc))
             {
                 try
                 {
-                    // Make sure we're in the right sector
-                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel ==========")) ;
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        if (line.Contains("mode 2 form 2"))
+                            modeTwoFormTwo++;
+                        else if (line.Contains("mode 2 no edc"))
+                            modeTwoNoEdc++;
+                    }
 
-                    // Fast forward to the PVD
-                    while (!sr.ReadLine().StartsWith("0310")) ;
+                    // This shouldn't happen
+                    if (modeTwoNoEdc == 0 && modeTwoFormTwo == 0)
+                        return null;
 
-                    // Now that we're at the PVD, read each line in and concatenate
-                    string pvd = "";
-                    for (int i = 0; i < 6; i++)
-                        pvd += sr.ReadLine() + "\n"; // 320-370
+                    // EDC exists
+                    else if (modeTwoNoEdc == 0 && modeTwoFormTwo != 0)
+                        return true;
 
-                    return pvd;
+                    // EDC doesn't exist
+                    else if (modeTwoNoEdc != 0 && modeTwoFormTwo == 0)
+                        return false;
+
+                    // This shouldn't happen
+                    else if (modeTwoNoEdc != 0 && modeTwoFormTwo != 0)
+                        return null;
+
+                    // No idea how it would fall through
+                    return null;
                 }
                 catch
                 {
@@ -2098,33 +2120,6 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the hex contents of the PIC file
-        /// </summary>
-        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
-        /// <returns>PIC data as a hex string if possible, null on error</returns>
-        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        private string GetPIC(string picPath)
-        {
-            // If the file doesn't exist, we can't get the info
-            if (!File.Exists(picPath))
-                return null;
-
-            try
-            {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
-                {
-                    string hex = BitConverter.ToString(br.ReadBytes(140)).Replace("-", string.Empty);
-                    return Regex.Replace(hex, ".{32}", "$0\n");
-                }
-            }
-            catch
-            {
-                // We don't care what the error was right now
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Get the version from a PlayStation 4 disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
@@ -2162,11 +2157,11 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the header from a Sega CD / Mega CD, Saturn, or Dreamcast Low-Density region, if possible
+        /// Get the PVD from the input file, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
-        /// <returns>Header as a byte array if possible, null on error</returns>
-        private string GetSegaHeader(string mainInfo)
+        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
+        private string GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -2177,23 +2172,54 @@ namespace DICUI.Utilities
                 try
                 {
                     // Make sure we're in the right sector
-                    while (!sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel ==========")) ;
 
-                    // Fast forward to the header
-                    while (!sr.ReadLine().Trim().StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")) ;
+                    // Fast forward to the PVD
+                    while (!sr.ReadLine().StartsWith("0310")) ;
 
-                    // Now that we're at the Header, read each line in and concatenate
-                    string header = "";
-                    for (int i = 0; i < 32; i++)
-                        header += sr.ReadLine() + "\n"; // 0000-01F0
+                    // Now that we're at the PVD, read each line in and concatenate
+                    string pvd = "";
+                    for (int i = 0; i < 6; i++)
+                        pvd += sr.ReadLine() + "\n"; // 320-370
 
-                    return header;
+                    return pvd;
                 }
                 catch
                 {
                     // We don't care what the exception is right now
                     return null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a Saturn disc, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        {
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (string.IsNullOrWhiteSpace(segaHeader))
+                return false;
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader.Split('\n');
+                string serialVersionLine = header[2].Substring(58);
+                string dateLine = header[3].Substring(58);
+                serial = serialVersionLine.Substring(0, 8);
+                version = serialVersionLine.Substring(10, 6);
+                date = dateLine.Substring(0, 8);
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
             }
         }
 
@@ -2282,33 +2308,38 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the build info from a Saturn disc, if possible
+        /// Get the header from a Sega CD / Mega CD, Saturn, or Dreamcast Low-Density region, if possible
         /// </summary>
-        /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
-        /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        /// <param name="mainInfo">_mainInfo.txt file location</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private string GetSegaHeader(string mainInfo)
         {
-            serial = null; version = null; date = null;
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(mainInfo))
+                return null;
 
-            // If the input header is null, we can't do a thing
-            if (string.IsNullOrWhiteSpace(segaHeader))
-                return false;
+            using (StreamReader sr = File.OpenText(mainInfo))
+            {
+                try
+                {
+                    // Make sure we're in the right sector
+                    while (!sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
 
-            // Now read it in cutting it into lines for easier parsing
-            try
-            {
-                string[] header = segaHeader.Split('\n');
-                string serialVersionLine = header[2].Substring(58);
-                string dateLine = header[3].Substring(58);
-                serial = serialVersionLine.Substring(0, 8);
-                version = serialVersionLine.Substring(10, 6);
-                date = dateLine.Substring(0, 8);
-                return true;
-            }
-            catch
-            {
-                // We don't care what the error is
-                return false;
+                    // Fast forward to the header
+                    while (!sr.ReadLine().Trim().StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")) ;
+
+                    // Now that we're at the Header, read each line in and concatenate
+                    string header = "";
+                    for (int i = 0; i < 32; i++)
+                        header += sr.ReadLine() + "\n"; // 0000-01F0
+
+                    return header;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
             }
         }
 
@@ -2378,6 +2409,40 @@ namespace DICUI.Utilities
                     return Category.Audio;
                 default:
                     return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private string GetWriteOffset(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the offsets
+                    while (!sr.ReadLine().Trim().StartsWith("========== Offset")) ;
+                    sr.ReadLine(); // Combined Offset
+                    sr.ReadLine(); // Drive Offset
+                    sr.ReadLine(); // Separator line
+
+                    // Now that we're at the offsets, attempt to get the sample offset
+                    return sr.ReadLine().Split(' ').LastOrDefault();
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
             }
         }
 
@@ -2539,40 +2604,6 @@ namespace DICUI.Utilities
                     return Region.JapanEurope;
                 default:
                     return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the write offset from the input file, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Sample write offset if possible, null on error</returns>
-        private string GetWriteOffset(string disc)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-            {
-                return null;
-            }
-
-            using (StreamReader sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Fast forward to the offsets
-                    while (!sr.ReadLine().Trim().StartsWith("========== Offset")) ;
-                    sr.ReadLine(); // Combined Offset
-                    sr.ReadLine(); // Drive Offset
-                    sr.ReadLine(); // Separator line
-
-                    // Now that we're at the offsets, attempt to get the sample offset
-                    return sr.ReadLine().Split(' ').LastOrDefault();
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
             }
         }
 
