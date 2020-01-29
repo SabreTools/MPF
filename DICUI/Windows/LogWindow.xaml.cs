@@ -363,6 +363,20 @@ namespace DICUI.Windows
         {
             output.Document.Blocks.Clear();
         }
+        
+        private void OnSaveButton(object sender, EventArgs e)
+        {
+            using (StreamWriter tw = new StreamWriter(File.OpenWrite("console.log")))
+            {
+                foreach (var inline in _paragraph.Inlines)
+                {
+                    if (inline is Run)
+                    {
+                        tw.Write(((Run)(inline)).Text);
+                    }
+                }
+            }
+        }
 
         private void OnAbortButton(object sender, EventArgs args)
         {
