@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BurnOutSharp.External.psxt001z;
 using DICUI.Data;
 using DICUI.Web;
 using Newtonsoft.Json;
@@ -1017,15 +1018,24 @@ namespace DICUI.Utilities
                         info.EDC.EDC = YesNo.NULL;
 
                     info.CopyProtection.AntiModchip = GetAntiModchipDetected(combinedBase + "_disc.txt") ? YesNo.Yes : YesNo.No;
-                    info.CopyProtection.LibCrypt = YesNo.No;
-                    if (File.Exists(combinedBase + "_subIntention.txt"))
+
+                    bool? psLibCryptStatus = GetLibCryptDetected(combinedBase + ".sub");
+                    if (psLibCryptStatus == true)
                     {
-                        FileInfo fi = new FileInfo(combinedBase + "_subIntention.txt");
-                        if (fi.Length > 0)
-                        {
-                            info.CopyProtection.LibCrypt = YesNo.Yes;
+                        info.CopyProtection.LibCrypt = YesNo.Yes;
+                        if (File.Exists(combinedBase + "_subIntention.txt"))
                             info.CopyProtection.LibCryptData = GetFullFile(combinedBase + "_subIntention.txt") ?? "";
-                        }
+                        else
+                            info.CopyProtection.LibCryptData = "LibCrypt detected but no subIntention data found!";
+                    }
+                    else if (psLibCryptStatus == false)
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.No;
+                    }
+                    else
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.NULL;
+                        info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
                     }
 
                     break;
@@ -1871,6 +1881,20 @@ namespace DICUI.Utilities
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get if LibCrypt data is detected in the subchannel file, if possible
+        /// </summary>
+        /// <param name="sub">.sub file location</param>
+        /// <returns>Status of the LibCrypt data, if possible</returns>
+        private bool? GetLibCryptDetected(string sub)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(sub))
+                return null;
+
+            return LibCrypt.CheckSubfile(sub);
         }
 
         /// <summary>
