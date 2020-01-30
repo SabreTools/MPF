@@ -10,12 +10,12 @@ namespace DICUI.Utilities
     /// <summary>
     ///  Represents a generic set of DiscImageCreator parameters
     /// </summary>
-    public class Parameters
+    public class CreatorParameters
     {
         /// <summary>
         /// Base DiscImageCreator command to run
         /// </summary>
-        public DICCommand Command { get; set; }
+        public CreatorCommand Command { get; set; }
 
         /// <summary>
         /// Drive letter or path to pass to DiscImageCreator
@@ -50,8 +50,8 @@ namespace DICUI.Utilities
         /// <summary>
         /// Set of flags to pass to DiscImageCreator
         /// </summary>
-        private Dictionary<DICFlag, bool> _flags = new Dictionary<DICFlag, bool>();
-        public bool this[DICFlag key]
+        private Dictionary<CreatorFlag, bool> _flags = new Dictionary<CreatorFlag, bool>();
+        public bool this[CreatorFlag key]
         {
             get
             {
@@ -64,7 +64,7 @@ namespace DICUI.Utilities
                 _flags[key] = value;
             }
         }
-        internal IEnumerable<DICFlag> Keys => _flags.Keys;
+        internal IEnumerable<CreatorFlag> Keys => _flags.Keys;
 
         #region DIC Flag Values
 
@@ -125,12 +125,12 @@ namespace DICUI.Utilities
         /// Populate a Parameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
-        public Parameters(string parameters)
+        public CreatorParameters(string parameters)
         {
             // If any parameters are not valid, wipe out everything
             if (!ValidateAndSetParameters(parameters))
             {
-                Command = DICCommand.NONE;
+                Command = CreatorCommand.NONE;
 
                 DriveLetter = null;
                 DriveSpeed = null;
@@ -140,7 +140,7 @@ namespace DICUI.Utilities
                 StartLBAValue = null;
                 EndLBAValue = null;
 
-                _flags = new Dictionary<DICFlag, bool>();
+                _flags = new Dictionary<CreatorFlag, bool>();
 
                 AddOffsetValue = null;
                 BEOpcodeValue = null;
@@ -163,7 +163,7 @@ namespace DICUI.Utilities
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
         /// <param name="rereadCount">User-defined reread count</param>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int rereadCount)
+        public CreatorParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int rereadCount)
         {
             SetBaseCommand(system, type);
             DriveLetter = driveLetter.ToString();
@@ -198,29 +198,29 @@ namespace DICUI.Utilities
             // Determine what the commandline should look like given the first item
             switch (Command)
             {
-                case DICCommand.Audio:
-                case DICCommand.CompactDisc:
-                case DICCommand.Data:
-                case DICCommand.DigitalVideoDisc:
-                case DICCommand.GDROM:
-                case DICCommand.Swap:
+                case CreatorCommand.Audio:
+                case CreatorCommand.CompactDisc:
+                case CreatorCommand.Data:
+                case CreatorCommand.DigitalVideoDisc:
+                case CreatorCommand.GDROM:
+                case CreatorCommand.Swap:
                     // GameCube and Wii
-                    if (this[DICFlag.Raw])
+                    if (this[CreatorFlag.Raw])
                     {
                         type = MediaType.NintendoGameCubeGameDisc;
                         system = KnownSystem.NintendoGameCube;
                     }
 
                     // PlayStation
-                    else if (this[DICFlag.NoFixSubQLibCrypt]
-                        || this[DICFlag.ScanAntiMod])
+                    else if (this[CreatorFlag.NoFixSubQLibCrypt]
+                        || this[CreatorFlag.ScanAntiMod])
                     {
                         type = MediaType.CDROM;
                         system = KnownSystem.SonyPlayStation;
                     }
 
                     // Saturn
-                    else if (this[DICFlag.SeventyFour])
+                    else if (this[CreatorFlag.SeventyFour])
                     {
                         type = MediaType.CDROM;
                         system = KnownSystem.SegaSaturn;
@@ -240,32 +240,32 @@ namespace DICUI.Utilities
         {
             List<string> parameters = new List<string>();
 
-            if (Command != DICCommand.NONE)
+            if (Command != CreatorCommand.NONE)
                 parameters.Add(Command.LongName());
             else
                 return null;
 
             // Drive Letter
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.BluRay
-                || Command == DICCommand.Close
-                || Command == DICCommand.CompactDisc
-                || Command == DICCommand.Data
-                || Command == DICCommand.DigitalVideoDisc
-                || Command == DICCommand.Disk
-                || Command == DICCommand.DriveSpeed
-                || Command == DICCommand.Eject
-                || Command == DICCommand.Floppy
-                || Command == DICCommand.GDROM
-                || Command == DICCommand.Reset
-                || Command == DICCommand.SACD
-                || Command == DICCommand.Start
-                || Command == DICCommand.Stop
-                || Command == DICCommand.Swap
-                || Command == DICCommand.XBOX
-                || Command == DICCommand.XBOXSwap
-                || Command == DICCommand.XGD2Swap
-                || Command == DICCommand.XGD3Swap)
+            if (Command == CreatorCommand.Audio
+                || Command == CreatorCommand.BluRay
+                || Command == CreatorCommand.Close
+                || Command == CreatorCommand.CompactDisc
+                || Command == CreatorCommand.Data
+                || Command == CreatorCommand.DigitalVideoDisc
+                || Command == CreatorCommand.Disk
+                || Command == CreatorCommand.DriveSpeed
+                || Command == CreatorCommand.Eject
+                || Command == CreatorCommand.Floppy
+                || Command == CreatorCommand.GDROM
+                || Command == CreatorCommand.Reset
+                || Command == CreatorCommand.SACD
+                || Command == CreatorCommand.Start
+                || Command == CreatorCommand.Stop
+                || Command == CreatorCommand.Swap
+                || Command == CreatorCommand.XBOX
+                || Command == CreatorCommand.XBOXSwap
+                || Command == CreatorCommand.XGD2Swap
+                || Command == CreatorCommand.XGD3Swap)
             {
                 if (DriveLetter != null)
                     parameters.Add(DriveLetter);
@@ -274,23 +274,23 @@ namespace DICUI.Utilities
             }
 
             // Filename
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.BluRay
-                || Command == DICCommand.CompactDisc
-                || Command == DICCommand.Data
-                || Command == DICCommand.DigitalVideoDisc
-                || Command == DICCommand.Disk
-                || Command == DICCommand.Floppy
-                || Command == DICCommand.GDROM
-                || Command == DICCommand.MDS
-                || Command == DICCommand.Merge
-                || Command == DICCommand.SACD
-                || Command == DICCommand.Swap
-                || Command == DICCommand.Sub
-                || Command == DICCommand.XBOX
-                || Command == DICCommand.XBOXSwap
-                || Command == DICCommand.XGD2Swap
-                || Command == DICCommand.XGD3Swap)
+            if (Command == CreatorCommand.Audio
+                || Command == CreatorCommand.BluRay
+                || Command == CreatorCommand.CompactDisc
+                || Command == CreatorCommand.Data
+                || Command == CreatorCommand.DigitalVideoDisc
+                || Command == CreatorCommand.Disk
+                || Command == CreatorCommand.Floppy
+                || Command == CreatorCommand.GDROM
+                || Command == CreatorCommand.MDS
+                || Command == CreatorCommand.Merge
+                || Command == CreatorCommand.SACD
+                || Command == CreatorCommand.Swap
+                || Command == CreatorCommand.Sub
+                || Command == CreatorCommand.XBOX
+                || Command == CreatorCommand.XBOXSwap
+                || Command == CreatorCommand.XGD2Swap
+                || Command == CreatorCommand.XGD3Swap)
             {
                 if (Filename != null)
                     parameters.Add("\"" + Filename.Trim('"') + "\"");
@@ -299,7 +299,7 @@ namespace DICUI.Utilities
             }
 
             // Optiarc Filename
-            if (Command == DICCommand.Merge)
+            if (Command == CreatorCommand.Merge)
             {
                 if (OptiarcFilename != null)
                     parameters.Add("\"" + OptiarcFilename.Trim('"') + "\"");
@@ -308,18 +308,18 @@ namespace DICUI.Utilities
             }
 
             // Drive Speed
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.BluRay
-                || Command == DICCommand.CompactDisc
-                || Command == DICCommand.Data
-                || Command == DICCommand.DigitalVideoDisc
-                || Command == DICCommand.GDROM
-                || Command == DICCommand.SACD
-                || Command == DICCommand.Swap
-                || Command == DICCommand.XBOX
-                || Command == DICCommand.XBOXSwap
-                || Command == DICCommand.XGD2Swap
-                || Command == DICCommand.XGD3Swap)
+            if (Command == CreatorCommand.Audio
+                || Command == CreatorCommand.BluRay
+                || Command == CreatorCommand.CompactDisc
+                || Command == CreatorCommand.Data
+                || Command == CreatorCommand.DigitalVideoDisc
+                || Command == CreatorCommand.GDROM
+                || Command == CreatorCommand.SACD
+                || Command == CreatorCommand.Swap
+                || Command == CreatorCommand.XBOX
+                || Command == CreatorCommand.XBOXSwap
+                || Command == CreatorCommand.XGD2Swap
+                || Command == CreatorCommand.XGD3Swap)
             {
                 if (DriveSpeed != null)
                     parameters.Add(DriveSpeed.ToString());
@@ -328,8 +328,8 @@ namespace DICUI.Utilities
             }
 
             // LBA Markers
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.Data)
+            if (Command == CreatorCommand.Audio
+                || Command == CreatorCommand.Data)
             {
                 if (StartLBAValue != null && StartLBAValue > 0
                     && EndLBAValue != null && EndLBAValue > 0)
@@ -342,12 +342,12 @@ namespace DICUI.Utilities
             }
 
             // Add Offset
-            if (Command == DICCommand.Audio
-                || Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.Audio
+                || Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.AddOffset])
+                if (this[CreatorFlag.AddOffset])
                 {
-                    parameters.Add(DICFlag.AddOffset.LongName());
+                    parameters.Add(CreatorFlag.AddOffset.LongName());
                     if (AddOffsetValue != null)
                         parameters.Add(AddOffsetValue.ToString());
                     else
@@ -356,29 +356,29 @@ namespace DICUI.Utilities
             }
 
             // AMSF Dumping
-            if (Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.AMSF])
-                    parameters.Add(DICFlag.AMSF.LongName());
+                if (this[CreatorFlag.AMSF])
+                    parameters.Add(CreatorFlag.AMSF.LongName());
             }
 
             // Atari Jaguar CD
-            if (Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.AtariJaguar])
-                    parameters.Add(DICFlag.AtariJaguar.LongName());
+                if (this[CreatorFlag.AtariJaguar])
+                    parameters.Add(CreatorFlag.AtariJaguar.LongName());
             }
 
             // BE Opcode
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.BEOpcode] && !this[DICFlag.D8Opcode])
+                if (this[CreatorFlag.BEOpcode] && !this[CreatorFlag.D8Opcode])
                 {
-                    parameters.Add(DICFlag.BEOpcode.LongName());
+                    parameters.Add(CreatorFlag.BEOpcode.LongName());
                     if (BEOpcodeValue != null
                         && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
                         parameters.Add(BEOpcodeValue);
@@ -386,15 +386,15 @@ namespace DICUI.Utilities
             }
 
             // C2 Opcode
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.C2Opcode])
+                if (this[CreatorFlag.C2Opcode])
                 {
-                    parameters.Add(DICFlag.C2Opcode.LongName());
+                    parameters.Add(CreatorFlag.C2Opcode.LongName());
                     if (C2OpcodeValue[0] != null)
                     {
                         if (C2OpcodeValue[0] > 0)
@@ -427,171 +427,171 @@ namespace DICUI.Utilities
             }
 
             // Copyright Management Information
-            if (Command == DICCommand.DigitalVideoDisc)
+            if (Command == CreatorCommand.DigitalVideoDisc)
             {
-                if (this[DICFlag.CopyrightManagementInformation])
-                    parameters.Add(DICFlag.CopyrightManagementInformation.LongName());
+                if (this[CreatorFlag.CopyrightManagementInformation])
+                    parameters.Add(CreatorFlag.CopyrightManagementInformation.LongName());
             }
 
             // D8 Opcode
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.D8Opcode])
-                    parameters.Add(DICFlag.D8Opcode.LongName());
+                if (this[CreatorFlag.D8Opcode])
+                    parameters.Add(CreatorFlag.D8Opcode.LongName());
             }
 
             // Disable Beep
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.BluRay
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.DigitalVideoDisc
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap
-               || Command == DICCommand.XBOX)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.BluRay
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.DigitalVideoDisc
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap
+               || Command == CreatorCommand.XBOX)
             {
-                if (this[DICFlag.DisableBeep])
-                    parameters.Add(DICFlag.DisableBeep.LongName());
+                if (this[CreatorFlag.DisableBeep])
+                    parameters.Add(CreatorFlag.DisableBeep.LongName());
             }
 
             // Force Unit Access
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.BluRay
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.DigitalVideoDisc
-               || Command == DICCommand.Swap
-               || Command == DICCommand.XBOX)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.BluRay
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.DigitalVideoDisc
+               || Command == CreatorCommand.Swap
+               || Command == CreatorCommand.XBOX)
             {
-                if (this[DICFlag.ForceUnitAccess])
+                if (this[CreatorFlag.ForceUnitAccess])
                 {
-                    parameters.Add(DICFlag.ForceUnitAccess.LongName());
+                    parameters.Add(CreatorFlag.ForceUnitAccess.LongName());
                     if (ForceUnitAccessValue != null)
                         parameters.Add(ForceUnitAccessValue.ToString());
                 }
             }
 
             // MCN
-            if (Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.MCN])
-                    parameters.Add(DICFlag.MCN.LongName());
+                if (this[CreatorFlag.MCN])
+                    parameters.Add(CreatorFlag.MCN.LongName());
             }
 
             // Multi-Session
-            if (Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.MultiSession])
-                    parameters.Add(DICFlag.MultiSession.LongName());
+                if (this[CreatorFlag.MultiSession])
+                    parameters.Add(CreatorFlag.MultiSession.LongName());
             }
 
             // Not fix SubP
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.NoFixSubP])
-                    parameters.Add(DICFlag.NoFixSubP.LongName());
+                if (this[CreatorFlag.NoFixSubP])
+                    parameters.Add(CreatorFlag.NoFixSubP.LongName());
             }
 
             // Not fix SubQ
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.NoFixSubQ])
-                    parameters.Add(DICFlag.NoFixSubQ.LongName());
+                if (this[CreatorFlag.NoFixSubQ])
+                    parameters.Add(CreatorFlag.NoFixSubQ.LongName());
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.NoFixSubQLibCrypt])
-                    parameters.Add(DICFlag.NoFixSubQLibCrypt.LongName());
+                if (this[CreatorFlag.NoFixSubQLibCrypt])
+                    parameters.Add(CreatorFlag.NoFixSubQLibCrypt.LongName());
             }
             
             // Not fix SubQ (SecuROM)
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.NoFixSubQSecuROM])
-                    parameters.Add(DICFlag.NoFixSubQSecuROM.LongName());
+                if (this[CreatorFlag.NoFixSubQSecuROM])
+                    parameters.Add(CreatorFlag.NoFixSubQSecuROM.LongName());
             }
 
             // Not fix SubRtoW
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.NoFixSubRtoW])
-                    parameters.Add(DICFlag.NoFixSubRtoW.LongName());
+                if (this[CreatorFlag.NoFixSubRtoW])
+                    parameters.Add(CreatorFlag.NoFixSubRtoW.LongName());
             }
 
             // Not skip security sectors
-            if (Command == DICCommand.XBOX
-                || Command == DICCommand.XBOXSwap
-                || Command == DICCommand.XGD2Swap
-                || Command == DICCommand.XGD3Swap)
+            if (Command == CreatorCommand.XBOX
+                || Command == CreatorCommand.XBOXSwap
+                || Command == CreatorCommand.XGD2Swap
+                || Command == CreatorCommand.XGD3Swap)
             {
-                if (this[DICFlag.NoSkipSS])
+                if (this[CreatorFlag.NoSkipSS])
                 {
-                    parameters.Add(DICFlag.NoSkipSS.LongName());
+                    parameters.Add(CreatorFlag.NoSkipSS.LongName());
                     if (NoSkipSecuritySectorValue != null)
                         parameters.Add(NoSkipSecuritySectorValue.ToString());
                 }
             }
 
             // Raw read (2064 byte/sector)
-            if (Command == DICCommand.DigitalVideoDisc)
+            if (Command == CreatorCommand.DigitalVideoDisc)
             {
-                if (this[DICFlag.Raw])
-                    parameters.Add(DICFlag.Raw.LongName());
+                if (this[CreatorFlag.Raw])
+                    parameters.Add(CreatorFlag.Raw.LongName());
             }
 
             // Reverse read
-            if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.DigitalVideoDisc)
+            if (Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.DigitalVideoDisc)
             {
-                if (this[DICFlag.Reverse])
-                    parameters.Add(DICFlag.Reverse.LongName());
+                if (this[CreatorFlag.Reverse])
+                    parameters.Add(CreatorFlag.Reverse.LongName());
             }
 
             // Scan PlayStation anti-mod strings
-            if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data)
+            if (Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data)
             {
-                if (this[DICFlag.ScanAntiMod])
-                    parameters.Add(DICFlag.ScanAntiMod.LongName());
+                if (this[CreatorFlag.ScanAntiMod])
+                    parameters.Add(CreatorFlag.ScanAntiMod.LongName());
             }
 
             // Scan file to detect protect
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.DigitalVideoDisc
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.DigitalVideoDisc
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.ScanFileProtect])
+                if (this[CreatorFlag.ScanFileProtect])
                 {
-                    parameters.Add(DICFlag.ScanFileProtect.LongName());
+                    parameters.Add(CreatorFlag.ScanFileProtect.LongName());
                     if (ScanFileProtectValue != null)
                     {
                         if (ScanFileProtectValue > 0)
@@ -603,29 +603,29 @@ namespace DICUI.Utilities
             }
 
             // Scan file to detect protect
-            if (Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.ScanSectorProtect])
-                    parameters.Add(DICFlag.ScanSectorProtect.LongName());
+                if (this[CreatorFlag.ScanSectorProtect])
+                    parameters.Add(CreatorFlag.ScanSectorProtect.LongName());
             }
 
             // Scan 74:00:00 (Saturn)
-            if (Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.SeventyFour])
-                    parameters.Add(DICFlag.SeventyFour.LongName());
+                if (this[CreatorFlag.SeventyFour])
+                    parameters.Add(CreatorFlag.SeventyFour.LongName());
             }
 
             // Skip sectors
-            if (Command == DICCommand.Data)
+            if (Command == CreatorCommand.Data)
             {
-                if (this[DICFlag.SkipSector])
+                if (this[CreatorFlag.SkipSector])
                 {
                     if (SkipSectorValue[0] != null && SkipSectorValue[1] != null)
                     {
-                        parameters.Add(DICFlag.SkipSector.LongName());
+                        parameters.Add(CreatorFlag.SkipSector.LongName());
                         if (SkipSectorValue[0] >= 0 && SkipSectorValue[1] >= 0)
                         {
                             parameters.Add(SkipSectorValue[0].ToString());
@@ -640,15 +640,15 @@ namespace DICUI.Utilities
             }
 
             // Set Subchannel read level
-            if (Command == DICCommand.Audio
-               || Command == DICCommand.CompactDisc
-               || Command == DICCommand.Data
-               || Command == DICCommand.GDROM
-               || Command == DICCommand.Swap)
+            if (Command == CreatorCommand.Audio
+               || Command == CreatorCommand.CompactDisc
+               || Command == CreatorCommand.Data
+               || Command == CreatorCommand.GDROM
+               || Command == CreatorCommand.Swap)
             {
-                if (this[DICFlag.SubchannelReadLevel])
+                if (this[CreatorFlag.SubchannelReadLevel])
                 {
-                    parameters.Add(DICFlag.SubchannelReadLevel.LongName());
+                    parameters.Add(CreatorFlag.SubchannelReadLevel.LongName());
                     if (SubchannelReadLevelValue != null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
@@ -660,11 +660,11 @@ namespace DICUI.Utilities
             }
 
             // VideoNow
-            if (Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.VideoNow])
+                if (this[CreatorFlag.VideoNow])
                 {
-                    parameters.Add(DICFlag.VideoNow.LongName());
+                    parameters.Add(CreatorFlag.VideoNow.LongName());
                     if (VideoNowValue != null)
                     {
                         if (VideoNowValue >= 0)
@@ -676,10 +676,10 @@ namespace DICUI.Utilities
             }
 
             // VideoNow Color
-            if (Command == DICCommand.CompactDisc)
+            if (Command == CreatorCommand.CompactDisc)
             {
-                if (this[DICFlag.VideoNowColor])
-                    parameters.Add(DICFlag.VideoNowColor.LongName());
+                if (this[CreatorFlag.VideoNowColor])
+                    parameters.Add(CreatorFlag.VideoNowColor.LongName());
             }
 
             return string.Join(" ", parameters);
@@ -717,7 +717,7 @@ namespace DICUI.Utilities
             int index = -1;
             switch (parts[0])
             {
-                case DICCommandStrings.Audio:
+                case CreatorCommandStrings.Audio:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -743,11 +743,11 @@ namespace DICUI.Utilities
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
 
-                    Command = DICCommand.Audio;
+                    Command = CreatorCommand.Audio;
                     index = 6;
                     break;
 
-                case DICCommandStrings.BluRay:
+                case CreatorCommandStrings.BluRay:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -763,11 +763,11 @@ namespace DICUI.Utilities
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    Command = DICCommand.BluRay;
+                    Command = CreatorCommand.BluRay;
                     index = 4;
                     break;
 
-                case DICCommandStrings.Close:
+                case CreatorCommandStrings.Close:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -776,10 +776,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.Close;
+                    Command = CreatorCommand.Close;
                     break;
 
-                case DICCommandStrings.CompactDisc:
+                case CreatorCommandStrings.CompactDisc:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -795,11 +795,11 @@ namespace DICUI.Utilities
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    Command = DICCommand.CompactDisc;
+                    Command = CreatorCommand.CompactDisc;
                     index = 4;
                     break;
 
-                case DICCommandStrings.Data:
+                case CreatorCommandStrings.Data:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -825,11 +825,11 @@ namespace DICUI.Utilities
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
 
-                    Command = DICCommand.Data;
+                    Command = CreatorCommand.Data;
                     index = 6;
                     break;
 
-                case DICCommandStrings.DigitalVideoDisc:
+                case CreatorCommandStrings.DigitalVideoDisc:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -845,11 +845,11 @@ namespace DICUI.Utilities
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    Command = DICCommand.DigitalVideoDisc;
+                    Command = CreatorCommand.DigitalVideoDisc;
                     index = 4;
                     break;
 
-                case DICCommandStrings.Disk:
+                case CreatorCommandStrings.Disk:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -863,10 +863,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 3)
                         return false;
 
-                    Command = DICCommand.Disk;
+                    Command = CreatorCommand.Disk;
                     break;
 
-                case DICCommandStrings.DriveSpeed:
+                case CreatorCommandStrings.DriveSpeed:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -875,10 +875,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.DriveSpeed;
+                    Command = CreatorCommand.DriveSpeed;
                     break;
 
-                case DICCommandStrings.Eject:
+                case CreatorCommandStrings.Eject:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -887,10 +887,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.Eject;
+                    Command = CreatorCommand.Eject;
                     break;
 
-                case DICCommandStrings.Floppy:
+                case CreatorCommandStrings.Floppy:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -904,10 +904,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 3)
                         return false;
 
-                    Command = DICCommand.Floppy;
+                    Command = CreatorCommand.Floppy;
                     break;
 
-                case DICCommandStrings.GDROM:
+                case CreatorCommandStrings.GDROM:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -923,11 +923,11 @@ namespace DICUI.Utilities
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    Command = DICCommand.GDROM;
+                    Command = CreatorCommand.GDROM;
                     index = 4;
                     break;
 
-                case DICCommandStrings.MDS:
+                case CreatorCommandStrings.MDS:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -936,10 +936,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.MDS;
+                    Command = CreatorCommand.MDS;
                     break;
 
-                case DICCommandStrings.Merge:
+                case CreatorCommandStrings.Merge:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -953,10 +953,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 3)
                         return false;
 
-                    Command = DICCommand.Merge;
+                    Command = CreatorCommand.Merge;
                     break;
 
-                case DICCommandStrings.Reset:
+                case CreatorCommandStrings.Reset:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -965,10 +965,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.Reset;
+                    Command = CreatorCommand.Reset;
                     break;
 
-                case DICCommandStrings.SACD:
+                case CreatorCommandStrings.SACD:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -987,10 +987,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 4)
                         return false;
 
-                    Command = DICCommand.SACD;
+                    Command = CreatorCommand.SACD;
                     break;
 
-                case DICCommandStrings.Start:
+                case CreatorCommandStrings.Start:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -999,10 +999,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.Start;
+                    Command = CreatorCommand.Start;
                     break;
 
-                case DICCommandStrings.Stop:
+                case CreatorCommandStrings.Stop:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1011,10 +1011,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.Stop;
+                    Command = CreatorCommand.Stop;
                     break;
 
-                case DICCommandStrings.Sub:
+                case CreatorCommandStrings.Sub:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -1023,10 +1023,10 @@ namespace DICUI.Utilities
                     if (parts.Count > 2)
                         return false;
 
-                    Command = DICCommand.Sub;
+                    Command = CreatorCommand.Sub;
                     break;
 
-                case DICCommandStrings.Swap:
+                case CreatorCommandStrings.Swap:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1042,11 +1042,11 @@ namespace DICUI.Utilities
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    Command = DICCommand.Swap;
+                    Command = CreatorCommand.Swap;
                     index = 4;
                     break;
 
-                case DICCommandStrings.XBOX:
+                case CreatorCommandStrings.XBOX:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1062,13 +1062,13 @@ namespace DICUI.Utilities
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    Command = DICCommand.XBOX;
+                    Command = CreatorCommand.XBOX;
                     index = 4;
                     break;
 
-                case DICCommandStrings.XBOXSwap:
-                case DICCommandStrings.XGD2Swap:
-                case DICCommandStrings.XGD3Swap:
+                case CreatorCommandStrings.XBOXSwap:
+                case CreatorCommandStrings.XGD2Swap:
+                case CreatorCommandStrings.XGD3Swap:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1102,66 +1102,66 @@ namespace DICUI.Utilities
                 {
                     switch (parts[i])
                     {
-                        case DICFlagStrings.AddOffset:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.AddOffset:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                                 return false;
                             else if (!IsValidNumber(parts[i + 1]))
                                 return false;
 
-                            this[DICFlag.AddOffset] = true;
+                            this[CreatorFlag.AddOffset] = true;
                             AddOffsetValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlagStrings.AMSF:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.AMSF:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.AMSF] = true;
+                            this[CreatorFlag.AMSF] = true;
                             break;
 
-                        case DICFlagStrings.AtariJaguar:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.AtariJaguar:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.AtariJaguar] = true;
+                            this[CreatorFlag.AtariJaguar] = true;
                             break;
 
-                        case DICFlagStrings.BEOpcode:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.BEOpcode:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[DICFlag.BEOpcode] = true;
+                                this[CreatorFlag.BEOpcode] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[DICFlag.BEOpcode] = true;
+                                this[CreatorFlag.BEOpcode] = true;
                                 break;
                             }
                             else if (parts[i + 1] != "raw" && (parts[i + 1] != "pack"))
                                 return false;
 
-                            this[DICFlag.BEOpcode] = true;
+                            this[CreatorFlag.BEOpcode] = true;
                             BEOpcodeValue = parts[i + 1];
                             i++;
                             break;
 
-                        case DICFlagStrings.C2Opcode:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.C2Opcode:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
 
-                            this[DICFlag.C2Opcode] = true;
+                            this[CreatorFlag.C2Opcode] = true;
                             for (int j = 0; j < 4; j++)
                             {
                                 if (!DoesExist(parts, i + 1))
@@ -1179,211 +1179,211 @@ namespace DICUI.Utilities
 
                             break;
 
-                        case DICFlagStrings.CopyrightManagementInformation:
-                            if (parts[0] != DICCommandStrings.DigitalVideoDisc)
+                        case CreatorFlagStrings.CopyrightManagementInformation:
+                            if (parts[0] != CreatorCommandStrings.DigitalVideoDisc)
                                 return false;
 
-                            this[DICFlag.CopyrightManagementInformation] = true;
+                            this[CreatorFlag.CopyrightManagementInformation] = true;
                             break;
 
-                        case DICFlagStrings.D8Opcode:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.D8Opcode:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
 
-                            this[DICFlag.D8Opcode] = true;
+                            this[CreatorFlag.D8Opcode] = true;
                             break;
 
-                        case DICFlagStrings.DisableBeep:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.BluRay
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.DigitalVideoDisc
-                                && parts[0] != DICCommandStrings.GDROM
-                                && parts[0] != DICCommandStrings.XBOX)
+                        case CreatorFlagStrings.DisableBeep:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.BluRay
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.DigitalVideoDisc
+                                && parts[0] != CreatorCommandStrings.GDROM
+                                && parts[0] != CreatorCommandStrings.XBOX)
                                 return false;
 
-                            this[DICFlag.DisableBeep] = true;
+                            this[CreatorFlag.DisableBeep] = true;
                             break;
 
-                        case DICFlagStrings.ForceUnitAccess:
-                            if (parts[0] != DICCommandStrings.Audio
-                               && parts[0] != DICCommandStrings.BluRay
-                               && parts[0] != DICCommandStrings.CompactDisc
-                               && parts[0] != DICCommandStrings.DigitalVideoDisc
-                               && parts[0] != DICCommandStrings.Data
-                               && parts[0] != DICCommandStrings.GDROM
-                               && parts[0] != DICCommandStrings.XBOX)
+                        case CreatorFlagStrings.ForceUnitAccess:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                               && parts[0] != CreatorCommandStrings.BluRay
+                               && parts[0] != CreatorCommandStrings.CompactDisc
+                               && parts[0] != CreatorCommandStrings.DigitalVideoDisc
+                               && parts[0] != CreatorCommandStrings.Data
+                               && parts[0] != CreatorCommandStrings.GDROM
+                               && parts[0] != CreatorCommandStrings.XBOX)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[DICFlag.ForceUnitAccess] = true;
+                                this[CreatorFlag.ForceUnitAccess] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[DICFlag.ForceUnitAccess] = true;
+                                this[CreatorFlag.ForceUnitAccess] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 return false;
 
-                            this[DICFlag.ForceUnitAccess] = true;
+                            this[CreatorFlag.ForceUnitAccess] = true;
                             ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlagStrings.MCN:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.MCN:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.MCN] = true;
+                            this[CreatorFlag.MCN] = true;
                             break;
 
-                        case DICFlagStrings.MultiSession:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.MultiSession:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.MultiSession] = true;
+                            this[CreatorFlag.MultiSession] = true;
                             break;
 
-                        case DICFlagStrings.NoFixSubP:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.NoFixSubP:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
 
-                            this[DICFlag.NoFixSubP] = true;
+                            this[CreatorFlag.NoFixSubP] = true;
                             break;
 
-                        case DICFlagStrings.NoFixSubQ:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.NoFixSubQ:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
 
-                            this[DICFlag.NoFixSubQ] = true;
+                            this[CreatorFlag.NoFixSubQ] = true;
                             break;
 
-                        case DICFlagStrings.NoFixSubQLibCrypt:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.NoFixSubQLibCrypt:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.NoFixSubQLibCrypt] = true;
+                            this[CreatorFlag.NoFixSubQLibCrypt] = true;
                             break;
 
-                        case DICFlagStrings.NoFixSubRtoW:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.NoFixSubRtoW:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
 
-                            this[DICFlag.NoFixSubRtoW] = true;
+                            this[CreatorFlag.NoFixSubRtoW] = true;
                             break;
 
-                        case DICFlagStrings.NoFixSubQSecuROM:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.NoFixSubQSecuROM:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
 
-                            this[DICFlag.NoFixSubQSecuROM] = true;
+                            this[CreatorFlag.NoFixSubQSecuROM] = true;
                             break;
 
-                        case DICFlagStrings.NoSkipSS:
-                            if (parts[0] != DICCommandStrings.XBOX
-                                && parts[0] != DICCommandStrings.XBOXSwap
-                                && parts[0] != DICCommandStrings.XGD2Swap
-                                && parts[0] != DICCommandStrings.XGD3Swap)
+                        case CreatorFlagStrings.NoSkipSS:
+                            if (parts[0] != CreatorCommandStrings.XBOX
+                                && parts[0] != CreatorCommandStrings.XBOXSwap
+                                && parts[0] != CreatorCommandStrings.XGD2Swap
+                                && parts[0] != CreatorCommandStrings.XGD3Swap)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[DICFlag.NoSkipSS] = true;
+                                this[CreatorFlag.NoSkipSS] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[DICFlag.NoSkipSS] = true;
+                                this[CreatorFlag.NoSkipSS] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 return false;
 
-                            this[DICFlag.NoSkipSS] = true;
+                            this[CreatorFlag.NoSkipSS] = true;
                             ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlagStrings.Raw:
-                            if (parts[0] != DICCommandStrings.DigitalVideoDisc)
+                        case CreatorFlagStrings.Raw:
+                            if (parts[0] != CreatorCommandStrings.DigitalVideoDisc)
                                 return false;
 
-                            this[DICFlag.Raw] = true;
+                            this[CreatorFlag.Raw] = true;
                             break;
 
-                        case DICFlagStrings.Reverse:
-                            if (parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.DigitalVideoDisc)
+                        case CreatorFlagStrings.Reverse:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.DigitalVideoDisc)
                                 return false;
 
-                            this[DICFlag.Reverse] = true;
+                            this[CreatorFlag.Reverse] = true;
                             break;
 
-                        case DICFlagStrings.ScanAntiMod:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.ScanAntiMod:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.ScanAntiMod] = true;
+                            this[CreatorFlag.ScanAntiMod] = true;
                             break;
 
-                        case DICFlagStrings.ScanFileProtect:
-                            if (parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.DigitalVideoDisc)
+                        case CreatorFlagStrings.ScanFileProtect:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.DigitalVideoDisc)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[DICFlag.ScanFileProtect] = true;
+                                this[CreatorFlag.ScanFileProtect] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[DICFlag.ScanFileProtect] = true;
+                                this[CreatorFlag.ScanFileProtect] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 return false;
 
-                            this[DICFlag.ScanFileProtect] = true;
+                            this[CreatorFlag.ScanFileProtect] = true;
                             ScanFileProtectValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlagStrings.ScanSectorProtect:
-                            if (parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data)
+                        case CreatorFlagStrings.ScanSectorProtect:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data)
                                 return false;
 
-                            this[DICFlag.ScanSectorProtect] = true;
+                            this[CreatorFlag.ScanSectorProtect] = true;
                             break;
 
-                        case DICFlagStrings.SeventyFour:
-                            if (parts[0] != DICCommandStrings.Swap)
+                        case CreatorFlagStrings.SeventyFour:
+                            if (parts[0] != CreatorCommandStrings.Swap)
                                 return false;
 
-                            this[DICFlag.SeventyFour] = true;
+                            this[CreatorFlag.SeventyFour] = true;
                             break;
 
-                        case DICFlagStrings.SkipSector:
-                            if (parts[0] != DICCommandStrings.Data)
+                        case CreatorFlagStrings.SkipSector:
+                            if (parts[0] != CreatorCommandStrings.Data)
                                 return false;
                             else if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
                                 return false;
@@ -1392,62 +1392,62 @@ namespace DICUI.Utilities
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0) || !IsValidNumber(parts[i + 2], lowerBound: 0))
                                 return false;
 
-                            this[DICFlag.SkipSector] = true;
+                            this[CreatorFlag.SkipSector] = true;
                             SkipSectorValue[0] = Int32.Parse(parts[i + 1]);
                             SkipSectorValue[1] = Int32.Parse(parts[i + 2]);
                             i += 2;
                             break;
 
-                        case DICFlagStrings.SubchannelReadLevel:
-                            if (parts[0] != DICCommandStrings.Audio
-                                && parts[0] != DICCommandStrings.CompactDisc
-                                && parts[0] != DICCommandStrings.Data
-                                && parts[0] != DICCommandStrings.GDROM)
+                        case CreatorFlagStrings.SubchannelReadLevel:
+                            if (parts[0] != CreatorCommandStrings.Audio
+                                && parts[0] != CreatorCommandStrings.CompactDisc
+                                && parts[0] != CreatorCommandStrings.Data
+                                && parts[0] != CreatorCommandStrings.GDROM)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[DICFlag.SubchannelReadLevel] = true;
+                                this[CreatorFlag.SubchannelReadLevel] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[DICFlag.SubchannelReadLevel] = true;
+                                this[CreatorFlag.SubchannelReadLevel] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0, upperBound: 2))
                                 return false;
 
-                            this[DICFlag.SubchannelReadLevel] = true;
+                            this[CreatorFlag.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlagStrings.VideoNow:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.VideoNow:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[DICFlag.VideoNow] = true;
+                                this[CreatorFlag.VideoNow] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[DICFlag.VideoNow] = true;
+                                this[CreatorFlag.VideoNow] = true;
                                 break;
                             }
                             else if (!IsValidNumber(parts[i + 1], lowerBound: 0))
                                 return false;
 
-                            this[DICFlag.VideoNow] = true;
+                            this[CreatorFlag.VideoNow] = true;
                             VideoNowValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
-                        case DICFlagStrings.VideoNowColor:
-                            if (parts[0] != DICCommandStrings.CompactDisc)
+                        case CreatorFlagStrings.VideoNowColor:
+                            if (parts[0] != CreatorCommandStrings.CompactDisc)
                                 return false;
 
-                            this[DICFlag.VideoNowColor] = true;
+                            this[CreatorFlag.VideoNowColor] = true;
                             break;
 
                         default:
@@ -1528,7 +1528,7 @@ namespace DICUI.Utilities
             // If we have an invalid combination, we should Command = null
             if (!Validators.GetValidMediaTypes(system).Contains(type))
             {
-                Command = DICCommand.NONE;
+                Command = CreatorCommand.NONE;
                 return;
             }
 
@@ -1536,43 +1536,43 @@ namespace DICUI.Utilities
             {
                 case MediaType.CDROM:
                     if (system == KnownSystem.SuperAudioCD)
-                        Command = DICCommand.SACD;
+                        Command = CreatorCommand.SACD;
                     else
-                        Command = DICCommand.CompactDisc;
+                        Command = CreatorCommand.CompactDisc;
                     return;
                 case MediaType.DVD:
                     if (system == KnownSystem.MicrosoftXBOX
                         || system == KnownSystem.MicrosoftXBOX360)
                     {
-                        Command = DICCommand.XBOX;
+                        Command = CreatorCommand.XBOX;
                         return;
                     }
-                    Command = DICCommand.DigitalVideoDisc;
+                    Command = CreatorCommand.DigitalVideoDisc;
                     return;
                 case MediaType.GDROM:
-                    Command = DICCommand.GDROM;
+                    Command = CreatorCommand.GDROM;
                     return;
                 case MediaType.HDDVD:
-                    Command = DICCommand.DigitalVideoDisc;
+                    Command = CreatorCommand.DigitalVideoDisc;
                     return;
                 case MediaType.BluRay:
-                    Command = DICCommand.BluRay;
+                    Command = CreatorCommand.BluRay;
                     return;
                 case MediaType.NintendoGameCubeGameDisc:
-                    Command = DICCommand.DigitalVideoDisc;
+                    Command = CreatorCommand.DigitalVideoDisc;
                     return;
                 case MediaType.NintendoWiiOpticalDisc:
-                    Command = DICCommand.DigitalVideoDisc;
+                    Command = CreatorCommand.DigitalVideoDisc;
                     return;
                 case MediaType.FloppyDisk:
-                    Command = DICCommand.Floppy;
+                    Command = CreatorCommand.Floppy;
                     return;
                 case MediaType.HardDisk:
-                    Command = DICCommand.Disk;
+                    Command = CreatorCommand.Disk;
                     return;
 
                 default:
-                    Command = DICCommand.NONE;
+                    Command = CreatorCommand.NONE;
                     return;
             }
         }
@@ -1609,59 +1609,59 @@ namespace DICUI.Utilities
             switch (type)
             {
                 case MediaType.CDROM:
-                    this[DICFlag.C2Opcode] = true;
+                    this[CreatorFlag.C2Opcode] = true;
 
                     switch (system)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            this[DICFlag.NoFixSubQSecuROM] = true;
-                            this[DICFlag.ScanFileProtect] = true;
+                            this[CreatorFlag.NoFixSubQSecuROM] = true;
+                            this[CreatorFlag.ScanFileProtect] = true;
 
                             if (paranoid)
                             {
-                                this[DICFlag.ScanSectorProtect] = true;
-                                this[DICFlag.SubchannelReadLevel] = true;
+                                this[CreatorFlag.ScanSectorProtect] = true;
+                                this[CreatorFlag.SubchannelReadLevel] = true;
                                 SubchannelReadLevelValue = 2;
                             }
                             break;
                         case KnownSystem.AtariJaguarCD:
-                            this[DICFlag.AtariJaguar] = true;
+                            this[CreatorFlag.AtariJaguar] = true;
                             break;
                         case KnownSystem.HasbroVideoNow:
                         case KnownSystem.HasbroVideoNowJr:
-                            this[DICFlag.VideoNow] = true;
+                            this[CreatorFlag.VideoNow] = true;
                             this.VideoNowValue = 18032;
                             break;
                         case KnownSystem.HasbroVideoNowColor:
-                            this[DICFlag.VideoNowColor] = true;
+                            this[CreatorFlag.VideoNowColor] = true;
                             break;
                         case KnownSystem.HasbroVideoNowXP:
-                            this[DICFlag.VideoNow] = true;
+                            this[CreatorFlag.VideoNow] = true;
                             this.VideoNowValue = 20832;
                             break;
                         case KnownSystem.NECPCEngineTurboGrafxCD:
-                            this[DICFlag.MCN] = true;
+                            this[CreatorFlag.MCN] = true;
                             break;
                         case KnownSystem.SonyPlayStation:
-                            this[DICFlag.ScanAntiMod] = true;
-                            this[DICFlag.NoFixSubQLibCrypt] = true;
+                            this[CreatorFlag.ScanAntiMod] = true;
+                            this[CreatorFlag.NoFixSubQLibCrypt] = true;
                             break;
                     }
                     break;
                 case MediaType.DVD:
                     if (paranoid)
                     {
-                        this[DICFlag.CopyrightManagementInformation] = true;
-                        this[DICFlag.ScanFileProtect] = true;
+                        this[CreatorFlag.CopyrightManagementInformation] = true;
+                        this[CreatorFlag.ScanFileProtect] = true;
                     }
                     break;
                 case MediaType.GDROM:
-                    this[DICFlag.C2Opcode] = true;
+                    this[CreatorFlag.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
                     if (paranoid)
-                        this[DICFlag.CopyrightManagementInformation] = true;
+                        this[CreatorFlag.CopyrightManagementInformation] = true;
                     break;
                 case MediaType.BluRay:
                     // Currently no defaults set
@@ -1669,10 +1669,10 @@ namespace DICUI.Utilities
 
                 // Special Formats
                 case MediaType.NintendoGameCubeGameDisc:
-                    this[DICFlag.Raw] = true;
+                    this[CreatorFlag.Raw] = true;
                     break;
                 case MediaType.NintendoWiiOpticalDisc:
-                    this[DICFlag.Raw] = true;
+                    this[CreatorFlag.Raw] = true;
                     break;
 
                 // Non-optical

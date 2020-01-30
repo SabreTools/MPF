@@ -18,7 +18,7 @@ namespace DICUI.Test
         {
             var env = new DumpEnvironment
             {
-                DICParameters = new Parameters(parameters),
+                CreatorParameters = new CreatorParameters(parameters),
                 Drive = isFloppy
                     ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
                     : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString())),

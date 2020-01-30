@@ -453,7 +453,7 @@ namespace DICUI.Windows
                 // Get the currently selected options
                 Drive = DriveLetterComboBox.SelectedItem as Drive,
 
-                DICParameters = new Parameters(ParametersTextBox.Text),
+                CreatorParameters = new CreatorParameters(ParametersTextBox.Text),
 
                 QuietMode = _options.QuietMode,
                 ParanoidMode = _options.ParanoidMode,
@@ -670,8 +670,8 @@ namespace DICUI.Windows
                 // If SmartE is detected on the current disc, remove `/sf` from the flags
                 if (protections.Contains("SmartE"))
                 {
-                    _env.DICParameters[DICFlag.ScanFileProtect] = false;
-                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DICFlagStrings.ScanFileProtect} from parameters");
+                    _env.CreatorParameters[CreatorFlag.ScanFileProtect] = false;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {CreatorFlagStrings.ScanFileProtect} from parameters");
                 }
 
                 if (!ViewModels.LoggerViewModel.WindowVisible)
@@ -763,19 +763,19 @@ namespace DICUI.Windows
         /// </summary>
         private void ProcessCustomParameters()
         {
-            _env.DICParameters = new Parameters(ParametersTextBox.Text);
+            _env.CreatorParameters = new CreatorParameters(ParametersTextBox.Text);
 
-            int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.DICParameters.DriveLetter[0]);
+            int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.CreatorParameters.DriveLetter[0]);
             if (driveIndex > -1)
                 DriveLetterComboBox.SelectedIndex = driveIndex;
 
-            int driveSpeed = _env.DICParameters.DriveSpeed ?? -1;
+            int driveSpeed = _env.CreatorParameters.DriveSpeed ?? -1;
             if (driveSpeed > 0)
                 DriveSpeedComboBox.SelectedValue = driveSpeed;
             else
-                _env.DICParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
+                _env.CreatorParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
 
-            string trimmedPath = _env.DICParameters.Filename?.Trim('"') ?? string.Empty;
+            string trimmedPath = _env.CreatorParameters.Filename?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
@@ -787,7 +787,7 @@ namespace DICUI.Windows
             else
                 outputFilename = OutputFilenameTextBox.Text;
 
-            MediaType? mediaType = _env.DICParameters.Command.ToMediaType();
+            MediaType? mediaType = _env.CreatorParameters.Command.ToMediaType();
             int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
             if (mediaTypeIndex > -1)
                 MediaTypeComboBox.SelectedIndex = mediaTypeIndex;

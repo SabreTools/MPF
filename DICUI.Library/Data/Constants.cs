@@ -3,7 +3,7 @@
     /// <summary>
     /// Top-level commands for DiscImageCreator
     /// </summary>
-    public static class DICCommandStrings
+    public static class CreatorCommandStrings
     {
         public const string Audio = "audio";
         public const string BluRay = "bd";
@@ -33,7 +33,7 @@
     /// <summary>
     /// Dumping flags for DiscImageCreator
     /// </summary>
-    public static class DICFlagStrings
+    public static class CreatorFlagStrings
     {
         public const string AddOffset = "/a";
         public const string AMSF = "/p";

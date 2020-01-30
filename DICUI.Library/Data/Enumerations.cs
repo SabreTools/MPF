@@ -19,9 +19,9 @@
     }
 
     /// <summary>
-    /// Supported DIC commands
+    /// Supported DiscImageCreator commands
     /// </summary>
-    public enum DICCommand
+    public enum CreatorCommand
     {
         NONE = 0,
         Audio,
@@ -50,9 +50,9 @@
     }
 
     /// <summary>
-    /// Supported DIC flags
+    /// Supported DiscImageCreator flags
     /// </summary>
-    public enum DICFlag
+    public enum CreatorFlag
     {
         NONE = 0,
         AddOffset,

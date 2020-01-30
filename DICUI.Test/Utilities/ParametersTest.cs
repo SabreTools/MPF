@@ -9,39 +9,39 @@ namespace DICUI.Test.Utilities
     public class ParametersTest
     {
         [Theory]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CDROM, DICCommand.CompactDisc)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, DICCommand.XBOX)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, DICCommand.NONE)]
-        [InlineData(KnownSystem.SegaNu, MediaType.BluRay, DICCommand.BluRay)]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.FloppyDisk, DICCommand.Floppy)]
-        [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, DICCommand.NONE)]
-        public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, DICCommand expected)
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CDROM, CreatorCommand.CompactDisc)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, CreatorCommand.XBOX)]
+        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, CreatorCommand.NONE)]
+        [InlineData(KnownSystem.SegaNu, MediaType.BluRay, CreatorCommand.BluRay)]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.FloppyDisk, CreatorCommand.Floppy)]
+        [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, CreatorCommand.NONE)]
+        public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, CreatorCommand expected)
         {
-            Parameters actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, true, -1);
+            CreatorParameters actual = new CreatorParameters(knownSystem, mediaType, 'D', "disc.bin", 16, true, -1);
             Assert.Equal(expected, actual.Command);
         }
 
         [Theory]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new DICFlag[] { DICFlag.Raw })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new DICFlag[] { })]
+        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new CreatorFlag[] { CreatorFlag.Raw })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new CreatorFlag[] { })]
         /* paranoid mode tests */
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect, DICFlag.ScanSectorProtect, DICFlag.SubchannelReadLevel })]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new DICFlag[] { DICFlag.C2Opcode, DICFlag.NoFixSubQSecuROM, DICFlag.ScanFileProtect })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation, DICFlag.ScanFileProtect })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new DICFlag[] { DICFlag.CopyrightManagementInformation })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new DICFlag[] { })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new DICFlag[] { })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new CreatorFlag[] { CreatorFlag.C2Opcode, CreatorFlag.NoFixSubQSecuROM, CreatorFlag.ScanFileProtect, CreatorFlag.ScanSectorProtect, CreatorFlag.SubchannelReadLevel })]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new CreatorFlag[] { CreatorFlag.C2Opcode, CreatorFlag.NoFixSubQSecuROM, CreatorFlag.ScanFileProtect })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new CreatorFlag[] { CreatorFlag.CopyrightManagementInformation, CreatorFlag.ScanFileProtect })]
+        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new CreatorFlag[] { CreatorFlag.CopyrightManagementInformation })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new CreatorFlag[] { })]
+        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new CreatorFlag[] { })]
         /* reread c2 */
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new DICFlag[] { DICFlag.C2Opcode })]
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new DICFlag[] { DICFlag.C2Opcode })]
+        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new CreatorFlag[] { CreatorFlag.C2Opcode })]
+        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new CreatorFlag[] { CreatorFlag.C2Opcode })]
 
-        public void ParametersFromOptionsTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, DICFlag[] expected)
+        public void ParametersFromOptionsTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, CreatorFlag[] expected)
         {
-            Parameters actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, paranoid, rereadC2);
+            CreatorParameters actual = new CreatorParameters(knownSystem, mediaType, 'D', "disc.bin", 16, paranoid, rereadC2);
 
-            HashSet<DICFlag> expectedSet = new HashSet<DICFlag>(expected ?? new DICFlag[0]);
-            HashSet<DICFlag> actualSet = new HashSet<DICFlag>(actual.Keys ?? new DICFlag[0]);
+            HashSet<CreatorFlag> expectedSet = new HashSet<CreatorFlag>(expected ?? new CreatorFlag[0]);
+            HashSet<CreatorFlag> actualSet = new HashSet<CreatorFlag>(actual.Keys ?? new CreatorFlag[0]);
             Assert.Equal(expectedSet, actualSet);
             if (rereadC2 == -1 || !Validators.GetValidMediaTypes(knownSystem).Contains(mediaType))
                 Assert.Null(actual.C2OpcodeValue[0]);
@@ -59,7 +59,7 @@ namespace DICUI.Test.Utilities
         [InlineData("stop D", null, null, "D", null)]
         public void DetermineFlagsTest(string parameters, MediaType? expectedMediaType, KnownSystem? expectedKnownSystem, string expectedDriveLetter, string expectedPath)
         {
-            Parameters actualParams = new Parameters(parameters);
+            CreatorParameters actualParams = new CreatorParameters(parameters);
             bool actual = actualParams.DetermineFlags(out MediaType? actualMediaType, out KnownSystem? actualKnownSystem, out string actualDriveLetter, out string actualPath);
             Assert.Equal(expectedMediaType, actualMediaType);
             Assert.Equal(expectedKnownSystem, actualKnownSystem);
@@ -78,7 +78,7 @@ namespace DICUI.Test.Utilities
         [InlineData("ls", false)]
         public void ValidateParametersTest(string parameters, bool expected)
         {
-            Parameters actual = new Parameters(parameters);
+            CreatorParameters actual = new CreatorParameters(parameters);
             Assert.Equal(expected, actual.IsValid());
         }
     }

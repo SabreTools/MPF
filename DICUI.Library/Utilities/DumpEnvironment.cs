@@ -66,7 +66,7 @@ namespace DICUI.Utilities
         /// <summary>
         /// Parameters object representing what to send to DiscImageCreator
         /// </summary>
-        public Parameters DICParameters { get; set; }
+        public CreatorParameters CreatorParameters { get; set; }
 
         /// <summary>
         /// Determines if placeholder values should be set for fields
@@ -158,9 +158,9 @@ namespace DICUI.Utilities
             if (!File.Exists(DICPath))
                 return false;
 
-            Parameters parameters = new Parameters(string.Empty)
+            CreatorParameters parameters = new CreatorParameters(string.Empty)
             {
-                Command = DICCommand.DriveSpeed,
+                Command = CreatorCommand.DriveSpeed,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -189,9 +189,9 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            Parameters parameters = new Parameters(string.Empty)
+            CreatorParameters parameters = new CreatorParameters(string.Empty)
             {
-                Command = DICCommand.Eject,
+                Command = CreatorCommand.Eject,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -342,12 +342,12 @@ namespace DICUI.Utilities
 
                 // Set the proper parameters
                 string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
-                DICParameters = new Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
+                CreatorParameters = new CreatorParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
                 if (QuietMode)
-                    DICParameters[DICFlag.DisableBeep] = true;
+                    CreatorParameters[CreatorFlag.DisableBeep] = true;
 
                 // Generate and return the param string
-                return DICParameters.GenerateParameters();
+                return CreatorParameters.GenerateParameters();
             }
 
             return null;
@@ -369,9 +369,9 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            Parameters parameters = new Parameters(string.Empty)
+            CreatorParameters parameters = new CreatorParameters(string.Empty)
             {
-                Command = DICCommand.Reset,
+                Command = CreatorCommand.Reset,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -470,7 +470,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return DICParameters.IsValid()
+            return CreatorParameters.IsValid()
                 && !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
@@ -510,7 +510,7 @@ namespace DICUI.Utilities
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = DICPath,
-                    Arguments = DICParameters.GenerateParameters() ?? "",
+                    Arguments = CreatorParameters.GenerateParameters() ?? "",
                 },
             };
             dicProcess.Start();
@@ -522,7 +522,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteDiscImageCreatorWithParameters(Parameters parameters)
+        private async Task<string> ExecuteDiscImageCreatorWithParameters(CreatorParameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>

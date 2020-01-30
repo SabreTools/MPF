@@ -34,32 +34,32 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the most common known system for a given MediaType
         /// </summary>
-        /// <param name="baseCommand">DICCommand value to check</param>
+        /// <param name="baseCommand">CreatorCommand value to check</param>
         /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? ToKnownSystem(this DICCommand baseCommand)
+        public static KnownSystem? ToKnownSystem(this CreatorCommand baseCommand)
         {
             switch (baseCommand)
             {
-                case DICCommand.Audio:
+                case CreatorCommand.Audio:
                     return KnownSystem.AudioCD;
-                case DICCommand.CompactDisc:
-                case DICCommand.Data:
-                case DICCommand.DigitalVideoDisc:
-                case DICCommand.Disk:
-                case DICCommand.Floppy:
+                case CreatorCommand.CompactDisc:
+                case CreatorCommand.Data:
+                case CreatorCommand.DigitalVideoDisc:
+                case CreatorCommand.Disk:
+                case CreatorCommand.Floppy:
                     return KnownSystem.IBMPCCompatible;
-                case DICCommand.GDROM:
-                case DICCommand.Swap:
+                case CreatorCommand.GDROM:
+                case CreatorCommand.Swap:
                     return KnownSystem.SegaDreamcast;
-                case DICCommand.BluRay:
+                case CreatorCommand.BluRay:
                     return KnownSystem.SonyPlayStation3;
-                case DICCommand.SACD:
+                case CreatorCommand.SACD:
                     return KnownSystem.SuperAudioCD;
-                case DICCommand.XBOX:
-                case DICCommand.XBOXSwap:
+                case CreatorCommand.XBOX:
+                case CreatorCommand.XBOXSwap:
                     return KnownSystem.MicrosoftXBOX;
-                case DICCommand.XGD2Swap:
-                case DICCommand.XGD3Swap:
+                case CreatorCommand.XGD2Swap:
+                case CreatorCommand.XGD3Swap:
                     return KnownSystem.MicrosoftXBOX360;
                 default:
                     return null;
@@ -234,34 +234,34 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the MediaType associated with a given base command
         /// </summary>
-        /// <param name="baseCommand">DICCommand value to check</param>
+        /// <param name="baseCommand">CreatorCommand value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static MediaType? ToMediaType(this DICCommand baseCommand)
+        public static MediaType? ToMediaType(this CreatorCommand baseCommand)
         {
             switch (baseCommand)
             {
-                case DICCommand.Audio:
-                case DICCommand.CompactDisc:
-                case DICCommand.Data:
-                case DICCommand.SACD:
+                case CreatorCommand.Audio:
+                case CreatorCommand.CompactDisc:
+                case CreatorCommand.Data:
+                case CreatorCommand.SACD:
                     return MediaType.CDROM;
-                case DICCommand.GDROM:
-                case DICCommand.Swap:
+                case CreatorCommand.GDROM:
+                case CreatorCommand.Swap:
                     return MediaType.GDROM;
-                case DICCommand.DigitalVideoDisc:
-                case DICCommand.XBOX:
-                case DICCommand.XBOXSwap:
-                case DICCommand.XGD2Swap:
-                case DICCommand.XGD3Swap:
+                case CreatorCommand.DigitalVideoDisc:
+                case CreatorCommand.XBOX:
+                case CreatorCommand.XBOXSwap:
+                case CreatorCommand.XGD2Swap:
+                case CreatorCommand.XGD3Swap:
                     return MediaType.DVD;
-                case DICCommand.BluRay:
+                case CreatorCommand.BluRay:
                     return MediaType.BluRay;
 
                 // Non-optical
-                case DICCommand.Floppy:
+                case CreatorCommand.Floppy:
                     return MediaType.FloppyDisk;
-                case DICCommand.Disk:
+                case CreatorCommand.Disk:
                     return MediaType.HardDisk;
                 default:
                     return null;
@@ -541,132 +541,132 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the string representation of the DICCommand enum values
+        /// Get the string representation of the CreatorCommand enum values
         /// </summary>
-        /// <param name="command">DICCommand value to convert</param>
+        /// <param name="command">CreatorCommand value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this DICCommand command)
+        public static string LongName(this CreatorCommand command)
         {
             switch (command)
             {
-                case DICCommand.Audio:
-                    return DICCommandStrings.Audio;
-                case DICCommand.BluRay:
-                    return DICCommandStrings.BluRay;
-                case DICCommand.Close:
-                    return DICCommandStrings.Close;
-                case DICCommand.CompactDisc:
-                    return DICCommandStrings.CompactDisc;
-                case DICCommand.Data:
-                    return DICCommandStrings.Data;
-                case DICCommand.DigitalVideoDisc:
-                    return DICCommandStrings.DigitalVideoDisc;
-                case DICCommand.Disk:
-                    return DICCommandStrings.Disk;
-                case DICCommand.DriveSpeed:
-                    return DICCommandStrings.DriveSpeed;
-                case DICCommand.Eject:
-                    return DICCommandStrings.Eject;
-                case DICCommand.Floppy:
-                    return DICCommandStrings.Floppy;
-                case DICCommand.GDROM:
-                    return DICCommandStrings.GDROM;
-                case DICCommand.MDS:
-                    return DICCommandStrings.MDS;
-                case DICCommand.Merge:
-                    return DICCommandStrings.Merge;
-                case DICCommand.Reset:
-                    return DICCommandStrings.Reset;
-                case DICCommand.SACD:
-                    return DICCommandStrings.SACD;
-                case DICCommand.Start:
-                    return DICCommandStrings.Start;
-                case DICCommand.Stop:
-                    return DICCommandStrings.Stop;
-                case DICCommand.Sub:
-                    return DICCommandStrings.Sub;
-                case DICCommand.Swap:
-                    return DICCommandStrings.Swap;
-                case DICCommand.XBOX:
-                    return DICCommandStrings.XBOX;
-                case DICCommand.XBOXSwap:
-                    return DICCommandStrings.XBOXSwap;
-                case DICCommand.XGD2Swap:
-                    return DICCommandStrings.XGD2Swap;
-                case DICCommand.XGD3Swap:
-                    return DICCommandStrings.XGD3Swap;
+                case CreatorCommand.Audio:
+                    return CreatorCommandStrings.Audio;
+                case CreatorCommand.BluRay:
+                    return CreatorCommandStrings.BluRay;
+                case CreatorCommand.Close:
+                    return CreatorCommandStrings.Close;
+                case CreatorCommand.CompactDisc:
+                    return CreatorCommandStrings.CompactDisc;
+                case CreatorCommand.Data:
+                    return CreatorCommandStrings.Data;
+                case CreatorCommand.DigitalVideoDisc:
+                    return CreatorCommandStrings.DigitalVideoDisc;
+                case CreatorCommand.Disk:
+                    return CreatorCommandStrings.Disk;
+                case CreatorCommand.DriveSpeed:
+                    return CreatorCommandStrings.DriveSpeed;
+                case CreatorCommand.Eject:
+                    return CreatorCommandStrings.Eject;
+                case CreatorCommand.Floppy:
+                    return CreatorCommandStrings.Floppy;
+                case CreatorCommand.GDROM:
+                    return CreatorCommandStrings.GDROM;
+                case CreatorCommand.MDS:
+                    return CreatorCommandStrings.MDS;
+                case CreatorCommand.Merge:
+                    return CreatorCommandStrings.Merge;
+                case CreatorCommand.Reset:
+                    return CreatorCommandStrings.Reset;
+                case CreatorCommand.SACD:
+                    return CreatorCommandStrings.SACD;
+                case CreatorCommand.Start:
+                    return CreatorCommandStrings.Start;
+                case CreatorCommand.Stop:
+                    return CreatorCommandStrings.Stop;
+                case CreatorCommand.Sub:
+                    return CreatorCommandStrings.Sub;
+                case CreatorCommand.Swap:
+                    return CreatorCommandStrings.Swap;
+                case CreatorCommand.XBOX:
+                    return CreatorCommandStrings.XBOX;
+                case CreatorCommand.XBOXSwap:
+                    return CreatorCommandStrings.XBOXSwap;
+                case CreatorCommand.XGD2Swap:
+                    return CreatorCommandStrings.XGD2Swap;
+                case CreatorCommand.XGD3Swap:
+                    return CreatorCommandStrings.XGD3Swap;
 
-                case DICCommand.NONE:
+                case CreatorCommand.NONE:
                 default:
                     return "";
             }
         }
 
         /// <summary>
-        /// Get the string representation of the DICFlag enum values
+        /// Get the string representation of the CreatorFlag enum values
         /// </summary>
-        /// <param name="command">DICFlag value to convert</param>
+        /// <param name="command">CreatorFlag value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this DICFlag flag)
+        public static string LongName(this CreatorFlag flag)
         {
             switch (flag)
             {
-                case DICFlag.AddOffset:
-                    return DICFlagStrings.AddOffset;
-                case DICFlag.AMSF:
-                    return DICFlagStrings.AMSF;
-                case DICFlag.AtariJaguar:
-                    return DICFlagStrings.AtariJaguar;
-                case DICFlag.BEOpcode:
-                    return DICFlagStrings.BEOpcode;
-                case DICFlag.C2Opcode:
-                    return DICFlagStrings.C2Opcode;
-                case DICFlag.CopyrightManagementInformation:
-                    return DICFlagStrings.CopyrightManagementInformation;
-                case DICFlag.D8Opcode:
-                    return DICFlagStrings.D8Opcode;
-                case DICFlag.DisableBeep:
-                    return DICFlagStrings.DisableBeep;
-                case DICFlag.ForceUnitAccess:
-                    return DICFlagStrings.ForceUnitAccess;
-                case DICFlag.MCN:
-                    return DICFlagStrings.MCN;
-                case DICFlag.MultiSession:
-                    return DICFlagStrings.MultiSession;
-                case DICFlag.NoFixSubP:
-                    return DICFlagStrings.NoFixSubP;
-                case DICFlag.NoFixSubQ:
-                    return DICFlagStrings.NoFixSubQ;
-                case DICFlag.NoFixSubQLibCrypt:
-                    return DICFlagStrings.NoFixSubQLibCrypt;
-                case DICFlag.NoFixSubRtoW:
-                    return DICFlagStrings.NoFixSubRtoW;
-                case DICFlag.NoFixSubQSecuROM:
-                    return DICFlagStrings.NoFixSubQSecuROM;
-                case DICFlag.NoSkipSS:
-                    return DICFlagStrings.NoSkipSS;
-                case DICFlag.Raw:
-                    return DICFlagStrings.Raw;
-                case DICFlag.Reverse:
-                    return DICFlagStrings.Reverse;
-                case DICFlag.ScanAntiMod:
-                    return DICFlagStrings.ScanAntiMod;
-                case DICFlag.ScanFileProtect:
-                    return DICFlagStrings.ScanFileProtect;
-                case DICFlag.ScanSectorProtect:
-                    return DICFlagStrings.ScanSectorProtect;
-                case DICFlag.SeventyFour:
-                    return DICFlagStrings.SeventyFour;
-                case DICFlag.SkipSector:
-                    return DICFlagStrings.SkipSector;
-                case DICFlag.SubchannelReadLevel:
-                    return DICFlagStrings.SubchannelReadLevel;
-                case DICFlag.VideoNow:
-                    return DICFlagStrings.VideoNow;
-                case DICFlag.VideoNowColor:
-                    return DICFlagStrings.VideoNowColor;
+                case CreatorFlag.AddOffset:
+                    return CreatorFlagStrings.AddOffset;
+                case CreatorFlag.AMSF:
+                    return CreatorFlagStrings.AMSF;
+                case CreatorFlag.AtariJaguar:
+                    return CreatorFlagStrings.AtariJaguar;
+                case CreatorFlag.BEOpcode:
+                    return CreatorFlagStrings.BEOpcode;
+                case CreatorFlag.C2Opcode:
+                    return CreatorFlagStrings.C2Opcode;
+                case CreatorFlag.CopyrightManagementInformation:
+                    return CreatorFlagStrings.CopyrightManagementInformation;
+                case CreatorFlag.D8Opcode:
+                    return CreatorFlagStrings.D8Opcode;
+                case CreatorFlag.DisableBeep:
+                    return CreatorFlagStrings.DisableBeep;
+                case CreatorFlag.ForceUnitAccess:
+                    return CreatorFlagStrings.ForceUnitAccess;
+                case CreatorFlag.MCN:
+                    return CreatorFlagStrings.MCN;
+                case CreatorFlag.MultiSession:
+                    return CreatorFlagStrings.MultiSession;
+                case CreatorFlag.NoFixSubP:
+                    return CreatorFlagStrings.NoFixSubP;
+                case CreatorFlag.NoFixSubQ:
+                    return CreatorFlagStrings.NoFixSubQ;
+                case CreatorFlag.NoFixSubQLibCrypt:
+                    return CreatorFlagStrings.NoFixSubQLibCrypt;
+                case CreatorFlag.NoFixSubRtoW:
+                    return CreatorFlagStrings.NoFixSubRtoW;
+                case CreatorFlag.NoFixSubQSecuROM:
+                    return CreatorFlagStrings.NoFixSubQSecuROM;
+                case CreatorFlag.NoSkipSS:
+                    return CreatorFlagStrings.NoSkipSS;
+                case CreatorFlag.Raw:
+                    return CreatorFlagStrings.Raw;
+                case CreatorFlag.Reverse:
+                    return CreatorFlagStrings.Reverse;
+                case CreatorFlag.ScanAntiMod:
+                    return CreatorFlagStrings.ScanAntiMod;
+                case CreatorFlag.ScanFileProtect:
+                    return CreatorFlagStrings.ScanFileProtect;
+                case CreatorFlag.ScanSectorProtect:
+                    return CreatorFlagStrings.ScanSectorProtect;
+                case CreatorFlag.SeventyFour:
+                    return CreatorFlagStrings.SeventyFour;
+                case CreatorFlag.SkipSector:
+                    return CreatorFlagStrings.SkipSector;
+                case CreatorFlag.SubchannelReadLevel:
+                    return CreatorFlagStrings.SubchannelReadLevel;
+                case CreatorFlag.VideoNow:
+                    return CreatorFlagStrings.VideoNow;
+                case CreatorFlag.VideoNowColor:
+                    return CreatorFlagStrings.VideoNowColor;
 
-                case DICFlag.NONE:
+                case CreatorFlag.NONE:
                 default:
                     return "";
             }
