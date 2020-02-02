@@ -24,35 +24,45 @@
     public enum ChefCommand
     {
         NONE = 0,
-        Analyze,
-        Benchmark,
-        Checksum,
-        Compare,
-        Configure,
-        ConvertImage,
-        CreateSidecar,
-        Decode,
+
+        // Database Family
+        DatabaseStats,
+        DatabaseUpdate,
+
+        // Device Family
         DeviceInfo,
+        DeviceList,
         DeviceReport,
-        DumpMedia,
-        Entropy,
-        ExtractFiles,
-        Formats,
-        Gui,
-        Help,
+
+        // Filesystem Family
+        FilesystemExtract,
+        FilesystemList,
+        FilesystemOptions,
+
+        // Image Family
+        ImageAnalyze,
+        ImageChecksum,
+        ImageCompare,
+        ImageConvert,
+        ImageCreateSidecar,
+        ImageDecode,
+        ImageEntropy,
         ImageInfo,
-        ListDevices,
-        ListEncodings,
-        ListFiles,
-        ListNamespaces,
-        ListOptions,
+        ImageOptions,
+        ImagePrint,
+        ImageVerify,
+
+        // Media Family
+        MediaDump,
         MediaInfo,
         MediaScan,
-        PrintHex,
+
+        // Standalone Commands
+        Configure,
+        Formats,
+        ListEncodings,
+        ListNamespaces,
         Remote,
-        Stats,
-        Verify,
-        Version,
     }
 
     /// <summary>
@@ -130,9 +140,6 @@
         FormatConvert,
         FormatDump,
         ImgBurnLog,
-        Input,
-        Input1,
-        Input2,
         MediaBarcode,
         MediaManufacturer,
         MediaModel,
@@ -142,7 +149,6 @@
         MHDDLog,
         Namespace,
         Options,
-        Output,
         OutputPrefix,
         ResumeFile,
         Subchannel,

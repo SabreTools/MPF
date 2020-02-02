@@ -5,35 +5,58 @@
     /// </summary>
     public static class ChefCommandStrings
     {
-        public const string Analyze = "analyze";
-        public const string Benchmark = "benchmark";
-        public const string Checksum = "checksum";
-        public const string Compare = "compare";
+        // Database Family
+        public const string DatabasePrefixShort = "db";
+        public const string DatabasePrefixLong = "database";
+        public const string DatabaseStats = "stats";
+        public const string DatabaseUpdate = "update";
+
+        // Device Family
+        public const string DevicePrefixShort = "dev";
+        public const string DevicePrefixLong = "device";
+        public const string DeviceInfo = "info";
+        public const string DeviceList = "list";
+        public const string DeviceReport = "report";
+
+        // Filesystem Family
+        public const string FilesystemPrefixShort = "fi";
+        public const string FilesystemPrefixShortAlt = "fs";
+        public const string FilesystemPrefixLong = "filesystem";
+        public const string FilesystemExtract = "extract";
+        public const string FilesystemListShort = "ls";
+        public const string FilesystemListLong = "list";
+        public const string FilesystemOptions = "options";
+
+        // Image Family
+        public const string ImagePrefixShort = "i";
+        public const string ImagePrefixLong = "image";
+        public const string ImageAnalyze = "analyze";
+        public const string ImageChecksumShort = "chk";
+        public const string ImageChecksumLong = "checksum";
+        public const string ImageCompareShort = "cmp";
+        public const string ImageCompareLong = "compare";
+        public const string ImageConvert = "convert";
+        public const string ImageCreateSidecar = "create-sidecar";
+        public const string ImageDecode = "decode";
+        public const string ImageEntropy = "entropy";
+        public const string ImageInfo = "info";
+        public const string ImageOptions = "options";
+        public const string ImagePrint = "print";
+        public const string ImageVerify = "verify";
+
+        // Media Family
+        public const string MediaPrefixShort = "m";
+        public const string MediaPrefixLong = "media";
+        public const string MediaDump = "dump";
+        public const string MediaInfo = "info";
+        public const string MediaScan = "scan";
+
+        // Standalone Commands
         public const string Configure = "configure";
-        public const string ConvertImage = "convert-image";
-        public const string CreateSidecar = "create-sidecar";
-        public const string Decode = "decode";
-        public const string DeviceInfo = "device-info";
-        public const string DeviceReport = "device-report";
-        public const string DumpMedia = "dump-media";
-        public const string Entropy = "entropy";
-        public const string ExtractFiles = "extract-files";
         public const string Formats = "formats";
-        public const string Gui = "gui";
-        public const string Help = "help";
-        public const string ImageInfo = "image-info";
-        public const string ListDevices = "list-devices";
         public const string ListEncodings = "list-encodings";
-        public const string ListFiles = "ls";
         public const string ListNamespaces = "list-namespaces";
-        public const string ListOptions = "list-options";
-        public const string MediaInfo = "media-info";
-        public const string MediaScan = "media-scan";
-        public const string PrintHex = "printhex";
         public const string Remote = "remote";
-        public const string Stats = "stats";
-        public const string Verify = "verify";
-        public const string Version = "version";
     }
 
     /// <summary>
@@ -187,7 +210,6 @@
         // String flags
         public const string CommentsLong = "--comments";
         public const string CreatorLong = "--creator";
-        public const string DICRemoteHostLong = ""; // TODO: Figure out this flag at all; list-media, remote
         public const string DriveManufacturerLong = "--drive-manufacturer";
         public const string DriveModelLong = "--drive-model";
         public const string DriveRevisionLong = "--drive-revision";
@@ -200,10 +222,6 @@
         public const string FormatDumpLong = "--format";
         public const string ImgBurnLogShort = "-b";
         public const string ImgBurnLogLong = "--ibg-log";
-        public const string InputShort = "-i";
-        public const string InputLong = "--device";
-        public const string Input1Long = "--input1";
-        public const string Input2Long = "--input2";
         public const string MediaBarcodeLong = "--media-barcode";
         public const string MediaManufacturerLong = "--media-manufacturer";
         public const string MediaModelLong = "--media-model";
@@ -216,8 +234,6 @@
         public const string NamespaceLong = "--namespace";
         public const string OptionsShort = "-O";
         public const string OptionsLong = "--options";
-        public const string OutputShort = "-o";
-        public const string OutputLong = "--output";
         public const string OutputPrefixShort = "-w";
         public const string OutputPrefixLong = "--output-prefix";
         public const string ResumeFileShort = "-r";

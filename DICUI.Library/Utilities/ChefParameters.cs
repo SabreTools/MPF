@@ -96,6 +96,8 @@ namespace DICUI.Utilities
 
         public string OutputPrefixValue { get; set; }
 
+        public string RemoteHostValue { get; set; }
+
         public string ResumeFileValue { get; set; }
 
         public short? RetryPassesValue { get; set; }
@@ -127,6 +129,7 @@ namespace DICUI.Utilities
 
                 _flags = new Dictionary<ChefFlag, bool?>();
 
+                // TODO: Recreate this list later
                 BlockSizeValue = null;
                 CommentsValue = null;
                 CreatorValue = null;
@@ -179,13 +182,13 @@ namespace DICUI.Utilities
         /// <param name="retryPassesCount">User-defined retry passes count</param>
         public ChefParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int retryPassesCount)
         {
-            Command = ChefCommand.DumpMedia;
+            Command = ChefCommand.MediaDump;
 
-            this[ChefFlag.Input] = true;
             InputValue = $"\\\\?\\{driveLetter.ToString()}:";
-
-            this[ChefFlag.Output] = true;
             OutputValue = filename;
+
+            // TODO: Add outputting the sidecar
+            this[ChefFlag.Force] = true;
 
             if (driveSpeed != null)
             {
@@ -204,6 +207,7 @@ namespace DICUI.Utilities
         {
             List<string> parameters = new List<string>();
 
+            // TODO: Fix this again :(
             if (Command != ChefCommand.NONE)
                 parameters.Add(Command.LongName());
             else
@@ -564,200 +568,217 @@ namespace DICUI.Utilities
             if (GetSupportedCommands(ChefFlag.Comments).Contains(Command))
             {
                 if (this[ChefFlag.Comments] == true && CommentsValue != null)
-                    parameters.Add($"{ChefFlag.Comments.LongName()} {CommentsValue}");
+                    parameters.Add($"{ChefFlag.Comments.LongName()} \"{CommentsValue}\"");
             }
 
             // Creator
             if (GetSupportedCommands(ChefFlag.Creator).Contains(Command))
             {
                 if (this[ChefFlag.Creator] == true && CreatorValue != null)
-                    parameters.Add($"{ChefFlag.Creator.LongName()} {CreatorValue}");
+                    parameters.Add($"{ChefFlag.Creator.LongName()} \"{CreatorValue}\"");
             }
 
             // Drive Manufacturer
             if (GetSupportedCommands(ChefFlag.DriveManufacturer).Contains(Command))
             {
                 if (this[ChefFlag.DriveManufacturer] == true && DriveManufacturerValue != null)
-                    parameters.Add($"{ChefFlag.DriveManufacturer.LongName()} {DriveManufacturerValue}");
+                    parameters.Add($"{ChefFlag.DriveManufacturer.LongName()} \"{DriveManufacturerValue}\"");
             }
 
             // Drive Model
             if (GetSupportedCommands(ChefFlag.DriveModel).Contains(Command))
             {
                 if (this[ChefFlag.DriveModel] == true && DriveModelValue != null)
-                    parameters.Add($"{ChefFlag.DriveModel.LongName()} {DriveModelValue}");
+                    parameters.Add($"{ChefFlag.DriveModel.LongName()} \"{DriveModelValue}\"");
             }
 
             // Drive Revision
             if (GetSupportedCommands(ChefFlag.DriveRevision).Contains(Command))
             {
                 if (this[ChefFlag.DriveRevision] == true && DriveRevisionValue != null)
-                    parameters.Add($"{ChefFlag.DriveRevision.LongName()} {DriveRevisionValue}");
+                    parameters.Add($"{ChefFlag.DriveRevision.LongName()} \"{DriveRevisionValue}\"");
             }
 
             // Drive Serial
             if (GetSupportedCommands(ChefFlag.DriveSerial).Contains(Command))
             {
                 if (this[ChefFlag.DriveSerial] == true && DriveSerialValue != null)
-                    parameters.Add($"{ChefFlag.DriveSerial.LongName()} {DriveSerialValue}");
+                    parameters.Add($"{ChefFlag.DriveSerial.LongName()} \"{DriveSerialValue}\"");
             }
 
             // Encoding
             if (GetSupportedCommands(ChefFlag.Encoding).Contains(Command))
             {
                 if (this[ChefFlag.Encoding] == true && EncodingValue != null)
-                    parameters.Add($"{ChefFlag.Encoding.LongName()} {EncodingValue}");
+                    parameters.Add($"{ChefFlag.Encoding.LongName()} \"{EncodingValue}\"");
             }
 
             // Format (Convert)
             if (GetSupportedCommands(ChefFlag.FormatConvert).Contains(Command))
             {
                 if (this[ChefFlag.FormatConvert] == true && FormatConvertValue != null)
-                    parameters.Add($"{ChefFlag.FormatConvert.LongName()} {FormatConvertValue}");
+                    parameters.Add($"{ChefFlag.FormatConvert.LongName()} \"{FormatConvertValue}\"");
             }
 
             // Format (Dump)
             if (GetSupportedCommands(ChefFlag.FormatDump).Contains(Command))
             {
                 if (this[ChefFlag.FormatDump] == true && FormatDumpValue != null)
-                    parameters.Add($"{ChefFlag.FormatDump.LongName()} {FormatDumpValue}");
+                    parameters.Add($"{ChefFlag.FormatDump.LongName()} \"{FormatDumpValue}\"");
             }
 
             // ImgBurn Log
             if (GetSupportedCommands(ChefFlag.ImgBurnLog).Contains(Command))
             {
                 if (this[ChefFlag.ImgBurnLog] == true && ImgBurnLogValue != null)
-                    parameters.Add($"{ChefFlag.ImgBurnLog.LongName()} {ImgBurnLogValue}");
-            }
-
-            // Input
-            if (GetSupportedCommands(ChefFlag.Input).Contains(Command))
-            {
-                if (this[ChefFlag.Input] == true && InputValue != null)
-                    parameters.Add($"{ChefFlag.Input.LongName()} {InputValue}");
-                else
-                    return null;
-            }
-
-            // Input 1
-            if (GetSupportedCommands(ChefFlag.Input1).Contains(Command))
-            {
-                if (this[ChefFlag.Input1] == true && Input1Value != null)
-                    parameters.Add($"{ChefFlag.Input1.LongName()} {Input1Value}");
-                else
-                    return null;
-            }
-
-            // Input 2
-            if (GetSupportedCommands(ChefFlag.Input2).Contains(Command))
-            {
-                if (this[ChefFlag.Input2] == true && Input2Value != null)
-                    parameters.Add($"{ChefFlag.Input2.LongName()} {Input2Value}");
-                else
-                    return null;
+                    parameters.Add($"{ChefFlag.ImgBurnLog.LongName()} \"{ImgBurnLogValue}\"");
             }
 
             // Media Barcode
             if (GetSupportedCommands(ChefFlag.MediaBarcode).Contains(Command))
             {
                 if (this[ChefFlag.MediaBarcode] == true && MediaBarcodeValue != null)
-                    parameters.Add($"{ChefFlag.MediaBarcode.LongName()} {MediaBarcodeValue}");
+                    parameters.Add($"{ChefFlag.MediaBarcode.LongName()} \"{MediaBarcodeValue}\"");
             }
 
             // Media Manufacturer
             if (GetSupportedCommands(ChefFlag.MediaManufacturer).Contains(Command))
             {
                 if (this[ChefFlag.MediaManufacturer] == true && MediaManufacturerValue != null)
-                    parameters.Add($"{ChefFlag.MediaManufacturer.LongName()} {MediaManufacturerValue}");
+                    parameters.Add($"{ChefFlag.MediaManufacturer.LongName()} \"{MediaManufacturerValue}\"");
             }
 
             // Media Model
             if (GetSupportedCommands(ChefFlag.MediaModel).Contains(Command))
             {
                 if (this[ChefFlag.MediaModel] == true && MediaModelValue != null)
-                    parameters.Add($"{ChefFlag.MediaModel.LongName()} {MediaModelValue}");
+                    parameters.Add($"{ChefFlag.MediaModel.LongName()} \"{MediaModelValue}\"");
             }
 
             // Media Part Number
             if (GetSupportedCommands(ChefFlag.MediaPartNumber).Contains(Command))
             {
                 if (this[ChefFlag.MediaPartNumber] == true && MediaPartNumberValue != null)
-                    parameters.Add($"{ChefFlag.MediaPartNumber.LongName()} {MediaPartNumberValue}");
+                    parameters.Add($"{ChefFlag.MediaPartNumber.LongName()} \"{MediaPartNumberValue}\"");
             }
 
             // Media Serial
             if (GetSupportedCommands(ChefFlag.MediaSerial).Contains(Command))
             {
                 if (this[ChefFlag.MediaSerial] == true && MediaSerialValue != null)
-                    parameters.Add($"{ChefFlag.MediaSerial.LongName()} {MediaSerialValue}");
+                    parameters.Add($"{ChefFlag.MediaSerial.LongName()} \"{MediaSerialValue}\"");
             }
 
             // Media Title
             if (GetSupportedCommands(ChefFlag.MediaTitle).Contains(Command))
             {
                 if (this[ChefFlag.MediaTitle] == true && MediaTitleValue != null)
-                    parameters.Add($"{ChefFlag.MediaTitle.LongName()} {MediaTitleValue}");
+                    parameters.Add($"{ChefFlag.MediaTitle.LongName()} \"{MediaTitleValue}\"");
             }
 
             // MHDD Log
             if (GetSupportedCommands(ChefFlag.MHDDLog).Contains(Command))
             {
                 if (this[ChefFlag.MHDDLog] == true && MHDDLogValue != null)
-                    parameters.Add($"{ChefFlag.MHDDLog.LongName()} {MHDDLogValue}");
+                    parameters.Add($"{ChefFlag.MHDDLog.LongName()} \"{MHDDLogValue}\"");
             }
 
             // Namespace
             if (GetSupportedCommands(ChefFlag.Namespace).Contains(Command))
             {
                 if (this[ChefFlag.Namespace] == true && NamespaceValue != null)
-                    parameters.Add($"{ChefFlag.Namespace.LongName()} {NamespaceValue}");
+                    parameters.Add($"{ChefFlag.Namespace.LongName()} \"{NamespaceValue}\"");
             }
 
             // Options
             if (GetSupportedCommands(ChefFlag.Options).Contains(Command))
             {
                 if (this[ChefFlag.Options] == true && OptionsValue != null)
-                    parameters.Add($"{ChefFlag.Options.LongName()} {OptionsValue}");
-            }
-
-            // Output
-            if (GetSupportedCommands(ChefFlag.Output).Contains(Command))
-            {
-                if (this[ChefFlag.Output] == true && OutputValue != null)
-                    parameters.Add($"{ChefFlag.Output.LongName()} {OutputValue}");
-                else
-                    return null;
+                    parameters.Add($"{ChefFlag.Options.LongName()} \"{OptionsValue}\"");
             }
 
             // Output Prefix
             if (GetSupportedCommands(ChefFlag.OutputPrefix).Contains(Command))
             {
                 if (this[ChefFlag.OutputPrefix] == true && OutputPrefixValue != null)
-                    parameters.Add($"{ChefFlag.OutputPrefix.LongName()} {OutputPrefixValue}");
+                    parameters.Add($"{ChefFlag.OutputPrefix.LongName()} \"{OutputPrefixValue}\"");
             }
 
             // Resume File
             if (GetSupportedCommands(ChefFlag.ResumeFile).Contains(Command))
             {
                 if (this[ChefFlag.ResumeFile] == true && ResumeFileValue != null)
-                    parameters.Add($"{ChefFlag.ResumeFile.LongName()} {ResumeFileValue}");
+                    parameters.Add($"{ChefFlag.ResumeFile.LongName()} \"{ResumeFileValue}\"");
             }
 
             // Subchannel
             if (GetSupportedCommands(ChefFlag.Subchannel).Contains(Command))
             {
                 if (this[ChefFlag.Subchannel] == true && SubchannelValue != null)
-                    parameters.Add($"{ChefFlag.Subchannel.LongName()} {SubchannelValue}");
+                    parameters.Add($"{ChefFlag.Subchannel.LongName()} \"{SubchannelValue}\"");
             }
 
             // XML Sidecar
             if (GetSupportedCommands(ChefFlag.XMLSidecar).Contains(Command))
             {
                 if (this[ChefFlag.XMLSidecar] == true && XMLSidecarValue != null)
-                    parameters.Add($"{ChefFlag.XMLSidecar.LongName()} {XMLSidecarValue}");
+                    parameters.Add($"{ChefFlag.XMLSidecar.LongName()} \"{XMLSidecarValue}\"");
             }
 
             #endregion
+
+            // Handle filenames based on command, if necessary
+            switch (Command)
+            {
+                // Input value only
+                case ChefCommand.DeviceInfo:
+                case ChefCommand.DeviceReport:
+                case ChefCommand.FilesystemList:
+                case ChefCommand.ImageAnalyze:
+                case ChefCommand.ImageChecksum:
+                case ChefCommand.ImageCreateSidecar:
+                case ChefCommand.ImageDecode:
+                case ChefCommand.ImageEntropy:
+                case ChefCommand.ImageInfo:
+                case ChefCommand.ImagePrint:
+                case ChefCommand.ImageVerify:
+                case ChefCommand.MediaInfo:
+                case ChefCommand.MediaScan:
+                    if (string.IsNullOrWhiteSpace(InputValue))
+                        return null;
+
+                    parameters.Add($"\"{InputValue}\"");
+                    break;
+
+                // Two input values
+                case ChefCommand.ImageCompare:
+                    if (string.IsNullOrWhiteSpace(Input1Value) || string.IsNullOrWhiteSpace(Input2Value))
+                        return null;
+
+                    parameters.Add($"\"{Input1Value}\"");
+                    parameters.Add($"\"{Input2Value}\"");
+                    break;
+
+                // Input and Output value
+                case ChefCommand.FilesystemExtract:
+                case ChefCommand.ImageConvert:
+                case ChefCommand.MediaDump:
+                    if (string.IsNullOrWhiteSpace(InputValue) || string.IsNullOrWhiteSpace(OutputValue))
+                        return null;
+
+                    parameters.Add($"\"{InputValue}\"");
+                    parameters.Add($"\"{OutputValue}\"");
+                    break;
+
+                // Remote host value only
+                case ChefCommand.DeviceList:
+                case ChefCommand.Remote:
+                    if (string.IsNullOrWhiteSpace(RemoteHostValue))
+                        return null;
+
+                    parameters.Add($"\"{RemoteHostValue}\"");
+                    break;
+            }
 
             return string.Join(" ", parameters);
         }
@@ -791,13 +812,20 @@ namespace DICUI.Utilities
                 .ToList();
 
             // Determine what the commandline should look like given the first item
-            Command = Converters.StringToChefCommand(parts[0]);
+            Command = Converters.StringToChefCommand(parts[0], parts.Count > 1 ? parts[1] : null, out bool useSecond);
             if (Command == ChefCommand.NONE)
                 return false;
 
+            // Set the start according to what the full command was
+            int start = useSecond ? 2 : 1;
+
+            // Keep a count of keys to determine if we should break out to filename handling or not
+            int keyCount = Keys.Count();
+
             // Loop through all auxilary flags, if necessary
             // TODO: Should an invalid flag mean instant failure? There are some flags that share a short form and this could cause issues
-            for (int i = 1; i < parts.Count; i++)
+            int i = 0;
+            for (i = start; i < parts.Count; i++)
             {
                 sbyte? byteValue = null;
                 short? shortValue = null;
@@ -1115,27 +1143,6 @@ namespace DICUI.Utilities
                 else if (stringValue != string.Empty)
                     ImgBurnLogValue = stringValue;
 
-                // Input
-                stringValue = ProcessStringParameter(parts, ChefFlagStrings.InputShort, ChefFlagStrings.InputLong, ChefFlag.Input, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
-                    InputValue = stringValue;
-
-                // Input 1
-                stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.Input1Long, ChefFlag.Input1, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
-                    Input1Value = stringValue;
-
-                // Input 2
-                stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.Input2Long, ChefFlag.Input2, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
-                    Input2Value = stringValue;
-
                 // Media Barcode
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaBarcodeLong, ChefFlag.MediaBarcode, ref i);
                 if (stringValue == null)
@@ -1199,13 +1206,6 @@ namespace DICUI.Utilities
                 else if (stringValue != string.Empty)
                     OptionsValue = stringValue;
 
-                // Output
-                stringValue = ProcessStringParameter(parts, ChefFlagStrings.OutputShort, ChefFlagStrings.OutputLong, ChefFlag.Output, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
-                    OutputValue = stringValue;
-
                 // Output Prefix
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.OutputPrefixShort, ChefFlagStrings.OutputPrefixLong, ChefFlag.OutputPrefix, ref i);
                 if (stringValue == null)
@@ -1235,7 +1235,78 @@ namespace DICUI.Utilities
                     XMLSidecarValue = stringValue;
 
                 #endregion
+
+                // If we didn't add any new flags, break out since we might be at filename handling
+                if (keyCount == Keys.Count())
+                    break;
             }
+
+            // Handle filenames based on command, if necessary
+            switch (Command)
+            {
+                // Input value only
+                case ChefCommand.DeviceInfo:
+                case ChefCommand.DeviceReport:
+                case ChefCommand.FilesystemList:
+                case ChefCommand.ImageAnalyze:
+                case ChefCommand.ImageChecksum:
+                case ChefCommand.ImageCreateSidecar:
+                case ChefCommand.ImageDecode:
+                case ChefCommand.ImageEntropy:
+                case ChefCommand.ImageInfo:
+                case ChefCommand.ImagePrint:
+                case ChefCommand.ImageVerify:
+                case ChefCommand.MediaInfo:
+                case ChefCommand.MediaScan:
+                    if (!DoesExist(parts, i))
+                        return false;
+
+                    InputValue = parts[i];
+                    break;
+
+                // Two input values
+                case ChefCommand.ImageCompare:
+                    if (!DoesExist(parts, i))
+                        return false;
+
+                    Input1Value = parts[i];
+                    i++;
+
+                    if (!DoesExist(parts, i))
+                        return false;
+
+                    Input2Value = parts[i];
+                    break;
+
+                // Input and Output value
+                case ChefCommand.FilesystemExtract:
+                case ChefCommand.ImageConvert:
+                case ChefCommand.MediaDump:
+                    if (!DoesExist(parts, i))
+                        return false;
+
+                    InputValue = parts[i];
+                    i++;
+
+                    if (!DoesExist(parts, i))
+                        return false;
+
+                    OutputValue = parts[i];
+                    break;
+
+                // Remote host value only
+                case ChefCommand.DeviceList:
+                case ChefCommand.Remote:
+                    if (!DoesExist(parts, i))
+                        return false;
+
+                    RemoteHostValue = parts[i];
+                    break;
+            }
+
+            // If we didn't reach the end for some reason, it failed
+            if (i != parts.Count)
+                return false;
 
             return true;
         }
@@ -1265,289 +1336,283 @@ namespace DICUI.Utilities
             switch (flag)
             {
                 case ChefFlag.Adler32:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.BlockSize:
-                    commands.Add(ChefCommand.Benchmark);
-                    commands.Add(ChefCommand.CreateSidecar);
+                    commands.Add(ChefCommand.ImageCreateSidecar);
                     break;
                 case ChefFlag.Clear:
-                    commands.Add(ChefCommand.MediaInfo);
+                    commands.Add(ChefCommand.DatabaseUpdate);
                     break;
                 case ChefFlag.ClearAll:
-                    commands.Add(ChefCommand.MediaInfo);
+                    commands.Add(ChefCommand.DatabaseUpdate);
                     break;
                 case ChefFlag.Comments:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.Count:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.CRC16:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.CRC32:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.CRC64:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.Creator:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.Debug:
-                    commands.Add(ChefCommand.Analyze);
-                    commands.Add(ChefCommand.Benchmark);
-                    commands.Add(ChefCommand.Checksum);
-                    commands.Add(ChefCommand.Compare);
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.CreateSidecar);
-                    commands.Add(ChefCommand.Decode);
+                    commands.Add(ChefCommand.DatabaseStats);
+                    commands.Add(ChefCommand.DatabaseUpdate);
                     commands.Add(ChefCommand.DeviceInfo);
+                    commands.Add(ChefCommand.DeviceList);
                     commands.Add(ChefCommand.DeviceReport);
-                    commands.Add(ChefCommand.DumpMedia);
-                    commands.Add(ChefCommand.ExtractFiles);
-                    commands.Add(ChefCommand.ListFiles);
+                    commands.Add(ChefCommand.FilesystemExtract);
+                    commands.Add(ChefCommand.FilesystemList);
+                    commands.Add(ChefCommand.FilesystemOptions);
+                    commands.Add(ChefCommand.ImageAnalyze);
+                    commands.Add(ChefCommand.ImageChecksum);
+                    commands.Add(ChefCommand.ImageCompare);
+                    commands.Add(ChefCommand.ImageConvert);
+                    commands.Add(ChefCommand.ImageCreateSidecar);
+                    commands.Add(ChefCommand.ImageDecode);
+                    commands.Add(ChefCommand.ImageEntropy);
+                    commands.Add(ChefCommand.ImageInfo);
+                    commands.Add(ChefCommand.ImageOptions);
+                    commands.Add(ChefCommand.ImagePrint);
+                    commands.Add(ChefCommand.ImageVerify);
+                    commands.Add(ChefCommand.MediaDump);
                     commands.Add(ChefCommand.MediaInfo);
                     commands.Add(ChefCommand.MediaScan);
-                    commands.Add(ChefCommand.PrintHex);
-                    commands.Add(ChefCommand.Verify);
+                    commands.Add(ChefCommand.Configure);
+                    commands.Add(ChefCommand.Formats);
+                    commands.Add(ChefCommand.ListEncodings);
+                    commands.Add(ChefCommand.ListNamespaces);
+                    commands.Add(ChefCommand.Remote);
                     break;
                 case ChefFlag.DiskTags:
-                    commands.Add(ChefCommand.Decode);
+                    commands.Add(ChefCommand.ImageDecode);
                     break;
                 case ChefFlag.DriveManufacturer:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.DriveModel:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.DriveRevision:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.DriveSerial:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.DuplicatedSectors:
-                    commands.Add(ChefCommand.Entropy);
+                    commands.Add(ChefCommand.ImageEntropy);
                     break;
                 case ChefFlag.Encoding:
-                    commands.Add(ChefCommand.Analyze);
-                    commands.Add(ChefCommand.CreateSidecar);
-                    commands.Add(ChefCommand.DumpMedia);
-                    commands.Add(ChefCommand.ExtractFiles);
-                    commands.Add(ChefCommand.ListFiles);
+                    commands.Add(ChefCommand.FilesystemExtract);
+                    commands.Add(ChefCommand.FilesystemList);
+                    commands.Add(ChefCommand.ImageAnalyze);
+                    commands.Add(ChefCommand.ImageCreateSidecar);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.ExtendedAttributes:
-                    commands.Add(ChefCommand.ExtractFiles);
+                    commands.Add(ChefCommand.FilesystemExtract);
                     break;
                 case ChefFlag.Filesystems:
-                    commands.Add(ChefCommand.Analyze);
+                    commands.Add(ChefCommand.ImageAnalyze);
                     break;
                 case ChefFlag.FirstPregap:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.FixOffset:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Fletcher16:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.Fletcher32:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.Force:
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.ImageConvert);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.FormatConvert:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.FormatDump:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.ImgBurnLog:
                     commands.Add(ChefCommand.MediaScan);
                     break;
-                case ChefFlag.Input:
-                    commands.Add(ChefCommand.Analyze);
-                    commands.Add(ChefCommand.Checksum);
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.CreateSidecar);
-                    commands.Add(ChefCommand.Decode);
-                    commands.Add(ChefCommand.DeviceInfo);
-                    commands.Add(ChefCommand.DeviceReport);
-                    commands.Add(ChefCommand.DumpMedia);
-                    commands.Add(ChefCommand.Entropy);
-                    commands.Add(ChefCommand.ExtractFiles);
-                    commands.Add(ChefCommand.ImageInfo);
-                    commands.Add(ChefCommand.ListFiles);
-                    commands.Add(ChefCommand.MediaInfo);
-                    commands.Add(ChefCommand.MediaScan);
-                    commands.Add(ChefCommand.PrintHex);
-                    commands.Add(ChefCommand.Verify);
-                    break;
-                case ChefFlag.Input1:
-                    commands.Add(ChefCommand.Compare);
-                    break;
-                case ChefFlag.Input2:
-                    commands.Add(ChefCommand.Compare);
-                    break;
                 case ChefFlag.Length:
-                    commands.Add(ChefCommand.Decode);
-                    commands.Add(ChefCommand.PrintHex);
+                    commands.Add(ChefCommand.ImageDecode);
+                    commands.Add(ChefCommand.ImagePrint);
                     break;
                 case ChefFlag.LongFormat:
-                    commands.Add(ChefCommand.ListFiles);
+                    commands.Add(ChefCommand.FilesystemList);
                     break;
                 case ChefFlag.LongSectors:
-                    commands.Add(ChefCommand.PrintHex);
+                    commands.Add(ChefCommand.ImagePrint);
                     break;
                 case ChefFlag.MD5:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.MediaBarcode:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaLastSequence:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaManufacturer:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaModel:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaPartNumber:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaSequence:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaSerial:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.MediaTitle:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.Metadata:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.MHDDLog:
                     commands.Add(ChefCommand.MediaScan);
                     break;
                 case ChefFlag.Namespace:
-                    commands.Add(ChefCommand.ExtractFiles);
-                    commands.Add(ChefCommand.ListFiles);
+                    commands.Add(ChefCommand.FilesystemExtract);
+                    commands.Add(ChefCommand.FilesystemList);
                     break;
                 case ChefFlag.Options:
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.DumpMedia);
-                    commands.Add(ChefCommand.ExtractFiles);
-                    commands.Add(ChefCommand.ListFiles);
-                    break;
-                case ChefFlag.Output:
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.DumpMedia);
-                    commands.Add(ChefCommand.ExtractFiles);
+                    commands.Add(ChefCommand.FilesystemExtract);
+                    commands.Add(ChefCommand.FilesystemList);
+                    commands.Add(ChefCommand.ImageConvert);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.OutputPrefix:
                     commands.Add(ChefCommand.DeviceInfo);
                     commands.Add(ChefCommand.MediaInfo);
                     break;
                 case ChefFlag.Partitions:
-                    commands.Add(ChefCommand.Analyze);
+                    commands.Add(ChefCommand.ImageAnalyze);
                     break;
                 case ChefFlag.Persistent:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Resume:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.ResumeFile:
-                    commands.Add(ChefCommand.ConvertImage);
+                    commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.RetryPasses:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.SectorTags:
-                    commands.Add(ChefCommand.Decode);
+                    commands.Add(ChefCommand.ImageDecode);
                     break;
                 case ChefFlag.SeparatedTracks:
-                    commands.Add(ChefCommand.Checksum);
-                    commands.Add(ChefCommand.Entropy);
+                    commands.Add(ChefCommand.ImageChecksum);
+                    commands.Add(ChefCommand.ImageEntropy);
                     break;
                 case ChefFlag.SHA1:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.SHA256:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.SHA384:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.SHA512:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.Skip:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.SpamSum:
-                    commands.Add(ChefCommand.Checksum);
+                    commands.Add(ChefCommand.ImageChecksum);
                     break;
                 case ChefFlag.Speed:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Start:
-                    commands.Add(ChefCommand.Decode);
-                    commands.Add(ChefCommand.PrintHex);
+                    commands.Add(ChefCommand.ImageDecode);
+                    commands.Add(ChefCommand.ImagePrint);
                     break;
                 case ChefFlag.StopOnError:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Subchannel:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Tape:
-                    commands.Add(ChefCommand.CreateSidecar);
+                    commands.Add(ChefCommand.ImageCreateSidecar);
                     break;
                 case ChefFlag.Trim:
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Verbose:
-                    commands.Add(ChefCommand.Analyze);
-                    commands.Add(ChefCommand.Benchmark);
-                    commands.Add(ChefCommand.Checksum);
-                    commands.Add(ChefCommand.Compare);
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.CreateSidecar);
-                    commands.Add(ChefCommand.Decode);
+                    commands.Add(ChefCommand.DatabaseStats);
+                    commands.Add(ChefCommand.DatabaseUpdate);
                     commands.Add(ChefCommand.DeviceInfo);
+                    commands.Add(ChefCommand.DeviceList);
                     commands.Add(ChefCommand.DeviceReport);
-                    commands.Add(ChefCommand.DumpMedia);
-                    commands.Add(ChefCommand.ExtractFiles);
-                    commands.Add(ChefCommand.ListFiles);
+                    commands.Add(ChefCommand.FilesystemExtract);
+                    commands.Add(ChefCommand.FilesystemList);
+                    commands.Add(ChefCommand.FilesystemOptions);
+                    commands.Add(ChefCommand.ImageAnalyze);
+                    commands.Add(ChefCommand.ImageChecksum);
+                    commands.Add(ChefCommand.ImageCompare);
+                    commands.Add(ChefCommand.ImageConvert);
+                    commands.Add(ChefCommand.ImageCreateSidecar);
+                    commands.Add(ChefCommand.ImageDecode);
+                    commands.Add(ChefCommand.ImageEntropy);
+                    commands.Add(ChefCommand.ImageInfo);
+                    commands.Add(ChefCommand.ImageOptions);
+                    commands.Add(ChefCommand.ImagePrint);
+                    commands.Add(ChefCommand.ImageVerify);
+                    commands.Add(ChefCommand.MediaDump);
                     commands.Add(ChefCommand.MediaInfo);
                     commands.Add(ChefCommand.MediaScan);
-                    commands.Add(ChefCommand.PrintHex);
-                    commands.Add(ChefCommand.Verify);
+                    commands.Add(ChefCommand.Configure);
+                    commands.Add(ChefCommand.Formats);
+                    commands.Add(ChefCommand.ListEncodings);
+                    commands.Add(ChefCommand.ListNamespaces);
+                    commands.Add(ChefCommand.Remote);
                     break;
                 case ChefFlag.VerifyDisc:
-                    commands.Add(ChefCommand.Verify);
+                    commands.Add(ChefCommand.ImageAnalyze);
+                    commands.Add(ChefCommand.ImageVerify);
                     break;
                 case ChefFlag.VerifySectors:
-                    commands.Add(ChefCommand.Verify);
+                    commands.Add(ChefCommand.ImageAnalyze);
+                    commands.Add(ChefCommand.ImageVerify);
                     break;
                 case ChefFlag.WholeDisc:
-                    commands.Add(ChefCommand.Checksum);
-                    commands.Add(ChefCommand.Entropy);
+                    commands.Add(ChefCommand.ImageChecksum);
+                    commands.Add(ChefCommand.ImageEntropy);
                     break;
                 case ChefFlag.Width:
-                    commands.Add(ChefCommand.PrintHex);
+                    commands.Add(ChefCommand.ImagePrint);
                     break;
                 case ChefFlag.XMLSidecar:
-                    commands.Add(ChefCommand.ConvertImage);
-                    commands.Add(ChefCommand.DumpMedia);
+                    commands.Add(ChefCommand.ImageConvert);
+                    commands.Add(ChefCommand.MediaDump);
                     break;
 
                 case ChefFlag.NONE:
@@ -1862,8 +1927,9 @@ namespace DICUI.Utilities
             switch (type)
             {
                 case MediaType.CDROM:
-                    this[ChefFlag.Options] = true;
-                    OptionsValue = $"{ChefOptionStrings.CDRWinCuesheetSeparate}=true";
+                    // TODO: Re-add when implemented
+                    //this[ChefFlag.Options] = true;
+                    //OptionsValue = $"{ChefOptionStrings.CDRWinCuesheetSeparate}=true";
                     break;
                 case MediaType.DVD:
                     // Currently no defaults set

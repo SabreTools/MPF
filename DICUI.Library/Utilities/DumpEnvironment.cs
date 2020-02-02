@@ -555,18 +555,10 @@ namespace DICUI.Utilities
                 {
                     FileName = ChefPath,
                     Arguments = ChefParameters.GenerateParameters() ?? "",
-
-                    // TODO: Remove after debug
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
                 },
             };
             dicProcess.Start();
             dicProcess.WaitForExit();
-
-            // TODO: Remove after debug
-            string stdout = dicProcess.StandardOutput.ReadToEnd();
         }
 
         /// <summary>
