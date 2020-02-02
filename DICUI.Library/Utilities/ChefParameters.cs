@@ -206,7 +206,6 @@ namespace DICUI.Utilities
         {
             List<string> parameters = new List<string>();
 
-            // TODO: Fix this again :(
             if (Command != ChefCommand.NONE)
                 parameters.Add(Command.LongName());
             else
