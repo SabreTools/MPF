@@ -100,22 +100,6 @@
     }
 
     /// <summary>
-    /// Supported filters for DiscImageChef
-    /// </summary>
-    public static class ChefFilterGUIDs
-    {
-        public static string AppleDouble = "1b2165ee-c9df-4b21-bbbb-9e5892b2df4d";
-        public static string AppleSingle = "a69b20e8-f4d3-42bb-bd2b-4a7263394a05";
-        public static string BZip2 = "fccfb0c3-32ef-40d8-9714-2333f6ac72a9";
-        public static string GZip = "f4996661-4a29-42c9-a2c7-3904ef40f3b0";
-        public static string LZip = "09d715e9-20c0-48b1-a8d9-d8897cec57c9";
-        public static string MacBinary = "d7c321d3-e51f-45df-a150-f6bfdf0d7704";
-        public static string NoFilter = "12345678-aaaa-bbbb-cccc-123456789000";
-        public static string PCExchange = "9264eb9f-d634-4f9b-be12-c24cd44988c6";
-        public static string XZ = "666a8617-0444-4c05-9f4f-df0fd758d0d2";
-    }
-
-    /// <summary>
     /// Dumping flags for DiscImageChef
     /// </summary>
     public static class ChefFlagStrings
@@ -248,7 +232,189 @@
     /// </summary>
     public static class ChefFormatStrings
     {
-        // TODO: Try to get list of supported formats
+        // Supported filters
+        public static string AppleDouble = "AppleDouble";
+        public static string AppleSingle = "AppleSingle";
+        public static string BZip2 = "BZip2";
+        public static string GZip = "GZip";
+        public static string LZip = "LZip";
+        public static string MacBinary = "MacBinary";
+        public static string NoFilter = "No filter";
+        public static string PCExchange = "PCExchange";
+        public static string XZ = "XZ";
+
+        // Read-only media image formats
+        public static string AppleDiskArchivalRetrievalTool = "Apple Disk Archival/Retrieval Tool";
+        public static string AppleNewDiskImageFormat = "Apple New Disk Image Format";
+        public static string AppleNIB = "Apple NIB";
+        public static string BlindWrite4 = "BlindWrite 4";
+        public static string BlindWrite5 = "BlindWrite 5";
+        public static string CPCEMUDiskFileAndExtendedCPCDiskFile = "CPCEMU Disk-File and Extended CPC Disk-File";
+        public static string D2FDiskImage = "d2f disk image";
+        public static string D88DiskImage = "D88 Disk Image";
+        public static string DIMDiskImage = "DIM Disk Image";
+        public static string DiscFerret = "DiscFerret";
+        public static string DiscJuggler = "DiscJuggler";
+        public static string DreamcastGDIImage = "Dreamcast GDI image";
+        public static string DunfieldsIMD = "Dunfield's IMD";
+        public static string HDCopyDiskImage = "HD-Copy disk image";
+        public static string KryoFluxSTREAM = "KryoFlux STREAM";
+        public static string MAMECompressedHunksOfData = "MAME Compressed Hunks of Data";
+        public static string MicrosoftVHDX = "Microsoft VHDX";
+        public static string NeroBurningROMImage = "Nero Burning ROM image";
+        public static string PartCloneDiskImage = "PartClone disk image";
+        public static string PartimageDiskImage = "Partimage disk image";
+        public static string SpectrumFloppyDiskImage = "Spectrum Floppy Disk Image";
+        public static string SuperCardPro = "SuperCardPro";
+        public static string SydexCopyQM = "Sydex CopyQM";
+        public static string SydexTeleDisk = "Sydex TeleDisk";
+
+        // Read/write media image formats
+        public static string ACTApricotDiskImage = "ACT Apricot Disk Image";
+        public static string Alcohol120MediaDescriptorStructure = "Alcohol 120% Media Descriptor Structure";
+        public static string Anex86DiskImage = "Anex86 Disk Image";
+        public static string Apple2InterleavedDiskImage = "Apple ][Interleaved Disk Image";
+        public static string Apple2IMG = "Apple 2IMG";
+        public static string AppleDiskCopy42 = "Apple DiskCopy 4.2";
+        public static string AppleUniversalDiskImageFormat = "Apple Universal Disk Image Format";
+        public static string BasicLisaUtility = "Basic Lisa Utility";
+        public static string CDRDAOTocfile = "CDRDAO tocfile";
+        public static string CDRWinCuesheet = "CDRWin cuesheet";
+        public static string CisCopyDiskImageDCFile = "CisCopy Disk Image(DC-File)";
+        public static string CloneCD = "CloneCD";
+        public static string CopyTape = "CopyTape";
+        public static string DigitalResearchDiskCopy = "Digital Research DiskCopy";
+        public static string DiscImageChefFormat = "DiscImageChef format";
+        public static string IBMSaveDskF = "IBM SaveDskF";
+        public static string MAXIDiskImage = "MAXI Disk image";
+        public static string ParallelsDiskImage = "Parallels disk image";
+        public static string QEMUCopyOnWriteDiskImage = "QEMU Copy-On-Write disk image";
+        public static string QEMUCopyOnWriteDiskImageV2 = "QEMU Copy-On-Write disk image v2";
+        public static string QEMUEnhancedDiskImage = "QEMU Enhanced Disk image";
+        public static string RawDiskImage = "Raw Disk Image";
+        public static string RayAracheliansDiskIMage = "Ray Arachelian's Disk IMage";
+        public static string RSIDEHardDiskImage = "RS-IDE Hard Disk Image";
+        public static string T98HardDiskImage = "T98 Hard Disk Image";
+        public static string T98NextNHDr0DiskImage = "T98-Next NHD r0 Disk Image";
+        public static string Virtual98DiskImage = "Virtual98 Disk Image";
+        public static string VirtualBoxDiskImage = "VirtualBox Disk Image";
+        public static string VirtualPC = "VirtualPC";
+        public static string VMwareDiskImage = "VMware disk image";
+
+        // Supported filesystems for identification and information only
+        public static string AcornAdvancedDiscFilingSystem = "Acorn Advanced Disc Filing System";
+        public static string AlexanderOsipovDOSFileSystem = "Alexander Osipov DOS file system";
+        public static string AmigaDOSFilesystem = "Amiga DOS filesystem";
+        public static string AppleFileSystem = "Apple File System";
+        public static string AppleHFSPlusFilesystem = "Apple HFS+ filesystem";
+        public static string AppleHierarchicalFileSystem = "Apple Hierarchical File System";
+        public static string AppleProDOSFilesystem = "Apple ProDOS filesystem";
+        public static string AtheOSFilesystem = "AtheOS Filesystem";
+        public static string BeFilesystem = "Be Filesystem";
+        public static string BSDFastFileSystem = "BSD Fast File System(aka UNIX File System, UFS)";
+        public static string BTreeFileSystem = "B-tree file system";
+        public static string CommodoreFileSystem = "Commodore file system";
+        public static string CramFilesystem = "Cram filesystem";
+        public static string DumpEightPlugin = "dump(8) Plugin";
+        public static string ECMA67 = "ECMA-67";
+        public static string ExtentFileSystemPlugin = "Extent File System Plugin";
+        public static string F2FSPlugin = "F2FS Plugin";
+        public static string Files11OnDiskStructure = "Files-11 On-Disk Structure";
+        public static string FossilFilesystemPlugin = "Fossil Filesystem Plugin";
+        public static string HAMMERFilesystem = "HAMMER Filesystem";
+        public static string HighPerformanceOpticalFileSystem = "High Performance Optical File System";
+        public static string HPLogicalInterchangeFormatPlugin = "HP Logical Interchange Format Plugin";
+        public static string JFSPlugin = "JFS Plugin";
+        public static string LinuxExtendedFilesystem = "Linux extended Filesystem";
+        public static string LinuxExtendedFilesystem234 = "Linux extended Filesystem 2, 3 and 4";
+        public static string LocusFilesystemPlugin = "Locus Filesystem Plugin";
+        public static string MicroDOSFileSystem = "MicroDOS file system";
+        public static string MicrosoftExtendedFileAllocationTable = "Microsoft Extended File Allocation Table";
+        public static string MinixFilesystem = "Minix Filesystem";
+        public static string NewTechnologyFileSystem = "New Technology File System(NTFS)";
+        public static string NILFS2Plugin = "NILFS2 Plugin";
+        public static string NintendoOpticalFilesystems = "Nintendo optical filesystems";
+        public static string OS2HighPerformanceFileSystem = "OS/2 High Performance File System";
+        public static string OS9RandomBlockFilePlugin = "OS-9 Random Block File Plugin";
+        public static string PCEngineCDPlugin = "PC Engine CD Plugin";
+        public static string PCFXPlugin = "PC-FX Plugin";
+        public static string ProfessionalFileSystem = "Professional File System";
+        public static string QNX4Plugin = "QNX4 Plugin";
+        public static string QNX6Plugin = "QNX6 Plugin";
+        public static string ReiserFilesystemPlugin = "Reiser Filesystem Plugin";
+        public static string Reiser4FilesystemPlugin = "Reiser4 Filesystem Plugin";
+        public static string ResilientFileSystemPlugin = "Resilient File System plugin";
+        public static string RT11FileSystem = "RT-11 file system";
+        public static string SmartFileSystem = "SmartFileSystem";
+        public static string SolarOSFilesystem = "Solar_OS filesystem";
+        public static string SquashFilesystem = "Squash filesystem";
+        public static string UNICOSFilesystemPlugin = "UNICOS Filesystem Plugin";
+        public static string UniversalDiskFormat = "Universal Disk Format";
+        public static string UNIXBootFilesystem = "UNIX Boot filesystem";
+        public static string UNIXSystemVFilesystem = "UNIX System V filesystem";
+        public static string VeritasFilesystem = "Veritas filesystem";
+        public static string VMwareFilesystem = "VMware filesystem";
+        public static string XFSFilesystemPlugin = "XFS Filesystem Plugin";
+        public static string XiaFilesystem = "Xia filesystem";
+        public static string ZFSFilesystemPlugin = "ZFS Filesystem Plugin";
+
+        // Supported filesystems that can read their contents
+        public static string AppleDOSFileSystem = "Apple DOS File System";
+        public static string AppleLisaFileSystem = "Apple Lisa File System";
+        public static string AppleMacintoshFileSystem = "Apple Macintosh File System";
+        public static string CPMFileSystem = "CP/M File System";
+        public static string FATXFilesystemPlugin = "FATX Filesystem Plugin";
+        public static string ISO9660Filesystem = "ISO9660 Filesystem";
+        public static string MicrosoftFileAllocationTable = "Microsoft File Allocation Table";
+        public static string OperaFilesystemPlugin = "Opera Filesystem Plugin";
+        public static string UCSDPascalFilesystem = "U.C.S.D.Pascal filesystem";
+
+        // Supported partitioning schemes
+        public static string AcornFileCorePartitions = "Acorn FileCore partitions";
+        public static string ACTApricotPartitions = "ACT Apricot partitions";
+        public static string AmigaRigidDiskBlock = "Amiga Rigid Disk Block";
+        public static string ApplePartitionMap = "Apple Partition Map";
+        public static string AtariPartitions = "Atari partitions";
+        public static string BSDDisklabel = "BSD disklabel";
+        public static string DECDisklabel = "DEC disklabel";
+        public static string DragonFlyBSD64bitDisklabel = "DragonFly BSD 64-bit disklabel";
+        public static string GUIDPartitionTable = "GUID Partition Table";
+        public static string Human68kPartitions = "Human 68k partitions";
+        public static string MasterBootRecord = "Master Boot Record";
+        public static string NECPC9800PartitionTable = "NEC PC-9800 partition table";
+        public static string NeXTDisklabel = "NeXT Disklabel";
+        public static string Plan9PartitionTable = "Plan9 partition table";
+        public static string RioKarmaPartitioning = "Rio Karma partitioning";
+        public static string SGIDiskVolumeHeader = "SGI Disk Volume Header";
+        public static string SunDisklabel = "Sun Disklabel";
+        public static string UNIXHardwired = "UNIX hardwired";
+        public static string UNIXVTOC = "UNIX VTOC";
+        public static string XboxPartitioning = "Xbox partitioning";
+        public static string XENIX = "XENIX";
+    }
+
+    /// <summary>
+    /// Supported namespaces for DiscImageChef
+    /// </summary>
+    public static class ChefNamespaceStrings
+    {
+        // Namespaces for Apple Lisa File System
+        public static string LisaOfficeSystem = "office";
+        public static string LisaPascalWorkshop = "workshop";
+
+        // Namespaces for ISO9660 Filesystem
+        public static string JolietVolumeDescriptor = "joliet";
+        public static string PrimaryVolumeDescriptor = "normal";
+        public static string PrimaryVolumeDescriptorwithEncoding = "romeo";
+        public static string RockRidge = "rrip";
+        public static string PrimaryVolumeDescriptorVersionSuffix = "vms";
+
+        // Namespaces for Microsoft File Allocation Table
+        public static string DOS = "dos";
+        public static string LFNWhenAvailable = "ecs";
+        public static string LongFileNames = "lfn";
+        public static string WindowsNT = "nt";
+        public static string OS2Extended = "os2";
     }
 
     /// <summary>
