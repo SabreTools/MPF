@@ -187,7 +187,6 @@ namespace DICUI.Utilities
             InputValue = $"\\\\?\\{driveLetter.ToString()}:";
             OutputValue = filename;
 
-            // TODO: Add outputting the sidecar
             this[ChefFlag.Force] = true;
 
             if (driveSpeed != null)
@@ -1930,6 +1929,10 @@ namespace DICUI.Utilities
                     // TODO: Re-add when implemented
                     //this[ChefFlag.Options] = true;
                     //OptionsValue = $"{ChefOptionStrings.CDRWinCuesheetSeparate}=true";
+
+                    this[ChefFlag.FirstPregap] = true;
+                    this[ChefFlag.Subchannel] = true;
+                    SubchannelValue = "any";
                     break;
                 case MediaType.DVD:
                     // Currently no defaults set
