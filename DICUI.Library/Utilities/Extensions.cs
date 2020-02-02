@@ -189,6 +189,15 @@ namespace DICUI.Utilities
         };
 
         /// <summary>
+        /// List of systems that has an LSD pack
+        /// </summary>
+        public static readonly RedumpSystem[] HasLsd = new RedumpSystem[]
+        {
+            RedumpSystem.IBMPCcompatible,
+            RedumpSystem.SonyPlayStation,
+        };
+
+        /// <summary>
         /// List of systems that has an SBI pack
         /// </summary>
         public static readonly RedumpSystem[] HasSbi = new RedumpSystem[]

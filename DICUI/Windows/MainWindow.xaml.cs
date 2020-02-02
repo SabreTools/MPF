@@ -444,8 +444,10 @@ namespace DICUI.Windows
             var env = new DumpEnvironment()
             {
                 // Paths to tools
+                ChefPath = _options.ChefPath,
+                CreatorPath = _options.CreatorPath,
                 SubdumpPath = _options.SubDumpPath,
-                DICPath = _options.DICPath,
+                UseChef = _options.UseChef,
 
                 OutputDirectory = OutputDirectoryTextBox.Text,
                 OutputFilename = OutputFilenameTextBox.Text,
@@ -453,14 +455,15 @@ namespace DICUI.Windows
                 // Get the currently selected options
                 Drive = DriveLetterComboBox.SelectedItem as Drive,
 
-                CreatorParameters = new CreatorParameters(ParametersTextBox.Text),
-
                 QuietMode = _options.QuietMode,
                 ParanoidMode = _options.ParanoidMode,
                 ScanForProtection = _options.ScanForProtection,
                 RereadAmountC2 = _options.RereadAmountForC2,
                 AddPlaceholders = _options.AddPlaceholders,
                 PromptForDiscInformation = _options.PromptForDiscInformation,
+
+                ChefParameters = new ChefParameters(ParametersTextBox.Text),
+                CreatorParameters = new CreatorParameters(ParametersTextBox.Text),
 
                 Username = _options.Username,
                 Password = _options.Password,
@@ -510,9 +513,9 @@ namespace DICUI.Windows
 
             try
             {
-                // Check for the firmware first
+                // Check for the firmware first for DiscImageCreator
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                if (!await _env.DriveHasLatestFimrware())
+                if (!_env.UseChef && !await _env.DriveHasLatestFimrware())
                 {
                     MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -640,11 +643,11 @@ namespace DICUI.Windows
 
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
-                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension() ?? ".bin");
+                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension(_options.UseChef) ?? ".bin");
 
             // If the extension for the file changed, update that automatically
-            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension())
-                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension() ?? ".bin");
+            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension(_options.UseChef))
+                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension(_options.UseChef) ?? ".bin");
         }
 
         /// <summary>
@@ -763,34 +766,57 @@ namespace DICUI.Windows
         /// </summary>
         private void ProcessCustomParameters()
         {
-            _env.CreatorParameters = new CreatorParameters(ParametersTextBox.Text);
+            if (_options.UseChef)
+            {
+                _env.ChefParameters = new ChefParameters(ParametersTextBox.Text);
 
-            int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.CreatorParameters.DriveLetter[0]);
-            if (driveIndex > -1)
-                DriveLetterComboBox.SelectedIndex = driveIndex;
+                int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.ChefParameters.InputValue[0]);
+                if (driveIndex > -1)
+                    DriveLetterComboBox.SelectedIndex = driveIndex;
 
-            int driveSpeed = _env.CreatorParameters.DriveSpeed ?? -1;
-            if (driveSpeed > 0)
-                DriveSpeedComboBox.SelectedValue = driveSpeed;
+                string trimmedPath = _env.ChefParameters.OutputValue?.Trim('"') ?? string.Empty;
+                string outputDirectory = Path.GetDirectoryName(trimmedPath);
+                string outputFilename = Path.GetFileName(trimmedPath);
+                if (!string.IsNullOrWhiteSpace(outputDirectory))
+                    OutputDirectoryTextBox.Text = outputDirectory;
+                else
+                    outputDirectory = OutputDirectoryTextBox.Text;
+                if (!string.IsNullOrWhiteSpace(outputFilename))
+                    OutputFilenameTextBox.Text = outputFilename;
+                else
+                    outputFilename = OutputFilenameTextBox.Text;
+            }
             else
-                _env.CreatorParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
+            {
+                _env.CreatorParameters = new CreatorParameters(ParametersTextBox.Text);
 
-            string trimmedPath = _env.CreatorParameters.Filename?.Trim('"') ?? string.Empty;
-            string outputDirectory = Path.GetDirectoryName(trimmedPath);
-            string outputFilename = Path.GetFileName(trimmedPath);
-            if (!string.IsNullOrWhiteSpace(outputDirectory))
-                OutputDirectoryTextBox.Text = outputDirectory;
-            else
-                outputDirectory = OutputDirectoryTextBox.Text;
-            if (!string.IsNullOrWhiteSpace(outputFilename))
-                OutputFilenameTextBox.Text = outputFilename;
-            else
-                outputFilename = OutputFilenameTextBox.Text;
+                int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.CreatorParameters.DriveLetter[0]);
+                if (driveIndex > -1)
+                    DriveLetterComboBox.SelectedIndex = driveIndex;
 
-            MediaType? mediaType = _env.CreatorParameters.Command.ToMediaType();
-            int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
-            if (mediaTypeIndex > -1)
-                MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
+                int driveSpeed = _env.CreatorParameters.DriveSpeed ?? -1;
+                if (driveSpeed > 0)
+                    DriveSpeedComboBox.SelectedValue = driveSpeed;
+                else
+                    _env.CreatorParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
+
+                string trimmedPath = _env.CreatorParameters.Filename?.Trim('"') ?? string.Empty;
+                string outputDirectory = Path.GetDirectoryName(trimmedPath);
+                string outputFilename = Path.GetFileName(trimmedPath);
+                if (!string.IsNullOrWhiteSpace(outputDirectory))
+                    OutputDirectoryTextBox.Text = outputDirectory;
+                else
+                    outputDirectory = OutputDirectoryTextBox.Text;
+                if (!string.IsNullOrWhiteSpace(outputFilename))
+                    OutputFilenameTextBox.Text = outputFilename;
+                else
+                    outputFilename = OutputFilenameTextBox.Text;
+
+                MediaType? mediaType = _env.CreatorParameters.Command.ToMediaType();
+                int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
+                if (mediaTypeIndex > -1)
+                    MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
+            }
         }
 
         #endregion

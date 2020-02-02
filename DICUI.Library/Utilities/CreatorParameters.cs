@@ -8,7 +8,7 @@ using DICUI.Data;
 namespace DICUI.Utilities
 {
     /// <summary>
-    ///  Represents a generic set of DiscImageCreator parameters
+    /// Represents a generic set of DiscImageCreator parameters
     /// </summary>
     public class CreatorParameters
     {
@@ -66,7 +66,7 @@ namespace DICUI.Utilities
         }
         internal IEnumerable<CreatorFlag> Keys => _flags.Keys;
 
-        #region DIC Flag Values
+        #region DiscImageCreator Flag Values
 
         /// <summary>
         /// Manual offset for Audio CD
@@ -122,7 +122,7 @@ namespace DICUI.Utilities
         #endregion
 
         /// <summary>
-        /// Populate a Parameters object from a param string
+        /// Populate a CreatorParameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
         public CreatorParameters(string parameters)

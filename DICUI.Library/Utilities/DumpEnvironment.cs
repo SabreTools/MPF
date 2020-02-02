@@ -21,14 +21,24 @@ namespace DICUI.Utilities
         #region Tool paths
 
         /// <summary>
+        /// Path to DiscImageChef executable
+        /// </summary>
+        public string ChefPath { get; set; }
+
+        /// <summary>
         /// Path to DiscImageCreator executable
         /// </summary>
-        public string DICPath { get; set; }
+        public string CreatorPath { get; set; }
 
         /// <summary>
         /// Path to Subdump executable
         /// </summary>
         public string SubdumpPath { get; set; }
+
+        /// <summary>
+        /// Wether or not to use DiscImageChef instead of DiscImageCreator
+        /// </summary>
+        public bool UseChef { get; set; }
 
         #endregion
 
@@ -64,9 +74,19 @@ namespace DICUI.Utilities
         public MediaType? Type { get; set; }
 
         /// <summary>
+        /// Parameters object representing what to send to DiscImageChef
+        /// </summary>
+        public ChefParameters ChefParameters { get; set; }
+
+        /// <summary>
         /// Parameters object representing what to send to DiscImageCreator
         /// </summary>
         public CreatorParameters CreatorParameters { get; set; }
+
+        /// <summary>
+        /// Scan for copy protection, where applicable
+        /// </summary>
+        public bool ScanForProtection { get; set; }
 
         /// <summary>
         /// Determines if placeholder values should be set for fields
@@ -80,7 +100,7 @@ namespace DICUI.Utilities
 
         #endregion
 
-        #region Extra DIC arguments
+        #region Extra DiscImageCreator arguments
 
         /// <summary>
         /// Enable quiet mode (no beeps)
@@ -91,11 +111,6 @@ namespace DICUI.Utilities
         /// Enable paranoid mode (extra flags)
         /// </summary>
         public bool ParanoidMode { get; set; }
-
-        /// <summary>
-        /// Scan for copy protection, where applicable
-        /// </summary>
-        public bool ScanForProtection { get; set; }
 
         /// <summary>
         /// Number of C2 error reread attempts
@@ -155,7 +170,7 @@ namespace DICUI.Utilities
         public async Task<bool> DriveHasLatestFimrware()
         {
             // Validate that the required program exists
-            if (!File.Exists(DICPath))
+            if (!File.Exists(CreatorPath))
                 return false;
 
             CreatorParameters parameters = new CreatorParameters(string.Empty)
@@ -180,7 +195,7 @@ namespace DICUI.Utilities
         public async void EjectDisc()
         {
             // Validate that the required program exists
-            if (!File.Exists(DICPath))
+            if (!File.Exists(CreatorPath))
                 return;
 
             CancelDumping();
@@ -262,6 +277,7 @@ namespace DICUI.Utilities
         /// <returns></returns>
         public bool FoundAllFiles()
         {
+            // TODO: Make DiscImageChef variant of this
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
@@ -327,7 +343,7 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the full parameter string for DIC
+        /// Get the full parameter string for either DiscImageCreator or DiscImageChef
         /// </summary>
         /// <param name="driveSpeed">Nullable int representing the drive speed</param>
         /// <returns>String representing the params, null on error</returns>
@@ -342,12 +358,23 @@ namespace DICUI.Utilities
 
                 // Set the proper parameters
                 string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
-                CreatorParameters = new CreatorParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
-                if (QuietMode)
-                    CreatorParameters[CreatorFlag.DisableBeep] = true;
 
-                // Generate and return the param string
-                return CreatorParameters.GenerateParameters();
+                if (UseChef)
+                {
+                    ChefParameters = new ChefParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
+
+                    // Generate and return the param string
+                    return ChefParameters.GenerateParameters();
+                }
+                else
+                {
+                    CreatorParameters = new CreatorParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
+                    if (QuietMode)
+                        CreatorParameters[CreatorFlag.DisableBeep] = true;
+
+                    // Generate and return the param string
+                    return CreatorParameters.GenerateParameters();
+                }
             }
 
             return null;
@@ -359,7 +386,7 @@ namespace DICUI.Utilities
         public async void ResetDrive()
         {
             // Validate that the required program exists
-            if (!File.Exists(DICPath))
+            if (!File.Exists(CreatorPath))
                 return;
 
             // Precautionary check for dumping, just in case
@@ -385,7 +412,7 @@ namespace DICUI.Utilities
         {
             Result result = IsValidForDump();
 
-            // Execute DIC and external tools, if needed
+            // Execute dumping program and external tools, if needed
             if (Validators.GetSupportStatus(System, Type)
                 && !result.Message.Contains("not supported") // Completely unsupported media
                 && !result.Message.Contains("submission info")) // Submission info-only media
@@ -394,13 +421,22 @@ namespace DICUI.Utilities
                 if (!result)
                     return result;
 
-                progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
-                await Task.Run(() => ExecuteDiskImageCreator());
-                progress?.Report(Result.Success("DiscImageCreator has finished!"));
+                if (UseChef)
+                {
+                    progress?.Report(Result.Success("Executing DiscImageChef... please wait!"));
+                    await Task.Run(() => ExecuteDiscImageChef());
+                    progress?.Report(Result.Success("DiscImageChef has finished!"));
+                }
+                else
+                {
+                    progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
+                    await Task.Run(() => ExecuteDiscImageCreator());
+                    progress?.Report(Result.Success("DiscImageCreator has finished!"));
+                }
 
                 // Execute additional tools
                 progress?.Report(Result.Success("Running any additional tools... please wait!"));
-                result = await Task.Run(() => ExecuteAdditionalToolsAfterDIC());
+                result = await Task.Run(() => ExecuteAdditionalTools());
                 progress?.Report(result);
             }
 
@@ -470,7 +506,13 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            return CreatorParameters.IsValid()
+            bool parametersValid = false;
+            if (UseChef)
+                parametersValid = ChefParameters.IsValid();
+            else
+                parametersValid = CreatorParameters.IsValid();
+
+            return parametersValid
                 && !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
@@ -484,7 +526,7 @@ namespace DICUI.Utilities
         /// Run any additional tools given a DumpEnvironment
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        private Result ExecuteAdditionalToolsAfterDIC()
+        private Result ExecuteAdditionalTools()
         {
             // Special cases
             switch (System)
@@ -501,15 +543,79 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Run DiscImageChef
+        /// </summary>
+        private void ExecuteDiscImageChef()
+        {
+            Directory.CreateDirectory(OutputDirectory);
+
+            dicProcess = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = ChefPath,
+                    Arguments = ChefParameters.GenerateParameters() ?? "",
+
+                    // TODO: Remove after debug
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                },
+            };
+            dicProcess.Start();
+            dicProcess.WaitForExit();
+
+            // TODO: Remove after debug
+            string stdout = dicProcess.StandardOutput.ReadToEnd();
+        }
+
+        /// <summary>
+        /// Run DiscImageChef async with an input set of parameters
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns>Standard output from commandline window</returns>
+        private async Task<string> ExecuteDiscImageChefWithParameters(ChefParameters parameters)
+        {
+            Process childProcess;
+            string output = await Task.Run(() =>
+            {
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = ChefPath,
+                        Arguments = parameters.GenerateParameters(),
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit(1000);
+
+                // Just in case, we want to push a button 5 times to clear any errors
+                for (int i = 0; i < 5; i++)
+                    childProcess.StandardInput.WriteLine("Y");
+
+                string stdout = childProcess.StandardOutput.ReadToEnd();
+                childProcess.Dispose();
+                return stdout;
+            });
+
+            return output;
+        }
+
+        /// <summary>
         /// Run DiscImageCreator
         /// </summary>
-        private void ExecuteDiskImageCreator()
+        private void ExecuteDiscImageCreator()
         {
             dicProcess = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = DICPath,
+                    FileName = CreatorPath,
                     Arguments = CreatorParameters.GenerateParameters() ?? "",
                 },
             };
@@ -518,7 +624,7 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Run DIC async with an input set of parameters
+        /// Run DiscImageCreator async with an input set of parameters
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
@@ -531,7 +637,7 @@ namespace DICUI.Utilities
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = DICPath,
+                        FileName = CreatorPath,
                         Arguments = parameters.GenerateParameters(),
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -1338,7 +1444,9 @@ namespace DICUI.Utilities
             FixOutputPaths();
 
             // Validate that the required program exists
-            if (!File.Exists(DICPath))
+            if (UseChef && !File.Exists(ChefPath))
+                return Result.Failure("Error! Could not find DiscImageChef!");
+            else if (!UseChef && !File.Exists(CreatorPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
             // TODO: Ensure output path not the same as input drive OR DIC/DICUI location

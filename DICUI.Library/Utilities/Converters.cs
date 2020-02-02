@@ -465,20 +465,22 @@ namespace DICUI.Utilities
         /// Get the default extension for a given disc type
         /// </summary>
         /// <param name="type">MediaType value to check</param>
+        /// <param name="useChef">Whether or not DiscImageChef is being used</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string Extension(this MediaType? type)
+        public static string Extension(this MediaType? type, bool useChef)
         {
             switch (type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
+                    return useChef ? ".cue" : ".bin";
                 case MediaType.Cartridge:
                 case MediaType.HardDisk:
                 case MediaType.CompactFlash:
                 case MediaType.MMC:
                 case MediaType.SDCard:
                 case MediaType.FlashDrive:
-                    return ".bin";
+                    return useChef ? ".raw" : ".bin";
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
@@ -537,6 +539,255 @@ namespace DICUI.Utilities
                     return "Add-Ons";
                 default:
                     return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the ChefCommand enum values
+        /// </summary>
+        /// <param name="command">ChefCommand value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this ChefCommand command)
+        {
+            switch (command)
+            {
+                case ChefCommand.Analyze:
+                    return ChefCommandStrings.Analyze;
+                case ChefCommand.Benchmark:
+                    return ChefCommandStrings.Benchmark;
+                case ChefCommand.Checksum:
+                    return ChefCommandStrings.Checksum;
+                case ChefCommand.Compare:
+                    return ChefCommandStrings.Compare;
+                case ChefCommand.Configure:
+                    return ChefCommandStrings.Configure;
+                case ChefCommand.ConvertImage:
+                    return ChefCommandStrings.ConvertImage;
+                case ChefCommand.CreateSidecar:
+                    return ChefCommandStrings.CreateSidecar;
+                case ChefCommand.Decode:
+                    return ChefCommandStrings.Decode;
+                case ChefCommand.DeviceInfo:
+                    return ChefCommandStrings.DeviceInfo;
+                case ChefCommand.DeviceReport:
+                    return ChefCommandStrings.DeviceReport;
+                case ChefCommand.DumpMedia:
+                    return ChefCommandStrings.DumpMedia;
+                case ChefCommand.Entropy:
+                    return ChefCommandStrings.Entropy;
+                case ChefCommand.ExtractFiles:
+                    return ChefCommandStrings.ExtractFiles;
+                case ChefCommand.Formats:
+                    return ChefCommandStrings.Formats;
+                case ChefCommand.Gui:
+                    return ChefCommandStrings.Gui;
+                case ChefCommand.Help:
+                    return ChefCommandStrings.Help;
+                case ChefCommand.ImageInfo:
+                    return ChefCommandStrings.ImageInfo;
+                case ChefCommand.ListDevices:
+                    return ChefCommandStrings.ListDevices;
+                case ChefCommand.ListEncodings:
+                    return ChefCommandStrings.ListEncodings;
+                case ChefCommand.ListFiles:
+                    return ChefCommandStrings.ListFiles;
+                case ChefCommand.ListNamespaces:
+                    return ChefCommandStrings.ListNamespaces;
+                case ChefCommand.ListOptions:
+                    return ChefCommandStrings.ListOptions;
+                case ChefCommand.MediaInfo:
+                    return ChefCommandStrings.MediaInfo;
+                case ChefCommand.MediaScan:
+                    return ChefCommandStrings.MediaScan;
+                case ChefCommand.PrintHex:
+                    return ChefCommandStrings.PrintHex;
+                case ChefCommand.Remote:
+                    return ChefCommandStrings.Remote;
+                case ChefCommand.Stats:
+                    return ChefCommandStrings.Stats;
+                case ChefCommand.Verify:
+                    return ChefCommandStrings.Verify;
+                case ChefCommand.Version:
+                    return ChefCommandStrings.Version;
+
+                case ChefCommand.NONE:
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the ChefFlag enum values
+        /// </summary>
+        /// <param name="command">ChefFlag value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this ChefFlag flag)
+        {
+            switch (flag)
+            {
+                // Boolean flags
+                case ChefFlag.Adler32:
+                    return ChefFlagStrings.Adler32Long;
+                case ChefFlag.Clear:
+                    return ChefFlagStrings.ClearLong;
+                case ChefFlag.ClearAll:
+                    return ChefFlagStrings.ClearAllLong;
+                case ChefFlag.CRC16:
+                    return ChefFlagStrings.CRC16Long;
+                case ChefFlag.CRC32:
+                    return ChefFlagStrings.CRC32Long;
+                case ChefFlag.CRC64:
+                    return ChefFlagStrings.CRC64Long;
+                case ChefFlag.Debug:
+                    return ChefFlagStrings.DebugLong;
+                case ChefFlag.DiskTags:
+                    return ChefFlagStrings.DiskTagsLong;
+                case ChefFlag.DuplicatedSectors:
+                    return ChefFlagStrings.DuplicatedSectorsLong;
+                case ChefFlag.ExtendedAttributes:
+                    return ChefFlagStrings.ExtendedAttributesLong;
+                case ChefFlag.Filesystems:
+                    return ChefFlagStrings.FilesystemsLong;
+                case ChefFlag.FirstPregap:
+                    return ChefFlagStrings.FirstPregapLong;
+                case ChefFlag.FixOffset:
+                    return ChefFlagStrings.FixOffsetLong;
+                case ChefFlag.Fletcher16:
+                    return ChefFlagStrings.Fletcher16Long;
+                case ChefFlag.Fletcher32:
+                    return ChefFlagStrings.Fletcher32Long;
+                case ChefFlag.Force:
+                    return ChefFlagStrings.ForceLong;
+                case ChefFlag.LongFormat:
+                    return ChefFlagStrings.LongFormatLong;
+                case ChefFlag.LongSectors:
+                    return ChefFlagStrings.LongSectorsLong;
+                case ChefFlag.MD5:
+                    return ChefFlagStrings.MD5Long;
+                case ChefFlag.Metadata:
+                    return ChefFlagStrings.MetadataLong;
+                case ChefFlag.Partitions:
+                    return ChefFlagStrings.PartitionsLong;
+                case ChefFlag.Persistent:
+                    return ChefFlagStrings.PersistentLong;
+                case ChefFlag.Resume:
+                    return ChefFlagStrings.ResumeLong;
+                case ChefFlag.SectorTags:
+                    return ChefFlagStrings.SectorTagsLong;
+                case ChefFlag.SeparatedTracks:
+                    return ChefFlagStrings.SeparatedTracksLong;
+                case ChefFlag.SHA1:
+                    return ChefFlagStrings.SHA1Long;
+                case ChefFlag.SHA256:
+                    return ChefFlagStrings.SHA256Long;
+                case ChefFlag.SHA384:
+                    return ChefFlagStrings.SHA384Long;
+                case ChefFlag.SHA512:
+                    return ChefFlagStrings.SHA512Long;
+                case ChefFlag.SpamSum:
+                    return ChefFlagStrings.SpamSumLong;
+                case ChefFlag.StopOnError:
+                    return ChefFlagStrings.StopOnErrorLong;
+                case ChefFlag.Tape:
+                    return ChefFlagStrings.TapeLong;
+                case ChefFlag.Trim:
+                    return ChefFlagStrings.TrimLong;
+                case ChefFlag.Verbose:
+                    return ChefFlagStrings.VerboseLong;
+                case ChefFlag.VerifyDisc:
+                    return ChefFlagStrings.VerifyDiscLong;
+                case ChefFlag.VerifySectors:
+                    return ChefFlagStrings.VerifySectorsLong;
+                case ChefFlag.WholeDisc:
+                    return ChefFlagStrings.WholeDiscLong;
+
+                // Int8 flags
+                case ChefFlag.Speed:
+                    return ChefFlagStrings.SpeedLong;
+
+                // Int16 flags
+                case ChefFlag.RetryPasses:
+                    return ChefFlagStrings.RetryPassesLong;
+                case ChefFlag.Width:
+                    return ChefFlagStrings.WidthLong;
+
+                // Int32 flags
+                case ChefFlag.BlockSize:
+                    return ChefFlagStrings.BlockSizeLong;
+                case ChefFlag.Count:
+                    return ChefFlagStrings.CountLong;
+                case ChefFlag.MediaLastSequence:
+                    return ChefFlagStrings.MediaLastSequenceLong;
+                case ChefFlag.MediaSequence:
+                    return ChefFlagStrings.MediaSequenceLong;
+                case ChefFlag.Skip:
+                    return ChefFlagStrings.SkipLong;
+
+                // Int64 flags
+                case ChefFlag.Length:
+                    return ChefFlagStrings.LengthLong;
+                case ChefFlag.Start:
+                    return ChefFlagStrings.StartLong;
+
+                // String flags
+                case ChefFlag.Comments:
+                    return ChefFlagStrings.CommentsLong;
+                case ChefFlag.Creator:
+                    return ChefFlagStrings.CreatorLong;
+                case ChefFlag.DriveManufacturer:
+                    return ChefFlagStrings.DriveManufacturerLong;
+                case ChefFlag.DriveModel:
+                    return ChefFlagStrings.DriveModelLong;
+                case ChefFlag.DriveRevision:
+                    return ChefFlagStrings.DriveRevisionLong;
+                case ChefFlag.DriveSerial:
+                    return ChefFlagStrings.DriveSerialLong;
+                case ChefFlag.Encoding:
+                    return ChefFlagStrings.EncodingLong;
+                case ChefFlag.FormatConvert:
+                    return ChefFlagStrings.FormatConvertLong;
+                case ChefFlag.FormatDump:
+                    return ChefFlagStrings.FormatDumpLong;
+                case ChefFlag.ImgBurnLog:
+                    return ChefFlagStrings.ImgBurnLogLong;
+                case ChefFlag.Input:
+                    return ChefFlagStrings.InputLong;
+                case ChefFlag.Input1:
+                    return ChefFlagStrings.Input1Long;
+                case ChefFlag.Input2:
+                    return ChefFlagStrings.Input2Long;
+                case ChefFlag.MediaBarcode:
+                    return ChefFlagStrings.MediaBarcodeLong;
+                case ChefFlag.MediaManufacturer:
+                    return ChefFlagStrings.MediaManufacturerLong;
+                case ChefFlag.MediaModel:
+                    return ChefFlagStrings.MediaModelLong;
+                case ChefFlag.MediaPartNumber:
+                    return ChefFlagStrings.MediaPartNumberLong;
+                case ChefFlag.MediaSerial:
+                    return ChefFlagStrings.MediaSerialLong;
+                case ChefFlag.MediaTitle:
+                    return ChefFlagStrings.MediaTitleLong;
+                case ChefFlag.MHDDLog:
+                    return ChefFlagStrings.MHDDLogLong;
+                case ChefFlag.Namespace:
+                    return ChefFlagStrings.NamespaceLong;
+                case ChefFlag.Options:
+                    return ChefFlagStrings.OptionsLong;
+                case ChefFlag.Output:
+                    return ChefFlagStrings.OutputLong;
+                case ChefFlag.OutputPrefix:
+                    return ChefFlagStrings.OutputPrefixLong;
+                case ChefFlag.ResumeFile:
+                    return ChefFlagStrings.ResumeFileLong;
+                case ChefFlag.Subchannel:
+                    return ChefFlagStrings.SubchannelLong;
+                case ChefFlag.XMLSidecar:
+                    return ChefFlagStrings.XMLSidecarLong;
+
+                case ChefFlag.NONE:
+                default:
+                    return "";
             }
         }
 
@@ -2260,6 +2511,79 @@ namespace DICUI.Utilities
                     return Category.AddOns;
                 default:
                     return Category.Games;
+            }
+        }
+
+        /// <summary>
+        /// Get the ChefCommand enum value for a given string
+        /// </summary>
+        /// <param name="command">String value to convert</param>
+        /// <returns>ChefCommand represented by the string, if possible</returns>
+        public static ChefCommand StringToChefCommand(string command)
+        {
+            switch(command)
+            {
+                case ChefCommandStrings.Analyze:
+                    return ChefCommand.Analyze;
+                case ChefCommandStrings.Benchmark:
+                    return ChefCommand.Benchmark;
+                case ChefCommandStrings.Checksum:
+                    return ChefCommand.Checksum;
+                case ChefCommandStrings.Compare:
+                    return ChefCommand.Compare;
+                case ChefCommandStrings.Configure:
+                    return ChefCommand.Configure;
+                case ChefCommandStrings.ConvertImage:
+                    return ChefCommand.ConvertImage;
+                case ChefCommandStrings.CreateSidecar:
+                    return ChefCommand.CreateSidecar;
+                case ChefCommandStrings.Decode:
+                    return ChefCommand.Decode;
+                case ChefCommandStrings.DeviceInfo:
+                    return ChefCommand.DeviceInfo;
+                case ChefCommandStrings.DeviceReport:
+                    return ChefCommand.DeviceReport;
+                case ChefCommandStrings.DumpMedia:
+                    return ChefCommand.DumpMedia;
+                case ChefCommandStrings.Entropy:
+                    return ChefCommand.Entropy;
+                case ChefCommandStrings.ExtractFiles:
+                    return ChefCommand.ExtractFiles;
+                case ChefCommandStrings.Formats:
+                    return ChefCommand.Formats;
+                case ChefCommandStrings.Gui:
+                    return ChefCommand.Gui;
+                case ChefCommandStrings.Help:
+                    return ChefCommand.Help;
+                case ChefCommandStrings.ImageInfo:
+                    return ChefCommand.ImageInfo;
+                case ChefCommandStrings.ListDevices:
+                    return ChefCommand.ListDevices;
+                case ChefCommandStrings.ListEncodings:
+                    return ChefCommand.ListEncodings;
+                case ChefCommandStrings.ListFiles:
+                    return ChefCommand.ListFiles;
+                case ChefCommandStrings.ListNamespaces:
+                    return ChefCommand.ListNamespaces;
+                case ChefCommandStrings.ListOptions:
+                    return ChefCommand.ListOptions;
+                case ChefCommandStrings.MediaInfo:
+                    return ChefCommand.MediaInfo;
+                case ChefCommandStrings.MediaScan:
+                    return ChefCommand.MediaScan;
+                case ChefCommandStrings.PrintHex:
+                    return ChefCommand.PrintHex;
+                case ChefCommandStrings.Remote:
+                    return ChefCommand.Remote;
+                case ChefCommandStrings.Stats:
+                    return ChefCommand.Stats;
+                case ChefCommandStrings.Verify:
+                    return ChefCommand.Verify;
+                case ChefCommandStrings.Version:
+                    return ChefCommand.Version;
+
+                default:
+                    return ChefCommand.NONE;
             }
         }
 

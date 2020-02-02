@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Disc Image Creator GUI" Height="450" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
+        Title="DICUI" Height="450" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
         LocationChanged="MainWindowLocationChanged" Activated="MainWindowActivated" Closing="MainWindowClosing">
 
     <Window.Resources>

@@ -13,7 +13,11 @@ namespace DICUI
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is CreatorCommand)
+            if (value is ChefCommand)
+                return ((ChefCommand)value).LongName();
+            else if (value is ChefFlag)
+                return ((ChefFlag)value).LongName();
+            else if (value is CreatorCommand)
                 return ((CreatorCommand)value).LongName();
             else if (value is CreatorFlag)
                 return ((CreatorFlag)value).LongName();

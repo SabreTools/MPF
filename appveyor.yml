@@ -32,17 +32,24 @@ build:
 
 # post-build step
 after_build:
-- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/3995191/DiscImageCreator_20191223.zip
+- ps: appveyor DownloadFile https://github.com/discimagechef/DiscImageChef/releases/download/v4.5.1.1692/DiscImageChef-4.5.1.1692-debug.zip
+- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/4085628/DiscImageCreator_20200120.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
-- 7z e DiscImageCreator_20191223.zip -oDICUI\bin\Debug\net462\Programs Release_ANSI\*
-- 7z e DiscImageCreator_20191223.zip -oDICUI\bin\Debug\net472\Programs Release_ANSI\*
-- 7z e DiscImageCreator_20191223.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs Release_ANSI\*
+- 7z e DiscImageChef-4.5.1.1692-debug.zip -oDICUI\bin\Debug\net462\Programs\Chef *
+- 7z e DiscImageChef-4.5.1.1692-debug.zip -oDICUI\bin\Debug\net472\Programs\Chef *
+- 7z e DiscImageChef-4.5.1.1692-debug.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Chef *
+- 7z e DiscImageCreator_20200120.zip -oDICUI\bin\Debug\net462\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200120.zip -oDICUI\bin\Debug\net472\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200120.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Creator Release_ANSI\*
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net462 *
-- mv DICUI\bin\Debug\net462\subdump_fua_0x28.exe DICUI\bin\Debug\net462\subdump.exe
+- mkdir DICUI\bin\Debug\net462\Programs\Subdump
+- mv DICUI\bin\Debug\net462\subdump_fua_0x28.exe DICUI\bin\Debug\net462\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net472 *
-- mv DICUI\bin\Debug\net472\subdump_fua_0x28.exe DICUI\bin\Debug\net472\subdump.exe
+- mkdir DICUI\bin\Debug\net472\Programs\Subdump
+- mv DICUI\bin\Debug\net472\subdump_fua_0x28.exe DICUI\bin\Debug\net472\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\netcoreapp3.0 *
-- mv DICUI\bin\Debug\netcoreapp3.0\subdump_fua_0x28.exe DICUI\bin\Debug\netcoreapp3.0\subdump.exe
+- mkdir DICUI\bin\Debug\netcoreapp3.0\Programs\Subdump
+- mv DICUI\bin\Debug\netcoreapp3.0\subdump_fua_0x28.exe DICUI\bin\Debug\netcoreapp3.0\Programs\Subdump\subdump.exe
 - 7z a DICUI.zip DICUI\bin\Debug\*
 - 7z a DICUI-Check.zip DICUI.Check\bin\Debug\*
 
