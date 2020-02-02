@@ -554,28 +554,37 @@ namespace DICUI.Windows
 
                 if (result)
                 {
-                    // Verify dump output and save it
-                    result = _env.VerifyAndSaveDumpOutput(progress,
-                        EjectWhenDoneCheckBox.IsChecked,
-                        _options.ResetDriveAfterDump,
-                        (si) =>
-                        {
+                    // TODO: Remove Chef handling when irrelevant
+                    if (_env.UseChef)
+                    {
+                        ViewModels.LoggerViewModel.VerboseLogLn("DiscImageChef does not support split tracks or DiscImageCreator-compatible outputs");
+                        ViewModels.LoggerViewModel.VerboseLogLn("No automatic submission information will be gathered for this disc");
+                    }
+                    else
+                    {
+                        // Verify dump output and save it
+                        result = _env.VerifyAndSaveDumpOutput(progress,
+                            EjectWhenDoneCheckBox.IsChecked,
+                            _options.ResetDriveAfterDump,
+                            (si) =>
+                            {
                             // lazy initialization
                             if (_discInformationWindow == null)
-                            {
-                                _discInformationWindow = new DiscInformationWindow(this, si);
-                                _discInformationWindow.Closed += delegate
                                 {
-                                    _discInformationWindow = null;
-                                };
-                            }
+                                    _discInformationWindow = new DiscInformationWindow(this, si);
+                                    _discInformationWindow.Closed += delegate
+                                    {
+                                        _discInformationWindow = null;
+                                    };
+                                }
 
-                            _discInformationWindow.Owner = this;
-                            _discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                            _discInformationWindow.Refresh();
-                            return _discInformationWindow.ShowDialog();
-                        }
-                    );
+                                _discInformationWindow.Owner = this;
+                                _discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                                _discInformationWindow.Refresh();
+                                return _discInformationWindow.ShowDialog();
+                            }
+                        );
+                    }
                 }
 
                 StatusLabel.Content = result ? "Dumping complete!" : result.Message;
