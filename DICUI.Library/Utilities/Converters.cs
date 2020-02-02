@@ -469,6 +469,10 @@ namespace DICUI.Utilities
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string Extension(this MediaType? type, bool useChef)
         {
+            // TODO: This will change in the future for different formats
+            if (useChef)
+                return ".dicf";
+
             switch (type)
             {
                 case MediaType.CDROM:

@@ -1931,6 +1931,7 @@ namespace DICUI.Utilities
                     //OptionsValue = $"{ChefOptionStrings.CDRWinCuesheetSeparate}=true";
 
                     this[ChefFlag.FirstPregap] = true;
+                    this[ChefFlag.FixOffset] = true;
                     this[ChefFlag.Subchannel] = true;
                     SubchannelValue = "any";
                     break;
