@@ -12,6 +12,8 @@ DICUI relies on the following projects:
 - **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
 - **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
 
+**Note:** Both DiscImageCreator and DiscImageChef have WIP builds. In general, WIP builds are not supported with new flags or features until they make it into the stable release. The exception to this rule is currently DiscImageChef, due to the very old last stable release. It is recommended that you either download or build the latest version of DiscImageChef for use with DICUI.
+
 ## System Requirements
 
 Even though this is written in C#, this program can only be used on Windows systems due to one of the base programs, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
