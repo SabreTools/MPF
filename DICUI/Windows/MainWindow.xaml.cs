@@ -779,6 +779,9 @@ namespace DICUI.Windows
             {
                 _env.ChefParameters = new ChefParameters(ParametersTextBox.Text);
 
+                if (_env.ChefParameters == null)
+                    return;
+
                 int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.ChefParameters.InputValue[0]);
                 if (driveIndex > -1)
                     DriveLetterComboBox.SelectedIndex = driveIndex;
@@ -798,6 +801,9 @@ namespace DICUI.Windows
             else
             {
                 _env.CreatorParameters = new CreatorParameters(ParametersTextBox.Text);
+
+                if (_env.CreatorParameters == null)
+                    return;
 
                 int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.CreatorParameters.DriveLetter[0]);
                 if (driveIndex > -1)

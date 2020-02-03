@@ -817,19 +817,20 @@ namespace DICUI.Utilities
             // Set the start according to what the full command was
             int start = useSecond ? 2 : 1;
 
-            // Keep a count of keys to determine if we should break out to filename handling or not
-            int keyCount = Keys.Count();
-
             // Loop through all auxilary flags, if necessary
             // TODO: Should an invalid flag mean instant failure? There are some flags that share a short form and this could cause issues
             int i = 0;
             for (i = start; i < parts.Count; i++)
             {
+                // Flag read-out values
                 sbyte? byteValue = null;
                 short? shortValue = null;
                 int? intValue = null;
                 long? longValue = null;
                 string stringValue = null;
+
+                // Keep a count of keys to determine if we should break out to filename handling or not
+                int keyCount = Keys.Count();
 
                 #region Boolean flags
 
@@ -1259,7 +1260,8 @@ namespace DICUI.Utilities
                     if (!DoesExist(parts, i))
                         return false;
 
-                    InputValue = parts[i];
+                    InputValue = parts[i].Trim('"');
+                    i++;
                     break;
 
                 // Two input values
@@ -1267,13 +1269,14 @@ namespace DICUI.Utilities
                     if (!DoesExist(parts, i))
                         return false;
 
-                    Input1Value = parts[i];
+                    Input1Value = parts[i].Trim('"');
                     i++;
 
                     if (!DoesExist(parts, i))
                         return false;
 
-                    Input2Value = parts[i];
+                    Input2Value = parts[i].Trim('"');
+                    i++;
                     break;
 
                 // Input and Output value
@@ -1283,13 +1286,14 @@ namespace DICUI.Utilities
                     if (!DoesExist(parts, i))
                         return false;
 
-                    InputValue = parts[i];
+                    InputValue = parts[i].Trim('"');
                     i++;
 
                     if (!DoesExist(parts, i))
                         return false;
 
-                    OutputValue = parts[i];
+                    OutputValue = parts[i].Trim('"');
+                    i++;
                     break;
 
                 // Remote host value only
@@ -1298,7 +1302,8 @@ namespace DICUI.Utilities
                     if (!DoesExist(parts, i))
                         return false;
 
-                    RemoteHostValue = parts[i];
+                    RemoteHostValue = parts[i].Trim('"');
+                    i++;
                     break;
             }
 
@@ -1886,7 +1891,7 @@ namespace DICUI.Utilities
 
                 this[flag] = true;
                 i++;
-                return parts[i];
+                return parts[i].Trim('"');
             }
 
             return string.Empty;
