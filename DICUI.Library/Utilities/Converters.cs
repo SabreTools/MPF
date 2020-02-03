@@ -465,9 +465,14 @@ namespace DICUI.Utilities
         /// Get the default extension for a given disc type
         /// </summary>
         /// <param name="type">MediaType value to check</param>
+        /// <param name="useChef">Whether or not DiscImageChef is being used</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string Extension(this MediaType? type)
+        public static string Extension(this MediaType? type, bool useChef)
         {
+            // DiscImageChef has a single, unified output format by default
+            if (useChef)
+                return ".dicf";
+
             switch (type)
             {
                 case MediaType.CDROM:
@@ -537,6 +542,254 @@ namespace DICUI.Utilities
                     return "Add-Ons";
                 default:
                     return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the ChefCommand enum values
+        /// </summary>
+        /// <param name="command">ChefCommand value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this ChefCommand command)
+        {
+            switch (command)
+            {
+                // Database Family
+                case ChefCommand.DatabaseStats:
+                    return $"{ChefCommandStrings.DatabasePrefixLong} {ChefCommandStrings.DatabaseStats}";
+                case ChefCommand.DatabaseUpdate:
+                    return $"{ChefCommandStrings.DatabasePrefixLong} {ChefCommandStrings.DatabaseUpdate}";
+
+                // Device Family
+                case ChefCommand.DeviceInfo:
+                    return $"{ChefCommandStrings.DevicePrefixLong} {ChefCommandStrings.DeviceInfo}";
+                case ChefCommand.DeviceList:
+                    return $"{ChefCommandStrings.DevicePrefixLong} {ChefCommandStrings.DeviceList}";
+                case ChefCommand.DeviceReport:
+                    return $"{ChefCommandStrings.DevicePrefixLong} {ChefCommandStrings.DeviceReport}";
+
+                // Filesystem Family
+                case ChefCommand.FilesystemExtract:
+                    return $"{ChefCommandStrings.FilesystemPrefixLong} {ChefCommandStrings.FilesystemExtract}";
+                case ChefCommand.FilesystemList:
+                    return $"{ChefCommandStrings.FilesystemPrefixLong} {ChefCommandStrings.FilesystemListLong}";
+                case ChefCommand.FilesystemOptions:
+                    return $"{ChefCommandStrings.FilesystemPrefixLong} {ChefCommandStrings.FilesystemOptions}";
+
+                // Image Family
+                case ChefCommand.ImageAnalyze:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageAnalyze}";
+                case ChefCommand.ImageChecksum:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageChecksumLong}";
+                case ChefCommand.ImageCompare:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageCompareLong}";
+                case ChefCommand.ImageConvert:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageConvert}";
+                case ChefCommand.ImageCreateSidecar:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageCreateSidecar}";
+                case ChefCommand.ImageDecode:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageDecode}";
+                case ChefCommand.ImageEntropy:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageEntropy}";
+                case ChefCommand.ImageInfo:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageInfo}";
+                case ChefCommand.ImageOptions:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageOptions}";
+                case ChefCommand.ImagePrint:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImagePrint}";
+                case ChefCommand.ImageVerify:
+                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageVerify}";
+
+                // Media Family
+                case ChefCommand.MediaDump:
+                    return $"{ChefCommandStrings.MediaPrefixLong} {ChefCommandStrings.MediaDump}";
+                case ChefCommand.MediaInfo:
+                    return $"{ChefCommandStrings.MediaPrefixLong} {ChefCommandStrings.MediaInfo}";
+                case ChefCommand.MediaScan:
+                    return $"{ChefCommandStrings.MediaPrefixLong} {ChefCommandStrings.MediaScan}";
+
+                // Standalone Commands
+                case ChefCommand.Configure:
+                    return ChefCommandStrings.Configure;
+                case ChefCommand.Formats:
+                    return ChefCommandStrings.Formats;
+                case ChefCommand.ListEncodings:
+                    return ChefCommandStrings.ListEncodings;
+                case ChefCommand.ListNamespaces:
+                    return ChefCommandStrings.ListNamespaces;
+                case ChefCommand.Remote:
+                    return ChefCommandStrings.Remote;
+
+                case ChefCommand.NONE:
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the ChefFlag enum values
+        /// </summary>
+        /// <param name="command">ChefFlag value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this ChefFlag flag)
+        {
+            switch (flag)
+            {
+                // Boolean flags
+                case ChefFlag.Adler32:
+                    return ChefFlagStrings.Adler32Long;
+                case ChefFlag.Clear:
+                    return ChefFlagStrings.ClearLong;
+                case ChefFlag.ClearAll:
+                    return ChefFlagStrings.ClearAllLong;
+                case ChefFlag.CRC16:
+                    return ChefFlagStrings.CRC16Long;
+                case ChefFlag.CRC32:
+                    return ChefFlagStrings.CRC32Long;
+                case ChefFlag.CRC64:
+                    return ChefFlagStrings.CRC64Long;
+                case ChefFlag.Debug:
+                    return ChefFlagStrings.DebugLong;
+                case ChefFlag.DiskTags:
+                    return ChefFlagStrings.DiskTagsLong;
+                case ChefFlag.DuplicatedSectors:
+                    return ChefFlagStrings.DuplicatedSectorsLong;
+                case ChefFlag.ExtendedAttributes:
+                    return ChefFlagStrings.ExtendedAttributesLong;
+                case ChefFlag.Filesystems:
+                    return ChefFlagStrings.FilesystemsLong;
+                case ChefFlag.FirstPregap:
+                    return ChefFlagStrings.FirstPregapLong;
+                case ChefFlag.FixOffset:
+                    return ChefFlagStrings.FixOffsetLong;
+                case ChefFlag.Fletcher16:
+                    return ChefFlagStrings.Fletcher16Long;
+                case ChefFlag.Fletcher32:
+                    return ChefFlagStrings.Fletcher32Long;
+                case ChefFlag.Force:
+                    return ChefFlagStrings.ForceLong;
+                case ChefFlag.LongFormat:
+                    return ChefFlagStrings.LongFormatLong;
+                case ChefFlag.LongSectors:
+                    return ChefFlagStrings.LongSectorsLong;
+                case ChefFlag.MD5:
+                    return ChefFlagStrings.MD5Long;
+                case ChefFlag.Metadata:
+                    return ChefFlagStrings.MetadataLong;
+                case ChefFlag.Partitions:
+                    return ChefFlagStrings.PartitionsLong;
+                case ChefFlag.Persistent:
+                    return ChefFlagStrings.PersistentLong;
+                case ChefFlag.Resume:
+                    return ChefFlagStrings.ResumeLong;
+                case ChefFlag.SectorTags:
+                    return ChefFlagStrings.SectorTagsLong;
+                case ChefFlag.SeparatedTracks:
+                    return ChefFlagStrings.SeparatedTracksLong;
+                case ChefFlag.SHA1:
+                    return ChefFlagStrings.SHA1Long;
+                case ChefFlag.SHA256:
+                    return ChefFlagStrings.SHA256Long;
+                case ChefFlag.SHA384:
+                    return ChefFlagStrings.SHA384Long;
+                case ChefFlag.SHA512:
+                    return ChefFlagStrings.SHA512Long;
+                case ChefFlag.SpamSum:
+                    return ChefFlagStrings.SpamSumLong;
+                case ChefFlag.StopOnError:
+                    return ChefFlagStrings.StopOnErrorLong;
+                case ChefFlag.Tape:
+                    return ChefFlagStrings.TapeLong;
+                case ChefFlag.Trim:
+                    return ChefFlagStrings.TrimLong;
+                case ChefFlag.Verbose:
+                    return ChefFlagStrings.VerboseLong;
+                case ChefFlag.VerifyDisc:
+                    return ChefFlagStrings.VerifyDiscLong;
+                case ChefFlag.VerifySectors:
+                    return ChefFlagStrings.VerifySectorsLong;
+                case ChefFlag.WholeDisc:
+                    return ChefFlagStrings.WholeDiscLong;
+
+                // Int8 flags
+                case ChefFlag.Speed:
+                    return ChefFlagStrings.SpeedLong;
+
+                // Int16 flags
+                case ChefFlag.RetryPasses:
+                    return ChefFlagStrings.RetryPassesLong;
+                case ChefFlag.Width:
+                    return ChefFlagStrings.WidthLong;
+
+                // Int32 flags
+                case ChefFlag.BlockSize:
+                    return ChefFlagStrings.BlockSizeLong;
+                case ChefFlag.Count:
+                    return ChefFlagStrings.CountLong;
+                case ChefFlag.MediaLastSequence:
+                    return ChefFlagStrings.MediaLastSequenceLong;
+                case ChefFlag.MediaSequence:
+                    return ChefFlagStrings.MediaSequenceLong;
+                case ChefFlag.Skip:
+                    return ChefFlagStrings.SkipLong;
+
+                // Int64 flags
+                case ChefFlag.Length:
+                    return ChefFlagStrings.LengthLong;
+                case ChefFlag.Start:
+                    return ChefFlagStrings.StartLong;
+
+                // String flags
+                case ChefFlag.Comments:
+                    return ChefFlagStrings.CommentsLong;
+                case ChefFlag.Creator:
+                    return ChefFlagStrings.CreatorLong;
+                case ChefFlag.DriveManufacturer:
+                    return ChefFlagStrings.DriveManufacturerLong;
+                case ChefFlag.DriveModel:
+                    return ChefFlagStrings.DriveModelLong;
+                case ChefFlag.DriveRevision:
+                    return ChefFlagStrings.DriveRevisionLong;
+                case ChefFlag.DriveSerial:
+                    return ChefFlagStrings.DriveSerialLong;
+                case ChefFlag.Encoding:
+                    return ChefFlagStrings.EncodingLong;
+                case ChefFlag.FormatConvert:
+                    return ChefFlagStrings.FormatConvertLong;
+                case ChefFlag.FormatDump:
+                    return ChefFlagStrings.FormatDumpLong;
+                case ChefFlag.ImgBurnLog:
+                    return ChefFlagStrings.ImgBurnLogLong;
+                case ChefFlag.MediaBarcode:
+                    return ChefFlagStrings.MediaBarcodeLong;
+                case ChefFlag.MediaManufacturer:
+                    return ChefFlagStrings.MediaManufacturerLong;
+                case ChefFlag.MediaModel:
+                    return ChefFlagStrings.MediaModelLong;
+                case ChefFlag.MediaPartNumber:
+                    return ChefFlagStrings.MediaPartNumberLong;
+                case ChefFlag.MediaSerial:
+                    return ChefFlagStrings.MediaSerialLong;
+                case ChefFlag.MediaTitle:
+                    return ChefFlagStrings.MediaTitleLong;
+                case ChefFlag.MHDDLog:
+                    return ChefFlagStrings.MHDDLogLong;
+                case ChefFlag.Namespace:
+                    return ChefFlagStrings.NamespaceLong;
+                case ChefFlag.Options:
+                    return ChefFlagStrings.OptionsLong;
+                case ChefFlag.OutputPrefix:
+                    return ChefFlagStrings.OutputPrefixLong;
+                case ChefFlag.ResumeFile:
+                    return ChefFlagStrings.ResumeFileLong;
+                case ChefFlag.Subchannel:
+                    return ChefFlagStrings.SubchannelLong;
+                case ChefFlag.XMLSidecar:
+                    return ChefFlagStrings.XMLSidecarLong;
+
+                case ChefFlag.NONE:
+                default:
+                    return "";
             }
         }
 
@@ -629,8 +882,6 @@ namespace DICUI.Utilities
                     return CreatorFlagStrings.DisableBeep;
                 case CreatorFlag.ForceUnitAccess:
                     return CreatorFlagStrings.ForceUnitAccess;
-                case CreatorFlag.MCN:
-                    return CreatorFlagStrings.MCN;
                 case CreatorFlag.MultiSession:
                     return CreatorFlagStrings.MultiSession;
                 case CreatorFlag.NoFixSubP:
@@ -2261,6 +2512,132 @@ namespace DICUI.Utilities
                 default:
                     return Category.Games;
             }
+        }
+
+        /// <summary>
+        /// Get the ChefCommand enum value for a given string
+        /// </summary>
+        /// <param name="commandOne">First part of String value to convert</param>
+        /// <param name="commandTwo">Second part of String value to convert</param>
+        /// <param name="useSecond">Output bool if the second command was used</param>
+        /// <returns>ChefCommand represented by the string(s), if possible</returns>
+        public static ChefCommand StringToChefCommand(string commandOne, string commandTwo, out bool useSecond)
+        {
+            useSecond = false;
+            switch (commandOne)
+            {
+                // Database Family
+                case ChefCommandStrings.DatabasePrefixShort:
+                case ChefCommandStrings.DatabasePrefixLong:
+                    useSecond = true;
+                    switch (commandTwo)
+                    {
+                        case ChefCommandStrings.DatabaseStats:
+                            return ChefCommand.DatabaseStats;
+                        case ChefCommandStrings.DatabaseUpdate:
+                            return ChefCommand.DatabaseUpdate;
+                    }
+
+                    break;
+
+                // Device Family
+                case ChefCommandStrings.DevicePrefixShort:
+                case ChefCommandStrings.DevicePrefixLong:
+                    useSecond = true;
+                    switch (commandTwo)
+                    {
+                        case ChefCommandStrings.DeviceInfo:
+                            return ChefCommand.DeviceInfo;
+                        case ChefCommandStrings.DeviceList:
+                            return ChefCommand.DeviceList;
+                        case ChefCommandStrings.DeviceReport:
+                            return ChefCommand.DeviceReport;
+                    }
+
+                    break;
+
+                // Filesystem Family
+                case ChefCommandStrings.FilesystemPrefixShort:
+                case ChefCommandStrings.FilesystemPrefixShortAlt:
+                case ChefCommandStrings.FilesystemPrefixLong:
+                    useSecond = true;
+                    switch (commandTwo)
+                    {
+                        case ChefCommandStrings.FilesystemExtract:
+                            return ChefCommand.FilesystemExtract;
+                        case ChefCommandStrings.FilesystemListShort:
+                        case ChefCommandStrings.FilesystemListLong:
+                            return ChefCommand.FilesystemList;
+                        case ChefCommandStrings.DatabaseStats:
+                            return ChefCommand.FilesystemOptions;
+                    }
+
+                    break;
+
+                // Image Family
+                case ChefCommandStrings.ImagePrefixShort:
+                case ChefCommandStrings.ImagePrefixLong:
+                    useSecond = true;
+                    switch (commandTwo)
+                    {
+                        case ChefCommandStrings.ImageAnalyze:
+                            return ChefCommand.ImageAnalyze;
+                        case ChefCommandStrings.ImageChecksumShort:
+                        case ChefCommandStrings.ImageChecksumLong:
+                            return ChefCommand.ImageChecksum;
+                        case ChefCommandStrings.ImageCompareShort:
+                        case ChefCommandStrings.ImageCompareLong:
+                            return ChefCommand.ImageCompare;
+                        case ChefCommandStrings.ImageConvert:
+                            return ChefCommand.ImageConvert;
+                        case ChefCommandStrings.ImageCreateSidecar:
+                            return ChefCommand.ImageCreateSidecar;
+                        case ChefCommandStrings.ImageDecode:
+                            return ChefCommand.ImageDecode;
+                        case ChefCommandStrings.ImageEntropy:
+                            return ChefCommand.ImageEntropy;
+                        case ChefCommandStrings.ImageInfo:
+                            return ChefCommand.ImageInfo;
+                        case ChefCommandStrings.ImageOptions:
+                            return ChefCommand.ImageOptions;
+                        case ChefCommandStrings.ImagePrint:
+                            return ChefCommand.ImagePrint;
+                        case ChefCommandStrings.ImageVerify:
+                            return ChefCommand.ImageVerify;
+                    }
+
+                    break;
+
+                // Media Family
+                case ChefCommandStrings.MediaPrefixShort:
+                case ChefCommandStrings.MediaPrefixLong:
+                    useSecond = true;
+                    switch (commandTwo)
+                    {
+                        case ChefCommandStrings.MediaDump:
+                            return ChefCommand.MediaDump;
+                        case ChefCommandStrings.MediaInfo:
+                            return ChefCommand.MediaInfo;
+                        case ChefCommandStrings.MediaScan:
+                            return ChefCommand.MediaScan;
+                    }
+
+                    break;
+
+                // Standalone Commands
+                case ChefCommandStrings.Configure:
+                    return ChefCommand.Configure;
+                case ChefCommandStrings.Formats:
+                    return ChefCommand.Formats;
+                case ChefCommandStrings.ListEncodings:
+                    return ChefCommand.ListEncodings;
+                case ChefCommandStrings.ListNamespaces:
+                    return ChefCommand.ListNamespaces;
+                case ChefCommandStrings.Remote:
+                    return ChefCommand.Remote;
+            }
+
+            return ChefCommand.NONE;
         }
 
         /// <summary>

@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Options" Width="515.132" Height="552">
+        Title="Options" Width="515.132" Height="605">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="150"/>
             <RowDefinition Height="150"/>
             <RowDefinition Height="80"/>
@@ -29,19 +29,24 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
-            <TextBox x:Name="DICPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="DICPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageChef Path" />
+            <TextBox x:Name="ChefPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="ChefPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
-            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="subdump Path" />
-            <TextBox x:Name="SubDumpPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="SubDumpPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick"/>
+            <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
+            <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="CreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
-            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
-            <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="DefaultOutputPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
+            <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="subdump Path" />
+            <TextBox x:Name="SubDumpPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="SubDumpPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick"/>
+
+            <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
+            <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="DefaultOutputPathButton" Grid.Row="3" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
         </Grid>
 
         <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Preferred Dump Speed">
@@ -101,7 +106,7 @@
                           ToolTip="Enable pedantic and super-safe flags" Margin="0,4" 
                           />
 
-                <Label Grid.Row="0" Grid.Column="2" Content="C2 Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                <Label Grid.Row="0" Grid.Column="2" Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                 <TextBox Grid.Row="0" Grid.Column="3" VerticalAlignment="Center"
                              DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                              Text="{Binding Path=RereadAmountForC2}"

@@ -1,18 +1,22 @@
 # DICUI
 
-DiscImageCreator UI in C#
+DiscImageCreator/DiscimageChef UI in C#
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts)
 
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project :)
 
-We are using DiscImageCreator (DIC), created by Sarami, and we would like to thanks him for his great software. The latest release of DIC can be found on [the GitHub page](https://github.com/saramibreak/DiscImageCreator)
+DICUI relies on the following projects:
+- **DiscImageCreator** by Sarami - Dumping - [GitHub](https://github.com/saramibreak/DiscImageCreator)
+- **DiscImageChef** by Claunia - Dumping - [GitHub](https://github.com/discimagechef/DiscImageChef)
+- **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
+- **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
 
-This project relies on two open-source code ports to help perform copy protection scanning: [BurnOutSharp](https://github.com/mnadareski/BurnOutSharp) and [UnshieldSharp](https://github.com/mnadareski/UnshieldSharp)
+**Note:** Both DiscImageCreator and DiscImageChef have WIP builds. In general, WIP builds are not supported with new flags or features until they make it into the stable release. The exception to this rule is currently DiscImageChef, due to the very old last stable release. It is recommended that you either download or build the latest version of DiscImageChef for use with DICUI.
 
 ## System Requirements
 
-Even though this is written in C#, this program can only be used on Windows systems due to the base program, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
+Even though this is written in C#, this program can only be used on Windows systems due to one of the base programs, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
 
 - Windows 7 (newest version of Windows recommended)
 - .NET Framework 4.6.2, .NET Framework 4.7.2, or .NET Core 3.0 Runtimes (.NET Core 3.0 is not currently functional due to a dependency, please do not use it)

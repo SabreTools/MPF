@@ -9,8 +9,13 @@ namespace DICUI
     public class Options
     {
         public string DefaultOutputPath { get; private set; }
-        public string DICPath { get; private set; }
+        public string ChefPath { get; private set; }
+        public string CreatorPath { get; private set; }
         public string SubDumpPath { get; private set; }
+
+        // TODO: Change to string setting eventually to better support more tools
+        // TODO: Add to UI either as checkbox next to DiscImageChef or by making it a single select between both paths
+        public bool UseChef { get; set; }
 
         public int PreferredDumpSpeedCD { get; set; }
         public int PreferredDumpSpeedDVD { get; set; }
@@ -56,9 +61,11 @@ namespace DICUI
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             //TODO: hardcoded, we should find a better way
-            this.DICPath = GetStringSetting(configFile, "DICPath", "Programs\\DiscImageCreator.exe");
+            this.ChefPath = GetStringSetting(configFile, "ChefPath", "Programs\\DiscImageChef.exe");
+            this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\DiscImageCreator.exe");
             this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "subdump.exe");
             this.DefaultOutputPath = GetStringSetting(configFile, "DefaultOutputPath", "ISO");
+            this.UseChef = GetBooleanSetting(configFile, "UseChef", false);
 
             this.PreferredDumpSpeedCD = GetInt32Setting(configFile, "PreferredDumpSpeedCD", 72);
             this.PreferredDumpSpeedDVD = GetInt32Setting(configFile, "PreferredDumpSpeedDVD", 24);

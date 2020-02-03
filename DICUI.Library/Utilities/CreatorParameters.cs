@@ -8,7 +8,7 @@ using DICUI.Data;
 namespace DICUI.Utilities
 {
     /// <summary>
-    ///  Represents a generic set of DiscImageCreator parameters
+    /// Represents a generic set of DiscImageCreator parameters
     /// </summary>
     public class CreatorParameters
     {
@@ -66,7 +66,7 @@ namespace DICUI.Utilities
         }
         internal IEnumerable<CreatorFlag> Keys => _flags.Keys;
 
-        #region DIC Flag Values
+        #region DiscImageCreator Flag Values
 
         /// <summary>
         /// Manual offset for Audio CD
@@ -122,7 +122,7 @@ namespace DICUI.Utilities
         #endregion
 
         /// <summary>
-        /// Populate a Parameters object from a param string
+        /// Populate a CreatorParameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
         public CreatorParameters(string parameters)
@@ -342,8 +342,7 @@ namespace DICUI.Utilities
             }
 
             // Add Offset
-            if (Command == CreatorCommand.Audio
-                || Command == CreatorCommand.CompactDisc)
+            if (GetSupportedCommands(CreatorFlag.AddOffset).Contains(Command))
             {
                 if (this[CreatorFlag.AddOffset])
                 {
@@ -356,25 +355,21 @@ namespace DICUI.Utilities
             }
 
             // AMSF Dumping
-            if (Command == CreatorCommand.CompactDisc)
+            if (GetSupportedCommands(CreatorFlag.AMSF).Contains(Command))
             {
                 if (this[CreatorFlag.AMSF])
                     parameters.Add(CreatorFlag.AMSF.LongName());
             }
 
             // Atari Jaguar CD
-            if (Command == CreatorCommand.CompactDisc)
+            if (GetSupportedCommands(CreatorFlag.AtariJaguar).Contains(Command))
             {
                 if (this[CreatorFlag.AtariJaguar])
                     parameters.Add(CreatorFlag.AtariJaguar.LongName());
             }
 
             // BE Opcode
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.BEOpcode).Contains(Command))
             {
                 if (this[CreatorFlag.BEOpcode] && !this[CreatorFlag.D8Opcode])
                 {
@@ -386,11 +381,7 @@ namespace DICUI.Utilities
             }
 
             // C2 Opcode
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.C2Opcode).Contains(Command))
             {
                 if (this[CreatorFlag.C2Opcode])
                 {
@@ -427,45 +418,28 @@ namespace DICUI.Utilities
             }
 
             // Copyright Management Information
-            if (Command == CreatorCommand.DigitalVideoDisc)
+            if (GetSupportedCommands(CreatorFlag.CopyrightManagementInformation).Contains(Command))
             {
                 if (this[CreatorFlag.CopyrightManagementInformation])
                     parameters.Add(CreatorFlag.CopyrightManagementInformation.LongName());
             }
 
             // D8 Opcode
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.D8Opcode).Contains(Command))
             {
                 if (this[CreatorFlag.D8Opcode])
                     parameters.Add(CreatorFlag.D8Opcode.LongName());
             }
 
             // Disable Beep
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.BluRay
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.DigitalVideoDisc
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap
-               || Command == CreatorCommand.XBOX)
+            if (GetSupportedCommands(CreatorFlag.DisableBeep).Contains(Command))
             {
                 if (this[CreatorFlag.DisableBeep])
                     parameters.Add(CreatorFlag.DisableBeep.LongName());
             }
 
             // Force Unit Access
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.BluRay
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.DigitalVideoDisc
-               || Command == CreatorCommand.Swap
-               || Command == CreatorCommand.XBOX)
+            if (GetSupportedCommands(CreatorFlag.ForceUnitAccess).Contains(Command))
             {
                 if (this[CreatorFlag.ForceUnitAccess])
                 {
@@ -475,80 +449,50 @@ namespace DICUI.Utilities
                 }
             }
 
-            // MCN
-            if (Command == CreatorCommand.CompactDisc)
-            {
-                if (this[CreatorFlag.MCN])
-                    parameters.Add(CreatorFlag.MCN.LongName());
-            }
-
             // Multi-Session
-            if (Command == CreatorCommand.CompactDisc)
+            if (GetSupportedCommands(CreatorFlag.MultiSession).Contains(Command))
             {
                 if (this[CreatorFlag.MultiSession])
                     parameters.Add(CreatorFlag.MultiSession.LongName());
             }
 
             // Not fix SubP
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.NoFixSubP).Contains(Command))
             {
                 if (this[CreatorFlag.NoFixSubP])
                     parameters.Add(CreatorFlag.NoFixSubP.LongName());
             }
 
             // Not fix SubQ
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.NoFixSubQ).Contains(Command))
             {
                 if (this[CreatorFlag.NoFixSubQ])
                     parameters.Add(CreatorFlag.NoFixSubQ.LongName());
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.NoFixSubQLibCrypt).Contains(Command))
             {
                 if (this[CreatorFlag.NoFixSubQLibCrypt])
                     parameters.Add(CreatorFlag.NoFixSubQLibCrypt.LongName());
             }
             
             // Not fix SubQ (SecuROM)
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.NoFixSubQSecuROM).Contains(Command))
             {
                 if (this[CreatorFlag.NoFixSubQSecuROM])
                     parameters.Add(CreatorFlag.NoFixSubQSecuROM.LongName());
             }
 
             // Not fix SubRtoW
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.NoFixSubRtoW).Contains(Command))
             {
                 if (this[CreatorFlag.NoFixSubRtoW])
                     parameters.Add(CreatorFlag.NoFixSubRtoW.LongName());
             }
 
             // Not skip security sectors
-            if (Command == CreatorCommand.XBOX
-                || Command == CreatorCommand.XBOXSwap
-                || Command == CreatorCommand.XGD2Swap
-                || Command == CreatorCommand.XGD3Swap)
+            if (GetSupportedCommands(CreatorFlag.NoSkipSS).Contains(Command))
             {
                 if (this[CreatorFlag.NoSkipSS])
                 {
@@ -559,35 +503,28 @@ namespace DICUI.Utilities
             }
 
             // Raw read (2064 byte/sector)
-            if (Command == CreatorCommand.DigitalVideoDisc)
+            if (GetSupportedCommands(CreatorFlag.Raw).Contains(Command))
             {
                 if (this[CreatorFlag.Raw])
                     parameters.Add(CreatorFlag.Raw.LongName());
             }
 
             // Reverse read
-            if (Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.DigitalVideoDisc)
+            if (GetSupportedCommands(CreatorFlag.Reverse).Contains(Command))
             {
                 if (this[CreatorFlag.Reverse])
                     parameters.Add(CreatorFlag.Reverse.LongName());
             }
 
             // Scan PlayStation anti-mod strings
-            if (Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data)
+            if (GetSupportedCommands(CreatorFlag.ScanAntiMod).Contains(Command))
             {
                 if (this[CreatorFlag.ScanAntiMod])
                     parameters.Add(CreatorFlag.ScanAntiMod.LongName());
             }
 
             // Scan file to detect protect
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.DigitalVideoDisc
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.ScanFileProtect).Contains(Command))
             {
                 if (this[CreatorFlag.ScanFileProtect])
                 {
@@ -603,23 +540,21 @@ namespace DICUI.Utilities
             }
 
             // Scan file to detect protect
-            if (Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.ScanSectorProtect).Contains(Command))
             {
                 if (this[CreatorFlag.ScanSectorProtect])
                     parameters.Add(CreatorFlag.ScanSectorProtect.LongName());
             }
 
             // Scan 74:00:00 (Saturn)
-            if (Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.SeventyFour).Contains(Command))
             {
                 if (this[CreatorFlag.SeventyFour])
                     parameters.Add(CreatorFlag.SeventyFour.LongName());
             }
 
             // Skip sectors
-            if (Command == CreatorCommand.Data)
+            if (GetSupportedCommands(CreatorFlag.SkipSector).Contains(Command))
             {
                 if (this[CreatorFlag.SkipSector])
                 {
@@ -640,11 +575,7 @@ namespace DICUI.Utilities
             }
 
             // Set Subchannel read level
-            if (Command == CreatorCommand.Audio
-               || Command == CreatorCommand.CompactDisc
-               || Command == CreatorCommand.Data
-               || Command == CreatorCommand.GDROM
-               || Command == CreatorCommand.Swap)
+            if (GetSupportedCommands(CreatorFlag.SubchannelReadLevel).Contains(Command))
             {
                 if (this[CreatorFlag.SubchannelReadLevel])
                 {
@@ -660,7 +591,7 @@ namespace DICUI.Utilities
             }
 
             // VideoNow
-            if (Command == CreatorCommand.CompactDisc)
+            if (GetSupportedCommands(CreatorFlag.VideoNow).Contains(Command))
             {
                 if (this[CreatorFlag.VideoNow])
                 {
@@ -676,7 +607,7 @@ namespace DICUI.Utilities
             }
 
             // VideoNow Color
-            if (Command == CreatorCommand.CompactDisc)
+            if (GetSupportedCommands(CreatorFlag.VideoNowColor).Contains(Command))
             {
                 if (this[CreatorFlag.VideoNowColor])
                     parameters.Add(CreatorFlag.VideoNowColor.LongName());
@@ -1103,8 +1034,7 @@ namespace DICUI.Utilities
                     switch (parts[i])
                     {
                         case CreatorFlagStrings.AddOffset:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.AddOffset).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                                 return false;
@@ -1117,24 +1047,21 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.AMSF:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.AMSF).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.AMSF] = true;
                             break;
 
                         case CreatorFlagStrings.AtariJaguar:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.AtariJaguar).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.AtariJaguar] = true;
                             break;
 
                         case CreatorFlagStrings.BEOpcode:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.BEOpcode).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1155,10 +1082,7 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.C2Opcode:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.C2Opcode).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.C2Opcode] = true;
@@ -1180,43 +1104,28 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.CopyrightManagementInformation:
-                            if (parts[0] != CreatorCommandStrings.DigitalVideoDisc)
+                            if (!GetSupportedCommands(CreatorFlag.CopyrightManagementInformation).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.CopyrightManagementInformation] = true;
                             break;
 
                         case CreatorFlagStrings.D8Opcode:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.D8Opcode).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.D8Opcode] = true;
                             break;
 
                         case CreatorFlagStrings.DisableBeep:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.BluRay
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.DigitalVideoDisc
-                                && parts[0] != CreatorCommandStrings.GDROM
-                                && parts[0] != CreatorCommandStrings.XBOX)
+                            if (!GetSupportedCommands(CreatorFlag.DisableBeep).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.DisableBeep] = true;
                             break;
 
                         case CreatorFlagStrings.ForceUnitAccess:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                               && parts[0] != CreatorCommandStrings.BluRay
-                               && parts[0] != CreatorCommandStrings.CompactDisc
-                               && parts[0] != CreatorCommandStrings.DigitalVideoDisc
-                               && parts[0] != CreatorCommandStrings.Data
-                               && parts[0] != CreatorCommandStrings.GDROM
-                               && parts[0] != CreatorCommandStrings.XBOX)
+                            if (!GetSupportedCommands(CreatorFlag.ForceUnitAccess).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1236,72 +1145,50 @@ namespace DICUI.Utilities
                             i++;
                             break;
 
-                        case CreatorFlagStrings.MCN:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
-                                return false;
-
-                            this[CreatorFlag.MCN] = true;
-                            break;
-
                         case CreatorFlagStrings.MultiSession:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.MultiSession).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.MultiSession] = true;
                             break;
 
                         case CreatorFlagStrings.NoFixSubP:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.NoFixSubP).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.NoFixSubP] = true;
                             break;
 
                         case CreatorFlagStrings.NoFixSubQ:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.NoFixSubQ).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.NoFixSubQ] = true;
                             break;
 
                         case CreatorFlagStrings.NoFixSubQLibCrypt:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.NoFixSubQLibCrypt).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.NoFixSubQLibCrypt] = true;
                             break;
 
                         case CreatorFlagStrings.NoFixSubRtoW:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.NoFixSubRtoW).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.NoFixSubRtoW] = true;
                             break;
 
                         case CreatorFlagStrings.NoFixSubQSecuROM:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.NoFixSubQSecuROM).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.NoFixSubQSecuROM] = true;
                             break;
 
                         case CreatorFlagStrings.NoSkipSS:
-                            if (parts[0] != CreatorCommandStrings.XBOX
-                                && parts[0] != CreatorCommandStrings.XBOXSwap
-                                && parts[0] != CreatorCommandStrings.XGD2Swap
-                                && parts[0] != CreatorCommandStrings.XGD3Swap)
+                            if (!GetSupportedCommands(CreatorFlag.NoSkipSS).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1322,32 +1209,28 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.Raw:
-                            if (parts[0] != CreatorCommandStrings.DigitalVideoDisc)
+                            if (!GetSupportedCommands(CreatorFlag.Raw).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.Raw] = true;
                             break;
 
                         case CreatorFlagStrings.Reverse:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.DigitalVideoDisc)
+                            if (!GetSupportedCommands(CreatorFlag.Reverse).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.Reverse] = true;
                             break;
 
                         case CreatorFlagStrings.ScanAntiMod:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.ScanAntiMod).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.ScanAntiMod] = true;
                             break;
 
                         case CreatorFlagStrings.ScanFileProtect:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.DigitalVideoDisc)
+                            if (!GetSupportedCommands(CreatorFlag.ScanFileProtect).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1368,22 +1251,21 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.ScanSectorProtect:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data)
+                            if (!GetSupportedCommands(CreatorFlag.ScanSectorProtect).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.ScanSectorProtect] = true;
                             break;
 
                         case CreatorFlagStrings.SeventyFour:
-                            if (parts[0] != CreatorCommandStrings.Swap)
+                            if (!GetSupportedCommands(CreatorFlag.SeventyFour).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.SeventyFour] = true;
                             break;
 
                         case CreatorFlagStrings.SkipSector:
-                            if (parts[0] != CreatorCommandStrings.Data)
+                            if (!GetSupportedCommands(CreatorFlag.SkipSector).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
                                 return false;
@@ -1399,10 +1281,7 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.SubchannelReadLevel:
-                            if (parts[0] != CreatorCommandStrings.Audio
-                                && parts[0] != CreatorCommandStrings.CompactDisc
-                                && parts[0] != CreatorCommandStrings.Data
-                                && parts[0] != CreatorCommandStrings.GDROM)
+                            if (!GetSupportedCommands(CreatorFlag.SubchannelReadLevel).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1423,7 +1302,7 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.VideoNow:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.VideoNow).Contains(Command))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1444,7 +1323,7 @@ namespace DICUI.Utilities
                             break;
 
                         case CreatorFlagStrings.VideoNowColor:
-                            if (parts[0] != CreatorCommandStrings.CompactDisc)
+                            if (!GetSupportedCommands(CreatorFlag.VideoNowColor).Contains(Command))
                                 return false;
 
                             this[CreatorFlag.VideoNowColor] = true;
@@ -1460,16 +1339,172 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Returns whether a string is a valid drive letter
+        /// Returns whether or not the selected item exists
         /// </summary>
-        /// <param name="parameter">String value to check</param>
-        /// <returns>True if it's a valid drive letter, false otherwise</returns>
-        private bool IsValidDriveLetter(string parameter)
+        /// <param name="parameters">List of parameters to check against</param>
+        /// <param name="index">Current index</param>
+        /// <returns>True if the next item exists, false otherwise</returns>
+        private bool DoesExist(List<string> parameters, int index)
         {
-            if (!Regex.IsMatch(parameter, @"^[A-Z]:?\\?$"))
+            if (index >= parameters.Count)
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the list of commands that use a given flag
+        /// </summary>
+        /// <param name="flag">Flag value to get commands for</param>
+        /// <returns>List of ChefCommands, if possible</returns>
+        private List<CreatorCommand> GetSupportedCommands(CreatorFlag flag)
+        {
+            var commands = new List<CreatorCommand>();
+            switch (flag)
+            {
+                case CreatorFlag.AMSF:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    break;
+                case CreatorFlag.AtariJaguar:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    break;
+                case CreatorFlag.BEOpcode:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.C2Opcode:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.CopyrightManagementInformation:
+                    commands.Add(CreatorCommand.DigitalVideoDisc);
+                    break;
+                case CreatorFlag.D8Opcode:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.DisableBeep:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.BluRay);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.DigitalVideoDisc);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    commands.Add(CreatorCommand.XBOX);
+                    break;
+                case CreatorFlag.ForceUnitAccess:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.BluRay);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.DigitalVideoDisc);
+                    commands.Add(CreatorCommand.Swap);
+                    commands.Add(CreatorCommand.XBOX);
+                    break;
+                case CreatorFlag.MultiSession:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    break;
+                case CreatorFlag.NoFixSubP:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.NoFixSubQ:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.NoFixSubQLibCrypt:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.NoFixSubQSecuROM:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.NoFixSubRtoW:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.NoSkipSS:
+                    commands.Add(CreatorCommand.XBOX);
+                    commands.Add(CreatorCommand.XBOXSwap);
+                    commands.Add(CreatorCommand.XGD2Swap);
+                    commands.Add(CreatorCommand.XGD3Swap);
+                    break;
+                case CreatorFlag.Raw:
+                    commands.Add(CreatorCommand.DigitalVideoDisc);
+                    break;
+                case CreatorFlag.Reverse:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.DigitalVideoDisc);
+                    break;
+                case CreatorFlag.ScanAntiMod:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    break;
+                case CreatorFlag.ScanFileProtect:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.DigitalVideoDisc);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.ScanSectorProtect:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.SeventyFour:
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.SkipSector:
+                    commands.Add(CreatorCommand.Data);
+                    break;
+                case CreatorFlag.SubchannelReadLevel:
+                    commands.Add(CreatorCommand.Audio);
+                    commands.Add(CreatorCommand.CompactDisc);
+                    commands.Add(CreatorCommand.Data);
+                    commands.Add(CreatorCommand.GDROM);
+                    commands.Add(CreatorCommand.Swap);
+                    break;
+                case CreatorFlag.VideoNow:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    break;
+                case CreatorFlag.VideoNowColor:
+                    commands.Add(CreatorCommand.CompactDisc);
+                    break;
+
+                case CreatorFlag.NONE:
+                default:
+                    return commands;
+            }
+            
+            return commands;
         }
 
         /// <summary>
@@ -1486,14 +1521,13 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Returns whether or not the selected item exists
+        /// Returns whether a string is a valid drive letter
         /// </summary>
-        /// <param name="parameters">List of parameters to check against</param>
-        /// <param name="index">Current index</param>
-        /// <returns>True if the next item exists, false otherwise</returns>
-        private bool DoesExist(List<string> parameters, int index)
+        /// <param name="parameter">String value to check</param>
+        /// <returns>True if it's a valid drive letter, false otherwise</returns>
+        private bool IsValidDriveLetter(string parameter)
         {
-            if (index >= parameters.Count)
+            if (!Regex.IsMatch(parameter, @"^[A-Z]:?\\?$"))
                 return false;
 
             return true;
@@ -1639,9 +1673,6 @@ namespace DICUI.Utilities
                         case KnownSystem.HasbroVideoNowXP:
                             this[CreatorFlag.VideoNow] = true;
                             this.VideoNowValue = 20832;
-                            break;
-                        case KnownSystem.NECPCEngineTurboGrafxCD:
-                            this[CreatorFlag.MCN] = true;
                             break;
                         case KnownSystem.SonyPlayStation:
                             this[CreatorFlag.ScanAntiMod] = true;

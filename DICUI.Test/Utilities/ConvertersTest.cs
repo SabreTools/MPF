@@ -65,7 +65,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = Converters.Extension(mediaType);
+            string actual = Converters.Extension(mediaType, false);
             Assert.Equal(expected, actual);
         }
 

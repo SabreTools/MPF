@@ -13,6 +13,12 @@ namespace DICUI
             this._options = options;
         }
 
+        public bool UseChef
+        {
+            get { return _options.UseChef; }
+            set { _options.UseChef = value; }
+        }
+
         public bool QuietMode
         {
             get { return _options.QuietMode; }
