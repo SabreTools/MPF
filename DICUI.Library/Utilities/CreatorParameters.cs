@@ -1411,9 +1411,6 @@ namespace DICUI.Utilities
                     commands.Add(CreatorCommand.Swap);
                     commands.Add(CreatorCommand.XBOX);
                     break;
-                case CreatorFlag.MCN:
-                    commands.Add(CreatorCommand.CompactDisc);
-                    break;
                 case CreatorFlag.MultiSession:
                     commands.Add(CreatorCommand.CompactDisc);
                     break;
