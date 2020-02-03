@@ -469,7 +469,7 @@ namespace DICUI.Utilities
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string Extension(this MediaType? type, bool useChef)
         {
-            // TODO: This will change in the future for different formats
+            // DiscImageChef has a single, unified output format by default
             if (useChef)
                 return ".dicf";
 
@@ -477,14 +477,13 @@ namespace DICUI.Utilities
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    return useChef ? ".cue" : ".bin";
                 case MediaType.Cartridge:
                 case MediaType.HardDisk:
                 case MediaType.CompactFlash:
                 case MediaType.MMC:
                 case MediaType.SDCard:
                 case MediaType.FlashDrive:
-                    return useChef ? ".raw" : ".bin";
+                    return ".bin";
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:

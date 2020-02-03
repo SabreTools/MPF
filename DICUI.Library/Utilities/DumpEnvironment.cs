@@ -36,7 +36,7 @@ namespace DICUI.Utilities
         public string SubdumpPath { get; set; }
 
         /// <summary>
-        /// Wether or not to use DiscImageChef instead of DiscImageCreator
+        /// Use DiscImageChef instead of DiscImageCreator
         /// </summary>
         public bool UseChef { get; set; }
 
@@ -277,7 +277,6 @@ namespace DICUI.Utilities
         /// <returns></returns>
         public bool FoundAllFiles()
         {
-            // TODO: Make DiscImageChef variant of this
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 

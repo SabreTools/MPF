@@ -12,6 +12,9 @@ namespace DICUI
         public string ChefPath { get; private set; }
         public string CreatorPath { get; private set; }
         public string SubDumpPath { get; private set; }
+
+        // TODO: Change to string setting eventually to better support more tools
+        // TODO: Add to UI either as checkbox next to DiscImageChef or by making it a single select between both paths
         public bool UseChef { get; set; }
 
         public int PreferredDumpSpeedCD { get; set; }

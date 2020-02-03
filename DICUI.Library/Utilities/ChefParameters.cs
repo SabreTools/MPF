@@ -129,7 +129,6 @@ namespace DICUI.Utilities
 
                 _flags = new Dictionary<ChefFlag, bool?>();
 
-                // TODO: Recreate this list later
                 BlockSizeValue = null;
                 CommentsValue = null;
                 CreatorValue = null;
@@ -159,6 +158,7 @@ namespace DICUI.Utilities
                 OptionsValue = null;
                 OutputValue = null;
                 OutputPrefixValue = null;
+                RemoteHostValue = null;
                 ResumeFileValue = null;
                 RetryPassesValue = null;
                 SkipValue = null;
