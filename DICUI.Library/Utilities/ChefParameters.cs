@@ -818,7 +818,6 @@ namespace DICUI.Utilities
             int start = useSecond ? 2 : 1;
 
             // Loop through all auxilary flags, if necessary
-            // TODO: Should an invalid flag mean instant failure? There are some flags that share a short form and this could cause issues
             int i = 0;
             for (i = start; i < parts.Count; i++)
             {
@@ -835,152 +834,114 @@ namespace DICUI.Utilities
                 #region Boolean flags
 
                 // Adler-32
-                if (!ProcessBooleanParameter(parts, ChefFlagStrings.Adler32Short, ChefFlagStrings.Adler32Long, ChefFlag.Adler32, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.Adler32Short, ChefFlagStrings.Adler32Long, ChefFlag.Adler32, ref i);
 
                 // Clear
-                if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.ClearLong, ChefFlag.Clear, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.ClearLong, ChefFlag.Clear, ref i);
 
                 // Clear All
-                if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.ClearAllLong, ChefFlag.ClearAll, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.ClearAllLong, ChefFlag.ClearAll, ref i);
 
                 // CRC16
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.CRC16Long, ChefFlag.CRC16, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.CRC16Long, ChefFlag.CRC16, ref i);
 
                 // CRC32
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.CRC32Short, ChefFlagStrings.CRC32Long, ChefFlag.CRC32, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.CRC32Short, ChefFlagStrings.CRC32Long, ChefFlag.CRC32, ref i);
 
                 // CRC64
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.CRC64Long, ChefFlag.CRC64, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.CRC64Long, ChefFlag.CRC64, ref i);
 
                 // Debug
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.DebugShort, ChefFlagStrings.DebugLong, ChefFlag.Debug, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.DebugShort, ChefFlagStrings.DebugLong, ChefFlag.Debug, ref i);
 
                 // Disk Tags
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.DiskTagsShort, ChefFlagStrings.DiskTagsLong, ChefFlag.DiskTags, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.DiskTagsShort, ChefFlagStrings.DiskTagsLong, ChefFlag.DiskTags, ref i);
 
                 // Deduplicated Sectors
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.DuplicatedSectorsShort, ChefFlagStrings.DuplicatedSectorsLong, ChefFlag.DuplicatedSectors, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.DuplicatedSectorsShort, ChefFlagStrings.DuplicatedSectorsLong, ChefFlag.DuplicatedSectors, ref i);
 
                 // Extended Attributes
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.ExtendedAttributesShort, ChefFlagStrings.ExtendedAttributesLong, ChefFlag.ExtendedAttributes, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.ExtendedAttributesShort, ChefFlagStrings.ExtendedAttributesLong, ChefFlag.ExtendedAttributes, ref i);
 
                 // Filesystems
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.FilesystemsShort, ChefFlagStrings.FilesystemsLong, ChefFlag.Filesystems, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.FilesystemsShort, ChefFlagStrings.FilesystemsLong, ChefFlag.Filesystems, ref i);
 
                 // First Pregap
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.FirstPregapLong, ChefFlag.FirstPregap, ref i))
-                    return false;
-
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.FirstPregapLong, ChefFlag.FirstPregap, ref i);
                 // Fix Offset
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.FixOffsetLong, ChefFlag.FixOffset, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.FixOffsetLong, ChefFlag.FixOffset, ref i);
 
                 // Fletcher-16
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.Fletcher16Long, ChefFlag.Fletcher16, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.Fletcher16Long, ChefFlag.Fletcher16, ref i);
 
                 // Fletcher-32
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.Fletcher32Long, ChefFlag.Fletcher32, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.Fletcher32Long, ChefFlag.Fletcher32, ref i);
 
                 // Force
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.ForceShort, ChefFlagStrings.ForceLong, ChefFlag.Force, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.ForceShort, ChefFlagStrings.ForceLong, ChefFlag.Force, ref i);
 
                 // Long Format
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.LongFormatShort, ChefFlagStrings.LongFormatLong, ChefFlag.LongFormat, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.LongFormatShort, ChefFlagStrings.LongFormatLong, ChefFlag.LongFormat, ref i);
 
                 // Long Sectors
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.LongSectorsShort, ChefFlagStrings.LongSectorsLong, ChefFlag.LongSectors, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.LongSectorsShort, ChefFlagStrings.LongSectorsLong, ChefFlag.LongSectors, ref i);
 
                 // MD5
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.MD5Short, ChefFlagStrings.MD5Long, ChefFlag.MD5, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.MD5Short, ChefFlagStrings.MD5Long, ChefFlag.MD5, ref i);
 
                 // Metadata
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.MetadataLong, ChefFlag.Metadata, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.MetadataLong, ChefFlag.Metadata, ref i);
 
                 // Partitions
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.PartitionsShort, ChefFlagStrings.PartitionsLong, ChefFlag.Partitions, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.PartitionsShort, ChefFlagStrings.PartitionsLong, ChefFlag.Partitions, ref i);
 
                 // Persistent
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.PersistentLong, ChefFlag.Persistent, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.PersistentLong, ChefFlag.Persistent, ref i);
 
                 // Resume
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.ResumeShort, ChefFlagStrings.ResumeLong, ChefFlag.Resume, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.ResumeShort, ChefFlagStrings.ResumeLong, ChefFlag.Resume, ref i);
 
                 // Sector Tags
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.SectorTagsShort, ChefFlagStrings.SectorTagsLong, ChefFlag.SectorTags, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.SectorTagsShort, ChefFlagStrings.SectorTagsLong, ChefFlag.SectorTags, ref i);
 
                 // Separated Tracks
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.SeparatedTracksShort, ChefFlagStrings.SeparatedTracksLong, ChefFlag.SeparatedTracks, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.SeparatedTracksShort, ChefFlagStrings.SeparatedTracksLong, ChefFlag.SeparatedTracks, ref i);
 
                 // SHA-1
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.SHA1Short, ChefFlagStrings.SHA1Long, ChefFlag.SHA1, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.SHA1Short, ChefFlagStrings.SHA1Long, ChefFlag.SHA1, ref i);
 
                 // SHA-256
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.SHA256Long, ChefFlag.SHA256, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.SHA256Long, ChefFlag.SHA256, ref i);
 
                 // SHA-384
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.SHA384Long, ChefFlag.SHA384, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.SHA384Long, ChefFlag.SHA384, ref i);
 
                 // SHA-512
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.SHA512Long, ChefFlag.SHA512, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.SHA512Long, ChefFlag.SHA512, ref i);
 
                 // SpamSum
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.SpamSumShort, ChefFlagStrings.SpamSumLong, ChefFlag.SpamSum, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.SpamSumShort, ChefFlagStrings.SpamSumLong, ChefFlag.SpamSum, ref i);
 
                 // Stop on Error
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.StopOnErrorShort, ChefFlagStrings.StopOnErrorLong, ChefFlag.StopOnError, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.StopOnErrorShort, ChefFlagStrings.StopOnErrorLong, ChefFlag.StopOnError, ref i);
 
                 // Tape
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.TapeShort, ChefFlagStrings.TapeLong, ChefFlag.Tape, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.TapeShort, ChefFlagStrings.TapeLong, ChefFlag.Tape, ref i);
 
                 // Trim
-                else if (!ProcessBooleanParameter(parts, null, ChefFlagStrings.TrimLong, ChefFlag.Trim, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.TrimLong, ChefFlag.Trim, ref i);
 
                 // Verbose
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.VerboseShort, ChefFlagStrings.VerboseLong, ChefFlag.Verbose, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.VerboseShort, ChefFlagStrings.VerboseLong, ChefFlag.Verbose, ref i);
 
                 // Verify Disc
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.VerifyDiscShort, ChefFlagStrings.VerifyDiscLong, ChefFlag.VerifyDisc, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.VerifyDiscShort, ChefFlagStrings.VerifyDiscLong, ChefFlag.VerifyDisc, ref i);
 
                 // Verify Sectors
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.VerifySectorsShort, ChefFlagStrings.VerifySectorsLong, ChefFlag.VerifySectors, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.VerifySectorsShort, ChefFlagStrings.VerifySectorsLong, ChefFlag.VerifySectors, ref i);
 
                 // Whole Disc
-                else if (!ProcessBooleanParameter(parts, ChefFlagStrings.WholeDiscShort, ChefFlagStrings.WholeDiscLong, ChefFlag.VerifySectors, ref i))
-                    return false;
+                ProcessBooleanParameter(parts, ChefFlagStrings.WholeDiscShort, ChefFlagStrings.WholeDiscLong, ChefFlag.VerifySectors, ref i);
 
                 #endregion
 
@@ -988,9 +949,7 @@ namespace DICUI.Utilities
 
                 // Speed
                 byteValue = ProcessInt8Parameter(parts, null, ChefFlagStrings.SpeedLong, ChefFlag.Speed, ref i);
-                if (byteValue == null)
-                    return false;
-                else if (byteValue != SByte.MinValue)
+                if (byteValue == null && byteValue != SByte.MinValue)
                     SpeedValue = byteValue;
 
                 #endregion
@@ -999,16 +958,12 @@ namespace DICUI.Utilities
 
                 // Retry Passes
                 shortValue = ProcessInt16Parameter(parts, ChefFlagStrings.RetryPassesShort, ChefFlagStrings.RetryPassesLong, ChefFlag.RetryPasses, ref i);
-                if (shortValue == null)
-                    return false;
-                else if (shortValue != Int16.MinValue)
+                if (shortValue != null && shortValue != Int16.MinValue)
                     RetryPassesValue = shortValue;
 
                 // Width
                 shortValue = ProcessInt16Parameter(parts, ChefFlagStrings.WidthShort, ChefFlagStrings.WidthLong, ChefFlag.Width, ref i);
-                if (shortValue == null)
-                    return false;
-                else if (shortValue != Int16.MinValue)
+                if (shortValue != null && shortValue != Int16.MinValue)
                     WidthValue = shortValue;
 
                 #endregion
@@ -1017,37 +972,27 @@ namespace DICUI.Utilities
 
                 // Block Size
                 intValue = ProcessInt32Parameter(parts, ChefFlagStrings.BlockSizeShort, ChefFlagStrings.BlockSizeLong, ChefFlag.BlockSize, ref i);
-                if (intValue == null)
-                    return false;
-                else if (intValue != Int32.MinValue)
+                if (intValue != null && intValue != Int32.MinValue)
                     BlockSizeValue = intValue;
 
                 // Count
                 intValue = ProcessInt32Parameter(parts, ChefFlagStrings.CountShort, ChefFlagStrings.CountLong, ChefFlag.Count, ref i);
-                if (intValue == null)
-                    return false;
-                else if (intValue != Int32.MinValue)
+                if (intValue != null && intValue != Int32.MinValue)
                     CountValue = intValue;
 
                 // Media Last Sequence
                 intValue = ProcessInt32Parameter(parts, null, ChefFlagStrings.MediaLastSequenceLong, ChefFlag.MediaLastSequence, ref i);
-                if (intValue == null)
-                    return false;
-                else if (intValue != Int32.MinValue)
+                if (intValue != null && intValue != Int32.MinValue)
                     MediaLastSequenceValue = intValue;
 
                 // Media Sequence
                 intValue = ProcessInt32Parameter(parts, null, ChefFlagStrings.MediaSequenceLong, ChefFlag.MediaSequence, ref i);
-                if (intValue == null)
-                    return false;
-                else if (intValue != Int32.MinValue)
+                if (intValue != null && intValue != Int32.MinValue)
                     MediaSequenceValue = intValue;
 
                 // Skip
                 intValue = ProcessInt32Parameter(parts, ChefFlagStrings.SkipShort, ChefFlagStrings.SkipLong, ChefFlag.Skip, ref i);
-                if (intValue == null)
-                    return false;
-                else if (intValue != Int32.MinValue)
+                if (intValue != null && intValue != Int32.MinValue)
                     SkipValue = intValue;
 
                 #endregion
@@ -1056,12 +1001,10 @@ namespace DICUI.Utilities
 
                 // Length -- Can also be "all"
                 longValue = ProcessInt64Parameter(parts, ChefFlagStrings.LengthShort, ChefFlagStrings.LengthLong, ChefFlag.Length, ref i);
-                if (longValue == null)
-                    return false;
-                else if (longValue != Int64.MinValue)
+                if (longValue == null && longValue != Int64.MinValue)
                     LengthValue = longValue;
 
-                // Start
+                // Start -- Required value
                 longValue = ProcessInt64Parameter(parts, ChefFlagStrings.StartShort, ChefFlagStrings.StartLong, ChefFlag.Start, ref i);
                 if (longValue == null)
                     return false;
@@ -1074,163 +1017,117 @@ namespace DICUI.Utilities
 
                 // Comments
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.CommentsLong, ChefFlag.Comments, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     CommentsValue = stringValue;
 
                 // Creator
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.CreatorLong, ChefFlag.Creator, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     CreatorValue = stringValue;
 
                 // Drive Manufacturer
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.DriveManufacturerLong, ChefFlag.DriveManufacturer, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveManufacturerValue = stringValue;
 
                 // Drive Model
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.DriveModelLong, ChefFlag.DriveModel, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveModelValue = stringValue;
 
                 // Drive Revision
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.DriveRevisionLong, ChefFlag.DriveRevision, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveRevisionValue = stringValue;
 
                 // Drive Serial
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.DriveSerialLong, ChefFlag.DriveSerial, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     DriveSerialValue = stringValue;
 
                 // Encoding -- TODO: List of encodings?
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.EncodingShort, ChefFlagStrings.EncodingLong, ChefFlag.Encoding, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     EncodingValue = stringValue;
 
                 // Format (Convert) -- TODO: List of formats?
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.FormatConvertShort, ChefFlagStrings.FormatConvertLong, ChefFlag.FormatConvert, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     FormatConvertValue = stringValue;
 
                 // Format (Dump) -- TODO: List of formats?
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.FormatDumpShort, ChefFlagStrings.FormatDumpLong, ChefFlag.FormatDump, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     FormatDumpValue = stringValue;
 
                 // ImgBurn Log
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.ImgBurnLogShort, ChefFlagStrings.ImgBurnLogLong, ChefFlag.ImgBurnLog, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     ImgBurnLogValue = stringValue;
 
                 // Media Barcode
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaBarcodeLong, ChefFlag.MediaBarcode, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MediaBarcodeValue = stringValue;
 
                 // Media Manufacturer
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaManufacturerLong, ChefFlag.MediaManufacturer, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MediaManufacturerValue = stringValue;
 
                 // Media Model
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaModelLong, ChefFlag.MediaModel, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MediaModelValue = stringValue;
 
                 // Media Part Number
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaPartNumberLong, ChefFlag.MediaPartNumber, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MediaPartNumberValue = stringValue;
 
                 // Media Serial
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaSerialLong, ChefFlag.MediaSerial, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MediaSerialValue = stringValue;
 
                 // Media Title
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.MediaTitleLong, ChefFlag.MediaTitle, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MediaTitleValue = stringValue;
 
                 // MHDD Log
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.MHDDLogShort, ChefFlagStrings.MHDDLogLong, ChefFlag.MHDDLog, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     MHDDLogValue = stringValue;
 
                 // Namespace
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.NamespaceShort, ChefFlagStrings.NamespaceLong, ChefFlag.Namespace, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     NamespaceValue = stringValue;
 
                 // Options -- TODO: Validate options?
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.OptionsShort, ChefFlagStrings.OptionsLong, ChefFlag.Options, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     OptionsValue = stringValue;
 
                 // Output Prefix
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.OutputPrefixShort, ChefFlagStrings.OutputPrefixLong, ChefFlag.OutputPrefix, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     OutputPrefixValue = stringValue;
 
                 // Resume File
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.ResumeFileShort, ChefFlagStrings.ResumeFileLong, ChefFlag.ResumeFile, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     ResumeFileValue = stringValue;
 
                 // Subchannel
                 stringValue = ProcessStringParameter(parts, null, ChefFlagStrings.SubchannelLong, ChefFlag.Subchannel, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     SubchannelValue = stringValue;
 
                 // XML Sidecar
                 stringValue = ProcessStringParameter(parts, ChefFlagStrings.XMLSidecarShort, ChefFlagStrings.XMLSidecarLong, ChefFlag.XMLSidecar, ref i);
-                if (stringValue == null)
-                    return false;
-                else if (stringValue != string.Empty)
+                if (!string.IsNullOrEmpty(stringValue))
                     XMLSidecarValue = stringValue;
 
                 #endregion
@@ -1930,10 +1827,6 @@ namespace DICUI.Utilities
             switch (type)
             {
                 case MediaType.CDROM:
-                    // TODO: Re-add when implemented
-                    //this[ChefFlag.Options] = true;
-                    //OptionsValue = $"{ChefOptionStrings.CDRWinCuesheetSeparate}=true";
-
                     this[ChefFlag.FirstPregap] = true;
                     this[ChefFlag.FixOffset] = true;
                     this[ChefFlag.Subchannel] = true;
