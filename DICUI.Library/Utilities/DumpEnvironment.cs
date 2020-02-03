@@ -686,6 +686,26 @@ namespace DICUI.Utilities
             // Sanitize the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
+            // TODO: Notes about DiscImageChef outputs:
+            // - All hash data is stored in the CICM XML sidecar
+            // - The path to all track hashes is CICMMetadata.OpticalDisc.Track()
+            // - Each track has a billion hashes under a Checksums.Checksum() element
+            // - Checksum type is defined as type="x" - use crc32, md, sha1
+            // - Track sizes are under a Size() element
+            // - Also cotnains a Sequence() element that has TrackNumber() and Session()
+            // - Currently does not automatically output a CUE, see if this data
+            //      can be used to generate a CUE?
+            // - When using DICF, Tracks are not named, just numbered. Will need
+            //      to be generated when creating the pseudo-dat
+            // - Set of DICF outputs are: .cicm.ml, .dicf, .ibg, .log, .mhddlog.bin, .resume.xml
+            //      (For CD)
+            // - `image convert` might be able to help generate CUE, CCD, SUB?
+            // - CICMMetadata.OpticalDisc.Tracks() and .Sessions() might both be helpful
+            // - NEED CONFIRMATION OF TRACK SPLITTING ON CD
+            // - NEED CONFIRMATION OF DVD-5/9 OUTPUTS
+            // - NEED CONFIRMATION OF BD-25/50 OUTPUTS
+            // - NEED CONFIRMATION OF XISO OUTPUTS
+
             // Check that all of the relevant files are there
             if (!FoundAllFiles())
                 return null;
