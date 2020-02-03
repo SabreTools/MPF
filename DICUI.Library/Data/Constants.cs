@@ -496,7 +496,6 @@
         public const string D8Opcode = "/d8";
         public const string DisableBeep = "/q";
         public const string ForceUnitAccess = "/f";
-        public const string MCN = "/m";
         public const string MultiSession = "/ms";
         public const string NoFixSubP = "/np";
         public const string NoFixSubQ = "/nq";

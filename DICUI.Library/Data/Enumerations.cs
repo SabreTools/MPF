@@ -201,7 +201,6 @@
         D8Opcode,
         DisableBeep,
         ForceUnitAccess,
-        MCN,
         MultiSession,
         NoFixSubP,
         NoFixSubQ,

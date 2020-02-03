@@ -883,8 +883,6 @@ namespace DICUI.Utilities
                     return CreatorFlagStrings.DisableBeep;
                 case CreatorFlag.ForceUnitAccess:
                     return CreatorFlagStrings.ForceUnitAccess;
-                case CreatorFlag.MCN:
-                    return CreatorFlagStrings.MCN;
                 case CreatorFlag.MultiSession:
                     return CreatorFlagStrings.MultiSession;
                 case CreatorFlag.NoFixSubP:

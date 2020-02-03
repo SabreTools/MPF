@@ -449,13 +449,6 @@ namespace DICUI.Utilities
                 }
             }
 
-            // MCN
-            if (GetSupportedCommands(CreatorFlag.MCN).Contains(Command))
-            {
-                if (this[CreatorFlag.MCN])
-                    parameters.Add(CreatorFlag.MCN.LongName());
-            }
-
             // Multi-Session
             if (GetSupportedCommands(CreatorFlag.MultiSession).Contains(Command))
             {
@@ -1152,13 +1145,6 @@ namespace DICUI.Utilities
                             i++;
                             break;
 
-                        case CreatorFlagStrings.MCN:
-                            if (!GetSupportedCommands(CreatorFlag.MCN).Contains(Command))
-                                return false;
-
-                            this[CreatorFlag.MCN] = true;
-                            break;
-
                         case CreatorFlagStrings.MultiSession:
                             if (!GetSupportedCommands(CreatorFlag.MultiSession).Contains(Command))
                                 return false;
@@ -1690,9 +1676,6 @@ namespace DICUI.Utilities
                         case KnownSystem.HasbroVideoNowXP:
                             this[CreatorFlag.VideoNow] = true;
                             this.VideoNowValue = 20832;
-                            break;
-                        case KnownSystem.NECPCEngineTurboGrafxCD:
-                            this[CreatorFlag.MCN] = true;
                             break;
                         case KnownSystem.SonyPlayStation:
                             this[CreatorFlag.ScanAntiMod] = true;
