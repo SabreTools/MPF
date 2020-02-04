@@ -708,6 +708,8 @@ namespace DICUI.Utilities
                     return ChefFlagStrings.VerifyDiscLong;
                 case ChefFlag.VerifySectors:
                     return ChefFlagStrings.VerifySectorsLong;
+                case ChefFlag.Version:
+                    return ChefFlagStrings.VersionLong;
                 case ChefFlag.WholeDisc:
                     return ChefFlagStrings.WholeDiscLong;
 

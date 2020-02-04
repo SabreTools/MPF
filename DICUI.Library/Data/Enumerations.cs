@@ -109,6 +109,7 @@
         Verbose,
         VerifyDisc,
         VerifySectors,
+        Version,
         WholeDisc,
 
         // Int8 flags

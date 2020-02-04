@@ -206,6 +206,22 @@ namespace DICUI.Utilities
         {
             List<string> parameters = new List<string>();
 
+            #region Pre-command flags
+
+            // Debug
+            if (this[ChefFlag.Debug] != null)
+                parameters.Add($"{ChefFlag.Debug.LongName()} {this[ChefFlag.Debug]}");
+
+            // Verbose
+            if (this[ChefFlag.Verbose] != null)
+                parameters.Add($"{ChefFlag.Verbose.LongName()} {this[ChefFlag.Verbose]}");
+
+            // Version
+            if (this[ChefFlag.Version] != null)
+                parameters.Add($"{ChefFlag.Version.LongName()} {this[ChefFlag.Version]}");
+
+            #endregion
+
             if (Command != ChefCommand.NONE)
                 parameters.Add(Command.LongName());
             else
@@ -253,13 +269,6 @@ namespace DICUI.Utilities
             {
                 if (this[ChefFlag.CRC64] != null)
                     parameters.Add($"{ChefFlag.CRC64.LongName()} {this[ChefFlag.CRC64]}");
-            }
-
-            // Debug
-            if (GetSupportedCommands(ChefFlag.Debug).Contains(Command))
-            {
-                if (this[ChefFlag.Debug] != null)
-                    parameters.Add($"{ChefFlag.Debug.LongName()} {this[ChefFlag.Debug]}");
             }
 
             // Disk Tags
@@ -442,13 +451,6 @@ namespace DICUI.Utilities
             {
                 if (this[ChefFlag.Trim] != null)
                     parameters.Add($"{ChefFlag.Trim.LongName()} {this[ChefFlag.Trim]}");
-            }
-
-            // Verbose
-            if (GetSupportedCommands(ChefFlag.Verbose).Contains(Command))
-            {
-                if (this[ChefFlag.Verbose] != null)
-                    parameters.Add($"{ChefFlag.Verbose.LongName()} {this[ChefFlag.Verbose]}");
             }
 
             // Verify Disc
@@ -809,13 +811,37 @@ namespace DICUI.Utilities
                 .Select(m => m.Value)
                 .ToList();
 
+            // Search for pre-command flags first
+            int start = 0;
+            for (int j = 0; j < parts.Count; j++)
+            {
+                // Keep a count of keys to determine if we should break out to command handling or not
+                int keyCount = Keys.Count();
+
+                // Debug
+                if (ProcessBooleanParameter(parts, ChefFlagStrings.DebugShort, ChefFlagStrings.DebugLong, ChefFlag.Debug, ref j))
+                    start++;
+
+                // Verbose
+                if (ProcessBooleanParameter(parts, ChefFlagStrings.VerboseShort, ChefFlagStrings.VerboseLong, ChefFlag.Verbose, ref j))
+                    start++;
+
+                // Verbose
+                if (ProcessBooleanParameter(parts, null, ChefFlagStrings.VersionLong, ChefFlag.Version, ref j))
+                    start++;
+
+                // If we didn't add any new flags, break out since we might be at command handling
+                if (keyCount == Keys.Count())
+                    break;
+            }
+
             // Determine what the commandline should look like given the first item
-            Command = Converters.StringToChefCommand(parts[0], parts.Count > 1 ? parts[1] : null, out bool useSecond);
+            Command = Converters.StringToChefCommand(parts[start], parts.Count > start ? parts[start + 1] : null, out bool useSecond);
             if (Command == ChefCommand.NONE)
                 return false;
 
             // Set the start according to what the full command was
-            int start = useSecond ? 2 : 1;
+            start += useSecond ? 2 : 1;
 
             // Loop through all auxilary flags, if necessary
             int i = 0;
@@ -851,9 +877,6 @@ namespace DICUI.Utilities
                 // CRC64
                 ProcessBooleanParameter(parts, null, ChefFlagStrings.CRC64Long, ChefFlag.CRC64, ref i);
 
-                // Debug
-                ProcessBooleanParameter(parts, ChefFlagStrings.DebugShort, ChefFlagStrings.DebugLong, ChefFlag.Debug, ref i);
-
                 // Disk Tags
                 ProcessBooleanParameter(parts, ChefFlagStrings.DiskTagsShort, ChefFlagStrings.DiskTagsLong, ChefFlag.DiskTags, ref i);
 
@@ -868,6 +891,7 @@ namespace DICUI.Utilities
 
                 // First Pregap
                 ProcessBooleanParameter(parts, null, ChefFlagStrings.FirstPregapLong, ChefFlag.FirstPregap, ref i);
+
                 // Fix Offset
                 ProcessBooleanParameter(parts, null, ChefFlagStrings.FixOffsetLong, ChefFlag.FixOffset, ref i);
 
@@ -930,9 +954,6 @@ namespace DICUI.Utilities
 
                 // Trim
                 ProcessBooleanParameter(parts, null, ChefFlagStrings.TrimLong, ChefFlag.Trim, ref i);
-
-                // Verbose
-                ProcessBooleanParameter(parts, ChefFlagStrings.VerboseShort, ChefFlagStrings.VerboseLong, ChefFlag.Verbose, ref i);
 
                 // Verify Disc
                 ProcessBooleanParameter(parts, ChefFlagStrings.VerifyDiscShort, ChefFlagStrings.VerifyDiscLong, ChefFlag.VerifyDisc, ref i);
@@ -1266,33 +1287,7 @@ namespace DICUI.Utilities
                     commands.Add(ChefCommand.ImageConvert);
                     break;
                 case ChefFlag.Debug:
-                    commands.Add(ChefCommand.DatabaseStats);
-                    commands.Add(ChefCommand.DatabaseUpdate);
-                    commands.Add(ChefCommand.DeviceInfo);
-                    commands.Add(ChefCommand.DeviceList);
-                    commands.Add(ChefCommand.DeviceReport);
-                    commands.Add(ChefCommand.FilesystemExtract);
-                    commands.Add(ChefCommand.FilesystemList);
-                    commands.Add(ChefCommand.FilesystemOptions);
-                    commands.Add(ChefCommand.ImageAnalyze);
-                    commands.Add(ChefCommand.ImageChecksum);
-                    commands.Add(ChefCommand.ImageCompare);
-                    commands.Add(ChefCommand.ImageConvert);
-                    commands.Add(ChefCommand.ImageCreateSidecar);
-                    commands.Add(ChefCommand.ImageDecode);
-                    commands.Add(ChefCommand.ImageEntropy);
-                    commands.Add(ChefCommand.ImageInfo);
-                    commands.Add(ChefCommand.ImageOptions);
-                    commands.Add(ChefCommand.ImagePrint);
-                    commands.Add(ChefCommand.ImageVerify);
-                    commands.Add(ChefCommand.MediaDump);
-                    commands.Add(ChefCommand.MediaInfo);
-                    commands.Add(ChefCommand.MediaScan);
-                    commands.Add(ChefCommand.Configure);
-                    commands.Add(ChefCommand.Formats);
-                    commands.Add(ChefCommand.ListEncodings);
-                    commands.Add(ChefCommand.ListNamespaces);
-                    commands.Add(ChefCommand.Remote);
+                    commands.Add(ChefCommand.NONE);
                     break;
                 case ChefFlag.DiskTags:
                     commands.Add(ChefCommand.ImageDecode);
@@ -1467,33 +1462,7 @@ namespace DICUI.Utilities
                     commands.Add(ChefCommand.MediaDump);
                     break;
                 case ChefFlag.Verbose:
-                    commands.Add(ChefCommand.DatabaseStats);
-                    commands.Add(ChefCommand.DatabaseUpdate);
-                    commands.Add(ChefCommand.DeviceInfo);
-                    commands.Add(ChefCommand.DeviceList);
-                    commands.Add(ChefCommand.DeviceReport);
-                    commands.Add(ChefCommand.FilesystemExtract);
-                    commands.Add(ChefCommand.FilesystemList);
-                    commands.Add(ChefCommand.FilesystemOptions);
-                    commands.Add(ChefCommand.ImageAnalyze);
-                    commands.Add(ChefCommand.ImageChecksum);
-                    commands.Add(ChefCommand.ImageCompare);
-                    commands.Add(ChefCommand.ImageConvert);
-                    commands.Add(ChefCommand.ImageCreateSidecar);
-                    commands.Add(ChefCommand.ImageDecode);
-                    commands.Add(ChefCommand.ImageEntropy);
-                    commands.Add(ChefCommand.ImageInfo);
-                    commands.Add(ChefCommand.ImageOptions);
-                    commands.Add(ChefCommand.ImagePrint);
-                    commands.Add(ChefCommand.ImageVerify);
-                    commands.Add(ChefCommand.MediaDump);
-                    commands.Add(ChefCommand.MediaInfo);
-                    commands.Add(ChefCommand.MediaScan);
-                    commands.Add(ChefCommand.Configure);
-                    commands.Add(ChefCommand.Formats);
-                    commands.Add(ChefCommand.ListEncodings);
-                    commands.Add(ChefCommand.ListNamespaces);
-                    commands.Add(ChefCommand.Remote);
+                    commands.Add(ChefCommand.NONE);
                     break;
                 case ChefFlag.VerifyDisc:
                     commands.Add(ChefCommand.ImageAnalyze);
@@ -1502,6 +1471,9 @@ namespace DICUI.Utilities
                 case ChefFlag.VerifySectors:
                     commands.Add(ChefCommand.ImageAnalyze);
                     commands.Add(ChefCommand.ImageVerify);
+                    break;
+                case ChefFlag.Version:
+                    commands.Add(ChefCommand.NONE);
                     break;
                 case ChefFlag.WholeDisc:
                     commands.Add(ChefCommand.ImageChecksum);

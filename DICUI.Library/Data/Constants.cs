@@ -163,6 +163,7 @@
         public const string VerifyDiscLong = "--verify-disc";
         public const string VerifySectorsShort = "-s";
         public const string VerifySectorsLong = "--verify-sectors";
+        public const string VersionLong = "--version";
         public const string WholeDiscShort = "-w";
         public const string WholeDiscLong = "--whole-disc";
 
