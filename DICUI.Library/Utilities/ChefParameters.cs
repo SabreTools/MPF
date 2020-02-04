@@ -784,6 +784,22 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Gets if the current command is considered a dumping command or not
+        /// </summary>
+        /// <returns>True if it's a dumping command, false otherwise</returns>
+        public bool IsDumpingCommand()
+        {
+            switch (Command)
+            {
+                case ChefCommand.MediaDump:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
         /// Returns if the current Parameter object is valid
         /// </summary>
         /// <returns></returns>

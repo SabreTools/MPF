@@ -550,7 +550,23 @@ namespace DICUI.Windows
 
                 var progress = new Progress<Result>();
                 progress.ProgressChanged += ProgressUpdated;
-                Result result = await _env.StartDumping(progress);
+                Result result = await _env.Run(progress);
+
+                // If we didn't execute a dumping command we cannot get submission output
+                bool isDumpingCommand = false;
+                if (_env.UseChef)
+                    isDumpingCommand = _env.ChefParameters.IsDumpingCommand();
+                else
+                    isDumpingCommand = _env.CreatorParameters.IsDumpingCommand();
+
+                if (!isDumpingCommand)
+                {
+                    ViewModels.LoggerViewModel.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
+                    StatusLabel.Content = "Execution complete!";
+                    StartStopButton.Content = Constants.StartDumping;
+                    CopyProtectScanButton.IsEnabled = true;
+                    return;
+                }
 
                 if (result)
                 {

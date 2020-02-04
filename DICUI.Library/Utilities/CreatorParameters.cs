@@ -617,6 +617,35 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Gets if the current command is considered a dumping command or not
+        /// </summary>
+        /// <returns>True if it's a dumping command, false otherwise</returns>
+        public bool IsDumpingCommand()
+        {
+            switch (Command)
+            {
+                case CreatorCommand.Audio:
+                case CreatorCommand.BluRay:
+                case CreatorCommand.CompactDisc:
+                case CreatorCommand.Data:
+                case CreatorCommand.DigitalVideoDisc:
+                case CreatorCommand.Disk:
+                case CreatorCommand.Floppy:
+                case CreatorCommand.GDROM:
+                case CreatorCommand.SACD:
+                case CreatorCommand.Swap:
+                case CreatorCommand.XBOX:
+                case CreatorCommand.XBOXSwap:
+                case CreatorCommand.XGD2Swap:
+                case CreatorCommand.XGD3Swap:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
         /// Returns if the current Parameter object is valid
         /// </summary>
         /// <returns></returns>

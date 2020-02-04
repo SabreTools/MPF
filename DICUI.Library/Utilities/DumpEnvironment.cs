@@ -419,9 +419,9 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Execute a complete dump workflow
+        /// Execute the initial invocation of the dumping programs
         /// </summary>
-        public async Task<Result> StartDumping(IProgress<Result> progress)
+        public async Task<Result> Run(IProgress<Result> progress)
         {
             Result result = IsValidForDump();
 
