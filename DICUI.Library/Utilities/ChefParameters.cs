@@ -813,22 +813,19 @@ namespace DICUI.Utilities
 
             // Search for pre-command flags first
             int start = 0;
-            for (int j = 0; j < parts.Count; j++)
+            for (start = 0; start < parts.Count; start++)
             {
                 // Keep a count of keys to determine if we should break out to command handling or not
                 int keyCount = Keys.Count();
 
                 // Debug
-                if (ProcessBooleanParameter(parts, ChefFlagStrings.DebugShort, ChefFlagStrings.DebugLong, ChefFlag.Debug, ref j))
-                    start++;
+                ProcessBooleanParameter(parts, ChefFlagStrings.DebugShort, ChefFlagStrings.DebugLong, ChefFlag.Debug, ref start);
 
                 // Verbose
-                if (ProcessBooleanParameter(parts, ChefFlagStrings.VerboseShort, ChefFlagStrings.VerboseLong, ChefFlag.Verbose, ref j))
-                    start++;
+                ProcessBooleanParameter(parts, ChefFlagStrings.VerboseShort, ChefFlagStrings.VerboseLong, ChefFlag.Verbose, ref start);
 
                 // Verbose
-                if (ProcessBooleanParameter(parts, null, ChefFlagStrings.VersionLong, ChefFlag.Version, ref j))
-                    start++;
+                ProcessBooleanParameter(parts, null, ChefFlagStrings.VersionLong, ChefFlag.Version, ref start);
 
                 // If we didn't add any new flags, break out since we might be at command handling
                 if (keyCount == Keys.Count())
