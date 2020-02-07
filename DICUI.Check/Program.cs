@@ -57,14 +57,31 @@ namespace DICUI.Check
                 return;
             }
 
-            // Check for Redump login credentials
+            // Check for additional flags
             string username = null, password = null;
+            bool useChef = false;
             int startIndex = 2;
-            if (args[2] == "-c" || args[2] == "--credentials")
+            for (; startIndex < args.Length; startIndex++)
             {
-                username = args[3];
-                password = args[4];
-                startIndex = 5;
+                // Redump login
+                if (args[startIndex] == "-c" || args[startIndex] == "--credentials")
+                {
+                    username = args[startIndex + 1];
+                    password = args[startIndex + 2];
+                    startIndex += 2;
+                }
+
+                // Use DiscImageChef
+                else if (args[startIndex] == "-u" || args[startIndex] == "--use-chef")
+                {
+                    useChef = true;
+                }
+
+                // Default, we fall out
+                else
+                {
+                    break;
+                }
             }
 
             // Make a new Progress object
@@ -93,6 +110,7 @@ namespace DICUI.Check
                     Type = mediaType,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
+                    UseChef = useChef,
 
                     Username = username,
                     Password = password,
@@ -115,7 +133,7 @@ namespace DICUI.Check
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("DICUI.Check.exe <mediatype> <system> [-c username password] </path/to/output.bin> ...");
+            Console.WriteLine("DICUI.Check.exe <mediatype> <system> [options] </path/to/output.bin> ...");
             Console.WriteLine();
             Console.WriteLine(@"Common Media Types:\r\n
 bd / bluray     - BD-ROM
@@ -137,6 +155,10 @@ saturn          - Sega Saturn
 xbox            - Microsoft XBOX
 x360            - Microsoft XBOX 360");
             Console.WriteLine("Run 'DICUI.Check.exe [-ls|--listsystems' for more options");
+            Console.WriteLine();
+            Console.WriteLine(@"Common Options:\r\n
+-c username password    - Redump credentials
+-u                      - Check for DiscImageChef");
         }
 
         /// <summary>
