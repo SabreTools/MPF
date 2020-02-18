@@ -2366,20 +2366,26 @@ namespace DICUI.Utilities
 
             // Try both of the common paths that contain information
             string exeName = null;
+
+            // Try reading SYSTEM.CNF to find the "BOOT" value
             if (File.Exists(systemCnfPath))
             {
-                // Let's try reading SYSTEM.CNF to find the "BOOT" value
                 try
                 {
                     using (StreamReader sr = File.OpenText(systemCnfPath))
                     {
-                        // Not assuming proper ordering, just in case
+                        // Not assuming any ordering, just in case
                         string line = sr.ReadLine();
                         while (!line.StartsWith("BOOT"))
                             line = sr.ReadLine();
 
-                        // Once it finds the "BOOT" line, extract the name
-                        exeName = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?);.*").Groups[1].Value;
+                        // Once it finds the "BOOT" line, extract the name, if possible
+                        var match = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?)");
+                        if (match != null && match.Groups.Count > 1)
+                        {
+                            exeName = match.Groups[1].Value;
+                            exeName = exeName.Split(';')[0];
+                        }
                     }
                 }
                 catch
@@ -2388,14 +2394,14 @@ namespace DICUI.Utilities
                     return false;
                 }
             }
-            else if (File.Exists(psxExePath))
-            {
+
+            // If the SYSTEM.CNF value can't be found, try PSX.EXE
+            if (string.IsNullOrWhiteSpace(exeName) && File.Exists(psxExePath))
                 exeName = "PSX.EXE";
-            }
-            else
-            {
+
+            // If neither can be found, we return false
+            if (string.IsNullOrWhiteSpace(exeName))
                 return false;
-            }
 
             // Standardized "S" serials
             if (exeName.StartsWith("S"))
@@ -2484,7 +2490,7 @@ namespace DICUI.Utilities
             if (!File.Exists(systemCnfPath))
                 return null;
 
-            // Let's try reading SYSTEM.CNF to find the "VER" value
+            // Try reading SYSTEM.CNF to find the "VER" value
             try
             {
                 using (StreamReader sr = File.OpenText(systemCnfPath))
@@ -2495,7 +2501,11 @@ namespace DICUI.Utilities
                         line = sr.ReadLine();
 
                     // Once it finds the "VER" line, extract the version
-                    return Regex.Match(line, @"VER\s*=\s*(.*)").Groups[1].Value;
+                    var match = Regex.Match(line, @"VER\s*=\s*(.*)");
+                    if (match != null && match.Groups.Count > 1)
+                        return match.Groups[1].Value;
+
+                    return null;
                 }
             }
             catch
