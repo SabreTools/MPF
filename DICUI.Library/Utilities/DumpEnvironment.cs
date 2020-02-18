@@ -2366,11 +2366,7 @@ namespace DICUI.Utilities
 
             // Try both of the common paths that contain information
             string exeName = null;
-            if (File.Exists(psxExePath))
-            {
-                exeName = "PSX.EXE";
-            }
-            else if (File.Exists(systemCnfPath))
+            if (File.Exists(systemCnfPath))
             {
                 // Let's try reading SYSTEM.CNF to find the "BOOT" value
                 try
@@ -2391,6 +2387,10 @@ namespace DICUI.Utilities
                     // We don't care what the error was
                     return false;
                 }
+            }
+            else if (File.Exists(psxExePath))
+            {
+                exeName = "PSX.EXE";
             }
             else
             {
