@@ -27,6 +27,7 @@ namespace DICUI.Windows
             PopulateCategories();
             PopulateRegions();
             PopulateLanguages();
+            DisableFieldsIfNeeded();
         }
 
         public void Refresh()
@@ -116,6 +117,22 @@ namespace DICUI.Windows
 
             LanguagesComboBox.ItemsSource = _languages;
             LanguagesComboBox.SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// Disable fields that aren't applicable to the current disc
+        /// </summary>
+        private void DisableFieldsIfNeeded()
+        {
+            // Only disable for single-layer discs
+            if (_submissionInfo.SizeAndChecksums.Layerbreak == default(long))
+            {
+                L1MasteringRingTextBox.IsReadOnly = true;
+                L1MasteringSIDTextBox.IsReadOnly = true;
+                L1ToolstampTextBox.IsReadOnly = true;
+                L1MouldSIDTextBox.IsReadOnly = true;
+                L1AdditionalMouldTextBox.IsReadOnly = true;
+            }
         }
 
         #region Event Handlers
