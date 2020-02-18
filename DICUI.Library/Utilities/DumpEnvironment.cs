@@ -1253,7 +1253,7 @@ namespace DICUI.Utilities
                 AddIfExists(output, Template.EditionField, info.VersionAndEditions.OtherEditions, 1);
 
                 // EDC section
-                if (info.EDC.EDC != YesNo.NULL)
+                if (info.CommonDiscInfo.System == KnownSystem.SonyPlayStation)
                 {
                     output.Add("EDC:");
                     AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
@@ -1281,7 +1281,7 @@ namespace DICUI.Utilities
                 if (info.CopyProtection.Protection != null || info.EDC.EDC != YesNo.NULL)
                 {
                     output.Add(""); output.Add("Copy Protection:");
-                    if (info.EDC.EDC != YesNo.NULL)
+                    if (info.CommonDiscInfo.System == KnownSystem.SonyPlayStation)
                     {
                         AddIfExists(output, Template.PlayStationAntiModchipField, info.CopyProtection.AntiModchip.LongName(), 1);
                         AddIfExists(output, Template.PlayStationLibCryptField, info.CopyProtection.LibCrypt.LongName(), 1);
