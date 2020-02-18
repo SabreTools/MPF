@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using DICUI.Data;
 
 namespace DICUI.Windows
@@ -127,11 +128,20 @@ namespace DICUI.Windows
             // Only disable for single-layer discs
             if (_submissionInfo.SizeAndChecksums.Layerbreak == default(long))
             {
-                L1MasteringRingTextBox.IsReadOnly = true;
-                L1MasteringSIDTextBox.IsReadOnly = true;
-                L1ToolstampTextBox.IsReadOnly = true;
-                L1MouldSIDTextBox.IsReadOnly = true;
-                L1AdditionalMouldTextBox.IsReadOnly = true;
+                L1MasteringRingTextBox.IsEnabled = false;
+                L1MasteringRingTextBox.Background = Brushes.Gray;
+
+                L1MasteringSIDTextBox.IsEnabled = false;
+                L1MasteringSIDTextBox.Background = Brushes.Gray;
+
+                L1ToolstampTextBox.IsEnabled = false;
+                L1ToolstampTextBox.Background = Brushes.Gray;
+
+                L1MouldSIDTextBox.IsEnabled = false;
+                L1MouldSIDTextBox.Background = Brushes.Gray;
+
+                L1AdditionalMouldTextBox.IsEnabled = false;
+                L1AdditionalMouldTextBox.Background = Brushes.Gray;
             }
         }
 
