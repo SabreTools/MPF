@@ -110,7 +110,7 @@ namespace DICUI.Check
                     Type = mediaType,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    UseChef = useChef,
+                    InternalProgram = useChef ? InternalProgram.DiscImageChef : InternalProgram.DiscImageCreator,
 
                     Username = username,
                     Password = password,
