@@ -38,9 +38,9 @@ namespace DICUI.Utilities
         public string SubdumpPath { get; set; }
 
         /// <summary>
-        /// Use DiscImageChef instead of DiscImageCreator
+        /// Internal program to run
         /// </summary>
-        public bool UseChef { get; set; }
+        public InternalProgram InternalProgram { get; set; }
 
         #endregion
 
@@ -78,12 +78,12 @@ namespace DICUI.Utilities
         /// <summary>
         /// Parameters object representing what to send to DiscImageChef
         /// </summary>
-        public ChefParameters ChefParameters { get; set; }
+        public DiscImageChef.Parameters ChefParameters { get; set; }
 
         /// <summary>
         /// Parameters object representing what to send to DiscImageCreator
         /// </summary>
-        public CreatorParameters CreatorParameters { get; set; }
+        public DiscImageCreator.Parameters CreatorParameters { get; set; }
 
         /// <summary>
         /// Scan for copy protection, where applicable
@@ -143,9 +143,9 @@ namespace DICUI.Utilities
         #region External process information
 
         /// <summary>
-        /// Process to track DiscImageCreator instances
+        /// Process to track external program
         /// </summary>
-        private Process dicProcess;
+        private Process process;
 
         #endregion
 
@@ -158,8 +158,8 @@ namespace DICUI.Utilities
         {
             try
             {
-                if (dicProcess != null && !dicProcess.HasExited)
-                    dicProcess.Kill();
+                if (process != null && !process.HasExited)
+                    process.Kill();
             }
             catch
             { }
@@ -175,9 +175,9 @@ namespace DICUI.Utilities
             if (!File.Exists(CreatorPath))
                 return false;
 
-            CreatorParameters parameters = new CreatorParameters(string.Empty)
+            var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = CreatorCommand.DriveSpeed,
+                Command = DiscImageCreator.Command.DriveSpeed,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -206,9 +206,9 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            CreatorParameters parameters = new CreatorParameters(string.Empty)
+            var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = CreatorCommand.Eject,
+                Command = DiscImageCreator.Command.Eject,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -291,7 +291,7 @@ namespace DICUI.Utilities
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);
 
             // If we're using DiscImageChef, the outputs are consistent
-            if (UseChef)
+            if (InternalProgram == InternalProgram.DiscImageChef)
             {
                 return File.Exists(combinedBase + ".cicm.xml")
                     && File.Exists(combinedBase + ".dicf")
@@ -372,18 +372,18 @@ namespace DICUI.Utilities
                 // Set the proper parameters
                 string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
 
-                if (UseChef)
+                if (InternalProgram == InternalProgram.DiscImageChef)
                 {
-                    ChefParameters = new ChefParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
+                    ChefParameters = new DiscImageChef.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
 
                     // Generate and return the param string
                     return ChefParameters.GenerateParameters();
                 }
                 else
                 {
-                    CreatorParameters = new CreatorParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
+                    CreatorParameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
                     if (QuietMode)
-                        CreatorParameters[CreatorFlag.DisableBeep] = true;
+                        CreatorParameters[DiscImageCreator.Flag.DisableBeep] = true;
 
                     // Generate and return the param string
                     return CreatorParameters.GenerateParameters();
@@ -409,9 +409,9 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            CreatorParameters parameters = new CreatorParameters(string.Empty)
+            DiscImageCreator.Parameters parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = CreatorCommand.Reset,
+                Command = DiscImageCreator.Command.Reset,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -434,7 +434,7 @@ namespace DICUI.Utilities
                 if (!result)
                     return result;
 
-                if (UseChef)
+                if (InternalProgram == InternalProgram.DiscImageChef)
                 {
                     progress?.Report(Result.Success("Executing DiscImageChef... please wait!"));
                     await Task.Run(() => ExecuteDiscImageChef());
@@ -520,7 +520,7 @@ namespace DICUI.Utilities
         internal bool ParametersValid()
         {
             bool parametersValid = false;
-            if (UseChef)
+            if (InternalProgram == InternalProgram.DiscImageChef)
                 parametersValid = ChefParameters.IsValid();
             else
                 parametersValid = CreatorParameters.IsValid();
@@ -562,7 +562,7 @@ namespace DICUI.Utilities
         {
             Directory.CreateDirectory(OutputDirectory);
 
-            dicProcess = new Process()
+            process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
@@ -570,8 +570,8 @@ namespace DICUI.Utilities
                     Arguments = ChefParameters.GenerateParameters() ?? "",
                 },
             };
-            dicProcess.Start();
-            dicProcess.WaitForExit();
+            process.Start();
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -579,7 +579,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteDiscImageChefWithParameters(ChefParameters parameters)
+        private async Task<string> ExecuteDiscImageChefWithParameters(DiscImageChef.Parameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -616,7 +616,7 @@ namespace DICUI.Utilities
         /// </summary>
         private void ExecuteDiscImageCreator()
         {
-            dicProcess = new Process()
+            process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
@@ -624,8 +624,8 @@ namespace DICUI.Utilities
                     Arguments = CreatorParameters.GenerateParameters() ?? "",
                 },
             };
-            dicProcess.Start();
-            dicProcess.WaitForExit();
+            process.Start();
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -633,7 +633,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteDiscImageCreatorWithParameters(CreatorParameters parameters)
+        private async Task<string> ExecuteDiscImageCreatorWithParameters(DiscImageCreator.Parameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -733,7 +733,9 @@ namespace DICUI.Utilities
                 },
                 TracksAndWriteOffsets = new TracksAndWriteOffsetsSection()
                 {
-                    ClrMameProData = UseChef ? GenerateDatfile(combinedBase + ".cicm.xml") : GetDatfile(combinedBase + ".dat"),
+                    ClrMameProData = InternalProgram == InternalProgram.DiscImageChef
+                        ? GenerateDatfile(combinedBase + ".cicm.xml")
+                        : GetDatfile(combinedBase + ".dat"),
                 },
             };
 
@@ -805,7 +807,9 @@ namespace DICUI.Utilities
                         errorCount = GetErrorCount(combinedBase + ".img_EccEdc.txt");
 
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-                    info.TracksAndWriteOffsets.Cuesheet = (UseChef ? GenerateCuesheet(combinedBase + ".dicf", combinedBase + ".cicm.xml") : GetFullFile(combinedBase + ".cue")) ?? "";
+                    info.TracksAndWriteOffsets.Cuesheet = (InternalProgram == InternalProgram.DiscImageChef
+                        ? GenerateCuesheet(combinedBase + ".dicf", combinedBase + ".cicm.xml")
+                        : GetFullFile(combinedBase + ".cue")) ?? "";
 
                     string cdWriteOffset = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
@@ -1453,9 +1457,9 @@ namespace DICUI.Utilities
             FixOutputPaths();
 
             // Validate that the required program exists
-            if (UseChef && !File.Exists(ChefPath))
+            if (InternalProgram == InternalProgram.DiscImageChef && !File.Exists(ChefPath))
                 return Result.Failure("Error! Could not find DiscImageChef!");
-            else if (!UseChef && !File.Exists(CreatorPath))
+            else if (InternalProgram != InternalProgram.DiscImageChef && !File.Exists(CreatorPath))
                 return Result.Failure("Error! Could not find DiscImageCreator!");
 
             // TODO: Ensure output path not the same as input drive OR DIC/DICUI location
@@ -1543,15 +1547,15 @@ namespace DICUI.Utilities
             if (string.IsNullOrEmpty(ChefPath))
                 return null;
 
-            var convertParams = new ChefParameters(null)
+            var convertParams = new DiscImageChef.Parameters(null)
             {
-                Command = ChefCommand.ImageConvert,
+                Command = DiscImageChef.Command.ImageConvert,
 
                 InputValue = dicf,
                 OutputValue = dicf + ".cue",
             };
 
-            convertParams[ChefFlag.XMLSidecar] = true;
+            convertParams[DiscImageChef.Flag.XMLSidecar] = true;
             convertParams.XMLSidecarValue = cicmSidecar;
 
             ExecuteDiscImageChefWithParameters(convertParams).ConfigureAwait(false).GetAwaiter().GetResult();

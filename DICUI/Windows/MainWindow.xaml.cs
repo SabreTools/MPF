@@ -447,7 +447,7 @@ namespace DICUI.Windows
                 ChefPath = _options.ChefPath,
                 CreatorPath = _options.CreatorPath,
                 SubdumpPath = _options.SubDumpPath,
-                UseChef = _options.UseChef,
+                InternalProgram = _options.UseChef ? InternalProgram.DiscImageChef : InternalProgram.DiscImageCreator,
 
                 OutputDirectory = OutputDirectoryTextBox.Text,
                 OutputFilename = OutputFilenameTextBox.Text,
@@ -462,8 +462,8 @@ namespace DICUI.Windows
                 AddPlaceholders = _options.AddPlaceholders,
                 PromptForDiscInformation = _options.PromptForDiscInformation,
 
-                ChefParameters = new ChefParameters(ParametersTextBox.Text),
-                CreatorParameters = new CreatorParameters(ParametersTextBox.Text),
+                ChefParameters = new DiscImageChef.Parameters(ParametersTextBox.Text),
+                CreatorParameters = new DiscImageCreator.Parameters(ParametersTextBox.Text),
 
                 Username = _options.Username,
                 Password = _options.Password,
@@ -515,7 +515,7 @@ namespace DICUI.Windows
             {
                 // Check for the firmware first for DiscImageCreator
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                if (!_env.UseChef && !await _env.DriveHasLatestFimrware())
+                if (_env.InternalProgram != InternalProgram.DiscImageChef && !await _env.DriveHasLatestFimrware())
                 {
                     MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -554,7 +554,7 @@ namespace DICUI.Windows
 
                 // If we didn't execute a dumping command we cannot get submission output
                 bool isDumpingCommand = false;
-                if (_env.UseChef)
+                if (_env.InternalProgram == InternalProgram.DiscImageChef)
                     isDumpingCommand = _env.ChefParameters.IsDumpingCommand();
                 else
                     isDumpingCommand = _env.CreatorParameters.IsDumpingCommand();
@@ -571,7 +571,7 @@ namespace DICUI.Windows
                 if (result)
                 {
                     // TODO: Remove Chef handling when irrelevant
-                    if (_env.UseChef)
+                    if (_env.InternalProgram == InternalProgram.DiscImageChef)
                     {
                         ViewModels.LoggerViewModel.VerboseLogLn("DiscImageChef does not support split tracks or DiscImageCreator-compatible outputs");
                         ViewModels.LoggerViewModel.VerboseLogLn("No automatic submission information will be gathered for this disc");
@@ -668,11 +668,11 @@ namespace DICUI.Windows
 
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
-                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension(_options.UseChef) ?? ".bin");
+                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension(_env.InternalProgram) ?? ".bin");
 
             // If the extension for the file changed, update that automatically
-            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension(_options.UseChef))
-                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension(_options.UseChef) ?? ".bin");
+            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension(_env.InternalProgram))
+                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension(_env.InternalProgram) ?? ".bin");
         }
 
         /// <summary>
@@ -698,8 +698,8 @@ namespace DICUI.Windows
                 // If SmartE is detected on the current disc, remove `/sf` from the flags
                 if (protections.Contains("SmartE"))
                 {
-                    _env.CreatorParameters[CreatorFlag.ScanFileProtect] = false;
-                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {CreatorFlagStrings.ScanFileProtect} from parameters");
+                    _env.CreatorParameters[DiscImageCreator.Flag.ScanFileProtect] = false;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 }
 
                 if (!ViewModels.LoggerViewModel.WindowVisible)
@@ -793,7 +793,7 @@ namespace DICUI.Windows
         {
             if (_options.UseChef)
             {
-                _env.ChefParameters = new ChefParameters(ParametersTextBox.Text);
+                _env.ChefParameters = new DiscImageChef.Parameters(ParametersTextBox.Text);
 
                 if (_env.ChefParameters == null)
                     return;
@@ -816,7 +816,7 @@ namespace DICUI.Windows
             }
             else
             {
-                _env.CreatorParameters = new CreatorParameters(ParametersTextBox.Text);
+                _env.CreatorParameters = new DiscImageCreator.Parameters(ParametersTextBox.Text);
 
                 if (_env.CreatorParameters == null)
                     return;

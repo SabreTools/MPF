@@ -61,9 +61,9 @@ namespace DICUI
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             //TODO: hardcoded, we should find a better way
-            this.ChefPath = GetStringSetting(configFile, "ChefPath", "Programs\\DiscImageChef.exe");
-            this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\DiscImageCreator.exe");
-            this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "subdump.exe");
+            this.ChefPath = GetStringSetting(configFile, "ChefPath", "Programs\\Chef\\DiscImageChef.exe");
+            this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe");
+            this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "Programs\\Subdump\\subdump.exe");
             this.DefaultOutputPath = GetStringSetting(configFile, "DefaultOutputPath", "ISO");
             this.UseChef = GetBooleanSetting(configFile, "UseChef", false);
 

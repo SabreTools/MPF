@@ -5,8 +5,8 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using IMAPI2;
 using DICUI.Data;
+using IMAPI2; // TODO: Doesn't work with .NET Core
 
 namespace DICUI.Utilities
 {
@@ -789,6 +789,7 @@ namespace DICUI.Utilities
             // Get all relevant disc information
             try
             {
+                // TODO: Doesn't work with .NET Core
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
                 deviceId = deviceId.ToLower().Replace('\\', '#');
                 string id = null;

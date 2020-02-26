@@ -13,18 +13,25 @@ namespace DICUI
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ChefCommand)
-                return ((ChefCommand)value).LongName();
-            else if (value is ChefFlag)
-                return ((ChefFlag)value).LongName();
-            else if (value is CreatorCommand)
-                return ((CreatorCommand)value).LongName();
-            else if (value is CreatorFlag)
-                return ((CreatorFlag)value).LongName();
-            else if (value is MediaType?)
+            // Common
+            if (value is MediaType?)
                 return ((MediaType?)value).LongName();
             else if (value is KnownSystem?)
                 return ((KnownSystem?)value).LongName();
+
+            // DiscImageChef
+            else if (value is DiscImageChef.Command)
+                return ((DiscImageChef.Command)value).LongName();
+            else if (value is DiscImageChef.Flag)
+                return ((DiscImageChef.Flag)value).LongName();
+
+            // DiscImageCreator
+            else if (value is DiscImageCreator.Command)
+                return ((DiscImageCreator.Command)value).LongName();
+            else if (value is DiscImageCreator.Flag)
+                return ((DiscImageCreator.Flag)value).LongName();
+
+            // Default
             else
                 return "";
         }

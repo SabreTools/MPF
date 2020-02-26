@@ -19,208 +19,16 @@
     }
 
     /// <summary>
-    /// Supported DiscImageChef commands
+    /// Dump status for Redump
     /// </summary>
-    public enum ChefCommand
+    public enum DumpStatus
     {
-        NONE = 0,
-
-        // Database Family
-        DatabaseStats,
-        DatabaseUpdate,
-
-        // Device Family
-        DeviceInfo,
-        DeviceList,
-        DeviceReport,
-
-        // Filesystem Family
-        FilesystemExtract,
-        FilesystemList,
-        FilesystemOptions,
-
-        // Image Family
-        ImageAnalyze,
-        ImageChecksum,
-        ImageCompare,
-        ImageConvert,
-        ImageCreateSidecar,
-        ImageDecode,
-        ImageEntropy,
-        ImageInfo,
-        ImageOptions,
-        ImagePrint,
-        ImageVerify,
-
-        // Media Family
-        MediaDump,
-        MediaInfo,
-        MediaScan,
-
-        // Standalone Commands
-        Configure,
-        Formats,
-        ListEncodings,
-        ListNamespaces,
-        Remote,
+        BadDumpRed = 2,
+        PossibleBadDumpYellow = 3,
+        OriginalMediaBlue = 4,
+        TwoOrMoreDumpsGreen = 5,
     }
-
-    /// <summary>
-    /// Supported DiscImageChef flags
-    /// </summary>
-    public enum ChefFlag
-    {
-        NONE = 0,
-
-        // Boolean flags
-        Adler32,
-        Clear,
-        ClearAll,
-        CRC16,
-        CRC32,
-        CRC64,
-        Debug,
-        DiskTags,
-        DuplicatedSectors,
-        ExtendedAttributes,
-        Filesystems,
-        FirstPregap,
-        FixOffset,
-        Fletcher16,
-        Fletcher32,
-        Force,
-        LongFormat,
-        LongSectors,
-        MD5,
-        Metadata,
-        Partitions,
-        Persistent,
-        Resume,
-        SectorTags,
-        SeparatedTracks,
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512,
-        SpamSum,
-        StopOnError,
-        Tape,
-        Trim,
-        Verbose,
-        VerifyDisc,
-        VerifySectors,
-        Version,
-        WholeDisc,
-
-        // Int8 flags
-        Speed,
-
-        // Int16 flags
-        RetryPasses,
-        Width,
-
-        // Int32 flags
-        BlockSize,
-        Count,
-        MediaLastSequence,
-        MediaSequence,
-        Skip,
-
-        // Int64 flags
-        Length,
-        Start,
-
-        // String flags
-        Comments,
-        Creator,
-        DriveManufacturer,
-        DriveModel,
-        DriveRevision,
-        DriveSerial,
-        Encoding,
-        FormatConvert,
-        FormatDump,
-        ImgBurnLog,
-        MediaBarcode,
-        MediaManufacturer,
-        MediaModel,
-        MediaPartNumber,
-        MediaSerial,
-        MediaTitle,
-        MHDDLog,
-        Namespace,
-        Options,
-        OutputPrefix,
-        ResumeFile,
-        Subchannel,
-        XMLSidecar,
-    }
-
-    /// <summary>
-    /// Supported DiscImageCreator commands
-    /// </summary>
-    public enum CreatorCommand
-    {
-        NONE = 0,
-        Audio,
-        BluRay,
-        Close,
-        CompactDisc,
-        Data,
-        DigitalVideoDisc,
-        Disk,
-        DriveSpeed,
-        Eject,
-        Floppy,
-        GDROM,
-        MDS,
-        Merge,
-        Reset,
-        SACD,
-        Start,
-        Stop,
-        Sub,
-        Swap,
-        XBOX,
-        XBOXSwap,
-        XGD2Swap,
-        XGD3Swap,
-    }
-
-    /// <summary>
-    /// Supported DiscImageCreator flags
-    /// </summary>
-    public enum CreatorFlag
-    {
-        NONE = 0,
-        AddOffset,
-        AMSF,
-        AtariJaguar,
-        BEOpcode,
-        C2Opcode,
-        CopyrightManagementInformation,
-        D8Opcode,
-        DisableBeep,
-        ForceUnitAccess,
-        MultiSession,
-        NoFixSubP,
-        NoFixSubQ,
-        NoFixSubQLibCrypt,
-        NoFixSubRtoW,
-        NoFixSubQSecuROM,
-        NoSkipSS,
-        Raw,
-        Reverse,
-        ScanAntiMod,
-        ScanFileProtect,
-        ScanSectorProtect,
-        SeventyFour,
-        SkipSector,
-        SubchannelReadLevel,
-        VideoNow,
-        VideoNowColor,
-    }
-
+    
     /// <summary>
     /// Drive type for dumping
     /// </summary>
@@ -233,14 +41,13 @@
     }
 
     /// <summary>
-    /// Dump status for Redump
+    /// Program that is being used to dump media
     /// </summary>
-    public enum DumpStatus
+    public enum InternalProgram
     {
-        BadDumpRed = 2,
-        PossibleBadDumpYellow = 3,
-        OriginalMediaBlue = 4,
-        TwoOrMoreDumpsGreen = 5,
+        DiscImageCreator,
+        DiscImageChef,
+        DD, // TODO: Currently unimplemented
     }
 
     /// <summary>
