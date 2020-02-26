@@ -50,7 +50,7 @@ namespace DICUI.Check
             }
 
             // Check the KnownSystem
-            var knownSystem = args[1].Trim('"').ToKnownSystem();
+            var knownSystem = Converters.ToKnownSystem(args[1].Trim('"'));
             if (knownSystem == KnownSystem.NONE)
             {
                 DisplayHelp($"{args[1]} is not a recognized system");

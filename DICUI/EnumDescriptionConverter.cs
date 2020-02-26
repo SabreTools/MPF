@@ -21,15 +21,15 @@ namespace DICUI
 
             // DiscImageChef
             else if (value is DiscImageChef.Command)
-                return ((DiscImageChef.Command)value).LongName();
+                return DiscImageChef.Converters.LongName((DiscImageChef.Command)value);
             else if (value is DiscImageChef.Flag)
-                return ((DiscImageChef.Flag)value).LongName();
+                return DiscImageChef.Converters.LongName((DiscImageChef.Flag)value);
 
             // DiscImageCreator
             else if (value is DiscImageCreator.Command)
-                return ((DiscImageCreator.Command)value).LongName();
+                return DiscImageCreator.Converters.LongName((DiscImageCreator.Command)value);
             else if (value is DiscImageCreator.Flag)
-                return ((DiscImageCreator.Flag)value).LongName();
+                return DiscImageCreator.Converters.LongName((DiscImageCreator.Flag)value);
 
             // Default
             else

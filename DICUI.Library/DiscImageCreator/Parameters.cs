@@ -130,7 +130,7 @@ namespace DICUI.DiscImageCreator
             List<string> parameters = new List<string>();
 
             if (Command != Command.NONE)
-                parameters.Add(Command.LongName());
+                parameters.Add(Converters.LongName(Command));
             else
                 return null;
 
@@ -235,7 +235,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.AddOffset] == true)
                 {
-                    parameters.Add(Flag.AddOffset.LongName());
+                    parameters.Add(Converters.LongName(Flag.AddOffset));
                     if (AddOffsetValue != null)
                         parameters.Add(AddOffsetValue.ToString());
                     else
@@ -247,14 +247,14 @@ namespace DICUI.DiscImageCreator
             if (GetSupportedCommands(Flag.AMSF).Contains(Command))
             {
                 if (this[Flag.AMSF] == true)
-                    parameters.Add(Flag.AMSF.LongName());
+                    parameters.Add(Converters.LongName(Flag.AMSF));
             }
 
             // Atari Jaguar CD
             if (GetSupportedCommands(Flag.AtariJaguar).Contains(Command))
             {
                 if (this[Flag.AtariJaguar] == true)
-                    parameters.Add(Flag.AtariJaguar.LongName());
+                    parameters.Add(Converters.LongName(Flag.AtariJaguar));
             }
 
             // BE Opcode
@@ -262,7 +262,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.BEOpcode] == true && this[Flag.D8Opcode] != true)
                 {
-                    parameters.Add(Flag.BEOpcode.LongName());
+                    parameters.Add(Converters.LongName(Flag.BEOpcode));
                     if (BEOpcodeValue != null
                         && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
                         parameters.Add(BEOpcodeValue);
@@ -274,7 +274,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.C2Opcode] == true)
                 {
-                    parameters.Add(Flag.C2Opcode.LongName());
+                    parameters.Add(Converters.LongName(Flag.C2Opcode));
                     if (C2OpcodeValue[0] != null)
                     {
                         if (C2OpcodeValue[0] > 0)
@@ -310,21 +310,21 @@ namespace DICUI.DiscImageCreator
             if (GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(Command))
             {
                 if (this[Flag.CopyrightManagementInformation] == true)
-                    parameters.Add(Flag.CopyrightManagementInformation.LongName());
+                    parameters.Add(Converters.LongName(Flag.CopyrightManagementInformation));
             }
 
             // D8 Opcode
             if (GetSupportedCommands(Flag.D8Opcode).Contains(Command))
             {
                 if (this[Flag.D8Opcode] == true)
-                    parameters.Add(Flag.D8Opcode.LongName());
+                    parameters.Add(Converters.LongName(Flag.D8Opcode));
             }
 
             // Disable Beep
             if (GetSupportedCommands(Flag.DisableBeep).Contains(Command))
             {
                 if (this[Flag.DisableBeep] == true)
-                    parameters.Add(Flag.DisableBeep.LongName());
+                    parameters.Add(Converters.LongName(Flag.DisableBeep));
             }
 
             // Force Unit Access
@@ -332,7 +332,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.ForceUnitAccess] == true)
                 {
-                    parameters.Add(Flag.ForceUnitAccess.LongName());
+                    parameters.Add(Converters.LongName(Flag.ForceUnitAccess));
                     if (ForceUnitAccessValue != null)
                         parameters.Add(ForceUnitAccessValue.ToString());
                 }
@@ -342,42 +342,42 @@ namespace DICUI.DiscImageCreator
             if (GetSupportedCommands(Flag.MultiSession).Contains(Command))
             {
                 if (this[Flag.MultiSession] == true)
-                    parameters.Add(Flag.MultiSession.LongName());
+                    parameters.Add(Converters.LongName(Flag.MultiSession));
             }
 
             // Not fix SubP
             if (GetSupportedCommands(Flag.NoFixSubP).Contains(Command))
             {
                 if (this[Flag.NoFixSubP] == true)
-                    parameters.Add(Flag.NoFixSubP.LongName());
+                    parameters.Add(Converters.LongName(Flag.NoFixSubP));
             }
 
             // Not fix SubQ
             if (GetSupportedCommands(Flag.NoFixSubQ).Contains(Command))
             {
                 if (this[Flag.NoFixSubQ] == true)
-                    parameters.Add(Flag.NoFixSubQ.LongName());
+                    parameters.Add(Converters.LongName(Flag.NoFixSubQ));
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
             if (GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(Command))
             {
                 if (this[Flag.NoFixSubQLibCrypt] == true)
-                    parameters.Add(Flag.NoFixSubQLibCrypt.LongName());
+                    parameters.Add(Converters.LongName(Flag.NoFixSubQLibCrypt));
             }
             
             // Not fix SubQ (SecuROM)
             if (GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(Command))
             {
                 if (this[Flag.NoFixSubQSecuROM] == true)
-                    parameters.Add(Flag.NoFixSubQSecuROM.LongName());
+                    parameters.Add(Converters.LongName(Flag.NoFixSubQSecuROM));
             }
 
             // Not fix SubRtoW
             if (GetSupportedCommands(Flag.NoFixSubRtoW).Contains(Command))
             {
                 if (this[Flag.NoFixSubRtoW] == true)
-                    parameters.Add(Flag.NoFixSubRtoW.LongName());
+                    parameters.Add(Converters.LongName(Flag.NoFixSubRtoW));
             }
 
             // Not skip security sectors
@@ -385,7 +385,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.NoSkipSS] == true)
                 {
-                    parameters.Add(Flag.NoSkipSS.LongName());
+                    parameters.Add(Converters.LongName(Flag.NoSkipSS));
                     if (NoSkipSecuritySectorValue != null)
                         parameters.Add(NoSkipSecuritySectorValue.ToString());
                 }
@@ -395,21 +395,21 @@ namespace DICUI.DiscImageCreator
             if (GetSupportedCommands(Flag.Raw).Contains(Command))
             {
                 if (this[Flag.Raw] == true)
-                    parameters.Add(Flag.Raw.LongName());
+                    parameters.Add(Converters.LongName(Flag.Raw));
             }
 
             // Reverse read
             if (GetSupportedCommands(Flag.Reverse).Contains(Command))
             {
                 if (this[Flag.Reverse] == true)
-                    parameters.Add(Flag.Reverse.LongName());
+                    parameters.Add(Converters.LongName(Flag.Reverse));
             }
 
             // Scan PlayStation anti-mod strings
             if (GetSupportedCommands(Flag.ScanAntiMod).Contains(Command))
             {
                 if (this[Flag.ScanAntiMod] == true)
-                    parameters.Add(Flag.ScanAntiMod.LongName());
+                    parameters.Add(Converters.LongName(Flag.ScanAntiMod));
             }
 
             // Scan file to detect protect
@@ -417,7 +417,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.ScanFileProtect] == true)
                 {
-                    parameters.Add(Flag.ScanFileProtect.LongName());
+                    parameters.Add(Converters.LongName(Flag.ScanFileProtect));
                     if (ScanFileProtectValue != null)
                     {
                         if (ScanFileProtectValue > 0)
@@ -432,14 +432,14 @@ namespace DICUI.DiscImageCreator
             if (GetSupportedCommands(Flag.ScanSectorProtect).Contains(Command))
             {
                 if (this[Flag.ScanSectorProtect] == true)
-                    parameters.Add(Flag.ScanSectorProtect.LongName());
+                    parameters.Add(Converters.LongName(Flag.ScanSectorProtect));
             }
 
             // Scan 74:00:00 (Saturn)
             if (GetSupportedCommands(Flag.SeventyFour).Contains(Command))
             {
                 if (this[Flag.SeventyFour] == true)
-                    parameters.Add(Flag.SeventyFour.LongName());
+                    parameters.Add(Converters.LongName(Flag.SeventyFour));
             }
 
             // Skip sectors
@@ -449,7 +449,7 @@ namespace DICUI.DiscImageCreator
                 {
                     if (SkipSectorValue[0] != null && SkipSectorValue[1] != null)
                     {
-                        parameters.Add(Flag.SkipSector.LongName());
+                        parameters.Add(Converters.LongName(Flag.SkipSector));
                         if (SkipSectorValue[0] >= 0 && SkipSectorValue[1] >= 0)
                         {
                             parameters.Add(SkipSectorValue[0].ToString());
@@ -468,7 +468,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.SubchannelReadLevel] == true)
                 {
-                    parameters.Add(Flag.SubchannelReadLevel.LongName());
+                    parameters.Add(Converters.LongName(Flag.SubchannelReadLevel));
                     if (SubchannelReadLevelValue != null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
@@ -484,7 +484,7 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.VideoNow] == true)
                 {
-                    parameters.Add(Flag.VideoNow.LongName());
+                    parameters.Add(Converters.LongName(Flag.VideoNow));
                     if (VideoNowValue != null)
                     {
                         if (VideoNowValue >= 0)
@@ -499,7 +499,7 @@ namespace DICUI.DiscImageCreator
             if (GetSupportedCommands(Flag.VideoNowColor).Contains(Command))
             {
                 if (this[Flag.VideoNowColor] == true)
-                    parameters.Add(Flag.VideoNowColor.LongName());
+                    parameters.Add(Converters.LongName(Flag.VideoNowColor));
             }
 
             return string.Join(" ", parameters);

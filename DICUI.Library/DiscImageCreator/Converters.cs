@@ -15,7 +15,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="baseCommand">Command value to check</param>
         /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? ToKnownSystem(this Command baseCommand)
+        public static KnownSystem? ToKnownSystem(Command baseCommand)
         {
             switch (baseCommand)
             {
@@ -51,7 +51,7 @@ namespace DICUI.DiscImageCreator
         /// <param name="baseCommand">Command value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static MediaType? ToMediaType(this Command baseCommand)
+        public static MediaType? ToMediaType(Command baseCommand)
         {
             switch (baseCommand)
             {
@@ -87,7 +87,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string Extension(this MediaType? type)
+        public static string Extension(MediaType? type)
         {
             switch (type)
             {
@@ -130,7 +130,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="command">Command value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this Command command)
+        public static string LongName(Command command)
         {
             switch (command)
             {
@@ -192,7 +192,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="command">Flag value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this Flag flag)
+        public static string LongName(Flag flag)
         {
             switch (flag)
             {

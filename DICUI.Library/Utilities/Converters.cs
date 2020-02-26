@@ -2026,7 +2026,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="sys">String value to convert</param>
         /// <returns>KnownSystem represented by the string, if possible</returns>
-        public static KnownSystem? ToKnownSystem(this string sys)
+        public static KnownSystem? ToKnownSystem(string sys)
         {
             switch (sys)
             {

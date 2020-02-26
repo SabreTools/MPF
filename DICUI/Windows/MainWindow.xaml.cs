@@ -666,13 +666,25 @@ namespace DICUI.Windows
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
                 OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
+            // Get the extension for the file for the next two statements
+            string extension = null;
+            switch (_env.InternalProgram)
+            {
+                case InternalProgram.DiscImageChef:
+                    extension = DiscImageChef.Converters.Extension(mediaType);
+                    break;
+                case InternalProgram.DiscImageCreator:
+                    extension = DiscImageCreator.Converters.Extension(mediaType);
+                    break;
+            }
+
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
-                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension(_env.InternalProgram) ?? ".bin");
+                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
 
             // If the extension for the file changed, update that automatically
-            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension(_env.InternalProgram))
-                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension(_env.InternalProgram) ?? ".bin");
+            else if (Path.GetExtension(OutputFilenameTextBox.Text) != extension)
+                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (extension ?? ".bin");
         }
 
         /// <summary>
@@ -843,7 +855,7 @@ namespace DICUI.Windows
                 else
                     outputFilename = OutputFilenameTextBox.Text;
 
-                MediaType? mediaType = _env.CreatorParameters.Command.ToMediaType();
+                MediaType? mediaType = DiscImageCreator.Converters.ToMediaType(_env.CreatorParameters.Command);
                 int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
                 if (mediaTypeIndex > -1)
                     MediaTypeComboBox.SelectedIndex = mediaTypeIndex;

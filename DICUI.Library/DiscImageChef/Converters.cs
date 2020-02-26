@@ -15,7 +15,7 @@ namespace DICUI.DiscImageChef
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string Extension(this MediaType? type)
+        public static string Extension(MediaType? type)
         {
             // DiscImageChef has a single, unified output format by default
             return ".dicf";
@@ -30,7 +30,7 @@ namespace DICUI.DiscImageChef
         /// </summary>
         /// <param name="command">Command value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this Command command)
+        public static string LongName(Command command)
         {
             switch (command)
             {
@@ -111,7 +111,7 @@ namespace DICUI.DiscImageChef
         /// </summary>
         /// <param name="command">Flag value to convert</param>
         /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this Flag flag)
+        public static string LongName(Flag flag)
         {
             switch (flag)
             {
