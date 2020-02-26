@@ -278,7 +278,7 @@ namespace DICUI.DiscImageChef
             #endregion
 
             if (Command != Command.NONE)
-                parameters.Add(Converters.Extension(Command));
+                parameters.Add(Converters.LongName(Command));
             else
                 return null;
 
