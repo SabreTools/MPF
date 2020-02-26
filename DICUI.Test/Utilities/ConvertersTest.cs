@@ -1,6 +1,5 @@
 ﻿using System;
 using DICUI.Data;
-using DICUI.DiscImageCreator;
 using DICUI.Utilities;
 using Xunit;
 
@@ -28,7 +27,7 @@ namespace DICUI.Test.Utilities
         [InlineData(Command.XBOX, MediaType.DVD)]
         public void BaseCommandToMediaTypeTest(Command command, MediaType? expected)
         {
-            MediaType? actual = command.ToMediaType();
+            MediaType? actual = DiscImageCreator.Converters.ToMediaType(command);
             Assert.Equal(expected, actual);
         }
 
@@ -52,7 +51,7 @@ namespace DICUI.Test.Utilities
         [InlineData(Command.XBOX, KnownSystem.MicrosoftXBOX)]
         public void BaseCommandToKnownSystemTest(Command command, KnownSystem? expected)
         {
-            KnownSystem? actual = Converters.ToKnownSystem(command);
+            KnownSystem? actual = DiscImageCreator.Converters.ToKnownSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -66,7 +65,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = DiscImageCreator.Converters.Extension(mediaType);
+            string actual = Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 
