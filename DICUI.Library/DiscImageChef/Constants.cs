@@ -425,16 +425,16 @@ namespace DICUI.DiscImageChef
     {
         // ACT Apricot Disk Image
         public static string ACTApricotDiskImageCompress = "compress"; // boolean, default false
-        
+
         // Apple DiskCopy 4.2
         public static string AppleDiskCopyMacOSX = "macosx"; // boolean, default false
-        
+
         // CDRDAO tocfile
         public static string CDRDAOTocfileSeparate = "separate"; // boolean, default false
-        
+
         // CDRWin cuesheet
         public static string CDRWinCuesheetSeparate = "separate"; // boolean, default false
-        
+
         // DiscImageChef format
         public static string DiscImageChefDeduplicate = "deduplicate"; // boolean, default true
         public static string DiscImageChefDictionary = "dictionary"; // number, default 33554432

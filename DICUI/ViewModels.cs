@@ -13,10 +13,10 @@ namespace DICUI
             this._options = options;
         }
 
-        public bool UseChef
+        public string InternalProgram
         {
-            get { return _options.UseChef; }
-            set { _options.UseChef = value; }
+            get { return _options.InternalProgram; }
+            set { _options.InternalProgram = value; }
         }
 
         public bool QuietMode

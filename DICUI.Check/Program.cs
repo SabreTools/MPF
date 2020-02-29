@@ -39,10 +39,10 @@ namespace DICUI.Check
             {
                 DisplayHelp("Invalid number of arguments");
                 return;
-            }            
+            }
 
             // Check the MediaType
-            var mediaType = Converters.StringToMediaType(args[0].Trim('"'));
+            var mediaType = Converters.ToMediaType(args[0].Trim('"'));
             if (mediaType == MediaType.NONE)
             {
                 DisplayHelp($"{args[0]} is not a recognized media type");
@@ -74,6 +74,7 @@ namespace DICUI.Check
                 // Use DiscImageChef
                 else if (args[startIndex] == "-u" || args[startIndex] == "--use-chef")
                 {
+                    // TODO: Make this into an InternalProgram flag
                     useChef = true;
                 }
 

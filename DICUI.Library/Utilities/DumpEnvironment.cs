@@ -23,24 +23,9 @@ namespace DICUI.Utilities
         #region Tool paths
 
         /// <summary>
-        /// Path to DiscImageChef executable
-        /// </summary>
-        public string ChefPath { get; set; }
-
-        /// <summary>
-        /// Path to DiscImageCreator executable
-        /// </summary>
-        public string CreatorPath { get; set; }
-
-        /// <summary>
         /// Path to Subdump executable
         /// </summary>
         public string SubdumpPath { get; set; }
-
-        /// <summary>
-        /// Internal program to run
-        /// </summary>
-        public InternalProgram InternalProgram { get; set; }
 
         #endregion
 
@@ -76,14 +61,14 @@ namespace DICUI.Utilities
         public MediaType? Type { get; set; }
 
         /// <summary>
-        /// Parameters object representing what to send to DiscImageChef
+        /// Parameters object representing what to send to the internal program
         /// </summary>
-        public DiscImageChef.Parameters ChefParameters { get; set; }
+        public BaseParameters Parameters { get; set; }
 
         /// <summary>
-        /// Parameters object representing what to send to DiscImageCreator
+        /// Internal program to run
         /// </summary>
-        public DiscImageCreator.Parameters CreatorParameters { get; set; }
+        public InternalProgram InternalProgram { get; set; }
 
         /// <summary>
         /// Scan for copy protection, where applicable
@@ -94,7 +79,7 @@ namespace DICUI.Utilities
         /// Determines if placeholder values should be set for fields
         /// </summary>
         public bool AddPlaceholders { get; set; }
-        
+
         /// <summary>
         /// Determines if the user should be prompted to input or fix submission data
         /// </summary>
@@ -102,7 +87,7 @@ namespace DICUI.Utilities
 
         #endregion
 
-        #region Extra DiscImageCreator arguments
+        #region Extra arguments
 
         /// <summary>
         /// Enable quiet mode (no beeps)
@@ -137,7 +122,7 @@ namespace DICUI.Utilities
         /// Determine if a complete set of Redump credentials might exist
         /// </summary>
         public bool HasRedumpLogin { get => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password); }
-        
+
         #endregion
 
         #region External process information
@@ -149,7 +134,31 @@ namespace DICUI.Utilities
 
         #endregion
 
+        /// <summary>
+        /// Empty constructor for the rest of the magic
+        /// </summary>
+        public DumpEnvironment()
+        {
+        }
+
         #region Public Functionality
+
+        /// <summary>
+        /// Set the parameters object based on the internal program and parameters string
+        /// </summary>
+        /// <param name="parameters">String representation of the parameters</param>
+        public void SetParameters(string parameters)
+        {
+            switch (InternalProgram)
+            {
+                case InternalProgram.DiscImageChef:
+                    Parameters = new DiscImageChef.Parameters(parameters);
+                    break;
+                case InternalProgram.DiscImageCreator:
+                    Parameters = new DiscImageCreator.Parameters(parameters);
+                    break;
+            }
+        }
 
         /// <summary>
         /// Cancel an in-progress dumping process
@@ -172,12 +181,12 @@ namespace DICUI.Utilities
         public async Task<bool> DriveHasLatestFimrware()
         {
             // Validate that the required program exists
-            if (!File.Exists(CreatorPath))
+            if (!File.Exists(Parameters.Path))
                 return false;
 
             var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = DiscImageCreator.Command.DriveSpeed,
+                BaseCommand = DiscImageCreator.Command.DriveSpeed,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -197,7 +206,7 @@ namespace DICUI.Utilities
         public async void EjectDisc()
         {
             // Validate that the required program exists
-            if (!File.Exists(CreatorPath))
+            if (!File.Exists(Parameters.Path))
                 return;
 
             CancelDumping();
@@ -208,7 +217,7 @@ namespace DICUI.Utilities
 
             var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = DiscImageCreator.Command.Eject,
+                BaseCommand = DiscImageCreator.Command.Eject,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -236,7 +245,7 @@ namespace DICUI.Utilities
 
                 // Now get the normalized paths
                 OutputDirectory = Path.GetDirectoryName(combinedPath);
-                OutputFilename = Path.GetFileName(combinedPath);                
+                OutputFilename = Path.GetFileName(combinedPath);
 
                 // Take care of extra path characters
                 OutputDirectory = new StringBuilder(OutputDirectory)
@@ -371,23 +380,18 @@ namespace DICUI.Utilities
 
                 // Set the proper parameters
                 string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
-
-                if (InternalProgram == InternalProgram.DiscImageChef)
+                switch (InternalProgram)
                 {
-                    ChefParameters = new DiscImageChef.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
-
-                    // Generate and return the param string
-                    return ChefParameters.GenerateParameters();
+                    case InternalProgram.DiscImageChef:
+                        Parameters = new DiscImageChef.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
+                        break;
+                    case InternalProgram.DiscImageCreator:
+                        Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
+                        break;
                 }
-                else
-                {
-                    CreatorParameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
-                    if (QuietMode)
-                        CreatorParameters[DiscImageCreator.Flag.DisableBeep] = true;
 
-                    // Generate and return the param string
-                    return CreatorParameters.GenerateParameters();
-                }
+                // Generate and return the param string
+                return Parameters.GenerateParameters();
             }
 
             return null;
@@ -399,7 +403,7 @@ namespace DICUI.Utilities
         public async void ResetDrive()
         {
             // Validate that the required program exists
-            if (!File.Exists(CreatorPath))
+            if (!File.Exists(Parameters.Path))
                 return;
 
             // Precautionary check for dumping, just in case
@@ -411,7 +415,7 @@ namespace DICUI.Utilities
 
             DiscImageCreator.Parameters parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = DiscImageCreator.Command.Reset,
+                BaseCommand = DiscImageCreator.Command.Reset,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -519,13 +523,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            bool parametersValid = false;
-            if (InternalProgram == InternalProgram.DiscImageChef)
-                parametersValid = ChefParameters.IsValid();
-            else
-                parametersValid = CreatorParameters.IsValid();
-
-            return parametersValid
+            return Parameters.IsValid()
                 && !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
@@ -566,8 +564,8 @@ namespace DICUI.Utilities
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = ChefPath,
-                    Arguments = ChefParameters.GenerateParameters() ?? "",
+                    FileName = Parameters.Path,
+                    Arguments = Parameters.GenerateParameters() ?? "",
                 },
             };
             process.Start();
@@ -588,7 +586,7 @@ namespace DICUI.Utilities
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = ChefPath,
+                        FileName = parameters.Path,
                         Arguments = parameters.GenerateParameters(),
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -620,8 +618,8 @@ namespace DICUI.Utilities
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = CreatorPath,
-                    Arguments = CreatorParameters.GenerateParameters() ?? "",
+                    FileName = Parameters.Path,
+                    Arguments = Parameters.GenerateParameters() ?? "",
                 },
             };
             process.Start();
@@ -642,7 +640,7 @@ namespace DICUI.Utilities
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = CreatorPath,
+                        FileName = Parameters.Path,
                         Arguments = parameters.GenerateParameters(),
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -1168,7 +1166,7 @@ namespace DICUI.Utilities
                     }
                     info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                     break;
-                
+
                 case KnownSystem.SonyPlayStation3:
                     info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
                     info.Extras.DiscID = (this.AddPlaceholders ? Template.RequiredValue : "");
@@ -1246,7 +1244,7 @@ namespace DICUI.Utilities
                 }
 
                 AddIfExists(output, Template.BarcodeField, info.CommonDiscInfo.Barcode, 1);
-                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo.EXEDateBuildDate, 1);                    
+                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo.EXEDateBuildDate, 1);
                 AddIfExists(output, Template.ErrorCountField, info.CommonDiscInfo.ErrorsCount, 1);
                 AddIfExists(output, Template.CommentsField, info.CommonDiscInfo.Comments.Trim(), 1);
                 AddIfExists(output, Template.ContentsField, info.CommonDiscInfo.Contents.Trim(), 1);
@@ -1262,7 +1260,7 @@ namespace DICUI.Utilities
                     output.Add("EDC:");
                     AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
                 }
-                
+
                 // Parent/Clone Relationship section
                 // output.Add(""); output.Add("Parent/Clone Relationship:");
                 // AddIfExists(output, Template.ParentIDField, info.ParentID);
@@ -1280,7 +1278,7 @@ namespace DICUI.Utilities
                     AddIfExists(output, Template.GameCubeWiiBCAField, info.Extras.BCA, 1);
                     AddIfExists(output, Template.XBOXSSRanges, info.Extras.SecuritySectorRanges, 1);
                 }
-                
+
                 // Copy Protection section
                 if (info.CopyProtection.Protection != null || info.EDC.EDC != YesNo.NULL)
                 {
@@ -1457,12 +1455,10 @@ namespace DICUI.Utilities
             FixOutputPaths();
 
             // Validate that the required program exists
-            if (InternalProgram == InternalProgram.DiscImageChef && !File.Exists(ChefPath))
-                return Result.Failure("Error! Could not find DiscImageChef!");
-            else if (InternalProgram != InternalProgram.DiscImageChef && !File.Exists(CreatorPath))
-                return Result.Failure("Error! Could not find DiscImageCreator!");
+            if (!File.Exists(Parameters.Path))
+                return Result.Failure("Error! Could not find the program!");
 
-            // TODO: Ensure output path not the same as input drive OR DIC/DICUI location
+            // TODO: Ensure output path not the same as input drive OR executable location
 
             return Result.Success();
         }
@@ -1544,12 +1540,12 @@ namespace DICUI.Utilities
                 return null;
 
             // If this is being run in Check, we can't run DiscImageChef
-            if (string.IsNullOrEmpty(ChefPath))
+            if (string.IsNullOrEmpty(Parameters.Path))
                 return null;
 
             var convertParams = new DiscImageChef.Parameters(null)
             {
-                Command = DiscImageChef.Command.ImageConvert,
+                BaseCommand = DiscImageChef.Command.ImageConvert,
 
                 InputValue = dicf,
                 OutputValue = dicf + ".cue",
@@ -1656,7 +1652,7 @@ namespace DICUI.Utilities
                                 case "Size":
                                     size = trackReader.ReadElementContentAsLong();
                                     break;
-                                
+
                                 // Track number
                                 case "Sequence":
                                     XmlReader sequenceReader = trackReader.ReadSubtree();

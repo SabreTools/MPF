@@ -18,8 +18,8 @@ namespace DICUI.Test.Utilities
         [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, Command.NONE)]
         public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, Command expected)
         {
-            Parameters actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, true, -1);
-            Assert.Equal(expected, actual.Command);
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, true, false, -1);
+            Assert.Equal(expected, actual.BaseCommand);
         }
 
         [Theory]
@@ -39,10 +39,10 @@ namespace DICUI.Test.Utilities
 
         public void ParametersFromOptionsTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, Flag[] expected)
         {
-            Parameters actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, paranoid, rereadC2);
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, paranoid, false, rereadC2);
 
             HashSet<Flag> expectedSet = new HashSet<Flag>(expected ?? new Flag[0]);
-            HashSet<Flag> actualSet = new HashSet<Flag>(actual.Keys ?? new Flag[0]);
+            HashSet<Flag> actualSet = new HashSet<Flag>(actual.Keys.Cast<Flag>() ?? new Flag[0]);
             Assert.Equal(expectedSet, actualSet);
             if (rereadC2 == -1 || !Validators.GetValidMediaTypes(knownSystem).Contains(mediaType))
                 Assert.Null(actual.C2OpcodeValue[0]);
@@ -62,7 +62,7 @@ namespace DICUI.Test.Utilities
         [InlineData("ls", false)]
         public void ValidateParametersTest(string parameters, bool expected)
         {
-            Parameters actual = new Parameters(parameters);
+            var actual = new Parameters(parameters);
             Assert.Equal(expected, actual.IsValid());
         }
     }

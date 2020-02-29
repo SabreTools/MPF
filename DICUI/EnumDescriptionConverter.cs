@@ -19,18 +19,6 @@ namespace DICUI
             else if (value is KnownSystem?)
                 return ((KnownSystem?)value).LongName();
 
-            // DiscImageChef
-            else if (value is DiscImageChef.Command)
-                return DiscImageChef.Converters.LongName((DiscImageChef.Command)value);
-            else if (value is DiscImageChef.Flag)
-                return DiscImageChef.Converters.LongName((DiscImageChef.Flag)value);
-
-            // DiscImageCreator
-            else if (value is DiscImageCreator.Command)
-                return DiscImageCreator.Converters.LongName((DiscImageCreator.Command)value);
-            else if (value is DiscImageCreator.Flag)
-                return DiscImageCreator.Converters.LongName((DiscImageCreator.Flag)value);
-
             // Default
             else
                 return "";

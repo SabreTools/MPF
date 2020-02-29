@@ -10,8 +10,35 @@ namespace DICUI.DiscImageCreator
     /// <summary>
     /// Represents a generic set of DiscImageCreator parameters
     /// </summary>
-    public class Parameters : Data.Parameters<Command, Flag>
+    public class Parameters : BaseParameters
     {
+        /// <summary>
+        /// Base command to run
+        /// </summary>
+        public Command BaseCommand { get; set; }
+
+        /// <summary>
+        /// Set of flags to pass to the executable
+        /// </summary>
+        protected Dictionary<Flag, bool?> _flags = new Dictionary<Flag, bool?>();
+        public bool? this[Flag key]
+        {
+            get
+            {
+                if (_flags.ContainsKey(key))
+                    return _flags[key];
+
+                return null;
+            }
+            set
+            {
+                _flags[key] = value;
+            }
+        }
+        protected internal IEnumerable<Flag> Keys => _flags.Keys;
+
+        #region Common Input Values
+
         /// <summary>
         /// Drive letter or path to pass to DiscImageCreator
         /// </summary>
@@ -42,7 +69,9 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         public int? EndLBAValue { get; set; }
 
-        #region DiscImageCreator Flag Values
+        #endregion
+
+        #region Flag Values
 
         /// <summary>
         /// Manual offset for Audio CD
@@ -104,6 +133,7 @@ namespace DICUI.DiscImageCreator
         public Parameters(string parameters)
             : base(parameters)
         {
+            this.InternalProgram = InternalProgram.DiscImageCreator;
         }
 
         /// <summary>
@@ -115,10 +145,13 @@ namespace DICUI.DiscImageCreator
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
+        /// <param name="quietMode">Enable quiet mode (no beeps)</param>
         /// <param name="retryCount">User-defined reread count</param>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int retryCount)
-            : base(system, type, driveLetter, filename, driveSpeed, paranoid, retryCount)
+        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, bool quietMode, int retryCount)
+            : base(system, type, driveLetter, filename, driveSpeed, paranoid, quietMode, retryCount)
         {
+            if (quietMode)
+                this[Flag.DisableBeep] = true;
         }
 
         /// <summary>
@@ -129,32 +162,32 @@ namespace DICUI.DiscImageCreator
         {
             List<string> parameters = new List<string>();
 
-            if (Command != Command.NONE)
-                parameters.Add(Converters.LongName(Command));
+            if (BaseCommand != Command.NONE)
+                parameters.Add(Converters.LongName((Command)BaseCommand));
             else
                 return null;
 
             // Drive Letter
-            if (Command == Command.Audio
-                || Command == Command.BluRay
-                || Command == Command.Close
-                || Command == Command.CompactDisc
-                || Command == Command.Data
-                || Command == Command.DigitalVideoDisc
-                || Command == Command.Disk
-                || Command == Command.DriveSpeed
-                || Command == Command.Eject
-                || Command == Command.Floppy
-                || Command == Command.GDROM
-                || Command == Command.Reset
-                || Command == Command.SACD
-                || Command == Command.Start
-                || Command == Command.Stop
-                || Command == Command.Swap
-                || Command == Command.XBOX
-                || Command == Command.XBOXSwap
-                || Command == Command.XGD2Swap
-                || Command == Command.XGD3Swap)
+            if (BaseCommand == Command.Audio
+                || BaseCommand == Command.BluRay
+                || BaseCommand == Command.Close
+                || BaseCommand == Command.CompactDisc
+                || BaseCommand == Command.Data
+                || BaseCommand == Command.DigitalVideoDisc
+                || BaseCommand == Command.Disk
+                || BaseCommand == Command.DriveSpeed
+                || BaseCommand == Command.Eject
+                || BaseCommand == Command.Floppy
+                || BaseCommand == Command.GDROM
+                || BaseCommand == Command.Reset
+                || BaseCommand == Command.SACD
+                || BaseCommand == Command.Start
+                || BaseCommand == Command.Stop
+                || BaseCommand == Command.Swap
+                || BaseCommand == Command.XBOX
+                || BaseCommand == Command.XBOXSwap
+                || BaseCommand == Command.XGD2Swap
+                || BaseCommand == Command.XGD3Swap)
             {
                 if (DriveLetter != null)
                     parameters.Add(DriveLetter);
@@ -163,23 +196,23 @@ namespace DICUI.DiscImageCreator
             }
 
             // Filename
-            if (Command == Command.Audio
-                || Command == Command.BluRay
-                || Command == Command.CompactDisc
-                || Command == Command.Data
-                || Command == Command.DigitalVideoDisc
-                || Command == Command.Disk
-                || Command == Command.Floppy
-                || Command == Command.GDROM
-                || Command == Command.MDS
-                || Command == Command.Merge
-                || Command == Command.SACD
-                || Command == Command.Swap
-                || Command == Command.Sub
-                || Command == Command.XBOX
-                || Command == Command.XBOXSwap
-                || Command == Command.XGD2Swap
-                || Command == Command.XGD3Swap)
+            if (BaseCommand == Command.Audio
+                || BaseCommand == Command.BluRay
+                || BaseCommand == Command.CompactDisc
+                || BaseCommand == Command.Data
+                || BaseCommand == Command.DigitalVideoDisc
+                || BaseCommand == Command.Disk
+                || BaseCommand == Command.Floppy
+                || BaseCommand == Command.GDROM
+                || BaseCommand == Command.MDS
+                || BaseCommand == Command.Merge
+                || BaseCommand == Command.SACD
+                || BaseCommand == Command.Swap
+                || BaseCommand == Command.Sub
+                || BaseCommand == Command.XBOX
+                || BaseCommand == Command.XBOXSwap
+                || BaseCommand == Command.XGD2Swap
+                || BaseCommand == Command.XGD3Swap)
             {
                 if (Filename != null)
                     parameters.Add("\"" + Filename.Trim('"') + "\"");
@@ -188,7 +221,7 @@ namespace DICUI.DiscImageCreator
             }
 
             // Optiarc Filename
-            if (Command == Command.Merge)
+            if (BaseCommand == Command.Merge)
             {
                 if (OptiarcFilename != null)
                     parameters.Add("\"" + OptiarcFilename.Trim('"') + "\"");
@@ -197,18 +230,18 @@ namespace DICUI.DiscImageCreator
             }
 
             // Drive Speed
-            if (Command == Command.Audio
-                || Command == Command.BluRay
-                || Command == Command.CompactDisc
-                || Command == Command.Data
-                || Command == Command.DigitalVideoDisc
-                || Command == Command.GDROM
-                || Command == Command.SACD
-                || Command == Command.Swap
-                || Command == Command.XBOX
-                || Command == Command.XBOXSwap
-                || Command == Command.XGD2Swap
-                || Command == Command.XGD3Swap)
+            if (BaseCommand == Command.Audio
+                || BaseCommand == Command.BluRay
+                || BaseCommand == Command.CompactDisc
+                || BaseCommand == Command.Data
+                || BaseCommand == Command.DigitalVideoDisc
+                || BaseCommand == Command.GDROM
+                || BaseCommand == Command.SACD
+                || BaseCommand == Command.Swap
+                || BaseCommand == Command.XBOX
+                || BaseCommand == Command.XBOXSwap
+                || BaseCommand == Command.XGD2Swap
+                || BaseCommand == Command.XGD3Swap)
             {
                 if (DriveSpeed != null)
                     parameters.Add(DriveSpeed.ToString());
@@ -217,8 +250,8 @@ namespace DICUI.DiscImageCreator
             }
 
             // LBA Markers
-            if (Command == Command.Audio
-                || Command == Command.Data)
+            if (BaseCommand == Command.Audio
+                || BaseCommand == Command.Data)
             {
                 if (StartLBAValue != null && StartLBAValue > 0
                     && EndLBAValue != null && EndLBAValue > 0)
@@ -231,7 +264,7 @@ namespace DICUI.DiscImageCreator
             }
 
             // Add Offset
-            if (GetSupportedCommands(Flag.AddOffset).Contains(Command))
+            if (GetSupportedCommands(Flag.AddOffset).Contains(BaseCommand))
             {
                 if (this[Flag.AddOffset] == true)
                 {
@@ -244,21 +277,21 @@ namespace DICUI.DiscImageCreator
             }
 
             // AMSF Dumping
-            if (GetSupportedCommands(Flag.AMSF).Contains(Command))
+            if (GetSupportedCommands(Flag.AMSF).Contains(BaseCommand))
             {
                 if (this[Flag.AMSF] == true)
                     parameters.Add(Converters.LongName(Flag.AMSF));
             }
 
             // Atari Jaguar CD
-            if (GetSupportedCommands(Flag.AtariJaguar).Contains(Command))
+            if (GetSupportedCommands(Flag.AtariJaguar).Contains(BaseCommand))
             {
                 if (this[Flag.AtariJaguar] == true)
                     parameters.Add(Converters.LongName(Flag.AtariJaguar));
             }
 
             // BE Opcode
-            if (GetSupportedCommands(Flag.BEOpcode).Contains(Command))
+            if (GetSupportedCommands(Flag.BEOpcode).Contains(BaseCommand))
             {
                 if (this[Flag.BEOpcode] == true && this[Flag.D8Opcode] != true)
                 {
@@ -270,7 +303,7 @@ namespace DICUI.DiscImageCreator
             }
 
             // C2 Opcode
-            if (GetSupportedCommands(Flag.C2Opcode).Contains(Command))
+            if (GetSupportedCommands(Flag.C2Opcode).Contains(BaseCommand))
             {
                 if (this[Flag.C2Opcode] == true)
                 {
@@ -307,28 +340,28 @@ namespace DICUI.DiscImageCreator
             }
 
             // Copyright Management Information
-            if (GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(Command))
+            if (GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(BaseCommand))
             {
                 if (this[Flag.CopyrightManagementInformation] == true)
                     parameters.Add(Converters.LongName(Flag.CopyrightManagementInformation));
             }
 
             // D8 Opcode
-            if (GetSupportedCommands(Flag.D8Opcode).Contains(Command))
+            if (GetSupportedCommands(Flag.D8Opcode).Contains(BaseCommand))
             {
                 if (this[Flag.D8Opcode] == true)
                     parameters.Add(Converters.LongName(Flag.D8Opcode));
             }
 
             // Disable Beep
-            if (GetSupportedCommands(Flag.DisableBeep).Contains(Command))
+            if (GetSupportedCommands(Flag.DisableBeep).Contains(BaseCommand))
             {
                 if (this[Flag.DisableBeep] == true)
                     parameters.Add(Converters.LongName(Flag.DisableBeep));
             }
 
             // Force Unit Access
-            if (GetSupportedCommands(Flag.ForceUnitAccess).Contains(Command))
+            if (GetSupportedCommands(Flag.ForceUnitAccess).Contains(BaseCommand))
             {
                 if (this[Flag.ForceUnitAccess] == true)
                 {
@@ -339,49 +372,49 @@ namespace DICUI.DiscImageCreator
             }
 
             // Multi-Session
-            if (GetSupportedCommands(Flag.MultiSession).Contains(Command))
+            if (GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
             {
                 if (this[Flag.MultiSession] == true)
                     parameters.Add(Converters.LongName(Flag.MultiSession));
             }
 
             // Not fix SubP
-            if (GetSupportedCommands(Flag.NoFixSubP).Contains(Command))
+            if (GetSupportedCommands(Flag.NoFixSubP).Contains(BaseCommand))
             {
                 if (this[Flag.NoFixSubP] == true)
                     parameters.Add(Converters.LongName(Flag.NoFixSubP));
             }
 
             // Not fix SubQ
-            if (GetSupportedCommands(Flag.NoFixSubQ).Contains(Command))
+            if (GetSupportedCommands(Flag.NoFixSubQ).Contains(BaseCommand))
             {
                 if (this[Flag.NoFixSubQ] == true)
                     parameters.Add(Converters.LongName(Flag.NoFixSubQ));
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
-            if (GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(Command))
+            if (GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(BaseCommand))
             {
                 if (this[Flag.NoFixSubQLibCrypt] == true)
                     parameters.Add(Converters.LongName(Flag.NoFixSubQLibCrypt));
             }
-            
+
             // Not fix SubQ (SecuROM)
-            if (GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(Command))
+            if (GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(BaseCommand))
             {
                 if (this[Flag.NoFixSubQSecuROM] == true)
                     parameters.Add(Converters.LongName(Flag.NoFixSubQSecuROM));
             }
 
             // Not fix SubRtoW
-            if (GetSupportedCommands(Flag.NoFixSubRtoW).Contains(Command))
+            if (GetSupportedCommands(Flag.NoFixSubRtoW).Contains(BaseCommand))
             {
                 if (this[Flag.NoFixSubRtoW] == true)
                     parameters.Add(Converters.LongName(Flag.NoFixSubRtoW));
             }
 
             // Not skip security sectors
-            if (GetSupportedCommands(Flag.NoSkipSS).Contains(Command))
+            if (GetSupportedCommands(Flag.NoSkipSS).Contains(BaseCommand))
             {
                 if (this[Flag.NoSkipSS] == true)
                 {
@@ -392,28 +425,28 @@ namespace DICUI.DiscImageCreator
             }
 
             // Raw read (2064 byte/sector)
-            if (GetSupportedCommands(Flag.Raw).Contains(Command))
+            if (GetSupportedCommands(Flag.Raw).Contains(BaseCommand))
             {
                 if (this[Flag.Raw] == true)
                     parameters.Add(Converters.LongName(Flag.Raw));
             }
 
             // Reverse read
-            if (GetSupportedCommands(Flag.Reverse).Contains(Command))
+            if (GetSupportedCommands(Flag.Reverse).Contains(BaseCommand))
             {
                 if (this[Flag.Reverse] == true)
                     parameters.Add(Converters.LongName(Flag.Reverse));
             }
 
             // Scan PlayStation anti-mod strings
-            if (GetSupportedCommands(Flag.ScanAntiMod).Contains(Command))
+            if (GetSupportedCommands(Flag.ScanAntiMod).Contains(BaseCommand))
             {
                 if (this[Flag.ScanAntiMod] == true)
                     parameters.Add(Converters.LongName(Flag.ScanAntiMod));
             }
 
             // Scan file to detect protect
-            if (GetSupportedCommands(Flag.ScanFileProtect).Contains(Command))
+            if (GetSupportedCommands(Flag.ScanFileProtect).Contains(BaseCommand))
             {
                 if (this[Flag.ScanFileProtect] == true)
                 {
@@ -429,21 +462,21 @@ namespace DICUI.DiscImageCreator
             }
 
             // Scan file to detect protect
-            if (GetSupportedCommands(Flag.ScanSectorProtect).Contains(Command))
+            if (GetSupportedCommands(Flag.ScanSectorProtect).Contains(BaseCommand))
             {
                 if (this[Flag.ScanSectorProtect] == true)
                     parameters.Add(Converters.LongName(Flag.ScanSectorProtect));
             }
 
             // Scan 74:00:00 (Saturn)
-            if (GetSupportedCommands(Flag.SeventyFour).Contains(Command))
+            if (GetSupportedCommands(Flag.SeventyFour).Contains(BaseCommand))
             {
                 if (this[Flag.SeventyFour] == true)
                     parameters.Add(Converters.LongName(Flag.SeventyFour));
             }
 
             // Skip sectors
-            if (GetSupportedCommands(Flag.SkipSector).Contains(Command))
+            if (GetSupportedCommands(Flag.SkipSector).Contains(BaseCommand))
             {
                 if (this[Flag.SkipSector] == true)
                 {
@@ -464,7 +497,7 @@ namespace DICUI.DiscImageCreator
             }
 
             // Set Subchannel read level
-            if (GetSupportedCommands(Flag.SubchannelReadLevel).Contains(Command))
+            if (GetSupportedCommands(Flag.SubchannelReadLevel).Contains(BaseCommand))
             {
                 if (this[Flag.SubchannelReadLevel] == true)
                 {
@@ -480,7 +513,7 @@ namespace DICUI.DiscImageCreator
             }
 
             // VideoNow
-            if (GetSupportedCommands(Flag.VideoNow).Contains(Command))
+            if (GetSupportedCommands(Flag.VideoNow).Contains(BaseCommand))
             {
                 if (this[Flag.VideoNow] == true)
                 {
@@ -496,7 +529,7 @@ namespace DICUI.DiscImageCreator
             }
 
             // VideoNow Color
-            if (GetSupportedCommands(Flag.VideoNowColor).Contains(Command))
+            if (GetSupportedCommands(Flag.VideoNowColor).Contains(BaseCommand))
             {
                 if (this[Flag.VideoNowColor] == true)
                     parameters.Add(Converters.LongName(Flag.VideoNowColor));
@@ -506,12 +539,42 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
+        /// Get the input path from the implementation
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public override string InputPath() => DriveLetter;
+
+        /// <summary>
+        /// Get the output path from the implementation
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public override string OutputPath() => Filename;
+
+        /// <summary>
+        /// Get the processing speed from the implementation
+        /// </summary>
+        /// <returns>int? representing the speed, null on error</returns>
+        public override int? GetSpeed() => DriveSpeed;
+
+        /// <summary>
+        /// Set the processing speed int the implementation
+        /// </summary>
+        /// <param name="speed">int? representing the speed</param>
+        public override void SetSpeed(int? speed) => DriveSpeed = speed;
+
+        /// <summary>
+        /// Get the MediaType from the current set of parameters
+        /// </summary>
+        /// <returns>MediaType value if successful, null on error</returns>
+        public override MediaType? GetMediaType() => Converters.ToMediaType(BaseCommand);
+
+        /// <summary>
         /// Gets if the current command is considered a dumping command or not
         /// </summary>
         /// <returns>True if it's a dumping command, false otherwise</returns>
         public override bool IsDumpingCommand()
         {
-            switch (Command)
+            switch (BaseCommand)
             {
                 case Command.Audio:
                 case Command.BluRay:
@@ -539,7 +602,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         protected override void ResetValues()
         {
-            Command = Command.NONE;
+            BaseCommand = Command.NONE;
 
             DriveLetter = null;
             DriveSpeed = null;
@@ -560,7 +623,7 @@ namespace DICUI.DiscImageCreator
             SubchannelReadLevelValue = null;
             VideoNowValue = null;
         }
-        
+
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
@@ -699,13 +762,13 @@ namespace DICUI.DiscImageCreator
                 .ToList();
 
             // Determine what the commandline should look like given the first item
-            Command = Converters.StringToCommand(parts[0]);
-            if (Command == Command.NONE)
+            BaseCommand = Converters.StringToCommand(parts[0]);
+            if (BaseCommand == Command.NONE)
                 return false;
 
             // Loop through ordered command-specific flags
             int index = -1;
-            switch (Command)
+            switch (BaseCommand)
             {
                 case Command.Audio:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
@@ -1073,7 +1136,7 @@ namespace DICUI.DiscImageCreator
                     switch (parts[i])
                     {
                         case FlagStrings.AddOffset:
-                            if (!GetSupportedCommands(Flag.AddOffset).Contains(Command))
+                            if (!GetSupportedCommands(Flag.AddOffset).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                                 return false;
@@ -1086,21 +1149,21 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.AMSF:
-                            if (!GetSupportedCommands(Flag.AMSF).Contains(Command))
+                            if (!GetSupportedCommands(Flag.AMSF).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.AMSF] = true;
                             break;
 
                         case FlagStrings.AtariJaguar:
-                            if (!GetSupportedCommands(Flag.AtariJaguar).Contains(Command))
+                            if (!GetSupportedCommands(Flag.AtariJaguar).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.AtariJaguar] = true;
                             break;
 
                         case FlagStrings.BEOpcode:
-                            if (!GetSupportedCommands(Flag.BEOpcode).Contains(Command))
+                            if (!GetSupportedCommands(Flag.BEOpcode).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1121,7 +1184,7 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.C2Opcode:
-                            if (!GetSupportedCommands(Flag.C2Opcode).Contains(Command))
+                            if (!GetSupportedCommands(Flag.C2Opcode).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.C2Opcode] = true;
@@ -1143,28 +1206,28 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.CopyrightManagementInformation:
-                            if (!GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(Command))
+                            if (!GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.CopyrightManagementInformation] = true;
                             break;
 
                         case FlagStrings.D8Opcode:
-                            if (!GetSupportedCommands(Flag.D8Opcode).Contains(Command))
+                            if (!GetSupportedCommands(Flag.D8Opcode).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.D8Opcode] = true;
                             break;
 
                         case FlagStrings.DisableBeep:
-                            if (!GetSupportedCommands(Flag.DisableBeep).Contains(Command))
+                            if (!GetSupportedCommands(Flag.DisableBeep).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.DisableBeep] = true;
                             break;
 
                         case FlagStrings.ForceUnitAccess:
-                            if (!GetSupportedCommands(Flag.ForceUnitAccess).Contains(Command))
+                            if (!GetSupportedCommands(Flag.ForceUnitAccess).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1185,49 +1248,49 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.MultiSession:
-                            if (!GetSupportedCommands(Flag.MultiSession).Contains(Command))
+                            if (!GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.MultiSession] = true;
                             break;
 
                         case FlagStrings.NoFixSubP:
-                            if (!GetSupportedCommands(Flag.NoFixSubP).Contains(Command))
+                            if (!GetSupportedCommands(Flag.NoFixSubP).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.NoFixSubP] = true;
                             break;
 
                         case FlagStrings.NoFixSubQ:
-                            if (!GetSupportedCommands(Flag.NoFixSubQ).Contains(Command))
+                            if (!GetSupportedCommands(Flag.NoFixSubQ).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.NoFixSubQ] = true;
                             break;
 
                         case FlagStrings.NoFixSubQLibCrypt:
-                            if (!GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(Command))
+                            if (!GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.NoFixSubQLibCrypt] = true;
                             break;
 
                         case FlagStrings.NoFixSubRtoW:
-                            if (!GetSupportedCommands(Flag.NoFixSubRtoW).Contains(Command))
+                            if (!GetSupportedCommands(Flag.NoFixSubRtoW).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.NoFixSubRtoW] = true;
                             break;
 
                         case FlagStrings.NoFixSubQSecuROM:
-                            if (!GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(Command))
+                            if (!GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.NoFixSubQSecuROM] = true;
                             break;
 
                         case FlagStrings.NoSkipSS:
-                            if (!GetSupportedCommands(Flag.NoSkipSS).Contains(Command))
+                            if (!GetSupportedCommands(Flag.NoSkipSS).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1248,28 +1311,28 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.Raw:
-                            if (!GetSupportedCommands(Flag.Raw).Contains(Command))
+                            if (!GetSupportedCommands(Flag.Raw).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.Raw] = true;
                             break;
 
                         case FlagStrings.Reverse:
-                            if (!GetSupportedCommands(Flag.Reverse).Contains(Command))
+                            if (!GetSupportedCommands(Flag.Reverse).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.Reverse] = true;
                             break;
 
                         case FlagStrings.ScanAntiMod:
-                            if (!GetSupportedCommands(Flag.ScanAntiMod).Contains(Command))
+                            if (!GetSupportedCommands(Flag.ScanAntiMod).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.ScanAntiMod] = true;
                             break;
 
                         case FlagStrings.ScanFileProtect:
-                            if (!GetSupportedCommands(Flag.ScanFileProtect).Contains(Command))
+                            if (!GetSupportedCommands(Flag.ScanFileProtect).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1290,21 +1353,21 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.ScanSectorProtect:
-                            if (!GetSupportedCommands(Flag.ScanSectorProtect).Contains(Command))
+                            if (!GetSupportedCommands(Flag.ScanSectorProtect).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.ScanSectorProtect] = true;
                             break;
 
                         case FlagStrings.SeventyFour:
-                            if (!GetSupportedCommands(Flag.SeventyFour).Contains(Command))
+                            if (!GetSupportedCommands(Flag.SeventyFour).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.SeventyFour] = true;
                             break;
 
                         case FlagStrings.SkipSector:
-                            if (!GetSupportedCommands(Flag.SkipSector).Contains(Command))
+                            if (!GetSupportedCommands(Flag.SkipSector).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
                                 return false;
@@ -1320,7 +1383,7 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.SubchannelReadLevel:
-                            if (!GetSupportedCommands(Flag.SubchannelReadLevel).Contains(Command))
+                            if (!GetSupportedCommands(Flag.SubchannelReadLevel).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1341,7 +1404,7 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.VideoNow:
-                            if (!GetSupportedCommands(Flag.VideoNow).Contains(Command))
+                            if (!GetSupportedCommands(Flag.VideoNow).Contains(BaseCommand))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                             {
@@ -1362,7 +1425,7 @@ namespace DICUI.DiscImageCreator
                             break;
 
                         case FlagStrings.VideoNowColor:
-                            if (!GetSupportedCommands(Flag.VideoNowColor).Contains(Command))
+                            if (!GetSupportedCommands(Flag.VideoNowColor).Contains(BaseCommand))
                                 return false;
 
                             this[Flag.VideoNowColor] = true;
@@ -1382,7 +1445,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>
         /// <returns>List of DiscImageChef.Commands, if possible</returns>
-        protected override List<Command> GetSupportedCommands(Flag flag)
+        private List<Command> GetSupportedCommands(Flag flag)
         {
             var commands = new List<Command>();
             switch (flag)
@@ -1528,7 +1591,7 @@ namespace DICUI.DiscImageCreator
                 default:
                     return commands;
             }
-            
+
             return commands;
         }
 
@@ -1539,10 +1602,10 @@ namespace DICUI.DiscImageCreator
         /// <param name="type">MediaType value to check</param>
         private void SetBaseCommand(KnownSystem? system, MediaType? type)
         {
-            // If we have an invalid combination, we should Command = null
+            // If we have an invalid combination, we should BaseCommand = null
             if (!Utilities.Validators.GetValidMediaTypes(system).Contains(type))
             {
-                Command = Command.NONE;
+                BaseCommand = Command.NONE;
                 return;
             }
 
@@ -1550,43 +1613,43 @@ namespace DICUI.DiscImageCreator
             {
                 case MediaType.CDROM:
                     if (system == KnownSystem.SuperAudioCD)
-                        Command = Command.SACD;
+                        BaseCommand = Command.SACD;
                     else
-                        Command = Command.CompactDisc;
+                        BaseCommand = Command.CompactDisc;
                     return;
                 case MediaType.DVD:
                     if (system == KnownSystem.MicrosoftXBOX
                         || system == KnownSystem.MicrosoftXBOX360)
                     {
-                        Command = Command.XBOX;
+                        BaseCommand = Command.XBOX;
                         return;
                     }
-                    Command = Command.DigitalVideoDisc;
+                    BaseCommand = Command.DigitalVideoDisc;
                     return;
                 case MediaType.GDROM:
-                    Command = Command.GDROM;
+                    BaseCommand = Command.GDROM;
                     return;
                 case MediaType.HDDVD:
-                    Command = Command.DigitalVideoDisc;
+                    BaseCommand = Command.DigitalVideoDisc;
                     return;
                 case MediaType.BluRay:
-                    Command = Command.BluRay;
+                    BaseCommand = Command.BluRay;
                     return;
                 case MediaType.NintendoGameCubeGameDisc:
-                    Command = Command.DigitalVideoDisc;
+                    BaseCommand = Command.DigitalVideoDisc;
                     return;
                 case MediaType.NintendoWiiOpticalDisc:
-                    Command = Command.DigitalVideoDisc;
+                    BaseCommand = Command.DigitalVideoDisc;
                     return;
                 case MediaType.FloppyDisk:
-                    Command = Command.Floppy;
+                    BaseCommand = Command.Floppy;
                     return;
                 case MediaType.HardDisk:
-                    Command = Command.Disk;
+                    BaseCommand = Command.Disk;
                     return;
 
                 default:
-                    Command = Command.NONE;
+                    BaseCommand = Command.NONE;
                     return;
             }
         }

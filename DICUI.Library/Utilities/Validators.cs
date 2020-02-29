@@ -6,7 +6,7 @@ using System.Management;
 using System.Threading.Tasks;
 using BurnOutSharp;
 using DICUI.Data;
-using IMAPI2; // TODO: Doesn't work with .NET Core
+//using IMAPI2; // TODO: Doesn't work with .NET Core
 
 namespace DICUI.Utilities
 {
@@ -764,17 +764,38 @@ namespace DICUI.Utilities
             else if (drive.InternalDriveType == InternalDriveType.Removable)
                 return MediaType.FlashDrive;
 
-            // Get the DeviceID from the current drive letter
+            // Get the DeviceID and MediaType from the current drive letter
             string deviceId = null;
+            ushort mediaType = 0;
             try
             {
-                ManagementObjectSearcher searcher =
-                    new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + drive.Letter + ":\'");
+                // Get the device ID first
+                var searcher = new ManagementObjectSearcher(
+                    "root\\CIMV2",
+                    $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{drive.Letter}:\'");
 
-                var collection = searcher.Get();
-                foreach (ManagementObject queryObj in collection)
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
                     deviceId = (string)queryObj["DeviceID"];
+                }
+
+                // If we got no valid device, we don't care and just return
+                if (deviceId == null)
+                    return null;
+
+                // Now try to get the physical media associated
+                searcher = new ManagementObjectSearcher(
+                    "root\\CIMV2",
+                    $"SELECT * FROM Win32_PhysicalMedia");
+                    //$"SELECT * FROM Win32_PhysicalMedia WHERE Name = '{deviceId}'");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    deviceId = (string)queryObj["Tag"];
+                    mediaType = (ushort)queryObj["MediaType"];
+                }
+
+                return ((PhysicalMediaType)mediaType).ToMediaType();
             }
             catch
             {
@@ -782,42 +803,36 @@ namespace DICUI.Utilities
                 return null;
             }
 
-            // If we got no valid device, we don't care and just return
-            if (deviceId == null)
-                return null;
+            //// Get all relevant disc information
+            //try
+            //{
+            //    // TODO: Doesn't work with .NET Core
+            //    MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+            //    deviceId = deviceId.ToLower().Replace('\\', '#');
+            //    string id = null;
+            //    foreach (var disc in discMaster)
+            //    {
+            //        if (disc.ToString().Contains(deviceId))
+            //            id = disc.ToString();
+            //    }
 
-            // Get all relevant disc information
-            try
-            {
-                // TODO: Doesn't work with .NET Core
-                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-                deviceId = deviceId.ToLower().Replace('\\', '#');
-                string id = null;
-                foreach (var disc in discMaster)
-                {
-                    if (disc.ToString().Contains(deviceId))
-                        id = disc.ToString();
-                }
+            //    // If we couldn't find the drive, we don't care and return
+            //    if (id == null)
+            //        return null;
 
-                // If we couldn't find the drive, we don't care and return
-                if (id == null)
-                    return null;
-
-                // Otherwise, we get the media type, if any
-                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-                recorder.InitializeDiscRecorder(id);
-                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-                dataWriter.Recorder = recorder;
-                var media = dataWriter.CurrentPhysicalMediaType;
-                if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-                    return Converters.ToMediaType(media);
-            }
-            catch
-            {
-                // We don't care what the error is
-            }
-
-            return null;
+            //    // Otherwise, we get the media type, if any
+            //    MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+            //    recorder.InitializeDiscRecorder(id);
+            //    MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+            //    dataWriter.Recorder = recorder;
+            //    var media = dataWriter.CurrentPhysicalMediaType;
+            //    if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+            //        return media.ToMediaType();
+            //}
+            //catch
+            //{
+            //    // We don't care what the error is
+            //}
         }
 
         /// <summary>
@@ -876,7 +891,7 @@ namespace DICUI.Utilities
                 // If we have a weird disc, just assume PS1
                 return KnownSystem.SonyPlayStation;
             }
-            
+
             // Sony PlayStation 4
             if (drive.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {

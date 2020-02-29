@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using DICUI.Data;
-using IMAPI2; // TODO: Doesn't work with .NET Core
+//using IMAPI2; // TODO: Doesn't work with .NET Core
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -201,36 +201,78 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
-        public static MediaType? ToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
+        //public static MediaType? ToMediaType(this IMAPI_MEDIA_PHYSICAL_TYPE type)
+        //{
+        //    // TODO: Doesn't work with .NET Core
+        //    switch (type)
+        //    {
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+        //            return MediaType.NONE;
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+        //            return MediaType.CDROM;
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+        //            return MediaType.DVD;
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+        //            return MediaType.HDDVD;
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+        //        case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+        //            return MediaType.BluRay;
+        //        default:
+        //            return null;
+        //    }
+        //}
+
+        /// <summary>
+        /// Convert physical media type to a MediaType
+        /// </summary>
+        /// <param name="type">PhsyicalMediaType value to check</param>
+        /// <returns>MediaType if possible, null on error</returns>
+        public static MediaType? ToMediaType(this PhysicalMediaType type)
         {
-            // TODO: Doesn't work with .NET Core
             switch (type)
             {
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+                case PhysicalMediaType.Unknown:
                     return MediaType.NONE;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+
+                // CD-based media
+                case PhysicalMediaType.CDROM:
+                case PhysicalMediaType.CDROMXA:
+                case PhysicalMediaType.CDI: // TODO: Make this separate at some point (CD-I/CD-I Ready?)
+                case PhysicalMediaType.CDRecordable:
+                case PhysicalMediaType.CDRW:
+                case PhysicalMediaType.CDDA:
+                case PhysicalMediaType.CDPlus: // TODO: Make this separate at some point (Enhanced CD?)
                     return MediaType.CDROM;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+
+                // DVD-based media
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.DVDPlusRW:
+                case PhysicalMediaType.DVDRAM:
+                case PhysicalMediaType.DVDROM:
+                case PhysicalMediaType.DVDVideo: // TODO: Make this separate at some point (DVD-Video?)
+                case PhysicalMediaType.DVDRecordable:
+                case PhysicalMediaType.DVDMinusRW:
+                case PhysicalMediaType.DVDAudio: // TODO: Make this separate at some point (DVD-Audio?)
+                case PhysicalMediaType.DVD5: // TODO: Make this separate at some point (DVD-5?)
+                case PhysicalMediaType.DVD9: // TODO: Make this separate at some point (DVD-9?)
+                case PhysicalMediaType.DVD10: // TODO: Make this separate at some point (DVD-10?)
+                case PhysicalMediaType.DVD18: // TODO: Make this separate at some point (DVD-18?)
                     return MediaType.DVD;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
-                    return MediaType.HDDVD;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
-                    return MediaType.BluRay;
+
                 default:
                     return null;
             }
@@ -1986,9 +2028,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the Category enum value for a given string
         /// </summary>
-        /// <param name="sys">String value to convert</param>
+        /// <param name="category">String value to convert</param>
         /// <returns>Category represented by the string, if possible</returns>
-        public static Category StringToCategory(string category)
+        public static Category ToCategory(string category)
         {
             switch (category.ToLowerInvariant())
             {
@@ -2018,6 +2060,31 @@ namespace DICUI.Utilities
                     return Category.AddOns;
                 default:
                     return Category.Games;
+            }
+        }
+
+        /// <summary>
+        /// Get the InternalProgram enum value for a given string
+        /// </summary>
+        /// <param name="internalProgram">String value to convert</param>
+        /// <returns>InternalProgram represented by the string, if possible</returns>
+        public static InternalProgram ToInternalProgram(string internalProgram)
+        {
+            switch (internalProgram.ToLowerInvariant())
+            {
+                case "chef":
+                case "dichef":
+                case "discimagechef":
+                    return InternalProgram.DiscImageChef;
+                case "creator":
+                case "dic":
+                case "dicreator":
+                case "discimagecreator":
+                    return InternalProgram.DiscImageCreator;
+                case "dd":
+                    return InternalProgram.DD;
+                default:
+                    return InternalProgram.NONE;
             }
         }
 
@@ -2738,9 +2805,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the Language enum value for a given string
         /// </summary>
-        /// <param name="sys">String value to convert</param>
+        /// <param name="lang">String value to convert</param>
         /// <returns>Language represented by the string, if possible</returns>
-        public static Language? StringToLanguage(string lang)
+        public static Language? ToLanguage(string lang)
         {
             switch (lang)
             {
@@ -2826,7 +2893,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="type">String value to convert</param>
         /// <returns>MediaType represented by the string, if possible</returns>
-        public static MediaType StringToMediaType(string type)
+        public static MediaType ToMediaType(string type)
             {
                 switch (type.ToLowerInvariant())
                 {
@@ -2997,9 +3064,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the Region enum value for a given string
         /// </summary>
-        /// <param name="type">String value to convert</param>
+        /// <param name="region">String value to convert</param>
         /// <returns>Region represented by the string, if possible</returns>
-        public static Region? StringToRegion(string region)
+        public static Region? ToRegion(string region)
         {
             switch (region)
             {

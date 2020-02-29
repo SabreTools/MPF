@@ -280,7 +280,7 @@ namespace DICUI.Windows
                     + (different
                         ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
                         : $"{Environment.NewLine}You have the newest version!");
-                
+
                 // If we have a new version, put it in the clipboard
                 if (different)
                     Clipboard.SetText(releaseUrl);
@@ -444,10 +444,8 @@ namespace DICUI.Windows
             var env = new DumpEnvironment()
             {
                 // Paths to tools
-                ChefPath = _options.ChefPath,
-                CreatorPath = _options.CreatorPath,
                 SubdumpPath = _options.SubDumpPath,
-                InternalProgram = _options.UseChef ? InternalProgram.DiscImageChef : InternalProgram.DiscImageCreator,
+                InternalProgram = Converters.ToInternalProgram(_options.InternalProgram),
 
                 OutputDirectory = OutputDirectoryTextBox.Text,
                 OutputFilename = OutputFilenameTextBox.Text,
@@ -462,15 +460,25 @@ namespace DICUI.Windows
                 AddPlaceholders = _options.AddPlaceholders,
                 PromptForDiscInformation = _options.PromptForDiscInformation,
 
-                ChefParameters = new DiscImageChef.Parameters(ParametersTextBox.Text),
-                CreatorParameters = new DiscImageCreator.Parameters(ParametersTextBox.Text),
-
                 Username = _options.Username,
                 Password = _options.Password,
 
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
                 Type = MediaTypeComboBox.SelectedItem as MediaType?,
             };
+
+            // Set parameters and path accordingly
+            env.SetParameters(ParametersTextBox.Text);
+            switch (env.InternalProgram)
+            {
+                case InternalProgram.DiscImageChef:
+                    env.Parameters.Path = _options.ChefPath;
+                    break;
+
+                case InternalProgram.DiscImageCreator:
+                    env.Parameters.Path = _options.CreatorPath;
+                    break;
+            }
 
             // Disable automatic reprocessing of the textboxes until we're done
             OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
@@ -553,13 +561,7 @@ namespace DICUI.Windows
                 Result result = await _env.Run(progress);
 
                 // If we didn't execute a dumping command we cannot get submission output
-                bool isDumpingCommand = false;
-                if (_env.InternalProgram == InternalProgram.DiscImageChef)
-                    isDumpingCommand = _env.ChefParameters.IsDumpingCommand();
-                else
-                    isDumpingCommand = _env.CreatorParameters.IsDumpingCommand();
-
-                if (!isDumpingCommand)
+                if (!_env.Parameters.IsDumpingCommand())
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
                     StatusLabel.Content = "Execution complete!";
@@ -707,12 +709,13 @@ namespace DICUI.Windows
 
                 string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\");
 
-                // If SmartE is detected on the current disc, remove `/sf` from the flags
-                if (protections.Contains("SmartE"))
-                {
-                    _env.CreatorParameters[DiscImageCreator.Flag.ScanFileProtect] = false;
-                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
-                }
+                // TODO: Re-enable this functionality somehow
+                //// If SmartE is detected on the current disc, remove `/sf` from the flags
+                //if (protections.Contains("SmartE"))
+                //{
+                //    _env.Parameters[DiscImageCreator.Flag.ScanFileProtect] = false;
+                //    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+                //}
 
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -768,7 +771,7 @@ namespace DICUI.Windows
         private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            Drive drive = DriveLetterComboBox.SelectedItem as Drive;
+            var drive = DriveLetterComboBox.SelectedItem as Drive;
             if (drive == null)
                 return;
 
@@ -803,63 +806,36 @@ namespace DICUI.Windows
         /// </summary>
         private void ProcessCustomParameters()
         {
-            if (_options.UseChef)
-            {
-                _env.ChefParameters = new DiscImageChef.Parameters(ParametersTextBox.Text);
+            _env.SetParameters(ParametersTextBox.Text);
+            if (_env.Parameters == null)
+                return;
 
-                if (_env.ChefParameters == null)
-                    return;
+            int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.Parameters.InputPath()[0]);
+            if (driveIndex > -1)
+                DriveLetterComboBox.SelectedIndex = driveIndex;
 
-                int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.ChefParameters.InputValue[0]);
-                if (driveIndex > -1)
-                    DriveLetterComboBox.SelectedIndex = driveIndex;
-
-                string trimmedPath = _env.ChefParameters.OutputValue?.Trim('"') ?? string.Empty;
-                string outputDirectory = Path.GetDirectoryName(trimmedPath);
-                string outputFilename = Path.GetFileName(trimmedPath);
-                if (!string.IsNullOrWhiteSpace(outputDirectory))
-                    OutputDirectoryTextBox.Text = outputDirectory;
-                else
-                    outputDirectory = OutputDirectoryTextBox.Text;
-                if (!string.IsNullOrWhiteSpace(outputFilename))
-                    OutputFilenameTextBox.Text = outputFilename;
-                else
-                    outputFilename = OutputFilenameTextBox.Text;
-            }
+            int driveSpeed = _env.Parameters.GetSpeed() ?? -1;
+            if (driveSpeed > 0)
+                DriveSpeedComboBox.SelectedValue = driveSpeed;
             else
-            {
-                _env.CreatorParameters = new DiscImageCreator.Parameters(ParametersTextBox.Text);
+                _env.Parameters.SetSpeed((int?)DriveSpeedComboBox.SelectedValue);
 
-                if (_env.CreatorParameters == null)
-                    return;
+            string trimmedPath = _env.Parameters.OutputPath()?.Trim('"') ?? string.Empty;
+            string outputDirectory = Path.GetDirectoryName(trimmedPath);
+            string outputFilename = Path.GetFileName(trimmedPath);
+            if (!string.IsNullOrWhiteSpace(outputDirectory))
+                OutputDirectoryTextBox.Text = outputDirectory;
+            else
+                outputDirectory = OutputDirectoryTextBox.Text;
+            if (!string.IsNullOrWhiteSpace(outputFilename))
+                OutputFilenameTextBox.Text = outputFilename;
+            else
+                outputFilename = OutputFilenameTextBox.Text;
 
-                int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.CreatorParameters.DriveLetter[0]);
-                if (driveIndex > -1)
-                    DriveLetterComboBox.SelectedIndex = driveIndex;
-
-                int driveSpeed = _env.CreatorParameters.DriveSpeed ?? -1;
-                if (driveSpeed > 0)
-                    DriveSpeedComboBox.SelectedValue = driveSpeed;
-                else
-                    _env.CreatorParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
-
-                string trimmedPath = _env.CreatorParameters.Filename?.Trim('"') ?? string.Empty;
-                string outputDirectory = Path.GetDirectoryName(trimmedPath);
-                string outputFilename = Path.GetFileName(trimmedPath);
-                if (!string.IsNullOrWhiteSpace(outputDirectory))
-                    OutputDirectoryTextBox.Text = outputDirectory;
-                else
-                    outputDirectory = OutputDirectoryTextBox.Text;
-                if (!string.IsNullOrWhiteSpace(outputFilename))
-                    OutputFilenameTextBox.Text = outputFilename;
-                else
-                    outputFilename = OutputFilenameTextBox.Text;
-
-                MediaType? mediaType = DiscImageCreator.Converters.ToMediaType(_env.CreatorParameters.Command);
-                int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
-                if (mediaTypeIndex > -1)
-                    MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
-            }
+            MediaType? mediaType = _env.Parameters.GetMediaType();
+            int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
+            if (mediaTypeIndex > -1)
+                MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
         }
 
         #endregion

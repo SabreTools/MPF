@@ -5,7 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  
+
   <!-- TODO: Doesn't work with .NET Core -->
   <ItemGroup>
     <COMReference Include="IMAPI2">

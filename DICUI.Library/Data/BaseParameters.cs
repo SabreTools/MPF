@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace DICUI.Data
 {
-    public abstract class Parameters<T, U>
+    public abstract class BaseParameters
     {
         /// <summary>
         /// Path to the executable
@@ -12,35 +11,15 @@ namespace DICUI.Data
         public string Path { get; set; }
 
         /// <summary>
-        /// Base command to run
+        /// Program that this set of parameters represents
         /// </summary>
-        public T Command { get; set; }
-
-        /// <summary>
-        /// Set of flags to pass to the executable
-        /// </summary>
-        protected Dictionary<U, bool?> _flags = new Dictionary<U, bool?>();
-        public bool? this[U key]
-        {
-            get
-            {
-                if (_flags.ContainsKey(key))
-                    return _flags[key];
-
-                return null;
-            }
-            set
-            {
-                _flags[key] = value;
-            }
-        }
-        protected internal IEnumerable<U> Keys => _flags.Keys;
+        public InternalProgram InternalProgram { get; set; }
 
         /// <summary>
         /// Populate a Parameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
-        public Parameters(string parameters)
+        public BaseParameters(string parameters)
         {
             // If any parameters are not valid, wipe out everything
             if (!ValidateAndSetParameters(parameters))
@@ -58,8 +37,9 @@ namespace DICUI.Data
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
+        /// <param name="quietMode">Enable quiet mode (no beeps)</param>
         /// <param name="retryCount">User-defined reread count</param>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int retryCount)
+        public BaseParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, bool quietMode, int retryCount)
         {
             SetDefaultParameters(system, type, driveLetter, filename, driveSpeed, paranoid, retryCount);
         }
@@ -69,6 +49,36 @@ namespace DICUI.Data
         /// </summary>
         /// <returns>Correctly formatted parameter string, null on error</returns>
         public abstract string GenerateParameters();
+
+        /// <summary>
+        /// Get the input path from the implementation
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public abstract string InputPath();
+
+        /// <summary>
+        /// Get the output path from the implementation
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public abstract string OutputPath();
+
+        /// <summary>
+        /// Get the processing speed from the implementation
+        /// </summary>
+        /// <returns>int? representing the speed, null on error</returns>
+        public abstract int? GetSpeed();
+
+        /// <summary>
+        /// Set the processing speed int the implementation
+        /// </summary>
+        /// <param name="speed">int? representing the speed</param>
+        public abstract void SetSpeed(int? speed);
+
+        /// <summary>
+        /// Get the MediaType from the current set of parameters
+        /// </summary>
+        /// <returns>MediaType value if successful, null on error</returns>
+        public abstract MediaType? GetMediaType();
 
         /// <summary>
         /// Gets if the current command is considered a dumping command or not
@@ -84,7 +94,7 @@ namespace DICUI.Data
         {
             return GenerateParameters() != null;
         }
-    
+
         /// <summary>
         /// Reset all special variables to have default values
         /// </summary>
@@ -115,13 +125,6 @@ namespace DICUI.Data
         /// <param name="parameters">String possibly representing parameters</param>
         /// <returns></returns>
         protected abstract bool ValidateAndSetParameters(string parameters);
-
-        /// <summary>
-        /// Get the list of commands that use a given flag
-        /// </summary>
-        /// <param name="flag">Flag value to get commands for</param>
-        /// <returns>List of DiscImageChef.Commands, if possible</returns>
-        protected abstract List<T> GetSupportedCommands(U flag);
 
         /// <summary>
         /// Returns whether or not the selected item exists

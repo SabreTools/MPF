@@ -3,7 +3,7 @@ namespace DICUI.DiscImageCreator
     /// <summary>
     /// Supported DiscImageCreator commands
     /// </summary>
-    public enum Command
+    public enum Command : int
     {
         NONE = 0,
         Audio,
@@ -34,7 +34,7 @@ namespace DICUI.DiscImageCreator
     /// <summary>
     /// Supported DiscImageCreator flags
     /// </summary>
-    public enum Flag
+    public enum Flag : int
     {
         NONE = 0,
         AddOffset,

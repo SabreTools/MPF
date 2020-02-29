@@ -9,9 +9,34 @@ namespace DICUI.DiscImageChef
     /// <summary>
     /// Represents a generic set of DiscImageChef parameters
     /// </summary>
-    public class Parameters : Data.Parameters<Command, Flag>
+    public class Parameters : BaseParameters
     {
-        #region DiscImageChef Flag Values
+        /// <summary>
+        /// Base command to run
+        /// </summary>
+        public Command BaseCommand { get; set; }
+
+        /// <summary>
+        /// Set of flags to pass to the executable
+        /// </summary>
+        protected Dictionary<Flag, bool?> _flags = new Dictionary<Flag, bool?>();
+        public bool? this[Flag key]
+        {
+            get
+            {
+                if (_flags.ContainsKey(key))
+                    return _flags[key];
+
+                return null;
+            }
+            set
+            {
+                _flags[key] = value;
+            }
+        }
+        protected internal IEnumerable<Flag> Keys => _flags.Keys;
+
+        #region Flag Values
 
         public int? BlockSizeValue { get; set; }
 
@@ -98,6 +123,7 @@ namespace DICUI.DiscImageChef
         public Parameters(string parameters)
             : base(parameters)
         {
+            this.InternalProgram = InternalProgram.DiscImageChef;
         }
 
         /// <summary>
@@ -109,9 +135,10 @@ namespace DICUI.DiscImageChef
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
+        /// <param name="quietMode">Enable quiet mode (no beeps)</param>
         /// <param name="retryCount">User-defined reread count</param>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, int retryCount)
-            : base(system, type, driveLetter, filename, driveSpeed, paranoid, retryCount)
+        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, bool quietMode, int retryCount)
+            : base(system, type, driveLetter, filename, driveSpeed, paranoid, quietMode, retryCount)
         {
         }
 
@@ -120,7 +147,7 @@ namespace DICUI.DiscImageChef
         /// </summary>
         protected override void ResetValues()
         {
-            Command = Command.NONE;
+            BaseCommand = Command.NONE;
 
             _flags = new Dictionary<Flag, bool?>();
 
@@ -163,7 +190,7 @@ namespace DICUI.DiscImageChef
             WidthValue = null;
             XMLSidecarValue = null;
         }
-        
+
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
@@ -183,7 +210,7 @@ namespace DICUI.DiscImageChef
             bool paranoid,
             int retryCount)
         {
-            Command = Command.MediaDump;
+            BaseCommand = Command.MediaDump;
 
             InputValue = $"\\\\?\\{driveLetter.ToString()}:";
             OutputValue = filename;
@@ -214,7 +241,7 @@ namespace DICUI.DiscImageChef
                 this[Flag.Debug] = true;
                 this[Flag.Verbose] = true;
             }
-            
+
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type
             switch (type)
@@ -277,253 +304,253 @@ namespace DICUI.DiscImageChef
 
             #endregion
 
-            if (Command != Command.NONE)
-                parameters.Add(Converters.LongName(Command));
+            if (BaseCommand != Command.NONE)
+                parameters.Add(Converters.LongName((Command)BaseCommand));
             else
                 return null;
 
             #region Boolean flags
 
             // Adler-32
-            if (GetSupportedCommands(Flag.Adler32).Contains(Command))
+            if (GetSupportedCommands(Flag.Adler32).Contains(BaseCommand))
             {
                 if (this[Flag.Adler32] != null)
                     parameters.Add($"{Converters.LongName(Flag.Adler32)} {this[Flag.Adler32]}");
             }
 
             // Clear
-            if (GetSupportedCommands(Flag.Clear).Contains(Command))
+            if (GetSupportedCommands(Flag.Clear).Contains(BaseCommand))
             {
                 if (this[Flag.Clear] != null)
                     parameters.Add($"{Converters.LongName(Flag.Clear)} {this[Flag.Clear]}");
             }
 
             // Clear All
-            if (GetSupportedCommands(Flag.ClearAll).Contains(Command))
+            if (GetSupportedCommands(Flag.ClearAll).Contains(BaseCommand))
             {
                 if (this[Flag.ClearAll] != null)
                     parameters.Add($"{Converters.LongName(Flag.ClearAll)} {this[Flag.ClearAll]}");
             }
 
             // CRC16
-            if (GetSupportedCommands(Flag.CRC16).Contains(Command))
+            if (GetSupportedCommands(Flag.CRC16).Contains(BaseCommand))
             {
                 if (this[Flag.CRC16] != null)
                     parameters.Add($"{Converters.LongName(Flag.CRC16)} {this[Flag.CRC16]}");
             }
 
             // CRC32
-            if (GetSupportedCommands(Flag.CRC32).Contains(Command))
+            if (GetSupportedCommands(Flag.CRC32).Contains(BaseCommand))
             {
                 if (this[Flag.CRC32] != null)
                     parameters.Add($"{Converters.LongName(Flag.CRC32)} {this[Flag.CRC32]}");
             }
 
             // CRC64
-            if (GetSupportedCommands(Flag.CRC64).Contains(Command))
+            if (GetSupportedCommands(Flag.CRC64).Contains(BaseCommand))
             {
                 if (this[Flag.CRC64] != null)
                     parameters.Add($"{Converters.LongName(Flag.CRC64)} {this[Flag.CRC64]}");
             }
 
             // Disk Tags
-            if (GetSupportedCommands(Flag.DiskTags).Contains(Command))
+            if (GetSupportedCommands(Flag.DiskTags).Contains(BaseCommand))
             {
                 if (this[Flag.DiskTags] != null)
                     parameters.Add($"{Converters.LongName(Flag.DiskTags)} {this[Flag.DiskTags]}");
             }
 
             // Duplicated Sectors
-            if (GetSupportedCommands(Flag.DuplicatedSectors).Contains(Command))
+            if (GetSupportedCommands(Flag.DuplicatedSectors).Contains(BaseCommand))
             {
                 if (this[Flag.DuplicatedSectors] != null)
                     parameters.Add($"{Converters.LongName(Flag.DuplicatedSectors)} {this[Flag.DuplicatedSectors]}");
             }
 
             // Extended Attributes
-            if (GetSupportedCommands(Flag.ExtendedAttributes).Contains(Command))
+            if (GetSupportedCommands(Flag.ExtendedAttributes).Contains(BaseCommand))
             {
                 if (this[Flag.ExtendedAttributes] != null)
                     parameters.Add($"{Converters.LongName(Flag.ExtendedAttributes)} {this[Flag.ExtendedAttributes]}");
             }
 
             // Filesystems
-            if (GetSupportedCommands(Flag.Filesystems).Contains(Command))
+            if (GetSupportedCommands(Flag.Filesystems).Contains(BaseCommand))
             {
                 if (this[Flag.Filesystems] != null)
                     parameters.Add($"{Converters.LongName(Flag.Filesystems)} {this[Flag.Filesystems]}");
             }
 
             // First Pregap
-            if (GetSupportedCommands(Flag.FirstPregap).Contains(Command))
+            if (GetSupportedCommands(Flag.FirstPregap).Contains(BaseCommand))
             {
                 if (this[Flag.FirstPregap] != null)
                     parameters.Add($"{Converters.LongName(Flag.FirstPregap)} {this[Flag.FirstPregap]}");
             }
 
             // Fix Offset
-            if (GetSupportedCommands(Flag.FixOffset).Contains(Command))
+            if (GetSupportedCommands(Flag.FixOffset).Contains(BaseCommand))
             {
                 if (this[Flag.FixOffset] != null)
                     parameters.Add($"{Converters.LongName(Flag.FixOffset)} {this[Flag.FixOffset]}");
             }
 
             // Fletcher-16
-            if (GetSupportedCommands(Flag.Fletcher16).Contains(Command))
+            if (GetSupportedCommands(Flag.Fletcher16).Contains(BaseCommand))
             {
                 if (this[Flag.Fletcher16] != null)
                     parameters.Add($"{Converters.LongName(Flag.Fletcher16)} {this[Flag.Fletcher16]}");
             }
 
             // Fletcher-32
-            if (GetSupportedCommands(Flag.Fletcher32).Contains(Command))
+            if (GetSupportedCommands(Flag.Fletcher32).Contains(BaseCommand))
             {
                 if (this[Flag.Fletcher32] != null)
                     parameters.Add($"{Converters.LongName(Flag.Fletcher32)} {this[Flag.Fletcher32]}");
             }
 
             // Force
-            if (GetSupportedCommands(Flag.Force).Contains(Command))
+            if (GetSupportedCommands(Flag.Force).Contains(BaseCommand))
             {
                 if (this[Flag.Force] != null)
                     parameters.Add($"{Converters.LongName(Flag.Force)} {this[Flag.Force]}");
             }
 
             // Long Format
-            if (GetSupportedCommands(Flag.LongFormat).Contains(Command))
+            if (GetSupportedCommands(Flag.LongFormat).Contains(BaseCommand))
             {
                 if (this[Flag.LongFormat] != null)
                     parameters.Add($"{Converters.LongName(Flag.LongFormat)} {this[Flag.LongFormat]}");
             }
 
             // Long Sectors
-            if (GetSupportedCommands(Flag.LongSectors).Contains(Command))
+            if (GetSupportedCommands(Flag.LongSectors).Contains(BaseCommand))
             {
                 if (this[Flag.LongSectors] != null)
                     parameters.Add($"{Converters.LongName(Flag.LongSectors)} {this[Flag.LongSectors]}");
             }
 
             // MD5
-            if (GetSupportedCommands(Flag.MD5).Contains(Command))
+            if (GetSupportedCommands(Flag.MD5).Contains(BaseCommand))
             {
                 if (this[Flag.MD5] != null)
                     parameters.Add($"{Converters.LongName(Flag.MD5)} {this[Flag.MD5]}");
             }
 
             // Metadata
-            if (GetSupportedCommands(Flag.Metadata).Contains(Command))
+            if (GetSupportedCommands(Flag.Metadata).Contains(BaseCommand))
             {
                 if (this[Flag.Metadata] != null)
                     parameters.Add($"{Converters.LongName(Flag.Metadata)} {this[Flag.Metadata]}");
             }
 
             // Partitions
-            if (GetSupportedCommands(Flag.Partitions).Contains(Command))
+            if (GetSupportedCommands(Flag.Partitions).Contains(BaseCommand))
             {
                 if (this[Flag.Partitions] != null)
                     parameters.Add($"{Converters.LongName(Flag.Partitions)} {this[Flag.Partitions]}");
             }
 
             // Persistent
-            if (GetSupportedCommands(Flag.Persistent).Contains(Command))
+            if (GetSupportedCommands(Flag.Persistent).Contains(BaseCommand))
             {
                 if (this[Flag.Persistent] != null)
                     parameters.Add($"{Converters.LongName(Flag.Persistent)} {this[Flag.Persistent]}");
             }
 
             // Resume
-            if (GetSupportedCommands(Flag.Resume).Contains(Command))
+            if (GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
             {
                 if (this[Flag.Resume] != null)
                     parameters.Add($"{Converters.LongName(Flag.Resume)} {this[Flag.Resume]}");
             }
 
             // Sector Tags
-            if (GetSupportedCommands(Flag.SectorTags).Contains(Command))
+            if (GetSupportedCommands(Flag.SectorTags).Contains(BaseCommand))
             {
                 if (this[Flag.SectorTags] != null)
                     parameters.Add($"{Converters.LongName(Flag.SectorTags)} {this[Flag.SectorTags]}");
             }
 
             // Separated Tracks
-            if (GetSupportedCommands(Flag.SeparatedTracks).Contains(Command))
+            if (GetSupportedCommands(Flag.SeparatedTracks).Contains(BaseCommand))
             {
                 if (this[Flag.SeparatedTracks] != null)
                     parameters.Add($"{Converters.LongName(Flag.SeparatedTracks)} {this[Flag.SeparatedTracks]}");
             }
 
             // SHA-1
-            if (GetSupportedCommands(Flag.SHA1).Contains(Command))
+            if (GetSupportedCommands(Flag.SHA1).Contains(BaseCommand))
             {
                 if (this[Flag.SHA1] != null)
                     parameters.Add($"{Converters.LongName(Flag.SHA1)} {this[Flag.SHA1]}");
             }
 
             // SHA-256
-            if (GetSupportedCommands(Flag.SHA256).Contains(Command))
+            if (GetSupportedCommands(Flag.SHA256).Contains(BaseCommand))
             {
                 if (this[Flag.SHA256] != null)
                     parameters.Add($"{Converters.LongName(Flag.SHA256)} {this[Flag.SHA256]}");
             }
 
             // SHA-384
-            if (GetSupportedCommands(Flag.SHA384).Contains(Command))
+            if (GetSupportedCommands(Flag.SHA384).Contains(BaseCommand))
             {
                 if (this[Flag.SHA384] != null)
                     parameters.Add($"{Converters.LongName(Flag.SHA384)} {this[Flag.SHA384]}");
             }
 
             // SHA-512
-            if (GetSupportedCommands(Flag.SHA512).Contains(Command))
+            if (GetSupportedCommands(Flag.SHA512).Contains(BaseCommand))
             {
                 if (this[Flag.SHA512] != null)
                     parameters.Add($"{Converters.LongName(Flag.SHA512)} {this[Flag.SHA512]}");
             }
 
             // SpamSum
-            if (GetSupportedCommands(Flag.SpamSum).Contains(Command))
+            if (GetSupportedCommands(Flag.SpamSum).Contains(BaseCommand))
             {
                 if (this[Flag.SpamSum] != null)
                     parameters.Add($"{Converters.LongName(Flag.SpamSum)} {this[Flag.SpamSum]}");
             }
 
             // Stop on Error
-            if (GetSupportedCommands(Flag.StopOnError).Contains(Command))
+            if (GetSupportedCommands(Flag.StopOnError).Contains(BaseCommand))
             {
                 if (this[Flag.StopOnError] != null)
                     parameters.Add($"{Converters.LongName(Flag.StopOnError)} {this[Flag.StopOnError]}");
             }
 
             // Tape
-            if (GetSupportedCommands(Flag.Tape).Contains(Command))
+            if (GetSupportedCommands(Flag.Tape).Contains(BaseCommand))
             {
                 if (this[Flag.Tape] != null)
                     parameters.Add($"{Converters.LongName(Flag.Tape)} {this[Flag.Tape]}");
             }
 
             // Trim
-            if (GetSupportedCommands(Flag.Trim).Contains(Command))
+            if (GetSupportedCommands(Flag.Trim).Contains(BaseCommand))
             {
                 if (this[Flag.Trim] != null)
                     parameters.Add($"{Converters.LongName(Flag.Trim)} {this[Flag.Trim]}");
             }
 
             // Verify Disc
-            if (GetSupportedCommands(Flag.VerifyDisc).Contains(Command))
+            if (GetSupportedCommands(Flag.VerifyDisc).Contains(BaseCommand))
             {
                 if (this[Flag.VerifyDisc] != null)
                     parameters.Add($"{Converters.LongName(Flag.VerifyDisc)} {this[Flag.VerifyDisc]}");
             }
 
             // Verify Sectors
-            if (GetSupportedCommands(Flag.VerifySectors).Contains(Command))
+            if (GetSupportedCommands(Flag.VerifySectors).Contains(BaseCommand))
             {
                 if (this[Flag.VerifySectors] != null)
                     parameters.Add($"{Converters.LongName(Flag.VerifySectors)} {this[Flag.VerifySectors]}");
             }
 
             // Whole Disc
-            if (GetSupportedCommands(Flag.WholeDisc).Contains(Command))
+            if (GetSupportedCommands(Flag.WholeDisc).Contains(BaseCommand))
             {
                 if (this[Flag.WholeDisc] != null)
                     parameters.Add($"{Converters.LongName(Flag.WholeDisc)} {this[Flag.WholeDisc]}");
@@ -534,7 +561,7 @@ namespace DICUI.DiscImageChef
             #region Int8 flags
 
             // Speed
-            if (GetSupportedCommands(Flag.Speed).Contains(Command))
+            if (GetSupportedCommands(Flag.Speed).Contains(BaseCommand))
             {
                 if (this[Flag.Speed] == true && SpeedValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Speed)} {SpeedValue}");
@@ -545,14 +572,14 @@ namespace DICUI.DiscImageChef
             #region Int16 flags
 
             // Retry Passes
-            if (GetSupportedCommands(Flag.RetryPasses).Contains(Command))
+            if (GetSupportedCommands(Flag.RetryPasses).Contains(BaseCommand))
             {
                 if (this[Flag.RetryPasses] == true && RetryPassesValue != null)
                     parameters.Add($"{Converters.LongName(Flag.RetryPasses)} {RetryPassesValue}");
             }
 
             // Width
-            if (GetSupportedCommands(Flag.Width).Contains(Command))
+            if (GetSupportedCommands(Flag.Width).Contains(BaseCommand))
             {
                 if (this[Flag.Width] == true && WidthValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Width)} {WidthValue}");
@@ -563,35 +590,35 @@ namespace DICUI.DiscImageChef
             #region Int32 flags
 
             // Block Size
-            if (GetSupportedCommands(Flag.BlockSize).Contains(Command))
+            if (GetSupportedCommands(Flag.BlockSize).Contains(BaseCommand))
             {
                 if (this[Flag.BlockSize] == true && BlockSizeValue != null)
                     parameters.Add($"{Converters.LongName(Flag.BlockSize)} {BlockSizeValue}");
             }
 
             // Count
-            if (GetSupportedCommands(Flag.Count).Contains(Command))
+            if (GetSupportedCommands(Flag.Count).Contains(BaseCommand))
             {
                 if (this[Flag.Count] == true && CountValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Count)} {CountValue}");
             }
 
             // Media Last Sequence
-            if (GetSupportedCommands(Flag.MediaLastSequence).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaLastSequence).Contains(BaseCommand))
             {
                 if (this[Flag.MediaLastSequence] == true && MediaLastSequenceValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaLastSequence)} {MediaLastSequenceValue}");
             }
 
             // Media Sequence
-            if (GetSupportedCommands(Flag.MediaSequence).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaSequence).Contains(BaseCommand))
             {
                 if (this[Flag.MediaSequence] == true && MediaSequenceValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaSequence)} {MediaSequenceValue}");
             }
 
             // Skip
-            if (GetSupportedCommands(Flag.Skip).Contains(Command))
+            if (GetSupportedCommands(Flag.Skip).Contains(BaseCommand))
             {
                 if (this[Flag.Skip] == true && SkipValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Skip)} {SkipValue}");
@@ -602,14 +629,14 @@ namespace DICUI.DiscImageChef
             #region Int64 flags
 
             // Length -- TODO: Support "all" case
-            if (GetSupportedCommands(Flag.Length).Contains(Command))
+            if (GetSupportedCommands(Flag.Length).Contains(BaseCommand))
             {
                 if (this[Flag.Length] == true && LengthValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Length)} {LengthValue}");
             }
 
             // Start
-            if (GetSupportedCommands(Flag.Start).Contains(Command))
+            if (GetSupportedCommands(Flag.Start).Contains(BaseCommand))
             {
                 if (this[Flag.Start] == true && StartValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Start)} {StartValue}");
@@ -620,161 +647,161 @@ namespace DICUI.DiscImageChef
             #region String flags
 
             // Comments
-            if (GetSupportedCommands(Flag.Comments).Contains(Command))
+            if (GetSupportedCommands(Flag.Comments).Contains(BaseCommand))
             {
                 if (this[Flag.Comments] == true && CommentsValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Comments)} \"{CommentsValue}\"");
             }
 
             // Creator
-            if (GetSupportedCommands(Flag.Creator).Contains(Command))
+            if (GetSupportedCommands(Flag.Creator).Contains(BaseCommand))
             {
                 if (this[Flag.Creator] == true && CreatorValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Creator)} \"{CreatorValue}\"");
             }
 
             // Drive Manufacturer
-            if (GetSupportedCommands(Flag.DriveManufacturer).Contains(Command))
+            if (GetSupportedCommands(Flag.DriveManufacturer).Contains(BaseCommand))
             {
                 if (this[Flag.DriveManufacturer] == true && DriveManufacturerValue != null)
                     parameters.Add($"{Converters.LongName(Flag.DriveManufacturer)} \"{DriveManufacturerValue}\"");
             }
 
             // Drive Model
-            if (GetSupportedCommands(Flag.DriveModel).Contains(Command))
+            if (GetSupportedCommands(Flag.DriveModel).Contains(BaseCommand))
             {
                 if (this[Flag.DriveModel] == true && DriveModelValue != null)
                     parameters.Add($"{Converters.LongName(Flag.DriveModel)} \"{DriveModelValue}\"");
             }
 
             // Drive Revision
-            if (GetSupportedCommands(Flag.DriveRevision).Contains(Command))
+            if (GetSupportedCommands(Flag.DriveRevision).Contains(BaseCommand))
             {
                 if (this[Flag.DriveRevision] == true && DriveRevisionValue != null)
                     parameters.Add($"{Converters.LongName(Flag.DriveRevision)} \"{DriveRevisionValue}\"");
             }
 
             // Drive Serial
-            if (GetSupportedCommands(Flag.DriveSerial).Contains(Command))
+            if (GetSupportedCommands(Flag.DriveSerial).Contains(BaseCommand))
             {
                 if (this[Flag.DriveSerial] == true && DriveSerialValue != null)
                     parameters.Add($"{Converters.LongName(Flag.DriveSerial)} \"{DriveSerialValue}\"");
             }
 
             // Encoding
-            if (GetSupportedCommands(Flag.Encoding).Contains(Command))
+            if (GetSupportedCommands(Flag.Encoding).Contains(BaseCommand))
             {
                 if (this[Flag.Encoding] == true && EncodingValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Encoding)} \"{EncodingValue}\"");
             }
 
             // Format (Convert)
-            if (GetSupportedCommands(Flag.FormatConvert).Contains(Command))
+            if (GetSupportedCommands(Flag.FormatConvert).Contains(BaseCommand))
             {
                 if (this[Flag.FormatConvert] == true && FormatConvertValue != null)
                     parameters.Add($"{Converters.LongName(Flag.FormatConvert)} \"{FormatConvertValue}\"");
             }
 
             // Format (Dump)
-            if (GetSupportedCommands(Flag.FormatDump).Contains(Command))
+            if (GetSupportedCommands(Flag.FormatDump).Contains(BaseCommand))
             {
                 if (this[Flag.FormatDump] == true && FormatDumpValue != null)
                     parameters.Add($"{Converters.LongName(Flag.FormatDump)} \"{FormatDumpValue}\"");
             }
 
             // ImgBurn Log
-            if (GetSupportedCommands(Flag.ImgBurnLog).Contains(Command))
+            if (GetSupportedCommands(Flag.ImgBurnLog).Contains(BaseCommand))
             {
                 if (this[Flag.ImgBurnLog] == true && ImgBurnLogValue != null)
                     parameters.Add($"{Converters.LongName(Flag.ImgBurnLog)} \"{ImgBurnLogValue}\"");
             }
 
             // Media Barcode
-            if (GetSupportedCommands(Flag.MediaBarcode).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaBarcode).Contains(BaseCommand))
             {
                 if (this[Flag.MediaBarcode] == true && MediaBarcodeValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaBarcode)} \"{MediaBarcodeValue}\"");
             }
 
             // Media Manufacturer
-            if (GetSupportedCommands(Flag.MediaManufacturer).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaManufacturer).Contains(BaseCommand))
             {
                 if (this[Flag.MediaManufacturer] == true && MediaManufacturerValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaManufacturer)} \"{MediaManufacturerValue}\"");
             }
 
             // Media Model
-            if (GetSupportedCommands(Flag.MediaModel).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaModel).Contains(BaseCommand))
             {
                 if (this[Flag.MediaModel] == true && MediaModelValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaModel)} \"{MediaModelValue}\"");
             }
 
             // Media Part Number
-            if (GetSupportedCommands(Flag.MediaPartNumber).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaPartNumber).Contains(BaseCommand))
             {
                 if (this[Flag.MediaPartNumber] == true && MediaPartNumberValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaPartNumber)} \"{MediaPartNumberValue}\"");
             }
 
             // Media Serial
-            if (GetSupportedCommands(Flag.MediaSerial).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaSerial).Contains(BaseCommand))
             {
                 if (this[Flag.MediaSerial] == true && MediaSerialValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaSerial)} \"{MediaSerialValue}\"");
             }
 
             // Media Title
-            if (GetSupportedCommands(Flag.MediaTitle).Contains(Command))
+            if (GetSupportedCommands(Flag.MediaTitle).Contains(BaseCommand))
             {
                 if (this[Flag.MediaTitle] == true && MediaTitleValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MediaTitle)} \"{MediaTitleValue}\"");
             }
 
             // MHDD Log
-            if (GetSupportedCommands(Flag.MHDDLog).Contains(Command))
+            if (GetSupportedCommands(Flag.MHDDLog).Contains(BaseCommand))
             {
                 if (this[Flag.MHDDLog] == true && MHDDLogValue != null)
                     parameters.Add($"{Converters.LongName(Flag.MHDDLog)} \"{MHDDLogValue}\"");
             }
 
             // Namespace
-            if (GetSupportedCommands(Flag.Namespace).Contains(Command))
+            if (GetSupportedCommands(Flag.Namespace).Contains(BaseCommand))
             {
                 if (this[Flag.Namespace] == true && NamespaceValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Namespace)} \"{NamespaceValue}\"");
             }
 
             // Options
-            if (GetSupportedCommands(Flag.Options).Contains(Command))
+            if (GetSupportedCommands(Flag.Options).Contains(BaseCommand))
             {
                 if (this[Flag.Options] == true && OptionsValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Options)} \"{OptionsValue}\"");
             }
 
             // Output Prefix
-            if (GetSupportedCommands(Flag.OutputPrefix).Contains(Command))
+            if (GetSupportedCommands(Flag.OutputPrefix).Contains(BaseCommand))
             {
                 if (this[Flag.OutputPrefix] == true && OutputPrefixValue != null)
                     parameters.Add($"{Converters.LongName(Flag.OutputPrefix)} \"{OutputPrefixValue}\"");
             }
 
             // Resume File
-            if (GetSupportedCommands(Flag.ResumeFile).Contains(Command))
+            if (GetSupportedCommands(Flag.ResumeFile).Contains(BaseCommand))
             {
                 if (this[Flag.ResumeFile] == true && ResumeFileValue != null)
                     parameters.Add($"{Converters.LongName(Flag.ResumeFile)} \"{ResumeFileValue}\"");
             }
 
             // Subchannel
-            if (GetSupportedCommands(Flag.Subchannel).Contains(Command))
+            if (GetSupportedCommands(Flag.Subchannel).Contains(BaseCommand))
             {
                 if (this[Flag.Subchannel] == true && SubchannelValue != null)
                     parameters.Add($"{Converters.LongName(Flag.Subchannel)} \"{SubchannelValue}\"");
             }
 
             // XML Sidecar
-            if (GetSupportedCommands(Flag.XMLSidecar).Contains(Command))
+            if (GetSupportedCommands(Flag.XMLSidecar).Contains(BaseCommand))
             {
                 if (this[Flag.XMLSidecar] == true && XMLSidecarValue != null)
                     parameters.Add($"{Converters.LongName(Flag.XMLSidecar)} \"{XMLSidecarValue}\"");
@@ -783,7 +810,7 @@ namespace DICUI.DiscImageChef
             #endregion
 
             // Handle filenames based on command, if necessary
-            switch (Command)
+            switch (BaseCommand)
             {
                 // Input value only
                 case Command.DeviceInfo:
@@ -839,12 +866,42 @@ namespace DICUI.DiscImageChef
         }
 
         /// <summary>
+        /// Get the input path from the implementation
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public override string InputPath() => InputValue;
+
+        /// <summary>
+        /// Get the output path from the implementation
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public override string OutputPath() => OutputValue;
+
+        /// <summary>
+        /// Get the processing speed from the implementation
+        /// </summary>
+        /// <returns>int? representing the speed, null on error</returns>
+        public override int? GetSpeed() => SpeedValue;
+
+        /// <summary>
+        /// Set the processing speed int the implementation
+        /// </summary>
+        /// <param name="speed">int? representing the speed</param>
+        public override void SetSpeed(int? speed) => SpeedValue = (sbyte?)speed;
+
+        /// <summary>
+        /// Get the MediaType from the current set of parameters
+        /// </summary>
+        /// <returns>MediaType value if successful, null on error</returns>
+        public override MediaType? GetMediaType() => null;
+
+        /// <summary>
         /// Gets if the current command is considered a dumping command or not
         /// </summary>
         /// <returns>True if it's a dumping command, false otherwise</returns>
         public override bool IsDumpingCommand()
         {
-            switch (Command)
+            switch (BaseCommand)
             {
                 case Command.MediaDump:
                     return true;
@@ -895,8 +952,8 @@ namespace DICUI.DiscImageChef
             }
 
             // Determine what the commandline should look like given the first item
-            Command = Converters.StringToCommand(parts[start], parts.Count > start ? parts[start + 1] : null, out bool useSecond);
-            if (Command == Command.NONE)
+            BaseCommand = Converters.StringToCommand(parts[start], parts.Count > start ? parts[start + 1] : null, out bool useSecond);
+            if (BaseCommand == Command.NONE)
                 return false;
 
             // Set the start according to what the full command was
@@ -1218,7 +1275,7 @@ namespace DICUI.DiscImageChef
             }
 
             // Handle filenames based on command, if necessary
-            switch (Command)
+            switch (BaseCommand)
             {
                 // Input value only
                 case Command.DeviceInfo:
@@ -1296,7 +1353,7 @@ namespace DICUI.DiscImageChef
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>
         /// <returns>List of Commands, if possible</returns>
-        protected override List<Command> GetSupportedCommands(Flag flag)
+        private List<Command> GetSupportedCommands(Flag flag)
         {
             var commands = new List<Command>();
             switch (flag)
@@ -1556,7 +1613,7 @@ namespace DICUI.DiscImageChef
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
             {
-                if (!GetSupportedCommands(flag).Contains(Command))
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
                     return false;
                 else if (!DoesExist(parts, i + 1))
                     return false;
@@ -1586,7 +1643,7 @@ namespace DICUI.DiscImageChef
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
             {
-                if (!GetSupportedCommands(flag).Contains(Command))
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
                     return null;
                 else if (!DoesExist(parts, i + 1))
                     return null;
@@ -1617,7 +1674,7 @@ namespace DICUI.DiscImageChef
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
             {
-                if (!GetSupportedCommands(flag).Contains(Command))
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
                     return null;
                 else if (!DoesExist(parts, i + 1))
                     return null;
@@ -1648,7 +1705,7 @@ namespace DICUI.DiscImageChef
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
             {
-                if (!GetSupportedCommands(flag).Contains(Command))
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
                     return null;
                 else if (!DoesExist(parts, i + 1))
                     return null;
@@ -1679,7 +1736,7 @@ namespace DICUI.DiscImageChef
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
             {
-                if (!GetSupportedCommands(flag).Contains(Command))
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
                     return null;
                 else if (!DoesExist(parts, i + 1))
                     return null;
@@ -1710,7 +1767,7 @@ namespace DICUI.DiscImageChef
 
             if (parts[i] == shortFlagString || parts[i] == longFlagString)
             {
-                if (!GetSupportedCommands(flag).Contains(Command))
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
                     return null;
                 else if (!DoesExist(parts, i + 1))
                     return null;

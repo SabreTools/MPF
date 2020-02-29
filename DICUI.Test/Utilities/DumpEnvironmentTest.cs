@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using DICUI.Data;
-using DICUI.DiscImageCreator;
 using DICUI.Utilities;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace DICUI.Test
         {
             var env = new DumpEnvironment
             {
-                CreatorParameters = new Parameters(parameters),
+                Parameters = new DiscImageCreator.Parameters(parameters),
                 Drive = isFloppy
                     ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
                     : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString())),

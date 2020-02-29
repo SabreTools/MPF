@@ -3,7 +3,7 @@ namespace DICUI.DiscImageChef
     /// <summary>
     /// Supported DiscImageChef commands
     /// </summary>
-    public enum Command
+    public enum Command : int
     {
         NONE = 0,
 
@@ -50,7 +50,7 @@ namespace DICUI.DiscImageChef
     /// <summary>
     /// Supported DiscImageChef flags
     /// </summary>
-    public enum Flag
+    public enum Flag : int
     {
         NONE = 0,
 
