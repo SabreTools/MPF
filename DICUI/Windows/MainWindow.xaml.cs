@@ -472,7 +472,7 @@ namespace DICUI.Windows
             switch (env.InternalProgram)
             {
                 case InternalProgram.Aaru:
-                    env.Parameters.Path = _options.ChefPath;
+                    env.Parameters.Path = _options.AaruPath;
                     break;
 
                 case InternalProgram.DiscImageCreator:
@@ -572,7 +572,7 @@ namespace DICUI.Windows
 
                 if (result)
                 {
-                    // TODO: Remove Chef handling when irrelevant
+                    // TODO: Remove Aaru handling when irrelevant
                     if (_env.InternalProgram == InternalProgram.Aaru)
                     {
                         ViewModels.LoggerViewModel.VerboseLogLn("Aaru does not support split tracks or DiscImageCreator-compatible outputs");

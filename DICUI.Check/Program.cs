@@ -59,7 +59,7 @@ namespace DICUI.Check
 
             // Check for additional flags
             string username = null, password = null;
-            bool useChef = false;
+            bool useAaru = false;
             int startIndex = 2;
             for (; startIndex < args.Length; startIndex++)
             {
@@ -72,10 +72,10 @@ namespace DICUI.Check
                 }
 
                 // Use Aaru
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use-chef")
+                else if (args[startIndex] == "-u" || args[startIndex] == "--use-aaru")
                 {
                     // TODO: Make this into an InternalProgram flag
-                    useChef = true;
+                    useAaru = true;
                 }
 
                 // Default, we fall out
@@ -111,7 +111,7 @@ namespace DICUI.Check
                     Type = mediaType,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    InternalProgram = useChef ? InternalProgram.Aaru : InternalProgram.DiscImageCreator,
+                    InternalProgram = useAaru ? InternalProgram.Aaru : InternalProgram.DiscImageCreator,
 
                     Username = username,
                     Password = password,

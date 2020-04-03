@@ -14,7 +14,7 @@ namespace DICUI.Aaru
         public static string Extension(MediaType? type)
         {
             // Aaru has a single, unified output format by default
-            return ".dicf";
+            return ".aif";
         }
 
         #endregion

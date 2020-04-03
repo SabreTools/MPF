@@ -9,7 +9,7 @@ namespace DICUI
     public class Options
     {
         public string DefaultOutputPath { get; private set; }
-        public string ChefPath { get; private set; }
+        public string AaruPath { get; private set; }
         public string CreatorPath { get; private set; }
         public string SubDumpPath { get; private set; }
 
@@ -59,7 +59,7 @@ namespace DICUI
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             //TODO: hardcoded, we should find a better way
-            this.ChefPath = GetStringSetting(configFile, "AaruPath", "Programs\\Aaru\\Aaru.exe");
+            this.AaruPath = GetStringSetting(configFile, "AaruPath", "Programs\\Aaru\\Aaru.exe");
             this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe");
             this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "Programs\\Subdump\\subdump.exe");
             this.DefaultOutputPath = GetStringSetting(configFile, "DefaultOutputPath", "ISO");

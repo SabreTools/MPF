@@ -32,12 +32,12 @@ build:
 
 # post-build step
 after_build:
-- ps: appveyor DownloadFile https://github.com/discimagechef/DiscImageChef/releases/download/v4.5.1.1692/DiscImageChef-4.5.1.1692-debug.zip
+- ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.0.0.2879/aaru-5.0.0.2879-1_windows_x64.zip
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/4151891/DiscImageCreator_20200204.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
-- 7z e DiscImageChef-4.5.1.1692-debug.zip -oDICUI\bin\Debug\net462\Programs\Chef *
-- 7z e DiscImageChef-4.5.1.1692-debug.zip -oDICUI\bin\Debug\net472\Programs\Chef *
-- 7z e DiscImageChef-4.5.1.1692-debug.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Chef *
+- 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\net462\Programs\Aaru *
+- 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\net472\Programs\Aaru *
+- 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Aaru *
 - 7z e DiscImageCreator_20200204.zip -oDICUI\bin\Debug\net462\Programs\Creator Release_ANSI\*
 - 7z e DiscImageCreator_20200204.zip -oDICUI\bin\Debug\net472\Programs\Creator Release_ANSI\*
 - 7z e DiscImageCreator_20200204.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Creator Release_ANSI\*

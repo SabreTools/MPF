@@ -8,7 +8,7 @@ This is a community project, so if you have some time and knowledge to give, we'
 
 DICUI relies on the following projects:
 - **DiscImageCreator** by Sarami - Dumping - [GitHub](https://github.com/saramibreak/DiscImageCreator)
-- **Aaru** by Claunia - Dumping - [GitHub](https://github.com/discimagechef/DiscImageChef)
+- **Aaru** by Claunia - Dumping - [GitHub](https://github.com/aaru-dps/Aaru)
 - **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
 - **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
 
