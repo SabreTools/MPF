@@ -71,7 +71,7 @@ namespace DICUI.Check
                     startIndex += 2;
                 }
 
-                // Use DiscImageChef
+                // Use Aaru
                 else if (args[startIndex] == "-u" || args[startIndex] == "--use-chef")
                 {
                     // TODO: Make this into an InternalProgram flag
@@ -111,7 +111,7 @@ namespace DICUI.Check
                     Type = mediaType,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    InternalProgram = useChef ? InternalProgram.DiscImageChef : InternalProgram.DiscImageCreator,
+                    InternalProgram = useChef ? InternalProgram.Aaru : InternalProgram.DiscImageCreator,
 
                     Username = username,
                     Password = password,
@@ -159,7 +159,7 @@ x360            - Microsoft XBOX 360");
             Console.WriteLine();
             Console.WriteLine(@"Common Options:\r\n
 -c username password    - Redump credentials
--u                      - Check for DiscImageChef");
+-u                      - Check for Aaru");
         }
 
         /// <summary>

@@ -471,7 +471,7 @@ namespace DICUI.Windows
             env.SetParameters(ParametersTextBox.Text);
             switch (env.InternalProgram)
             {
-                case InternalProgram.DiscImageChef:
+                case InternalProgram.Aaru:
                     env.Parameters.Path = _options.ChefPath;
                     break;
 
@@ -523,7 +523,7 @@ namespace DICUI.Windows
             {
                 // Check for the firmware first for DiscImageCreator
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                if (_env.InternalProgram != InternalProgram.DiscImageChef && !await _env.DriveHasLatestFimrware())
+                if (_env.InternalProgram != InternalProgram.Aaru && !await _env.DriveHasLatestFimrware())
                 {
                     MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -573,9 +573,9 @@ namespace DICUI.Windows
                 if (result)
                 {
                     // TODO: Remove Chef handling when irrelevant
-                    if (_env.InternalProgram == InternalProgram.DiscImageChef)
+                    if (_env.InternalProgram == InternalProgram.Aaru)
                     {
-                        ViewModels.LoggerViewModel.VerboseLogLn("DiscImageChef does not support split tracks or DiscImageCreator-compatible outputs");
+                        ViewModels.LoggerViewModel.VerboseLogLn("Aaru does not support split tracks or DiscImageCreator-compatible outputs");
                         ViewModels.LoggerViewModel.VerboseLogLn("No automatic submission information will be gathered for this disc");
                     }
                     else
@@ -672,8 +672,8 @@ namespace DICUI.Windows
             string extension = null;
             switch (_env.InternalProgram)
             {
-                case InternalProgram.DiscImageChef:
-                    extension = DiscImageChef.Converters.Extension(mediaType);
+                case InternalProgram.Aaru:
+                    extension = Aaru.Converters.Extension(mediaType);
                     break;
                 case InternalProgram.DiscImageCreator:
                     extension = DiscImageCreator.Converters.Extension(mediaType);

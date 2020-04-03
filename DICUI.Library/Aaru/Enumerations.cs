@@ -1,7 +1,7 @@
-namespace DICUI.DiscImageChef
+namespace DICUI.Aaru
 {
     /// <summary>
-    /// Supported DiscImageChef commands
+    /// Supported Aaru commands
     /// </summary>
     public enum Command : int
     {
@@ -48,7 +48,7 @@ namespace DICUI.DiscImageChef
     }
 
     /// <summary>
-    /// Supported DiscImageChef flags
+    /// Supported Aaru flags
     /// </summary>
     public enum Flag : int
     {

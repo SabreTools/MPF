@@ -1444,7 +1444,7 @@ namespace DICUI.DiscImageCreator
         /// Get the list of commands that use a given flag
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>
-        /// <returns>List of DiscImageChef.Commands, if possible</returns>
+        /// <returns>List of DiscImageCreator.Commands, if possible</returns>
         private List<Command> GetSupportedCommands(Flag flag)
         {
             var commands = new List<Command>();

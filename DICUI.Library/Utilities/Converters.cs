@@ -2072,10 +2072,11 @@ namespace DICUI.Utilities
         {
             switch (internalProgram.ToLowerInvariant())
             {
+                case "aaru":
                 case "chef":
                 case "dichef":
                 case "discimagechef":
-                    return InternalProgram.DiscImageChef;
+                    return InternalProgram.Aaru;
                 case "creator":
                 case "dic":
                 case "dicreator":

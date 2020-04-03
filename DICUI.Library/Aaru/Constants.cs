@@ -1,7 +1,7 @@
-namespace DICUI.DiscImageChef
+namespace DICUI.Aaru
 {
     /// <summary>
-    /// Top-level commands for DiscImageChef
+    /// Top-level commands for Aaru
     /// </summary>
     public static class CommandStrings
     {
@@ -60,7 +60,7 @@ namespace DICUI.DiscImageChef
     }
 
     /// <summary>
-    /// Supported encodings for DiscImageChef
+    /// Supported encodings for Aaru
     /// </summary>
     public static class EncodingStrings
     {
@@ -100,7 +100,7 @@ namespace DICUI.DiscImageChef
     }
 
     /// <summary>
-    /// Dumping flags for DiscImageChef
+    /// Dumping flags for Aaru
     /// </summary>
     public static class FlagStrings
     {
@@ -229,7 +229,7 @@ namespace DICUI.DiscImageChef
     }
 
     /// <summary>
-    /// Supported formats for DiscImageChef
+    /// Supported formats for Aaru
     /// </summary>
     public static class FormatStrings
     {
@@ -285,7 +285,7 @@ namespace DICUI.DiscImageChef
         public static string CloneCD = "CloneCD";
         public static string CopyTape = "CopyTape";
         public static string DigitalResearchDiskCopy = "Digital Research DiskCopy";
-        public static string DiscImageChefFormat = "DiscImageChef format";
+        public static string AaruFormat = "Aaru format";
         public static string IBMSaveDskF = "IBM SaveDskF";
         public static string MAXIDiskImage = "MAXI Disk image";
         public static string ParallelsDiskImage = "Parallels disk image";
@@ -395,7 +395,7 @@ namespace DICUI.DiscImageChef
     }
 
     /// <summary>
-    /// Supported namespaces for DiscImageChef
+    /// Supported namespaces for Aaru
     /// </summary>
     public static class NamespaceStrings
     {
@@ -419,7 +419,7 @@ namespace DICUI.DiscImageChef
     }
 
     /// <summary>
-    /// Supported options for DiscImageChef
+    /// Supported options for Aaru
     /// </summary>
     public static class OptionStrings
     {
@@ -435,16 +435,16 @@ namespace DICUI.DiscImageChef
         // CDRWin cuesheet
         public static string CDRWinCuesheetSeparate = "separate"; // boolean, default false
 
-        // DiscImageChef format
-        public static string DiscImageChefDeduplicate = "deduplicate"; // boolean, default true
-        public static string DiscImageChefDictionary = "dictionary"; // number, default 33554432
-        public static string DiscImageChefMaxDDTSize = "max_ddt_size"; // number, default 256
-        public static string DiscImageChefMD5 = "md5"; // boolean, default false
-        public static string DiscImageChefNoCompress = "nocompress"; // boolean, default false
-        public static string DiscImageChefSectorsPerBlock = "sectors_per_block"; // number, default 4096
-        public static string DiscImageChefSHA1 = "sha1"; // boolean, default false
-        public static string DiscImageChefSHA256 = "sha256"; // boolean, default false
-        public static string DiscImageChefSpamSum = "spamsum"; // boolean, default false
+        // Aaru format
+        public static string AaruDeduplicate = "deduplicate"; // boolean, default true
+        public static string AaruDictionary = "dictionary"; // number, default 33554432
+        public static string AaruMaxDDTSize = "max_ddt_size"; // number, default 256
+        public static string AaruMD5 = "md5"; // boolean, default false
+        public static string AaruNoCompress = "nocompress"; // boolean, default false
+        public static string AaruSectorsPerBlock = "sectors_per_block"; // number, default 4096
+        public static string AaruSHA1 = "sha1"; // boolean, default false
+        public static string AaruSHA256 = "sha256"; // boolean, default false
+        public static string AaruSpamSum = "spamsum"; // boolean, default false
 
         // VMware disk image
         public static string VMwareDiskImageAdapterType = "adapter_type"; // string, default ide

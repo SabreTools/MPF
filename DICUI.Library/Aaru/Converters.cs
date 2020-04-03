@@ -1,6 +1,6 @@
 using DICUI.Data;
 
-namespace DICUI.DiscImageChef
+namespace DICUI.Aaru
 {
     public static class Converters
     {
@@ -13,7 +13,7 @@ namespace DICUI.DiscImageChef
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string Extension(MediaType? type)
         {
-            // DiscImageChef has a single, unified output format by default
+            // Aaru has a single, unified output format by default
             return ".dicf";
         }
 

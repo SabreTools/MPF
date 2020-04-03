@@ -48,7 +48,7 @@
         NONE = 0,
 
         DiscImageCreator,
-        DiscImageChef,
+        Aaru,
         DD, // TODO: Currently unimplemented
     }
 

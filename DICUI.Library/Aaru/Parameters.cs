@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DICUI.Data;
 
-namespace DICUI.DiscImageChef
+namespace DICUI.Aaru
 {
     /// <summary>
-    /// Represents a generic set of DiscImageChef parameters
+    /// Represents a generic set of Aaru parameters
     /// </summary>
     public class Parameters : BaseParameters
     {
@@ -123,7 +123,7 @@ namespace DICUI.DiscImageChef
         public Parameters(string parameters)
             : base(parameters)
         {
-            this.InternalProgram = InternalProgram.DiscImageChef;
+            this.InternalProgram = InternalProgram.Aaru;
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace DICUI.DiscImageChef
                 RetryPassesValue = (short)retryCount;
             }
 
-            // Paranoia in DiscImageChef means more output
+            // Paranoia in Aaru means more output
             if (paranoid)
             {
                 this[Flag.Debug] = true;
