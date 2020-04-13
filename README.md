@@ -12,7 +12,7 @@ DICUI relies on the following projects:
 - **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
 - **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
 
-**Note:** Both DiscImageCreator and Aaru have WIP builds. In general, WIP builds are not supported with new flags or features until they make it into the stable release. The exception to this rule is currently Aaru, due to the very old last stable release. It is recommended that you either download or build the latest version of Aaru for use with DICUI.
+**Note:** Both DiscImageCreator and Aaru have WIP builds. In general, WIP builds are not supported with new flags or features until they make it into the stable release.
 
 ## System Requirements
 
