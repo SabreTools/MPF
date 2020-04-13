@@ -39,10 +39,10 @@ namespace DICUI.Check
             {
                 DisplayHelp("Invalid number of arguments");
                 return;
-            }            
+            }
 
             // Check the MediaType
-            var mediaType = Converters.StringToMediaType(args[0].Trim('"'));
+            var mediaType = Converters.ToMediaType(args[0].Trim('"'));
             if (mediaType == MediaType.NONE)
             {
                 DisplayHelp($"{args[0]} is not a recognized media type");
@@ -50,7 +50,7 @@ namespace DICUI.Check
             }
 
             // Check the KnownSystem
-            var knownSystem = Converters.StringToKnownSystem(args[1].Trim('"'));
+            var knownSystem = Converters.ToKnownSystem(args[1].Trim('"'));
             if (knownSystem == KnownSystem.NONE)
             {
                 DisplayHelp($"{args[1]} is not a recognized system");
@@ -59,7 +59,7 @@ namespace DICUI.Check
 
             // Check for additional flags
             string username = null, password = null;
-            bool useChef = false;
+            string internalProgram = "DiscImageCreator";
             int startIndex = 2;
             for (; startIndex < args.Length; startIndex++)
             {
@@ -71,10 +71,10 @@ namespace DICUI.Check
                     startIndex += 2;
                 }
 
-                // Use DiscImageChef
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use-chef")
+                // Use specific program
+                else if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
                 {
-                    useChef = true;
+                    internalProgram = args[startIndex].Split('=')[1];
                 }
 
                 // Default, we fall out
@@ -110,7 +110,7 @@ namespace DICUI.Check
                     Type = mediaType,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    UseChef = useChef,
+                    InternalProgram = Converters.ToInternalProgram(internalProgram),
 
                     Username = username,
                     Password = password,
@@ -158,7 +158,7 @@ x360            - Microsoft XBOX 360");
             Console.WriteLine();
             Console.WriteLine(@"Common Options:\r\n
 -c username password    - Redump credentials
--u                      - Check for DiscImageChef");
+-u                      - Check for Aaru");
         }
 
         /// <summary>

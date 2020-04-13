@@ -13,18 +13,13 @@ namespace DICUI
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is ChefCommand)
-                return ((ChefCommand)value).LongName();
-            else if (value is ChefFlag)
-                return ((ChefFlag)value).LongName();
-            else if (value is CreatorCommand)
-                return ((CreatorCommand)value).LongName();
-            else if (value is CreatorFlag)
-                return ((CreatorFlag)value).LongName();
-            else if (value is MediaType?)
+            // Common
+            if (value is MediaType?)
                 return ((MediaType?)value).LongName();
             else if (value is KnownSystem?)
                 return ((KnownSystem?)value).LongName();
+
+            // Default
             else
                 return "";
         }

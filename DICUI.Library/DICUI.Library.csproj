@@ -1,12 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net462;net472;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net462;net472;net48;netcoreapp3.1</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  
-  <ItemGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'!='netcoreapp2.1' AND '$(TargetFramework)'!='netcoreapp3.1'">
+    <DefineConstants>NET_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.1' AND '$(TargetFramework)'!='netcoreapp3.1'">
     <COMReference Include="IMAPI2">
       <Guid>{2735412F-7F64-5B0F-8F00-5D77AFBE261E}</Guid>
       <VersionMajor>1</VersionMajor>

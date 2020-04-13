@@ -280,7 +280,7 @@ namespace DICUI.Windows
                     + (different
                         ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
                         : $"{Environment.NewLine}You have the newest version!");
-                
+
                 // If we have a new version, put it in the clipboard
                 if (different)
                     Clipboard.SetText(releaseUrl);
@@ -444,10 +444,8 @@ namespace DICUI.Windows
             var env = new DumpEnvironment()
             {
                 // Paths to tools
-                ChefPath = _options.ChefPath,
-                CreatorPath = _options.CreatorPath,
                 SubdumpPath = _options.SubDumpPath,
-                UseChef = _options.UseChef,
+                InternalProgram = Converters.ToInternalProgram(_options.InternalProgram),
 
                 OutputDirectory = OutputDirectoryTextBox.Text,
                 OutputFilename = OutputFilenameTextBox.Text,
@@ -462,15 +460,25 @@ namespace DICUI.Windows
                 AddPlaceholders = _options.AddPlaceholders,
                 PromptForDiscInformation = _options.PromptForDiscInformation,
 
-                ChefParameters = new ChefParameters(ParametersTextBox.Text),
-                CreatorParameters = new CreatorParameters(ParametersTextBox.Text),
-
                 Username = _options.Username,
                 Password = _options.Password,
 
                 System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
                 Type = MediaTypeComboBox.SelectedItem as MediaType?,
             };
+
+            // Set parameters and path accordingly
+            env.SetParameters(ParametersTextBox.Text);
+            switch (env.InternalProgram)
+            {
+                case InternalProgram.Aaru:
+                    env.Parameters.Path = _options.AaruPath;
+                    break;
+
+                case InternalProgram.DiscImageCreator:
+                    env.Parameters.Path = _options.CreatorPath;
+                    break;
+            }
 
             // Disable automatic reprocessing of the textboxes until we're done
             OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
@@ -515,7 +523,7 @@ namespace DICUI.Windows
             {
                 // Check for the firmware first for DiscImageCreator
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                if (!_env.UseChef && !await _env.DriveHasLatestFimrware())
+                if (_env.InternalProgram == InternalProgram.DiscImageCreator && !await _env.DriveHasLatestFimrware())
                 {
                     MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -553,13 +561,7 @@ namespace DICUI.Windows
                 Result result = await _env.Run(progress);
 
                 // If we didn't execute a dumping command we cannot get submission output
-                bool isDumpingCommand = false;
-                if (_env.UseChef)
-                    isDumpingCommand = _env.ChefParameters.IsDumpingCommand();
-                else
-                    isDumpingCommand = _env.CreatorParameters.IsDumpingCommand();
-
-                if (!isDumpingCommand)
+                if (!_env.Parameters.IsDumpingCommand())
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
                     StatusLabel.Content = "Execution complete!";
@@ -570,10 +572,10 @@ namespace DICUI.Windows
 
                 if (result)
                 {
-                    // TODO: Remove Chef handling when irrelevant
-                    if (_env.UseChef)
+                    // TODO: Remove Aaru handling when irrelevant
+                    if (_env.InternalProgram == InternalProgram.Aaru)
                     {
-                        ViewModels.LoggerViewModel.VerboseLogLn("DiscImageChef does not support split tracks or DiscImageCreator-compatible outputs");
+                        ViewModels.LoggerViewModel.VerboseLogLn("Aaru does not support split tracks or DiscImageCreator-compatible outputs");
                         ViewModels.LoggerViewModel.VerboseLogLn("No automatic submission information will be gathered for this disc");
                     }
                     else
@@ -666,13 +668,25 @@ namespace DICUI.Windows
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
                 OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
+            // Get the extension for the file for the next two statements
+            string extension = null;
+            switch (_env.InternalProgram)
+            {
+                case InternalProgram.Aaru:
+                    extension = Aaru.Converters.Extension(mediaType);
+                    break;
+                case InternalProgram.DiscImageCreator:
+                    extension = DiscImageCreator.Converters.Extension(mediaType);
+                    break;
+            }
+
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
-                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (mediaType.Extension(_options.UseChef) ?? ".bin");
+                OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
 
             // If the extension for the file changed, update that automatically
-            else if (Path.GetExtension(OutputFilenameTextBox.Text) != mediaType.Extension(_options.UseChef))
-                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (mediaType.Extension(_options.UseChef) ?? ".bin");
+            else if (Path.GetExtension(OutputFilenameTextBox.Text) != extension)
+                OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (extension ?? ".bin");
         }
 
         /// <summary>
@@ -695,11 +709,11 @@ namespace DICUI.Windows
 
                 string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\");
 
-                // If SmartE is detected on the current disc, remove `/sf` from the flags
-                if (protections.Contains("SmartE"))
+                // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
+                if (_env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
                 {
-                    _env.CreatorParameters[CreatorFlag.ScanFileProtect] = false;
-                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {CreatorFlagStrings.ScanFileProtect} from parameters");
+                    ((DiscImageCreator.Parameters)_env.Parameters)[DiscImageCreator.Flag.ScanFileProtect] = false;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 }
 
                 if (!ViewModels.LoggerViewModel.WindowVisible)
@@ -756,7 +770,7 @@ namespace DICUI.Windows
         private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            Drive drive = DriveLetterComboBox.SelectedItem as Drive;
+            var drive = DriveLetterComboBox.SelectedItem as Drive;
             if (drive == null)
                 return;
 
@@ -791,63 +805,36 @@ namespace DICUI.Windows
         /// </summary>
         private void ProcessCustomParameters()
         {
-            if (_options.UseChef)
-            {
-                _env.ChefParameters = new ChefParameters(ParametersTextBox.Text);
+            _env.SetParameters(ParametersTextBox.Text);
+            if (_env.Parameters == null)
+                return;
 
-                if (_env.ChefParameters == null)
-                    return;
+            int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.Parameters.InputPath()[0]);
+            if (driveIndex > -1)
+                DriveLetterComboBox.SelectedIndex = driveIndex;
 
-                int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.ChefParameters.InputValue[0]);
-                if (driveIndex > -1)
-                    DriveLetterComboBox.SelectedIndex = driveIndex;
-
-                string trimmedPath = _env.ChefParameters.OutputValue?.Trim('"') ?? string.Empty;
-                string outputDirectory = Path.GetDirectoryName(trimmedPath);
-                string outputFilename = Path.GetFileName(trimmedPath);
-                if (!string.IsNullOrWhiteSpace(outputDirectory))
-                    OutputDirectoryTextBox.Text = outputDirectory;
-                else
-                    outputDirectory = OutputDirectoryTextBox.Text;
-                if (!string.IsNullOrWhiteSpace(outputFilename))
-                    OutputFilenameTextBox.Text = outputFilename;
-                else
-                    outputFilename = OutputFilenameTextBox.Text;
-            }
+            int driveSpeed = _env.Parameters.GetSpeed() ?? -1;
+            if (driveSpeed > 0)
+                DriveSpeedComboBox.SelectedValue = driveSpeed;
             else
-            {
-                _env.CreatorParameters = new CreatorParameters(ParametersTextBox.Text);
+                _env.Parameters.SetSpeed((int?)DriveSpeedComboBox.SelectedValue);
 
-                if (_env.CreatorParameters == null)
-                    return;
+            string trimmedPath = _env.Parameters.OutputPath()?.Trim('"') ?? string.Empty;
+            string outputDirectory = Path.GetDirectoryName(trimmedPath);
+            string outputFilename = Path.GetFileName(trimmedPath);
+            if (!string.IsNullOrWhiteSpace(outputDirectory))
+                OutputDirectoryTextBox.Text = outputDirectory;
+            else
+                outputDirectory = OutputDirectoryTextBox.Text;
+            if (!string.IsNullOrWhiteSpace(outputFilename))
+                OutputFilenameTextBox.Text = outputFilename;
+            else
+                outputFilename = OutputFilenameTextBox.Text;
 
-                int driveIndex = _drives.Select(d => d.Letter).ToList().IndexOf(_env.CreatorParameters.DriveLetter[0]);
-                if (driveIndex > -1)
-                    DriveLetterComboBox.SelectedIndex = driveIndex;
-
-                int driveSpeed = _env.CreatorParameters.DriveSpeed ?? -1;
-                if (driveSpeed > 0)
-                    DriveSpeedComboBox.SelectedValue = driveSpeed;
-                else
-                    _env.CreatorParameters.DriveSpeed = (int?)DriveSpeedComboBox.SelectedValue;
-
-                string trimmedPath = _env.CreatorParameters.Filename?.Trim('"') ?? string.Empty;
-                string outputDirectory = Path.GetDirectoryName(trimmedPath);
-                string outputFilename = Path.GetFileName(trimmedPath);
-                if (!string.IsNullOrWhiteSpace(outputDirectory))
-                    OutputDirectoryTextBox.Text = outputDirectory;
-                else
-                    outputDirectory = OutputDirectoryTextBox.Text;
-                if (!string.IsNullOrWhiteSpace(outputFilename))
-                    OutputFilenameTextBox.Text = outputFilename;
-                else
-                    outputFilename = OutputFilenameTextBox.Text;
-
-                MediaType? mediaType = _env.CreatorParameters.Command.ToMediaType();
-                int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
-                if (mediaTypeIndex > -1)
-                    MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
-            }
+            MediaType? mediaType = _env.Parameters.GetMediaType();
+            int mediaTypeIndex = _mediaTypes.IndexOf(mediaType);
+            if (mediaTypeIndex > -1)
+                MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
         }
 
         #endregion

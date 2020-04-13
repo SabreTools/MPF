@@ -32,9 +32,9 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageChef Path" />
-            <TextBox x:Name="ChefPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-            <Button x:Name="ChefPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
+            <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
+            <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
             <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
@@ -94,16 +94,16 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <CheckBox Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Quiet Mode" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
-                          IsChecked="{Binding Path=QuietMode}" 
-                          ToolTip="Disable DiscImageCreator sounds" Margin="0,4" 
+                <CheckBox Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Quiet Mode"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                          IsChecked="{Binding Path=QuietMode}"
+                          ToolTip="Disable DiscImageCreator sounds" Margin="0,4"
                           />
-                
-                <CheckBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Paranoid Mode" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+
+                <CheckBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Content="Paranoid Mode"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=ParanoidMode}"
-                          ToolTip="Enable pedantic and super-safe flags" Margin="0,4" 
+                          ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
                           />
 
                 <Label Grid.Row="0" Grid.Column="2" Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
@@ -113,40 +113,40 @@
                              ToolTip="Specifies how many rereads are attempted on C2 error"
                              />
 
-                <CheckBox Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Content="Protection Scan" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+                <CheckBox Grid.Column="0" Grid.Row="1" VerticalAlignment="Center" Content="Protection Scan"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=ScanForProtection}"
                           ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                           />
 
-                <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Content="Skip Type Detect" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+                <CheckBox Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Content="Skip Type Detect"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=SkipMediaTypeDetection}"
                           ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
                           />
 
-                <CheckBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Add Placeholders" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+                <CheckBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Content="Add Placeholders"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=AddPlaceholders}"
                           ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
                           />
 
-                <CheckBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Show Disc Info" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
+                <CheckBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Show Disc Info"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=PromptForDiscInformation}"
                           ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
                           />
 
-                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="No Fixed Drives" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
-                          IsChecked="{Binding Path=IgnoreFixedDrives}" 
-                          ToolTip="Ignore hard drives and other fixed drives" Margin="0,4" 
+                <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="No Fixed Drives"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                          IsChecked="{Binding Path=IgnoreFixedDrives}"
+                          ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                           />
 
-                <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Content="Reset After Dump" 
-                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
-                          IsChecked="{Binding Path=ResetDriveAfterDump}" 
-                          ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4" 
+                <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Content="Reset After Dump"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                          IsChecked="{Binding Path=ResetDriveAfterDump}"
+                          ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
                           />
             </Grid>
 

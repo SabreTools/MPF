@@ -146,14 +146,14 @@ namespace DICUI.Data
             // Category
             match = categoryRegex.Match(discData);
             if (match.Success)
-                this.CommonDiscInfo.Category = Converters.StringToCategory(match.Groups[1].Value);
+                this.CommonDiscInfo.Category = Converters.ToCategory(match.Groups[1].Value);
             else
                 this.CommonDiscInfo.Category = Data.Category.Games;
 
             // Region
             match = regionRegex.Match(discData);
             if (match.Success)
-                this.CommonDiscInfo.Region = Converters.StringToRegion(match.Groups[1].Value);
+                this.CommonDiscInfo.Region = Converters.ToRegion(match.Groups[1].Value);
 
             // Languages
             var matches = languagesRegex.Matches(discData);
@@ -161,7 +161,7 @@ namespace DICUI.Data
             {
                 List<Language?> tempLanguages = new List<Language?>();
                 foreach (Match submatch in matches)
-                    tempLanguages.Add(Converters.StringToLanguage(submatch.Groups[1].Value));
+                    tempLanguages.Add(Converters.ToLanguage(submatch.Groups[1].Value));
 
                 this.CommonDiscInfo.Languages = tempLanguages.ToArray();
             }

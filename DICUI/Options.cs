@@ -9,13 +9,11 @@ namespace DICUI
     public class Options
     {
         public string DefaultOutputPath { get; private set; }
-        public string ChefPath { get; private set; }
+        public string AaruPath { get; private set; }
         public string CreatorPath { get; private set; }
         public string SubDumpPath { get; private set; }
 
-        // TODO: Change to string setting eventually to better support more tools
-        // TODO: Add to UI either as checkbox next to DiscImageChef or by making it a single select between both paths
-        public bool UseChef { get; set; }
+        public string InternalProgram { get; set; }
 
         public int PreferredDumpSpeedCD { get; set; }
         public int PreferredDumpSpeedDVD { get; set; }
@@ -46,13 +44,13 @@ namespace DICUI
             //TODO: reflection is used
             //TODO: is remove needed, doesn't the value get directly overridden
             Array.ForEach(
-                GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance), 
+                GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance),
                 p => {
                     configFile.AppSettings.Settings.Remove(p.Name);
                     configFile.AppSettings.Settings.Add(p.Name, Convert.ToString(p.GetValue(this)));
                 }
             );
-            
+
             configFile.Save(ConfigurationSaveMode.Modified);
         }
 
@@ -61,11 +59,11 @@ namespace DICUI
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             //TODO: hardcoded, we should find a better way
-            this.ChefPath = GetStringSetting(configFile, "ChefPath", "Programs\\DiscImageChef.exe");
-            this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\DiscImageCreator.exe");
-            this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "subdump.exe");
+            this.AaruPath = GetStringSetting(configFile, "AaruPath", "Programs\\Aaru\\Aaru.exe");
+            this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe");
+            this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "Programs\\Subdump\\subdump.exe");
             this.DefaultOutputPath = GetStringSetting(configFile, "DefaultOutputPath", "ISO");
-            this.UseChef = GetBooleanSetting(configFile, "UseChef", false);
+            this.InternalProgram = GetStringSetting(configFile, "InternalProgram", Data.InternalProgram.DiscImageCreator.ToString());
 
             this.PreferredDumpSpeedCD = GetInt32Setting(configFile, "PreferredDumpSpeedCD", 72);
             this.PreferredDumpSpeedDVD = GetInt32Setting(configFile, "PreferredDumpSpeedDVD", 24);

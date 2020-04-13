@@ -19,206 +19,14 @@
     }
 
     /// <summary>
-    /// Supported DiscImageChef commands
+    /// Dump status for Redump
     /// </summary>
-    public enum ChefCommand
+    public enum DumpStatus
     {
-        NONE = 0,
-
-        // Database Family
-        DatabaseStats,
-        DatabaseUpdate,
-
-        // Device Family
-        DeviceInfo,
-        DeviceList,
-        DeviceReport,
-
-        // Filesystem Family
-        FilesystemExtract,
-        FilesystemList,
-        FilesystemOptions,
-
-        // Image Family
-        ImageAnalyze,
-        ImageChecksum,
-        ImageCompare,
-        ImageConvert,
-        ImageCreateSidecar,
-        ImageDecode,
-        ImageEntropy,
-        ImageInfo,
-        ImageOptions,
-        ImagePrint,
-        ImageVerify,
-
-        // Media Family
-        MediaDump,
-        MediaInfo,
-        MediaScan,
-
-        // Standalone Commands
-        Configure,
-        Formats,
-        ListEncodings,
-        ListNamespaces,
-        Remote,
-    }
-
-    /// <summary>
-    /// Supported DiscImageChef flags
-    /// </summary>
-    public enum ChefFlag
-    {
-        NONE = 0,
-
-        // Boolean flags
-        Adler32,
-        Clear,
-        ClearAll,
-        CRC16,
-        CRC32,
-        CRC64,
-        Debug,
-        DiskTags,
-        DuplicatedSectors,
-        ExtendedAttributes,
-        Filesystems,
-        FirstPregap,
-        FixOffset,
-        Fletcher16,
-        Fletcher32,
-        Force,
-        LongFormat,
-        LongSectors,
-        MD5,
-        Metadata,
-        Partitions,
-        Persistent,
-        Resume,
-        SectorTags,
-        SeparatedTracks,
-        SHA1,
-        SHA256,
-        SHA384,
-        SHA512,
-        SpamSum,
-        StopOnError,
-        Tape,
-        Trim,
-        Verbose,
-        VerifyDisc,
-        VerifySectors,
-        Version,
-        WholeDisc,
-
-        // Int8 flags
-        Speed,
-
-        // Int16 flags
-        RetryPasses,
-        Width,
-
-        // Int32 flags
-        BlockSize,
-        Count,
-        MediaLastSequence,
-        MediaSequence,
-        Skip,
-
-        // Int64 flags
-        Length,
-        Start,
-
-        // String flags
-        Comments,
-        Creator,
-        DriveManufacturer,
-        DriveModel,
-        DriveRevision,
-        DriveSerial,
-        Encoding,
-        FormatConvert,
-        FormatDump,
-        ImgBurnLog,
-        MediaBarcode,
-        MediaManufacturer,
-        MediaModel,
-        MediaPartNumber,
-        MediaSerial,
-        MediaTitle,
-        MHDDLog,
-        Namespace,
-        Options,
-        OutputPrefix,
-        ResumeFile,
-        Subchannel,
-        XMLSidecar,
-    }
-
-    /// <summary>
-    /// Supported DiscImageCreator commands
-    /// </summary>
-    public enum CreatorCommand
-    {
-        NONE = 0,
-        Audio,
-        BluRay,
-        Close,
-        CompactDisc,
-        Data,
-        DigitalVideoDisc,
-        Disk,
-        DriveSpeed,
-        Eject,
-        Floppy,
-        GDROM,
-        MDS,
-        Merge,
-        Reset,
-        SACD,
-        Start,
-        Stop,
-        Sub,
-        Swap,
-        XBOX,
-        XBOXSwap,
-        XGD2Swap,
-        XGD3Swap,
-    }
-
-    /// <summary>
-    /// Supported DiscImageCreator flags
-    /// </summary>
-    public enum CreatorFlag
-    {
-        NONE = 0,
-        AddOffset,
-        AMSF,
-        AtariJaguar,
-        BEOpcode,
-        C2Opcode,
-        CopyrightManagementInformation,
-        D8Opcode,
-        DisableBeep,
-        ForceUnitAccess,
-        MultiSession,
-        NoFixSubP,
-        NoFixSubQ,
-        NoFixSubQLibCrypt,
-        NoFixSubRtoW,
-        NoFixSubQSecuROM,
-        NoSkipSS,
-        Raw,
-        Reverse,
-        ScanAntiMod,
-        ScanFileProtect,
-        ScanSectorProtect,
-        SeventyFour,
-        SkipSector,
-        SubchannelReadLevel,
-        VideoNow,
-        VideoNowColor,
+        BadDumpRed = 2,
+        PossibleBadDumpYellow = 3,
+        OriginalMediaBlue = 4,
+        TwoOrMoreDumpsGreen = 5,
     }
 
     /// <summary>
@@ -233,14 +41,15 @@
     }
 
     /// <summary>
-    /// Dump status for Redump
+    /// Program that is being used to dump media
     /// </summary>
-    public enum DumpStatus
+    public enum InternalProgram
     {
-        BadDumpRed = 2,
-        PossibleBadDumpYellow = 3,
-        OriginalMediaBlue = 4,
-        TwoOrMoreDumpsGreen = 5,
+        NONE = 0,
+
+        DiscImageCreator,
+        Aaru,
+        DD, // TODO: Currently unimplemented
     }
 
     /// <summary>
@@ -375,6 +184,7 @@
         AUSCOMSystem1,
         BallyGameMagic,
         CapcomCPSystemIII,
+        funworldPhotoPlay,
         GlobalVRVarious,
         GlobalVRVortek,
         GlobalVRVortekV3,
@@ -439,6 +249,7 @@
         PhotoCD,
         PlayStationGameSharkUpdates,
         RainbowDisc,
+        SegaPrologue21,
         SuperAudioCD,
         TaoiKTV,
         TomyKissSite,
@@ -571,6 +382,80 @@
         MMC,
         SDCard,
         FlashDrive,
+    }
+
+    /// <summary>
+    /// Media types according to https://docs.microsoft.com/en-us/previous-versions/windows/desktop/cimwin32a/win32-physicalmedia
+    /// </summary>
+    public enum PhysicalMediaType : ushort
+    {
+        Unknown = 0,
+        Other = 1,
+        TapeCartridge = 2,
+        QICCartridge = 3,
+        AITCartridge = 4,
+        DTFCartridge = 5,
+        DATCartridge = 6,
+        EightMillimeterTapeCartridge = 7,
+        NineteenMillimeterTapeCartridge = 8,
+        DLTCartridge = 9,
+        HalfInchMagneticTapeCartridge = 10,
+        CartridgeDisk = 11,
+        JAZDisk = 12,
+        ZIPDisk = 13,
+        SyQuestDisk = 14,
+        WinchesterRemovableDisk = 15,
+        CDROM = 16,
+        CDROMXA = 17,
+        CDI = 18,
+        CDRecordable = 19,
+        WORM = 20,
+        MagnetoOptical = 21,
+        DVD = 22,
+        DVDPlusRW = 23,
+        DVDRAM = 24,
+        DVDROM = 25,
+        DVDVideo = 26,
+        Divx = 27,
+        FloppyDiskette = 28,
+        HardDisk = 29,
+        MemoryCard = 30,
+        HardCopy = 31,
+        ClikDisk = 32,
+        CDRW = 33,
+        CDDA = 34,
+        CDPlus = 35,
+        DVDRecordable = 36,
+        DVDMinusRW = 37,
+        DVDAudio = 38,
+        DVD5 = 39,
+        DVD9 = 40,
+        DVD10 = 41,
+        DVD18 = 42,
+        MagnetoOpticalRewriteable = 43,
+        MagnetoOpticalWriteOnce = 44,
+        MagnetoOpticalRewriteableLIMDOW = 45,
+        PhaseChangeWriteOnce = 46,
+        PhaseChangeRewriteable = 47,
+        PhaseChangeDualRewriteable = 48,
+        AblativeWriteOnce = 49,
+        NearFieldRecording = 50,
+        MiniQic = 51,
+        Travan = 52,
+        EightMillimeterMetalParticle = 53,
+        EightMillimeterAdvancedMetalEvaporate = 54,
+        NCTP = 55,
+        LTOUltrium = 56,
+        LTOAccelis = 57,
+        NineTrackTape = 58,
+        EighteenTrackTape = 59,
+        ThirtySixTrackTape = 60,
+        Magstar3590 = 61,
+        MagstarMP = 62,
+        D2Tape = 63,
+        TapeDSTSmall = 64,
+        TapeDSTMedium = 65,
+        TapeDSTLarge = 66,
     }
 
     /// <summary>

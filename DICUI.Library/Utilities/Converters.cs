@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
-using IMAPI2;
 using DICUI.Data;
+#if NET_FRAMEWORK
+using IMAPI2;
+#endif
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -26,41 +28,6 @@ namespace DICUI.Utilities
                     return InternalDriveType.HardDisk;
                 case DriveType.Removable:
                     return InternalDriveType.Removable;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the most common known system for a given MediaType
-        /// </summary>
-        /// <param name="baseCommand">CreatorCommand value to check</param>
-        /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? ToKnownSystem(this CreatorCommand baseCommand)
-        {
-            switch (baseCommand)
-            {
-                case CreatorCommand.Audio:
-                    return KnownSystem.AudioCD;
-                case CreatorCommand.CompactDisc:
-                case CreatorCommand.Data:
-                case CreatorCommand.DigitalVideoDisc:
-                case CreatorCommand.Disk:
-                case CreatorCommand.Floppy:
-                    return KnownSystem.IBMPCCompatible;
-                case CreatorCommand.GDROM:
-                case CreatorCommand.Swap:
-                    return KnownSystem.SegaDreamcast;
-                case CreatorCommand.BluRay:
-                    return KnownSystem.SonyPlayStation3;
-                case CreatorCommand.SACD:
-                    return KnownSystem.SuperAudioCD;
-                case CreatorCommand.XBOX:
-                case CreatorCommand.XBOXSwap:
-                    return KnownSystem.MicrosoftXBOX;
-                case CreatorCommand.XGD2Swap:
-                case CreatorCommand.XGD3Swap:
-                    return KnownSystem.MicrosoftXBOX360;
                 default:
                     return null;
             }
@@ -231,77 +198,84 @@ namespace DICUI.Utilities
             }
         }
 
-        /// <summary>
-        /// Get the MediaType associated with a given base command
-        /// </summary>
-        /// <param name="baseCommand">CreatorCommand value to check</param>
-        /// <returns>MediaType if possible, null on error</returns>
-        /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
-        public static MediaType? ToMediaType(this CreatorCommand baseCommand)
-        {
-            switch (baseCommand)
-            {
-                case CreatorCommand.Audio:
-                case CreatorCommand.CompactDisc:
-                case CreatorCommand.Data:
-                case CreatorCommand.SACD:
-                    return MediaType.CDROM;
-                case CreatorCommand.GDROM:
-                case CreatorCommand.Swap:
-                    return MediaType.GDROM;
-                case CreatorCommand.DigitalVideoDisc:
-                case CreatorCommand.XBOX:
-                case CreatorCommand.XBOXSwap:
-                case CreatorCommand.XGD2Swap:
-                case CreatorCommand.XGD3Swap:
-                    return MediaType.DVD;
-                case CreatorCommand.BluRay:
-                    return MediaType.BluRay;
-
-                // Non-optical
-                case CreatorCommand.Floppy:
-                    return MediaType.FloppyDisk;
-                case CreatorCommand.Disk:
-                    return MediaType.HardDisk;
-                default:
-                    return null;
-            }
-        }
-
+#if NET_FRAMEWORK
         /// <summary>
         /// Convert IMAPI physical media type to a MediaType
         /// </summary>
         /// <param name="type">IMAPI_MEDIA_PHYSICAL_TYPE value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
-        public static MediaType? ToMediaType(IMAPI_MEDIA_PHYSICAL_TYPE type)
+        public static MediaType? IMAPIToMediaType(this IMAPI_MEDIA_PHYSICAL_TYPE type)
+        {
+           switch (type)
+           {
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+                   return MediaType.NONE;
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+                   return MediaType.CDROM;
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+                   return MediaType.DVD;
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+                   return MediaType.HDDVD;
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+                   return MediaType.BluRay;
+               default:
+                   return null;
+           }
+        }
+#endif
+
+        /// <summary>
+        /// Convert physical media type to a MediaType
+        /// </summary>
+        /// <param name="type">PhsyicalMediaType value to check</param>
+        /// <returns>MediaType if possible, null on error</returns>
+        public static MediaType? ToMediaType(this PhysicalMediaType type)
         {
             switch (type)
             {
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+                case PhysicalMediaType.Unknown:
                     return MediaType.NONE;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+
+                // CD-based media
+                case PhysicalMediaType.CDROM:
+                case PhysicalMediaType.CDROMXA:
+                case PhysicalMediaType.CDI: // TODO: Make this separate at some point (CD-I/CD-I Ready?)
+                case PhysicalMediaType.CDRecordable:
+                case PhysicalMediaType.CDRW:
+                case PhysicalMediaType.CDDA:
+                case PhysicalMediaType.CDPlus: // TODO: Make this separate at some point (Enhanced CD?)
                     return MediaType.CDROM;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+
+                // DVD-based media
+                case PhysicalMediaType.DVD:
+                case PhysicalMediaType.DVDPlusRW:
+                case PhysicalMediaType.DVDRAM:
+                case PhysicalMediaType.DVDROM:
+                case PhysicalMediaType.DVDVideo: // TODO: Make this separate at some point (DVD-Video?)
+                case PhysicalMediaType.DVDRecordable:
+                case PhysicalMediaType.DVDMinusRW:
+                case PhysicalMediaType.DVDAudio: // TODO: Make this separate at some point (DVD-Audio?)
+                case PhysicalMediaType.DVD5: // TODO: Make this separate at some point (DVD-5?)
+                case PhysicalMediaType.DVD9: // TODO: Make this separate at some point (DVD-9?)
+                case PhysicalMediaType.DVD10: // TODO: Make this separate at some point (DVD-10?)
+                case PhysicalMediaType.DVD18: // TODO: Make this separate at some point (DVD-18?)
                     return MediaType.DVD;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
-                    return MediaType.HDDVD;
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
-                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
-                    return MediaType.BluRay;
+
                 default:
                     return null;
             }
@@ -461,50 +435,6 @@ namespace DICUI.Utilities
             }
         }
 
-        /// <summary>
-        /// Get the default extension for a given disc type
-        /// </summary>
-        /// <param name="type">MediaType value to check</param>
-        /// <param name="useChef">Whether or not DiscImageChef is being used</param>
-        /// <returns>Valid extension (with leading '.'), null on error</returns>
-        public static string Extension(this MediaType? type, bool useChef)
-        {
-            // DiscImageChef has a single, unified output format by default
-            if (useChef)
-                return ".dicf";
-
-            switch (type)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                case MediaType.Cartridge:
-                case MediaType.HardDisk:
-                case MediaType.CompactFlash:
-                case MediaType.MMC:
-                case MediaType.SDCard:
-                case MediaType.FlashDrive:
-                    return ".bin";
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoWiiOpticalDisc:
-                case MediaType.UMD:
-                    return ".iso";
-                case MediaType.LaserDisc:
-                case MediaType.NintendoGameCubeGameDisc:
-                    return ".raw";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return ".wud";
-                case MediaType.FloppyDisk:
-                    return ".img";
-                case MediaType.Cassette:
-                    return ".wav";
-                case MediaType.NONE:
-                default:
-                    return null;
-            }
-        }
-
         #endregion
 
         #region Convert to Long Name
@@ -542,386 +472,6 @@ namespace DICUI.Utilities
                     return "Add-Ons";
                 default:
                     return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the ChefCommand enum values
-        /// </summary>
-        /// <param name="command">ChefCommand value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this ChefCommand command)
-        {
-            switch (command)
-            {
-                // Database Family
-                case ChefCommand.DatabaseStats:
-                    return $"{ChefCommandStrings.DatabasePrefixLong} {ChefCommandStrings.DatabaseStats}";
-                case ChefCommand.DatabaseUpdate:
-                    return $"{ChefCommandStrings.DatabasePrefixLong} {ChefCommandStrings.DatabaseUpdate}";
-
-                // Device Family
-                case ChefCommand.DeviceInfo:
-                    return $"{ChefCommandStrings.DevicePrefixLong} {ChefCommandStrings.DeviceInfo}";
-                case ChefCommand.DeviceList:
-                    return $"{ChefCommandStrings.DevicePrefixLong} {ChefCommandStrings.DeviceList}";
-                case ChefCommand.DeviceReport:
-                    return $"{ChefCommandStrings.DevicePrefixLong} {ChefCommandStrings.DeviceReport}";
-
-                // Filesystem Family
-                case ChefCommand.FilesystemExtract:
-                    return $"{ChefCommandStrings.FilesystemPrefixLong} {ChefCommandStrings.FilesystemExtract}";
-                case ChefCommand.FilesystemList:
-                    return $"{ChefCommandStrings.FilesystemPrefixLong} {ChefCommandStrings.FilesystemListLong}";
-                case ChefCommand.FilesystemOptions:
-                    return $"{ChefCommandStrings.FilesystemPrefixLong} {ChefCommandStrings.FilesystemOptions}";
-
-                // Image Family
-                case ChefCommand.ImageAnalyze:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageAnalyze}";
-                case ChefCommand.ImageChecksum:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageChecksumLong}";
-                case ChefCommand.ImageCompare:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageCompareLong}";
-                case ChefCommand.ImageConvert:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageConvert}";
-                case ChefCommand.ImageCreateSidecar:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageCreateSidecar}";
-                case ChefCommand.ImageDecode:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageDecode}";
-                case ChefCommand.ImageEntropy:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageEntropy}";
-                case ChefCommand.ImageInfo:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageInfo}";
-                case ChefCommand.ImageOptions:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageOptions}";
-                case ChefCommand.ImagePrint:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImagePrint}";
-                case ChefCommand.ImageVerify:
-                    return $"{ChefCommandStrings.ImagePrefixLong} {ChefCommandStrings.ImageVerify}";
-
-                // Media Family
-                case ChefCommand.MediaDump:
-                    return $"{ChefCommandStrings.MediaPrefixLong} {ChefCommandStrings.MediaDump}";
-                case ChefCommand.MediaInfo:
-                    return $"{ChefCommandStrings.MediaPrefixLong} {ChefCommandStrings.MediaInfo}";
-                case ChefCommand.MediaScan:
-                    return $"{ChefCommandStrings.MediaPrefixLong} {ChefCommandStrings.MediaScan}";
-
-                // Standalone Commands
-                case ChefCommand.Configure:
-                    return ChefCommandStrings.Configure;
-                case ChefCommand.Formats:
-                    return ChefCommandStrings.Formats;
-                case ChefCommand.ListEncodings:
-                    return ChefCommandStrings.ListEncodings;
-                case ChefCommand.ListNamespaces:
-                    return ChefCommandStrings.ListNamespaces;
-                case ChefCommand.Remote:
-                    return ChefCommandStrings.Remote;
-
-                case ChefCommand.NONE:
-                default:
-                    return "";
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the ChefFlag enum values
-        /// </summary>
-        /// <param name="command">ChefFlag value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this ChefFlag flag)
-        {
-            switch (flag)
-            {
-                // Boolean flags
-                case ChefFlag.Adler32:
-                    return ChefFlagStrings.Adler32Long;
-                case ChefFlag.Clear:
-                    return ChefFlagStrings.ClearLong;
-                case ChefFlag.ClearAll:
-                    return ChefFlagStrings.ClearAllLong;
-                case ChefFlag.CRC16:
-                    return ChefFlagStrings.CRC16Long;
-                case ChefFlag.CRC32:
-                    return ChefFlagStrings.CRC32Long;
-                case ChefFlag.CRC64:
-                    return ChefFlagStrings.CRC64Long;
-                case ChefFlag.Debug:
-                    return ChefFlagStrings.DebugLong;
-                case ChefFlag.DiskTags:
-                    return ChefFlagStrings.DiskTagsLong;
-                case ChefFlag.DuplicatedSectors:
-                    return ChefFlagStrings.DuplicatedSectorsLong;
-                case ChefFlag.ExtendedAttributes:
-                    return ChefFlagStrings.ExtendedAttributesLong;
-                case ChefFlag.Filesystems:
-                    return ChefFlagStrings.FilesystemsLong;
-                case ChefFlag.FirstPregap:
-                    return ChefFlagStrings.FirstPregapLong;
-                case ChefFlag.FixOffset:
-                    return ChefFlagStrings.FixOffsetLong;
-                case ChefFlag.Fletcher16:
-                    return ChefFlagStrings.Fletcher16Long;
-                case ChefFlag.Fletcher32:
-                    return ChefFlagStrings.Fletcher32Long;
-                case ChefFlag.Force:
-                    return ChefFlagStrings.ForceLong;
-                case ChefFlag.LongFormat:
-                    return ChefFlagStrings.LongFormatLong;
-                case ChefFlag.LongSectors:
-                    return ChefFlagStrings.LongSectorsLong;
-                case ChefFlag.MD5:
-                    return ChefFlagStrings.MD5Long;
-                case ChefFlag.Metadata:
-                    return ChefFlagStrings.MetadataLong;
-                case ChefFlag.Partitions:
-                    return ChefFlagStrings.PartitionsLong;
-                case ChefFlag.Persistent:
-                    return ChefFlagStrings.PersistentLong;
-                case ChefFlag.Resume:
-                    return ChefFlagStrings.ResumeLong;
-                case ChefFlag.SectorTags:
-                    return ChefFlagStrings.SectorTagsLong;
-                case ChefFlag.SeparatedTracks:
-                    return ChefFlagStrings.SeparatedTracksLong;
-                case ChefFlag.SHA1:
-                    return ChefFlagStrings.SHA1Long;
-                case ChefFlag.SHA256:
-                    return ChefFlagStrings.SHA256Long;
-                case ChefFlag.SHA384:
-                    return ChefFlagStrings.SHA384Long;
-                case ChefFlag.SHA512:
-                    return ChefFlagStrings.SHA512Long;
-                case ChefFlag.SpamSum:
-                    return ChefFlagStrings.SpamSumLong;
-                case ChefFlag.StopOnError:
-                    return ChefFlagStrings.StopOnErrorLong;
-                case ChefFlag.Tape:
-                    return ChefFlagStrings.TapeLong;
-                case ChefFlag.Trim:
-                    return ChefFlagStrings.TrimLong;
-                case ChefFlag.Verbose:
-                    return ChefFlagStrings.VerboseLong;
-                case ChefFlag.VerifyDisc:
-                    return ChefFlagStrings.VerifyDiscLong;
-                case ChefFlag.VerifySectors:
-                    return ChefFlagStrings.VerifySectorsLong;
-                case ChefFlag.Version:
-                    return ChefFlagStrings.VersionLong;
-                case ChefFlag.WholeDisc:
-                    return ChefFlagStrings.WholeDiscLong;
-
-                // Int8 flags
-                case ChefFlag.Speed:
-                    return ChefFlagStrings.SpeedLong;
-
-                // Int16 flags
-                case ChefFlag.RetryPasses:
-                    return ChefFlagStrings.RetryPassesLong;
-                case ChefFlag.Width:
-                    return ChefFlagStrings.WidthLong;
-
-                // Int32 flags
-                case ChefFlag.BlockSize:
-                    return ChefFlagStrings.BlockSizeLong;
-                case ChefFlag.Count:
-                    return ChefFlagStrings.CountLong;
-                case ChefFlag.MediaLastSequence:
-                    return ChefFlagStrings.MediaLastSequenceLong;
-                case ChefFlag.MediaSequence:
-                    return ChefFlagStrings.MediaSequenceLong;
-                case ChefFlag.Skip:
-                    return ChefFlagStrings.SkipLong;
-
-                // Int64 flags
-                case ChefFlag.Length:
-                    return ChefFlagStrings.LengthLong;
-                case ChefFlag.Start:
-                    return ChefFlagStrings.StartLong;
-
-                // String flags
-                case ChefFlag.Comments:
-                    return ChefFlagStrings.CommentsLong;
-                case ChefFlag.Creator:
-                    return ChefFlagStrings.CreatorLong;
-                case ChefFlag.DriveManufacturer:
-                    return ChefFlagStrings.DriveManufacturerLong;
-                case ChefFlag.DriveModel:
-                    return ChefFlagStrings.DriveModelLong;
-                case ChefFlag.DriveRevision:
-                    return ChefFlagStrings.DriveRevisionLong;
-                case ChefFlag.DriveSerial:
-                    return ChefFlagStrings.DriveSerialLong;
-                case ChefFlag.Encoding:
-                    return ChefFlagStrings.EncodingLong;
-                case ChefFlag.FormatConvert:
-                    return ChefFlagStrings.FormatConvertLong;
-                case ChefFlag.FormatDump:
-                    return ChefFlagStrings.FormatDumpLong;
-                case ChefFlag.ImgBurnLog:
-                    return ChefFlagStrings.ImgBurnLogLong;
-                case ChefFlag.MediaBarcode:
-                    return ChefFlagStrings.MediaBarcodeLong;
-                case ChefFlag.MediaManufacturer:
-                    return ChefFlagStrings.MediaManufacturerLong;
-                case ChefFlag.MediaModel:
-                    return ChefFlagStrings.MediaModelLong;
-                case ChefFlag.MediaPartNumber:
-                    return ChefFlagStrings.MediaPartNumberLong;
-                case ChefFlag.MediaSerial:
-                    return ChefFlagStrings.MediaSerialLong;
-                case ChefFlag.MediaTitle:
-                    return ChefFlagStrings.MediaTitleLong;
-                case ChefFlag.MHDDLog:
-                    return ChefFlagStrings.MHDDLogLong;
-                case ChefFlag.Namespace:
-                    return ChefFlagStrings.NamespaceLong;
-                case ChefFlag.Options:
-                    return ChefFlagStrings.OptionsLong;
-                case ChefFlag.OutputPrefix:
-                    return ChefFlagStrings.OutputPrefixLong;
-                case ChefFlag.ResumeFile:
-                    return ChefFlagStrings.ResumeFileLong;
-                case ChefFlag.Subchannel:
-                    return ChefFlagStrings.SubchannelLong;
-                case ChefFlag.XMLSidecar:
-                    return ChefFlagStrings.XMLSidecarLong;
-
-                case ChefFlag.NONE:
-                default:
-                    return "";
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the CreatorCommand enum values
-        /// </summary>
-        /// <param name="command">CreatorCommand value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this CreatorCommand command)
-        {
-            switch (command)
-            {
-                case CreatorCommand.Audio:
-                    return CreatorCommandStrings.Audio;
-                case CreatorCommand.BluRay:
-                    return CreatorCommandStrings.BluRay;
-                case CreatorCommand.Close:
-                    return CreatorCommandStrings.Close;
-                case CreatorCommand.CompactDisc:
-                    return CreatorCommandStrings.CompactDisc;
-                case CreatorCommand.Data:
-                    return CreatorCommandStrings.Data;
-                case CreatorCommand.DigitalVideoDisc:
-                    return CreatorCommandStrings.DigitalVideoDisc;
-                case CreatorCommand.Disk:
-                    return CreatorCommandStrings.Disk;
-                case CreatorCommand.DriveSpeed:
-                    return CreatorCommandStrings.DriveSpeed;
-                case CreatorCommand.Eject:
-                    return CreatorCommandStrings.Eject;
-                case CreatorCommand.Floppy:
-                    return CreatorCommandStrings.Floppy;
-                case CreatorCommand.GDROM:
-                    return CreatorCommandStrings.GDROM;
-                case CreatorCommand.MDS:
-                    return CreatorCommandStrings.MDS;
-                case CreatorCommand.Merge:
-                    return CreatorCommandStrings.Merge;
-                case CreatorCommand.Reset:
-                    return CreatorCommandStrings.Reset;
-                case CreatorCommand.SACD:
-                    return CreatorCommandStrings.SACD;
-                case CreatorCommand.Start:
-                    return CreatorCommandStrings.Start;
-                case CreatorCommand.Stop:
-                    return CreatorCommandStrings.Stop;
-                case CreatorCommand.Sub:
-                    return CreatorCommandStrings.Sub;
-                case CreatorCommand.Swap:
-                    return CreatorCommandStrings.Swap;
-                case CreatorCommand.XBOX:
-                    return CreatorCommandStrings.XBOX;
-                case CreatorCommand.XBOXSwap:
-                    return CreatorCommandStrings.XBOXSwap;
-                case CreatorCommand.XGD2Swap:
-                    return CreatorCommandStrings.XGD2Swap;
-                case CreatorCommand.XGD3Swap:
-                    return CreatorCommandStrings.XGD3Swap;
-
-                case CreatorCommand.NONE:
-                default:
-                    return "";
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the CreatorFlag enum values
-        /// </summary>
-        /// <param name="command">CreatorFlag value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this CreatorFlag flag)
-        {
-            switch (flag)
-            {
-                case CreatorFlag.AddOffset:
-                    return CreatorFlagStrings.AddOffset;
-                case CreatorFlag.AMSF:
-                    return CreatorFlagStrings.AMSF;
-                case CreatorFlag.AtariJaguar:
-                    return CreatorFlagStrings.AtariJaguar;
-                case CreatorFlag.BEOpcode:
-                    return CreatorFlagStrings.BEOpcode;
-                case CreatorFlag.C2Opcode:
-                    return CreatorFlagStrings.C2Opcode;
-                case CreatorFlag.CopyrightManagementInformation:
-                    return CreatorFlagStrings.CopyrightManagementInformation;
-                case CreatorFlag.D8Opcode:
-                    return CreatorFlagStrings.D8Opcode;
-                case CreatorFlag.DisableBeep:
-                    return CreatorFlagStrings.DisableBeep;
-                case CreatorFlag.ForceUnitAccess:
-                    return CreatorFlagStrings.ForceUnitAccess;
-                case CreatorFlag.MultiSession:
-                    return CreatorFlagStrings.MultiSession;
-                case CreatorFlag.NoFixSubP:
-                    return CreatorFlagStrings.NoFixSubP;
-                case CreatorFlag.NoFixSubQ:
-                    return CreatorFlagStrings.NoFixSubQ;
-                case CreatorFlag.NoFixSubQLibCrypt:
-                    return CreatorFlagStrings.NoFixSubQLibCrypt;
-                case CreatorFlag.NoFixSubRtoW:
-                    return CreatorFlagStrings.NoFixSubRtoW;
-                case CreatorFlag.NoFixSubQSecuROM:
-                    return CreatorFlagStrings.NoFixSubQSecuROM;
-                case CreatorFlag.NoSkipSS:
-                    return CreatorFlagStrings.NoSkipSS;
-                case CreatorFlag.Raw:
-                    return CreatorFlagStrings.Raw;
-                case CreatorFlag.Reverse:
-                    return CreatorFlagStrings.Reverse;
-                case CreatorFlag.ScanAntiMod:
-                    return CreatorFlagStrings.ScanAntiMod;
-                case CreatorFlag.ScanFileProtect:
-                    return CreatorFlagStrings.ScanFileProtect;
-                case CreatorFlag.ScanSectorProtect:
-                    return CreatorFlagStrings.ScanSectorProtect;
-                case CreatorFlag.SeventyFour:
-                    return CreatorFlagStrings.SeventyFour;
-                case CreatorFlag.SkipSector:
-                    return CreatorFlagStrings.SkipSector;
-                case CreatorFlag.SubchannelReadLevel:
-                    return CreatorFlagStrings.SubchannelReadLevel;
-                case CreatorFlag.VideoNow:
-                    return CreatorFlagStrings.VideoNow;
-                case CreatorFlag.VideoNowColor:
-                    return CreatorFlagStrings.VideoNowColor;
-
-                case CreatorFlag.NONE:
-                default:
-                    return "";
             }
         }
 
@@ -1050,6 +600,8 @@ namespace DICUI.Utilities
                     return "Bally Game Magic";
                 case KnownSystem.CapcomCPSystemIII:
                     return "Capcom CP System III";
+                case KnownSystem.funworldPhotoPlay:
+                    return "funworld Photo Play";
                 case KnownSystem.GlobalVRVarious:
                     return "Global VR PC-based Systems";
                 case KnownSystem.GlobalVRVortek:
@@ -1169,6 +721,8 @@ namespace DICUI.Utilities
                     return "PlayStation GameShark Updates";
                 case KnownSystem.RainbowDisc:
                     return "Rainbow Disc";
+                case KnownSystem.SegaPrologue21:
+                    return "Sega Prologue 21";
                 case KnownSystem.SuperAudioCD:
                     return "Super Audio CD";
                 case KnownSystem.TaoiKTV:
@@ -1859,6 +1413,8 @@ namespace DICUI.Utilities
                     return "game magic";
                 case KnownSystem.CapcomCPSystemIII:
                     return "cps3";
+                case KnownSystem.funworldPhotoPlay:
+                    return "fpp";
                 case KnownSystem.GlobalVRVarious:
                     return "globalvr";
                 case KnownSystem.GlobalVRVortek:
@@ -1978,6 +1534,8 @@ namespace DICUI.Utilities
                     return "gameshark";
                 case KnownSystem.RainbowDisc:
                     return "rainbow";
+                case KnownSystem.SegaPrologue21:
+                    return "pl21";
                 case KnownSystem.SuperAudioCD:
                     return "sacd";
                 case KnownSystem.TaoiKTV:
@@ -2481,9 +2039,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the Category enum value for a given string
         /// </summary>
-        /// <param name="sys">String value to convert</param>
+        /// <param name="category">String value to convert</param>
         /// <returns>Category represented by the string, if possible</returns>
-        public static Category StringToCategory(string category)
+        public static Category ToCategory(string category)
         {
             switch (category.ToLowerInvariant())
             {
@@ -2517,129 +2075,29 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the ChefCommand enum value for a given string
+        /// Get the InternalProgram enum value for a given string
         /// </summary>
-        /// <param name="commandOne">First part of String value to convert</param>
-        /// <param name="commandTwo">Second part of String value to convert</param>
-        /// <param name="useSecond">Output bool if the second command was used</param>
-        /// <returns>ChefCommand represented by the string(s), if possible</returns>
-        public static ChefCommand StringToChefCommand(string commandOne, string commandTwo, out bool useSecond)
+        /// <param name="internalProgram">String value to convert</param>
+        /// <returns>InternalProgram represented by the string, if possible</returns>
+        public static InternalProgram ToInternalProgram(string internalProgram)
         {
-            useSecond = false;
-            switch (commandOne)
+            switch (internalProgram.ToLowerInvariant())
             {
-                // Database Family
-                case ChefCommandStrings.DatabasePrefixShort:
-                case ChefCommandStrings.DatabasePrefixLong:
-                    useSecond = true;
-                    switch (commandTwo)
-                    {
-                        case ChefCommandStrings.DatabaseStats:
-                            return ChefCommand.DatabaseStats;
-                        case ChefCommandStrings.DatabaseUpdate:
-                            return ChefCommand.DatabaseUpdate;
-                    }
-
-                    break;
-
-                // Device Family
-                case ChefCommandStrings.DevicePrefixShort:
-                case ChefCommandStrings.DevicePrefixLong:
-                    useSecond = true;
-                    switch (commandTwo)
-                    {
-                        case ChefCommandStrings.DeviceInfo:
-                            return ChefCommand.DeviceInfo;
-                        case ChefCommandStrings.DeviceList:
-                            return ChefCommand.DeviceList;
-                        case ChefCommandStrings.DeviceReport:
-                            return ChefCommand.DeviceReport;
-                    }
-
-                    break;
-
-                // Filesystem Family
-                case ChefCommandStrings.FilesystemPrefixShort:
-                case ChefCommandStrings.FilesystemPrefixShortAlt:
-                case ChefCommandStrings.FilesystemPrefixLong:
-                    useSecond = true;
-                    switch (commandTwo)
-                    {
-                        case ChefCommandStrings.FilesystemExtract:
-                            return ChefCommand.FilesystemExtract;
-                        case ChefCommandStrings.FilesystemListShort:
-                        case ChefCommandStrings.FilesystemListLong:
-                            return ChefCommand.FilesystemList;
-                        case ChefCommandStrings.DatabaseStats:
-                            return ChefCommand.FilesystemOptions;
-                    }
-
-                    break;
-
-                // Image Family
-                case ChefCommandStrings.ImagePrefixShort:
-                case ChefCommandStrings.ImagePrefixLong:
-                    useSecond = true;
-                    switch (commandTwo)
-                    {
-                        case ChefCommandStrings.ImageAnalyze:
-                            return ChefCommand.ImageAnalyze;
-                        case ChefCommandStrings.ImageChecksumShort:
-                        case ChefCommandStrings.ImageChecksumLong:
-                            return ChefCommand.ImageChecksum;
-                        case ChefCommandStrings.ImageCompareShort:
-                        case ChefCommandStrings.ImageCompareLong:
-                            return ChefCommand.ImageCompare;
-                        case ChefCommandStrings.ImageConvert:
-                            return ChefCommand.ImageConvert;
-                        case ChefCommandStrings.ImageCreateSidecar:
-                            return ChefCommand.ImageCreateSidecar;
-                        case ChefCommandStrings.ImageDecode:
-                            return ChefCommand.ImageDecode;
-                        case ChefCommandStrings.ImageEntropy:
-                            return ChefCommand.ImageEntropy;
-                        case ChefCommandStrings.ImageInfo:
-                            return ChefCommand.ImageInfo;
-                        case ChefCommandStrings.ImageOptions:
-                            return ChefCommand.ImageOptions;
-                        case ChefCommandStrings.ImagePrint:
-                            return ChefCommand.ImagePrint;
-                        case ChefCommandStrings.ImageVerify:
-                            return ChefCommand.ImageVerify;
-                    }
-
-                    break;
-
-                // Media Family
-                case ChefCommandStrings.MediaPrefixShort:
-                case ChefCommandStrings.MediaPrefixLong:
-                    useSecond = true;
-                    switch (commandTwo)
-                    {
-                        case ChefCommandStrings.MediaDump:
-                            return ChefCommand.MediaDump;
-                        case ChefCommandStrings.MediaInfo:
-                            return ChefCommand.MediaInfo;
-                        case ChefCommandStrings.MediaScan:
-                            return ChefCommand.MediaScan;
-                    }
-
-                    break;
-
-                // Standalone Commands
-                case ChefCommandStrings.Configure:
-                    return ChefCommand.Configure;
-                case ChefCommandStrings.Formats:
-                    return ChefCommand.Formats;
-                case ChefCommandStrings.ListEncodings:
-                    return ChefCommand.ListEncodings;
-                case ChefCommandStrings.ListNamespaces:
-                    return ChefCommand.ListNamespaces;
-                case ChefCommandStrings.Remote:
-                    return ChefCommand.Remote;
+                case "aaru":
+                case "chef":
+                case "dichef":
+                case "discimagechef":
+                    return InternalProgram.Aaru;
+                case "creator":
+                case "dic":
+                case "dicreator":
+                case "discimagecreator":
+                    return InternalProgram.DiscImageCreator;
+                case "dd":
+                    return InternalProgram.DD;
+                default:
+                    return InternalProgram.NONE;
             }
-
-            return ChefCommand.NONE;
         }
 
         /// <summary>
@@ -2647,7 +2105,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="sys">String value to convert</param>
         /// <returns>KnownSystem represented by the string, if possible</returns>
-        public static KnownSystem StringToKnownSystem(string sys)
+        public static KnownSystem? ToKnownSystem(string sys)
         {
             switch (sys)
             {
@@ -3033,6 +2491,11 @@ namespace DICUI.Utilities
                 case "capcom cp system 3":
                 case "capcom cp system iii":
                     return KnownSystem.CapcomCPSystemIII;
+                case "fpp":
+                case "funworldphotoplay":
+                case "funworld photoplay":
+                case "funworld photo play":
+                    return KnownSystem.funworldPhotoPlay;
                 case "globalvr":
                 case "global vr":
                 case "global vr pc-based systems":
@@ -3330,6 +2793,13 @@ namespace DICUI.Utilities
                 case "rainbowdisc":
                 case "rainbow disc":
                     return KnownSystem.RainbowDisc;
+                case "pl21":
+                case "prologue21":
+                case "prologue 21":
+                case "segaprologue21":
+                case "sega prologue21":
+                case "sega prologue 21":
+                    return KnownSystem.SegaPrologue21;
                 case "sacd":
                 case "superaudiocd":
                 case "super audio cd":
@@ -3359,9 +2829,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the Language enum value for a given string
         /// </summary>
-        /// <param name="sys">String value to convert</param>
+        /// <param name="lang">String value to convert</param>
         /// <returns>Language represented by the string, if possible</returns>
-        public static Language? StringToLanguage(string lang)
+        public static Language? ToLanguage(string lang)
         {
             switch (lang)
             {
@@ -3447,7 +2917,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="type">String value to convert</param>
         /// <returns>MediaType represented by the string, if possible</returns>
-        public static MediaType StringToMediaType(string type)
+        public static MediaType ToMediaType(string type)
             {
                 switch (type.ToLowerInvariant())
                 {
@@ -3618,9 +3088,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the Region enum value for a given string
         /// </summary>
-        /// <param name="type">String value to convert</param>
+        /// <param name="region">String value to convert</param>
         /// <returns>Region represented by the string, if possible</returns>
-        public static Region? StringToRegion(string region)
+        public static Region? ToRegion(string region)
         {
             switch (region)
             {

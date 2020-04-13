@@ -23,24 +23,9 @@ namespace DICUI.Utilities
         #region Tool paths
 
         /// <summary>
-        /// Path to DiscImageChef executable
-        /// </summary>
-        public string ChefPath { get; set; }
-
-        /// <summary>
-        /// Path to DiscImageCreator executable
-        /// </summary>
-        public string CreatorPath { get; set; }
-
-        /// <summary>
         /// Path to Subdump executable
         /// </summary>
         public string SubdumpPath { get; set; }
-
-        /// <summary>
-        /// Use DiscImageChef instead of DiscImageCreator
-        /// </summary>
-        public bool UseChef { get; set; }
 
         #endregion
 
@@ -76,14 +61,14 @@ namespace DICUI.Utilities
         public MediaType? Type { get; set; }
 
         /// <summary>
-        /// Parameters object representing what to send to DiscImageChef
+        /// Parameters object representing what to send to the internal program
         /// </summary>
-        public ChefParameters ChefParameters { get; set; }
+        public BaseParameters Parameters { get; set; }
 
         /// <summary>
-        /// Parameters object representing what to send to DiscImageCreator
+        /// Internal program to run
         /// </summary>
-        public CreatorParameters CreatorParameters { get; set; }
+        public InternalProgram InternalProgram { get; set; }
 
         /// <summary>
         /// Scan for copy protection, where applicable
@@ -94,7 +79,7 @@ namespace DICUI.Utilities
         /// Determines if placeholder values should be set for fields
         /// </summary>
         public bool AddPlaceholders { get; set; }
-        
+
         /// <summary>
         /// Determines if the user should be prompted to input or fix submission data
         /// </summary>
@@ -102,7 +87,7 @@ namespace DICUI.Utilities
 
         #endregion
 
-        #region Extra DiscImageCreator arguments
+        #region Extra arguments
 
         /// <summary>
         /// Enable quiet mode (no beeps)
@@ -137,19 +122,43 @@ namespace DICUI.Utilities
         /// Determine if a complete set of Redump credentials might exist
         /// </summary>
         public bool HasRedumpLogin { get => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Password); }
-        
+
         #endregion
 
         #region External process information
 
         /// <summary>
-        /// Process to track DiscImageCreator instances
+        /// Process to track external program
         /// </summary>
-        private Process dicProcess;
+        private Process process;
 
         #endregion
 
+        /// <summary>
+        /// Empty constructor for the rest of the magic
+        /// </summary>
+        public DumpEnvironment()
+        {
+        }
+
         #region Public Functionality
+
+        /// <summary>
+        /// Set the parameters object based on the internal program and parameters string
+        /// </summary>
+        /// <param name="parameters">String representation of the parameters</param>
+        public void SetParameters(string parameters)
+        {
+            switch (InternalProgram)
+            {
+                case InternalProgram.Aaru:
+                    Parameters = new Aaru.Parameters(parameters);
+                    break;
+                case InternalProgram.DiscImageCreator:
+                    Parameters = new DiscImageCreator.Parameters(parameters);
+                    break;
+            }
+        }
 
         /// <summary>
         /// Cancel an in-progress dumping process
@@ -158,8 +167,8 @@ namespace DICUI.Utilities
         {
             try
             {
-                if (dicProcess != null && !dicProcess.HasExited)
-                    dicProcess.Kill();
+                if (process != null && !process.HasExited)
+                    process.Kill();
             }
             catch
             { }
@@ -172,12 +181,12 @@ namespace DICUI.Utilities
         public async Task<bool> DriveHasLatestFimrware()
         {
             // Validate that the required program exists
-            if (!File.Exists(CreatorPath))
+            if (!File.Exists(Parameters.Path))
                 return false;
 
-            CreatorParameters parameters = new CreatorParameters(string.Empty)
+            var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = CreatorCommand.DriveSpeed,
+                BaseCommand = DiscImageCreator.Command.DriveSpeed,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -197,7 +206,7 @@ namespace DICUI.Utilities
         public async void EjectDisc()
         {
             // Validate that the required program exists
-            if (!File.Exists(CreatorPath))
+            if (!File.Exists(Parameters.Path))
                 return;
 
             CancelDumping();
@@ -206,9 +215,9 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            CreatorParameters parameters = new CreatorParameters(string.Empty)
+            var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = CreatorCommand.Eject,
+                BaseCommand = DiscImageCreator.Command.Eject,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -236,7 +245,7 @@ namespace DICUI.Utilities
 
                 // Now get the normalized paths
                 OutputDirectory = Path.GetDirectoryName(combinedPath);
-                OutputFilename = Path.GetFileName(combinedPath);                
+                OutputFilename = Path.GetFileName(combinedPath);
 
                 // Take care of extra path characters
                 OutputDirectory = new StringBuilder(OutputDirectory)
@@ -290,11 +299,11 @@ namespace DICUI.Utilities
             // Now ensure that all required files exist
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);
 
-            // If we're using DiscImageChef, the outputs are consistent
-            if (UseChef)
+            // If we're using Aaru, the outputs are consistent
+            if (InternalProgram == InternalProgram.Aaru)
             {
                 return File.Exists(combinedBase + ".cicm.xml")
-                    && File.Exists(combinedBase + ".dicf")
+                    && File.Exists(combinedBase + ".aif")
                     && File.Exists(combinedBase + ".ibg")
                     && File.Exists(combinedBase + ".log")
                     && File.Exists(combinedBase + ".mhddlog.bin")
@@ -356,7 +365,7 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Get the full parameter string for either DiscImageCreator or DiscImageChef
+        /// Get the full parameter string for either DiscImageCreator or Aaru
         /// </summary>
         /// <param name="driveSpeed">Nullable int representing the drive speed</param>
         /// <returns>String representing the params, null on error</returns>
@@ -371,23 +380,18 @@ namespace DICUI.Utilities
 
                 // Set the proper parameters
                 string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
-
-                if (UseChef)
+                switch (InternalProgram)
                 {
-                    ChefParameters = new ChefParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
-
-                    // Generate and return the param string
-                    return ChefParameters.GenerateParameters();
+                    case InternalProgram.Aaru:
+                        Parameters = new Aaru.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
+                        break;
+                    case InternalProgram.DiscImageCreator:
+                        Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
+                        break;
                 }
-                else
-                {
-                    CreatorParameters = new CreatorParameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, RereadAmountC2);
-                    if (QuietMode)
-                        CreatorParameters[CreatorFlag.DisableBeep] = true;
 
-                    // Generate and return the param string
-                    return CreatorParameters.GenerateParameters();
-                }
+                // Generate and return the param string
+                return Parameters.GenerateParameters();
             }
 
             return null;
@@ -399,7 +403,7 @@ namespace DICUI.Utilities
         public async void ResetDrive()
         {
             // Validate that the required program exists
-            if (!File.Exists(CreatorPath))
+            if (!File.Exists(Parameters.Path))
                 return;
 
             // Precautionary check for dumping, just in case
@@ -409,9 +413,9 @@ namespace DICUI.Utilities
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            CreatorParameters parameters = new CreatorParameters(string.Empty)
+            DiscImageCreator.Parameters parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                Command = CreatorCommand.Reset,
+                BaseCommand = DiscImageCreator.Command.Reset,
                 DriveLetter = Drive.Letter.ToString(),
             };
 
@@ -434,11 +438,11 @@ namespace DICUI.Utilities
                 if (!result)
                     return result;
 
-                if (UseChef)
+                if (InternalProgram == InternalProgram.Aaru)
                 {
-                    progress?.Report(Result.Success("Executing DiscImageChef... please wait!"));
-                    await Task.Run(() => ExecuteDiscImageChef());
-                    progress?.Report(Result.Success("DiscImageChef has finished!"));
+                    progress?.Report(Result.Success("Executing Aaru... please wait!"));
+                    await Task.Run(() => ExecuteAaru());
+                    progress?.Report(Result.Success("Aaru has finished!"));
                 }
                 else
                 {
@@ -519,13 +523,7 @@ namespace DICUI.Utilities
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            bool parametersValid = false;
-            if (UseChef)
-                parametersValid = ChefParameters.IsValid();
-            else
-                parametersValid = CreatorParameters.IsValid();
-
-            return parametersValid
+            return Parameters.IsValid()
                 && !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.HardDisk ^ Type == MediaType.HardDisk)
                 && !(Drive.InternalDriveType == InternalDriveType.Removable ^ (Type == MediaType.CompactFlash || Type == MediaType.SDCard || Type == MediaType.FlashDrive));
@@ -556,30 +554,30 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Run DiscImageChef
+        /// Run Aaru
         /// </summary>
-        private void ExecuteDiscImageChef()
+        private void ExecuteAaru()
         {
             Directory.CreateDirectory(OutputDirectory);
 
-            dicProcess = new Process()
+            process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = ChefPath,
-                    Arguments = ChefParameters.GenerateParameters() ?? "",
+                    FileName = Parameters.Path,
+                    Arguments = Parameters.GenerateParameters() ?? "",
                 },
             };
-            dicProcess.Start();
-            dicProcess.WaitForExit();
+            process.Start();
+            process.WaitForExit();
         }
 
         /// <summary>
-        /// Run DiscImageChef async with an input set of parameters
+        /// Run Aaru async with an input set of parameters
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteDiscImageChefWithParameters(ChefParameters parameters)
+        private async Task<string> ExecuteAaruWithParameters(Aaru.Parameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -588,7 +586,7 @@ namespace DICUI.Utilities
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = ChefPath,
+                        FileName = parameters.Path,
                         Arguments = parameters.GenerateParameters(),
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -616,16 +614,16 @@ namespace DICUI.Utilities
         /// </summary>
         private void ExecuteDiscImageCreator()
         {
-            dicProcess = new Process()
+            process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
-                    FileName = CreatorPath,
-                    Arguments = CreatorParameters.GenerateParameters() ?? "",
+                    FileName = Parameters.Path,
+                    Arguments = Parameters.GenerateParameters() ?? "",
                 },
             };
-            dicProcess.Start();
-            dicProcess.WaitForExit();
+            process.Start();
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -633,7 +631,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteDiscImageCreatorWithParameters(CreatorParameters parameters)
+        private async Task<string> ExecuteDiscImageCreatorWithParameters(DiscImageCreator.Parameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -642,7 +640,7 @@ namespace DICUI.Utilities
                 {
                     StartInfo = new ProcessStartInfo()
                     {
-                        FileName = CreatorPath,
+                        FileName = Parameters.Path,
                         Arguments = parameters.GenerateParameters(),
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -699,7 +697,7 @@ namespace DICUI.Utilities
             // Sanitize the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
-            // TODO: Notes about DiscImageChef outputs:
+            // TODO: Notes about Aaru outputs:
             // - `image convert` might be able to help generate CUE, CCD, SUB?
             // - NEED CONFIRMATION OF TRACK SPLITTING ON CD
 
@@ -733,7 +731,9 @@ namespace DICUI.Utilities
                 },
                 TracksAndWriteOffsets = new TracksAndWriteOffsetsSection()
                 {
-                    ClrMameProData = UseChef ? GenerateDatfile(combinedBase + ".cicm.xml") : GetDatfile(combinedBase + ".dat"),
+                    ClrMameProData = InternalProgram == InternalProgram.Aaru
+                        ? GenerateDatfile(combinedBase + ".cicm.xml")
+                        : GetDatfile(combinedBase + ".dat"),
                 },
             };
 
@@ -805,7 +805,9 @@ namespace DICUI.Utilities
                         errorCount = GetErrorCount(combinedBase + ".img_EccEdc.txt");
 
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-                    info.TracksAndWriteOffsets.Cuesheet = (UseChef ? GenerateCuesheet(combinedBase + ".dicf", combinedBase + ".cicm.xml") : GetFullFile(combinedBase + ".cue")) ?? "";
+                    info.TracksAndWriteOffsets.Cuesheet = (InternalProgram == InternalProgram.Aaru
+                        ? GenerateCuesheet(combinedBase + ".aif", combinedBase + ".cicm.xml")
+                        : GetFullFile(combinedBase + ".cue")) ?? "";
 
                     string cdWriteOffset = GetWriteOffset(combinedBase + "_disc.txt") ?? "";
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
@@ -1164,7 +1166,7 @@ namespace DICUI.Utilities
                     }
                     info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                     break;
-                
+
                 case KnownSystem.SonyPlayStation3:
                     info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
                     info.Extras.DiscID = (this.AddPlaceholders ? Template.RequiredValue : "");
@@ -1242,7 +1244,7 @@ namespace DICUI.Utilities
                 }
 
                 AddIfExists(output, Template.BarcodeField, info.CommonDiscInfo.Barcode, 1);
-                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo.EXEDateBuildDate, 1);                    
+                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo.EXEDateBuildDate, 1);
                 AddIfExists(output, Template.ErrorCountField, info.CommonDiscInfo.ErrorsCount, 1);
                 AddIfExists(output, Template.CommentsField, info.CommonDiscInfo.Comments.Trim(), 1);
                 AddIfExists(output, Template.ContentsField, info.CommonDiscInfo.Contents.Trim(), 1);
@@ -1258,7 +1260,7 @@ namespace DICUI.Utilities
                     output.Add("EDC:");
                     AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
                 }
-                
+
                 // Parent/Clone Relationship section
                 // output.Add(""); output.Add("Parent/Clone Relationship:");
                 // AddIfExists(output, Template.ParentIDField, info.ParentID);
@@ -1276,7 +1278,7 @@ namespace DICUI.Utilities
                     AddIfExists(output, Template.GameCubeWiiBCAField, info.Extras.BCA, 1);
                     AddIfExists(output, Template.XBOXSSRanges, info.Extras.SecuritySectorRanges, 1);
                 }
-                
+
                 // Copy Protection section
                 if (info.CopyProtection.Protection != null || info.EDC.EDC != YesNo.NULL)
                 {
@@ -1453,12 +1455,10 @@ namespace DICUI.Utilities
             FixOutputPaths();
 
             // Validate that the required program exists
-            if (UseChef && !File.Exists(ChefPath))
-                return Result.Failure("Error! Could not find DiscImageChef!");
-            else if (!UseChef && !File.Exists(CreatorPath))
-                return Result.Failure("Error! Could not find DiscImageCreator!");
+            if (!File.Exists(Parameters.Path))
+                return Result.Failure("Error! Could not find the program!");
 
-            // TODO: Ensure output path not the same as input drive OR DIC/DICUI location
+            // TODO: Ensure output path not the same as input drive OR executable location
 
             return Result.Success();
         }
@@ -1528,42 +1528,42 @@ namespace DICUI.Utilities
         /// <summary>
         /// Generate a cuesheet string based on CICM sidecar data
         /// </summary>
-        /// <param name="dicf">DICF output image</param>
-        /// <param name="cicmSidecar">CICM Sidecar data generated by DiscImageChef</param>
+        /// <param name="aif">AIF output image</param>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>String containing the cuesheet, null on error</returns>
-        private string GenerateCuesheet(string dicf, string cicmSidecar)
+        private string GenerateCuesheet(string aif, string cicmSidecar)
         {
             // Note that this path only generates a cuesheet against a single BIN, not split
 
             // If the files don't exist, we can't get info from them
-            if (!File.Exists(dicf) || !File.Exists(cicmSidecar))
+            if (!File.Exists(aif) || !File.Exists(cicmSidecar))
                 return null;
 
-            // If this is being run in Check, we can't run DiscImageChef
-            if (string.IsNullOrEmpty(ChefPath))
+            // If this is being run in Check, we can't run Aaru
+            if (string.IsNullOrEmpty(Parameters.Path))
                 return null;
 
-            var convertParams = new ChefParameters(null)
+            var convertParams = new Aaru.Parameters(null)
             {
-                Command = ChefCommand.ImageConvert,
+                BaseCommand = Aaru.Command.ImageConvert,
 
-                InputValue = dicf,
-                OutputValue = dicf + ".cue",
+                InputValue = aif,
+                OutputValue = aif + ".cue",
             };
 
-            convertParams[ChefFlag.XMLSidecar] = true;
+            convertParams[Aaru.Flag.XMLSidecar] = true;
             convertParams.XMLSidecarValue = cicmSidecar;
 
-            ExecuteDiscImageChefWithParameters(convertParams).ConfigureAwait(false).GetAwaiter().GetResult();
+            ExecuteAaruWithParameters(convertParams).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            File.Delete(dicf + ".bin");
-            return GetFullFile(dicf + ".cue");
+            File.Delete(aif + ".bin");
+            return GetFullFile(aif + ".cue");
         }
 
         /// <summary>
         /// Generate a CMP XML datfile string based on CICM sidecar data
         /// </summary>
-        /// <param name="cicmSidecar">CICM Sidecar data generated by DiscImageChef</param>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>String containing the datfile, null on error</returns>
         private string GenerateDatfile(string cicmSidecar)
         {
@@ -1596,7 +1596,7 @@ namespace DICUI.Utilities
                 return null;
 
             // Only care about OpticalDisc types
-            // TODO: DiscImageChef - Support floppy images
+            // TODO: Aaru - Support floppy images
             xtr = xtr.ReadSubtree();
             xtr.MoveToContent();
             xtr.Read();
@@ -1652,7 +1652,7 @@ namespace DICUI.Utilities
                                 case "Size":
                                     size = trackReader.ReadElementContentAsLong();
                                     break;
-                                
+
                                 // Track number
                                 case "Sequence":
                                     XmlReader sequenceReader = trackReader.ReadSubtree();

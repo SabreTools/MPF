@@ -20,7 +20,7 @@ namespace DICUI.Windows
         {
             InitializeComponent();
             _mainWindow = mainWindow;
-            _options = options;      
+            _options = options;
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -43,7 +43,7 @@ namespace DICUI.Windows
 
         private string[] PathSettings()
         {
-            string[] pathSettings = { "ChefPath", "CreatorPath", "DefaultOutputPath", "SubDumpPath" };
+            string[] pathSettings = { "AaruPath", "CreatorPath", "DefaultOutputPath", "SubDumpPath" };
             return pathSettings;
         }
 

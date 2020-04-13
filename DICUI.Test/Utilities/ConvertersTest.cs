@@ -8,50 +8,50 @@ namespace DICUI.Test.Utilities
     public class ConvertersTest
     {
         [Theory]
-        [InlineData(CreatorCommand.Audio, MediaType.CDROM)]
-        [InlineData(CreatorCommand.BluRay, MediaType.BluRay)]
-        [InlineData(CreatorCommand.Close, null)]
-        [InlineData(CreatorCommand.CompactDisc, MediaType.CDROM)]
-        [InlineData(CreatorCommand.Data, MediaType.CDROM)]
-        [InlineData(CreatorCommand.DigitalVideoDisc, MediaType.DVD)]
-        [InlineData(CreatorCommand.Eject, null)]
-        [InlineData(CreatorCommand.Floppy, MediaType.FloppyDisk)]
-        [InlineData(CreatorCommand.GDROM, MediaType.GDROM)]
-        [InlineData(CreatorCommand.MDS, null)]
-        [InlineData(CreatorCommand.Reset, null)]
-        [InlineData(CreatorCommand.SACD, MediaType.CDROM)]
-        [InlineData(CreatorCommand.Start, null)]
-        [InlineData(CreatorCommand.Stop, null)]
-        [InlineData(CreatorCommand.Sub, null)]
-        [InlineData(CreatorCommand.Swap, MediaType.GDROM)]
-        [InlineData(CreatorCommand.XBOX, MediaType.DVD)]
-        public void BaseCommandToMediaTypeTest(CreatorCommand command, MediaType? expected)
+        [InlineData(DiscImageCreator.Command.Audio, MediaType.CDROM)]
+        [InlineData(DiscImageCreator.Command.BluRay, MediaType.BluRay)]
+        [InlineData(DiscImageCreator.Command.Close, null)]
+        [InlineData(DiscImageCreator.Command.CompactDisc, MediaType.CDROM)]
+        [InlineData(DiscImageCreator.Command.Data, MediaType.CDROM)]
+        [InlineData(DiscImageCreator.Command.DigitalVideoDisc, MediaType.DVD)]
+        [InlineData(DiscImageCreator.Command.Eject, null)]
+        [InlineData(DiscImageCreator.Command.Floppy, MediaType.FloppyDisk)]
+        [InlineData(DiscImageCreator.Command.GDROM, MediaType.GDROM)]
+        [InlineData(DiscImageCreator.Command.MDS, null)]
+        [InlineData(DiscImageCreator.Command.Reset, null)]
+        [InlineData(DiscImageCreator.Command.SACD, MediaType.CDROM)]
+        [InlineData(DiscImageCreator.Command.Start, null)]
+        [InlineData(DiscImageCreator.Command.Stop, null)]
+        [InlineData(DiscImageCreator.Command.Sub, null)]
+        [InlineData(DiscImageCreator.Command.Swap, MediaType.GDROM)]
+        [InlineData(DiscImageCreator.Command.XBOX, MediaType.DVD)]
+        public void BaseCommandToMediaTypeTest(DiscImageCreator.Command command, MediaType? expected)
         {
-            MediaType? actual = command.ToMediaType();
+            MediaType? actual = DiscImageCreator.Converters.ToMediaType(command);
             Assert.Equal(expected, actual);
         }
 
         [Theory]
-        [InlineData(CreatorCommand.Audio, KnownSystem.AudioCD)]
-        [InlineData(CreatorCommand.BluRay, KnownSystem.SonyPlayStation3)]
-        [InlineData(CreatorCommand.Close, null)]
-        [InlineData(CreatorCommand.CompactDisc, KnownSystem.IBMPCCompatible)]
-        [InlineData(CreatorCommand.Data, KnownSystem.IBMPCCompatible)]
-        [InlineData(CreatorCommand.DigitalVideoDisc, KnownSystem.IBMPCCompatible)]
-        [InlineData(CreatorCommand.Eject, null)]
-        [InlineData(CreatorCommand.Floppy, KnownSystem.IBMPCCompatible)]
-        [InlineData(CreatorCommand.GDROM, KnownSystem.SegaDreamcast)]
-        [InlineData(CreatorCommand.MDS, null)]
-        [InlineData(CreatorCommand.Reset, null)]
-        [InlineData(CreatorCommand.SACD, KnownSystem.SuperAudioCD)]
-        [InlineData(CreatorCommand.Start, null)]
-        [InlineData(CreatorCommand.Stop, null)]
-        [InlineData(CreatorCommand.Sub, null)]
-        [InlineData(CreatorCommand.Swap, KnownSystem.SegaDreamcast)]
-        [InlineData(CreatorCommand.XBOX, KnownSystem.MicrosoftXBOX)]
-        public void BaseCommandToKnownSystemTest(CreatorCommand command, KnownSystem? expected)
+        [InlineData(DiscImageCreator.Command.Audio, KnownSystem.AudioCD)]
+        [InlineData(DiscImageCreator.Command.BluRay, KnownSystem.SonyPlayStation3)]
+        [InlineData(DiscImageCreator.Command.Close, null)]
+        [InlineData(DiscImageCreator.Command.CompactDisc, KnownSystem.IBMPCCompatible)]
+        [InlineData(DiscImageCreator.Command.Data, KnownSystem.IBMPCCompatible)]
+        [InlineData(DiscImageCreator.Command.DigitalVideoDisc, KnownSystem.IBMPCCompatible)]
+        [InlineData(DiscImageCreator.Command.Eject, null)]
+        [InlineData(DiscImageCreator.Command.Floppy, KnownSystem.IBMPCCompatible)]
+        [InlineData(DiscImageCreator.Command.GDROM, KnownSystem.SegaDreamcast)]
+        [InlineData(DiscImageCreator.Command.MDS, null)]
+        [InlineData(DiscImageCreator.Command.Reset, null)]
+        [InlineData(DiscImageCreator.Command.SACD, KnownSystem.SuperAudioCD)]
+        [InlineData(DiscImageCreator.Command.Start, null)]
+        [InlineData(DiscImageCreator.Command.Stop, null)]
+        [InlineData(DiscImageCreator.Command.Sub, null)]
+        [InlineData(DiscImageCreator.Command.Swap, KnownSystem.SegaDreamcast)]
+        [InlineData(DiscImageCreator.Command.XBOX, KnownSystem.MicrosoftXBOX)]
+        public void BaseCommandToKnownSystemTest(DiscImageCreator.Command command, KnownSystem? expected)
         {
-            KnownSystem? actual = Converters.ToKnownSystem(command);
+            KnownSystem? actual = DiscImageCreator.Converters.ToKnownSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -65,7 +65,7 @@ namespace DICUI.Test.Utilities
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = Converters.Extension(mediaType, false);
+            string actual = DiscImageCreator.Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 

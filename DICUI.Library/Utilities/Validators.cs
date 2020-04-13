@@ -5,8 +5,10 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using IMAPI2;
 using DICUI.Data;
+#if NET_FRAMEWORK
+using IMAPI2;
+#endif
 
 namespace DICUI.Utilities
 {
@@ -315,6 +317,11 @@ namespace DICUI.Utilities
 
                 // https://en.wikipedia.org/wiki/CP_System_III
                 case KnownSystem.CapcomCPSystemIII:
+                    types.Add(MediaType.CDROM);
+                    break;
+
+                // UNKNOWN
+                case KnownSystem.funworldPhotoPlay:
                     types.Add(MediaType.CDROM);
                     break;
 
@@ -649,6 +656,11 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     break;
 
+                // https://segaretro.org/Prologue_21
+                case KnownSystem.SegaPrologue21:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://en.wikipedia.org/wiki/Super_Audio_CD
                 case KnownSystem.SuperAudioCD:
                     types.Add(MediaType.CDROM);
@@ -764,31 +776,26 @@ namespace DICUI.Utilities
             else if (drive.InternalDriveType == InternalDriveType.Removable)
                 return MediaType.FlashDrive;
 
-            // Get the DeviceID from the current drive letter
+            // Get the DeviceID and MediaType from the current drive letter
             string deviceId = null;
+            ushort mediaType = 0;
             try
             {
-                ManagementObjectSearcher searcher =
-                    new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_CDROMDrive WHERE Id = '" + drive.Letter + ":\'");
+                // Get the device ID first
+                var searcher = new ManagementObjectSearcher(
+                    "root\\CIMV2",
+                    $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{drive.Letter}:\'");
 
-                var collection = searcher.Get();
-                foreach (ManagementObject queryObj in collection)
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
                     deviceId = (string)queryObj["DeviceID"];
-            }
-            catch
-            {
-                // We don't care what the error was
-                return null;
-            }
+                }
 
-            // If we got no valid device, we don't care and just return
-            if (deviceId == null)
-                return null;
+                // If we got no valid device, we don't care and just return
+                if (deviceId == null)
+                    return null;
 
-            // Get all relevant disc information
-            try
-            {
+#if NET_FRAMEWORK
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
                 deviceId = deviceId.ToLower().Replace('\\', '#');
                 string id = null;
@@ -809,14 +816,31 @@ namespace DICUI.Utilities
                 dataWriter.Recorder = recorder;
                 var media = dataWriter.CurrentPhysicalMediaType;
                 if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-                    return Converters.ToMediaType(media);
+                    return media.IMAPIToMediaType();
+
+                return null;
+#else
+                // Now try to get the physical media associated
+                searcher = new ManagementObjectSearcher(
+                    "root\\CIMV2",
+                    $"SELECT * FROM Win32_PhysicalMedia");
+                    //$"SELECT * FROM Win32_PhysicalMedia WHERE Name = '{deviceId}'");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    deviceId = (string)queryObj["Tag"];
+                    mediaType = (ushort)queryObj["MediaType"];
+                }
+
+                return ((PhysicalMediaType)mediaType).ToMediaType();
+#endif
+
             }
             catch
             {
-                // We don't care what the error is
+                // We don't care what the error was
+                return null;
             }
-
-            return null;
         }
 
         /// <summary>
@@ -875,7 +899,7 @@ namespace DICUI.Utilities
                 // If we have a weird disc, just assume PS1
                 return KnownSystem.SonyPlayStation;
             }
-            
+
             // Sony PlayStation 4
             if (drive.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {
@@ -953,7 +977,8 @@ namespace DICUI.Utilities
                 if (found == null || found.Count == 0)
                     return "None found";
 
-                return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+                // Strip out "CD Check" instances due to false positives
+                return string.Join("\n", found.Where(kvp => !kvp.Value.Equals("CD Check", StringComparison.OrdinalIgnoreCase)).Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
             }
             catch (Exception ex)
             {
