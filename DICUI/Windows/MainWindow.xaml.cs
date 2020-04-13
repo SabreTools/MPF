@@ -523,7 +523,7 @@ namespace DICUI.Windows
             {
                 // Check for the firmware first for DiscImageCreator
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                if (_env.InternalProgram != InternalProgram.Aaru && !await _env.DriveHasLatestFimrware())
+                if (_env.InternalProgram == InternalProgram.DiscImageCreator && !await _env.DriveHasLatestFimrware())
                 {
                     MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -709,13 +709,12 @@ namespace DICUI.Windows
 
                 string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\");
 
-                // TODO: Re-enable this functionality somehow
-                //// If SmartE is detected on the current disc, remove `/sf` from the flags
-                //if (protections.Contains("SmartE"))
-                //{
-                //    _env.Parameters[DiscImageCreator.Flag.ScanFileProtect] = false;
-                //    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
-                //}
+                // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
+                if (_env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
+                {
+                    ((DiscImageCreator.Parameters)_env.Parameters)[DiscImageCreator.Flag.ScanFileProtect] = false;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+                }
 
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);

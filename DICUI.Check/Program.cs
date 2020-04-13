@@ -59,7 +59,7 @@ namespace DICUI.Check
 
             // Check for additional flags
             string username = null, password = null;
-            bool useAaru = false;
+            string internalProgram = "DiscImageCreator";
             int startIndex = 2;
             for (; startIndex < args.Length; startIndex++)
             {
@@ -71,11 +71,10 @@ namespace DICUI.Check
                     startIndex += 2;
                 }
 
-                // Use Aaru
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use-aaru")
+                // Use specific program
+                else if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
                 {
-                    // TODO: Make this into an InternalProgram flag
-                    useAaru = true;
+                    internalProgram = args[startIndex].Split('=')[1];
                 }
 
                 // Default, we fall out
@@ -111,7 +110,7 @@ namespace DICUI.Check
                     Type = mediaType,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    InternalProgram = useAaru ? InternalProgram.Aaru : InternalProgram.DiscImageCreator,
+                    InternalProgram = Converters.ToInternalProgram(internalProgram),
 
                     Username = username,
                     Password = password,
