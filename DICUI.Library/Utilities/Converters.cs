@@ -2493,10 +2493,8 @@ namespace DICUI.Utilities
                     return KnownSystem.CapcomCPSystemIII;
                 case "fpp":
                 case "funworldphotoplay":
-                case "photoplay":
                 case "funworld photoplay":
                 case "funworld photo play":
-                case "photo play":
                     return KnownSystem.funworldPhotoPlay;
                 case "globalvr":
                 case "global vr":
