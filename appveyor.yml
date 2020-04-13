@@ -37,9 +37,11 @@ after_build:
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 - 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\net462\Programs\Aaru *
 - 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\net472\Programs\Aaru *
+- 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\net48\Programs\Aaru *
 - 7z e aaru-5.0.0.2879-1_windows_x64.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Aaru *
 - 7z e /DiscImageCreator_20200403.zip -oDICUI\bin\Debug\net462\Programs\Creator Release_ANSI\*
 - 7z e /DiscImageCreator_20200403.zip -oDICUI\bin\Debug\net472\Programs\Creator Release_ANSI\*
+- 7z e /DiscImageCreator_20200403.zip -oDICUI\bin\Debug\net48\Programs\Creator Release_ANSI\*
 - 7z e /DiscImageCreator_20200403.zip -oDICUI\bin\Debug\netcoreapp3.0\Programs\Creator Release_ANSI\*
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net462 *
 - mkdir DICUI\bin\Debug\net462\Programs\Subdump
@@ -47,6 +49,9 @@ after_build:
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net472 *
 - mkdir DICUI\bin\Debug\net472\Programs\Subdump
 - mv DICUI\bin\Debug\net472\subdump_fua_0x28.exe DICUI\bin\Debug\net472\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net48 *
+- mkdir DICUI\bin\Debug\net48\Programs\Subdump
+- mv DICUI\bin\Debug\net48\subdump_fua_0x28.exe DICUI\bin\Debug\net462\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\netcoreapp3.0 *
 - mkdir DICUI\bin\Debug\netcoreapp3.0\Programs\Subdump
 - mv DICUI\bin\Debug\netcoreapp3.0\subdump_fua_0x28.exe DICUI\bin\Debug\netcoreapp3.0\Programs\Subdump\subdump.exe
