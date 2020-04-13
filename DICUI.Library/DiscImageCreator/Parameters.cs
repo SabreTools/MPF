@@ -535,6 +535,13 @@ namespace DICUI.DiscImageCreator
                     parameters.Add(Converters.LongName(Flag.VideoNowColor));
             }
 
+            // VideoNowXP
+            if (GetSupportedCommands(Flag.VideoNowXP).Contains(BaseCommand))
+            {
+                if (this[Flag.VideoNowXP] == true)
+                    parameters.Add(Converters.LongName(Flag.VideoNowXP));
+            }
+
             return string.Join(" ", parameters);
         }
 
@@ -700,8 +707,7 @@ namespace DICUI.DiscImageCreator
                             this[Flag.VideoNowColor] = true;
                             break;
                         case KnownSystem.HasbroVideoNowXP:
-                            this[Flag.VideoNow] = true;
-                            this.VideoNowValue = 20832;
+                            this[Flag.VideoNowXP] = true;
                             break;
                         case KnownSystem.SonyPlayStation:
                             this[Flag.ScanAntiMod] = true;
@@ -1431,6 +1437,13 @@ namespace DICUI.DiscImageCreator
                             this[Flag.VideoNowColor] = true;
                             break;
 
+                        case FlagStrings.VideoNowXP:
+                            if (!GetSupportedCommands(Flag.VideoNowXP).Contains(BaseCommand))
+                                return false;
+
+                            this[Flag.VideoNowXP] = true;
+                            break;
+
                         default:
                             return false;
                     }
@@ -1584,6 +1597,9 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.CompactDisc);
                     break;
                 case Flag.VideoNowColor:
+                    commands.Add(Command.CompactDisc);
+                    break;
+                case Flag.VideoNowXP:
                     commands.Add(Command.CompactDisc);
                     break;
 

@@ -61,5 +61,6 @@ namespace DICUI.DiscImageCreator
         public const string SubchannelReadLevel = "/s";
         public const string VideoNow = "/vn";
         public const string VideoNowColor = "/vnc";
+        public const string VideoNowXP = "/vnx";
     }
 }

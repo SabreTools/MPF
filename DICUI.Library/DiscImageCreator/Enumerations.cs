@@ -63,5 +63,6 @@ namespace DICUI.DiscImageCreator
         SubchannelReadLevel,
         VideoNow,
         VideoNowColor,
+        VideoNowXP,
     }
 }

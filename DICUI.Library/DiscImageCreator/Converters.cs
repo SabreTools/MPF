@@ -44,7 +44,7 @@ namespace DICUI.DiscImageCreator
                     return null;
             }
         }
-    
+
         /// <summary>
         /// Get the MediaType associated with a given base command
         /// </summary>
@@ -81,7 +81,7 @@ namespace DICUI.DiscImageCreator
                     return null;
             }
         }
-    
+
         /// <summary>
         /// Get the default extension for a given disc type
         /// </summary>
@@ -120,7 +120,7 @@ namespace DICUI.DiscImageCreator
                     return null;
             }
         }
-    
+
         #endregion
 
         #region Convert to Long Name
@@ -248,6 +248,8 @@ namespace DICUI.DiscImageCreator
                     return FlagStrings.VideoNow;
                 case Flag.VideoNowColor:
                     return FlagStrings.VideoNowColor;
+                case Flag.VideoNowXP:
+                    return FlagStrings.VideoNowXP;
 
                 case Flag.NONE:
                 default:
@@ -314,7 +316,7 @@ namespace DICUI.DiscImageCreator
                     return Command.XGD2Swap;
                 case CommandStrings.XGD3Swap:
                     return Command.XGD3Swap;
-                    
+
                 default:
                     return Command.NONE;
             }
