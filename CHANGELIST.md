@@ -1,3 +1,13 @@
+### 1.16 (2020-04-13)
+- Updated to DIC version 20200403
+- UI updates based on user feedback
+- Added support for Aaru (formerly DiscImageChef)
+- Added more support for different output file formats (such as CleanRip)
+- Add PS1/PS2 serial extraction and matching
+- Fix PS1 date support when both PSX.EXE and normal executable are both present
+- Update BurnOutSharp
+- Many MANY bits of internal cleanup
+
 ### 1.15 (2019-11-16)
 
 - Updated to DIC version 20191116

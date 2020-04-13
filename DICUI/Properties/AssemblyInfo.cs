@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DICUI")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,8 +51,8 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.15")]
-[assembly: AssemblyFileVersion("1.15.0.0")]
+[assembly: AssemblyVersion("1.16")]
+[assembly: AssemblyFileVersion("1.16.0.0")]
 
 // Anything marked as internal can be used by the test methods
 [assembly: InternalsVisibleTo("DICUI.Test")]
