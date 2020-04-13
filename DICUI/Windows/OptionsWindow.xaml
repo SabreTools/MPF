@@ -33,7 +33,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
-            <TextBox x:Name="AaruPathextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
             <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
