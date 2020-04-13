@@ -6,8 +6,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <!-- TODO: Doesn't work with .NET Core -->
-  <ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)'!='netcoreapp2.1' AND '$(TargetFramework)'!='netcoreapp3.1'">
+    <DefineConstants>NET_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp2.1' AND '$(TargetFramework)'!='netcoreapp3.1'">
     <COMReference Include="IMAPI2">
       <Guid>{2735412F-7F64-5B0F-8F00-5D77AFBE261E}</Guid>
       <VersionMajor>1</VersionMajor>

@@ -6,7 +6,9 @@ using System.Management;
 using System.Threading.Tasks;
 using BurnOutSharp;
 using DICUI.Data;
-//using IMAPI2; // TODO: Doesn't work with .NET Core
+#if NET_FRAMEWORK
+using IMAPI2;
+#endif
 
 namespace DICUI.Utilities
 {
@@ -783,6 +785,31 @@ namespace DICUI.Utilities
                 if (deviceId == null)
                     return null;
 
+#if NET_FRAMEWORK
+                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+                deviceId = deviceId.ToLower().Replace('\\', '#');
+                string id = null;
+                foreach (var disc in discMaster)
+                {
+                    if (disc.ToString().Contains(deviceId))
+                        id = disc.ToString();
+                }
+
+                // If we couldn't find the drive, we don't care and return
+                if (id == null)
+                    return null;
+
+                // Otherwise, we get the media type, if any
+                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                recorder.InitializeDiscRecorder(id);
+                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+                dataWriter.Recorder = recorder;
+                var media = dataWriter.CurrentPhysicalMediaType;
+                if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+                    return media.IMAPIToMediaType();
+
+                return null;
+#else
                 // Now try to get the physical media associated
                 searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
@@ -796,43 +823,14 @@ namespace DICUI.Utilities
                 }
 
                 return ((PhysicalMediaType)mediaType).ToMediaType();
+#endif
+
             }
             catch
             {
                 // We don't care what the error was
                 return null;
             }
-
-            //// Get all relevant disc information
-            //try
-            //{
-            //    // TODO: Doesn't work with .NET Core
-            //    MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-            //    deviceId = deviceId.ToLower().Replace('\\', '#');
-            //    string id = null;
-            //    foreach (var disc in discMaster)
-            //    {
-            //        if (disc.ToString().Contains(deviceId))
-            //            id = disc.ToString();
-            //    }
-
-            //    // If we couldn't find the drive, we don't care and return
-            //    if (id == null)
-            //        return null;
-
-            //    // Otherwise, we get the media type, if any
-            //    MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-            //    recorder.InitializeDiscRecorder(id);
-            //    MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-            //    dataWriter.Recorder = recorder;
-            //    var media = dataWriter.CurrentPhysicalMediaType;
-            //    if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
-            //        return media.ToMediaType();
-            //}
-            //catch
-            //{
-            //    // We don't care what the error is
-            //}
         }
 
         /// <summary>
