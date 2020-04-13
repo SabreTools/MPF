@@ -967,7 +967,8 @@ namespace DICUI.Utilities
                 if (found == null || found.Count == 0)
                     return "None found";
 
-                return string.Join("\n", found.Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+                // Strip out "CD Check" instances due to false positives
+                return string.Join("\n", found.Where(kvp => !kvp.Value.Equals("CD Check", StringComparison.OrdinalIgnoreCase)).Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
             }
             catch (Exception ex)
             {
