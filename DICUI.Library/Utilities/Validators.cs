@@ -321,6 +321,11 @@ namespace DICUI.Utilities
                     break;
 
                 // UNKNOWN
+                case KnownSystem.funworldPhotoPlay:
+                    types.Add(MediaType.CDROM);
+                    break;
+
+                // UNKNOWN
                 case KnownSystem.GlobalVRVarious:
                     types.Add(MediaType.CDROM);
                     break;
@@ -648,6 +653,11 @@ namespace DICUI.Utilities
 
                 // https://en.wikipedia.org/wiki/Doors_and_Windows_(EP)
                 case KnownSystem.RainbowDisc:
+                    types.Add(MediaType.CDROM);
+                    break;
+
+                // https://segaretro.org/Prologue_21
+                case KnownSystem.SegaPrologue21:
                     types.Add(MediaType.CDROM);
                     break;
 

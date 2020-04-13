@@ -600,6 +600,8 @@ namespace DICUI.Utilities
                     return "Bally Game Magic";
                 case KnownSystem.CapcomCPSystemIII:
                     return "Capcom CP System III";
+                case KnownSystem.funworldPhotoPlay:
+                    return "funworld Photo Play";
                 case KnownSystem.GlobalVRVarious:
                     return "Global VR PC-based Systems";
                 case KnownSystem.GlobalVRVortek:
@@ -719,6 +721,8 @@ namespace DICUI.Utilities
                     return "PlayStation GameShark Updates";
                 case KnownSystem.RainbowDisc:
                     return "Rainbow Disc";
+                case KnownSystem.SegaPrologue21:
+                    return "Sega Prologue 21";
                 case KnownSystem.SuperAudioCD:
                     return "Super Audio CD";
                 case KnownSystem.TaoiKTV:
@@ -1409,6 +1413,8 @@ namespace DICUI.Utilities
                     return "game magic";
                 case KnownSystem.CapcomCPSystemIII:
                     return "cps3";
+                case KnownSystem.funworldPhotoPlay:
+                    return "fpp";
                 case KnownSystem.GlobalVRVarious:
                     return "globalvr";
                 case KnownSystem.GlobalVRVortek:
@@ -1528,6 +1534,8 @@ namespace DICUI.Utilities
                     return "gameshark";
                 case KnownSystem.RainbowDisc:
                     return "rainbow";
+                case KnownSystem.SegaPrologue21:
+                    return "pl21";
                 case KnownSystem.SuperAudioCD:
                     return "sacd";
                 case KnownSystem.TaoiKTV:
@@ -2483,6 +2491,13 @@ namespace DICUI.Utilities
                 case "capcom cp system 3":
                 case "capcom cp system iii":
                     return KnownSystem.CapcomCPSystemIII;
+                case "fpp":
+                case "funworldphotoplay":
+                case "photoplay":
+                case "funworld photoplay":
+                case "funworld photo play":
+                case "photo play":
+                    return KnownSystem.funworldPhotoPlay;
                 case "globalvr":
                 case "global vr":
                 case "global vr pc-based systems":
@@ -2780,6 +2795,13 @@ namespace DICUI.Utilities
                 case "rainbowdisc":
                 case "rainbow disc":
                     return KnownSystem.RainbowDisc;
+                case "pl21":
+                case "prologue21":
+                case "prologue 21":
+                case "segaprologue21":
+                case "sega prologue21":
+                case "sega prologue 21":
+                    return KnownSystem.SegaPrologue21;
                 case "sacd":
                 case "superaudiocd":
                 case "super audio cd":
