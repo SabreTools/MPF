@@ -475,6 +475,10 @@ namespace DICUI.Windows
                     env.Parameters.Path = _options.AaruPath;
                     break;
 
+                case InternalProgram.DD:
+                    env.Parameters.Path = _options.DDPath;
+                    break;
+
                 case InternalProgram.DiscImageCreator:
                     env.Parameters.Path = _options.CreatorPath;
                     break;
@@ -521,15 +525,6 @@ namespace DICUI.Windows
 
             try
             {
-                // Check for the firmware first for DiscImageCreator
-                // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                // TODO: Re-enable once whatever issues DIC is having with this are figured out
-                //if (_env.InternalProgram == InternalProgram.DiscImageCreator && !await _env.DriveHasLatestFimrware())
-                //{
-                //    MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
-                //    return;
-                //}
-
                 // Validate that the user explicitly wants an inactive drive to be considered for dumping
                 if (!_env.Drive.MarkedActive)
                 {
@@ -676,6 +671,11 @@ namespace DICUI.Windows
                 case InternalProgram.Aaru:
                     extension = Aaru.Converters.Extension(mediaType);
                     break;
+
+                case InternalProgram.DD:
+                    extension = DD.Converters.Extension(mediaType);
+                    break;
+
                 case InternalProgram.DiscImageCreator:
                     extension = DiscImageCreator.Converters.Extension(mediaType);
                     break;

@@ -154,6 +154,11 @@ namespace DICUI.Utilities
                 case InternalProgram.Aaru:
                     Parameters = new Aaru.Parameters(parameters);
                     break;
+
+                case InternalProgram.DD:
+                    Parameters = new DD.Parameters(parameters);
+                    break;
+
                 case InternalProgram.DiscImageCreator:
                     Parameters = new DiscImageCreator.Parameters(parameters);
                     break;
@@ -172,32 +177,6 @@ namespace DICUI.Utilities
             }
             catch
             { }
-        }
-
-        /// <summary>
-        /// Gets if the current drive has the latest firmware
-        /// </summary>
-        /// <returns></returns>
-        public async Task<bool> DriveHasLatestFimrware()
-        {
-            // Validate that the required program exists
-            if (!File.Exists(Parameters.Path))
-                return false;
-
-            var parameters = new DiscImageCreator.Parameters(string.Empty)
-            {
-                BaseCommand = DiscImageCreator.Command.DriveSpeed,
-                DriveLetter = Drive.Letter.ToString(),
-            };
-
-            string output = await ExecuteDiscImageCreatorWithParameters(parameters);
-
-            // If we get the firmware message
-            if (output.Contains("[ERROR] This drive isn't latest firmware. Please update."))
-                return false;
-
-            // Otherwise, we know the firmware's good
-            return true;
         }
 
         /// <summary>
@@ -385,6 +364,11 @@ namespace DICUI.Utilities
                     case InternalProgram.Aaru:
                         Parameters = new Aaru.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
                         break;
+
+                    case InternalProgram.DD:
+                        Parameters = new DD.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
+                        break;
+
                     case InternalProgram.DiscImageCreator:
                         Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
                         break;

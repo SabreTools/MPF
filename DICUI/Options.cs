@@ -8,9 +8,11 @@ namespace DICUI
 {
     public class Options
     {
-        public string DefaultOutputPath { get; private set; }
         public string AaruPath { get; private set; }
         public string CreatorPath { get; private set; }
+        public string DDPath { get; private set; }
+
+        public string DefaultOutputPath { get; private set; }
         public string SubDumpPath { get; private set; }
 
         public string InternalProgram { get; set; }
@@ -61,6 +63,7 @@ namespace DICUI
             //TODO: hardcoded, we should find a better way
             this.AaruPath = GetStringSetting(configFile, "AaruPath", "Programs\\Aaru\\Aaru.exe");
             this.CreatorPath = GetStringSetting(configFile, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe");
+            this.DDPath = GetStringSetting(configFile, "DDPath", "Programs\\DD\\dd.exe");
             this.SubDumpPath = GetStringSetting(configFile, "SubDumpPath", "Programs\\Subdump\\subdump.exe");
             this.DefaultOutputPath = GetStringSetting(configFile, "DefaultOutputPath", "ISO");
             this.InternalProgram = GetStringSetting(configFile, "InternalProgram", Data.InternalProgram.DiscImageCreator.ToString());
