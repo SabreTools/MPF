@@ -523,11 +523,12 @@ namespace DICUI.Windows
             {
                 // Check for the firmware first for DiscImageCreator
                 // TODO: Remove this (and method) once DIC end-to-end logging becomes a thing
-                if (_env.InternalProgram == InternalProgram.DiscImageCreator && !await _env.DriveHasLatestFimrware())
-                {
-                    MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                // TODO: Re-enable once whatever issues DIC is having with this are figured out
+                //if (_env.InternalProgram == InternalProgram.DiscImageCreator && !await _env.DriveHasLatestFimrware())
+                //{
+                //    MessageBox.Show($"DiscImageCreator has reported that drive {_env.Drive.Letter} is not updated to the most recent firmware. Please update the firmware for your drive and try again.", "Outdated Firmware", MessageBoxButton.OK, MessageBoxImage.Error);
+                //    return;
+                //}
 
                 // Validate that the user explicitly wants an inactive drive to be considered for dumping
                 if (!_env.Drive.MarkedActive)
