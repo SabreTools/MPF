@@ -212,7 +212,7 @@ namespace DICUI.Aaru
         {
             BaseCommand = Command.MediaDump;
 
-            InputValue = $"\\\\?\\{driveLetter.ToString()}:";
+            InputValue = $"\\\\?\\{driveLetter}:";
             OutputValue = filename;
 
             this[Flag.Force] = true;
@@ -305,7 +305,7 @@ namespace DICUI.Aaru
             #endregion
 
             if (BaseCommand != Command.NONE)
-                parameters.Add(Converters.LongName((Command)BaseCommand));
+                parameters.Add(Converters.LongName(BaseCommand));
             else
                 return null;
 

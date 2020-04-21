@@ -163,7 +163,7 @@ namespace DICUI.DiscImageCreator
             List<string> parameters = new List<string>();
 
             if (BaseCommand != Command.NONE)
-                parameters.Add(Converters.LongName((Command)BaseCommand));
+                parameters.Add(Converters.LongName(BaseCommand));
             else
                 return null;
 
