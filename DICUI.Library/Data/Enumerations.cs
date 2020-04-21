@@ -48,7 +48,7 @@
         NONE = 0,
 
         Aaru,
-        DD, // TODO: Currently partially implemented
+        DD,
         DiscImageCreator,
     }
 

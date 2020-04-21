@@ -265,9 +265,18 @@ namespace DICUI.DD
             InputFileValue = $"\\\\?\\{driveLetter}:";
             OutputFileValue = filename;
 
-            // TODO: Refine the block size more based on media type (1440K for FDD, etc.)
+            // TODO: Add more common block sizes
             this[Flag.BlockSize] = true;
-            BlockSizeValue = 1024 * 1024 * 1024;
+            switch (type)
+            {
+                case MediaType.FloppyDisk:
+                    BlockSizeValue = 1440 * 1024;
+                    break;
+
+                default:
+                    BlockSizeValue = 1024 * 1024 * 1024;
+                    break;
+            }
 
             this[Flag.Progress] = true;
             this[Flag.Size] = true;

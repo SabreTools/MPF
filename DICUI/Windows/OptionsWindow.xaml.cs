@@ -43,7 +43,7 @@ namespace DICUI.Windows
 
         private string[] PathSettings()
         {
-            string[] pathSettings = { "AaruPath", "CreatorPath", "DefaultOutputPath", "SubDumpPath" };
+            string[] pathSettings = { "AaruPath", "CreatorPath", "DDPath", "DefaultOutputPath", "SubDumpPath" };
             return pathSettings;
         }
 

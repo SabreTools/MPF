@@ -249,12 +249,12 @@ namespace DICUI.Data
     /// </summary>
     public class CommonDiscInfoSection
     {
-        // TODO: Name not defined
+        // Name not defined by Redump
         [JsonProperty(PropertyName = "d_system", Required = Required.AllowNull)]
         [JsonConverter(typeof(KnownSystemConverter))]
         public KnownSystem? System { get; set; }
 
-        // TODO: Name not defined
+        // Name not defined by Redump
         // TODO: Have this convert to a new `RedumpMedia?` if possible, for submission
         [JsonProperty(PropertyName = "d_media", Required = Required.AllowNull)]
         [JsonConverter(typeof(MediaTypeConverter))]
