@@ -262,7 +262,10 @@ namespace DICUI.DD
         {
             BaseCommand = Command.NONE;
 
+            this[Flag.InputFile] = true;
             InputFileValue = $"\\\\?\\{driveLetter}:";
+
+            this[Flag.OutputFile] = true;
             OutputFileValue = filename;
 
             // TODO: Add more common block sizes
