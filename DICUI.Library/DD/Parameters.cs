@@ -391,6 +391,19 @@ namespace DICUI.DD
         }
 
         /// <summary>
+        /// Validate if all required output files exist
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <returns></returns>
+        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
+        {
+            // TODO: Figure out what sort of output files are expected... just `.bin`?
+            return true;
+        }
+
+        /// <summary>
         /// Get the list of commands that use a given flag
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>

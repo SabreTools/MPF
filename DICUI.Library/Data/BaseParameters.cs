@@ -127,6 +127,15 @@ namespace DICUI.Data
         protected abstract bool ValidateAndSetParameters(string parameters);
 
         /// <summary>
+        /// Validate if all required output files exist
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <returns></returns>
+        public abstract bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type);
+
+        /// <summary>
         /// Returns whether or not the selected item exists
         /// </summary>
         /// <param name="parameters">List of parameters to check against</param>

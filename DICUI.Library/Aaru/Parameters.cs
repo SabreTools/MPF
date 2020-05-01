@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DICUI.Data;
@@ -1346,6 +1347,23 @@ namespace DICUI.Aaru
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Validate if all required output files exist
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <returns></returns>
+        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
+        {
+            return File.Exists(basePath + ".cicm.xml")
+                && File.Exists(basePath + ".aif")
+                && File.Exists(basePath + ".ibg")
+                && File.Exists(basePath + ".log")
+                && File.Exists(basePath + ".mhddlog.bin")
+                && File.Exists(basePath + ".resume.xml");
         }
 
         /// <summary>

@@ -482,6 +482,12 @@ namespace DICUI.Windows
                 case InternalProgram.DiscImageCreator:
                     env.Parameters.Path = _options.CreatorPath;
                     break;
+
+                // This should never happen, but it needs a fallback.
+                default:
+                    env.InternalProgram = InternalProgram.DiscImageCreator;
+                    env.Parameters.Path = _options.CreatorPath;
+                    break;
             }
 
             // Disable automatic reprocessing of the textboxes until we're done
@@ -502,8 +508,8 @@ namespace DICUI.Windows
         /// </summary>
         private async void StartDumping()
         {
-            if (_env == null)
-                _env = DetermineEnvironment();
+            // One last check to determine environment, just in case
+            _env = DetermineEnvironment();
 
             // If still in custom parameter mode, check that users meant to continue or not
             if (EnableParametersCheckBox.IsChecked == true)

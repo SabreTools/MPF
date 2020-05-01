@@ -1454,6 +1454,80 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
+        /// Validate if all required output files exist
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <returns></returns>
+        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
+        {
+            // Some disc types are audio-only
+            bool audioOnly = (system == KnownSystem.AtariJaguarCD)
+                || (system == KnownSystem.AudioCD)
+                || (system == KnownSystem.SuperAudioCD);
+
+            switch (type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    // return File.Exists(combinedBase + ".c2") // Doesn't output on Linux
+                    return File.Exists(basePath + ".ccd")
+                        && File.Exists(basePath + ".cue")
+                        && File.Exists(basePath + ".dat")
+                        && File.Exists(basePath + ".img")
+                        && (audioOnly || File.Exists(basePath + ".img_EdcEcc.txt") || File.Exists(basePath + ".img_EccEdc.txt"))
+                        && (audioOnly || File.Exists(basePath + ".scm"))
+                        && File.Exists(basePath + ".sub")
+                        // && File.Exists(combinedBase + "_c2Error.txt") // Doesn't output on Linux
+                        && File.Exists(basePath + "_cmd.txt")
+                        && File.Exists(basePath + "_disc.txt")
+                        && File.Exists(basePath + "_drive.txt")
+                        && File.Exists(basePath + "_img.cue")
+                        && File.Exists(basePath + "_mainError.txt")
+                        && File.Exists(basePath + "_mainInfo.txt")
+                        && File.Exists(basePath + "_subError.txt")
+                        && File.Exists(basePath + "_subInfo.txt")
+                        // && File.Exists(combinedBase + "_subIntention.txt") // Not guaranteed output
+                        && (File.Exists(basePath + "_subReadable.txt") || File.Exists(basePath + "_sub.txt"))
+                        && File.Exists(basePath + "_volDesc.txt");
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    bool dicDump = File.Exists(basePath + ".dat")
+                        && File.Exists(basePath + "_cmd.txt")
+                        && File.Exists(basePath + "_disc.txt")
+                        && File.Exists(basePath + "_drive.txt")
+                        && File.Exists(basePath + "_mainError.txt")
+                        && File.Exists(basePath + "_mainInfo.txt")
+                        && File.Exists(basePath + "_volDesc.txt");
+                    bool cleanRipDump = File.Exists(basePath + "-dumpinfo.txt")
+                        && File.Exists(basePath + ".bca");
+                    return dicDump | cleanRipDump;
+
+                case MediaType.FloppyDisk:
+                case MediaType.HardDisk:
+                    // TODO: Determine what outputs come out from a HDD, SD, etc.
+                    return File.Exists(basePath + ".dat")
+                        && File.Exists(basePath + "_cmd.txt")
+                       && File.Exists(basePath + "_disc.txt");
+
+                case MediaType.UMD:
+                    return File.Exists(basePath + "_disc.txt")
+                        || File.Exists(basePath + "_mainError.txt")
+                        || File.Exists(basePath + "_mainInfo.txt")
+                        || File.Exists(basePath + "_volDesc.txt");
+
+                default:
+                    // Non-dumping commands will usually produce no output, so this is irrelevant
+                    return true;
+            }
+        }
+
+        /// <summary>
         /// Get the list of commands that use a given flag
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>
