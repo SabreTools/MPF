@@ -162,6 +162,11 @@ namespace DICUI.Utilities
                 case InternalProgram.DiscImageCreator:
                     Parameters = new DiscImageCreator.Parameters(parameters);
                     break;
+
+                // This should never happen, but it needs a fallback.
+                default:
+                    Parameters = new DiscImageCreator.Parameters(parameters);
+                    break;
             }
         }
 
@@ -200,7 +205,7 @@ namespace DICUI.Utilities
                 DriveLetter = Drive.Letter.ToString(),
             };
 
-            await ExecuteDiscImageCreatorWithParameters(parameters);
+            await ExecuteInternalProgram(parameters);
         }
 
         /// <summary>
@@ -270,77 +275,11 @@ namespace DICUI.Utilities
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
-            // Some disc types are audio-only
-            bool audioOnly = (System == KnownSystem.AtariJaguarCD)
-                || (System == KnownSystem.AudioCD)
-                || (System == KnownSystem.SuperAudioCD);
+            // Then get the base path for all checking
+            string basePath = Path.Combine(OutputDirectory, outputFilename);
 
-            // Now ensure that all required files exist
-            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
-
-            // If we're using Aaru, the outputs are consistent
-            if (InternalProgram == InternalProgram.Aaru)
-            {
-                return File.Exists(combinedBase + ".cicm.xml")
-                    && File.Exists(combinedBase + ".aif")
-                    && File.Exists(combinedBase + ".ibg")
-                    && File.Exists(combinedBase + ".log")
-                    && File.Exists(combinedBase + ".mhddlog.bin")
-                    && File.Exists(combinedBase + ".resume.xml");
-            }
-
-            switch (Type)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    // return File.Exists(combinedBase + ".c2") // Doesn't output on Linux
-                    return File.Exists(combinedBase + ".ccd")
-                        && File.Exists(combinedBase + ".cue")
-                        && File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + ".img")
-                        && (audioOnly || File.Exists(combinedBase + ".img_EdcEcc.txt") || File.Exists(combinedBase + ".img_EccEdc.txt"))
-                        && (audioOnly || File.Exists(combinedBase + ".scm"))
-                        && File.Exists(combinedBase + ".sub")
-                        // && File.Exists(combinedBase + "_c2Error.txt") // Doesn't output on Linux
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_img.cue")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_subError.txt")
-                        && File.Exists(combinedBase + "_subInfo.txt")
-                        // && File.Exists(combinedBase + "_subIntention.txt") // Not guaranteed output
-                        && (File.Exists(combinedBase + "_subReadable.txt") || File.Exists(combinedBase + "_sub.txt"))
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    bool dicDump = File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                        && File.Exists(combinedBase + "_disc.txt")
-                        && File.Exists(combinedBase + "_drive.txt")
-                        && File.Exists(combinedBase + "_mainError.txt")
-                        && File.Exists(combinedBase + "_mainInfo.txt")
-                        && File.Exists(combinedBase + "_volDesc.txt");
-                    bool cleanRipDump = File.Exists(combinedBase + "-dumpinfo.txt")
-                        && File.Exists(combinedBase + ".bca");
-                    return dicDump | cleanRipDump;
-                case MediaType.FloppyDisk:
-                    return File.Exists(combinedBase + ".dat")
-                        && File.Exists(combinedBase + "_cmd.txt")
-                       && File.Exists(combinedBase + "_disc.txt");
-                case MediaType.UMD:
-                    return File.Exists(combinedBase + "_disc.txt")
-                        || File.Exists(combinedBase + "_mainError.txt")
-                        || File.Exists(combinedBase + "_mainInfo.txt")
-                        || File.Exists(combinedBase + "_volDesc.txt");
-                default:
-                    // Non-dumping commands will usually produce no output, so this is irrelevant
-                    return true;
-            }
+            // Finally, let the parameters say if all files exist
+            return Parameters.CheckAllOutputFilesExist(basePath, this.System, this.Type);
         }
 
         /// <summary>
@@ -370,6 +309,11 @@ namespace DICUI.Utilities
                         break;
 
                     case InternalProgram.DiscImageCreator:
+                        Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
+                        break;
+
+                    // This should never happen, but it needs a fallback.
+                    default:
                         Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, ParanoidMode, QuietMode, RereadAmountC2);
                         break;
                 }
@@ -403,7 +347,7 @@ namespace DICUI.Utilities
                 DriveLetter = Drive.Letter.ToString(),
             };
 
-            await ExecuteDiscImageCreatorWithParameters(parameters);
+            await ExecuteInternalProgram(parameters);
         }
 
         /// <summary>
@@ -422,18 +366,10 @@ namespace DICUI.Utilities
                 if (!result)
                     return result;
 
-                if (InternalProgram == InternalProgram.Aaru)
-                {
-                    progress?.Report(Result.Success("Executing Aaru... please wait!"));
-                    await Task.Run(() => ExecuteAaru());
-                    progress?.Report(Result.Success("Aaru has finished!"));
-                }
-                else
-                {
-                    progress?.Report(Result.Success("Executing DiscImageCreator... please wait!"));
-                    await Task.Run(() => ExecuteDiscImageCreator());
-                    progress?.Report(Result.Success("DiscImageCreator has finished!"));
-                }
+                // Execute internal tool
+                progress?.Report(Result.Success($"Executing {this.InternalProgram}... please wait!"));
+                await Task.Run(() => ExecuteInternalProgram());
+                progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
 
                 // Execute additional tools
                 progress?.Report(Result.Success("Running any additional tools... please wait!"));
@@ -538,9 +474,9 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Run Aaru
+        /// Run internal program
         /// </summary>
-        private void ExecuteAaru()
+        private void ExecuteInternalProgram()
         {
             Directory.CreateDirectory(OutputDirectory);
 
@@ -557,11 +493,11 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Run Aaru async with an input set of parameters
+        /// Run internal program async with an input set of parameters
         /// </summary>
         /// <param name="parameters"></param>
         /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteAaruWithParameters(Aaru.Parameters parameters)
+        private async Task<string> ExecuteInternalProgram(BaseParameters parameters)
         {
             Process childProcess;
             string output = await Task.Run(() =>
@@ -571,60 +507,6 @@ namespace DICUI.Utilities
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = parameters.Path,
-                        Arguments = parameters.GenerateParameters(),
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit(1000);
-
-                // Just in case, we want to push a button 5 times to clear any errors
-                for (int i = 0; i < 5; i++)
-                    childProcess.StandardInput.WriteLine("Y");
-
-                string stdout = childProcess.StandardOutput.ReadToEnd();
-                childProcess.Dispose();
-                return stdout;
-            });
-
-            return output;
-        }
-
-        /// <summary>
-        /// Run DiscImageCreator
-        /// </summary>
-        private void ExecuteDiscImageCreator()
-        {
-            process = new Process()
-            {
-                StartInfo = new ProcessStartInfo()
-                {
-                    FileName = Parameters.Path,
-                    Arguments = Parameters.GenerateParameters() ?? "",
-                },
-            };
-            process.Start();
-            process.WaitForExit();
-        }
-
-        /// <summary>
-        /// Run DiscImageCreator async with an input set of parameters
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns>Standard output from commandline window</returns>
-        private async Task<string> ExecuteDiscImageCreatorWithParameters(DiscImageCreator.Parameters parameters)
-        {
-            Process childProcess;
-            string output = await Task.Run(() =>
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = Parameters.Path,
                         Arguments = parameters.GenerateParameters(),
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -972,6 +854,16 @@ namespace DICUI.Utilities
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
+                case KnownSystem.KonamiPython2:
+                    if (GetPlaystationExecutableInfo(Drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
+                    break;
+
                 case KnownSystem.KonamiSystem573:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
@@ -1143,11 +1035,13 @@ namespace DICUI.Utilities
 
                 case KnownSystem.SonyPlayStation2:
                     info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
+
                     if (GetPlaystationExecutableInfo(Drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
+
                     info.VersionAndEditions.Version = GetPlayStation2Version(Drive?.Letter) ?? "";
                     break;
 
@@ -1538,7 +1432,7 @@ namespace DICUI.Utilities
             convertParams[Aaru.Flag.XMLSidecar] = true;
             convertParams.XMLSidecarValue = cicmSidecar;
 
-            ExecuteAaruWithParameters(convertParams).ConfigureAwait(false).GetAwaiter().GetResult();
+            ExecuteInternalProgram(convertParams).ConfigureAwait(false).GetAwaiter().GetResult();
 
             File.Delete(aif + ".bin");
             return GetFullFile(aif + ".cue");
