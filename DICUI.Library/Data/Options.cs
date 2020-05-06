@@ -166,6 +166,7 @@ namespace DICUI.Data
             set { _settings["Username"] = value; }
         }
 
+        // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
         public string Password
         {
             get { return GetStringSetting(_settings, "Password", ""); }
@@ -187,26 +188,6 @@ namespace DICUI.Data
         public Options(Dictionary<string, string> settings)
         {
             this._settings = settings;
-        }
-
-        /// <summary>
-        /// Passthrough for getting explcit options
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public string this[string key]
-        {
-            get
-            {
-                if (_settings.ContainsKey(key))
-                    return _settings[key];
-
-                return null;
-            }
-            set
-            {
-                _settings[key] = value;
-            }
         }
 
         /// <summary>
@@ -278,60 +259,33 @@ namespace DICUI.Data
 
         public bool IsReadOnly => ((IDictionary<string, string>)_settings).IsReadOnly;
 
-        public bool ContainsKey(string key)
+        public string this[string key]
         {
-            return _settings.ContainsKey(key);
+            get { return (_settings.ContainsKey(key) ? _settings[key] : null); }
+            set { _settings[key] = value; }
         }
 
-        public void Add(string key, string value)
-        {
-            _settings.Add(key, value);
-        }
+        public bool ContainsKey(string key) => _settings.ContainsKey(key);
 
-        public bool Remove(string key)
-        {
-            return _settings.Remove(key);
-        }
+        public void Add(string key, string value) => _settings.Add(key, value);
 
-        public bool TryGetValue(string key, out string value)
-        {
-            return _settings.TryGetValue(key, out value);
-        }
+        public bool Remove(string key) => _settings.Remove(key);
 
-        public void Add(KeyValuePair<string, string> item)
-        {
-            _settings.Add(item.Key, item.Value);
-        }
+        public bool TryGetValue(string key, out string value) => _settings.TryGetValue(key, out value);
 
-        public void Clear()
-        {
-            _settings.Clear();
-        }
+        public void Add(KeyValuePair<string, string> item) => _settings.Add(item.Key, item.Value);
 
-        public bool Contains(KeyValuePair<string, string> item)
-        {
-            return ((IDictionary<string, string>)_settings).Contains(item);
-        }
+        public void Clear() => _settings.Clear();
 
-        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
-        {
-            ((IDictionary<string, string>)_settings).CopyTo(array, arrayIndex);
-        }
+        public bool Contains(KeyValuePair<string, string> item) => ((IDictionary<string, string>)_settings).Contains(item);
 
-        public bool Remove(KeyValuePair<string, string> item)
-        {
-            return ((IDictionary<string, string>)_settings).Remove(item);
-        }
+        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => ((IDictionary<string, string>)_settings).CopyTo(array, arrayIndex);
 
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
-        {
-            return _settings.GetEnumerator();
-        }
+        public bool Remove(KeyValuePair<string, string> item) => ((IDictionary<string, string>)_settings).Remove(item);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _settings.GetEnumerator();
-        }
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => _settings.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _settings.GetEnumerator();
 
         #endregion
     }

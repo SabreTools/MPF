@@ -102,6 +102,7 @@ namespace DICUI.Check
                 string filepath = Path.GetFullPath(args[i]);
 
                 // Now populate an environment
+                // TODO: Replace this with Dictionary constructor
                 var options = new Options
                 {
                     InternalProgram = internalProgram,
