@@ -1,110 +1,212 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace DICUI.Data
 {
-    public class Options
+    public class Options : IDictionary<string, string>
     {
+        private Dictionary<string, string> _settings = new Dictionary<string, string>();
+
         #region Internal Program
 
-        public string AaruPath { get; set; }
-        public string CreatorPath { get; set; }
-        public string DDPath { get; set; }
-        public string InternalProgram { get; set; }
+        public string AaruPath
+        {
+            get { return GetStringSetting(_settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
+            set { _settings["AaruPath"] = value; }
+        }
+
+        public string CreatorPath
+        {
+            get { return GetStringSetting(_settings, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
+            set { _settings["CreatorPath"] = value; }
+        }
+
+        public string DDPath
+        {
+            get { return GetStringSetting(_settings, "DDPath", "Programs\\DD\\dd.exe"); }
+            set { _settings["DDPath"] = value; }
+        }
+
+        public string InternalProgram
+        {
+            get { return GetStringSetting(_settings, "InternalProgram", Data.InternalProgram.DiscImageCreator.ToString()); }
+            set { _settings["InternalProgram"] = value; }
+        }
 
         #endregion
 
         #region Extra Paths
 
-        public string DefaultOutputPath { get; set; }
-        public string SubDumpPath { get; set; }
+        public string DefaultOutputPath
+        {
+            get { return GetStringSetting(_settings, "DefaultOutputPath", "ISO"); }
+            set { _settings["DefaultOutputPath"] = value; }
+        }
+
+        public string SubDumpPath
+        {
+            get { return GetStringSetting(_settings, "SubDumpPath", "Programs\\Subdump\\subdump.exe"); }
+            set { _settings["SubDumpPath"] = value; }
+        }
 
         #endregion
 
         #region Dumping Speeds
 
-        public int PreferredDumpSpeedCD { get; set; }
-        public int PreferredDumpSpeedDVD { get; set; }
-        public int PreferredDumpSpeedBD { get; set; }
+        public int PreferredDumpSpeedCD
+        {
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedCD", 72); }
+            set { _settings["PreferredDumpSpeedCD"] = value.ToString(); }
+        }
+
+        public int PreferredDumpSpeedDVD
+        {
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedDVD", 24); }
+            set { _settings["PreferredDumpSpeedDVD"] = value.ToString(); }
+        }
+
+        public int PreferredDumpSpeedBD
+        {
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedBD", 16); }
+            set { _settings["PreferredDumpSpeedBD"] = value.ToString(); }
+        }
 
         #endregion
 
         #region Extra Dumping Options
 
-        public bool QuietMode { get; set; }
-        public bool ParanoidMode { get; set; }
-        public bool ScanForProtection { get; set; }
-        public int RereadAmountForC2 { get; set; }
-        public bool AddPlaceholders { get; set; }
-        public bool PromptForDiscInformation { get; set; }
-        public bool IgnoreFixedDrives { get; set; }
-        public bool ResetDriveAfterDump { get; set; }
+        public bool QuietMode
+        {
+            get { return GetBooleanSetting(_settings, "QuietMode", false); }
+            set { _settings["QuietMode"] = value.ToString(); }
+        }
+
+        public bool ParanoidMode
+        {
+            get { return GetBooleanSetting(_settings, "ParanoidMode", false); }
+            set { _settings["ParanoidMode"] = value.ToString(); }
+        }
+
+        public bool ScanForProtection
+        {
+            get { return GetBooleanSetting(_settings, "ScanForProtection", true); }
+            set { _settings["ScanForProtection"] = value.ToString(); }
+        }
+
+        public int RereadAmountForC2
+        {
+            get { return GetInt32Setting(_settings, "RereadAmountForC2", 20); }
+            set { _settings["RereadAmountForC2"] = value.ToString(); }
+        }
+
+        public bool AddPlaceholders
+        {
+            get { return GetBooleanSetting(_settings, "AddPlaceholders", true); }
+            set { _settings["AddPlaceholders"] = value.ToString(); }
+        }
+
+        public bool PromptForDiscInformation
+        {
+            get { return GetBooleanSetting(_settings, "PromptForDiscInformation", true); }
+            set { _settings["PromptForDiscInformation"] = value.ToString(); }
+        }
+
+        public bool IgnoreFixedDrives
+        {
+            get { return GetBooleanSetting(_settings, "IgnoreFixedDrives", false); }
+            set { _settings["IgnoreFixedDrives"] = value.ToString(); }
+        }
+
+        public bool ResetDriveAfterDump
+        {
+            get { return GetBooleanSetting(_settings, "ResetDriveAfterDump", false); }
+            set { _settings["ResetDriveAfterDump"] = value.ToString(); }
+        }
 
         #endregion
 
         #region Skip Options
 
-        public bool SkipMediaTypeDetection { get; set; }
-        public bool SkipSystemDetection { get; set; }
+        public bool SkipMediaTypeDetection
+        {
+            get { return GetBooleanSetting(_settings, "SkipMediaTypeDetection", false); }
+            set { _settings["SkipMediaTypeDetection"] = value.ToString(); }
+        }
+
+        public bool SkipSystemDetection
+        {
+            get { return GetBooleanSetting(_settings, "SkipSystemDetection", false); }
+            set { _settings["SkipSystemDetection"] = value.ToString(); }
+        }
 
         #endregion
 
         #region Logging Options
 
-        public bool VerboseLogging { get; set; }
-        public bool OpenLogWindowAtStartup { get; set; }
+        public bool VerboseLogging
+        {
+            get { return GetBooleanSetting(_settings, "VerboseLogging", true); }
+            set { _settings["VerboseLogging"] = value.ToString(); }
+        }
+
+        public bool OpenLogWindowAtStartup
+        {
+            get { return GetBooleanSetting(_settings, "OpenLogWindowAtStartup", true); }
+            set { _settings["OpenLogWindowAtStartup"] = value.ToString(); }
+        }
 
         #endregion
 
         #region Redump Login Information
 
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public string Username
+        {
+            get { return GetStringSetting(_settings, "Username", ""); }
+            set { _settings["Username"] = value; }
+        }
+
+        public string Password
+        {
+            get { return GetStringSetting(_settings, "Password", ""); }
+            set { _settings["Password"] = value; }
+        }
 
         #endregion
 
         /// <summary>
-        /// Load settings from a Dictionary<string, string></string>
+        /// Empty constructor for legacy compatiblity
         /// </summary>
-        /// <param name="settings">Settings dictionary to pull from</param>
-        public void Load(Dictionary<string, string> settings)
+        /// TODO: Eventually remove this empty constructor
+        public Options() { }
+
+        /// <summary>
+        /// Constructor taking a dictionary for settings
+        /// </summary>
+        /// <param name="settings"></param>
+        public Options(Dictionary<string, string> settings)
         {
-            // Internal Program
-            this.AaruPath = GetStringSetting(settings, "AaruPath", "Programs\\Aaru\\Aaru.exe");
-            this.CreatorPath = GetStringSetting(settings, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe");
-            this.DDPath = GetStringSetting(settings, "DDPath", "Programs\\DD\\dd.exe");
-            this.InternalProgram = GetStringSetting(settings, "InternalProgram", Data.InternalProgram.DiscImageCreator.ToString());
+            this._settings = settings;
+        }
 
-            // Extra Paths
-            this.DefaultOutputPath = GetStringSetting(settings, "DefaultOutputPath", "ISO");
-            this.SubDumpPath = GetStringSetting(settings, "SubDumpPath", "Programs\\Subdump\\subdump.exe");
+        /// <summary>
+        /// Passthrough for getting explcit options
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string this[string key]
+        {
+            get
+            {
+                if (_settings.ContainsKey(key))
+                    return _settings[key];
 
-            // Dumping Speeds
-            this.PreferredDumpSpeedCD = GetInt32Setting(settings, "PreferredDumpSpeedCD", 72);
-            this.PreferredDumpSpeedDVD = GetInt32Setting(settings, "PreferredDumpSpeedDVD", 24);
-            this.PreferredDumpSpeedBD = GetInt32Setting(settings, "PreferredDumpSpeedBD", 16);
-
-            // Extra Dumping Options
-            this.QuietMode = GetBooleanSetting(settings, "QuietMode", false);
-            this.ParanoidMode = GetBooleanSetting(settings, "ParanoidMode", false);
-            this.ScanForProtection = GetBooleanSetting(settings, "ScanForProtection", true);
-            this.RereadAmountForC2 = GetInt32Setting(settings, "RereadAmountForC2", 20);
-            this.AddPlaceholders = GetBooleanSetting(settings, "AddPlaceholders", true);
-            this.PromptForDiscInformation = GetBooleanSetting(settings, "PromptForDiscInformation", true);
-            this.IgnoreFixedDrives = GetBooleanSetting(settings, "IgnoreFixedDrives", false);
-            this.ResetDriveAfterDump = GetBooleanSetting(settings, "ResetDriveAfterDump", false);
-
-            // Skip Options
-            this.SkipMediaTypeDetection = GetBooleanSetting(settings, "SkipMediaTypeDetection", false);
-            this.SkipSystemDetection = GetBooleanSetting(settings, "SkipSystemDetection", false);
-
-            // Logging Options
-            this.VerboseLogging = GetBooleanSetting(settings, "VerboseLogging", true);
-            this.OpenLogWindowAtStartup = GetBooleanSetting(settings, "OpenLogWindowAtStartup", true);
-
-            // Redump Login Information
-            this.Username = GetStringSetting(settings, "Username", "");
-            this.Password = GetStringSetting(settings, "Password", "");
+                return null;
+            }
+            set
+            {
+                _settings[key] = value;
+            }
         }
 
         /// <summary>
@@ -165,5 +267,72 @@ namespace DICUI.Data
             else
                 return defaultValue;
         }
+
+        #region IDictionary implementations
+
+        public ICollection<string> Keys => _settings.Keys;
+
+        public ICollection<string> Values => _settings.Values;
+
+        public int Count => _settings.Count;
+
+        public bool IsReadOnly => ((IDictionary<string, string>)_settings).IsReadOnly;
+
+        public bool ContainsKey(string key)
+        {
+            return _settings.ContainsKey(key);
+        }
+
+        public void Add(string key, string value)
+        {
+            _settings.Add(key, value);
+        }
+
+        public bool Remove(string key)
+        {
+            return _settings.Remove(key);
+        }
+
+        public bool TryGetValue(string key, out string value)
+        {
+            return _settings.TryGetValue(key, out value);
+        }
+
+        public void Add(KeyValuePair<string, string> item)
+        {
+            _settings.Add(item.Key, item.Value);
+        }
+
+        public void Clear()
+        {
+            _settings.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, string> item)
+        {
+            return ((IDictionary<string, string>)_settings).Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+        {
+            ((IDictionary<string, string>)_settings).CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<string, string> item)
+        {
+            return ((IDictionary<string, string>)_settings).Remove(item);
+        }
+
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return _settings.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _settings.GetEnumerator();
+        }
+
+        #endregion
     }
 }

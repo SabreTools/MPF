@@ -40,7 +40,6 @@ namespace DICUI.Windows
 
             // Initializes and load Options object
             _uiOptions = new UIOptions();
-            _uiOptions.Load();
             ViewModels.OptionsViewModel = new OptionsViewModel(_uiOptions);
 
             _logWindow = new LogWindow(this);

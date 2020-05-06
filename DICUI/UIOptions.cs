@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Reflection;
 using DICUI.Data;
 
 namespace DICUI
@@ -15,67 +13,62 @@ namespace DICUI
         /// </summary>
         public UIOptions()
         {
-            Options = new Options();
+            Load();
         }
 
         /// <summary>
-        /// Move these to some utility class in DICUI application
+        /// Save a configuration from internal Options
         /// </summary>
         public void Save()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
-            //TODO: reflection is used
-            //TODO: is remove needed, doesn't the value get directly overridden
-            Array.ForEach(
-                Options.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance),
-                p => {
-                    configFile.AppSettings.Settings.Remove(p.Name);
-                    configFile.AppSettings.Settings.Add(p.Name, Convert.ToString(p.GetValue(this)));
-                }
-            );
+            // Loop through all settings in Options and save them, overwriting existing settings
+            foreach (var kvp in Options)
+            {
+                configFile.AppSettings.Settings.Remove(kvp.Key);
+                configFile.AppSettings.Settings.Add(kvp.Key, kvp.Value);
+            }
 
             configFile.Save(ConfigurationSaveMode.Modified);
         }
 
-        public void Load()
+        /// <summary>
+        /// Load a configuration into internal Options
+        /// </summary>
+        private void Load()
         {
             Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             var settings = ConvertToDictionary(configFile);
-            Options.Load(settings);
+            Options = new Options(settings);
         }
 
         /// <summary>
-        /// Convert the AppSettings to a dictionary
+        /// Get a setting value from the base Options
         /// </summary>
-        /// <param name="configFile"></param>
-        /// <returns></returns>
-        private Dictionary<string, string> ConvertToDictionary(Configuration configFile)
-        {
-            var settings = configFile.AppSettings.Settings;
-            var dict = new Dictionary<string, string>();
-
-            foreach (string key in settings.AllKeys)
-            {
-                dict[key] = settings[key]?.Value ?? string.Empty;
-            }
-
-            return dict;
-        }
-
-        //TODO: probably should be generic for non-string options
-        //TODO: using reflection for Set and Get is orthodox but it works, should be changed to a key,value map probably
-        public void Set(string key, string value)
-        {
-           Options.GetType().GetProperty(key, BindingFlags.Public | BindingFlags.Instance).SetValue(this, value);
-        }
-
+        /// <param name="key">Key to retrieve the value for</param>
+        /// <returns>String value if possible, null otherwise</returns>
         public string Get(string key)
         {
-            return Options.GetType().GetProperty(key, BindingFlags.Public | BindingFlags.Instance).GetValue(this) as string;
+            return Options[key];
         }
 
+        /// <summary>
+        /// Set a setting value in the base Options
+        /// </summary>
+        /// <param name="key">Key to set the value for</param>
+        /// <param name="value">Value to set</param>
+        public void Set(string key, string value)
+        {
+            Options[key] = value;
+        }
+
+        /// <summary>
+        /// Get the preferred dumping speed given a media type
+        /// </summary>
+        /// <param name="type">MediaType representing the current selection</param>
+        /// <returns>Int value representing the dump speed</returns>
         public int GetPreferredDumpSpeedForMediaType(MediaType? type)
         {
             switch (type)
@@ -93,6 +86,24 @@ namespace DICUI
                 default:
                     return this.Options.PreferredDumpSpeedCD;
             }
+        }
+
+        /// <summary>
+        /// Convert the configuration app settings to a dictionary
+        /// </summary>
+        /// <param name="configFile">Configuration to load from</param>
+        /// <returns>Dictionary with all values from app settings</returns>
+        private Dictionary<string, string> ConvertToDictionary(Configuration configFile)
+        {
+            var settings = configFile.AppSettings.Settings;
+            var dict = new Dictionary<string, string>();
+
+            foreach (string key in settings.AllKeys)
+            {
+                dict[key] = settings[key]?.Value ?? string.Empty;
+            }
+
+            return dict;
         }
     }
 }
