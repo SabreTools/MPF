@@ -26,7 +26,7 @@ namespace DICUI.Windows
         private DumpEnvironment _env;
 
         // Option related
-        private Options _options;
+        private UIOptions _uiOptions;
         private OptionsWindow _optionsWindow;
 
         // User input related
@@ -39,9 +39,9 @@ namespace DICUI.Windows
             InitializeComponent();
 
             // Initializes and load Options object
-            _options = new Options();
-            _options.Load();
-            ViewModels.OptionsViewModel = new OptionsViewModel(_options);
+            _uiOptions = new UIOptions();
+            _uiOptions.Load();
+            ViewModels.OptionsViewModel = new OptionsViewModel(_uiOptions);
 
             _logWindow = new LogWindow(this);
             ViewModels.LoggerViewModel.SetWindow(_logWindow);
@@ -51,7 +51,7 @@ namespace DICUI.Windows
             DiskScanButton.IsEnabled = false;
             CopyProtectScanButton.IsEnabled = false;
 
-            if (_options.OpenLogWindowAtStartup)
+            if (_uiOptions.Options.OpenLogWindowAtStartup)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
                 double combinedHeight = this.Height + _logWindow.Height + Constants.LogWindowMarginFromMainWindow;
@@ -73,7 +73,7 @@ namespace DICUI.Windows
 
             _alreadyShown = true;
 
-            if (_options.OpenLogWindowAtStartup)
+            if (_uiOptions.Options.OpenLogWindowAtStartup)
             {
                 //TODO: this should be bound directly to WindowVisible property in two way fashion
                 // we need to study how to properly do it in XAML
@@ -109,7 +109,7 @@ namespace DICUI.Windows
                     _env.EjectDisc();
                 }
 
-                if (_options.ResetDriveAfterDump)
+                if (_uiOptions.Options.ResetDriveAfterDump)
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn($"Resetting drive {_env.Drive.Letter}");
                     _env.ResetDrive();
@@ -242,7 +242,7 @@ namespace DICUI.Windows
             // lazy initialization
             if (_optionsWindow == null)
             {
-                _optionsWindow = new OptionsWindow(this, _options);
+                _optionsWindow = new OptionsWindow(this, _uiOptions);
                 _optionsWindow.Closed += delegate
                 {
                     _optionsWindow = null;
@@ -369,7 +369,7 @@ namespace DICUI.Windows
             DiskScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            _drives = Validators.CreateListOfDrives(_options.IgnoreFixedDrives);
+            _drives = Validators.CreateListOfDrives(_uiOptions.Options.IgnoreFixedDrives);
             DriveLetterComboBox.ItemsSource = _drives;
 
             if (DriveLetterComboBox.Items.Count > 0)
@@ -391,7 +391,7 @@ namespace DICUI.Windows
                                 CopyProtectScanButton.IsEnabled = true;
 
                 // Get the current media type
-                if (!_options.SkipSystemDetection && index != -1)
+                if (!_uiOptions.Options.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", _drives[index].Letter);
                     var currentSystem = Validators.GetKnownSystem(_drives[index]);
@@ -441,54 +441,13 @@ namespace DICUI.Windows
         private DumpEnvironment DetermineEnvironment()
         {
             // Populate the new environment
-            var env = new DumpEnvironment()
-            {
-                // Paths to tools
-                SubdumpPath = _options.SubDumpPath,
-                InternalProgram = Converters.ToInternalProgram(_options.InternalProgram),
-
-                OutputDirectory = OutputDirectoryTextBox.Text,
-                OutputFilename = OutputFilenameTextBox.Text,
-
-                // Get the currently selected options
-                Drive = DriveLetterComboBox.SelectedItem as Drive,
-
-                QuietMode = _options.QuietMode,
-                ParanoidMode = _options.ParanoidMode,
-                ScanForProtection = _options.ScanForProtection,
-                RereadAmountC2 = _options.RereadAmountForC2,
-                AddPlaceholders = _options.AddPlaceholders,
-                PromptForDiscInformation = _options.PromptForDiscInformation,
-
-                Username = _options.Username,
-                Password = _options.Password,
-
-                System = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
-                Type = MediaTypeComboBox.SelectedItem as MediaType?,
-            };
-
-            // Set parameters and path accordingly
-            env.SetParameters(ParametersTextBox.Text);
-            switch (env.InternalProgram)
-            {
-                case InternalProgram.Aaru:
-                    env.Parameters.Path = _options.AaruPath;
-                    break;
-
-                case InternalProgram.DD:
-                    env.Parameters.Path = _options.DDPath;
-                    break;
-
-                case InternalProgram.DiscImageCreator:
-                    env.Parameters.Path = _options.CreatorPath;
-                    break;
-
-                // This should never happen, but it needs a fallback.
-                default:
-                    env.InternalProgram = InternalProgram.DiscImageCreator;
-                    env.Parameters.Path = _options.CreatorPath;
-                    break;
-            }
+            var env = new DumpEnvironment(_uiOptions.Options,
+                OutputDirectoryTextBox.Text,
+                OutputFilenameTextBox.Text,
+                DriveLetterComboBox.SelectedItem as Drive,
+                SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
+                MediaTypeComboBox.SelectedItem as MediaType?,
+                ParametersTextBox.Text);
 
             // Disable automatic reprocessing of the textboxes until we're done
             OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
@@ -585,7 +544,7 @@ namespace DICUI.Windows
                         // Verify dump output and save it
                         result = _env.VerifyAndSaveDumpOutput(progress,
                             EjectWhenDoneCheckBox.IsChecked,
-                            _options.ResetDriveAfterDump,
+                            _uiOptions.Options.ResetDriveAfterDump,
                             (si) =>
                             {
                             // lazy initialization
@@ -668,7 +627,7 @@ namespace DICUI.Windows
 
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
-                OutputDirectoryTextBox.Text = Path.Combine(_options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
+                OutputDirectoryTextBox.Text = Path.Combine(_uiOptions.Options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
             // Get the extension for the file for the next two statements
             string extension = null;
@@ -744,31 +703,10 @@ namespace DICUI.Windows
             DriveSpeedComboBox.ItemsSource = values;
             ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
 
-            // Find the minimum set to compare against
-            int preferred = 100;
-            switch (_currentMediaType)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
-                    preferred = _options.PreferredDumpSpeedCD;
-                    break;
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    preferred = _options.PreferredDumpSpeedDVD;
-                    break;
-                case MediaType.BluRay:
-                    preferred = _options.PreferredDumpSpeedBD;
-                    break;
-                default:
-                    preferred = _options.PreferredDumpSpeedCD;
-                    break;
-            }
-
             // Set the selected speed
-            ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", preferred);
-            DriveSpeedComboBox.SelectedValue = preferred;
+            int speed = _uiOptions.GetPreferredDumpSpeedForMediaType(_currentMediaType);
+            ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", speed);
+            DriveSpeedComboBox.SelectedValue = speed;
         }
 
         /// <summary>
@@ -782,7 +720,7 @@ namespace DICUI.Windows
                 return;
 
             // Get the current media type
-            if (!_options.SkipMediaTypeDetection)
+            if (!_uiOptions.Options.SkipMediaTypeDetection)
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetMediaType(drive);

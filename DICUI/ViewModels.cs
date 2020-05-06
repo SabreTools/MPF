@@ -6,113 +6,113 @@ namespace DICUI
 {
     public class OptionsViewModel
     {
-        private Options _options;
+        private UIOptions _uiOptions;
 
-        public OptionsViewModel(Options options)
+        public OptionsViewModel(UIOptions uiOptions)
         {
-            this._options = options;
+            this._uiOptions = uiOptions;
         }
 
         public string InternalProgram
         {
-            get { return _options.InternalProgram; }
-            set { _options.InternalProgram = value; }
+            get { return _uiOptions.Options.InternalProgram; }
+            set { _uiOptions.Options.InternalProgram = value; }
         }
 
         public bool QuietMode
         {
-            get { return _options.QuietMode; }
-            set { _options.QuietMode = value; }
+            get { return _uiOptions.Options.QuietMode; }
+            set { _uiOptions.Options.QuietMode = value; }
         }
 
         public bool ParanoidMode
         {
-            get { return _options.ParanoidMode; }
-            set { _options.ParanoidMode = value; }
+            get { return _uiOptions.Options.ParanoidMode; }
+            set { _uiOptions.Options.ParanoidMode = value; }
         }
 
         public bool ScanForProtection
         {
-            get { return _options.ScanForProtection; }
-            set { _options.ScanForProtection = value; }
+            get { return _uiOptions.Options.ScanForProtection; }
+            set { _uiOptions.Options.ScanForProtection = value; }
         }
 
         public string RereadAmountForC2
         {
-            get { return Convert.ToString(_options.RereadAmountForC2); }
+            get { return Convert.ToString(_uiOptions.Options.RereadAmountForC2); }
             set
             {
                 if (Int32.TryParse(value, out int result))
-                    _options.RereadAmountForC2 = result;
+                    _uiOptions.Options.RereadAmountForC2 = result;
             }
         }
 
         public bool AddPlaceholders
         {
-            get { return _options.AddPlaceholders; }
-            set { _options.AddPlaceholders = value; }
+            get { return _uiOptions.Options.AddPlaceholders; }
+            set { _uiOptions.Options.AddPlaceholders = value; }
         }
 
         public bool PromptForDiscInformation
         {
-            get { return _options.PromptForDiscInformation; }
-            set { _options.PromptForDiscInformation = value; }
+            get { return _uiOptions.Options.PromptForDiscInformation; }
+            set { _uiOptions.Options.PromptForDiscInformation = value; }
         }
 
         public bool IgnoreFixedDrives
         {
-            get { return _options.IgnoreFixedDrives; }
-            set { _options.IgnoreFixedDrives = value; }
+            get { return _uiOptions.Options.IgnoreFixedDrives; }
+            set { _uiOptions.Options.IgnoreFixedDrives = value; }
         }
 
         public bool ResetDriveAfterDump
         {
-            get { return _options.ResetDriveAfterDump; }
-            set { _options.ResetDriveAfterDump = value; }
+            get { return _uiOptions.Options.ResetDriveAfterDump; }
+            set { _uiOptions.Options.ResetDriveAfterDump = value; }
         }
 
         public bool SkipMediaTypeDetection
         {
-            get { return _options.SkipMediaTypeDetection; }
-            set { _options.SkipMediaTypeDetection = value; }
+            get { return _uiOptions.Options.SkipMediaTypeDetection; }
+            set { _uiOptions.Options.SkipMediaTypeDetection = value; }
         }
 
         public bool SkipSystemDetection
         {
-            get { return _options.SkipSystemDetection; }
-            set { _options.SkipSystemDetection = value; }
+            get { return _uiOptions.Options.SkipSystemDetection; }
+            set { _uiOptions.Options.SkipSystemDetection = value; }
         }
 
         public bool VerboseLogging
         {
-            get { return _options.VerboseLogging; }
+            get { return _uiOptions.Options.VerboseLogging; }
             set
             {
-                _options.VerboseLogging = value;
-                _options.Save();
+                _uiOptions.Options.VerboseLogging = value;
+                _uiOptions.Save();
             }
         }
 
         public bool OpenLogWindowAtStartup
         {
-            get { return _options.OpenLogWindowAtStartup; }
+            get { return _uiOptions.Options.OpenLogWindowAtStartup; }
             set
             {
-                _options.OpenLogWindowAtStartup = value;
-                _options.Save();
+                _uiOptions.Options.OpenLogWindowAtStartup = value;
+                _uiOptions.Save();
             }
         }
 
         public string Username
         {
-            get { return _options.Username; }
-            set { _options.Username = value; }
+            get { return _uiOptions.Options.Username; }
+            set { _uiOptions.Options.Username = value; }
         }
 
         public string Password
         {
-            get { return _options.Password; }
-            set { _options.Password = value; }
+            get { return _uiOptions.Options.Password; }
+            set { _uiOptions.Options.Password = value; }
         }
     }
 

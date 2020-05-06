@@ -14,9 +14,9 @@ namespace DICUI.Windows
     public partial class OptionsWindow : Window
     {
         private readonly MainWindow _mainWindow;
-        private readonly Options _options;
+        private readonly UIOptions _options;
 
-        public OptionsWindow(MainWindow mainWindow, Options options)
+        public OptionsWindow(MainWindow mainWindow, UIOptions options)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
@@ -101,12 +101,12 @@ namespace DICUI.Windows
         {
             Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
 
-            DumpSpeedCDSlider.Value = _options.PreferredDumpSpeedCD;
-            DumpSpeedDVDSlider.Value = _options.PreferredDumpSpeedDVD;
-            DumpSpeedBDSlider.Value = _options.PreferredDumpSpeedBD;
+            DumpSpeedCDSlider.Value = _options.Options.PreferredDumpSpeedCD;
+            DumpSpeedDVDSlider.Value = _options.Options.PreferredDumpSpeedDVD;
+            DumpSpeedBDSlider.Value = _options.Options.PreferredDumpSpeedBD;
 
-            RedumpUsernameTextBox.Text = _options.Username;
-            RedumpPasswordBox.Password = _options.Password;
+            RedumpUsernameTextBox.Text = _options.Options.Username;
+            RedumpPasswordBox.Password = _options.Options.Password;
         }
 
         #region Event Handlers
@@ -115,12 +115,12 @@ namespace DICUI.Windows
         {
             Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
 
-            _options.PreferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
-            _options.PreferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
-            _options.PreferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
+            _options.Options.PreferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
+            _options.Options.PreferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
+            _options.Options.PreferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
 
-            _options.Username = RedumpUsernameTextBox.Text;
-            _options.Password = RedumpPasswordBox.Password;
+            _options.Options.Username = RedumpUsernameTextBox.Text;
+            _options.Options.Password = RedumpPasswordBox.Password;
 
             _options.Save();
             Hide();

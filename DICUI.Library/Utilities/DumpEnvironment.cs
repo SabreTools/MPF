@@ -18,6 +18,7 @@ namespace DICUI.Utilities
     /// <summary>
     /// Represents the state of all settings to be used during dumping
     /// </summary>
+    /// TODO: Look into splitting this up in a more reasonable way
     public class DumpEnvironment
     {
         #region Tool paths
@@ -61,14 +62,14 @@ namespace DICUI.Utilities
         public MediaType? Type { get; set; }
 
         /// <summary>
-        /// Parameters object representing what to send to the internal program
-        /// </summary>
-        public BaseParameters Parameters { get; set; }
-
-        /// <summary>
         /// Internal program to run
         /// </summary>
         public InternalProgram InternalProgram { get; set; }
+
+        /// <summary>
+        /// Parameters object representing what to send to the internal program
+        /// </summary>
+        public BaseParameters Parameters { get; set; }
 
         /// <summary>
         /// Scan for copy protection, where applicable
@@ -135,10 +136,55 @@ namespace DICUI.Utilities
         #endregion
 
         /// <summary>
-        /// Empty constructor for the rest of the magic
+        /// Empty constructor for testing only
         /// </summary>
-        public DumpEnvironment()
+        /// TODO: Remove this and fix tests
+        public DumpEnvironment() { }
+
+        /// <summary>
+        /// Constructor for a full DumpEnvironment object from user information
+        /// </summary>
+        /// <param name="options"></param>
+        /// <param name="outputDirectory"></param>
+        /// <param name="outputFilename"></param>
+        /// <param name="drive"></param>
+        /// <param name="system"></param>
+        /// <param name="type"></param>
+        /// <param name="parameters"></param>
+        public DumpEnvironment(Options options,
+            string outputDirectory,
+            string outputFilename,
+            Drive drive,
+            KnownSystem? system,
+            MediaType? type,
+            string parameters)
         {
+            // Tool paths
+            this.SubdumpPath = options.SubDumpPath;
+
+            // Output paths
+            this.OutputDirectory = outputDirectory;
+            this.OutputFilename = outputFilename;
+
+            // UI information
+            this.Drive = drive;
+            this.System = system;
+            this.Type = type;
+            this.InternalProgram = Converters.ToInternalProgram(options.InternalProgram);
+            SetParameters(parameters);
+            SetInternalToolPath(options);
+            this.ScanForProtection = options.ScanForProtection;
+            this.AddPlaceholders = options.AddPlaceholders;
+            this.PromptForDiscInformation = options.PromptForDiscInformation;
+
+            // Extra arguments
+            this.QuietMode = options.QuietMode;
+            this.ParanoidMode = options.ParanoidMode;
+            this.RereadAmountC2 = options.RereadAmountForC2;
+
+            // Redump login information
+            this.Username = options.Username;
+            this.Password = options.Password;
         }
 
         #region Public Functionality
@@ -149,23 +195,51 @@ namespace DICUI.Utilities
         /// <param name="parameters">String representation of the parameters</param>
         public void SetParameters(string parameters)
         {
-            switch (InternalProgram)
+            switch (this.InternalProgram)
             {
                 case InternalProgram.Aaru:
-                    Parameters = new Aaru.Parameters(parameters);
+                    this.Parameters = new Aaru.Parameters(parameters);
                     break;
 
                 case InternalProgram.DD:
-                    Parameters = new DD.Parameters(parameters);
+                    this.Parameters = new DD.Parameters(parameters);
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    Parameters = new DiscImageCreator.Parameters(parameters);
+                    this.Parameters = new DiscImageCreator.Parameters(parameters);
                     break;
 
                 // This should never happen, but it needs a fallback.
                 default:
-                    Parameters = new DiscImageCreator.Parameters(parameters);
+                    this.Parameters = new DiscImageCreator.Parameters(parameters);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Set the path on the parameters object based on the intermal program
+        /// </summary>
+        /// <param name="options"></param>
+        public void SetInternalToolPath(Options options)
+        {
+            switch (this.InternalProgram)
+            {
+                case InternalProgram.Aaru:
+                    this.Parameters.Path = options.AaruPath;
+                    break;
+
+                case InternalProgram.DD:
+                    this.Parameters.Path = options.DDPath;
+                    break;
+
+                case InternalProgram.DiscImageCreator:
+                    this.Parameters.Path = options.CreatorPath;
+                    break;
+
+                // This should never happen, but it needs a fallback.
+                default:
+                    this.InternalProgram = InternalProgram.DiscImageCreator;
+                    this.Parameters.Path = options.CreatorPath;
                     break;
             }
         }

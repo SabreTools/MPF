@@ -102,19 +102,17 @@ namespace DICUI.Check
                 string filepath = Path.GetFullPath(args[i]);
 
                 // Now populate an environment
-                var env = new DumpEnvironment
+                var options = new Options
                 {
-                    OutputDirectory = "",
-                    OutputFilename = filepath,
-                    System = knownSystem,
-                    Type = mediaType,
+                    InternalProgram = internalProgram,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    InternalProgram = Converters.ToInternalProgram(internalProgram),
 
                     Username = username,
                     Password = password,
                 };
+
+                var env = new DumpEnvironment(options, "", filepath, null, knownSystem, mediaType, null);
                 env.FixOutputPaths();
 
                 // Finally, attempt to do the output dance
