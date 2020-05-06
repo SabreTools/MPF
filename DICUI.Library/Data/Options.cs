@@ -176,16 +176,10 @@ namespace DICUI.Data
         #endregion
 
         /// <summary>
-        /// Empty constructor for legacy compatiblity
-        /// </summary>
-        /// TODO: Eventually remove this empty constructor
-        public Options() { }
-
-        /// <summary>
         /// Constructor taking a dictionary for settings
         /// </summary>
         /// <param name="settings"></param>
-        public Options(Dictionary<string, string> settings)
+        public Options(Dictionary<string, string> settings = null)
         {
             this._settings = settings;
         }
