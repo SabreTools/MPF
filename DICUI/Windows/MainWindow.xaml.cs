@@ -50,7 +50,7 @@ namespace DICUI.Windows
             DiskScanButton.IsEnabled = false;
             CopyProtectScanButton.IsEnabled = false;
 
-            if (_uiOptions.Options.OpenLogWindowAtStartup)
+            if (_uiOptions.OpenLogWindowAtStartup)
             {
                 this.WindowStartupLocation = WindowStartupLocation.Manual;
                 double combinedHeight = this.Height + _logWindow.Height + Constants.LogWindowMarginFromMainWindow;
@@ -72,7 +72,7 @@ namespace DICUI.Windows
 
             _alreadyShown = true;
 
-            if (_uiOptions.Options.OpenLogWindowAtStartup)
+            if (_uiOptions.OpenLogWindowAtStartup)
             {
                 //TODO: this should be bound directly to WindowVisible property in two way fashion
                 // we need to study how to properly do it in XAML
@@ -108,7 +108,7 @@ namespace DICUI.Windows
                     _env.EjectDisc();
                 }
 
-                if (_uiOptions.Options.ResetDriveAfterDump)
+                if (_uiOptions.ResetDriveAfterDump)
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn($"Resetting drive {_env.Drive.Letter}");
                     _env.ResetDrive();
@@ -368,7 +368,7 @@ namespace DICUI.Windows
             DiskScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            _drives = Validators.CreateListOfDrives(_uiOptions.Options.IgnoreFixedDrives);
+            _drives = Validators.CreateListOfDrives(_uiOptions.IgnoreFixedDrives);
             DriveLetterComboBox.ItemsSource = _drives;
 
             if (DriveLetterComboBox.Items.Count > 0)
@@ -390,7 +390,7 @@ namespace DICUI.Windows
                                 CopyProtectScanButton.IsEnabled = true;
 
                 // Get the current media type
-                if (!_uiOptions.Options.SkipSystemDetection && index != -1)
+                if (!_uiOptions.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", _drives[index].Letter);
                     var currentSystem = Validators.GetKnownSystem(_drives[index]);
@@ -543,7 +543,7 @@ namespace DICUI.Windows
                         // Verify dump output and save it
                         result = _env.VerifyAndSaveDumpOutput(progress,
                             EjectWhenDoneCheckBox.IsChecked,
-                            _uiOptions.Options.ResetDriveAfterDump,
+                            _uiOptions.ResetDriveAfterDump,
                             (si) =>
                             {
                                 // lazy initialization
@@ -626,7 +626,7 @@ namespace DICUI.Windows
 
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
-                OutputDirectoryTextBox.Text = Path.Combine(_uiOptions.Options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
+                OutputDirectoryTextBox.Text = Path.Combine(_uiOptions.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
             // Get the extension for the file for the next two statements
             string extension = null;
@@ -719,7 +719,7 @@ namespace DICUI.Windows
                 return;
 
             // Get the current media type
-            if (!_uiOptions.Options.SkipMediaTypeDetection)
+            if (!_uiOptions.SkipMediaTypeDetection)
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                 _currentMediaType = Validators.GetMediaType(drive);

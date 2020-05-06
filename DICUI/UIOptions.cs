@@ -6,7 +6,20 @@ namespace DICUI
 {
     public class UIOptions
     {
+        // TODO: Is there any way that this can be made private?
         public Options Options { get; set; }
+
+        #region Passthrough values
+
+        // TODO: Can any of these be removed?
+        public string DefaultOutputPath => Options.DefaultOutputPath;
+        public bool IgnoreFixedDrives => Options.IgnoreFixedDrives;
+        public bool ResetDriveAfterDump => Options.ResetDriveAfterDump;
+        public bool SkipMediaTypeDetection => Options.SkipMediaTypeDetection;
+        public bool SkipSystemDetection => Options.SkipSystemDetection;
+        public bool OpenLogWindowAtStartup => Options.OpenLogWindowAtStartup;
+
+        #endregion
 
         /// <summary>
         /// Default constructor
