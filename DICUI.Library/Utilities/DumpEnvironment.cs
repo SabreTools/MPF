@@ -24,6 +24,12 @@ namespace DICUI.Utilities
         #region Tool paths
 
         /// <summary>
+        /// Path to DiscImageCreator executable
+        /// </summary>
+        /// <remarks>DiscImageCreator is both used as an internal tool and an extra tool</remarks>
+        public string DiscImageCreatorPath { get; set; }
+
+        /// <summary>
         /// Path to Subdump executable
         /// </summary>
         public string SubdumpPath { get; set; }
@@ -160,6 +166,7 @@ namespace DICUI.Utilities
             string parameters)
         {
             // Tool paths
+            this.DiscImageCreatorPath = options.CreatorPath;
             this.SubdumpPath = options.SubDumpPath;
 
             // Output paths
@@ -259,12 +266,12 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Eject the disc using DIC
+        /// Eject the disc using DiscImageCreator
         /// </summary>
         public async void EjectDisc()
         {
             // Validate that the required program exists
-            if (!File.Exists(Parameters.Path))
+            if (!File.Exists(this.DiscImageCreatorPath))
                 return;
 
             CancelDumping();
@@ -277,6 +284,7 @@ namespace DICUI.Utilities
             {
                 BaseCommand = DiscImageCreator.Command.Eject,
                 DriveLetter = Drive.Letter.ToString(),
+                Path = this.DiscImageCreatorPath,
             };
 
             await ExecuteInternalProgram(parameters);
@@ -400,12 +408,12 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
-        /// Reset the current drive using DIC
+        /// Reset the current drive using DiscImageCreator
         /// </summary>
         public async void ResetDrive()
         {
             // Validate that the required program exists
-            if (!File.Exists(Parameters.Path))
+            if (!File.Exists(this.DiscImageCreatorPath))
                 return;
 
             // Precautionary check for dumping, just in case
@@ -419,6 +427,7 @@ namespace DICUI.Utilities
             {
                 BaseCommand = DiscImageCreator.Command.Reset,
                 DriveLetter = Drive.Letter.ToString(),
+                Path = this.DiscImageCreatorPath,
             };
 
             await ExecuteInternalProgram(parameters);

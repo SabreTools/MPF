@@ -546,8 +546,8 @@ namespace DICUI.Windows
                             _uiOptions.Options.ResetDriveAfterDump,
                             (si) =>
                             {
-                            // lazy initialization
-                            if (_discInformationWindow == null)
+                                // lazy initialization
+                                if (_discInformationWindow == null)
                                 {
                                     _discInformationWindow = new DiscInformationWindow(this, si);
                                     _discInformationWindow.Closed += delegate
