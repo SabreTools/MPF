@@ -1004,6 +1004,7 @@ namespace DICUI.Utilities
         /// <returns>Copy protection detected in the envirionment, if any</returns>
         public static async Task<string> RunProtectionScanOnPath(string path)
         {
+#if NET_FRAMEWORK
             try
             {
                 var found = await Task.Run(() =>
@@ -1021,6 +1022,9 @@ namespace DICUI.Utilities
             {
                 return $"Path could not be scanned! {ex}";
             }
+#else
+            return "Copy protection scanning is not available on .NET Core builds";
+#endif
         }
     }
 }
