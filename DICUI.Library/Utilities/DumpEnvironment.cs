@@ -185,6 +185,7 @@ namespace DICUI.Utilities
         {
             switch (this.InternalProgram)
             {
+                // Dumping support
                 case InternalProgram.Aaru:
                     this.Parameters = new Aaru.Parameters(parameters);
                     break;
@@ -195,6 +196,11 @@ namespace DICUI.Utilities
 
                 case InternalProgram.DiscImageCreator:
                     this.Parameters = new DiscImageCreator.Parameters(parameters);
+                    break;
+
+                // Verification support only
+                case InternalProgram.CleanRip:
+                    this.Parameters = new CleanRip.Parameters(parameters);
                     break;
 
                 // This should never happen, but it needs a fallback
@@ -212,6 +218,7 @@ namespace DICUI.Utilities
         {
             switch (this.InternalProgram)
             {
+                // Dumping support
                 case InternalProgram.Aaru:
                     this.Parameters.ExecutablePath = options.AaruPath;
                     break;
@@ -222,6 +229,11 @@ namespace DICUI.Utilities
 
                 case InternalProgram.DiscImageCreator:
                     this.Parameters.ExecutablePath = options.CreatorPath;
+                    break;
+
+                // Verification support only
+                case InternalProgram.CleanRip:
+                    this.Parameters.ExecutablePath = null;
                     break;
 
                 // This should never happen, but it needs a fallback
@@ -755,12 +767,44 @@ namespace DICUI.Utilities
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
+                    info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     info.Extras.BCA = info.Extras.BCA ?? (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
+                    // If we have a single-layer disc
+                    if (info.SizeAndChecksums.Layerbreak == default(long))
+                    {
+                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    }
+                    // If we have a dual-layer disc
+                    else
+                    {
+                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+
+                        info.CommonDiscInfo.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    }
+
                     info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
                     info.Extras.BCA = info.Extras.BCA ?? (this.AddPlaceholders ? Template.RequiredValue : "");
+
                     break;
 
                 case MediaType.UMD:

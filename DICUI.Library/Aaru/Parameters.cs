@@ -228,7 +228,7 @@ namespace DICUI.Aaru
             }
 
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Utilities.Validators.GetValidMediaTypes(system);
+            var validTypes = Validators.GetValidMediaTypes(system);
             if (!validTypes.Contains(type))
                 return;
 
