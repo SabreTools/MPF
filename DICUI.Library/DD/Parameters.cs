@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DICUI.Data;
+using DICUI.Utilities;
 
 namespace DICUI.DD
 {
@@ -401,6 +402,20 @@ namespace DICUI.DD
         {
             // TODO: Figure out what sort of output files are expected... just `.bin`?
             return true;
+        }
+
+        /// <summary>
+        /// Generate a SubmissionInfo for the output files
+        /// </summary>
+        /// <param name="info">Base submission info to fill in specifics for</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <param name="drive">Drive representing the disc to get information from</param>
+        /// <returns></returns>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
+        {
+            // TODO: Implement getting submission info, if possible
         }
 
         /// <summary>

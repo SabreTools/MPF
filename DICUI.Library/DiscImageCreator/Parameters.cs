@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BurnOutSharp.External.psxt001z;
 using DICUI.Data;
+using DICUI.Utilities;
 
 namespace DICUI.DiscImageCreator
 {
@@ -1471,7 +1473,7 @@ namespace DICUI.DiscImageCreator
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    // return File.Exists(combinedBase + ".c2") // Doesn't output on Linux
+                    // return File.Exists(basePath + ".c2") // Doesn't output on Linux
                     return File.Exists(basePath + ".ccd")
                         && File.Exists(basePath + ".cue")
                         && File.Exists(basePath + ".dat")
@@ -1479,7 +1481,7 @@ namespace DICUI.DiscImageCreator
                         && (audioOnly || File.Exists(basePath + ".img_EdcEcc.txt") || File.Exists(basePath + ".img_EccEdc.txt"))
                         && (audioOnly || File.Exists(basePath + ".scm"))
                         && File.Exists(basePath + ".sub")
-                        // && File.Exists(combinedBase + "_c2Error.txt") // Doesn't output on Linux
+                        // && File.Exists(basePath + "_c2Error.txt") // Doesn't output on Linux
                         && File.Exists(basePath + "_cmd.txt")
                         && File.Exists(basePath + "_disc.txt")
                         && File.Exists(basePath + "_drive.txt")
@@ -1488,7 +1490,7 @@ namespace DICUI.DiscImageCreator
                         && File.Exists(basePath + "_mainInfo.txt")
                         && File.Exists(basePath + "_subError.txt")
                         && File.Exists(basePath + "_subInfo.txt")
-                        // && File.Exists(combinedBase + "_subIntention.txt") // Not guaranteed output
+                        // && File.Exists(basePath + "_subIntention.txt") // Not guaranteed output
                         && (File.Exists(basePath + "_subReadable.txt") || File.Exists(basePath + "_sub.txt"))
                         && File.Exists(basePath + "_volDesc.txt");
 
@@ -1524,6 +1526,307 @@ namespace DICUI.DiscImageCreator
                 default:
                     // Non-dumping commands will usually produce no output, so this is irrelevant
                     return true;
+            }
+        }
+
+        /// <summary>
+        /// Generate a SubmissionInfo for the output files
+        /// </summary>
+        /// <param name="info">Base submission info to fill in specifics for</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <param name="drive">Drive representing the disc to get information from</param>
+        /// <returns></returns>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
+        {
+            string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // Fill in the hash data
+            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
+
+            // Extract info based generically on MediaType
+            switch (type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "Disc has no PVD"; ;
+
+                    long errorCount = -1;
+                    if (File.Exists(basePath + ".img_EdcEcc.txt"))
+                        errorCount = GetErrorCount(basePath + ".img_EdcEcc.txt");
+                    else if (File.Exists(basePath + ".img_EccEdc.txt"))
+                        errorCount = GetErrorCount(basePath + ".img_EccEdc.txt");
+
+                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile(basePath + ".cue") ?? "";
+
+                    string cdWriteOffset = GetWriteOffset(basePath + "_disc.txt") ?? "";
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
+
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    bool isXbox = (system == KnownSystem.MicrosoftXBOX || system == KnownSystem.MicrosoftXBOX360);
+
+                    // Get the individual hash data, as per internal
+                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    {
+                        info.SizeAndChecksums.Size = size;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                        info.TracksAndWriteOffsets.ClrMameProData = null;
+                    }
+
+                    // Deal with the layerbreak
+                    string layerbreak = null;
+                    if (type == MediaType.DVD)
+                        layerbreak = GetLayerbreak(basePath + "_disc.txt", isXbox) ?? "";
+                    else if (type == MediaType.BluRay)
+                        layerbreak = (info.SizeAndChecksums.Size > 25025314816 ? "25025314816" : null);
+
+                    // If we have a single-layer disc
+                    if (string.IsNullOrWhiteSpace(layerbreak))
+                    {
+                        info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
+                    }
+                    // If we have a dual-layer disc
+                    else
+                    {
+                        info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
+                        info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
+                    }
+
+                    // Bluray-specific options
+                    if (type == MediaType.BluRay)
+                        info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, "PIC.bin")) ?? "";
+
+                    break;
+
+                case MediaType.NintendoGameCubeGameDisc:
+                    if (File.Exists(basePath + ".bca"))
+                        info.Extras.BCA = GetFullFile(basePath + ".bca", true);
+
+                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? gcRegion;
+                        info.VersionAndEditions.Version = string.IsNullOrEmpty(info.VersionAndEditions.Version) ? gcVersion : info.VersionAndEditions.Version;
+                    }
+
+                    break;
+
+                case MediaType.NintendoWiiOpticalDisc:
+                    if (File.Exists(basePath + ".bca"))
+                        info.Extras.BCA = GetFullFile(basePath + ".bca", true);
+
+                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? wiiRegion, out string wiiVersion))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? wiiRegion;
+                        info.VersionAndEditions.Version = string.IsNullOrEmpty(info.VersionAndEditions.Version) ? wiiVersion : info.VersionAndEditions.Version;
+                    }
+
+                    break;
+
+                case MediaType.UMD:
+                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
+
+                    if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize))
+                    {
+                        info.CommonDiscInfo.Title = title ?? "";
+                        info.CommonDiscInfo.Category = umdcat ?? Category.Games;
+                        info.VersionAndEditions.Version = umdversion ?? "";
+                        info.SizeAndChecksums.Size = umdsize;
+
+                        if (!string.IsNullOrWhiteSpace(umdlayer))
+                            info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
+                    }
+
+                    break;
+            }
+
+            // Extract info based specifically on KnownSystem
+            switch (system)
+            {
+                case KnownSystem.AppleMacintosh:
+                case KnownSystem.EnhancedCD:
+                case KnownSystem.IBMPCCompatible:
+                case KnownSystem.RainbowDisc:
+                    if (File.Exists(basePath + "_subIntention.txt"))
+                    {
+                        FileInfo fi = new FileInfo(basePath + "_subIntention.txt");
+                        if (fi.Length > 0)
+                            info.CopyProtection.SecuROMData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.DVDVideo:
+                    info.CopyProtection.Protection = GetDVDProtection(basePath + "_CSSKey.txt", basePath + "_disc.txt") ?? "";
+                    break;
+
+                case KnownSystem.KonamiPython2:
+                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.MicrosoftXBOX:
+                    if (GetXBOXAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss ?? "";
+                    }
+
+                    if (GetXBOXDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
+                    {
+                        info.CommonDiscInfo.Serial = serial ?? "";
+                        info.VersionAndEditions.Version = version ?? "";
+                        info.CommonDiscInfo.Region = region;
+                    }
+
+                    break;
+
+                case KnownSystem.MicrosoftXBOX360:
+                    if (GetXBOXAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss360 ?? "";
+                    }
+
+                    if (GetXBOX360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
+                    {
+                        info.CommonDiscInfo.Serial = serial360 ?? "";
+                        info.VersionAndEditions.Version = version360 ?? "";
+                        info.CommonDiscInfo.Region = region360;
+                    }
+                    break;
+
+                case KnownSystem.NamcoSegaNintendoTriforce:
+                    if (type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    break;
+
+                case KnownSystem.SegaCDMegaCD:
+                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    // Take only the last 16 lines for Sega CD
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16));
+
+                    if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
+                    {
+                        info.CommonDiscInfo.Serial = scdSerial ?? "";
+                        info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.SegaChihiro:
+                    if (type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    break;
+
+                case KnownSystem.SegaDreamcast:
+                    if (type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    break;
+
+                case KnownSystem.SegaNaomi:
+                    if (type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    break;
+
+                case KnownSystem.SegaNaomi2:
+                    if (type == MediaType.CDROM)
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    break;
+
+                case KnownSystem.SegaSaturn:
+                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    // Take only the first 16 lines for Saturn
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                    if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
+                    {
+                        info.CommonDiscInfo.Serial = saturnSerial ?? "";
+                        info.VersionAndEditions.Version = saturnVersion ?? "";
+                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.SonyPlayStation:
+                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationRegion, out string playstationDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                    }
+
+                    bool? psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EdcEcc.txt");
+                    if (psEdcStatus == true)
+                        info.EDC.EDC = YesNo.Yes;
+                    else if (psEdcStatus == false)
+                        info.EDC.EDC = YesNo.No;
+                    else
+                        info.EDC.EDC = YesNo.NULL;
+
+                    info.CopyProtection.AntiModchip = GetAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
+
+                    bool? psLibCryptStatus = GetLibCryptDetected(basePath + ".sub");
+                    if (psLibCryptStatus == true)
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.Yes;
+                        if (File.Exists(basePath + "_subIntention.txt"))
+                            info.CopyProtection.LibCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                        else
+                            info.CopyProtection.LibCryptData = "LibCrypt detected but no subIntention data found!";
+                    }
+                    else if (psLibCryptStatus == false)
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.No;
+                    }
+                    else
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.NULL;
+                        info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
+                    }
+
+                    break;
+
+                case KnownSystem.SonyPlayStation2:
+                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation4:
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
+                    break;
             }
         }
 
@@ -1743,5 +2046,1154 @@ namespace DICUI.DiscImageCreator
                     return;
             }
         }
+
+        #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the existance of an anti-modchip string from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Antimodchip existance if possible, false on error</returns>
+        private bool GetAntiModchipDetected(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return false;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Check for either antimod string
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line.StartsWith("Detected anti-mod string"))
+                            return true;
+                        else if (line.StartsWith("No anti-mod string"))
+                            return false;
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the proper datfile from the input file, if possible
+        /// </summary>
+        /// <param name="dat">.dat file location</param>
+        /// <returns>Relevant pieces of the datfile, null on error</returns>
+        private string GetDatfile(string dat)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(dat))
+                return null;
+
+            using (StreamReader sr = File.OpenText(dat))
+            {
+                try
+                {
+                    // Make sure this file is a .dat
+                    if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+                        return null;
+                    if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
+                        return null;
+
+                    // Fast forward to the rom lines
+                    while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
+                    sr.ReadLine(); // <category>Games</category>
+                    sr.ReadLine(); // <description>Plextor</description>
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string pvd = "", line = sr.ReadLine().Trim();
+                    while (line.StartsWith("<rom"))
+                    {
+                        pvd += line + "\n";
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return pvd.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the DVD protection information, if possible
+        /// </summary>
+        /// <param name="cssKey">_CSSKey.txt file location</param>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Formatted string representing the DVD protection, null on error</returns>
+        private string GetDVDProtection(string cssKey, string disc)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(disc))
+                return null;
+
+            // Setup all of the individual pieces
+            string region = null, rceProtection = null, copyrightProtectionSystemType = null, encryptedDiscKey = null, playerKey = null, decryptedDiscKey = null;
+
+            // Get everything from _disc.txt first
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the copyright information
+                    while (!sr.ReadLine().Trim().StartsWith("========== CopyrightInformation ==========")) ;
+
+                    // Now read until we hit the manufacturing information
+                    string line = sr.ReadLine().Trim();
+                    while (!line.StartsWith("========== ManufacturingInformation =========="))
+                    {
+                        if (line.StartsWith("CopyrightProtectionType"))
+                            copyrightProtectionSystemType = line.Substring("CopyrightProtectionType: ".Length);
+                        else if (line.StartsWith("RegionManagementInformation"))
+                            region = line.Substring("RegionManagementInformation: ".Length);
+
+                        line = sr.ReadLine().Trim();
+                    }
+                }
+                catch { }
+            }
+
+            // Get everything from _CSSKey.txt next, if it exists
+            if (File.Exists(cssKey))
+            {
+                using (StreamReader sr = File.OpenText(cssKey))
+                {
+                    try
+                    {
+                        // Read until the end
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine().Trim();
+
+                            if (line.StartsWith("[001]"))
+                                encryptedDiscKey = line.Substring("[001]: ".Length);
+                            else if (line.StartsWith("PlayerKey"))
+                                playerKey = line.Substring("PlayerKey[1]: ".Length);
+                            else if (line.StartsWith("DecryptedDiscKey"))
+                                decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+                        }
+                    }
+                    catch { }
+                }
+            }
+
+            // Now we format everything we can
+            string protection = "";
+            if (!string.IsNullOrEmpty(region))
+                protection += $"Region: {region}\n";
+            if (!string.IsNullOrEmpty(rceProtection))
+                protection += $"RCE Protection: {rceProtection}\n";
+            if (!string.IsNullOrEmpty(copyrightProtectionSystemType))
+                protection += $"Copyright Protection System Type: {copyrightProtectionSystemType}\n";
+            if (!string.IsNullOrEmpty(encryptedDiscKey))
+                protection += $"Encrypted Disc Key: {encryptedDiscKey}\n";
+            if (!string.IsNullOrEmpty(playerKey))
+                protection += $"Player Key: {playerKey}\n";
+            if (!string.IsNullOrEmpty(decryptedDiscKey))
+                protection += $"Decrypted Disc Key: {decryptedDiscKey}\n";
+
+            return protection;
+        }
+
+        /// <summary>
+        /// Get the detected error count from the input files, if possible
+        /// </summary>
+        /// <param name="edcecc">.img_EdcEcc.txt/.img_EccEdc.txt file location</param>
+        /// <returns>Error count if possible, -1 on error</returns>
+        private long GetErrorCount(string edcecc)
+        {
+            // TODO: Better usage of _mainInfo and _c2Error for uncorrectable errors
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(edcecc))
+                return -1;
+
+            // First line of defense is the EdcEcc error file
+            using (StreamReader sr = File.OpenText(edcecc))
+            {
+                try
+                {
+                    // Read in the error count whenever we find it
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+
+                        if (line.StartsWith("[NO ERROR]"))
+                        {
+                            return 0;
+                        }
+                        else if (line.StartsWith("Total errors"))
+                        {
+                            if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
+                                return te;
+                            else
+                                return Int64.MinValue;
+                        }
+                    }
+
+                    // If we haven't found anything, return -1
+                    return -1;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return Int64.MaxValue;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the extracted GC and Wii version
+        /// </summary>
+        /// <param name="dumpinfo">Path to discinfo file</param>
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="version">Output internal version of the game</param>
+        /// <returns></returns>
+        private bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version)
+        {
+            region = null; version = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(dumpinfo))
+                return false;
+
+            using (StreamReader sr = File.OpenText(dumpinfo))
+            {
+                try
+                {
+                    // Make sure this file is a dumpinfo
+                    if (!sr.ReadLine().Contains("--File Generated by CleanRip"))
+                        return false;
+
+                    // Read all lines and gather dat information
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+                        if (line.StartsWith("Version"))
+                        {
+                            version = line.Substring(9);
+                        }
+                        else if (line.StartsWith("Filename"))
+                        {
+                            string serial = line.Substring(10);
+
+                            // char gameType = serial[0];
+                            // string gameid = serial[1] + serial[2];
+                            // string version = serial[4] + serial[5]
+
+                            switch (serial[3])
+                            {
+                                case 'A':
+                                    region = Region.World;
+                                    break;
+                                case 'D':
+                                    region = Region.Germany;
+                                    break;
+                                case 'E':
+                                    region = Region.USA;
+                                    break;
+                                case 'F':
+                                    region = Region.France;
+                                    break;
+                                case 'I':
+                                    region = Region.Italy;
+                                    break;
+                                case 'J':
+                                    region = Region.Japan;
+                                    break;
+                                case 'K':
+                                    region = Region.Korea;
+                                    break;
+                                case 'L':
+                                    region = Region.Europe; // Japanese import to Europe
+                                    break;
+                                case 'M':
+                                    region = Region.Europe; // American import to Europe
+                                    break;
+                                case 'N':
+                                    region = Region.USA; // Japanese import to USA
+                                    break;
+                                case 'P':
+                                    region = Region.Europe;
+                                    break;
+                                case 'R':
+                                    region = Region.Russia;
+                                    break;
+                                case 'S':
+                                    region = Region.Spain;
+                                    break;
+                                case 'Q':
+                                    region = Region.Korea; // Korea with Japanese language
+                                    break;
+                                case 'T':
+                                    region = Region.Korea; // Korea with English language
+                                    break;
+                                case 'X':
+                                    region = null; // Not a real region code
+                                    break;
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the split values for ISO-based media
+        /// </summary>
+        /// <param name="hashData">String representing the combined hash data</param>
+        /// <returns>True if extraction was successful, false otherwise</returns>
+        private bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
+        {
+            size = -1; crc32 = null; md5 = null; sha1 = null;
+
+            if (string.IsNullOrWhiteSpace(hashData))
+                return false;
+
+            Regex hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
+            Match m = hashreg.Match(hashData);
+            if (m.Success)
+            {
+                Int64.TryParse(m.Groups[1].Value, out size);
+                crc32 = m.Groups[2].Value;
+                md5 = m.Groups[3].Value;
+                sha1 = m.Groups[4].Value;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the layerbreak from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <param name="ignoreFirst">True if the first sector length is to be ignored, false otherwise</param>
+        /// <returns>Layerbreak if possible, null on error</returns>
+        private string GetLayerbreak(string disc, bool ignoreFirst)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return null;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the layerbreak
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        // We definitely found a single-layer disc
+                        if (line.Contains("NumberOfLayers: Single Layer"))
+                        {
+                            return null;
+                        }
+                        else if (line.Trim().StartsWith("========== SectorLength =========="))
+                        {
+                            // Skip the first one and unset the flag
+                            if (ignoreFirst)
+                                ignoreFirst = false;
+                            else
+                                break;
+                        }
+
+                        line = sr.ReadLine();
+                    }
+
+                    // Now that we're at the layerbreak line, attempt to get the decimal version
+                    return sr.ReadLine().Trim().Split(' ')[1];
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get if LibCrypt data is detected in the subchannel file, if possible
+        /// </summary>
+        /// <param name="sub">.sub file location</param>
+        /// <returns>Status of the LibCrypt data, if possible</returns>
+        private bool? GetLibCryptDetected(string sub)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(sub))
+                return null;
+
+            return LibCrypt.CheckSubfile(sub);
+        }
+
+        /// <summary>
+        /// Get the hex contents of the PIC file
+        /// </summary>
+        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
+        /// <returns>PIC data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        private string GetPIC(string picPath)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(picPath))
+                return null;
+
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
+                {
+                    string hex = BitConverter.ToString(br.ReadBytes(140)).Replace("-", string.Empty);
+                    return Regex.Replace(hex, ".{32}", "$0\n");
+                }
+            }
+            catch
+            {
+                // We don't care what the error was right now
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the detected missing EDC count from the input files, if possible
+        /// </summary>
+        /// <param name="edcecc">.img_EdcEcc.txt file location</param>
+        /// <returns>Status of PS1 EDC, if possible</returns>
+        private bool? GetPlayStationEDCStatus(string edcecc)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(edcecc))
+                return null;
+
+            // First line of defense is the EdcEcc error file
+            int modeTwoNoEdc = 0;
+            int modeTwoFormTwo = 0;
+            using (StreamReader sr = File.OpenText(edcecc))
+            {
+                try
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine();
+                        if (line.Contains("mode 2 form 2"))
+                            modeTwoFormTwo++;
+                        else if (line.Contains("mode 2 no edc"))
+                            modeTwoNoEdc++;
+                    }
+
+                    // This shouldn't happen
+                    if (modeTwoNoEdc == 0 && modeTwoFormTwo == 0)
+                        return null;
+
+                    // EDC exists
+                    else if (modeTwoNoEdc == 0 && modeTwoFormTwo != 0)
+                        return true;
+
+                    // EDC doesn't exist
+                    else if (modeTwoNoEdc != 0 && modeTwoFormTwo == 0)
+                        return false;
+
+                    // This shouldn't happen
+                    else if (modeTwoNoEdc != 0 && modeTwoFormTwo != 0)
+                        return null;
+
+                    // No idea how it would fall through
+                    return null;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
+        /// <returns></returns>
+        private bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        {
+            region = null; date = null;
+
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return false;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return false;
+
+            // Get the two paths that we will need to check
+            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+
+            // Try both of the common paths that contain information
+            string exeName = null;
+
+            // Try reading SYSTEM.CNF to find the "BOOT" value
+            if (File.Exists(systemCnfPath))
+            {
+                try
+                {
+                    using (StreamReader sr = File.OpenText(systemCnfPath))
+                    {
+                        // Not assuming any ordering, just in case
+                        string line = sr.ReadLine();
+                        while (!line.StartsWith("BOOT"))
+                            line = sr.ReadLine();
+
+                        // Once it finds the "BOOT" line, extract the name, if possible
+                        var match = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?)");
+                        if (match != null && match.Groups.Count > 1)
+                        {
+                            exeName = match.Groups[1].Value;
+                            exeName = exeName.Split(';')[0];
+                        }
+                    }
+                }
+                catch
+                {
+                    // We don't care what the error was
+                    return false;
+                }
+            }
+
+            // If the SYSTEM.CNF value can't be found, try PSX.EXE
+            if (string.IsNullOrWhiteSpace(exeName) && File.Exists(psxExePath))
+                exeName = "PSX.EXE";
+
+            // If neither can be found, we return false
+            if (string.IsNullOrWhiteSpace(exeName))
+                return false;
+
+            // Standardized "S" serials
+            if (exeName.StartsWith("S"))
+            {
+                // string publisher = exeName[0] + exeName[1];
+                // char secondRegion = exeName[3];
+                switch (exeName[2])
+                {
+                    case 'A':
+                        region = Region.Asia;
+                        break;
+                    case 'C':
+                        region = Region.China;
+                        break;
+                    case 'E':
+                        region = Region.Europe;
+                        break;
+                    case 'J':
+                        region = Region.JapanKorea;
+                        break;
+                    case 'K':
+                        region = Region.Korea;
+                        break;
+                    case 'P':
+                        region = Region.Japan;
+                        break;
+                    case 'U':
+                        region = Region.USA;
+                        break;
+                }
+            }
+
+            // Special cases
+            else if (exeName.StartsWith("PAPX"))
+            {
+                region = Region.Japan;
+            }
+            else if (exeName.StartsWith("PABX"))
+            {
+                // Region appears entirely random
+            }
+            else if (exeName.StartsWith("PCBX"))
+            {
+                region = Region.Japan;
+            }
+            else if (exeName.StartsWith("PDBX"))
+            {
+                // Single disc known, Japan
+            }
+            else if (exeName.StartsWith("PEBX"))
+            {
+                // Single disc known, Europe
+            }
+
+            // Now that we have the EXE name, try to get the fileinfo for it
+            string exePath = Path.Combine(drivePath, exeName);
+            if (!File.Exists(exePath))
+                return false;
+
+            // Fix the Y2K timestamp issue
+            FileInfo fi = new FileInfo(exePath);
+            DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
+                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
+            date = dt.ToString("yyyy-MM-dd");
+            return true;
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 2 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        private string GetPlayStation2Version(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find SYSTEM.CNF, we don't have a PlayStation 2 disc
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            if (!File.Exists(systemCnfPath))
+                return null;
+
+            // Try reading SYSTEM.CNF to find the "VER" value
+            try
+            {
+                using (StreamReader sr = File.OpenText(systemCnfPath))
+                {
+                    // Not assuming proper ordering, just in case
+                    string line = sr.ReadLine();
+                    while (!line.StartsWith("VER"))
+                        line = sr.ReadLine();
+
+                    // Once it finds the "VER" line, extract the version
+                    var match = Regex.Match(line, @"VER\s*=\s*(.*)");
+                    if (match != null && match.Groups.Count > 1)
+                        return match.Groups[1].Value;
+
+                    return null;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        private string GetPlayStation4Version(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.sfo, we don't have a PlayStation 4 disc
+            string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading param.sfo to find the version at the end of the file
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the PVD from the input file, if possible
+        /// </summary>
+        /// <param name="mainInfo">_mainInfo.txt file location</param>
+        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
+        private string GetPVD(string mainInfo)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(mainInfo))
+                return null;
+
+            using (StreamReader sr = File.OpenText(mainInfo))
+            {
+                try
+                {
+                    // Make sure we're in the right sector
+                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel ==========")) ;
+
+                    // Fast forward to the PVD
+                    while (!sr.ReadLine().StartsWith("0310")) ;
+
+                    // Now that we're at the PVD, read each line in and concatenate
+                    string pvd = "";
+                    for (int i = 0; i < 6; i++)
+                        pvd += sr.ReadLine() + "\n"; // 320-370
+
+                    return pvd;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a Saturn disc, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        {
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (string.IsNullOrWhiteSpace(segaHeader))
+                return false;
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader.Split('\n');
+                string serialVersionLine = header[2].Substring(58);
+                string dateLine = header[3].Substring(58);
+                serial = serialVersionLine.Substring(0, 8);
+                version = serialVersionLine.Substring(10, 6);
+                date = dateLine.Substring(0, 8);
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a Sega CD disc, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the  Sega CD header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        /// <remarks>Note that this works for MOST headers, except ones where the copyright stretches > 1 line</remarks>
+        private bool GetSegaCDBuildInfo(string segaHeader, out string serial, out string date)
+        {
+            serial = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (string.IsNullOrWhiteSpace(segaHeader))
+                return false;
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader.Split('\n');
+                string serialVersionLine = header[8].Substring(58);
+                string dateLine = header[1].Substring(58);
+                serial = serialVersionLine.Substring(3, 7);
+                date = dateLine.Substring(8).Trim();
+
+                // Properly format the date string, if possible
+                string[] dateSplit = date.Split('.');
+
+                if (dateSplit.Length == 1)
+                    dateSplit = new string[] { date.Substring(0, 4), date.Substring(4) };
+
+                string month = dateSplit[1];
+                switch (month)
+                {
+                    case "JAN":
+                        dateSplit[1] = "01";
+                        break;
+                    case "FEB":
+                        dateSplit[1] = "02";
+                        break;
+                    case "MAR":
+                        dateSplit[1] = "03";
+                        break;
+                    case "APR":
+                        dateSplit[1] = "04";
+                        break;
+                    case "MAY":
+                        dateSplit[1] = "05";
+                        break;
+                    case "JUN":
+                        dateSplit[1] = "06";
+                        break;
+                    case "JUL":
+                        dateSplit[1] = "07";
+                        break;
+                    case "AUG":
+                        dateSplit[1] = "08";
+                        break;
+                    case "SEP":
+                        dateSplit[1] = "09";
+                        break;
+                    case "OCT":
+                        dateSplit[1] = "10";
+                        break;
+                    case "NOV":
+                        dateSplit[1] = "11";
+                        break;
+                    case "DEC":
+                        dateSplit[1] = "12";
+                        break;
+                    default:
+                        dateSplit[1] = "00";
+                        break;
+                }
+
+                date = string.Join("-", dateSplit);
+
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the header from a Sega CD / Mega CD, Saturn, or Dreamcast Low-Density region, if possible
+        /// </summary>
+        /// <param name="mainInfo">_mainInfo.txt file location</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private string GetSegaHeader(string mainInfo)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(mainInfo))
+                return null;
+
+            using (StreamReader sr = File.OpenText(mainInfo))
+            {
+                try
+                {
+                    // Make sure we're in the right sector
+                    while (!sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+
+                    // Fast forward to the header
+                    while (!sr.ReadLine().Trim().StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")) ;
+
+                    // Now that we're at the Header, read each line in and concatenate
+                    string header = "";
+                    for (int i = 0; i < 32; i++)
+                        header += sr.ReadLine() + "\n"; // 0000-01F0
+
+                    return header;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the UMD auxiliary info from the outputted files, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetUMDAuxInfo(string disc, out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize)
+        {
+            title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return false;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Loop through everything to get the first instance of each required field
+                    string line = string.Empty;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().Trim();
+
+                        if (line.StartsWith("TITLE") && title == null)
+                            title = line.Substring("TITLE: ".Length);
+                        else if (line.StartsWith("DISC_VERSION") && umdversion == null)
+                            umdversion = line.Split(' ')[1];
+                        else if (line.StartsWith("pspUmdTypes"))
+                            umdcat = GetUMDCategory(line.Split(' ')[1]);
+                        else if (line.StartsWith("L0 length"))
+                            umdlayer = line.Split(' ')[2];
+                        else if (line.StartsWith("FileSize:"))
+                            umdsize = Int64.Parse(line.Split(' ')[1]);
+                    }
+
+                    // If the L0 length is the size of the full disc, there's no layerbreak
+                    if (Int64.Parse(umdlayer) * 2048 == umdsize)
+                        umdlayer = null;
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determine the category based on the UMDImageCreator string
+        /// </summary>
+        /// <param name="region">String representing the category</param>
+        /// <returns>Category, if possible</returns>
+        private Category? GetUMDCategory(string category)
+        {
+            switch (category)
+            {
+                case "GAME":
+                    return Category.Games;
+                case "VIDEO":
+                    return Category.Video;
+                case "AUDIO":
+                    return Category.Audio;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private string GetWriteOffset(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+            {
+                return null;
+            }
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the offsets
+                    while (!sr.ReadLine().Trim().StartsWith("========== Offset")) ;
+                    sr.ReadLine(); // Combined Offset
+                    sr.ReadLine(); // Drive Offset
+                    sr.ReadLine(); // Separator line
+
+                    // Now that we're at the offsets, attempt to get the sample offset
+                    return sr.ReadLine().Split(' ').LastOrDefault();
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the XBOX/360 auxiliary info from the outputted files, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
+        {
+            dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return false;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the Security Sector version and read it
+                    while (!sr.ReadLine().Trim().StartsWith("CPR_MAI Key")) ;
+                    ssver = sr.ReadLine().Trim().Split(' ')[4]; // "Version of challenge table: <VER>"
+
+                    // Fast forward to the Security Sector Ranges
+                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
+
+                    // Now that we're at the ranges, read each line in and concatenate
+                    Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+                    string line = sr.ReadLine().Trim();
+                    while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
+                    {
+                        // If we have a recognized line format, parse it
+                        if (line.StartsWith("Layer "))
+                        {
+                            var match = layerRegex.Match(line);
+                            ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                        }
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    // Fast forward to the aux hashes
+                    while (!line.StartsWith("<rom"))
+                        line = sr.ReadLine().Trim();
+
+                    // Read in the hashes to the proper parts
+                    while (line.StartsWith("<rom"))
+                    {
+                        if (line.Contains("SS.bin"))
+                            sshash = line;
+                        else if (line.Contains("PFI.bin"))
+                            pfihash = line;
+                        else if (line.Contains("DMI.bin"))
+                            dmihash = line;
+
+                        if (sr.EndOfStream)
+                            break;
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the XOX serial info from the DMI.bin file, if possible
+        /// </summary>
+        /// <param name="dmi">DMI.bin file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetXBOXDMIInfo(string dmi, out string serial, out string version, out Region? region)
+        {
+            serial = null; version = null; region = Region.World;
+
+            if (!File.Exists(dmi))
+                return false;
+
+            using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
+            {
+                try
+                {
+                    br.BaseStream.Seek(8, SeekOrigin.Begin);
+                    char[] str = br.ReadChars(8);
+
+                    serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}";
+                    version = $"1.{str[5]}{str[6]}";
+                    region = GetXBOXRegion(str[7]);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the XBOX 360 serial info from the DMI.bin file, if possible
+        /// </summary>
+        /// <param name="dmi">DMI.bin file location</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private bool GetXBOX360DMIInfo(string dmi, out string serial, out string version, out Region? region)
+        {
+            serial = null; version = null; region = null;
+
+            if (!File.Exists(dmi))
+                return false;
+
+            using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
+            {
+                try
+                {
+                    br.BaseStream.Seek(64, SeekOrigin.Begin);
+                    char[] str = br.ReadChars(14);
+
+                    serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}{str[5]}";
+                    version = $"1.{str[6]}{str[7]}";
+                    region = GetXBOXRegion(str[8]);
+                    // str[9], str[10], str[11] - unknown purpose
+                    // str[12], str[13] - disc <12> of <13>
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Determine the region based on the XBOX serial character
+        /// </summary>
+        /// <param name="region">Character denoting the region</param>
+        /// <returns>Region, if possible</returns>
+        private Region? GetXBOXRegion(char region)
+        {
+            switch (region)
+            {
+                case 'W':
+                    return Region.World;
+                case 'A':
+                    return Region.USA;
+                case 'J':
+                    return Region.JapanAsia;
+                case 'E':
+                    return Region.Europe;
+                case 'K':
+                    return Region.USAJapan;
+                case 'L':
+                    return Region.USAEurope;
+                case 'H':
+                    return Region.JapanEurope;
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
     }
 }
