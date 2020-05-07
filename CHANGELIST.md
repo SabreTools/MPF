@@ -1,4 +1,13 @@
+### 1.16.1 (2020-05-07)
+
+- Add preliminary support for DD for Windows (end to end still NW)
+- Add CNF parsing for Konami Python 2 discs (PS2-based)
+- Updated included Aaru version
+- Massive cleanup effort to detangle large chunks of code
+- Miscellaneous bugfixes that came from the above
+
 ### 1.16 (2020-04-13)
+
 - Updated to DIC version 20200403
 - UI updates based on user feedback
 - Added support for Aaru (formerly DiscImageChef)

@@ -7,12 +7,14 @@ DiscImageCreator/Aaru UI in C#
 This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project :)
 
 DICUI relies on the following projects:
-- **DiscImageCreator** by Sarami - Dumping - [GitHub](https://github.com/saramibreak/DiscImageCreator)
 - **Aaru** by Claunia - Dumping - [GitHub](https://github.com/aaru-dps/Aaru)
+- **CleanRip** by emu_kidid - Offline dumping - [GitHub](https://github.com/emukidid/cleanrip)
+- **DD for Windows* - Dumping - [Homepage](http://www.chrysocome.net/dd);
+- **DiscImageCreator** by Sarami - Dumping - [GitHub](https://github.com/saramibreak/DiscImageCreator)
 - **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
 - **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
 
-**Note:** Both DiscImageCreator and Aaru have WIP builds. In general, WIP builds are not supported with new flags or features until they make it into the stable release.
+**Note:** Both Aaru DiscImageCreator have WIP builds. In general, WIP builds are not supported with new flags or features until they make it into the stable release.
 
 ## System Requirements
 
@@ -53,3 +55,4 @@ These are the tireless individuals who have dedicated countless hours to help te
 - **Kludge** - Primary stress tester
 - **ajshell1** - Tester
 - **eientei95** - Tester
+- **VGPC Discord** - Testing and feedback
