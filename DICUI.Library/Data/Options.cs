@@ -6,7 +6,7 @@ namespace DICUI.Data
 {
     public class Options : IDictionary<string, string>
     {
-        private Dictionary<string, string> _settings = new Dictionary<string, string>();
+        private Dictionary<string, string> _settings;
 
         #region Internal Program
 
@@ -181,7 +181,7 @@ namespace DICUI.Data
         /// <param name="settings"></param>
         public Options(Dictionary<string, string> settings = null)
         {
-            this._settings = settings;
+            this._settings = settings ?? new Dictionary<string, string>();
         }
 
         /// <summary>

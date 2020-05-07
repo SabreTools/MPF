@@ -16,14 +16,12 @@ namespace DICUI.Test
         [InlineData("stop D", 'D', false, MediaType.DVD, true)]
         public void ParametersValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
-            var env = new DumpEnvironment
-            {
-                Parameters = new DiscImageCreator.Parameters(parameters),
-                Drive = isFloppy
-                    ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
-                    : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString())),
-                Type = mediaType,
-            };
+            var options = new Options() { InternalProgram = "dic" };
+            var drive = isFloppy
+                ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
+                : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString()));
+
+            var env = new DumpEnvironment(options, string.Empty, string.Empty, drive, KnownSystem.IBMPCCompatible, mediaType, parameters);
 
             bool actual = env.ParametersValid();
             Assert.Equal(expected, actual);
@@ -40,11 +38,8 @@ namespace DICUI.Test
         [InlineData("superhero", "blah&foo.bin", "superhero", "blah&foo.bin")]
         public void FixOutputPathsTest(string outputDirectory, string outputFilename, string expectedOutputDirectory, string expectedOutputFilename)
         {
-            var env = new DumpEnvironment
-            {
-                OutputDirectory = outputDirectory,
-                OutputFilename = outputFilename,
-            };
+            var options = new Options() { InternalProgram = "dic" };
+            var env = new DumpEnvironment(options, outputDirectory, outputFilename, null, KnownSystem.IBMPCCompatible, MediaType.CDROM, string.Empty);
 
             env.FixOutputPaths();
             Assert.Equal(expectedOutputDirectory, env.OutputDirectory);

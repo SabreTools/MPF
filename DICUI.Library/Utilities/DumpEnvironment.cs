@@ -142,12 +142,6 @@ namespace DICUI.Utilities
         #endregion
 
         /// <summary>
-        /// Empty constructor for testing only
-        /// </summary>
-        /// TODO: Remove this and fix tests
-        public DumpEnvironment() { }
-
-        /// <summary>
         /// Constructor for a full DumpEnvironment object from user information
         /// </summary>
         /// <param name="options"></param>
