@@ -33,25 +33,35 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
-            <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                    Text="{Binding Path=AaruPath}" />
             <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
-            <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                    Text="{Binding Path=CreatorPath}" />
             <Button x:Name="CreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
             <!--
             <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DD Path" />
-            <TextBox x:Name="DDPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <TextBox x:Name="DDPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                    Text="{Binding Path=DDPath}" />
             <Button x:Name="DDPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
             -->
 
             <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="subdump Path" />
-            <TextBox x:Name="SubDumpPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <TextBox x:Name="SubDumpPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                    Text="{Binding Path=SubDumpPath}" />
             <Button x:Name="SubDumpPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick"/>
 
             <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
-            <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+            <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                    Text="{Binding Path=DefaultOutputPath}" />
             <Button x:Name="DefaultOutputPathButton" Grid.Row="3" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
         </Grid>
 
@@ -70,16 +80,28 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Content="CD-ROM" />
-                <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static local:Constants.SpeedsForCDAsCollection}}" />
-                <TextBox x:Name="DumpSpeedCDTextBox" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
+                        Ticks="{Binding Source={x:Static local:Constants.SpeedsForCDAsCollection}}"
+                        DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                        Value="{Binding Path=PreferredDumpSpeedCD}" />
+                <TextBox x:Name="DumpSpeedCDTextBox" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
+                        Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                 <Label Grid.Row="1" Grid.Column="0" Content="DVD-ROM" />
-                <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static local:Constants.SpeedsForDVDAsCollection}}" />
-                <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
+                        Ticks="{Binding Source={x:Static local:Constants.SpeedsForDVDAsCollection}}"
+                        DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                        Value="{Binding Path=PreferredDumpSpeedDVD}"  />
+                <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
+                         Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                 <Label Grid.Row="2" Grid.Column="0" Content="BD-ROM" />
-                <Slider x:Name="DumpSpeedBDSlider" Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight" Ticks="{Binding Source={x:Static local:Constants.SpeedsForBDAsCollection}}" />
-                <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center" Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                <Slider x:Name="DumpSpeedBDSlider" Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
+                        Ticks="{Binding Source={x:Static local:Constants.SpeedsForBDAsCollection}}"
+                        DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                        Value="{Binding Path=PreferredDumpSpeedBD}"  />
+                <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
+                         Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
             </Grid>
 
@@ -173,7 +195,9 @@
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
-                <TextBox x:Name="RedumpUsernameTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <TextBox x:Name="RedumpUsernameTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                    Text="{Binding Path=Username}" />
 
                 <Label Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
                 <PasswordBox x:Name="RedumpPasswordBox" Grid.Row="0" Grid.Column="3" Height="22" HorizontalAlignment="Stretch" PasswordChar="*" />

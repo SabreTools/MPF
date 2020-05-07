@@ -1,5 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using DICUI.Utilities;
 
 namespace DICUI.Data
 {
@@ -8,12 +13,17 @@ namespace DICUI.Data
         /// <summary>
         /// Path to the executable
         /// </summary>
-        public string Path { get; set; }
+        public string ExecutablePath { get; set; }
 
         /// <summary>
         /// Program that this set of parameters represents
         /// </summary>
         public InternalProgram InternalProgram { get; set; }
+
+        /// <summary>
+        /// Process to track external program
+        /// </summary>
+        private Process process;
 
         /// <summary>
         /// Populate a Parameters object from a param string
@@ -136,6 +146,85 @@ namespace DICUI.Data
         public abstract bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type);
 
         /// <summary>
+        /// Generate a SubmissionInfo for the output files
+        /// </summary>
+        /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="system">KnownSystem type representing the media</param>
+        /// <param name="type">MediaType type representing the media</param>
+        /// <param name="drive">Drive representing the disc to get information from</param>
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, KnownSystem? system, MediaType? type, Drive drive);
+
+        /// <summary>
+        /// Run internal program
+        /// </summary>
+        public void ExecuteInternalProgram()
+        {
+            process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = ExecutablePath,
+                    Arguments = GenerateParameters() ?? "",
+                },
+            };
+
+            process.Start();
+            process.WaitForExit();
+        }
+
+        /// <summary>
+        /// Run internal program async with an input set of parameters
+        /// </summary>
+        /// <param name="parameters"></param>
+        /// <returns>Standard output from commandline window</returns>
+        public async Task<string> ExecuteInternalProgram(BaseParameters parameters)
+        {
+            Process childProcess;
+            string output = await Task.Run(() =>
+            {
+                childProcess = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = parameters.ExecutablePath,
+                        Arguments = parameters.GenerateParameters(),
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardInput = true,
+                        RedirectStandardOutput = true,
+                    },
+                };
+                childProcess.Start();
+                childProcess.WaitForExit(1000);
+
+                // Just in case, we want to push a button 5 times to clear any errors
+                for (int i = 0; i < 5; i++)
+                    childProcess.StandardInput.WriteLine("Y");
+
+                string stdout = childProcess.StandardOutput.ReadToEnd();
+                childProcess.Dispose();
+                return stdout;
+            });
+
+            return output;
+        }
+
+        /// <summary>
+        /// Cancel an in-progress dumping process
+        /// </summary>
+        public void KillInternalProgram()
+        {
+            try
+            {
+                if (process != null && !process.HasExited)
+                    process.Kill();
+            }
+            catch
+            { }
+        }
+
+        /// <summary>
         /// Returns whether or not the selected item exists
         /// </summary>
         /// <param name="parameters">List of parameters to check against</param>
@@ -147,6 +236,35 @@ namespace DICUI.Data
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the full lines from the input file, if possible
+        /// </summary>
+        /// <param name="filename">file location</param>
+        /// <param name="binary">True if should read as binary, false otherwise (default)</param>
+        /// <returns>Full text of the file, null on error</returns>
+        protected string GetFullFile(string filename, bool binary = false)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(filename))
+                return null;
+
+            // If we're reading as binary
+            if (binary)
+            {
+                string hex = string.Empty;
+                using (BinaryReader br = new BinaryReader(File.OpenRead(filename)))
+                {
+                    while (br.BaseStream.Position < br.BaseStream.Length)
+                    {
+                        hex += Convert.ToString(br.ReadByte(), 16);
+                    }
+                }
+                return hex;
+            }
+
+            return string.Join("\n", File.ReadAllLines(filename));
         }
 
         /// <summary>

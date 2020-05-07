@@ -14,13 +14,13 @@ namespace DICUI.Windows
     public partial class OptionsWindow : Window
     {
         private readonly MainWindow _mainWindow;
-        private readonly Options _options;
+        private readonly UIOptions _uiOptions;
 
-        public OptionsWindow(MainWindow mainWindow, Options options)
+        public OptionsWindow(MainWindow mainWindow, UIOptions options)
         {
             InitializeComponent();
             _mainWindow = mainWindow;
-            _options = options;
+            _uiOptions = options;
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -39,12 +39,6 @@ namespace DICUI.Windows
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             return dialog;
-        }
-
-        private string[] PathSettings()
-        {
-            string[] pathSettings = { "AaruPath", "CreatorPath", /* "DDPath", */ "DefaultOutputPath", "SubDumpPath" };
-            return pathSettings;
         }
 
         private TextBox TextBoxForPathSetting(string name)
@@ -83,7 +77,9 @@ namespace DICUI.Windows
                     }
 
                     if (exists)
+                    {
                         TextBoxForPathSetting(pathSettingName).Text = path;
+                    }
                     else
                     {
                         System.Windows.MessageBox.Show(
@@ -99,30 +95,18 @@ namespace DICUI.Windows
 
         public void Refresh()
         {
-            Array.ForEach(PathSettings(), setting => TextBoxForPathSetting(setting).Text = _options.Get(setting));
-
-            DumpSpeedCDSlider.Value = _options.PreferredDumpSpeedCD;
-            DumpSpeedDVDSlider.Value = _options.PreferredDumpSpeedDVD;
-            DumpSpeedBDSlider.Value = _options.PreferredDumpSpeedBD;
-
-            RedumpUsernameTextBox.Text = _options.Username;
-            RedumpPasswordBox.Password = _options.Password;
+            // Handle non-bindable fields
+            RedumpPasswordBox.Password = _uiOptions.Options.Password;
         }
 
         #region Event Handlers
 
         private void OnAcceptClick(object sender, EventArgs e)
         {
-            Array.ForEach(PathSettings(), setting => _options.Set(setting, TextBoxForPathSetting(setting).Text));
+            // Handle non-bindable fields
+            _uiOptions.Options.Password = RedumpPasswordBox.Password;
 
-            _options.PreferredDumpSpeedCD = Convert.ToInt32(DumpSpeedCDSlider.Value);
-            _options.PreferredDumpSpeedDVD = Convert.ToInt32(DumpSpeedDVDSlider.Value);
-            _options.PreferredDumpSpeedBD = Convert.ToInt32(DumpSpeedBDSlider.Value);
-
-            _options.Username = RedumpUsernameTextBox.Text;
-            _options.Password = RedumpPasswordBox.Password;
-
-            _options.Save();
+            _uiOptions.Save();
             Hide();
 
             _mainWindow.OnOptionsUpdated();
@@ -134,6 +118,9 @@ namespace DICUI.Windows
             Hide();
         }
 
+        /// <summary>
+        /// Test Redump credentials for validity
+        /// </summary>
         private void OnRedumpTestClick(object sender, EventArgs e)
         {
             using (CookieAwareWebClient wc = new CookieAwareWebClient())

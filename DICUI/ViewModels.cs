@@ -6,113 +6,189 @@ namespace DICUI
 {
     public class OptionsViewModel
     {
-        private Options _options;
+        private UIOptions _uiOptions;
 
-        public OptionsViewModel(Options options)
+        #region Internal Program
+
+        public string AaruPath
         {
-            this._options = options;
+            get { return _uiOptions.Options.AaruPath; }
+            set { _uiOptions.Options.AaruPath = value; }
+        }
+
+        public string CreatorPath
+        {
+            get { return _uiOptions.Options.CreatorPath; }
+            set { _uiOptions.Options.CreatorPath = value; }
+        }
+
+        public string DDPath
+        {
+            get { return _uiOptions.Options.DDPath; }
+            set { _uiOptions.Options.DDPath = value; }
         }
 
         public string InternalProgram
         {
-            get { return _options.InternalProgram; }
-            set { _options.InternalProgram = value; }
+            get { return _uiOptions.Options.InternalProgram; }
+            set { _uiOptions.Options.InternalProgram = value; }
         }
+
+        #endregion
+
+        #region Extra Paths
+
+        public string DefaultOutputPath
+        {
+            get { return _uiOptions.Options.DefaultOutputPath; }
+            set { _uiOptions.Options.DefaultOutputPath = value; }
+        }
+
+        public string SubDumpPath
+        {
+            get { return _uiOptions.Options.SubDumpPath; }
+            set { _uiOptions.Options.SubDumpPath = value; }
+        }
+
+        #endregion
+
+        #region Dumping Speeds
+
+        public int PreferredDumpSpeedCD
+        {
+            get { return _uiOptions.Options.PreferredDumpSpeedCD; }
+            set { _uiOptions.Options.PreferredDumpSpeedCD = value; }
+        }
+
+        public int PreferredDumpSpeedDVD
+        {
+            get { return _uiOptions.Options.PreferredDumpSpeedDVD; }
+            set { _uiOptions.Options.PreferredDumpSpeedDVD = value; }
+        }
+
+        public int PreferredDumpSpeedBD
+        {
+            get { return _uiOptions.Options.PreferredDumpSpeedBD; }
+            set { _uiOptions.Options.PreferredDumpSpeedBD = value; }
+        }
+
+        #endregion
+
+        #region Extra Dumping Options
 
         public bool QuietMode
         {
-            get { return _options.QuietMode; }
-            set { _options.QuietMode = value; }
+            get { return _uiOptions.Options.QuietMode; }
+            set { _uiOptions.Options.QuietMode = value; }
         }
 
         public bool ParanoidMode
         {
-            get { return _options.ParanoidMode; }
-            set { _options.ParanoidMode = value; }
+            get { return _uiOptions.Options.ParanoidMode; }
+            set { _uiOptions.Options.ParanoidMode = value; }
         }
 
         public bool ScanForProtection
         {
-            get { return _options.ScanForProtection; }
-            set { _options.ScanForProtection = value; }
+            get { return _uiOptions.Options.ScanForProtection; }
+            set { _uiOptions.Options.ScanForProtection = value; }
         }
 
         public string RereadAmountForC2
         {
-            get { return Convert.ToString(_options.RereadAmountForC2); }
+            get { return Convert.ToString(_uiOptions.Options.RereadAmountForC2); }
             set
             {
                 if (Int32.TryParse(value, out int result))
-                    _options.RereadAmountForC2 = result;
+                    _uiOptions.Options.RereadAmountForC2 = result;
             }
         }
 
         public bool AddPlaceholders
         {
-            get { return _options.AddPlaceholders; }
-            set { _options.AddPlaceholders = value; }
+            get { return _uiOptions.Options.AddPlaceholders; }
+            set { _uiOptions.Options.AddPlaceholders = value; }
         }
 
         public bool PromptForDiscInformation
         {
-            get { return _options.PromptForDiscInformation; }
-            set { _options.PromptForDiscInformation = value; }
+            get { return _uiOptions.Options.PromptForDiscInformation; }
+            set { _uiOptions.Options.PromptForDiscInformation = value; }
         }
 
         public bool IgnoreFixedDrives
         {
-            get { return _options.IgnoreFixedDrives; }
-            set { _options.IgnoreFixedDrives = value; }
+            get { return _uiOptions.Options.IgnoreFixedDrives; }
+            set { _uiOptions.Options.IgnoreFixedDrives = value; }
         }
 
         public bool ResetDriveAfterDump
         {
-            get { return _options.ResetDriveAfterDump; }
-            set { _options.ResetDriveAfterDump = value; }
+            get { return _uiOptions.Options.ResetDriveAfterDump; }
+            set { _uiOptions.Options.ResetDriveAfterDump = value; }
         }
+
+        #endregion
+
+        #region Skip Options
 
         public bool SkipMediaTypeDetection
         {
-            get { return _options.SkipMediaTypeDetection; }
-            set { _options.SkipMediaTypeDetection = value; }
+            get { return _uiOptions.Options.SkipMediaTypeDetection; }
+            set { _uiOptions.Options.SkipMediaTypeDetection = value; }
         }
 
         public bool SkipSystemDetection
         {
-            get { return _options.SkipSystemDetection; }
-            set { _options.SkipSystemDetection = value; }
+            get { return _uiOptions.Options.SkipSystemDetection; }
+            set { _uiOptions.Options.SkipSystemDetection = value; }
         }
+
+        #endregion
+
+        #region Logging Options
 
         public bool VerboseLogging
         {
-            get { return _options.VerboseLogging; }
+            get { return _uiOptions.Options.VerboseLogging; }
             set
             {
-                _options.VerboseLogging = value;
-                _options.Save();
+                _uiOptions.Options.VerboseLogging = value;
+                _uiOptions.Save(); // TODO: Why does this save here?
             }
         }
 
         public bool OpenLogWindowAtStartup
         {
-            get { return _options.OpenLogWindowAtStartup; }
+            get { return _uiOptions.Options.OpenLogWindowAtStartup; }
             set
             {
-                _options.OpenLogWindowAtStartup = value;
-                _options.Save();
+                _uiOptions.Options.OpenLogWindowAtStartup = value;
+                _uiOptions.Save(); // TODO: Why does this save here?
             }
         }
 
+        #endregion
+
+        #region Redump Login Information
+
         public string Username
         {
-            get { return _options.Username; }
-            set { _options.Username = value; }
+            get { return _uiOptions.Options.Username; }
+            set { _uiOptions.Options.Username = value; }
         }
 
         public string Password
         {
-            get { return _options.Password; }
-            set { _options.Password = value; }
+            get { return _uiOptions.Options.Password; }
+            set { _uiOptions.Options.Password = value; }
+        }
+
+        #endregion
+
+        public OptionsViewModel(UIOptions uiOptions)
+        {
+            this._uiOptions = uiOptions;
         }
     }
 

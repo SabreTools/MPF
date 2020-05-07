@@ -10,24 +10,26 @@ namespace DICUI.Check
         public static void Main(string[] args)
         {
             // Help options
-            if (args.Length == 0
-                || args[0] == "/h" || args[0] == "/?"
-                || args[0] == "-h" || args[0] == "-?")
+            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
             {
                 DisplayHelp();
                 return;
             }
 
             // List options
-            if (args[0] == "/lm" || args[0] == "/listmedia"
-                || args[0] == "-lm" || args[0] == "--listmedia")
+            if (args[0] == "-lm" || args[0] == "--listmedia")
             {
                 ListMediaTypes();
                 Console.ReadLine();
                 return;
             }
-            else if (args[0] == "/ls" || args[0] == "/listsystems"
-                || args[0] == "-ls" || args[0] == "--listsystems")
+            else if (args[0] == "-lp" || args[0] == "--listprograms")
+            {
+                ListPrograms();
+                Console.ReadLine();
+                return;
+            }
+            else if (args[0] == "-ls" || args[0] == "--listsystems")
             {
                 ListKnownSystems();
                 Console.ReadLine();
@@ -64,7 +66,13 @@ namespace DICUI.Check
             for (; startIndex < args.Length; startIndex++)
             {
                 // Redump login
-                if (args[startIndex] == "-c" || args[startIndex] == "--credentials")
+                if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
+                {
+                    string[] credentials = args[startIndex].Split('=')[1].Split(';');
+                    username = credentials[0];
+                    password = credentials[1];
+                }
+                else if (args[startIndex] == "-c" || args[startIndex] == "--credentials")
                 {
                     username = args[startIndex + 1];
                     password = args[startIndex + 2];
@@ -75,6 +83,11 @@ namespace DICUI.Check
                 else if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
                 {
                     internalProgram = args[startIndex].Split('=')[1];
+                }
+                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
+                {
+                    internalProgram = args[startIndex + 1];
+                    startIndex++;
                 }
 
                 // Default, we fall out
@@ -102,19 +115,18 @@ namespace DICUI.Check
                 string filepath = Path.GetFullPath(args[i]);
 
                 // Now populate an environment
-                var env = new DumpEnvironment
+                // TODO: Replace this with Dictionary constructor
+                var options = new Options
                 {
-                    OutputDirectory = "",
-                    OutputFilename = filepath,
-                    System = knownSystem,
-                    Type = mediaType,
+                    InternalProgram = internalProgram,
                     ScanForProtection = false,
                     PromptForDiscInformation = false,
-                    InternalProgram = Converters.ToInternalProgram(internalProgram),
 
                     Username = username,
                     Password = password,
                 };
+
+                var env = new DumpEnvironment(options, "", filepath, null, knownSystem, mediaType, null);
                 env.FixOutputPaths();
 
                 // Finally, attempt to do the output dance
@@ -135,7 +147,7 @@ namespace DICUI.Check
             Console.WriteLine("Usage:");
             Console.WriteLine("DICUI.Check.exe <mediatype> <system> [options] </path/to/output.bin> ...");
             Console.WriteLine();
-            Console.WriteLine(@"Common Media Types:\r\n
+            Console.WriteLine(@"Common Media Types:
 bd / bluray     - BD-ROM
 cd / cdrom      - CD-ROM
 dvd             - DVD-ROM
@@ -144,7 +156,7 @@ gd / gdrom      - GD-ROM
 umd             - UMD");
             Console.WriteLine("Run 'DICUI.Check.exe [-lm|--listmedia' for more options");
             Console.WriteLine();
-            Console.WriteLine(@"Common Systems:\r\n
+            Console.WriteLine(@"Common Systems:
 apple / mac     - Apple Macintosh
 cdi             - Philips CD-i
 ibm / ibmpc     - IBM PC Compatible
@@ -156,9 +168,15 @@ xbox            - Microsoft XBOX
 x360            - Microsoft XBOX 360");
             Console.WriteLine("Run 'DICUI.Check.exe [-ls|--listsystems' for more options");
             Console.WriteLine();
-            Console.WriteLine(@"Common Options:\r\n
+            Console.WriteLine(@"Common Options:
 -c username password    - Redump credentials
--u                      - Check for Aaru");
+-u                      - Set dumping program");
+            Console.WriteLine();
+            Console.WriteLine(@"Common Dumping Programs:
+cr / cleanrip   - CleanRip
+dic             - DiscImageCreator");
+            Console.WriteLine("Run 'DICUI.Check.exe [-lp|--listprograms' for more options");
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -173,6 +191,21 @@ x360            - Microsoft XBOX 360");
                     continue;
 
                 Console.WriteLine($"{((MediaType?)val).ShortName()} - {((MediaType?)val).LongName()}");
+            }
+        }
+
+        /// <summary>
+        /// List all programs with their short usable names
+        /// </summary>
+        private static void ListPrograms()
+        {
+            Console.WriteLine("Supported Programs:");
+            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
+            {
+                if (((InternalProgram)val) == InternalProgram.NONE)
+                    continue;
+
+                Console.WriteLine($"{((InternalProgram?)val).LongName()}");
             }
         }
 
