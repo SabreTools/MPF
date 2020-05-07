@@ -1,8 +1,4 @@
-using System;
-using System.IO;
 using DICUI.Data;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace DICUI.DiscImageCreator
 {

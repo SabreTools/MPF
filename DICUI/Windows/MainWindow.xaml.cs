@@ -532,37 +532,28 @@ namespace DICUI.Windows
 
                 if (result)
                 {
-                    // TODO: Remove Aaru handling when irrelevant
-                    if (_env.InternalProgram == InternalProgram.Aaru)
-                    {
-                        ViewModels.LoggerViewModel.VerboseLogLn("Aaru does not support split tracks or DiscImageCreator-compatible outputs");
-                        ViewModels.LoggerViewModel.VerboseLogLn("No automatic submission information will be gathered for this disc");
-                    }
-                    else
-                    {
-                        // Verify dump output and save it
-                        result = _env.VerifyAndSaveDumpOutput(progress,
-                            EjectWhenDoneCheckBox.IsChecked,
-                            _uiOptions.ResetDriveAfterDump,
-                            (si) =>
+                    // Verify dump output and save it
+                    result = _env.VerifyAndSaveDumpOutput(progress,
+                        EjectWhenDoneCheckBox.IsChecked,
+                        _uiOptions.ResetDriveAfterDump,
+                        (si) =>
+                        {
+                            // lazy initialization
+                            if (_discInformationWindow == null)
                             {
-                                // lazy initialization
-                                if (_discInformationWindow == null)
+                                _discInformationWindow = new DiscInformationWindow(this, si);
+                                _discInformationWindow.Closed += delegate
                                 {
-                                    _discInformationWindow = new DiscInformationWindow(this, si);
-                                    _discInformationWindow.Closed += delegate
-                                    {
-                                        _discInformationWindow = null;
-                                    };
-                                }
-
-                                _discInformationWindow.Owner = this;
-                                _discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                                _discInformationWindow.Refresh();
-                                return _discInformationWindow.ShowDialog();
+                                    _discInformationWindow = null;
+                                };
                             }
-                        );
-                    }
+
+                            _discInformationWindow.Owner = this;
+                            _discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                            _discInformationWindow.Refresh();
+                            return _discInformationWindow.ShowDialog();
+                        }
+                    );
                 }
 
                 StatusLabel.Content = result ? "Dumping complete!" : result.Message;
@@ -629,21 +620,7 @@ namespace DICUI.Windows
                 OutputDirectoryTextBox.Text = Path.Combine(_uiOptions.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
             // Get the extension for the file for the next two statements
-            string extension = null;
-            switch (_env.InternalProgram)
-            {
-                case InternalProgram.Aaru:
-                    extension = Aaru.Converters.Extension(mediaType);
-                    break;
-
-                case InternalProgram.DD:
-                    extension = DD.Converters.Extension(mediaType);
-                    break;
-
-                case InternalProgram.DiscImageCreator:
-                    extension = DiscImageCreator.Converters.Extension(mediaType);
-                    break;
-            }
+            string extension = _env.GetExtension(mediaType);
 
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))

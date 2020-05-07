@@ -26,6 +26,13 @@ namespace DICUI.Check
                 Console.ReadLine();
                 return;
             }
+            else if (args[0] == "/lp" || args[0] == "/listprograms"
+                || args[0] == "-lp" || args[0] == "--listprograms")
+            {
+                ListPrograms();
+                Console.ReadLine();
+                return;
+            }
             else if (args[0] == "/ls" || args[0] == "/listsystems"
                 || args[0] == "-ls" || args[0] == "--listsystems")
             {
@@ -157,7 +164,11 @@ x360            - Microsoft XBOX 360");
             Console.WriteLine();
             Console.WriteLine(@"Common Options:\r\n
 -c username password    - Redump credentials
--u                      - Check for Aaru");
+-u                      - Set dumping program");
+            Console.WriteLine(@"Common Dumping Programs:\r\n
+cr / cleanrip   - CleanRip");
+            Console.WriteLine("Run 'DICUI.Check.exe [-lp|--listprograms' for more options");
+            Console.WriteLine();
         }
 
         /// <summary>
@@ -172,6 +183,21 @@ x360            - Microsoft XBOX 360");
                     continue;
 
                 Console.WriteLine($"{((MediaType?)val).ShortName()} - {((MediaType?)val).LongName()}");
+            }
+        }
+
+        /// <summary>
+        /// List all programs with their short usable names
+        /// </summary>
+        private static void ListPrograms()
+        {
+            Console.WriteLine("Supported Programs:");
+            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
+            {
+                if (((InternalProgram)val) == InternalProgram.NONE)
+                    continue;
+
+                Console.WriteLine($"{((InternalProgram?)val).LongName()}");
             }
         }
 

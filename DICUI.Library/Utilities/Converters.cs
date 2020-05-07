@@ -476,6 +476,39 @@ namespace DICUI.Utilities
         }
 
         /// <summary>
+        /// Get the string representation of the InternalProgram enum values
+        /// </summary>
+        /// <param name="prog">InternalProgram value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this InternalProgram? prog)
+        {
+            switch (prog)
+            {
+                #region Dumping support
+
+                case InternalProgram.Aaru:
+                    return "Aaru";
+                case InternalProgram.DD:
+                    return "dd";
+                case InternalProgram.DiscImageCreator:
+                    return "DiscImageCreator";
+
+                #endregion
+
+                #region Verification support only
+
+                case InternalProgram.CleanRip:
+                    return "CleanRip";
+
+                #endregion
+
+                case InternalProgram.NONE:
+                default:
+                    return "Unknown";
+            }
+        }
+
+        /// <summary>
         /// Get the string representation of the KnownSystem enum values
         /// </summary>
         /// <param name="sys">KnownSystem value to convert</param>
@@ -2083,6 +2116,7 @@ namespace DICUI.Utilities
         {
             switch (internalProgram.ToLowerInvariant())
             {
+                // Dumping support
                 case "aaru":
                 case "chef":
                 case "dichef":
@@ -2092,9 +2126,18 @@ namespace DICUI.Utilities
                 case "dic":
                 case "dicreator":
                 case "discimagecreator":
+                case "umd":
+                case "umdcreator":
+                case "umdimagecreator":
                     return InternalProgram.DiscImageCreator;
                 case "dd":
                     return InternalProgram.DD;
+
+                // Verification support only
+                case "cleanrip":
+                case "cr":
+                    return InternalProgram.CleanRip;
+
                 default:
                     return InternalProgram.NONE;
             }

@@ -49,9 +49,13 @@ namespace DICUI.Data
     {
         NONE = 0,
 
+        // Dumping support
         Aaru,
         DD,
-        DiscImageCreator,
+        DiscImageCreator, // Includes UmdImageCreator
+
+        // Verification support only
+        CleanRip,
     }
 
     /// <summary>
