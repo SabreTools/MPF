@@ -778,7 +778,7 @@ namespace DICUI.Utilities
 
             // Get the DeviceID and MediaType from the current drive letter
             string deviceId = null;
-            ushort mediaType = 0;
+            int mediaType = 0;
             try
             {
                 // Get the device ID first
@@ -789,6 +789,36 @@ namespace DICUI.Utilities
                 foreach (ManagementObject queryObj in searcher.Get())
                 {
                     deviceId = (string)queryObj["DeviceID"];
+
+                    #region Possibly useful fields
+
+                    foreach (var property in queryObj.Properties)
+                    {
+                        Console.WriteLine(property);
+                    }
+
+                    // Capabilities list
+                    ushort[] capabilities = (ushort[])queryObj["Capabilities"];
+
+                    // Internal name of the device
+                    string caption = (string)queryObj["Caption"];
+
+                    // Flags for the file system, see FileSystemFlags
+                    uint fileSystemFlagsEx = (uint)queryObj["FileSystemFlagsEx"];
+
+                    // "CD Writer" doesn't fit https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-cdromdrive
+                    string mediaTypeString = (string)queryObj["MediaType"];
+
+                    // Internal name of the device (Seems like a duplicate of Caption)
+                    string name = (string)queryObj["Name"];
+
+                    // Full device ID for the drive (Seems like duplicate of DeviceID)
+                    string pnpDeviceId = (string)queryObj["PNPDeviceId"];
+
+                    // Size of the loaded media (extrapolate disc type from this?)
+                    ulong size = (ulong)queryObj["Size"];
+
+                    #endregion
                 }
 
                 // If we got no valid device, we don't care and just return
@@ -820,16 +850,23 @@ namespace DICUI.Utilities
 
                 return null;
 #else
+                // TODO: This entire .NET Core path still doesn't work
+                // This may honestly require an entire import of IMAPI2 stuff and then try
+                // as best as possible to get it working.
+
                 // Now try to get the physical media associated
                 searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
                     $"SELECT * FROM Win32_PhysicalMedia");
-                    //$"SELECT * FROM Win32_PhysicalMedia WHERE Name = '{deviceId}'");
 
                 foreach (ManagementObject queryObj in searcher.Get())
                 {
-                    deviceId = (string)queryObj["Tag"];
-                    mediaType = (ushort)queryObj["MediaType"];
+                    foreach (var property in queryObj.Properties)
+                    {
+                        Console.WriteLine(property);
+                    }
+
+                    mediaType = (int)(queryObj["MediaType"] ?? 0);
                 }
 
                 return ((PhysicalMediaType)mediaType).ToMediaType();
