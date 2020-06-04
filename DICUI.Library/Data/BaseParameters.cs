@@ -230,7 +230,7 @@ namespace DICUI.Data
         /// <param name="parameters">List of parameters to check against</param>
         /// <param name="index">Current index</param>
         /// <returns>True if the next item exists, false otherwise</returns>
-        protected bool DoesExist(List<string> parameters, int index)
+        protected static bool DoesExist(List<string> parameters, int index)
         {
             if (index >= parameters.Count)
                 return false;
@@ -244,7 +244,7 @@ namespace DICUI.Data
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
-        protected string GetFullFile(string filename, bool binary = false)
+        protected static string GetFullFile(string filename, bool binary = false)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -272,7 +272,7 @@ namespace DICUI.Data
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a flag, false otherwise</returns>
-        protected bool IsFlag(string parameter)
+        protected static bool IsFlag(string parameter)
         {
             if (parameter.Trim('\"').StartsWith("/"))
                 return true;
@@ -285,7 +285,7 @@ namespace DICUI.Data
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a valid drive letter, false otherwise</returns>
-        protected bool IsValidDriveLetter(string parameter)
+        protected static bool IsValidDriveLetter(string parameter)
         {
             if (!Regex.IsMatch(parameter, @"^[A-Z]:?\\?$"))
                 return false;
@@ -298,7 +298,7 @@ namespace DICUI.Data
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a valid bool, false otherwise</returns>
-        protected bool IsValidBool(string parameter)
+        protected static bool IsValidBool(string parameter)
         {
             return bool.TryParse(parameter, out bool temp);
         }
@@ -310,7 +310,7 @@ namespace DICUI.Data
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid byte, false otherwise</returns>
-        protected bool IsValidInt8(string parameter, sbyte lowerBound = -1, sbyte upperBound = -1)
+        protected static bool IsValidInt8(string parameter, sbyte lowerBound = -1, sbyte upperBound = -1)
         {
             if (!sbyte.TryParse(parameter, out sbyte temp))
                 return false;
@@ -329,7 +329,7 @@ namespace DICUI.Data
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid Int16, false otherwise</returns>
-        protected bool IsValidInt16(string parameter, short lowerBound = -1, short upperBound = -1)
+        protected static bool IsValidInt16(string parameter, short lowerBound = -1, short upperBound = -1)
         {
             if (!short.TryParse(parameter, out short temp))
                 return false;
@@ -348,7 +348,7 @@ namespace DICUI.Data
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid Int32, false otherwise</returns>
-        protected bool IsValidInt32(string parameter, int lowerBound = -1, int upperBound = -1)
+        protected static bool IsValidInt32(string parameter, int lowerBound = -1, int upperBound = -1)
         {
             if (!int.TryParse(parameter, out int temp))
                 return false;
@@ -367,7 +367,7 @@ namespace DICUI.Data
         /// <param name="lowerBound">Lower bound (>=)</param>
         /// <param name="upperBound">Upper bound (<=)</param>
         /// <returns>True if it's a valid Int64, false otherwise</returns>
-        protected bool IsValidInt64(string parameter, long lowerBound = -1, long upperBound = -1)
+        protected static bool IsValidInt64(string parameter, long lowerBound = -1, long upperBound = -1)
         {
             if (!long.TryParse(parameter, out long temp))
                 return false;

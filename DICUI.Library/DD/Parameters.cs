@@ -423,7 +423,7 @@ namespace DICUI.DD
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>
         /// <returns>List of Commands, if possible</returns>
-        private List<Command> GetSupportedCommands(Flag flag)
+        private static List<Command> GetSupportedCommands(Flag flag)
         {
             var commands = new List<Command>();
             switch (flag)

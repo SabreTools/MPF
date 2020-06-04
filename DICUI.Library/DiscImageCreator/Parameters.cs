@@ -1568,7 +1568,7 @@ namespace DICUI.DiscImageCreator
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    bool isXbox = (system == KnownSystem.MicrosoftXBOX || system == KnownSystem.MicrosoftXBOX360);
+                    bool xgd = (system == KnownSystem.MicrosoftXBOX || system == KnownSystem.MicrosoftXBOX360);
 
                     // Get the individual hash data, as per internal
                     if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
@@ -1583,7 +1583,7 @@ namespace DICUI.DiscImageCreator
                     // Deal with the layerbreak
                     string layerbreak = null;
                     if (type == MediaType.DVD)
-                        layerbreak = GetLayerbreak(basePath + "_disc.txt", isXbox) ?? "";
+                        layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
                     else if (type == MediaType.BluRay)
                         layerbreak = (info.SizeAndChecksums.Size > 25025314816 ? "25025314816" : null);
 
@@ -1809,7 +1809,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="flag">Flag value to get commands for</param>
         /// <returns>List of DiscImageCreator.Commands, if possible</returns>
-        private List<Command> GetSupportedCommands(Flag flag)
+        private static List<Command> GetSupportedCommands(Flag flag)
         {
             var commands = new List<Command>();
             switch (flag)
@@ -2028,7 +2028,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Antimodchip existance if possible, false on error</returns>
-        private bool GetAntiModchipDetected(string disc)
+        private static bool GetAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -2065,7 +2065,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="dat">.dat file location</param>
         /// <returns>Relevant pieces of the datfile, null on error</returns>
-        private string GetDatfile(string dat)
+        private static string GetDatfile(string dat)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dat))
@@ -2110,7 +2110,7 @@ namespace DICUI.DiscImageCreator
         /// <param name="cssKey">_CSSKey.txt file location</param>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
-        private string GetDVDProtection(string cssKey, string disc)
+        private static string GetDVDProtection(string cssKey, string disc)
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(disc))
@@ -2189,7 +2189,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt/.img_EccEdc.txt file location</param>
         /// <returns>Error count if possible, -1 on error</returns>
-        private long GetErrorCount(string edcecc)
+        private static long GetErrorCount(string edcecc)
         {
             // TODO: Better usage of _mainInfo and _c2Error for uncorrectable errors
 
@@ -2236,7 +2236,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
-        private bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
+        private static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -2263,9 +2263,9 @@ namespace DICUI.DiscImageCreator
         /// Get the layerbreak from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
-        /// <param name="ignoreFirst">True if the first sector length is to be ignored, false otherwise</param>
+        /// <param name="xgd">True if XGD layerbreak info should be used, false otherwise</param>
         /// <returns>Layerbreak if possible, null on error</returns>
-        private string GetLayerbreak(string disc, bool ignoreFirst)
+        private static string GetLayerbreak(string disc, bool xgd)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -2275,29 +2275,37 @@ namespace DICUI.DiscImageCreator
             {
                 try
                 {
-                    // Fast forward to the layerbreak
                     string line = sr.ReadLine();
                     while (line != null)
                     {
-                        // We definitely found a single-layer disc
+                        // Trim the line for later use
+                        line = line.Trim();
+
+                        // Single-layer discs have no layerbreak
                         if (line.Contains("NumberOfLayers: Single Layer"))
                         {
                             return null;
                         }
-                        else if (line.Trim().StartsWith("========== SectorLength =========="))
+
+                        // Xbox discs have a special layerbreaks
+                        else if (xgd && line.StartsWith("LayerBreak"))
                         {
-                            // Skip the first one and unset the flag
-                            if (ignoreFirst)
-                                ignoreFirst = false;
-                            else
-                                break;
+                            // LayerBreak: <size> (L0 Video: <size>, L0 Middle: <size>, L0 Game: <size>)
+                            return line.Split(' ')[1];
+                        }
+
+                        // Dual-layer discs have a regular layerbreak
+                        else if (!xgd && line.StartsWith("LayerZeroSector"))
+                        {
+                            // LayerZeroSector: <size> (<hex>)
+                            return line.Split(' ')[1];
                         }
 
                         line = sr.ReadLine();
                     }
 
-                    // Now that we're at the layerbreak line, attempt to get the decimal version
-                    return sr.ReadLine().Trim().Split(' ')[1];
+                    // If we get to the end, there's an issue
+                    return null;
                 }
                 catch
                 {
@@ -2312,7 +2320,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="sub">.sub file location</param>
         /// <returns>Status of the LibCrypt data, if possible</returns>
-        private bool? GetLibCryptDetected(string sub)
+        private static bool? GetLibCryptDetected(string sub)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(sub))
@@ -2327,7 +2335,7 @@ namespace DICUI.DiscImageCreator
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
         /// <returns>PIC data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        private string GetPIC(string picPath)
+        private static string GetPIC(string picPath)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))
@@ -2353,7 +2361,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="edcecc">.img_EdcEcc.txt file location</param>
         /// <returns>Status of PS1 EDC, if possible</returns>
-        private bool? GetPlayStationEDCStatus(string edcecc)
+        private static bool? GetPlayStationEDCStatus(string edcecc)
         {
             // If one of the files doesn't exist, we can't get info from them
             if (!File.Exists(edcecc))
@@ -2409,7 +2417,7 @@ namespace DICUI.DiscImageCreator
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-        private bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        private static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
         {
             region = null; date = null;
 
@@ -2536,7 +2544,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        private string GetPlayStation2Version(char? driveLetter)
+        private static string GetPlayStation2Version(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -2582,7 +2590,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
-        private string GetPlayStation4Version(char? driveLetter)
+        private static string GetPlayStation4Version(char? driveLetter)
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -2619,7 +2627,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Newline-deliminated PVD if possible, null on error</returns>
-        private string GetPVD(string mainInfo)
+        private static string GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -2655,7 +2663,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        private static bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
         {
             serial = null; version = null; date = null;
 
@@ -2687,7 +2695,7 @@ namespace DICUI.DiscImageCreator
         /// <<param name="segaHeader">String representing a formatter variant of the  Sega CD header</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
         /// <remarks>Note that this works for MOST headers, except ones where the copyright stretches > 1 line</remarks>
-        private bool GetSegaCDBuildInfo(string segaHeader, out string serial, out string date)
+        private static bool GetSegaCDBuildInfo(string segaHeader, out string serial, out string date)
         {
             serial = null; date = null;
 
@@ -2770,7 +2778,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
         /// <returns>Header as a byte array if possible, null on error</returns>
-        private string GetSegaHeader(string mainInfo)
+        private static string GetSegaHeader(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(mainInfo))
@@ -2806,7 +2814,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetUMDAuxInfo(string disc, out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize)
+        private static bool GetUMDAuxInfo(string disc, out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize)
         {
             title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
 
@@ -2855,7 +2863,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="region">String representing the category</param>
         /// <returns>Category, if possible</returns>
-        private Category? GetUMDCategory(string category)
+        private static Category? GetUMDCategory(string category)
         {
             switch (category)
             {
@@ -2875,7 +2883,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Sample write offset if possible, null on error</returns>
-        private string GetWriteOffset(string disc)
+        private static string GetWriteOffset(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
@@ -2909,7 +2917,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
+        private static bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
         {
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
@@ -2978,7 +2986,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetXBOXDMIInfo(string dmi, out string serial, out string version, out Region? region)
+        private static bool GetXBOXDMIInfo(string dmi, out string serial, out string version, out Region? region)
         {
             serial = null; version = null; region = Region.World;
 
@@ -3009,7 +3017,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private bool GetXBOX360DMIInfo(string dmi, out string serial, out string version, out Region? region)
+        private static bool GetXBOX360DMIInfo(string dmi, out string serial, out string version, out Region? region)
         {
             serial = null; version = null; region = null;
 
@@ -3042,7 +3050,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        private Region? GetXBOXRegion(char region)
+        private static Region? GetXBOXRegion(char region)
         {
             switch (region)
             {

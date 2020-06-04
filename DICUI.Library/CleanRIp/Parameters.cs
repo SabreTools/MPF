@@ -170,7 +170,7 @@ namespace DICUI.CleanRip
         /// <param name="iso">Path to ISO file</param>
         /// <param name="dumpinfo">Path to discinfo file</param>
         /// <returns></returns>
-        private string GetCleanripDatfile(string iso, string dumpinfo)
+        private static string GetCleanripDatfile(string iso, string dumpinfo)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dumpinfo))
@@ -218,7 +218,7 @@ namespace DICUI.CleanRip
         /// <param name="region">Output region, if possible</param>
         /// <param name="version">Output internal version of the game</param>
         /// <returns></returns>
-        private bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version)
+        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version)
         {
             region = null; version = null;
 
