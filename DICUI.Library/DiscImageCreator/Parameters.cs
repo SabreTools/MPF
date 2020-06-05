@@ -2417,7 +2417,7 @@ namespace DICUI.DiscImageCreator
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-        public static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        private static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
         {
             region = null; date = null;
 
