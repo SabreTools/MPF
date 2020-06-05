@@ -1643,7 +1643,7 @@ namespace DICUI.DiscImageCreator
                     break;
 
                 case KnownSystem.KonamiPython2:
-                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
@@ -1751,7 +1751,7 @@ namespace DICUI.DiscImageCreator
                     break;
 
                 case KnownSystem.SonyPlayStation:
-                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationRegion, out string playstationDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out Region? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
@@ -1765,7 +1765,7 @@ namespace DICUI.DiscImageCreator
                     else
                         info.EDC.EDC = YesNo.NULL;
 
-                    info.CopyProtection.AntiModchip = GetAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
 
                     bool? psLibCryptStatus = GetLibCryptDetected(basePath + ".sub");
                     if (psLibCryptStatus == true)
@@ -1789,7 +1789,7 @@ namespace DICUI.DiscImageCreator
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
@@ -2022,43 +2022,6 @@ namespace DICUI.DiscImageCreator
         }
 
         #region Information Extraction Methods
-
-        /// <summary>
-        /// Get the existance of an anti-modchip string from the input file, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Antimodchip existance if possible, false on error</returns>
-        private static bool GetAntiModchipDetected(string disc)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-                return false;
-
-            using (StreamReader sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Check for either antimod string
-                    string line = sr.ReadLine().Trim();
-                    while (!sr.EndOfStream)
-                    {
-                        if (line.StartsWith("Detected anti-mod string"))
-                            return true;
-                        else if (line.StartsWith("No anti-mod string"))
-                            return false;
-
-                        line = sr.ReadLine().Trim();
-                    }
-
-                    return false;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
-                }
-            }
-        }
 
         /// <summary>
         /// Get the proper datfile from the input file, if possible
@@ -2353,6 +2316,43 @@ namespace DICUI.DiscImageCreator
             {
                 // We don't care what the error was right now
                 return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the existance of an anti-modchip string from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Anti-modchip existance if possible, false on error</returns>
+        private static bool GetPlayStationAntiModchipDetected(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return false;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Check for either antimod string
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line.StartsWith("Detected anti-mod string"))
+                            return true;
+                        else if (line.StartsWith("No anti-mod string"))
+                            return false;
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
             }
         }
 

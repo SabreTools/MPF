@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -386,13 +386,51 @@ namespace DICUI.Data
         #region Common Information Extraction
 
         /// <summary>
+        /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Anti-modchip existance if possible, false on error</returns>
+        protected static bool GetPlayStationAntiModchipDetected(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return false;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return false;
+
+            string enAntiModString = "     SOFTWARE TERMINATED\nCONSOLE MAY HAVE BEEN MODIFIED\n     CALL 1-888-780-7690";
+            string jpAntiModString = "強制終了しました。\n本体が改造されている\nおそれがあります。";
+
+            // Scan through each file to check for the anti-modchip strings
+            foreach (string path in Directory.EnumerateFiles(drivePath, "*", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    // TODO: This is a memory hog
+                    string fileContents = File.ReadAllText(path);
+                    if (fileContents.Contains(enAntiModString) || fileContents.Contains(jpAntiModString))
+                        return true;
+                }
+                catch
+                {
+                    // No-op, we don't care what the error was
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Get the EXE date from a PlayStation disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-        protected static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        protected static bool GetPlayStationExecutableInfo(char? driveLetter, out Region? region, out string date)
         {
             region = null; date = null;
 

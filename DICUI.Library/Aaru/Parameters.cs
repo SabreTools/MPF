@@ -1397,7 +1397,7 @@ namespace DICUI.Aaru
             switch (system)
             {
                 case KnownSystem.KonamiPython2:
-                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
@@ -1407,16 +1407,17 @@ namespace DICUI.Aaru
                     break;
 
                 case KnownSystem.SonyPlayStation:
-                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationRegion, out string playstationDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out Region? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
