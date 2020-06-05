@@ -2417,7 +2417,7 @@ namespace DICUI.DiscImageCreator
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-        private static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        public static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
         {
             region = null; date = null;
 
@@ -2437,31 +2437,26 @@ namespace DICUI.DiscImageCreator
             // Try both of the common paths that contain information
             string exeName = null;
 
-            // Try reading SYSTEM.CNF to find the "BOOT" value
-            if (File.Exists(systemCnfPath))
-            {
-                try
-                {
-                    using (StreamReader sr = File.OpenText(systemCnfPath))
-                    {
-                        // Not assuming any ordering, just in case
-                        string line = sr.ReadLine();
-                        while (!line.StartsWith("BOOT"))
-                            line = sr.ReadLine();
+            // Read the CNF file as an INI file
+            var keyValuePairs = IniParse.ParseIniFile(systemCnfPath);
+            string bootValue = string.Empty;
 
-                        // Once it finds the "BOOT" line, extract the name, if possible
-                        var match = Regex.Match(line, @"BOOT.*?=\s*cdrom.?:\\?(.*?)");
-                        if (match != null && match.Groups.Count > 1)
-                        {
-                            exeName = match.Groups[1].Value;
-                            exeName = exeName.Split(';')[0];
-                        }
-                    }
-                }
-                catch
+            // PlayStation uses "BOOT" as the key
+            if (keyValuePairs.ContainsKey("boot"))
+                bootValue = keyValuePairs["boot"];
+
+            // PlayStation 2 uses "BOOT2" as the key
+            if (keyValuePairs.ContainsKey("boot2"))
+                bootValue = keyValuePairs["boot2"];
+
+            // If we had any boot value, parse it and get the executable name
+            if (!string.IsNullOrEmpty(bootValue))
+            {
+                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)");
+                if (match != null && match.Groups.Count > 1)
                 {
-                    // We don't care what the error was
-                    return false;
+                    exeName = match.Groups[1].Value;
+                    exeName = exeName.Split(';')[0];
                 }
             }
 
@@ -2555,34 +2550,16 @@ namespace DICUI.DiscImageCreator
             if (!Directory.Exists(drivePath))
                 return null;
 
-            // If we can't find SYSTEM.CNF, we don't have a PlayStation 2 disc
+            // Get the SYSTEM.CNF path to check
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
-            if (!File.Exists(systemCnfPath))
-                return null;
 
-            // Try reading SYSTEM.CNF to find the "VER" value
-            try
-            {
-                using (StreamReader sr = File.OpenText(systemCnfPath))
-                {
-                    // Not assuming proper ordering, just in case
-                    string line = sr.ReadLine();
-                    while (!line.StartsWith("VER"))
-                        line = sr.ReadLine();
-
-                    // Once it finds the "VER" line, extract the version
-                    var match = Regex.Match(line, @"VER\s*=\s*(.*)");
-                    if (match != null && match.Groups.Count > 1)
-                        return match.Groups[1].Value;
-
-                    return null;
-                }
-            }
-            catch
-            {
-                // We don't care what the error was
-                return null;
-            }
+            // Try to parse the SYSTEM.CNF file
+            var keyValuePairs = IniParse.ParseIniFile(systemCnfPath);
+            if (keyValuePairs.ContainsKey("ver"))
+                return keyValuePairs["ver"];
+            
+            // If "VER" can't be found, we can't do much
+            return null;
         }
 
         /// <summary>
