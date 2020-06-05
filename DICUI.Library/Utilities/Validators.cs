@@ -918,22 +918,19 @@ namespace DICUI.Utilities
             }
 
             // Sony PlayStation and Sony PlayStation 2
-            if (File.Exists(Path.Combine(drivePath, "SYSTEM.CNF")))
+            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+            if (File.Exists(systemCnfPath))
             {
                 // Check for either BOOT or BOOT2
-                using (StreamReader reader = File.OpenText(Path.Combine(drivePath, "SYSTEM.CNF")))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        string line = reader.ReadLine();
-                        if (line.Contains("BOOT2"))
-                            return KnownSystem.SonyPlayStation2;
-                        else if (line.Contains("BOOT"))
-                            return KnownSystem.SonyPlayStation;
-                    }
-                }
-
-                // If we have a weird disc, just assume PS1
+                var systemCnf = new IniFile(systemCnfPath);
+                if (systemCnf.ContainsKey("BOOT"))
+                    return KnownSystem.SonyPlayStation;
+                else if (systemCnf.ContainsKey("BOOT2"))
+                    return KnownSystem.SonyPlayStation2;
+            }
+            else if (File.Exists(psxExePath))
+            {
                 return KnownSystem.SonyPlayStation;
             }
 

@@ -1653,7 +1653,7 @@ namespace DICUI.DiscImageCreator
                     break;
 
                 case KnownSystem.MicrosoftXBOX:
-                    if (GetXBOXAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
                     {
                         info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
                             $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
@@ -1662,7 +1662,7 @@ namespace DICUI.DiscImageCreator
                         info.Extras.SecuritySectorRanges = ss ?? "";
                     }
 
-                    if (GetXBOXDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
+                    if (GetXboxDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
                     {
                         info.CommonDiscInfo.Serial = serial ?? "";
                         info.VersionAndEditions.Version = version ?? "";
@@ -1672,7 +1672,7 @@ namespace DICUI.DiscImageCreator
                     break;
 
                 case KnownSystem.MicrosoftXBOX360:
-                    if (GetXBOXAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
                     {
                         info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
                             $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
@@ -1681,7 +1681,7 @@ namespace DICUI.DiscImageCreator
                         info.Extras.SecuritySectorRanges = ss360 ?? "";
                     }
 
-                    if (GetXBOX360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
+                    if (GetXbox360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
                     {
                         info.CommonDiscInfo.Serial = serial360 ?? "";
                         info.VersionAndEditions.Version = version360 ?? "";
@@ -1970,7 +1970,7 @@ namespace DICUI.DiscImageCreator
         private void SetBaseCommand(KnownSystem? system, MediaType? type)
         {
             // If we have an invalid combination, we should BaseCommand = null
-            if (!Utilities.Validators.GetValidMediaTypes(system).Contains(type))
+            if (!Validators.GetValidMediaTypes(system).Contains(type))
             {
                 BaseCommand = Command.NONE;
                 return;
@@ -2411,195 +2411,6 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the EXE date from a PlayStation disc, if possible
-        /// </summary>
-        /// <param name="driveLetter">Drive letter to use to check</param>
-        /// <param name="region">Output region, if possible</param>
-        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
-        /// <returns></returns>
-        private static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
-        {
-            region = null; date = null;
-
-            // If there's no drive letter, we can't do this part
-            if (driveLetter == null)
-                return false;
-
-            // If the folder no longer exists, we can't do this part
-            string drivePath = driveLetter + ":\\";
-            if (!Directory.Exists(drivePath))
-                return false;
-
-            // Get the two paths that we will need to check
-            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
-            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
-
-            // Try both of the common paths that contain information
-            string exeName = null;
-
-            // Read the CNF file as an INI file
-            var keyValuePairs = IniParse.ParseIniFile(systemCnfPath);
-            string bootValue = string.Empty;
-
-            // PlayStation uses "BOOT" as the key
-            if (keyValuePairs.ContainsKey("boot"))
-                bootValue = keyValuePairs["boot"];
-
-            // PlayStation 2 uses "BOOT2" as the key
-            if (keyValuePairs.ContainsKey("boot2"))
-                bootValue = keyValuePairs["boot2"];
-
-            // If we had any boot value, parse it and get the executable name
-            if (!string.IsNullOrEmpty(bootValue))
-            {
-                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)");
-                if (match != null && match.Groups.Count > 1)
-                {
-                    exeName = match.Groups[1].Value;
-                    exeName = exeName.Split(';')[0];
-                }
-            }
-
-            // If the SYSTEM.CNF value can't be found, try PSX.EXE
-            if (string.IsNullOrWhiteSpace(exeName) && File.Exists(psxExePath))
-                exeName = "PSX.EXE";
-
-            // If neither can be found, we return false
-            if (string.IsNullOrWhiteSpace(exeName))
-                return false;
-
-            // Standardized "S" serials
-            if (exeName.StartsWith("S"))
-            {
-                // string publisher = exeName[0] + exeName[1];
-                // char secondRegion = exeName[3];
-                switch (exeName[2])
-                {
-                    case 'A':
-                        region = Region.Asia;
-                        break;
-                    case 'C':
-                        region = Region.China;
-                        break;
-                    case 'E':
-                        region = Region.Europe;
-                        break;
-                    case 'J':
-                        region = Region.JapanKorea;
-                        break;
-                    case 'K':
-                        region = Region.Korea;
-                        break;
-                    case 'P':
-                        region = Region.Japan;
-                        break;
-                    case 'U':
-                        region = Region.USA;
-                        break;
-                }
-            }
-
-            // Special cases
-            else if (exeName.StartsWith("PAPX"))
-            {
-                region = Region.Japan;
-            }
-            else if (exeName.StartsWith("PABX"))
-            {
-                // Region appears entirely random
-            }
-            else if (exeName.StartsWith("PCBX"))
-            {
-                region = Region.Japan;
-            }
-            else if (exeName.StartsWith("PDBX"))
-            {
-                // Single disc known, Japan
-            }
-            else if (exeName.StartsWith("PEBX"))
-            {
-                // Single disc known, Europe
-            }
-
-            // Now that we have the EXE name, try to get the fileinfo for it
-            string exePath = Path.Combine(drivePath, exeName);
-            if (!File.Exists(exePath))
-                return false;
-
-            // Fix the Y2K timestamp issue
-            FileInfo fi = new FileInfo(exePath);
-            DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
-                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
-            date = dt.ToString("yyyy-MM-dd");
-            return true;
-        }
-
-        /// <summary>
-        /// Get the version from a PlayStation 2 disc, if possible
-        /// </summary>
-        /// <param name="driveLetter">Drive letter to use to check</param>
-        /// <returns>Game version if possible, null on error</returns>
-        private static string GetPlayStation2Version(char? driveLetter)
-        {
-            // If there's no drive letter, we can't do this part
-            if (driveLetter == null)
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            string drivePath = driveLetter + ":\\";
-            if (!Directory.Exists(drivePath))
-                return null;
-
-            // Get the SYSTEM.CNF path to check
-            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
-
-            // Try to parse the SYSTEM.CNF file
-            var keyValuePairs = IniParse.ParseIniFile(systemCnfPath);
-            if (keyValuePairs.ContainsKey("ver"))
-                return keyValuePairs["ver"];
-            
-            // If "VER" can't be found, we can't do much
-            return null;
-        }
-
-        /// <summary>
-        /// Get the version from a PlayStation 4 disc, if possible
-        /// </summary>
-        /// <param name="driveLetter">Drive letter to use to check</param>
-        /// <returns>Game version if possible, null on error</returns>
-        private static string GetPlayStation4Version(char? driveLetter)
-        {
-            // If there's no drive letter, we can't do this part
-            if (driveLetter == null)
-                return null;
-
-            // If the folder no longer exists, we can't do this part
-            string drivePath = driveLetter + ":\\";
-            if (!Directory.Exists(drivePath))
-                return null;
-
-            // If we can't find param.sfo, we don't have a PlayStation 4 disc
-            string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
-            if (!File.Exists(paramSfoPath))
-                return null;
-
-            // Let's try reading param.sfo to find the version at the end of the file
-            try
-            {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
-                {
-                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
-                    return new string(br.ReadChars(5));
-                }
-            }
-            catch
-            {
-                // We don't care what the error was
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Get the PVD from the input file, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
@@ -2836,26 +2647,6 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
-        /// Determine the category based on the UMDImageCreator string
-        /// </summary>
-        /// <param name="region">String representing the category</param>
-        /// <returns>Category, if possible</returns>
-        private static Category? GetUMDCategory(string category)
-        {
-            switch (category)
-            {
-                case "GAME":
-                    return Category.Games;
-                case "VIDEO":
-                    return Category.Video;
-                case "AUDIO":
-                    return Category.Audio;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get the write offset from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
@@ -2864,9 +2655,7 @@ namespace DICUI.DiscImageCreator
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
-            {
                 return null;
-            }
 
             using (StreamReader sr = File.OpenText(disc))
             {
@@ -2890,11 +2679,11 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the XBOX/360 auxiliary info from the outputted files, if possible
+        /// Get the XGD auxiliary info from the outputted files, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXBOXAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
+        private static bool GetXgdAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
         {
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
@@ -2906,46 +2695,45 @@ namespace DICUI.DiscImageCreator
             {
                 try
                 {
-                    // Fast forward to the Security Sector version and read it
-                    while (!sr.ReadLine().Trim().StartsWith("CPR_MAI Key")) ;
-                    ssver = sr.ReadLine().Trim().Split(' ')[4]; // "Version of challenge table: <VER>"
-
-                    // Fast forward to the Security Sector Ranges
-                    while (!sr.ReadLine().Trim().StartsWith("Number of security sector ranges:")) ;
-
-                    // Now that we're at the ranges, read each line in and concatenate
-                    Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
-                    string line = sr.ReadLine().Trim();
-                    while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
+                    while(!sr.EndOfStream)
                     {
-                        // If we have a recognized line format, parse it
-                        if (line.StartsWith("Layer "))
+                        string line = sr.ReadLine().Trim();
+
+                        // Security Sector version
+                        if (line.StartsWith("Version of challenge table"))
                         {
-                            var match = layerRegex.Match(line);
-                            ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                            ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
                         }
 
-                        line = sr.ReadLine().Trim();
-                    }
+                        // Security Sector ranges
+                        else if (line.StartsWith("Number of security sector ranges:"))
+                        {
+                            Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
 
-                    // Fast forward to the aux hashes
-                    while (!line.StartsWith("<rom"))
-                        line = sr.ReadLine().Trim();
+                            line = sr.ReadLine().Trim();
+                            while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
+                            {
+                                // If we have a recognized line format, parse it
+                                if (line.StartsWith("Layer "))
+                                {
+                                    var match = layerRegex.Match(line);
+                                    ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                                }
 
-                    // Read in the hashes to the proper parts
-                    while (line.StartsWith("<rom"))
-                    {
-                        if (line.Contains("SS.bin"))
-                            sshash = line;
-                        else if (line.Contains("PFI.bin"))
-                            pfihash = line;
-                        else if (line.Contains("DMI.bin"))
-                            dmihash = line;
+                                line = sr.ReadLine().Trim();
+                            }
+                        }
 
-                        if (sr.EndOfStream)
-                            break;
-
-                        line = sr.ReadLine().Trim();
+                        // Special File Hashes
+                        else if (line.StartsWith("<rom"))
+                        {
+                            if (line.Contains("SS.bin"))
+                                sshash = line;
+                            else if (line.Contains("PFI.bin"))
+                                pfihash = line;
+                            else if (line.Contains("DMI.bin"))
+                                dmihash = line;
+                        }
                     }
 
                     return true;
@@ -2959,11 +2747,11 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the XOX serial info from the DMI.bin file, if possible
+        /// Get the Xbox serial info from the DMI.bin file, if possible
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXBOXDMIInfo(string dmi, out string serial, out string version, out Region? region)
+        private static bool GetXboxDMIInfo(string dmi, out string serial, out string version, out Region? region)
         {
             serial = null; version = null; region = Region.World;
 
@@ -2979,7 +2767,7 @@ namespace DICUI.DiscImageCreator
 
                     serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}";
                     version = $"1.{str[5]}{str[6]}";
-                    region = GetXBOXRegion(str[7]);
+                    region = GetXgdRegion(str[7]);
                     return true;
                 }
                 catch
@@ -2990,13 +2778,13 @@ namespace DICUI.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the XBOX 360 serial info from the DMI.bin file, if possible
+        /// Get the Xbox 360 serial info from the DMI.bin file, if possible
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXBOX360DMIInfo(string dmi, out string serial, out string version, out Region? region)
+        private static bool GetXbox360DMIInfo(string dmi, out string serial, out string version, out Region? region)
         {
-            serial = null; version = null; region = null;
+            serial = null; version = null; region = Region.World;
 
             if (!File.Exists(dmi))
                 return false;
@@ -3010,7 +2798,7 @@ namespace DICUI.DiscImageCreator
 
                     serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}{str[5]}";
                     version = $"1.{str[6]}{str[7]}";
-                    region = GetXBOXRegion(str[8]);
+                    region = GetXgdRegion(str[8]);
                     // str[9], str[10], str[11] - unknown purpose
                     // str[12], str[13] - disc <12> of <13>
                     return true;
@@ -3019,34 +2807,6 @@ namespace DICUI.DiscImageCreator
                 {
                     return false;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Determine the region based on the XBOX serial character
-        /// </summary>
-        /// <param name="region">Character denoting the region</param>
-        /// <returns>Region, if possible</returns>
-        private static Region? GetXBOXRegion(char region)
-        {
-            switch (region)
-            {
-                case 'W':
-                    return Region.World;
-                case 'A':
-                    return Region.USA;
-                case 'J':
-                    return Region.JapanAsia;
-                case 'E':
-                    return Region.Europe;
-                case 'K':
-                    return Region.USAJapan;
-                case 'L':
-                    return Region.USAEurope;
-                case 'H':
-                    return Region.JapanEurope;
-                default:
-                    return null;
             }
         }
 

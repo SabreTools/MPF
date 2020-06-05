@@ -224,6 +224,8 @@ namespace DICUI.Data
             { }
         }
 
+        #region Parameter Parsing
+
         /// <summary>
         /// Returns whether or not the selected item exists
         /// </summary>
@@ -378,5 +380,261 @@ namespace DICUI.Data
 
             return true;
         }
+
+        #endregion
+
+        #region Common Information Extraction
+
+        /// <summary>
+        /// Get the EXE date from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <param name="region">Output region, if possible</param>
+        /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
+        /// <returns></returns>
+        protected static bool GetPlaystationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        {
+            region = null; date = null;
+
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return false;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return false;
+
+            // Get the two paths that we will need to check
+            string psxExePath = Path.Combine(drivePath, "PSX.EXE");
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+
+            // Try both of the common paths that contain information
+            string exeName = null;
+
+            // Read the CNF file as an INI file
+            var systemCnf = new IniFile(systemCnfPath);
+            string bootValue = string.Empty;
+
+            // PlayStation uses "BOOT" as the key
+            if (systemCnf.ContainsKey("BOOT"))
+                bootValue = systemCnf["BOOT"];
+
+            // PlayStation 2 uses "BOOT2" as the key
+            if (systemCnf.ContainsKey("BOOT2"))
+                bootValue = systemCnf["BOOT2"];
+
+            // If we had any boot value, parse it and get the executable name
+            if (!string.IsNullOrEmpty(bootValue))
+            {
+                var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)");
+                if (match != null && match.Groups.Count > 1)
+                {
+                    exeName = match.Groups[1].Value;
+                    exeName = exeName.Split(';')[0];
+                }
+            }
+
+            // If the SYSTEM.CNF value can't be found, try PSX.EXE
+            if (string.IsNullOrWhiteSpace(exeName) && File.Exists(psxExePath))
+                exeName = "PSX.EXE";
+
+            // If neither can be found, we return false
+            if (string.IsNullOrWhiteSpace(exeName))
+                return false;
+
+            // Get the region, if possible
+            region = GetPlayStationRegion(exeName);
+
+            // Now that we have the EXE name, try to get the fileinfo for it
+            string exePath = Path.Combine(drivePath, exeName);
+            if (!File.Exists(exePath))
+                return false;
+
+            // Fix the Y2K timestamp issue
+            FileInfo fi = new FileInfo(exePath);
+            DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
+                fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
+            date = dt.ToString("yyyy-MM-dd");
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 2 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        protected static string GetPlayStation2Version(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // Get the SYSTEM.CNF path to check
+            string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
+
+            // Try to parse the SYSTEM.CNF file
+            var systemCnf = new IniFile(systemCnfPath);
+            if (systemCnf.ContainsKey("VER"))
+                return systemCnf["VER"];
+            
+            // If "VER" can't be found, we can't do much
+            return null;
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 4 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        protected static string GetPlayStation4Version(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.sfo, we don't have a PlayStation 4 disc
+            string paramSfoPath = Path.Combine(drivePath, "bd", "param.sfo");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading param.sfo to find the version at the end of the file
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Category Extraction
+
+        /// <summary>
+        /// Determine the category based on the UMDImageCreator string
+        /// </summary>
+        /// <param name="region">String representing the category</param>
+        /// <returns>Category, if possible</returns>
+        protected static Category? GetUMDCategory(string category)
+        {
+            switch (category)
+            {
+                case "GAME":
+                    return Category.Games;
+                case "VIDEO":
+                    return Category.Video;
+                case "AUDIO":
+                    return Category.Audio;
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
+
+        #region Region Extraction
+
+        /// <summary>
+        /// Determine the region based on the PlayStation serial code
+        /// </summary>
+        /// <param name="serial">PlayStation serial code</param>
+        /// <returns>Region mapped from name, if possible</returns>
+        protected static Region? GetPlayStationRegion(string serial)
+        {
+            // Standardized "S" serials
+            if (serial.StartsWith("S"))
+            {
+                // string publisher = serial[0] + serial[1];
+                // char secondRegion = serial[3];
+                switch (serial[2])
+                {
+                    case 'A':
+                        return Region.Asia;
+                    case 'C':
+                        return Region.China;
+                    case 'E':
+                        return Region.Europe;
+                    case 'J':
+                        return Region.JapanKorea;
+                    case 'K':
+                        return Region.Korea;
+                    case 'P':
+                        return Region.Japan;
+                    case 'U':
+                        return Region.USA;
+                }
+            }
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PAPX"))
+                return Region.Japan;
+
+            // Region appears entirely random
+            else if (serial.StartsWith("PABX"))
+                return null;
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PCBX"))
+                return Region.Japan;
+
+            // Single disc known, Japan
+            else if (serial.StartsWith("PDBX"))
+                return Region.Japan;
+
+            // Single disc known, Europe
+            else if (serial.StartsWith("PEBX"))
+                return Region.Europe;
+
+            return null;
+        }
+
+        /// <summary>
+        /// Determine the region based on the XGD serial character
+        /// </summary>
+        /// <param name="region">Character denoting the region</param>
+        /// <returns>Region, if possible</returns>
+        protected static Region? GetXgdRegion(char region)
+        {
+            switch (region)
+            {
+                case 'W':
+                    return Region.World;
+                case 'A':
+                    return Region.USA;
+                case 'J':
+                    return Region.JapanAsia;
+                case 'E':
+                    return Region.Europe;
+                case 'K':
+                    return Region.USAJapan;
+                case 'L':
+                    return Region.USAEurope;
+                case 'H':
+                    return Region.JapanEurope;
+                default:
+                    return null;
+            }
+        }
+
+        #endregion
     }
 }

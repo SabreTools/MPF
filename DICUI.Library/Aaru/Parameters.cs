@@ -1396,7 +1396,38 @@ namespace DICUI.Aaru
 
             switch (system)
             {
+                case KnownSystem.KonamiPython2:
+                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                    }
 
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation:
+                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationRegion, out string playstationDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                    }
+
+                    break;
+
+                case KnownSystem.SonyPlayStation2:
+                    if (GetPlaystationExecutableInfo(drive?.Letter, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    {
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation4:
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
+                    break;
             }
         }
 
