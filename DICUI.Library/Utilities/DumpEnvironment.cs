@@ -563,7 +563,7 @@ namespace DICUI.Utilities
             {
                 case KnownSystem.SegaSaturn:
                     if (!File.Exists(SubdumpPath))
-                        return Result.Failure("Error! Could not find subdump!");
+                        return Result.Success("Could not find subdump! Skipping execution...");
 
                     ExecuteSubdump();
                     return Result.Success("subdump has finished!");
