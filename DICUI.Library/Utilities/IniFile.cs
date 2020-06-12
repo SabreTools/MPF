@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace DICUI.Utilities
 {
-    public class IniFile
+    public class IniFile : IDictionary<string, string>
     {
-        private Dictionary<string, string> _keyValuePairs;
+        private Dictionary<string, string> _keyValuePairs = new Dictionary<string, string>();
 
         public string this[string key]
         {
@@ -37,7 +38,6 @@ namespace DICUI.Utilities
         /// </summary>
         public IniFile()
         {
-            _keyValuePairs = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -54,14 +54,6 @@ namespace DICUI.Utilities
         public IniFile(Stream stream)
         {
             this.Parse(stream);
-        }
-
-        /// <summary>
-        /// Check if the key exists in the INI file
-        /// </summary>
-        public bool ContainsKey(string key)
-        {
-            return _keyValuePairs.ContainsKey(key.ToLowerInvariant());
         }
 
         /// <summary>
@@ -230,5 +222,75 @@ namespace DICUI.Utilities
 
             return true;
         }
+
+        #region IDictionary Impelementations
+
+        public ICollection<string> Keys => ((IDictionary<string, string>)_keyValuePairs).Keys;
+
+        public ICollection<string> Values => ((IDictionary<string, string>)_keyValuePairs).Values;
+
+        public int Count => ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).Count;
+
+        public bool IsReadOnly => ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).IsReadOnly;
+
+        public void Add(string key, string value)
+        {
+            ((IDictionary<string, string>)_keyValuePairs).Add(key.ToLowerInvariant(), value);
+        }
+
+        bool IDictionary<string, string>.Remove(string key)
+        {
+            return ((IDictionary<string, string>)_keyValuePairs).Remove(key.ToLowerInvariant());
+        }
+
+        public bool TryGetValue(string key, out string value)
+        {
+            return ((IDictionary<string, string>)_keyValuePairs).TryGetValue(key.ToLowerInvariant(), out value);
+        }
+
+        public void Add(KeyValuePair<string, string> item)
+        {
+            var newItem = new KeyValuePair<string, string>(item.Key.ToLowerInvariant(), item.Value);
+            ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).Add(newItem);
+        }
+
+        public void Clear()
+        {
+            ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, string> item)
+        {
+            var newItem = new KeyValuePair<string, string>(item.Key.ToLowerInvariant(), item.Value);
+            return ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).Contains(newItem);
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _keyValuePairs.ContainsKey(key.ToLowerInvariant());
+        }
+
+        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+        {
+            ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<string, string> item)
+        {
+            var newItem = new KeyValuePair<string, string>(item.Key.ToLowerInvariant(), item.Value);
+            return ((ICollection<KeyValuePair<string, string>>)_keyValuePairs).Remove(newItem);
+        }
+
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<string, string>>)_keyValuePairs).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)_keyValuePairs).GetEnumerator();
+        }
+
+        #endregion
     }
 }
