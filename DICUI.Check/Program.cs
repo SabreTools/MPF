@@ -2,6 +2,7 @@
 using System.IO;
 using DICUI.Data;
 using DICUI.Utilities;
+using DICUI.Web;
 
 namespace DICUI.Check
 {
@@ -100,6 +101,19 @@ namespace DICUI.Check
             // Make a new Progress object
             var progress = new Progress<Result>();
             progress.ProgressChanged += ProgressUpdated;
+
+            // If credentials are invalid, alert the user
+            if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+            {
+                using (CookieAwareWebClient wc = new CookieAwareWebClient())
+                {
+                    RedumpAccess access = new RedumpAccess();
+                    if (access.RedumpLogin(wc, username, password))
+                        Console.WriteLine("Redump username and password accepted!");
+                    else
+                        Console.WriteLine("Redump username and password denied!");
+                }
+            }
 
             // Loop through all the rest of the args
             for (int i = startIndex; i < args.Length; i++)
