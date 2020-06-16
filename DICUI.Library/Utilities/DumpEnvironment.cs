@@ -723,6 +723,10 @@ namespace DICUI.Utilities
                 }
             }
 
+            // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
+            if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
+                info.TracksAndWriteOffsets.ClrMameProData = null;
+
             // Extract info based generically on MediaType
             switch (Type)
             {

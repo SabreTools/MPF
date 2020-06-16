@@ -1577,7 +1577,6 @@ namespace DICUI.DiscImageCreator
                         info.SizeAndChecksums.CRC32 = crc32;
                         info.SizeAndChecksums.MD5 = md5;
                         info.SizeAndChecksums.SHA1 = sha1;
-                        info.TracksAndWriteOffsets.ClrMameProData = null;
                     }
 
                     // Deal with the layerbreak
