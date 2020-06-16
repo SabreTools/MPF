@@ -119,14 +119,14 @@ namespace DICUI.Check
             for (int i = startIndex; i < args.Length; i++)
             {
                 // Check for a file
-                if (!File.Exists(args[i]))
+                if (!File.Exists(args[i].Trim('"')))
                 {
-                    DisplayHelp($"{args[i]} does not exist");
+                    DisplayHelp($"{args[i].Trim('"')} does not exist");
                     return;
                 }
 
                 // Get the full file path
-                string filepath = Path.GetFullPath(args[i]);
+                string filepath = Path.GetFullPath(args[i].Trim('"'));
 
                 // Now populate an environment
                 // TODO: Replace this with Dictionary constructor
