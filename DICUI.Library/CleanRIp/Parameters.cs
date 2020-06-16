@@ -143,6 +143,19 @@ namespace DICUI.CleanRip
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
         {
             info.TracksAndWriteOffsets.ClrMameProData = GetCleanripDatfile(basePath + ".iso", basePath + "-dumpinfo.txt");
+            
+            // Get the individual hash data, as per internal
+            if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+            {
+                info.SizeAndChecksums.Size = size;
+                info.SizeAndChecksums.CRC32 = crc32;
+                info.SizeAndChecksums.MD5 = md5;
+                info.SizeAndChecksums.SHA1 = sha1;
+
+                // Dual-layer discs have the same size and layerbreak
+                if (size == 8511160320)
+                    info.SizeAndChecksums.Layerbreak = 2084960;
+            }            
 
             // Extract info based generically on MediaType
             switch (type)

@@ -386,6 +386,34 @@ namespace DICUI.Data
         #region Common Information Extraction
 
         /// <summary>
+        /// Get the split values for ISO-based media
+        /// </summary>
+        /// <param name="hashData">String representing the combined hash data</param>
+        /// <returns>True if extraction was successful, false otherwise</returns>
+        protected static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
+        {
+            size = -1; crc32 = null; md5 = null; sha1 = null;
+
+            if (string.IsNullOrWhiteSpace(hashData))
+                return false;
+
+            Regex hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
+            Match m = hashreg.Match(hashData);
+            if (m.Success)
+            {
+                Int64.TryParse(m.Groups[1].Value, out size);
+                crc32 = m.Groups[2].Value;
+                md5 = m.Groups[3].Value;
+                sha1 = m.Groups[4].Value;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
