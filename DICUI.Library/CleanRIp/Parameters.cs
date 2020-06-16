@@ -121,6 +121,7 @@ namespace DICUI.CleanRip
         {
             switch (type)
             {
+                case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return File.Exists(basePath + "-dumpinfo.txt")
@@ -168,8 +169,8 @@ namespace DICUI.CleanRip
 
                     if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion))
                     {
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? gcRegion;
-                        info.VersionAndEditions.Version = string.IsNullOrEmpty(info.VersionAndEditions.Version) ? gcVersion : info.VersionAndEditions.Version;
+                        info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
+                        info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
                     }
 
                     break;

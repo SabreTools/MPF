@@ -118,6 +118,7 @@ namespace DICUI.Utilities
 
                 // https://en.wikipedia.org/wiki/GameCube
                 case KnownSystem.NintendoGameCube:
+                    types.Add(MediaType.DVD); // Only added here to help users; not strictly correct
                     types.Add(MediaType.NintendoGameCubeGameDisc);
                     break;
 
@@ -128,6 +129,7 @@ namespace DICUI.Utilities
 
                 // https://en.wikipedia.org/wiki/Wii
                 case KnownSystem.NintendoWii:
+                    types.Add(MediaType.DVD); // Only added here to help users; not strictly correct
                     types.Add(MediaType.NintendoWiiOpticalDisc);
                     break;
 
