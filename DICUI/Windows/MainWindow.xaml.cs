@@ -533,7 +533,7 @@ namespace DICUI.Windows
                 if (result)
                 {
                     // Verify dump output and save it
-                    result = _env.VerifyAndSaveDumpOutput(progress,
+                    result = await _env.VerifyAndSaveDumpOutput(progress,
                         EjectWhenDoneCheckBox.IsChecked,
                         _uiOptions.ResetDriveAfterDump,
                         (si) =>
@@ -555,9 +555,6 @@ namespace DICUI.Windows
                         }
                     );
                 }
-
-                StatusLabel.Content = result ? "Dumping complete!" : result.Message;
-                ViewModels.LoggerViewModel.VerboseLogLn(result ? "Dumping complete!" : result.Message);
             }
             catch
             {

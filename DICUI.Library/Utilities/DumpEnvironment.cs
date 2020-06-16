@@ -479,27 +479,27 @@ namespace DICUI.Utilities
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        public Result VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc = null, bool resetDrive = false, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
+        public async Task<Result> VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc = null, bool resetDrive = false, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
         {
-            progress.Report(Result.Success("Gathering submission information... please wait!"));
+            progress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Check to make sure that the output had all the correct files
             if (!FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
             progress?.Report(Result.Success("Extracting output information from output files..."));
-            SubmissionInfo submissionInfo = ExtractOutputInformation(progress);
+            SubmissionInfo submissionInfo = await ExtractOutputInformation(progress);
             progress?.Report(Result.Success("Extracting information complete!"));
 
             if (ejectDisc == true)
             {
-                progress.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
+                progress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
                 EjectDisc();
             }
 
             if (resetDrive)
             {
-                progress.Report(Result.Success($"Resetting drive {Drive.Letter}"));
+                progress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
                 ResetDrive();
             }
 
@@ -523,7 +523,7 @@ namespace DICUI.Utilities
             else
                 progress?.Report(Result.Failure("Writing could not complete!"));
 
-            progress.Report(Result.Success("All submission information gathered!"));
+            progress?.Report(Result.Success("All submission information gathered!"));
 
             return Result.Success();
         }
@@ -634,7 +634,7 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="driveLetter">Drive letter to check</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
-        private SubmissionInfo ExtractOutputInformation(IProgress<Result> progress)
+        private async Task<SubmissionInfo> ExtractOutputInformation(IProgress<Result> progress)
         {
             // Ensure the current disc combination should exist
             if (!Validators.GetValidMediaTypes(System).Contains(Type))
@@ -830,7 +830,7 @@ namespace DICUI.Utilities
                         info.CommonDiscInfo.Comments += $"[T:ISBN] {(AddPlaceholders ? Template.OptionalValue : "")}";
 
                     progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    info.CopyProtection.Protection = GetCopyProtection();
+                    info.CopyProtection.Protection = await GetCopyProtection();
                     progress?.Report(Result.Success("Copy protection scan complete!"));
 
                     break;
@@ -1285,10 +1285,10 @@ namespace DICUI.Utilities
         /// Get the current copy protection scheme, if possible
         /// </summary>
         /// <returns>Copy protection scheme if possible, null on error</returns>
-        private string GetCopyProtection()
+        private async Task<string> GetCopyProtection()
         {
             if (ScanForProtection)
-                return Task.Run(() => Validators.RunProtectionScanOnPath(Drive.Letter + ":\\")).GetAwaiter().GetResult();
+                return await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\");
 
             return "(CHECK WITH PROTECTIONID)";
         }

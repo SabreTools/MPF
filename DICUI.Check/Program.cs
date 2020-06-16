@@ -144,7 +144,7 @@ namespace DICUI.Check
                 env.FixOutputPaths();
 
                 // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(progress);
+                var result = env.VerifyAndSaveDumpOutput(progress).ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }
         }
