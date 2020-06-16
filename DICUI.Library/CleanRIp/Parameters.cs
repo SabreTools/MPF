@@ -160,6 +160,7 @@ namespace DICUI.CleanRip
             // Extract info based generically on MediaType
             switch (type)
             {
+                case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     if (File.Exists(basePath + ".bca"))
