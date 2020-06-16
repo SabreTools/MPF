@@ -701,7 +701,7 @@ namespace DICUI.Utilities
                         {
                             if (GetISOHashValues(hashData, out long size, out string crc32, out string md5, out string sha1))
                             {
-                                List<int> newIds = access.ProcessSearch(wc, sha1);
+                                List<int> newIds = access.ProcessSearch(wc, sha1.ToLowerInvariant());
                                 if (info.MatchedIDs.Any())
                                     info.MatchedIDs = info.MatchedIDs.Intersect(newIds).ToList();
                                 else
