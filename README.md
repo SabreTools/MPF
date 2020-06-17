@@ -9,7 +9,7 @@ This is a community project, so if you have some time and knowledge to give, we'
 DICUI relies on the following projects:
 - **Aaru** by Claunia - Dumping - [GitHub](https://github.com/aaru-dps/Aaru)
 - **CleanRip** by emu_kidid - Offline dumping - [GitHub](https://github.com/emukidid/cleanrip)
-- **DD for Windows* - Dumping - [Homepage](http://www.chrysocome.net/dd);
+- **DD for Windows** - Dumping - [Homepage](http://www.chrysocome.net/dd);
 - **DiscImageCreator** by Sarami - Dumping - [GitHub](https://github.com/saramibreak/DiscImageCreator)
 - **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
 - **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
