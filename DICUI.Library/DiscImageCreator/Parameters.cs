@@ -1482,7 +1482,7 @@ namespace DICUI.DiscImageCreator
                         && (audioOnly || File.Exists(basePath + ".scm"))
                         && File.Exists(basePath + ".sub")
                         // && File.Exists(basePath + "_c2Error.txt") // Doesn't output on Linux
-                        && File.Exists(basePath + "_cmd.txt")
+                        // && File.Exists(basePath + "_cmd.txt") // Replaced by timestamp-named file
                         && File.Exists(basePath + "_disc.txt")
                         && File.Exists(basePath + "_drive.txt")
                         && File.Exists(basePath + "_img.cue")
@@ -1500,7 +1500,7 @@ namespace DICUI.DiscImageCreator
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     bool dicDump = File.Exists(basePath + ".dat")
-                        && File.Exists(basePath + "_cmd.txt")
+                        // && File.Exists(basePath + "_cmd.txt") // Replaced by timestamp-named file
                         && File.Exists(basePath + "_disc.txt")
                         && File.Exists(basePath + "_drive.txt")
                         && File.Exists(basePath + "_mainError.txt")
@@ -1512,7 +1512,7 @@ namespace DICUI.DiscImageCreator
                 case MediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
                     return File.Exists(basePath + ".dat")
-                        && File.Exists(basePath + "_cmd.txt")
+                       // && File.Exists(basePath + "_cmd.txt") // Replaced by timestamp-named file
                        && File.Exists(basePath + "_disc.txt");
 
                 case MediaType.UMD:
