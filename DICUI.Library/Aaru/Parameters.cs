@@ -2464,13 +2464,13 @@ namespace DICUI.Aaru
             string pvd = string.Empty;
 
             string emptyTime = "0000-00-00T00:00:00";
-            if (DateTime.Parse(creation) == DateTime.MinValue)
+            if (string.IsNullOrEmpty(creation) || DateTime.Parse(creation) == DateTime.MinValue)
                 creation = emptyTime;
-            if (DateTime.Parse(modification) == DateTime.MinValue)
+            if (string.IsNullOrEmpty(modification) || DateTime.Parse(modification) == DateTime.MinValue)
                 modification = emptyTime;
-            if (DateTime.Parse(expiration) == DateTime.MinValue)
+            if (string.IsNullOrEmpty(expiration) || DateTime.Parse(expiration) == DateTime.MinValue)
                 expiration = emptyTime;
-            if (DateTime.Parse(effective) == DateTime.MinValue)
+            if (string.IsNullOrEmpty(effective) || DateTime.Parse(effective) == DateTime.MinValue)
                 effective = emptyTime;
 
             byte[] creationBytes = modification.ToCharArray().Select(c => (byte)c).ToArray();
