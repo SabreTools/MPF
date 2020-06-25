@@ -187,6 +187,7 @@ x360            - Microsoft XBOX 360");
 -u                      - Set dumping program");
             Console.WriteLine();
             Console.WriteLine(@"Common Dumping Programs:
+aaru / chef     - Aaru
 cr / cleanrip   - CleanRip
 dic             - DiscImageCreator");
             Console.WriteLine("Run 'DICUI.Check.exe [-lp|--listprograms' for more options");
