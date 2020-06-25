@@ -144,6 +144,8 @@ namespace DICUI.Aaru
                     return FlagStrings.Fletcher32Long;
                 case Flag.Force:
                     return FlagStrings.ForceLong;
+                case Flag.Help:
+                    return FlagStrings.HelpLong;
                 case Flag.LongFormat:
                     return FlagStrings.LongFormatLong;
                 case Flag.LongSectors:

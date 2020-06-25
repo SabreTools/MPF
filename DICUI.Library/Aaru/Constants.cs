@@ -62,41 +62,42 @@ namespace DICUI.Aaru
     /// <summary>
     /// Supported encodings for Aaru
     /// </summary>
+    /// TODO: Use to verify encoding settings
     public static class EncodingStrings
     {
-        public static string ArabicMac = "x-mac-arabic";
-        public static string AtariASCII = "atascii";
-        public static string CentralEuropeanMac = "x-mac-ce";
-        public static string CommodorePETSCII = "petscii";
-        public static string CroatianMac = "x-mac-croatian";
-        public static string CyrillicMac = "x-mac-cryillic";
-        public static string FarsiMac = "x-mac-farsi";
-        public static string GreekMac = "x-mac-greek";
-        public static string HebrewMac = "x-mac-hebrew";
-        public static string RomanianMac = "x-mac-romanian";
-        public static string SinclairZXSpectrum = "spectrum";
-        public static string SinclairZX80 = "zx80";
-        public static string SinclairZX81 = "zx81";
-        public static string TurkishMac = "x-mac-turkish";
-        public static string UkrainianMac = "x-mac-ukrainian";
-        public static string Unicode = "utf-16";
-        public static string UnicodeBigEndian = "utf-16BE";
-        public static string UnicodeUTF32BigEndian = "utf-32BE";
-        public static string UnicodeUTF32 = "utf-32";
-        public static string UnicodeUTF7 = "utf-7";
-        public static string UnicodeUTF8 = "utf-8";
-        public static string USASCII = "us-ascii";
-        public static string WesternEuropeanAppleII = "apple2";
-        public static string WesternEuropeanAppleIIc = "apple2c";
-        public static string WesternEuropeanAppleIIe = "apple2e";
-        public static string WesternEuropeanAppleIIgs = "apple2gs";
-        public static string WesternEuropeanAppleLisa = "lisa";
-        public static string WesternEuropeanAtariST = "atarist";
-        public static string WesternEuropeanGEM = "gem";
-        public static string WesternEuropeanGEOS = "geos";
-        public static string WesternEuropeanISO = "iso-8859-1";
-        public static string WesternEuropeanMac = "macintosh";
-        public static string WesternEuropeanRadix50 = "radix50";
+        public const string ArabicMac = "x-mac-arabic";
+        public const string AtariASCII = "atascii";
+        public const string CentralEuropeanMac = "x-mac-ce";
+        public const string CommodorePETSCII = "petscii";
+        public const string CroatianMac = "x-mac-croatian";
+        public const string CyrillicMac = "x-mac-cryillic";
+        public const string FarsiMac = "x-mac-farsi";
+        public const string GreekMac = "x-mac-greek";
+        public const string HebrewMac = "x-mac-hebrew";
+        public const string RomanianMac = "x-mac-romanian";
+        public const string SinclairZXSpectrum = "spectrum";
+        public const string SinclairZX80 = "zx80";
+        public const string SinclairZX81 = "zx81";
+        public const string TurkishMac = "x-mac-turkish";
+        public const string UkrainianMac = "x-mac-ukrainian";
+        public const string Unicode = "utf-16";
+        public const string UnicodeBigEndian = "utf-16BE";
+        public const string UnicodeUTF32BigEndian = "utf-32BE";
+        public const string UnicodeUTF32 = "utf-32";
+        public const string UnicodeUTF7 = "utf-7";
+        public const string UnicodeUTF8 = "utf-8";
+        public const string USASCII = "us-ascii";
+        public const string WesternEuropeanAppleII = "apple2";
+        public const string WesternEuropeanAppleIIc = "apple2c";
+        public const string WesternEuropeanAppleIIe = "apple2e";
+        public const string WesternEuropeanAppleIIgs = "apple2gs";
+        public const string WesternEuropeanAppleLisa = "lisa";
+        public const string WesternEuropeanAtariST = "atarist";
+        public const string WesternEuropeanGEM = "gem";
+        public const string WesternEuropeanGEOS = "geos";
+        public const string WesternEuropeanISO = "iso-8859-1";
+        public const string WesternEuropeanMac = "macintosh";
+        public const string WesternEuropeanRadix50 = "radix50";
     }
 
     /// <summary>
@@ -129,6 +130,9 @@ namespace DICUI.Aaru
         public const string Fletcher32Long = "--fletcher32";
         public const string ForceShort = "-f";
         public const string ForceLong = "--force";
+        public const string HelpShort = "-h";
+        public const string HelpShortAlt = "-?";
+        public const string HelpLong = "--help";
         public const string LongFormatShort = "-l";
         public const string LongFormatLong = "--long-format";
         public const string LongSectorsShort = "-r";
@@ -231,225 +235,233 @@ namespace DICUI.Aaru
     /// <summary>
     /// Supported formats for Aaru
     /// </summary>
+    /// TODO: Use to verify format settings
     public static class FormatStrings
     {
         // Supported filters
-        public static string AppleDouble = "AppleDouble";
-        public static string AppleSingle = "AppleSingle";
-        public static string BZip2 = "BZip2";
-        public static string GZip = "GZip";
-        public static string LZip = "LZip";
-        public static string MacBinary = "MacBinary";
-        public static string NoFilter = "No filter";
-        public static string PCExchange = "PCExchange";
-        public static string XZ = "XZ";
+        public const string AppleDouble = "AppleDouble";
+        public const string AppleSingle = "AppleSingle";
+        public const string BZip2 = "BZip2";
+        public const string GZip = "GZip";
+        public const string LZip = "LZip";
+        public const string MacBinary = "MacBinary";
+        public const string NoFilter = "No filter";
+        public const string PCExchange = "PCExchange";
+        public const string XZ = "XZ";
 
         // Read-only media image formats
-        public static string AppleDiskArchivalRetrievalTool = "Apple Disk Archival/Retrieval Tool";
-        public static string AppleNewDiskImageFormat = "Apple New Disk Image Format";
-        public static string AppleNIB = "Apple NIB";
-        public static string BlindWrite4 = "BlindWrite 4";
-        public static string BlindWrite5 = "BlindWrite 5";
-        public static string CPCEMUDiskFileAndExtendedCPCDiskFile = "CPCEMU Disk-File and Extended CPC Disk-File";
-        public static string D2FDiskImage = "d2f disk image";
-        public static string D88DiskImage = "D88 Disk Image";
-        public static string DIMDiskImage = "DIM Disk Image";
-        public static string DiscFerret = "DiscFerret";
-        public static string DiscJuggler = "DiscJuggler";
-        public static string DreamcastGDIImage = "Dreamcast GDI image";
-        public static string DunfieldsIMD = "Dunfield's IMD";
-        public static string HDCopyDiskImage = "HD-Copy disk image";
-        public static string KryoFluxSTREAM = "KryoFlux STREAM";
-        public static string MAMECompressedHunksOfData = "MAME Compressed Hunks of Data";
-        public static string MicrosoftVHDX = "Microsoft VHDX";
-        public static string NeroBurningROMImage = "Nero Burning ROM image";
-        public static string PartCloneDiskImage = "PartClone disk image";
-        public static string PartimageDiskImage = "Partimage disk image";
-        public static string SpectrumFloppyDiskImage = "Spectrum Floppy Disk Image";
-        public static string SuperCardPro = "SuperCardPro";
-        public static string SydexCopyQM = "Sydex CopyQM";
-        public static string SydexTeleDisk = "Sydex TeleDisk";
+        public const string AppleDiskArchivalRetrievalTool = "Apple Disk Archival/Retrieval Tool";
+        public const string AppleNewDiskImageFormat = "Apple New Disk Image Format";
+        public const string AppleNIB = "Apple NIB";
+        public const string BlindWrite4 = "BlindWrite 4";
+        public const string BlindWrite5 = "BlindWrite 5";
+        public const string CPCEMUDiskFileAndExtendedCPCDiskFile = "CPCEMU Disk-File and Extended CPC Disk-File";
+        public const string D2FDiskImage = "d2f disk image";
+        public const string D88DiskImage = "D88 Disk Image";
+        public const string DIMDiskImage = "DIM Disk Image";
+        public const string DiscFerret = "DiscFerret";
+        public const string DiscJuggler = "DiscJuggler";
+        public const string DreamcastGDIImage = "Dreamcast GDI image";
+        public const string DunfieldsIMD = "Dunfield's IMD";
+        public const string HDCopyDiskImage = "HD-Copy disk image";
+        public const string KryoFluxSTREAM = "KryoFlux STREAM";
+        public const string MAMECompressedHunksOfData = "MAME Compressed Hunks of Data";
+        public const string MicrosoftVHDX = "Microsoft VHDX";
+        public const string NeroBurningROMImage = "Nero Burning ROM image";
+        public const string PartCloneDiskImage = "PartClone disk image";
+        public const string PartimageDiskImage = "Partimage disk image";
+        public const string SpectrumFloppyDiskImage = "Spectrum Floppy Disk Image";
+        public const string SuperCardPro = "SuperCardPro";
+        public const string SydexCopyQM = "Sydex CopyQM";
+        public const string SydexTeleDisk = "Sydex TeleDisk";
 
         // Read/write media image formats
-        public static string ACTApricotDiskImage = "ACT Apricot Disk Image";
-        public static string Alcohol120MediaDescriptorStructure = "Alcohol 120% Media Descriptor Structure";
-        public static string Anex86DiskImage = "Anex86 Disk Image";
-        public static string Apple2InterleavedDiskImage = "Apple ][Interleaved Disk Image";
-        public static string Apple2IMG = "Apple 2IMG";
-        public static string AppleDiskCopy42 = "Apple DiskCopy 4.2";
-        public static string AppleUniversalDiskImageFormat = "Apple Universal Disk Image Format";
-        public static string BasicLisaUtility = "Basic Lisa Utility";
-        public static string CDRDAOTocfile = "CDRDAO tocfile";
-        public static string CDRWinCuesheet = "CDRWin cuesheet";
-        public static string CisCopyDiskImageDCFile = "CisCopy Disk Image(DC-File)";
-        public static string CloneCD = "CloneCD";
-        public static string CopyTape = "CopyTape";
-        public static string DigitalResearchDiskCopy = "Digital Research DiskCopy";
-        public static string AaruFormat = "Aaru format";
-        public static string IBMSaveDskF = "IBM SaveDskF";
-        public static string MAXIDiskImage = "MAXI Disk image";
-        public static string ParallelsDiskImage = "Parallels disk image";
-        public static string QEMUCopyOnWriteDiskImage = "QEMU Copy-On-Write disk image";
-        public static string QEMUCopyOnWriteDiskImageV2 = "QEMU Copy-On-Write disk image v2";
-        public static string QEMUEnhancedDiskImage = "QEMU Enhanced Disk image";
-        public static string RawDiskImage = "Raw Disk Image";
-        public static string RayAracheliansDiskIMage = "Ray Arachelian's Disk IMage";
-        public static string RSIDEHardDiskImage = "RS-IDE Hard Disk Image";
-        public static string T98HardDiskImage = "T98 Hard Disk Image";
-        public static string T98NextNHDr0DiskImage = "T98-Next NHD r0 Disk Image";
-        public static string Virtual98DiskImage = "Virtual98 Disk Image";
-        public static string VirtualBoxDiskImage = "VirtualBox Disk Image";
-        public static string VirtualPC = "VirtualPC";
-        public static string VMwareDiskImage = "VMware disk image";
+        public const string AaruFormat = "Aaru Format";
+        public const string ACTApricotDiskImage = "ACT Apricot Disk Image";
+        public const string Alcohol120MediaDescriptorStructure = "Alcohol 120% Media Descriptor Structure";
+        public const string Anex86DiskImage = "Anex86 Disk Image";
+        public const string Apple2InterleavedDiskImage = "Apple ][Interleaved Disk Image";
+        public const string Apple2IMG = "Apple 2IMG";
+        public const string AppleDiskCopy42 = "Apple DiskCopy 4.2";
+        public const string AppleUniversalDiskImageFormat = "Apple Universal Disk Image Format";
+        public const string BasicLisaUtility = "Basic Lisa Utility";
+        public const string CDRDAOTocfile = "CDRDAO tocfile";
+        public const string CDRWinCuesheet = "CDRWin cuesheet";
+        public const string CisCopyDiskImageDCFile = "CisCopy Disk Image(DC-File)";
+        public const string CloneCD = "CloneCD";
+        public const string CopyTape = "CopyTape";
+        public const string DigitalResearchDiskCopy = "Digital Research DiskCopy";
+        public const string IBMSaveDskF = "IBM SaveDskF";
+        public const string MAXIDiskImage = "MAXI Disk image";
+        public const string ParallelsDiskImage = "Parallels disk image";
+        public const string QEMUCopyOnWriteDiskImage = "QEMU Copy-On-Write disk image";
+        public const string QEMUCopyOnWriteDiskImageV2 = "QEMU Copy-On-Write disk image v2";
+        public const string QEMUEnhancedDiskImage = "QEMU Enhanced Disk image";
+        public const string RawDiskImage = "Raw Disk Image";
+        public const string RayAracheliansDiskIMage = "Ray Arachelian's Disk IMage";
+        public const string RSIDEHardDiskImage = "RS-IDE Hard Disk Image";
+        public const string T98HardDiskImage = "T98 Hard Disk Image";
+        public const string T98NextNHDr0DiskImage = "T98-Next NHD r0 Disk Image";
+        public const string Virtual98DiskImage = "Virtual98 Disk Image";
+        public const string VirtualBoxDiskImage = "VirtualBox Disk Image";
+        public const string VirtualPC = "VirtualPC";
+        public const string VMwareDiskImage = "VMware disk image";
 
         // Supported filesystems for identification and information only
-        public static string AcornAdvancedDiscFilingSystem = "Acorn Advanced Disc Filing System";
-        public static string AlexanderOsipovDOSFileSystem = "Alexander Osipov DOS file system";
-        public static string AmigaDOSFilesystem = "Amiga DOS filesystem";
-        public static string AppleFileSystem = "Apple File System";
-        public static string AppleHFSPlusFilesystem = "Apple HFS+ filesystem";
-        public static string AppleHierarchicalFileSystem = "Apple Hierarchical File System";
-        public static string AppleProDOSFilesystem = "Apple ProDOS filesystem";
-        public static string AtheOSFilesystem = "AtheOS Filesystem";
-        public static string BeFilesystem = "Be Filesystem";
-        public static string BSDFastFileSystem = "BSD Fast File System(aka UNIX File System, UFS)";
-        public static string BTreeFileSystem = "B-tree file system";
-        public static string CommodoreFileSystem = "Commodore file system";
-        public static string CramFilesystem = "Cram filesystem";
-        public static string DumpEightPlugin = "dump(8) Plugin";
-        public static string ECMA67 = "ECMA-67";
-        public static string ExtentFileSystemPlugin = "Extent File System Plugin";
-        public static string F2FSPlugin = "F2FS Plugin";
-        public static string Files11OnDiskStructure = "Files-11 On-Disk Structure";
-        public static string FossilFilesystemPlugin = "Fossil Filesystem Plugin";
-        public static string HAMMERFilesystem = "HAMMER Filesystem";
-        public static string HighPerformanceOpticalFileSystem = "High Performance Optical File System";
-        public static string HPLogicalInterchangeFormatPlugin = "HP Logical Interchange Format Plugin";
-        public static string JFSPlugin = "JFS Plugin";
-        public static string LinuxExtendedFilesystem = "Linux extended Filesystem";
-        public static string LinuxExtendedFilesystem234 = "Linux extended Filesystem 2, 3 and 4";
-        public static string LocusFilesystemPlugin = "Locus Filesystem Plugin";
-        public static string MicroDOSFileSystem = "MicroDOS file system";
-        public static string MicrosoftExtendedFileAllocationTable = "Microsoft Extended File Allocation Table";
-        public static string MinixFilesystem = "Minix Filesystem";
-        public static string NewTechnologyFileSystem = "New Technology File System(NTFS)";
-        public static string NILFS2Plugin = "NILFS2 Plugin";
-        public static string NintendoOpticalFilesystems = "Nintendo optical filesystems";
-        public static string OS2HighPerformanceFileSystem = "OS/2 High Performance File System";
-        public static string OS9RandomBlockFilePlugin = "OS-9 Random Block File Plugin";
-        public static string PCEngineCDPlugin = "PC Engine CD Plugin";
-        public static string PCFXPlugin = "PC-FX Plugin";
-        public static string ProfessionalFileSystem = "Professional File System";
-        public static string QNX4Plugin = "QNX4 Plugin";
-        public static string QNX6Plugin = "QNX6 Plugin";
-        public static string ReiserFilesystemPlugin = "Reiser Filesystem Plugin";
-        public static string Reiser4FilesystemPlugin = "Reiser4 Filesystem Plugin";
-        public static string ResilientFileSystemPlugin = "Resilient File System plugin";
-        public static string RT11FileSystem = "RT-11 file system";
-        public static string SmartFileSystem = "SmartFileSystem";
-        public static string SolarOSFilesystem = "Solar_OS filesystem";
-        public static string SquashFilesystem = "Squash filesystem";
-        public static string UNICOSFilesystemPlugin = "UNICOS Filesystem Plugin";
-        public static string UniversalDiskFormat = "Universal Disk Format";
-        public static string UNIXBootFilesystem = "UNIX Boot filesystem";
-        public static string UNIXSystemVFilesystem = "UNIX System V filesystem";
-        public static string VeritasFilesystem = "Veritas filesystem";
-        public static string VMwareFilesystem = "VMware filesystem";
-        public static string XFSFilesystemPlugin = "XFS Filesystem Plugin";
-        public static string XiaFilesystem = "Xia filesystem";
-        public static string ZFSFilesystemPlugin = "ZFS Filesystem Plugin";
+        public const string AcornAdvancedDiscFilingSystem = "Acorn Advanced Disc Filing System";
+        public const string AlexanderOsipovDOSFileSystem = "Alexander Osipov DOS file system";
+        public const string AmigaDOSFilesystem = "Amiga DOS filesystem";
+        public const string AppleFileSystem = "Apple File System";
+        public const string AppleHFSPlusFilesystem = "Apple HFS+ filesystem";
+        public const string AppleHierarchicalFileSystem = "Apple Hierarchical File System";
+        public const string AppleProDOSFilesystem = "Apple ProDOS filesystem";
+        public const string AtheOSFilesystem = "AtheOS Filesystem";
+        public const string BeFilesystem = "Be Filesystem";
+        public const string BSDFastFileSystem = "BSD Fast File System(aka UNIX File System, UFS)";
+        public const string BTreeFileSystem = "B-tree file system";
+        public const string CommodoreFileSystem = "Commodore file system";
+        public const string CramFilesystem = "Cram filesystem";
+        public const string DumpEightPlugin = "dump(8) Plugin";
+        public const string ECMA67 = "ECMA-67";
+        public const string ExtentFileSystemPlugin = "Extent File System Plugin";
+        public const string F2FSPlugin = "F2FS Plugin";
+        public const string Files11OnDiskStructure = "Files-11 On-Disk Structure";
+        public const string FossilFilesystemPlugin = "Fossil Filesystem Plugin";
+        public const string HAMMERFilesystem = "HAMMER Filesystem";
+        public const string HighPerformanceOpticalFileSystem = "High Performance Optical File System";
+        public const string HPLogicalInterchangeFormatPlugin = "HP Logical Interchange Format Plugin";
+        public const string JFSPlugin = "JFS Plugin";
+        public const string LinuxExtendedFilesystem = "Linux extended Filesystem";
+        public const string LinuxExtendedFilesystem234 = "Linux extended Filesystem 2, 3 and 4";
+        public const string LocusFilesystemPlugin = "Locus Filesystem Plugin";
+        public const string MicroDOSFileSystem = "MicroDOS file system";
+        public const string MicrosoftExtendedFileAllocationTable = "Microsoft Extended File Allocation Table";
+        public const string MinixFilesystem = "Minix Filesystem";
+        public const string NewTechnologyFileSystem = "New Technology File System(NTFS)";
+        public const string NILFS2Plugin = "NILFS2 Plugin";
+        public const string NintendoOpticalFilesystems = "Nintendo optical filesystems";
+        public const string OS2HighPerformanceFileSystem = "OS/2 High Performance File System";
+        public const string OS9RandomBlockFilePlugin = "OS-9 Random Block File Plugin";
+        public const string PCEngineCDPlugin = "PC Engine CD Plugin";
+        public const string PCFXPlugin = "PC-FX Plugin";
+        public const string ProfessionalFileSystem = "Professional File System";
+        public const string QNX4Plugin = "QNX4 Plugin";
+        public const string QNX6Plugin = "QNX6 Plugin";
+        public const string ReiserFilesystemPlugin = "Reiser Filesystem Plugin";
+        public const string Reiser4FilesystemPlugin = "Reiser4 Filesystem Plugin";
+        public const string ResilientFileSystemPlugin = "Resilient File System plugin";
+        public const string RT11FileSystem = "RT-11 file system";
+        public const string SmartFileSystem = "SmartFileSystem";
+        public const string SolarOSFilesystem = "Solar_OS filesystem";
+        public const string SquashFilesystem = "Squash filesystem";
+        public const string UNICOSFilesystemPlugin = "UNICOS Filesystem Plugin";
+        public const string UniversalDiskFormat = "Universal Disk Format";
+        public const string UNIXBootFilesystem = "UNIX Boot filesystem";
+        public const string UNIXSystemVFilesystem = "UNIX System V filesystem";
+        public const string VeritasFilesystem = "Veritas filesystem";
+        public const string VMwareFilesystem = "VMware filesystem";
+        public const string XFSFilesystemPlugin = "XFS Filesystem Plugin";
+        public const string XiaFilesystem = "Xia filesystem";
+        public const string ZFSFilesystemPlugin = "ZFS Filesystem Plugin";
 
         // Supported filesystems that can read their contents
-        public static string AppleDOSFileSystem = "Apple DOS File System";
-        public static string AppleLisaFileSystem = "Apple Lisa File System";
-        public static string AppleMacintoshFileSystem = "Apple Macintosh File System";
-        public static string CPMFileSystem = "CP/M File System";
-        public static string FATXFilesystemPlugin = "FATX Filesystem Plugin";
-        public static string ISO9660Filesystem = "ISO9660 Filesystem";
-        public static string MicrosoftFileAllocationTable = "Microsoft File Allocation Table";
-        public static string OperaFilesystemPlugin = "Opera Filesystem Plugin";
-        public static string UCSDPascalFilesystem = "U.C.S.D.Pascal filesystem";
+        public const string AppleDOSFileSystem = "Apple DOS File System";
+        public const string AppleLisaFileSystem = "Apple Lisa File System";
+        public const string AppleMacintoshFileSystem = "Apple Macintosh File System";
+        public const string CPMFileSystem = "CP/M File System";
+        public const string FATXFilesystemPlugin = "FATX Filesystem Plugin";
+        public const string ISO9660Filesystem = "ISO9660 Filesystem";
+        public const string MicrosoftFileAllocationTable = "Microsoft File Allocation Table";
+        public const string OperaFilesystemPlugin = "Opera Filesystem Plugin";
+        public const string UCSDPascalFilesystem = "U.C.S.D.Pascal filesystem";
 
         // Supported partitioning schemes
-        public static string AcornFileCorePartitions = "Acorn FileCore partitions";
-        public static string ACTApricotPartitions = "ACT Apricot partitions";
-        public static string AmigaRigidDiskBlock = "Amiga Rigid Disk Block";
-        public static string ApplePartitionMap = "Apple Partition Map";
-        public static string AtariPartitions = "Atari partitions";
-        public static string BSDDisklabel = "BSD disklabel";
-        public static string DECDisklabel = "DEC disklabel";
-        public static string DragonFlyBSD64bitDisklabel = "DragonFly BSD 64-bit disklabel";
-        public static string GUIDPartitionTable = "GUID Partition Table";
-        public static string Human68kPartitions = "Human 68k partitions";
-        public static string MasterBootRecord = "Master Boot Record";
-        public static string NECPC9800PartitionTable = "NEC PC-9800 partition table";
-        public static string NeXTDisklabel = "NeXT Disklabel";
-        public static string Plan9PartitionTable = "Plan9 partition table";
-        public static string RioKarmaPartitioning = "Rio Karma partitioning";
-        public static string SGIDiskVolumeHeader = "SGI Disk Volume Header";
-        public static string SunDisklabel = "Sun Disklabel";
-        public static string UNIXHardwired = "UNIX hardwired";
-        public static string UNIXVTOC = "UNIX VTOC";
-        public static string XboxPartitioning = "Xbox partitioning";
-        public static string XENIX = "XENIX";
+        public const string AcornFileCorePartitions = "Acorn FileCore partitions";
+        public const string ACTApricotPartitions = "ACT Apricot partitions";
+        public const string AmigaRigidDiskBlock = "Amiga Rigid Disk Block";
+        public const string ApplePartitionMap = "Apple Partition Map";
+        public const string AtariPartitions = "Atari partitions";
+        public const string BSDDisklabel = "BSD disklabel";
+        public const string DECDisklabel = "DEC disklabel";
+        public const string DragonFlyBSD64bitDisklabel = "DragonFly BSD 64-bit disklabel";
+        public const string GUIDPartitionTable = "GUID Partition Table";
+        public const string Human68kPartitions = "Human 68k partitions";
+        public const string MasterBootRecord = "Master Boot Record";
+        public const string NECPC9800PartitionTable = "NEC PC-9800 partition table";
+        public const string NeXTDisklabel = "NeXT Disklabel";
+        public const string Plan9PartitionTable = "Plan9 partition table";
+        public const string RioKarmaPartitioning = "Rio Karma partitioning";
+        public const string SGIDiskVolumeHeader = "SGI Disk Volume Header";
+        public const string SunDisklabel = "Sun Disklabel";
+        public const string UNIXHardwired = "UNIX hardwired";
+        public const string UNIXVTOC = "UNIX VTOC";
+        public const string XboxPartitioning = "Xbox partitioning";
+        public const string XENIX = "XENIX";
     }
 
     /// <summary>
     /// Supported namespaces for Aaru
     /// </summary>
+    /// TODO: Use to verify namespace settings
     public static class NamespaceStrings
     {
         // Namespaces for Apple Lisa File System
-        public static string LisaOfficeSystem = "office";
-        public static string LisaPascalWorkshop = "workshop";
+        public const string LisaOfficeSystem = "office";
+        public const string LisaPascalWorkshop = "workshop"; // Default
 
         // Namespaces for ISO9660 Filesystem
-        public static string JolietVolumeDescriptor = "joliet";
-        public static string PrimaryVolumeDescriptor = "normal";
-        public static string PrimaryVolumeDescriptorwithEncoding = "romeo";
-        public static string RockRidge = "rrip";
-        public static string PrimaryVolumeDescriptorVersionSuffix = "vms";
+        public const string JolietVolumeDescriptor = "joliet"; // Default
+        public const string PrimaryVolumeDescriptor = "normal";
+        public const string PrimaryVolumeDescriptorwithEncoding = "romeo";
+        public const string RockRidge = "rrip";
+        public const string PrimaryVolumeDescriptorVersionSuffix = "vms";
 
         // Namespaces for Microsoft File Allocation Table
-        public static string DOS = "dos";
-        public static string LFNWhenAvailable = "ecs";
-        public static string LongFileNames = "lfn";
-        public static string WindowsNT = "nt";
-        public static string OS2Extended = "os2";
+        public const string DOS83UpperCase = "dos";
+        public const string LFNWhenAvailableWithFallback = "ecs"; // Default
+        public const string LongFileNames = "lfn";
+        public const string WindowsNT83MixedCase = "nt";
+        public const string OS2Extended = "os2";
     }
 
     /// <summary>
     /// Supported options for Aaru
     /// </summary>
+    /// TODO: Use to verify option settings
     public static class OptionStrings
     {
+        // Aaru format
+        public const string AaruCompress = "compress"; // boolean, default true;
+        public const string AaruDeduplicate = "deduplicate"; // boolean, default true
+        public const string AaruDictionary = "dictionary"; // number, default 33554432
+        public const string AaruMaxDDTSize = "max_ddt_size"; // number, default 256
+        public const string AaruMD5 = "md5"; // boolean, default false
+        public const string AaruSectorsPerBlock = "sectors_per_block"; // number, default 4096 [power of 2]
+        public const string AaruSHA1 = "sha1"; // boolean, default false
+        public const string AaruSHA256 = "sha256"; // boolean, default false
+        public const string AaruSpamSum = "spamsum"; // boolean, default false
+
         // ACT Apricot Disk Image
-        public static string ACTApricotDiskImageCompress = "compress"; // boolean, default false
+        public const string ACTApricotDiskImageCompress = "compress"; // boolean, default false
 
         // Apple DiskCopy 4.2
-        public static string AppleDiskCopyMacOSX = "macosx"; // boolean, default false
+        public const string AppleDiskCopyMacOSX = "macosx"; // boolean, default false
 
         // CDRDAO tocfile
-        public static string CDRDAOTocfileSeparate = "separate"; // boolean, default false
+        public const string CDRDAOTocfileSeparate = "separate"; // boolean, default false
 
         // CDRWin cuesheet
-        public static string CDRWinCuesheetSeparate = "separate"; // boolean, default false
+        public const string CDRWinCuesheetSeparate = "separate"; // boolean, default false
 
-        // Aaru format
-        public static string AaruDeduplicate = "deduplicate"; // boolean, default true
-        public static string AaruDictionary = "dictionary"; // number, default 33554432
-        public static string AaruMaxDDTSize = "max_ddt_size"; // number, default 256
-        public static string AaruMD5 = "md5"; // boolean, default false
-        public static string AaruNoCompress = "nocompress"; // boolean, default false
-        public static string AaruSectorsPerBlock = "sectors_per_block"; // number, default 4096
-        public static string AaruSHA1 = "sha1"; // boolean, default false
-        public static string AaruSHA256 = "sha256"; // boolean, default false
-        public static string AaruSpamSum = "spamsum"; // boolean, default false
+        // ISO9660 Filesystem
+        public const string ISO9660FSUseEvd = "use_evd"; // boolean, default false
+        public const string ISO9660FSUsePathTable = "use_path_table"; // boolean, default false
+        public const string ISO9660FSUseTransTbl = "use_trans_tbl"; // boolean, default false
 
         // VMware disk image
-        public static string VMwareDiskImageAdapterType = "adapter_type"; // string, default ide
-        public static string VMwareDiskImageHWVersion = "hwversion"; // number, default 4
-        public static string VMwareDiskImageSparse = "sparse"; // boolean, default false
-        public static string VMwareDiskImageSplit = "split"; // boolean, default false
+        public const string VMwareDiskImageAdapterType = "adapter_type"; // string, default ide [ide, lsilogic, buslogic, legacyESX]
+        public const string VMwareDiskImageHWVersion = "hwversion"; // number, default 4
+        public const string VMwareDiskImageSparse = "sparse"; // boolean, default false
+        public const string VMwareDiskImageSplit = "split"; // boolean, default false
     }
 }

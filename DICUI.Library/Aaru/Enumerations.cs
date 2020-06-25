@@ -71,6 +71,7 @@ namespace DICUI.Aaru
         Fletcher16,
         Fletcher32,
         Force,
+        Help,
         LongFormat,
         LongSectors,
         MD5,

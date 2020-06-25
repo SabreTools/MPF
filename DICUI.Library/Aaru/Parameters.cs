@@ -295,16 +295,20 @@ namespace DICUI.Aaru
             #region Pre-command flags
 
             // Debug
-            if (this[Flag.Debug] != null)
-                parameters.Add($"{Converters.LongName(Flag.Debug)} {this[Flag.Debug]}");
+            if (this[Flag.Debug] == true)
+                parameters.Add(Converters.LongName(Flag.Debug));
 
             // Verbose
-            if (this[Flag.Verbose] != null)
-                parameters.Add($"{Converters.LongName(Flag.Verbose)} {this[Flag.Verbose]}");
+            if (this[Flag.Verbose] == true)
+                parameters.Add(Converters.LongName(Flag.Verbose));
 
             // Version
-            if (this[Flag.Version] != null)
-                parameters.Add($"{Converters.LongName(Flag.Version)} {this[Flag.Version]}");
+            if (this[Flag.Version] == true)
+                parameters.Add(Converters.LongName(Flag.Version));
+
+            // Help
+            if (this[Flag.Help] == true)
+                parameters.Add(Converters.LongName(Flag.Version));
 
             #endregion
 
@@ -318,246 +322,246 @@ namespace DICUI.Aaru
             // Adler-32
             if (GetSupportedCommands(Flag.Adler32).Contains(BaseCommand))
             {
-                if (this[Flag.Adler32] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Adler32)} {this[Flag.Adler32]}");
+                if (this[Flag.Adler32] == true)
+                    parameters.Add(Converters.LongName(Flag.Adler32));
             }
 
             // Clear
             if (GetSupportedCommands(Flag.Clear).Contains(BaseCommand))
             {
-                if (this[Flag.Clear] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Clear)} {this[Flag.Clear]}");
+                if (this[Flag.Clear] == true)
+                    parameters.Add(Converters.LongName(Flag.Clear));
             }
 
             // Clear All
             if (GetSupportedCommands(Flag.ClearAll).Contains(BaseCommand))
             {
-                if (this[Flag.ClearAll] != null)
-                    parameters.Add($"{Converters.LongName(Flag.ClearAll)} {this[Flag.ClearAll]}");
+                if (this[Flag.ClearAll] == true)
+                    parameters.Add(Converters.LongName(Flag.ClearAll));
             }
 
             // CRC16
             if (GetSupportedCommands(Flag.CRC16).Contains(BaseCommand))
             {
-                if (this[Flag.CRC16] != null)
-                    parameters.Add($"{Converters.LongName(Flag.CRC16)} {this[Flag.CRC16]}");
+                if (this[Flag.CRC16] == true)
+                    parameters.Add(Converters.LongName(Flag.CRC16));
             }
 
             // CRC32
             if (GetSupportedCommands(Flag.CRC32).Contains(BaseCommand))
             {
-                if (this[Flag.CRC32] != null)
-                    parameters.Add($"{Converters.LongName(Flag.CRC32)} {this[Flag.CRC32]}");
+                if (this[Flag.CRC32] == true)
+                    parameters.Add(Converters.LongName(Flag.CRC32));
             }
 
             // CRC64
             if (GetSupportedCommands(Flag.CRC64).Contains(BaseCommand))
             {
-                if (this[Flag.CRC64] != null)
-                    parameters.Add($"{Converters.LongName(Flag.CRC64)} {this[Flag.CRC64]}");
+                if (this[Flag.CRC64] == true)
+                    parameters.Add(Converters.LongName(Flag.CRC64));
             }
 
             // Disk Tags
             if (GetSupportedCommands(Flag.DiskTags).Contains(BaseCommand))
             {
-                if (this[Flag.DiskTags] != null)
-                    parameters.Add($"{Converters.LongName(Flag.DiskTags)} {this[Flag.DiskTags]}");
+                if (this[Flag.DiskTags] == true)
+                    parameters.Add(Converters.LongName(Flag.DiskTags));
             }
 
             // Duplicated Sectors
             if (GetSupportedCommands(Flag.DuplicatedSectors).Contains(BaseCommand))
             {
-                if (this[Flag.DuplicatedSectors] != null)
-                    parameters.Add($"{Converters.LongName(Flag.DuplicatedSectors)} {this[Flag.DuplicatedSectors]}");
+                if (this[Flag.DuplicatedSectors] == true)
+                    parameters.Add(Converters.LongName(Flag.DuplicatedSectors));
             }
 
             // Extended Attributes
             if (GetSupportedCommands(Flag.ExtendedAttributes).Contains(BaseCommand))
             {
-                if (this[Flag.ExtendedAttributes] != null)
-                    parameters.Add($"{Converters.LongName(Flag.ExtendedAttributes)} {this[Flag.ExtendedAttributes]}");
+                if (this[Flag.ExtendedAttributes] == true)
+                    parameters.Add(Converters.LongName(Flag.ExtendedAttributes));
             }
 
             // Filesystems
             if (GetSupportedCommands(Flag.Filesystems).Contains(BaseCommand))
             {
-                if (this[Flag.Filesystems] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Filesystems)} {this[Flag.Filesystems]}");
+                if (this[Flag.Filesystems] == true)
+                    parameters.Add(Converters.LongName(Flag.Filesystems));
             }
 
             // First Pregap
             if (GetSupportedCommands(Flag.FirstPregap).Contains(BaseCommand))
             {
-                if (this[Flag.FirstPregap] != null)
-                    parameters.Add($"{Converters.LongName(Flag.FirstPregap)} {this[Flag.FirstPregap]}");
+                if (this[Flag.FirstPregap] == true)
+                    parameters.Add(Converters.LongName(Flag.FirstPregap));
             }
 
             // Fix Offset
             if (GetSupportedCommands(Flag.FixOffset).Contains(BaseCommand))
             {
-                if (this[Flag.FixOffset] != null)
-                    parameters.Add($"{Converters.LongName(Flag.FixOffset)} {this[Flag.FixOffset]}");
+                if (this[Flag.FixOffset] == true)
+                    parameters.Add(Converters.LongName(Flag.FixOffset));
             }
 
             // Fletcher-16
             if (GetSupportedCommands(Flag.Fletcher16).Contains(BaseCommand))
             {
-                if (this[Flag.Fletcher16] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Fletcher16)} {this[Flag.Fletcher16]}");
+                if (this[Flag.Fletcher16] == true)
+                    parameters.Add(Converters.LongName(Flag.Fletcher16));
             }
 
             // Fletcher-32
             if (GetSupportedCommands(Flag.Fletcher32).Contains(BaseCommand))
             {
-                if (this[Flag.Fletcher32] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Fletcher32)} {this[Flag.Fletcher32]}");
+                if (this[Flag.Fletcher32] == true)
+                    parameters.Add(Converters.LongName(Flag.Fletcher32));
             }
 
             // Force
             if (GetSupportedCommands(Flag.Force).Contains(BaseCommand))
             {
-                if (this[Flag.Force] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Force)} {this[Flag.Force]}");
+                if (this[Flag.Force] == true)
+                    parameters.Add(Converters.LongName(Flag.Force));
             }
 
             // Long Format
             if (GetSupportedCommands(Flag.LongFormat).Contains(BaseCommand))
             {
-                if (this[Flag.LongFormat] != null)
-                    parameters.Add($"{Converters.LongName(Flag.LongFormat)} {this[Flag.LongFormat]}");
+                if (this[Flag.LongFormat] == true)
+                    parameters.Add(Converters.LongName(Flag.LongFormat));
             }
 
             // Long Sectors
             if (GetSupportedCommands(Flag.LongSectors).Contains(BaseCommand))
             {
-                if (this[Flag.LongSectors] != null)
-                    parameters.Add($"{Converters.LongName(Flag.LongSectors)} {this[Flag.LongSectors]}");
+                if (this[Flag.LongSectors] == true)
+                    parameters.Add(Converters.LongName(Flag.LongSectors));
             }
 
             // MD5
             if (GetSupportedCommands(Flag.MD5).Contains(BaseCommand))
             {
-                if (this[Flag.MD5] != null)
-                    parameters.Add($"{Converters.LongName(Flag.MD5)} {this[Flag.MD5]}");
+                if (this[Flag.MD5] == true)
+                    parameters.Add(Converters.LongName(Flag.MD5));
             }
 
             // Metadata
             if (GetSupportedCommands(Flag.Metadata).Contains(BaseCommand))
             {
-                if (this[Flag.Metadata] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Metadata)} {this[Flag.Metadata]}");
+                if (this[Flag.Metadata] == true)
+                    parameters.Add(Converters.LongName(Flag.Metadata));
             }
 
             // Partitions
             if (GetSupportedCommands(Flag.Partitions).Contains(BaseCommand))
             {
-                if (this[Flag.Partitions] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Partitions)} {this[Flag.Partitions]}");
+                if (this[Flag.Partitions] == true)
+                    parameters.Add(Converters.LongName(Flag.Partitions));
             }
 
             // Persistent
             if (GetSupportedCommands(Flag.Persistent).Contains(BaseCommand))
             {
-                if (this[Flag.Persistent] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Persistent)} {this[Flag.Persistent]}");
+                if (this[Flag.Persistent] == true)
+                    parameters.Add(Converters.LongName(Flag.Persistent));
             }
 
             // Resume
             if (GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
             {
-                if (this[Flag.Resume] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Resume)} {this[Flag.Resume]}");
+                if (this[Flag.Resume] == true)
+                    parameters.Add(Converters.LongName(Flag.Resume));
             }
 
             // Sector Tags
             if (GetSupportedCommands(Flag.SectorTags).Contains(BaseCommand))
             {
-                if (this[Flag.SectorTags] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SectorTags)} {this[Flag.SectorTags]}");
+                if (this[Flag.SectorTags] == true)
+                    parameters.Add(Converters.LongName(Flag.SectorTags));
             }
 
             // Separated Tracks
             if (GetSupportedCommands(Flag.SeparatedTracks).Contains(BaseCommand))
             {
-                if (this[Flag.SeparatedTracks] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SeparatedTracks)} {this[Flag.SeparatedTracks]}");
+                if (this[Flag.SeparatedTracks] == true)
+                    parameters.Add(Converters.LongName(Flag.SeparatedTracks));
             }
 
             // SHA-1
             if (GetSupportedCommands(Flag.SHA1).Contains(BaseCommand))
             {
-                if (this[Flag.SHA1] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SHA1)} {this[Flag.SHA1]}");
+                if (this[Flag.SHA1] == true)
+                    parameters.Add(Converters.LongName(Flag.SHA1));
             }
 
             // SHA-256
             if (GetSupportedCommands(Flag.SHA256).Contains(BaseCommand))
             {
-                if (this[Flag.SHA256] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SHA256)} {this[Flag.SHA256]}");
+                if (this[Flag.SHA256] == true)
+                    parameters.Add(Converters.LongName(Flag.SHA256));
             }
 
             // SHA-384
             if (GetSupportedCommands(Flag.SHA384).Contains(BaseCommand))
             {
-                if (this[Flag.SHA384] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SHA384)} {this[Flag.SHA384]}");
+                if (this[Flag.SHA384] == true)
+                    parameters.Add(Converters.LongName(Flag.SHA384));
             }
 
             // SHA-512
             if (GetSupportedCommands(Flag.SHA512).Contains(BaseCommand))
             {
-                if (this[Flag.SHA512] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SHA512)} {this[Flag.SHA512]}");
+                if (this[Flag.SHA512] == true)
+                    parameters.Add(Converters.LongName(Flag.SHA512));
             }
 
             // SpamSum
             if (GetSupportedCommands(Flag.SpamSum).Contains(BaseCommand))
             {
-                if (this[Flag.SpamSum] != null)
-                    parameters.Add($"{Converters.LongName(Flag.SpamSum)} {this[Flag.SpamSum]}");
+                if (this[Flag.SpamSum] == true)
+                    parameters.Add(Converters.LongName(Flag.SpamSum));
             }
 
             // Stop on Error
             if (GetSupportedCommands(Flag.StopOnError).Contains(BaseCommand))
             {
-                if (this[Flag.StopOnError] != null)
-                    parameters.Add($"{Converters.LongName(Flag.StopOnError)} {this[Flag.StopOnError]}");
+                if (this[Flag.StopOnError] == true)
+                    parameters.Add(Converters.LongName(Flag.StopOnError));
             }
 
             // Tape
             if (GetSupportedCommands(Flag.Tape).Contains(BaseCommand))
             {
-                if (this[Flag.Tape] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Tape)} {this[Flag.Tape]}");
+                if (this[Flag.Tape] == true)
+                    parameters.Add(Converters.LongName(Flag.Tape));
             }
 
             // Trim
             if (GetSupportedCommands(Flag.Trim).Contains(BaseCommand))
             {
-                if (this[Flag.Trim] != null)
-                    parameters.Add($"{Converters.LongName(Flag.Trim)} {this[Flag.Trim]}");
+                if (this[Flag.Trim] == true)
+                    parameters.Add(Converters.LongName(Flag.Trim));
             }
 
             // Verify Disc
             if (GetSupportedCommands(Flag.VerifyDisc).Contains(BaseCommand))
             {
-                if (this[Flag.VerifyDisc] != null)
-                    parameters.Add($"{Converters.LongName(Flag.VerifyDisc)} {this[Flag.VerifyDisc]}");
+                if (this[Flag.VerifyDisc] == true)
+                    parameters.Add(Converters.LongName(Flag.VerifyDisc));
             }
 
             // Verify Sectors
             if (GetSupportedCommands(Flag.VerifySectors).Contains(BaseCommand))
             {
-                if (this[Flag.VerifySectors] != null)
-                    parameters.Add($"{Converters.LongName(Flag.VerifySectors)} {this[Flag.VerifySectors]}");
+                if (this[Flag.VerifySectors] == true)
+                    parameters.Add(Converters.LongName(Flag.VerifySectors));
             }
 
             // Whole Disc
             if (GetSupportedCommands(Flag.WholeDisc).Contains(BaseCommand))
             {
-                if (this[Flag.WholeDisc] != null)
-                    parameters.Add($"{Converters.LongName(Flag.WholeDisc)} {this[Flag.WholeDisc]}");
+                if (this[Flag.WholeDisc] == true)
+                    parameters.Add(Converters.LongName(Flag.WholeDisc));
             }
 
             #endregion
@@ -632,11 +636,16 @@ namespace DICUI.Aaru
 
             #region Int64 flags
 
-            // Length -- TODO: Support "all" case
+            // Length
             if (GetSupportedCommands(Flag.Length).Contains(BaseCommand))
             {
                 if (this[Flag.Length] == true && LengthValue != null)
-                    parameters.Add($"{Converters.LongName(Flag.Length)} {LengthValue}");
+                {
+                    if (LengthValue >= 0)
+                        parameters.Add($"{Converters.LongName(Flag.Length)} {LengthValue}");
+                    else if (LengthValue == -1 && BaseCommand == Command.ImageDecode)
+                        parameters.Add($"{Converters.LongName(Flag.Length)} all");
+                }
             }
 
             // Start
@@ -942,13 +951,17 @@ namespace DICUI.Aaru
                 int keyCount = Keys.Count();
 
                 // Debug
-                ProcessBooleanParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, Flag.Debug, ref start);
+                ProcessFlagParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, Flag.Debug, ref start);
 
                 // Verbose
-                ProcessBooleanParameter(parts, FlagStrings.VerboseShort, FlagStrings.VerboseLong, Flag.Verbose, ref start);
+                ProcessFlagParameter(parts, FlagStrings.VerboseShort, FlagStrings.VerboseLong, Flag.Verbose, ref start);
 
-                // Verbose
-                ProcessBooleanParameter(parts, null, FlagStrings.VersionLong, Flag.Version, ref start);
+                // Version
+                ProcessFlagParameter(parts, null, FlagStrings.VersionLong, Flag.Version, ref start);
+
+                // Help
+                ProcessFlagParameter(parts, FlagStrings.HelpShort, FlagStrings.HelpLong, Flag.Help, ref start);
+                ProcessFlagParameter(parts, FlagStrings.HelpShortAlt, null, Flag.Help, ref start);
 
                 // If we didn't add any new flags, break out since we might be at command handling
                 if (keyCount == Keys.Count())
@@ -980,109 +993,109 @@ namespace DICUI.Aaru
                 #region Boolean flags
 
                 // Adler-32
-                ProcessBooleanParameter(parts, FlagStrings.Adler32Short, FlagStrings.Adler32Long, Flag.Adler32, ref i);
+                ProcessFlagParameter(parts, FlagStrings.Adler32Short, FlagStrings.Adler32Long, Flag.Adler32, ref i);
 
                 // Clear
-                ProcessBooleanParameter(parts, null, FlagStrings.ClearLong, Flag.Clear, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.ClearLong, Flag.Clear, ref i);
 
                 // Clear All
-                ProcessBooleanParameter(parts, null, FlagStrings.ClearAllLong, Flag.ClearAll, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.ClearAllLong, Flag.ClearAll, ref i);
 
                 // CRC16
-                ProcessBooleanParameter(parts, null, FlagStrings.CRC16Long, Flag.CRC16, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.CRC16Long, Flag.CRC16, ref i);
 
                 // CRC32
-                ProcessBooleanParameter(parts, FlagStrings.CRC32Short, FlagStrings.CRC32Long, Flag.CRC32, ref i);
+                ProcessFlagParameter(parts, FlagStrings.CRC32Short, FlagStrings.CRC32Long, Flag.CRC32, ref i);
 
                 // CRC64
-                ProcessBooleanParameter(parts, null, FlagStrings.CRC64Long, Flag.CRC64, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.CRC64Long, Flag.CRC64, ref i);
 
                 // Disk Tags
-                ProcessBooleanParameter(parts, FlagStrings.DiskTagsShort, FlagStrings.DiskTagsLong, Flag.DiskTags, ref i);
+                ProcessFlagParameter(parts, FlagStrings.DiskTagsShort, FlagStrings.DiskTagsLong, Flag.DiskTags, ref i);
 
                 // Deduplicated Sectors
-                ProcessBooleanParameter(parts, FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, Flag.DuplicatedSectors, ref i);
+                ProcessFlagParameter(parts, FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, Flag.DuplicatedSectors, ref i);
 
                 // Extended Attributes
-                ProcessBooleanParameter(parts, FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, Flag.ExtendedAttributes, ref i);
+                ProcessFlagParameter(parts, FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, Flag.ExtendedAttributes, ref i);
 
                 // Filesystems
-                ProcessBooleanParameter(parts, FlagStrings.FilesystemsShort, FlagStrings.FilesystemsLong, Flag.Filesystems, ref i);
+                ProcessFlagParameter(parts, FlagStrings.FilesystemsShort, FlagStrings.FilesystemsLong, Flag.Filesystems, ref i);
 
                 // First Pregap
-                ProcessBooleanParameter(parts, null, FlagStrings.FirstPregapLong, Flag.FirstPregap, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.FirstPregapLong, Flag.FirstPregap, ref i);
 
                 // Fix Offset
-                ProcessBooleanParameter(parts, null, FlagStrings.FixOffsetLong, Flag.FixOffset, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.FixOffsetLong, Flag.FixOffset, ref i);
 
                 // Fletcher-16
-                ProcessBooleanParameter(parts, null, FlagStrings.Fletcher16Long, Flag.Fletcher16, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.Fletcher16Long, Flag.Fletcher16, ref i);
 
                 // Fletcher-32
-                ProcessBooleanParameter(parts, null, FlagStrings.Fletcher32Long, Flag.Fletcher32, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.Fletcher32Long, Flag.Fletcher32, ref i);
 
                 // Force
-                ProcessBooleanParameter(parts, FlagStrings.ForceShort, FlagStrings.ForceLong, Flag.Force, ref i);
+                ProcessFlagParameter(parts, FlagStrings.ForceShort, FlagStrings.ForceLong, Flag.Force, ref i);
 
                 // Long Format
-                ProcessBooleanParameter(parts, FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, Flag.LongFormat, ref i);
+                ProcessFlagParameter(parts, FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, Flag.LongFormat, ref i);
 
                 // Long Sectors
-                ProcessBooleanParameter(parts, FlagStrings.LongSectorsShort, FlagStrings.LongSectorsLong, Flag.LongSectors, ref i);
+                ProcessFlagParameter(parts, FlagStrings.LongSectorsShort, FlagStrings.LongSectorsLong, Flag.LongSectors, ref i);
 
                 // MD5
-                ProcessBooleanParameter(parts, FlagStrings.MD5Short, FlagStrings.MD5Long, Flag.MD5, ref i);
+                ProcessFlagParameter(parts, FlagStrings.MD5Short, FlagStrings.MD5Long, Flag.MD5, ref i);
 
                 // Metadata
-                ProcessBooleanParameter(parts, null, FlagStrings.MetadataLong, Flag.Metadata, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.MetadataLong, Flag.Metadata, ref i);
 
                 // Partitions
-                ProcessBooleanParameter(parts, FlagStrings.PartitionsShort, FlagStrings.PartitionsLong, Flag.Partitions, ref i);
+                ProcessFlagParameter(parts, FlagStrings.PartitionsShort, FlagStrings.PartitionsLong, Flag.Partitions, ref i);
 
                 // Persistent
-                ProcessBooleanParameter(parts, null, FlagStrings.PersistentLong, Flag.Persistent, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.PersistentLong, Flag.Persistent, ref i);
 
                 // Resume
-                ProcessBooleanParameter(parts, FlagStrings.ResumeShort, FlagStrings.ResumeLong, Flag.Resume, ref i);
+                ProcessFlagParameter(parts, FlagStrings.ResumeShort, FlagStrings.ResumeLong, Flag.Resume, ref i);
 
                 // Sector Tags
-                ProcessBooleanParameter(parts, FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, Flag.SectorTags, ref i);
+                ProcessFlagParameter(parts, FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, Flag.SectorTags, ref i);
 
                 // Separated Tracks
-                ProcessBooleanParameter(parts, FlagStrings.SeparatedTracksShort, FlagStrings.SeparatedTracksLong, Flag.SeparatedTracks, ref i);
+                ProcessFlagParameter(parts, FlagStrings.SeparatedTracksShort, FlagStrings.SeparatedTracksLong, Flag.SeparatedTracks, ref i);
 
                 // SHA-1
-                ProcessBooleanParameter(parts, FlagStrings.SHA1Short, FlagStrings.SHA1Long, Flag.SHA1, ref i);
+                ProcessFlagParameter(parts, FlagStrings.SHA1Short, FlagStrings.SHA1Long, Flag.SHA1, ref i);
 
                 // SHA-256
-                ProcessBooleanParameter(parts, null, FlagStrings.SHA256Long, Flag.SHA256, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.SHA256Long, Flag.SHA256, ref i);
 
                 // SHA-384
-                ProcessBooleanParameter(parts, null, FlagStrings.SHA384Long, Flag.SHA384, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.SHA384Long, Flag.SHA384, ref i);
 
                 // SHA-512
-                ProcessBooleanParameter(parts, null, FlagStrings.SHA512Long, Flag.SHA512, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.SHA512Long, Flag.SHA512, ref i);
 
                 // SpamSum
-                ProcessBooleanParameter(parts, FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, Flag.SpamSum, ref i);
+                ProcessFlagParameter(parts, FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, Flag.SpamSum, ref i);
 
                 // Stop on Error
-                ProcessBooleanParameter(parts, FlagStrings.StopOnErrorShort, FlagStrings.StopOnErrorLong, Flag.StopOnError, ref i);
+                ProcessFlagParameter(parts, FlagStrings.StopOnErrorShort, FlagStrings.StopOnErrorLong, Flag.StopOnError, ref i);
 
                 // Tape
-                ProcessBooleanParameter(parts, FlagStrings.TapeShort, FlagStrings.TapeLong, Flag.Tape, ref i);
+                ProcessFlagParameter(parts, FlagStrings.TapeShort, FlagStrings.TapeLong, Flag.Tape, ref i);
 
                 // Trim
-                ProcessBooleanParameter(parts, null, FlagStrings.TrimLong, Flag.Trim, ref i);
+                ProcessFlagParameter(parts, null, FlagStrings.TrimLong, Flag.Trim, ref i);
 
                 // Verify Disc
-                ProcessBooleanParameter(parts, FlagStrings.VerifyDiscShort, FlagStrings.VerifyDiscLong, Flag.VerifyDisc, ref i);
+                ProcessFlagParameter(parts, FlagStrings.VerifyDiscShort, FlagStrings.VerifyDiscLong, Flag.VerifyDisc, ref i);
 
                 // Verify Sectors
-                ProcessBooleanParameter(parts, FlagStrings.VerifySectorsShort, FlagStrings.VerifySectorsLong, Flag.VerifySectors, ref i);
+                ProcessFlagParameter(parts, FlagStrings.VerifySectorsShort, FlagStrings.VerifySectorsLong, Flag.VerifySectors, ref i);
 
                 // Whole Disc
-                ProcessBooleanParameter(parts, FlagStrings.WholeDiscShort, FlagStrings.WholeDiscLong, Flag.VerifySectors, ref i);
+                ProcessFlagParameter(parts, FlagStrings.WholeDiscShort, FlagStrings.WholeDiscLong, Flag.VerifySectors, ref i);
 
                 #endregion
 
@@ -1140,10 +1153,18 @@ namespace DICUI.Aaru
 
                 #region Int64 flags
 
-                // Length -- Can also be "all"
+                // Length
                 longValue = ProcessInt64Parameter(parts, FlagStrings.LengthShort, FlagStrings.LengthLong, Flag.Length, ref i);
-                if (longValue == null && longValue != Int64.MinValue)
+                if (longValue != null && longValue != Int64.MinValue)
+                {
                     LengthValue = longValue;
+                }
+                else
+                {
+                    stringValue = ProcessStringParameter(parts, FlagStrings.LengthShort, FlagStrings.LengthLong, Flag.Length, ref i);
+                    if (string.Equals(stringValue, "all"))
+                        LengthValue = -1;
+                }
 
                 // Start -- Required value
                 longValue = ProcessInt64Parameter(parts, FlagStrings.StartShort, FlagStrings.StartLong, Flag.Start, ref i);
@@ -1264,7 +1285,21 @@ namespace DICUI.Aaru
                 // Subchannel
                 stringValue = ProcessStringParameter(parts, null, FlagStrings.SubchannelLong, Flag.Subchannel, ref i);
                 if (!string.IsNullOrEmpty(stringValue))
-                    SubchannelValue = stringValue;
+                {
+                    if (string.Equals(stringValue, "any")
+                        || string.Equals(stringValue, "rw")
+                        || string.Equals(stringValue, "rw-or-pq")
+                        || string.Equals(stringValue, "pq")
+                        || string.Equals(stringValue, "none")
+                        )
+                    {
+                        SubchannelValue = stringValue;
+                    }
+                    else
+                    {
+                        SubchannelValue = "any";
+                    }
+                }
 
                 // XML Sidecar
                 stringValue = ProcessStringParameter(parts, FlagStrings.XMLSidecarShort, FlagStrings.XMLSidecarLong, Flag.XMLSidecar, ref i);
@@ -1361,12 +1396,24 @@ namespace DICUI.Aaru
         /// <returns></returns>
         public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
         {
-            return File.Exists(basePath + ".cicm.xml")
-                && File.Exists(basePath + ".aif")
-                && File.Exists(basePath + ".ibg")
-                && File.Exists(basePath + ".log")
-                && File.Exists(basePath + ".mhddlog.bin")
-                && File.Exists(basePath + ".resume.xml");
+            switch (type)
+            {
+                case MediaType.CDROM:
+                    return File.Exists(basePath + ".cicm.xml")
+                        && File.Exists(basePath + ".ibg")
+                        && File.Exists(basePath + ".log")
+                        && File.Exists(basePath + ".mhddlog.bin")
+                        && File.Exists(basePath + ".resume.xml")
+                        && File.Exists(basePath + ".sub.log");
+                case MediaType.DVD:
+                    return File.Exists(basePath + ".cicm.xml")
+                        && File.Exists(basePath + ".ibg")
+                        && File.Exists(basePath + ".log")
+                        && File.Exists(basePath + ".mhddlog.bin")
+                        && File.Exists(basePath + ".resume.xml");
+                default:
+                    return false; // TODO: Figure out more formats
+            }
         }
 
         /// <summary>
@@ -1389,13 +1436,48 @@ namespace DICUI.Aaru
             switch (type)
             {
                 case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(basePath + ".aif", basePath + ".cicm.xml") ?? "";
+                    // TODO: Can this do GD-ROM?
+                    // TODO: Investigate if there's an error count for Aaru
+                    info.Extras.PVD = GeneratePVD(basePath + ".cicm.xml") ?? "Disc has no PVD";
+
+                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(basePath + ".cicm.xml") ?? "";
+
+                    string cdWriteOffset = GetWriteOffset(basePath + ".cicm.xml") ?? "";
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    bool xgd = (system == KnownSystem.MicrosoftXBOX || system == KnownSystem.MicrosoftXBOX360);
+
+                    // Get the individual hash data, as per internal
+                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    {
+                        info.SizeAndChecksums.Size = size;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                    }
+
+                    // TODO: Investigate XGD disc outputs
+                    // TODO: Get layerbreak information
+                    // TODO: Investigate BD specifics like PIC
+
                     break;
             }
 
             switch (system)
             {
+                // TODO: Can we get DVD protection or SecuROM data out of this?
+                // TODO: Can we get DMI, PFI, and SS hashes for XGD?
+                // TODO: Can we get SS version/ranges?
+                // TODO: Can we get DMI info?
+                // TODO: Can we get Sega Header info?
+                // TODO: Can we get PS1 EDC status?
+                // TODO: Can we get PS1 LibCrypt status?
+
                 case KnownSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
@@ -1527,6 +1609,9 @@ namespace DICUI.Aaru
                     break;
                 case Flag.FormatDump:
                     commands.Add(Command.MediaDump);
+                    break;
+                case Flag.Help:
+                    commands.Add(Command.NONE);
                     break;
                 case Flag.ImgBurnLog:
                     commands.Add(Command.MediaScan);
@@ -1679,6 +1764,31 @@ namespace DICUI.Aaru
             }
 
             return commands;
+        }
+
+        /// <summary>
+        /// Process a flag parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="flag">Flag value corresponding to the flag</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+        private bool ProcessFlagParameter(List<string> parts, string shortFlagString, string longFlagString, Flag flag, ref int i)
+        {
+            if (parts == null)
+                return false;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!GetSupportedCommands(flag).Contains(BaseCommand))
+                    return false;
+
+                this[flag] = true;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -1871,37 +1981,158 @@ namespace DICUI.Aaru
         /// <summary>
         /// Generate a cuesheet string based on CICM sidecar data
         /// </summary>
-        /// <param name="aif">AIF output image</param>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>String containing the cuesheet, null on error</returns>
-        private string GenerateCuesheet(string aif, string cicmSidecar)
+        private string GenerateCuesheet(string cicmSidecar)
         {
-            // Note that this path only generates a cuesheet against a single BIN, not split
-
-            // If the files don't exist, we can't get info from them
-            if (!File.Exists(aif) || !File.Exists(cicmSidecar))
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(cicmSidecar))
                 return null;
 
-            // If this is being run in Check, we can't run Aaru
-            if (string.IsNullOrEmpty(ExecutablePath))
-                return null;
+            // Required variables
+            int totalTracks = 0;
+            string cuesheet = string.Empty;
 
-            var convertParams = new Parameters(null)
+            // Open and read in the XML file
+            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
             {
-                BaseCommand = Command.ImageConvert,
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
 
-                InputValue = aif,
-                OutputValue = aif + ".cue",
-            };
+            // If the reader is null for some reason, we can't do anything
+            if (xtr == null)
+                return null;
 
-            convertParams[Flag.XMLSidecar] = true;
-            convertParams.XMLSidecarValue = cicmSidecar;
+            // Only care about CICM sidecar files
+            xtr.MoveToContent();
+            if (xtr.Name != "CICMMetadata")
+                return null;
 
-            // TODO: How do we get around this generation???
-            ExecuteInternalProgram(convertParams).ConfigureAwait(false).GetAwaiter().GetResult();
+            // Only care about OpticalDisc types
+            // TODO: Aaru - Support floppy images
+            xtr = xtr.ReadSubtree();
+            xtr.MoveToContent();
+            xtr.Read();
+            if (xtr.Name != "OpticalDisc")
+                return null;
 
-            File.Delete(aif + ".bin");
-            return GetFullFile(aif + ".cue");
+            // Get track count and all tracks now
+            xtr = xtr.ReadSubtree();
+            xtr.MoveToContent();
+            xtr.Read();
+            while (!xtr.EOF)
+            {
+                // We only want elements
+                if (xtr.NodeType != XmlNodeType.Element)
+                {
+                    xtr.Read();
+                    continue;
+                }
+
+                switch (xtr.Name)
+                {
+                    // Total track count
+                    case "Tracks":
+                        totalTracks = xtr.ReadElementContentAsInt();
+                        break;
+
+                    // TODO: Get CATALOG and TRACK flags somehow
+
+                    // Individual track data
+                    case "Track":
+                        XmlReader trackReader = xtr.ReadSubtree();
+                        if (trackReader == null)
+                            return null;
+
+                        int trackNumber = -1;
+                        string trackType = string.Empty;
+
+                        trackReader.MoveToContent();
+                        trackReader.Read();
+                        while (!trackReader.EOF)
+                        {
+                            // We only want elements
+                            if (trackReader.NodeType != XmlNodeType.Element)
+                            {
+                                trackReader.Read();
+                                continue;
+                            }
+
+                            switch (trackReader.Name)
+                            {
+                                // Track size
+                                case "TrackType":
+                                    trackType = trackReader.ReadElementContentAsString();
+                                    break;
+
+                                // Track number
+                                case "Sequence":
+                                    XmlReader sequenceReader = trackReader.ReadSubtree();
+                                    if (sequenceReader == null)
+                                        return null;
+
+                                    sequenceReader.ReadToDescendant("TrackNumber");
+                                    trackNumber = sequenceReader.ReadElementContentAsInt();
+
+                                    // Skip the sequence now that we've processed it
+                                    trackReader.Skip();
+
+                                    break;
+
+                                default:
+                                    trackReader.Skip();
+                                    break;
+                            }
+                        }
+
+                        
+
+                        // Build the track datfile data and append
+                        string trackName = Path.GetFileName(cicmSidecar).Replace(".cicm.xml", string.Empty);
+                        if (totalTracks == 1)
+                            trackName = $"{trackName}.bin";
+                        else if (totalTracks > 1 && totalTracks < 10)
+                            trackName = $"{trackName} (Track {trackNumber}).bin";
+                        else
+                            trackName = $"{trackName} (Track {trackNumber.ToString().PadLeft(2, '0')}).bin";
+
+                        cuesheet += $"FILE \"{trackName}\" BINARY\n";
+
+                        switch (trackType.ToLowerInvariant())
+                        {
+                            case "audio":
+                                trackType = "AUDIO";
+                                break;
+                            case "mode1":
+                                trackType = "MODE1/2352";
+                                break;
+                            case "m2f1":
+                                trackType = "MODE2/2352";
+                                break;
+                        }
+
+                        cuesheet += $"  TRACK {trackNumber.ToString().PadLeft(2, '0')} {trackType}\n";
+
+                        // TODO: How do we get the index data properly?
+                        cuesheet += "    INDEX 01 00:00:00\n";
+
+                        // Skip the track now that we've processed it
+                        xtr.Skip();
+
+                        break;
+
+                    default:
+                        xtr.Skip();
+                        break;
+                }
+            }
+
+            return cuesheet;
         }
 
         /// <summary>
@@ -2003,28 +2234,8 @@ namespace DICUI.Aaru
                                     if (sequenceReader == null)
                                         return null;
 
-                                    sequenceReader.MoveToContent();
-                                    sequenceReader.Read();
-                                    while (!sequenceReader.EOF)
-                                    {
-                                        // We only want elements
-                                        if (sequenceReader.NodeType != XmlNodeType.Element)
-                                        {
-                                            sequenceReader.Read();
-                                            continue;
-                                        }
-
-                                        switch (sequenceReader.Name)
-                                        {
-                                            case "TrackNumber":
-                                                trackNumber = sequenceReader.ReadElementContentAsInt();
-                                                break;
-
-                                            default:
-                                                trackReader.Skip();
-                                                break;
-                                        }
-                                    }
+                                    sequenceReader.ReadToDescendant("TrackNumber");
+                                    trackNumber = sequenceReader.ReadElementContentAsInt();
 
                                     // Skip the sequence now that we've processed it
                                     trackReader.Skip();
@@ -2088,17 +2299,13 @@ namespace DICUI.Aaru
                         // Build the track datfile data and append
                         string trackName = Path.GetFileName(cicmSidecar).Replace(".cicm.xml", string.Empty);
                         if (totalTracks == 1)
-                        {
-                            datfile += $"<rom name=\"{trackName}.bin\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
-                        }
+                            trackName = $"{trackName}.bin";
                         else if (totalTracks > 1 && totalTracks < 10)
-                        {
-                            datfile += $"<rom name=\"{trackName} (Track {trackNumber}).bin\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
-                        }
+                            trackName = $"{trackName} (Track {trackNumber}).bin";
                         else
-                        {
-                            datfile += $"<rom name=\"{trackName} (Track {trackNumber:2}).bin\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
-                        }
+                            trackName = $"{trackName} (Track {trackNumber.ToString().PadLeft(2, '0')}).bin";
+
+                        datfile += $"<rom name=\"{trackName}\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
 
                         // Skip the track now that we've processed it
                         xtr.Skip();
@@ -2112,6 +2319,262 @@ namespace DICUI.Aaru
             }
 
             return datfile;
+        }
+
+        /// <summary>
+        /// Generate a Redump-compatible PVD block based on CICM sidecar data
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>String containing the PVD, null on error</returns>
+        private static string GeneratePVD(string cicmSidecar)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(cicmSidecar))
+                return null;
+
+            // Required variables
+            string creation = string.Empty;
+            string modification = string.Empty;
+            string expiration = string.Empty;
+            string effective = string.Empty;
+
+            // Open and read in the XML file
+            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
+
+            // If the reader is null for some reason, we can't do anything
+            if (xtr == null)
+                return null;
+
+            // Only care about CICM sidecar files
+            xtr.MoveToContent();
+            if (xtr.Name != "CICMMetadata")
+                return null;
+
+            // Only care about OpticalDisc types
+            xtr = xtr.ReadSubtree();
+            xtr.MoveToContent();
+            xtr.Read();
+            if (xtr.Name != "OpticalDisc")
+                return null;
+
+            // Get track count and all tracks now
+            xtr = xtr.ReadSubtree();
+            xtr.MoveToContent();
+            xtr.Read();
+            while (!xtr.EOF)
+            {
+                // We only want elements
+                if (xtr.NodeType != XmlNodeType.Element)
+                {
+                    xtr.Read();
+                    continue;
+                }
+
+                switch (xtr.Name)
+                {
+                    // Individual track data
+                    case "Track":
+                        XmlReader trackReader = xtr.ReadSubtree();
+                        if (trackReader == null)
+                            return null;
+
+                        trackReader.MoveToContent();
+                        trackReader.ReadToDescendant("FileSystemInformation");
+                        trackReader.ReadToDescendant("Partition");
+                        if (!trackReader.ReadToDescendant("FileSystems"))
+                            break;
+
+                        trackReader.ReadToDescendant("FileSystem");
+
+                        XmlReader fileSystemReader = trackReader.ReadSubtree();
+                        if (fileSystemReader == null)
+                            return null;
+
+                        fileSystemReader.MoveToContent();
+                        fileSystemReader.Read();
+                        while (!fileSystemReader.EOF)
+                        {
+                            // We only want elements
+                            if (fileSystemReader.NodeType != XmlNodeType.Element)
+                            {
+                                fileSystemReader.Read();
+                                continue;
+                            }
+
+                            switch (fileSystemReader.Name)
+                            {
+                                case "CreationDate":
+                                    creation = fileSystemReader.ReadElementContentAsString();
+                                    break;
+
+                                case "ModificationDate":
+                                    modification = fileSystemReader.ReadElementContentAsString();
+                                    break;
+
+                                case "ExpirationDate":
+                                    expiration = fileSystemReader.ReadElementContentAsString();
+                                    break;
+
+                                case "EffectiveDate":
+                                    effective = fileSystemReader.ReadElementContentAsString();
+                                    break;
+
+                                default:
+                                    fileSystemReader.Skip();
+                                    break;
+                            }
+                        }
+
+                        // Skip the track now that we've processed it
+                        trackReader.Skip();
+
+                        break;
+
+                    default:
+                        xtr.Skip();
+                        break;
+                }
+            }
+
+            /*
+            Date format being used:
+            1997-11-07T08:57:03
+            
+            Needs to look like this on the other side
+            0320 : 20 20 20 20 20 20 20 20  20 20 20 20 20 31 39 39                199
+            0330 : 36 30 39 32 34 31 34 35  34 30 35 30 30 DC 31 39   6092414540500.19
+            0340 : 39 36 30 39 32 34 31 34  35 34 30 35 30 30 DC 30   96092414540500.0
+            0350 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 00   000000000000000.
+            0360 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30   0000000000000000
+            0370 : 00 01 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
+            */
+
+            // TODO: Hundredths of seconds are not part of the output, using 00 `30 30` bytes for now
+            // TODO: Timezones are not part of the output, using UTC `00` byte for now
+
+            // Build each row in consecutive order
+            string pvd = string.Empty;
+
+            string emptyTime = "0000-00-00T00:00:00";
+            if (DateTime.Parse(creation) == DateTime.MinValue)
+                creation = emptyTime;
+            if (DateTime.Parse(modification) == DateTime.MinValue)
+                modification = emptyTime;
+            if (DateTime.Parse(expiration) == DateTime.MinValue)
+                expiration = emptyTime;
+            if (DateTime.Parse(effective) == DateTime.MinValue)
+                effective = emptyTime;
+
+            byte[] creationBytes = modification.ToCharArray().Select(c => (byte)c).ToArray();
+            byte[] modificationBytes = expiration.ToCharArray().Select(c => (byte)c).ToArray();
+            byte[] expirationBytes = effective.ToCharArray().Select(c => (byte)c).ToArray();
+            byte[] effectiveBytes = creation.ToCharArray().Select(c => (byte)c).ToArray();
+
+            // 0320
+            pvd += $"0320 : 20 20 20 20 20 20 20 20";
+            pvd += $"  20 20 20 20 20 {creationBytes[0]:x} {creationBytes[1]:x} {creationBytes[2]:x}";
+            pvd += $"                {creation.Substring(0, 3)}\n";
+
+            // 0330
+            pvd += $"0330 : {creationBytes[3]:x} {creationBytes[5]:x} {creationBytes[6]:x} {creationBytes[8]:x} {creationBytes[9]:x} {creationBytes[11]:x} {creationBytes[12]:x} {creationBytes[14]:x}";
+            pvd += $"  {creationBytes[15]:x} {creationBytes[17]:x} {creationBytes[18]:x} 30 30 00 {modificationBytes[0]:x} {modificationBytes[1]:x}";
+            pvd += $"   {creation[3]}{creation.Substring(5, 2)}{creation.Substring(8, 2)}{creation.Substring(11, 2)}{creation.Substring(14, 2)}{creation.Substring(17, 2)}00.{modification.Substring(0, 2)}\n";
+
+            // 0340
+            pvd += $"0340 : {modificationBytes[2]:x} {modificationBytes[3]:x} {modificationBytes[5]:x} {modificationBytes[6]:x} {modificationBytes[8]:x} {modificationBytes[9]:x} {modificationBytes[11]:x} {modificationBytes[12]:x}";
+            pvd += $"  {modificationBytes[14]:x} {modificationBytes[15]:x} {modificationBytes[17]:x} {modificationBytes[18]:x} 30 30 00 {expirationBytes[0]:x}";
+            pvd += $"   {modification.Substring(2, 2)}{modification.Substring(5, 2)}{modification.Substring(8, 2)}{modification.Substring(11, 2)}{modification.Substring(14, 2)}{modification.Substring(17, 2)}00.{expiration[0]}\n";
+
+            // 0350
+            pvd += $"0350 : {expirationBytes[1]:x} {expirationBytes[2]:x} {expirationBytes[3]:x} {expirationBytes[5]:x} {expirationBytes[6]:x} {expirationBytes[8]:x} {expirationBytes[9]:x} {expirationBytes[11]:x}";
+            pvd += $"  {expirationBytes[12]:x} {expirationBytes[14]:x} {expirationBytes[15]:x} {expirationBytes[17]:x} {expirationBytes[18]:x} 30 30 00";
+            pvd += $"   {modification.Substring(1, 3)}{modification.Substring(5, 2)}{modification.Substring(8, 2)}{modification.Substring(11, 2)}{modification.Substring(14, 2)}{modification.Substring(17, 2)}00.\n";
+
+            // 0360
+            pvd += $"0360 : {effectiveBytes[0]:x} {effectiveBytes[1]:x} {effectiveBytes[2]:x} {effectiveBytes[3]:x} {effectiveBytes[5]:x} {effectiveBytes[6]:x} {effectiveBytes[8]:x} {effectiveBytes[9]:x}";
+            pvd += $"  {effectiveBytes[11]:x} {effectiveBytes[12]:x} {effectiveBytes[14]:x} {effectiveBytes[15]:x} {effectiveBytes[17]:x} {effectiveBytes[18]:x} 30 30";
+            pvd += $"   {effective.Substring(0, 4)}{effective.Substring(5, 2)}{effective.Substring(8, 2)}{effective.Substring(11, 2)}{effective.Substring(14, 2)}{effective.Substring(17, 2)}00\n";
+
+            // 0370 - TODO: Get the sometimes burner string that appears in this block
+            pvd += $"0370 : 00 01 00 00 00 00 00 00";
+            pvd += $"  00 00 00 00 00 00 00 00";
+            pvd += $"   ................\n";
+
+            return pvd;
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private static string GetWriteOffset(string cicmSidecar)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(cicmSidecar))
+                return null;
+
+            // Open and read in the XML file
+            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
+
+            // If the reader is null for some reason, we can't do anything
+            if (xtr == null)
+                return null;
+
+            // Only care about CICM sidecar files
+            xtr.MoveToContent();
+            if (xtr.Name != "CICMMetadata")
+                return null;
+
+            // Only care about OpticalDisc types
+            xtr = xtr.ReadSubtree();
+            xtr.MoveToContent();
+            xtr.Read();
+            if (xtr.Name != "OpticalDisc")
+                return null;
+
+            // Get track count and all tracks now
+            xtr = xtr.ReadSubtree();
+            xtr.MoveToContent();
+            xtr.Read();
+            while (!xtr.EOF)
+            {
+                // We only want elements
+                if (xtr.NodeType != XmlNodeType.Element)
+                {
+                    xtr.Read();
+                    continue;
+                }
+
+                switch (xtr.Name)
+                {
+                    // Disc offset
+                    case "Offset":
+                        return xtr.ReadElementContentAsString();
+
+                    default:
+                        xtr.Skip();
+                        break;
+                }
+            }
+
+            return null;
         }
 
         #endregion
