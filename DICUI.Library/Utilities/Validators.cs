@@ -91,14 +91,14 @@ namespace DICUI.Utilities
 
                 // https://en.wikipedia.org/wiki/Xbox_(console)
                 case KnownSystem.MicrosoftXBOX:
-                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
+                    types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Xbox_360
                 case KnownSystem.MicrosoftXBOX360:
-                    types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
+                    types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Xbox_One
