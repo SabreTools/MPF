@@ -2277,11 +2277,9 @@ namespace DICUI.DiscImageCreator
 
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
-                {
-                    string hex = BitConverter.ToString(br.ReadBytes(140)).Replace("-", string.Empty);
-                    return Regex.Replace(hex, ".{32}", "$0\n");
-                }
+                byte[] picBytes = File.ReadAllBytes(picPath);
+                string hex = BitConverter.ToString(picBytes, 0).Replace("-", string.Empty);
+                return Regex.Replace(hex, ".{32}", "$0\n");
             }
             catch
             {
