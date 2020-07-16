@@ -2330,7 +2330,7 @@ namespace DICUI.DiscImageCreator
             try
             {
                 byte[] picBytes = File.ReadAllBytes(picPath);
-                string hex = BitConverter.ToString(picBytes, 0).Replace("-", string.Empty);
+                string hex = BitConverter.ToString(picBytes).Replace("-", string.Empty);
                 return Regex.Replace(hex, ".{32}", "$0\n");
             }
             catch

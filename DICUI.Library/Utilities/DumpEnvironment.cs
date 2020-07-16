@@ -1078,7 +1078,7 @@ namespace DICUI.Utilities
                 string last = null;
                 for (int i = 0; i < output.Count; )
                 {
-                    if (output[i] == last)
+                    if (output[i] == last && string.IsNullOrWhiteSpace(last))
                     {
                         output.RemoveAt(i);
                     }
