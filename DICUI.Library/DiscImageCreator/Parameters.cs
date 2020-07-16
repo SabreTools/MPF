@@ -610,6 +610,7 @@ namespace DICUI.DiscImageCreator
                 case Command.GDROM:
                 case Command.SACD:
                 case Command.Swap:
+                case Command.Tape:
                 case Command.XBOX:
                 case Command.XBOXSwap:
                 case Command.XGD2Swap:
@@ -1987,8 +1988,9 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.Swap);
                     break;
                 case Flag.UseAnchorVolumeDescriptorPointer:
+                    commands.Add(Command.BluRay);
                     commands.Add(Command.DigitalVideoDisc);
-                    commands.Add(Command.SACD);
+                    commands.Add(Command.XBOX);
                     break;
                 case Flag.VideoNow:
                     commands.Add(Command.CompactDisc);
@@ -2059,6 +2061,9 @@ namespace DICUI.DiscImageCreator
                     return;
                 case MediaType.HardDisk:
                     BaseCommand = Command.Disk;
+                    return;
+                case MediaType.DataCartridge:
+                    BaseCommand = Command.Tape;
                     return;
 
                 default:
