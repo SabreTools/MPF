@@ -24,6 +24,7 @@ namespace DICUI.DiscImageCreator
         public const string Stop = "stop";
         public const string Sub = "sub";
         public const string Swap = "swap";
+        public const string Tape = "tape";
         public const string XBOX = "xbox";
         public const string XBOXSwap = "xboxswap";
         public const string XGD2Swap = "xgd2swap";
@@ -43,6 +44,7 @@ namespace DICUI.DiscImageCreator
         public const string CopyrightManagementInformation = "/c";
         public const string D8Opcode = "/d8";
         public const string DisableBeep = "/q";
+        public const string ExtractMicroSoftCabFile = "/mscf";
         public const string ForceUnitAccess = "/f";
         public const string MultiSession = "/ms";
         public const string NoFixSubP = "/np";
@@ -59,6 +61,7 @@ namespace DICUI.DiscImageCreator
         public const string SeventyFour = "/74";
         public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
+        public const string UseAnchorVolumeDescriptorPointer = "/avdp";
         public const string VideoNow = "/vn";
         public const string VideoNowColor = "/vnc";
         public const string VideoNowXP = "/vnx";

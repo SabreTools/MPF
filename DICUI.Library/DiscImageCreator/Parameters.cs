@@ -211,6 +211,7 @@ namespace DICUI.DiscImageCreator
                 || BaseCommand == Command.SACD
                 || BaseCommand == Command.Swap
                 || BaseCommand == Command.Sub
+                || BaseCommand == Command.Tape
                 || BaseCommand == Command.XBOX
                 || BaseCommand == Command.XBOXSwap
                 || BaseCommand == Command.XGD2Swap
@@ -373,6 +374,13 @@ namespace DICUI.DiscImageCreator
                 }
             }
 
+            // Extract MicroSoftCabFile
+            if (GetSupportedCommands(Flag.ExtractMicroSoftCabFile).Contains(BaseCommand))
+            {
+                if (this[Flag.ExtractMicroSoftCabFile] == true)
+                    parameters.Add(Converters.LongName(Flag.ExtractMicroSoftCabFile));
+            }
+
             // Multi-Session
             if (GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
             {
@@ -512,6 +520,13 @@ namespace DICUI.DiscImageCreator
                             return null;
                     }
                 }
+            }
+
+            // Use Anchor Volume Descriptor Pointer
+            if (GetSupportedCommands(Flag.UseAnchorVolumeDescriptorPointer).Contains(BaseCommand))
+            {
+                if (this[Flag.UseAnchorVolumeDescriptorPointer] == true)
+                    parameters.Add(Converters.LongName(Flag.UseAnchorVolumeDescriptorPointer));
             }
 
             // VideoNow
@@ -1031,9 +1046,7 @@ namespace DICUI.DiscImageCreator
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    if (parts.Count > 4)
-                        return false;
-
+                    index = 4;
                     break;
 
                 case Command.Start:
@@ -1086,6 +1099,17 @@ namespace DICUI.DiscImageCreator
                         DriveSpeed = Int32.Parse(parts[3]);
 
                     index = 4;
+                    break;
+
+                case Command.Tape:
+                    if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
+                        return false;
+                    else
+                        Filename = parts[1];
+
+                    if (parts.Count > 2)
+                        return false;
+
                     break;
 
                 case Command.XBOX:
@@ -1232,6 +1256,13 @@ namespace DICUI.DiscImageCreator
                                 return false;
 
                             this[Flag.DisableBeep] = true;
+                            break;
+
+                        case FlagStrings.ExtractMicroSoftCabFile:
+                            if (!GetSupportedCommands(Flag.ExtractMicroSoftCabFile).Contains(BaseCommand))
+                                return false;
+
+                            this[Flag.ExtractMicroSoftCabFile] = true;
                             break;
 
                         case FlagStrings.ForceUnitAccess:
@@ -1409,6 +1440,13 @@ namespace DICUI.DiscImageCreator
                             this[Flag.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
                             i++;
+                            break;
+
+                        case FlagStrings.UseAnchorVolumeDescriptorPointer:
+                            if (!GetSupportedCommands(Flag.UseAnchorVolumeDescriptorPointer).Contains(BaseCommand))
+                                return false;
+
+                            this[Flag.UseAnchorVolumeDescriptorPointer] = true;
                             break;
 
                         case FlagStrings.VideoNow:
@@ -1850,8 +1888,12 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.Data);
                     commands.Add(Command.DigitalVideoDisc);
                     commands.Add(Command.GDROM);
+                    commands.Add(Command.SACD);
                     commands.Add(Command.Swap);
                     commands.Add(Command.XBOX);
+                    break;
+                case Flag.ExtractMicroSoftCabFile:
+                    commands.Add(Command.CompactDisc);
                     break;
                 case Flag.ForceUnitAccess:
                     commands.Add(Command.Audio);
@@ -1859,6 +1901,7 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.CompactDisc);
                     commands.Add(Command.Data);
                     commands.Add(Command.DigitalVideoDisc);
+                    commands.Add(Command.SACD);
                     commands.Add(Command.Swap);
                     commands.Add(Command.XBOX);
                     break;
@@ -1942,6 +1985,10 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.Data);
                     commands.Add(Command.GDROM);
                     commands.Add(Command.Swap);
+                    break;
+                case Flag.UseAnchorVolumeDescriptorPointer:
+                    commands.Add(Command.DigitalVideoDisc);
+                    commands.Add(Command.SACD);
                     break;
                 case Flag.VideoNow:
                     commands.Add(Command.CompactDisc);

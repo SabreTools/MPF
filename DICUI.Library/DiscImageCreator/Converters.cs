@@ -22,6 +22,7 @@ namespace DICUI.DiscImageCreator
                 case Command.DigitalVideoDisc:
                 case Command.Disk:
                 case Command.Floppy:
+                case Command.Tape:
                     return KnownSystem.IBMPCCompatible;
                 case Command.GDROM:
                 case Command.Swap:
@@ -73,6 +74,8 @@ namespace DICUI.DiscImageCreator
                     return MediaType.FloppyDisk;
                 case Command.Disk:
                     return MediaType.HardDisk;
+                case Command.Tape:
+                    return MediaType.DataCartridge;
                 default:
                     return null;
             }
@@ -168,6 +171,8 @@ namespace DICUI.DiscImageCreator
                     return CommandStrings.Sub;
                 case Command.Swap:
                     return CommandStrings.Swap;
+                case Command.Tape:
+                    return CommandStrings.Tape;
                 case Command.XBOX:
                     return CommandStrings.XBOX;
                 case Command.XBOXSwap:
@@ -208,6 +213,8 @@ namespace DICUI.DiscImageCreator
                     return FlagStrings.D8Opcode;
                 case Flag.DisableBeep:
                     return FlagStrings.DisableBeep;
+                case Flag.ExtractMicroSoftCabFile:
+                    return FlagStrings.ExtractMicroSoftCabFile;
                 case Flag.ForceUnitAccess:
                     return FlagStrings.ForceUnitAccess;
                 case Flag.MultiSession:
@@ -240,6 +247,8 @@ namespace DICUI.DiscImageCreator
                     return FlagStrings.SkipSector;
                 case Flag.SubchannelReadLevel:
                     return FlagStrings.SubchannelReadLevel;
+                case Flag.UseAnchorVolumeDescriptorPointer:
+                    return FlagStrings.UseAnchorVolumeDescriptorPointer;
                 case Flag.VideoNow:
                     return FlagStrings.VideoNow;
                 case Flag.VideoNowColor:
@@ -304,6 +313,8 @@ namespace DICUI.DiscImageCreator
                     return Command.Sub;
                 case CommandStrings.Swap:
                     return Command.Swap;
+                case CommandStrings.Tape:
+                    return Command.Tape;
                 case CommandStrings.XBOX:
                     return Command.XBOX;
                 case CommandStrings.XBOXSwap:

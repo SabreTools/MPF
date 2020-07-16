@@ -260,6 +260,7 @@ namespace DICUI.Utilities
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.FloppyDisk);
                     types.Add(MediaType.HardDisk);
+                    types.Add(MediaType.DataCartridge);
                     break;
 
                 // https://en.wikipedia.org/wiki/PC-8800_series
