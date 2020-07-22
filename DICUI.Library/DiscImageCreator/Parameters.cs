@@ -1646,10 +1646,10 @@ namespace DICUI.DiscImageCreator
                 case MediaType.UMD:
                     info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
 
-                    if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize))
+                    if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize))
                     {
                         info.CommonDiscInfo.Title = title ?? "";
-                        info.CommonDiscInfo.Category = umdcat ?? Category.Games;
+                        info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
                         info.VersionAndEditions.Version = umdversion ?? "";
                         info.SizeAndChecksums.Size = umdsize;
 
@@ -2623,7 +2623,7 @@ namespace DICUI.DiscImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetUMDAuxInfo(string disc, out string title, out Category? umdcat, out string umdversion, out string umdlayer, out long umdsize)
+        private static bool GetUMDAuxInfo(string disc, out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize)
         {
             title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
 

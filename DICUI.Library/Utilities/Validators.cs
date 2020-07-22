@@ -84,6 +84,10 @@ namespace DICUI.Utilities
                     types.Add(MediaType.CDROM);
                     break;
 
+                case KnownSystem.MattelFisherPriceiXL:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://en.wikipedia.org/wiki/HyperScan
                 case KnownSystem.MattelHyperscan:
                     types.Add(MediaType.CDROM);

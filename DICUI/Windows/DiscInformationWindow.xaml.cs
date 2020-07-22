@@ -68,7 +68,7 @@ namespace DICUI.Windows
         /// </summary>
         private void PopulateCategories()
         {
-            var categories = Enum.GetValues(typeof(Category)).OfType<Category?>().ToList();
+            var categories = Enum.GetValues(typeof(DiscCategory)).OfType<DiscCategory?>().ToList();
 
             ViewModels.LoggerViewModel.VerboseLogLn("Populating categories, {0} categories found.", categories.Count);
 
@@ -153,7 +153,7 @@ namespace DICUI.Windows
             _submissionInfo.CommonDiscInfo.ForeignTitleNonLatin = ForeignTitleTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.DiscNumberLetter = DiscNumberLetterTextBox.Text ?? "";
             _submissionInfo.CommonDiscInfo.DiscTitle = DiscTitleTextBox.Text ?? "";
-            _submissionInfo.CommonDiscInfo.Category = (CategoryComboBox.SelectedItem as CategoryComboBoxItem)?.Value ?? Category.Games;
+            _submissionInfo.CommonDiscInfo.Category = (CategoryComboBox.SelectedItem as CategoryComboBoxItem)?.Value ?? DiscCategory.Games;
             _submissionInfo.CommonDiscInfo.Region = (RegionComboBox.SelectedItem as RegionComboBoxItem)?.Value ?? Region.World;
             var languages = new List<Language?>();
             foreach (var language in _languages)

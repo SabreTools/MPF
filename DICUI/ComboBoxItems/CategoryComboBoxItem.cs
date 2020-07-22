@@ -10,20 +10,20 @@ namespace DICUI
     {
         private object data;
 
-        public CategoryComboBoxItem(Category? category) => data = category;
+        public CategoryComboBoxItem(DiscCategory? category) => data = category;
 
-        public static implicit operator Category? (CategoryComboBoxItem item) => item.data as Category?;
+        public static implicit operator DiscCategory? (CategoryComboBoxItem item) => item.data as DiscCategory?;
 
         public string Name
         {
-            get { return (data as Category?).LongName(); }
+            get { return (data as DiscCategory?).LongName(); }
         }
 
         public bool IsChecked { get; set; }
 
-        public Category? Value
+        public DiscCategory? Value
         {
-            get { return data as Category?; }
+            get { return data as DiscCategory?; }
         }
     }
 }

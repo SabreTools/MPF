@@ -59,12 +59,12 @@ namespace DICUI.Utilities
                     return KnownSystem.AppleMacintosh;
                 case RedumpSystem.AudioCD:
                     return KnownSystem.AudioCD;
-                case RedumpSystem.BDVideo:
-                    return KnownSystem.BDVideo;
                 case RedumpSystem.BandaiPippin:
                     return KnownSystem.BandaiApplePippin;
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
                     return KnownSystem.BandaiPlaydiaQuickInteractiveSystem;
+                case RedumpSystem.BDVideo:
+                    return KnownSystem.BDVideo;
                 case RedumpSystem.CommodoreAmigaCD:
                     return KnownSystem.CommodoreAmiga;
                 case RedumpSystem.CommodoreAmigaCD32:
@@ -73,8 +73,12 @@ namespace DICUI.Utilities
                     return KnownSystem.CommodoreAmigaCDTV;
                 case RedumpSystem.DVDVideo:
                     return KnownSystem.DVDVideo;
+                case RedumpSystem.EnhancedCD:
+                    return KnownSystem.EnhancedCD;
                 case RedumpSystem.FujitsuFMTownsseries:
                     return KnownSystem.FujitsuFMTowns;
+                case RedumpSystem.funworldPhotoPlay:
+                    return KnownSystem.funworldPhotoPlay;
                 case RedumpSystem.HasbroVideoNow:
                     return KnownSystem.HasbroVideoNow;
                 case RedumpSystem.HasbroVideoNowColor:
@@ -99,6 +103,8 @@ namespace DICUI.Utilities
                     return KnownSystem.KonamiGVSystem;
                 case RedumpSystem.KonamiTwinkle:
                     return KnownSystem.KonamiTwinkle;
+                case RedumpSystem.MattelFisherPriceiXL:
+                    return KnownSystem.MattelFisherPriceiXL;
                 case RedumpSystem.MattelHyperScan:
                     return KnownSystem.MattelHyperscan;
                 case RedumpSystem.MemorexVisualInformationSystem:
@@ -117,13 +123,15 @@ namespace DICUI.Utilities
                     return KnownSystem.NECPCEngineTurboGrafxCD;
                 case RedumpSystem.NECPCFXPCFXGA:
                     return KnownSystem.NECPCFX;
+                case RedumpSystem.NamcoSegaNintendoTriforce:
+                    return KnownSystem.NamcoSegaNintendoTriforce;
                 case RedumpSystem.NamcoSystem12:
                     return KnownSystem.NamcoSystem12;
                 case RedumpSystem.NamcoSystem246:
                     return KnownSystem.NamcoCapcomTaitoSystem246;
                 case RedumpSystem.NavisoftNaviken21:
                     return KnownSystem.NavisoftNaviken21;
-                case RedumpSystem.NinendoGameCube:
+                case RedumpSystem.NintendoGameCube:
                     return KnownSystem.NintendoGameCube;
                 case RedumpSystem.NintendoWii:
                     return KnownSystem.NintendoWii;
@@ -155,6 +163,8 @@ namespace DICUI.Utilities
                     return KnownSystem.SegaNaomi;
                 case RedumpSystem.SegaNaomi2:
                     return KnownSystem.SegaNaomi2;
+                case RedumpSystem.SegaPrologue21:
+                    return KnownSystem.SegaPrologue21;
                 case RedumpSystem.SegaRingEdge:
                     return KnownSystem.SegaRingEdge;
                 case RedumpSystem.SegaRingEdge2:
@@ -163,8 +173,6 @@ namespace DICUI.Utilities
                     return KnownSystem.SegaSaturn;
                 case RedumpSystem.SegaTitanVideo:
                     return KnownSystem.SegaTitanVideo;
-                case RedumpSystem.SegaTriforce:
-                    return KnownSystem.NamcoSegaNintendoTriforce;
                 case RedumpSystem.SharpX68000:
                     return KnownSystem.SharpX68000;
                 case RedumpSystem.SNKNeoGeoCD:
@@ -296,12 +304,12 @@ namespace DICUI.Utilities
                     return RedumpSystem.AppleMacintosh;
                 case KnownSystem.AudioCD:
                     return RedumpSystem.AudioCD;
-                case KnownSystem.BDVideo:
-                    return RedumpSystem.BDVideo;
                 case KnownSystem.BandaiApplePippin:
                     return RedumpSystem.BandaiPippin;
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     return RedumpSystem.BandaiPlaydiaQuickInteractiveSystem;
+                case KnownSystem.BDVideo:
+                    return RedumpSystem.BDVideo;
                 case KnownSystem.CommodoreAmiga:
                     return RedumpSystem.CommodoreAmigaCD;
                 case KnownSystem.CommodoreAmigaCD32:
@@ -310,8 +318,12 @@ namespace DICUI.Utilities
                     return RedumpSystem.CommodoreAmigaCDTV;
                 case KnownSystem.DVDVideo:
                     return RedumpSystem.DVDVideo;
+                case KnownSystem.EnhancedCD:
+                    return RedumpSystem.EnhancedCD;
                 case KnownSystem.FujitsuFMTowns:
                     return RedumpSystem.FujitsuFMTownsseries;
+                case KnownSystem.funworldPhotoPlay:
+                    return RedumpSystem.funworldPhotoPlay;
                 case KnownSystem.HasbroVideoNow:
                     return RedumpSystem.HasbroVideoNow;
                 case KnownSystem.HasbroVideoNowColor:
@@ -336,6 +348,8 @@ namespace DICUI.Utilities
                     return RedumpSystem.KonamiSystemGV;
                 case KnownSystem.KonamiTwinkle:
                     return RedumpSystem.KonamiTwinkle;
+                case KnownSystem.MattelFisherPriceiXL:
+                    return RedumpSystem.MattelFisherPriceiXL;
                 case KnownSystem.MattelHyperscan:
                     return RedumpSystem.MattelHyperScan;
                 case KnownSystem.TandyMemorexVisualInformationSystem:
@@ -346,22 +360,24 @@ namespace DICUI.Utilities
                     return RedumpSystem.MicrosoftXbox360;
                 case KnownSystem.MicrosoftXBOXOne:
                     return RedumpSystem.MicrosoftXboxOne;
-                case KnownSystem.NECPC88:
-                    return RedumpSystem.NECPC88series;
-                case KnownSystem.NECPC98:
-                    return RedumpSystem.NECPC98series;
-                case KnownSystem.NECPCEngineTurboGrafxCD:
-                    return RedumpSystem.NECPCEngineCDTurboGrafxCD;
-                case KnownSystem.NECPCFX:
-                    return RedumpSystem.NECPCFXPCFXGA;
+                case KnownSystem.NamcoSegaNintendoTriforce:
+                    return RedumpSystem.NamcoSegaNintendoTriforce;
                 case KnownSystem.NamcoSystem12:
                     return RedumpSystem.NamcoSystem12;
                 case KnownSystem.NamcoCapcomTaitoSystem246:
                     return RedumpSystem.NamcoSystem246;
                 case KnownSystem.NavisoftNaviken21:
                     return RedumpSystem.NavisoftNaviken21;
+                case KnownSystem.NECPCEngineTurboGrafxCD:
+                    return RedumpSystem.NECPCEngineCDTurboGrafxCD;
+                case KnownSystem.NECPC88:
+                    return RedumpSystem.NECPC88series;
+                case KnownSystem.NECPC98:
+                    return RedumpSystem.NECPC98series;
+                case KnownSystem.NECPCFX:
+                    return RedumpSystem.NECPCFXPCFXGA;
                 case KnownSystem.NintendoGameCube:
-                    return RedumpSystem.NinendoGameCube; // RedumpSystem.NintendoGameCubeBIOS;
+                    return RedumpSystem.NintendoGameCube; // RedumpSystem.NintendoGameCubeBIOS;
                 case KnownSystem.NintendoWii:
                     return RedumpSystem.NintendoWii;
                 case KnownSystem.NintendoWiiU:
@@ -392,6 +408,8 @@ namespace DICUI.Utilities
                     return RedumpSystem.SegaNaomi;
                 case KnownSystem.SegaNaomi2:
                     return RedumpSystem.SegaNaomi2;
+                case KnownSystem.SegaPrologue21:
+                    return RedumpSystem.SegaPrologue21;
                 case KnownSystem.SegaRingEdge:
                     return RedumpSystem.SegaRingEdge;
                 case KnownSystem.SegaRingEdge2:
@@ -400,8 +418,6 @@ namespace DICUI.Utilities
                     return RedumpSystem.SegaSaturn;
                 case KnownSystem.SegaTitanVideo:
                     return RedumpSystem.SegaTitanVideo;
-                case KnownSystem.NamcoSegaNintendoTriforce:
-                    return RedumpSystem.SegaTriforce;
                 case KnownSystem.SharpX68000:
                     return RedumpSystem.SharpX68000;
                 case KnownSystem.SNKNeoGeoCD:
@@ -444,31 +460,31 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="category">Category value to convert</param>
         /// <returns>Short string representing the value, if possible</returns>
-        public static string LongName(this Category? category)
+        public static string LongName(this DiscCategory? category)
         {
             switch (category)
             {
-                case Category.Games:
+                case DiscCategory.Games:
                     return "Games";
-                case Category.Demos:
+                case DiscCategory.Demos:
                     return "Demos";
-                case Category.Video:
+                case DiscCategory.Video:
                     return "Video";
-                case Category.Audio:
+                case DiscCategory.Audio:
                     return "Audio";
-                case Category.Multimedia:
+                case DiscCategory.Multimedia:
                     return "Multimedia";
-                case Category.Applications:
+                case DiscCategory.Applications:
                     return "Applications";
-                case Category.Coverdiscs:
+                case DiscCategory.Coverdiscs:
                     return "Coverdiscs";
-                case Category.Educational:
+                case DiscCategory.Educational:
                     return "Educational";
-                case Category.BonusDiscs:
+                case DiscCategory.BonusDiscs:
                     return "Bonus Discs";
-                case Category.Preproduction:
+                case DiscCategory.Preproduction:
                     return "Preproduction";
-                case Category.AddOns:
+                case DiscCategory.AddOns:
                     return "Add-Ons";
                 default:
                     return null;
@@ -541,6 +557,8 @@ namespace DICUI.Utilities
                     return "Hasbro VideoNow Jr.";
                 case KnownSystem.HasbroVideoNowXP:
                     return "Hasbro VideoNow XP";
+                case KnownSystem.MattelFisherPriceiXL:
+                    return "Mattel Fisher-Price iXL";
                 case KnownSystem.MattelHyperscan:
                     return "Mattel HyperScan";
                 case KnownSystem.MicrosoftXBOX:
@@ -1019,14 +1037,16 @@ namespace DICUI.Utilities
                     return "Acorn Archimedes";
                 case RedumpSystem.AppleMacintosh:
                     return "Apple Macintosh";
+                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
+                    return "Atari Jaguar CD Interactive Multimedia System";
                 case RedumpSystem.AudioCD:
                     return "Audio CD";
-                case RedumpSystem.BDVideo:
-                    return "BD-Video";
                 case RedumpSystem.BandaiPippin:
                     return "Bandai Pippin";
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
                     return "Bandai Playdia Quick Interactive System";
+                case RedumpSystem.BDVideo:
+                    return "BD-Video";
                 case RedumpSystem.CommodoreAmigaCD:
                     return "Commodore Amiga CD";
                 case RedumpSystem.CommodoreAmigaCD32:
@@ -1035,8 +1055,12 @@ namespace DICUI.Utilities
                     return "Commodore Amiga CDTV";
                 case RedumpSystem.DVDVideo:
                     return "DVD-Video";
+                case RedumpSystem.EnhancedCD:
+                    return "Enhanced CD";
                 case RedumpSystem.FujitsuFMTownsseries:
                     return "Fujitsu FM Towns series";
+                case RedumpSystem.funworldPhotoPlay:
+                    return "funworld Photo Play";
                 case RedumpSystem.HasbroVideoNow:
                     return "Hasbro VideoNow";
                 case RedumpSystem.HasbroVideoNowColor:
@@ -1061,6 +1085,8 @@ namespace DICUI.Utilities
                     return "Konami System GV";
                 case RedumpSystem.KonamiTwinkle:
                     return "Konami Twinkle";
+                case RedumpSystem.MattelFisherPriceiXL:
+                    return "Mattel Fisher-Price iXL";
                 case RedumpSystem.MattelHyperScan:
                     return "Mattel HyperScan";
                 case RedumpSystem.MemorexVisualInformationSystem:
@@ -1071,21 +1097,23 @@ namespace DICUI.Utilities
                     return "Microsoft Xbox 360";
                 case RedumpSystem.MicrosoftXboxOne:
                     return "Microsoft Xbox One";
-                case RedumpSystem.NECPC88series:
-                    return "NEC PC-88 series";
-                case RedumpSystem.NECPC98series:
-                    return "NEC PC-98 series";
-                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
-                    return "NEC PC Engine CD & TurboGrafx CD";
-                case RedumpSystem.NECPCFXPCFXGA:
-                    return "NEC PC-FX & PC-FXGA";
+                case RedumpSystem.NamcoSegaNintendoTriforce:
+                    return "Namco · Sega · Nintendo Triforce";
                 case RedumpSystem.NamcoSystem12:
                     return "Namco System 12";
                 case RedumpSystem.NamcoSystem246:
                     return "Namco System 246";
                 case RedumpSystem.NavisoftNaviken21:
                     return "Navisoft Naviken 2.1";
-                case RedumpSystem.NinendoGameCube:
+                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
+                    return "NEC PC Engine CD & TurboGrafx CD";
+                case RedumpSystem.NECPC88series:
+                    return "NEC PC-88 series";
+                case RedumpSystem.NECPC98series:
+                    return "NEC PC-98 series";
+                case RedumpSystem.NECPCFXPCFXGA:
+                    return "NEC PC-FX & PC-FXGA";
+                case RedumpSystem.NintendoGameCube:
                     return "Nintendo GameCube";
                 case RedumpSystem.NintendoWii:
                     return "Nintendo Wii";
@@ -1117,6 +1145,8 @@ namespace DICUI.Utilities
                     return "Sega Naomi";
                 case RedumpSystem.SegaNaomi2:
                     return "Sega Naomi 2";
+                case RedumpSystem.SegaPrologue21:
+                    return "Prologue 21";
                 case RedumpSystem.SegaRingEdge:
                     return "Sega RingEdge";
                 case RedumpSystem.SegaRingEdge2:
@@ -1125,8 +1155,6 @@ namespace DICUI.Utilities
                     return "Sega Saturn";
                 case RedumpSystem.SegaTitanVideo:
                     return "Sega Titan Video";
-                case RedumpSystem.SegaTriforce:
-                    return "Sega Triforce";
                 case RedumpSystem.SharpX68000:
                     return "Sharp X68000";
                 case RedumpSystem.SNKNeoGeoCD:
@@ -1261,6 +1289,8 @@ namespace DICUI.Utilities
                     return "South Africa";
                 case Region.Spain:
                     return "Spain";
+                case Region.SpainPortugal:
+                    return "Spain, Portugal";
                 case Region.Sweden:
                     return "Sweden";
                 case Region.Switzerland:
@@ -1289,6 +1319,8 @@ namespace DICUI.Utilities
                     return "USA, Canada";
                 case Region.USAEurope:
                     return "USA, Europe";
+                case Region.USAGermany:
+                    return "USA, Germany";
                 case Region.USAJapan:
                     return "USA, Japan";
                 case Region.World:
@@ -1354,6 +1386,8 @@ namespace DICUI.Utilities
                     return "videonowjr";
                 case KnownSystem.HasbroVideoNowXP:
                     return "videonowxp";
+                case KnownSystem.MattelFisherPriceiXL:
+                    return "ixl";
                 case KnownSystem.MattelHyperscan:
                     return "hyperscan";
                 case KnownSystem.MicrosoftXBOX:
@@ -1786,14 +1820,16 @@ namespace DICUI.Utilities
                     return "archcd";
                 case RedumpSystem.AppleMacintosh:
                     return "mac";
+                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
+                    return "ajcd";
                 case RedumpSystem.AudioCD:
                     return "audio-cd";
-                case RedumpSystem.BDVideo:
-                    return "bd-video";
                 case RedumpSystem.BandaiPippin:
                     return "pippin";
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
                     return "qis";
+                case RedumpSystem.BDVideo:
+                    return "bd-video";
                 case RedumpSystem.CommodoreAmigaCD:
                     return "acd";
                 case RedumpSystem.CommodoreAmigaCD32:
@@ -1802,8 +1838,12 @@ namespace DICUI.Utilities
                     return "cdtv";
                 case RedumpSystem.DVDVideo:
                     return "dvd-video";
+                case RedumpSystem.EnhancedCD:
+                    return "enhanced-cd";
                 case RedumpSystem.FujitsuFMTownsseries:
                     return "fmt";
+                case RedumpSystem.funworldPhotoPlay:
+                    return "fpp";
                 case RedumpSystem.HasbroVideoNow:
                     return "hvn";
                 case RedumpSystem.HasbroVideoNowColor:
@@ -1828,6 +1868,8 @@ namespace DICUI.Utilities
                     return "ksgv";
                 case RedumpSystem.KonamiTwinkle:
                     return "kt";
+                case RedumpSystem.MattelFisherPriceiXL:
+                    return "ixl";
                 case RedumpSystem.MattelHyperScan:
                     return "hs";
                 case RedumpSystem.MemorexVisualInformationSystem:
@@ -1838,21 +1880,23 @@ namespace DICUI.Utilities
                     return "xbox360";
                 case RedumpSystem.MicrosoftXboxOne:
                     return "xboxone";
-                case RedumpSystem.NECPC88series:
-                    return "pc-88";
-                case RedumpSystem.NECPC98series:
-                    return "pc-98";
-                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
-                    return "pce";
-                case RedumpSystem.NECPCFXPCFXGA:
-                    return "pc-fx";
+                case RedumpSystem.NamcoSegaNintendoTriforce:
+                    return "triforce";
                 case RedumpSystem.NamcoSystem12:
                     return "ns12";
                 case RedumpSystem.NamcoSystem246:
                     return "ns246";
                 case RedumpSystem.NavisoftNaviken21:
                     return "navi21";
-                case RedumpSystem.NinendoGameCube:
+                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
+                    return "pce";
+                case RedumpSystem.NECPC88series:
+                    return "pc-88";
+                case RedumpSystem.NECPC98series:
+                    return "pc-98";
+                case RedumpSystem.NECPCFXPCFXGA:
+                    return "pc-fx";
+                case RedumpSystem.NintendoGameCube:
                     return "gc";
                 case RedumpSystem.NintendoWii:
                     return "wii";
@@ -1884,6 +1928,8 @@ namespace DICUI.Utilities
                     return "naomi";
                 case RedumpSystem.SegaNaomi2:
                     return "naomi2";
+                case RedumpSystem.SegaPrologue21:
+                    return "pl21";
                 case RedumpSystem.SegaRingEdge:
                     return "sre";
                 case RedumpSystem.SegaRingEdge2:
@@ -1892,8 +1938,6 @@ namespace DICUI.Utilities
                     return "ss";
                 case RedumpSystem.SegaTitanVideo:
                     return "stv";
-                case RedumpSystem.SegaTriforce:
-                    return "triforce";
                 case RedumpSystem.SharpX68000:
                     return "x86kcd";
                 case RedumpSystem.SNKNeoGeoCD:
@@ -2028,6 +2072,8 @@ namespace DICUI.Utilities
                     return "Za";
                 case Region.Spain:
                     return "S";
+                case Region.SpainPortugal:
+                    return "S,Pt";
                 case Region.Sweden:
                     return "Sw";
                 case Region.Switzerland:
@@ -2056,6 +2102,8 @@ namespace DICUI.Utilities
                     return "U,Ca";
                 case Region.USAEurope:
                     return "U,E";
+                case Region.USAGermany:
+                    return "U,G";
                 case Region.USAJapan:
                     return "U,J";
                 case Region.World:
@@ -2074,36 +2122,36 @@ namespace DICUI.Utilities
         /// </summary>
         /// <param name="category">String value to convert</param>
         /// <returns>Category represented by the string, if possible</returns>
-        public static Category ToCategory(string category)
+        public static DiscCategory ToCategory(string category)
         {
             switch (category.ToLowerInvariant())
             {
                 case "games":
-                    return Category.Games;
+                    return DiscCategory.Games;
                 case "demos":
-                    return Category.Demos;
+                    return DiscCategory.Demos;
                 case "video":
-                    return Category.Video;
+                    return DiscCategory.Video;
                 case "audio":
-                    return Category.Audio;
+                    return DiscCategory.Audio;
                 case "multimedia":
-                    return Category.Multimedia;
+                    return DiscCategory.Multimedia;
                 case "applications":
-                    return Category.Applications;
+                    return DiscCategory.Applications;
                 case "coverdiscs":
-                    return Category.Coverdiscs;
+                    return DiscCategory.Coverdiscs;
                 case "educational":
-                    return Category.Educational;
+                    return DiscCategory.Educational;
                 case "bonusdiscs":
                 case "bonus discs":
-                    return Category.BonusDiscs;
+                    return DiscCategory.BonusDiscs;
                 case "preproduction":
-                    return Category.Preproduction;
+                    return DiscCategory.Preproduction;
                 case "addons":
                 case "add-ons":
-                    return Category.AddOns;
+                    return DiscCategory.AddOns;
                 default:
-                    return Category.Games;
+                    return DiscCategory.Games;
             }
         }
 
@@ -2225,6 +2273,19 @@ namespace DICUI.Utilities
                 case "hasbrovideonowxp":
                 case "hasbro videonow xp":
                     return KnownSystem.HasbroVideoNowColor;
+                case "ixl":
+                case "mattelixl":
+                case "mattel ixl":
+                case "fisherpriceixl":
+                case "fisher price ixl":
+                case "fisher-price ixl":
+                case "fisherprice ixl":
+                case "mattelfisherpriceixl":
+                case "mattel fisher price ixl":
+                case "mattelfisherprice ixl":
+                case "mattel fisherprice ixl":
+                case "mattel fisher-price ixl":
+                    return KnownSystem.MattelFisherPriceiXL;
                 case "hyperscan":
                 case "mattelhyperscan":
                 case "mattel hyperscan":
@@ -3129,6 +3190,543 @@ namespace DICUI.Utilities
             }
 
         /// <summary>
+        /// Get the RedumpSystem enum value for a given string
+        /// </summary>
+        /// <param name="sys">String value to convert</param>
+        /// <returns>RedumpSystem represented by the string, if possible</returns>
+        public static RedumpSystem? ToRedumpSystem(string sys)
+        {
+            switch (sys)
+            {
+                // Special BIOS Sets
+                case "xboxbios":
+                case "xbox bios":
+                case "microsoftxboxbios":
+                case "microsoftxbox bios":
+                case "microsoft xbox bios":
+                    return RedumpSystem.MicrosoftXboxBIOS;
+                case "gcbios":
+                case "gc bios":
+                case "gamecubebios":
+                case "ngcbios":
+                case "ngc bios":
+                case "nintendogamecubebios":
+                case "nintendo gamecube bios":
+                    return RedumpSystem.NintendoGameCubeBIOS;
+                case "ps1bios":
+                case "ps1 bios":
+                case "psxbios":
+                case "psx bios":
+                case "playstationbios":
+                case "playstation bios":
+                case "sonyps1bios":
+                case "sonyps1 bios":
+                case "sony ps1 bios":
+                case "sonypsxbios":
+                case "sonypsx bios":
+                case "sony psx bios":
+                case "sonyplaystationbios":
+                case "sonyplaystation bios":
+                case "sony playstation bios":
+                    return RedumpSystem.SonyPlayStationBIOS;
+                case "ps2bios":
+                case "ps2 bios":
+                case "playstation2bios":
+                case "playstation2 bios":
+                case "playstation 2 bios":
+                case "sonyps2bios":
+                case "sonyps2 bios":
+                case "sony ps2 bios":
+                case "sonyplaystation2bios":
+                case "sonyplaystation2 bios":
+                case "sony playstation 2 bios":
+                    return RedumpSystem.SonyPlayStation2BIOS;
+
+                // Regular systems
+                case "acorn":
+                case "archimedes":
+                case "acornarchimedes":
+                case "acorn archimedes":
+                    return RedumpSystem.AcornArchimedes;
+                case "apple":
+                case "mac":
+                case "applemac":
+                case "macintosh":
+                case "applemacintosh":
+                case "apple mac":
+                case "apple macintosh":
+                    return RedumpSystem.AppleMacintosh;
+                case "jaguar":
+                case "jagcd":
+                case "jaguarcd":
+                case "jaguar cd":
+                case "atarijaguar":
+                case "atarijagcd":
+                case "atarijaguarcd":
+                case "atari jaguar cd":
+                    return RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem;
+                case "audio":
+                case "audiocd":
+                case "audio cd":
+                    return RedumpSystem.AudioCD;
+                case "playdia":
+                case "playdiaqis":
+                case "playdiaquickinteractivesystem":
+                case "bandaiplaydia":
+                case "bandaiplaydiaquickinteractivesystem":
+                case "bandai playdia quick interactive system":
+                    return RedumpSystem.BandaiPlaydiaQuickInteractiveSystem;
+                case "pippin":
+                case "bandaipippin":
+                case "bandai pippin":
+                case "applepippin":
+                case "apple pippin":
+                case "bandaiapplepippin":
+                case "bandai apple pippin":
+                case "bandai / apple pippin":
+                    return RedumpSystem.BandaiPippin;
+                case "bdvideo":
+                case "bd-video":
+                case "blurayvideo":
+                case "bluray video":
+                    return RedumpSystem.BDVideo;
+                case "amiga":
+                case "amigacd":
+                case "amiga cd":
+                case "commodoreamiga":
+                case "commodoreamigacd":
+                case "commodoreamiga cd":
+                case "commodore amiga":
+                case "commodore amiga cd":
+                    return RedumpSystem.CommodoreAmigaCD;
+                case "cd32":
+                case "amigacd32":
+                case "amiga cd32":
+                case "commodoreamigacd32":
+                case "commodore amiga cd32":
+                    return RedumpSystem.CommodoreAmigaCD32;
+                case "cdtv":
+                case "amigacdtv":
+                case "amiga cdtv":
+                case "commodoreamigacdtv":
+                case "commodore amiga cdtv":
+                    return RedumpSystem.CommodoreAmigaCDTV;
+                case "dvdvideo":
+                case "dvd-video":
+                    return RedumpSystem.DVDVideo;
+                case "enhancedcd":
+                case "enhanced cd":
+                case "enhancedcdrom":
+                case "enhanced cdrom":
+                case "enhanced cd-rom":
+                    return RedumpSystem.EnhancedCD;
+                case "fmtowns":
+                case "fmt":
+                case "fm towns":
+                case "fujitsufmtowns":
+                case "fujitsu fm towns":
+                case "fujitsu fm towns series":
+                    return RedumpSystem.FujitsuFMTownsseries;
+                case "fpp":
+                case "funworldphotoplay":
+                case "funworld photoplay":
+                case "funworld photo play":
+                    return RedumpSystem.funworldPhotoPlay;
+                case "videonow":
+                case "hasbrovideonow":
+                case "hasbro videonow":
+                    return RedumpSystem.HasbroVideoNow;
+                case "videonowcolor":
+                case "videonow color":
+                case "hasbrovideonowcolor":
+                case "hasbro videonow color":
+                    return RedumpSystem.HasbroVideoNowColor;
+                case "videonowjr":
+                case "videonow jr":
+                case "hasbrovideonowjr":
+                case "hasbro videonow jr":
+                    return RedumpSystem.HasbroVideoNowColor;
+                case "videonowxp":
+                case "videonow xp":
+                case "hasbrovideonowxp":
+                case "hasbro videonow xp":
+                    return RedumpSystem.HasbroVideoNowColor;
+                case "ibm":
+                case "ibmpc":
+                case "pc":
+                case "ibm pc":
+                case "ibm pc compatible":
+                    return RedumpSystem.IBMPCcompatible;
+                case "iteagle":
+                case "eagle":
+                case "incredible technologies eagle":
+                    return RedumpSystem.IncredibleTechnologiesEagle;
+                case "eamusement":
+                case "e-amusement":
+                case "konamieamusement":
+                case "konami eamusement":
+                case "konamie-amusement":
+                case "konami e-amusement":
+                    return RedumpSystem.KonamieAmusement;
+                case "firebeat":
+                case "konamifirebeat":
+                case "konami firebeat":
+                    return RedumpSystem.KonamiFireBeat;
+                case "konamim2":
+                case "konami m2":
+                    return RedumpSystem.KonamiM2;
+                case "system573":
+                case "system 573":
+                case "konamisystem573":
+                case "konami system 573":
+                    return RedumpSystem.KonamiSystem573;
+                case "gvsystem":
+                case "systemgv":
+                case "gv system":
+                case "system gv":
+                case "konamigvsystem":
+                case "konamisystemgv":
+                case "konami gv system":
+                case "konami system gv":
+                    return RedumpSystem.KonamiSystemGV;
+                case "twinkle":
+                case "konamitwinkle":
+                case "konami twinkle":
+                    return RedumpSystem.KonamiTwinkle;
+                case "ixl":
+                case "mattelixl":
+                case "mattel ixl":
+                case "fisherpriceixl":
+                case "fisher price ixl":
+                case "fisher-price ixl":
+                case "fisherprice ixl":
+                case "mattelfisherpriceixl":
+                case "mattel fisher price ixl":
+                case "mattelfisherprice ixl":
+                case "mattel fisherprice ixl":
+                case "mattel fisher-price ixl":
+                    return RedumpSystem.MattelFisherPriceiXL;
+                case "hyperscan":
+                case "mattelhyperscan":
+                case "mattel hyperscan":
+                    return RedumpSystem.MattelHyperScan;
+                case "vis":
+                case "tandyvis":
+                case "tandy vis":
+                case "tandyvisualinformationsystem":
+                case "tandy visual information system":
+                case "memorexvis":
+                case "memorex vis":
+                case "memorexvisualinformationsystem":
+                case "memorex visual information sytem":
+                case "tandy / memorex visual information system":
+                    return RedumpSystem.MemorexVisualInformationSystem;
+                case "xbox":
+                case "microsoftxbox":
+                case "microsoft xbox":
+                    return RedumpSystem.MicrosoftXbox;
+                case "x360":
+                case "xbox360":
+                case "microsoftx360":
+                case "microsoftxbox360":
+                case "microsoft x360":
+                case "microsoft xbox 360":
+                    return RedumpSystem.MicrosoftXbox360;
+                case "xb1":
+                case "xbone":
+                case "xboxone":
+                case "microsoftxbone":
+                case "microsoftxboxone":
+                case "microsoft xbone":
+                case "microsoft xbox one":
+                    return RedumpSystem.MicrosoftXboxOne;
+                case "triforce":
+                case "namcotriforce":
+                case "namco triforce":
+                case "segatriforce":
+                case "sega triforce":
+                case "nintendotriforce":
+                case "nintendo triforce":
+                case "namco / sega / nintendo triforce":
+                    return RedumpSystem.NamcoSegaNintendoTriforce;
+                case "system12":
+                case "system 12":
+                case "namcosystem12":
+                case "namco system 12":
+                    return RedumpSystem.NamcoSystem12;
+                case "system246":
+                case "system 246":
+                case "namcosystem246":
+                case "namco system 246":
+                case "capcomsystem246":
+                case "capcom system 246":
+                case "taitosystem246":
+                case "taito system 246":
+                case "namco / capcom / taito system 246":
+                    return RedumpSystem.NamcoSystem246;
+                case "naviken":
+                case "naviken21":
+                case "naviken 2.1":
+                case "navisoftnaviken":
+                case "navisoft naviken":
+                case "navisoftnaviken21":
+                case "navisoft naviken 2.1":
+                    return RedumpSystem.NavisoftNaviken21;
+                case "pcecd":
+                case "pce-cd":
+                case "tgcd":
+                case "tg-cd":
+                case "necpcecd":
+                case "nectgcd":
+                case "nec pc-engine cd":
+                case "nec turbografx cd":
+                case "nec pc-engine / turbografx cd":
+                    return RedumpSystem.NECPCEngineCDTurboGrafxCD;
+                case "pc88":
+                case "pc-88":
+                case "necpc88":
+                case "nec pc88":
+                case "nec pc-88":
+                    return RedumpSystem.NECPC88series;
+                case "pc98":
+                case "pc-98":
+                case "necpc98":
+                case "nec pc98":
+                case "nec pc-98":
+                    return RedumpSystem.NECPC98series;
+                case "pcfx":
+                case "pc-fx":
+                case "pcfxga":
+                case "pc-fxga":
+                case "necpcfx":
+                case "necpcfxga":
+                case "nec pc-fx":
+                case "nec pc-fxga":
+                case "nec pc-fx / pc-fxga":
+                    return RedumpSystem.NECPCFXPCFXGA;
+                case "gc":
+                case "gamecube":
+                case "ngc":
+                case "nintendogamecube":
+                case "nintendo gamecube":
+                    return RedumpSystem.NintendoGameCube;
+                case "wii":
+                case "nintendowii":
+                case "nintendo wii":
+                    return RedumpSystem.NintendoWii;
+                case "wiiu":
+                case "wii u":
+                case "nintendowiiu":
+                case "nintendo wii u":
+                    return RedumpSystem.NintendoWiiU;
+                case "palm":
+                case "palmos":
+                    return RedumpSystem.PalmOS;
+                case "3do":
+                case "3do interactive multiplayer":
+                case "panasonic3do":
+                case "panasonic 3do":
+                case "panasonic 3do interactive multiplayer":
+                    return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
+                case "panasonicm2":
+                case "panasonic m2":
+                    return RedumpSystem.PanasonicM2;
+                case "cdi":
+                case "cd-i":
+                case "philipscdi":
+                case "philips cdi":
+                case "philips cd-i":
+                    return RedumpSystem.PhilipsCDi;
+                case "cdidv":
+                case "cdidigitalvideo":
+                case "cdi digital video":
+                case "cd-i digital video":
+                case "philipscdidigitalvideo":
+                case "philips cdi digital video":
+                case "philips cd-i digital video":
+                    return RedumpSystem.PhilipsCDiDigitalVideo;
+                case "photo":
+                case "photocd":
+                case "photo cd":
+                    return RedumpSystem.PhotoCD;
+                case "gameshark":
+                case "psgameshark":
+                case "ps gameshark":
+                case "playstationgameshark":
+                case "playstation gameshark":
+                case "playstation gameshark updates":
+                    return RedumpSystem.PlayStationGameSharkUpdates;
+                case "chihiro":
+                case "segachihiro":
+                case "sega chihiro":
+                    return RedumpSystem.SegaChihiro;
+                case "dc":
+                case "sdc":
+                case "dreamcast":
+                case "segadreamcast":
+                case "sega dreamcast":
+                    return RedumpSystem.SegaDreamcast;
+                case "lindbergh":
+                case "segalindbergh":
+                case "sega lindbergh":
+                    return RedumpSystem.SegaLindbergh;
+                case "scd":
+                case "mcd":
+                case "smcd":
+                case "segacd":
+                case "megacd":
+                case "segamegacd":
+                case "sega cd":
+                case "mega cd":
+                case "sega cd / mega cd":
+                    return RedumpSystem.SegaMegaCDSegaCD;
+                case "naomi":
+                case "seganaomi":
+                case "sega naomi":
+                    return RedumpSystem.SegaNaomi;
+                case "naomi2":
+                case "naomi 2":
+                case "seganaomi2":
+                case "sega naomi 2":
+                    return RedumpSystem.SegaNaomi2;
+                case "pl21":
+                case "prologue21":
+                case "prologue 21":
+                case "segaprologue21":
+                case "sega prologue21":
+                case "sega prologue 21":
+                    return RedumpSystem.SegaPrologue21;
+                case "ringedge":
+                case "segaringedge":
+                case "sega ringedge":
+                    return RedumpSystem.SegaRingEdge;
+                case "ringedge2":
+                case "ringedge 2":
+                case "segaringedge2":
+                case "sega ringedge 2":
+                    return RedumpSystem.SegaRingEdge2;
+                case "saturn":
+                case "segasaturn":
+                case "sega saturn":
+                    return RedumpSystem.SegaSaturn;
+                case "stv":
+                case "titanvideo":
+                case "titan video":
+                case "segatitanvideo":
+                case "sega titan video":
+                    return RedumpSystem.SegaTitanVideo;
+                case "x68k":
+                case "x68000":
+                case "sharpx68k":
+                case "sharp x68k":
+                case "sharpx68000":
+                case "sharp x68000":
+                    return RedumpSystem.SharpX68000;
+                case "ngcd":
+                case "neogeocd":
+                case "neogeo cd":
+                case "neo geo cd":
+                case "snk ngcd":
+                case "snk neogeo cd":
+                case "snk neo geo cd":
+                    return RedumpSystem.SNKNeoGeoCD;
+                case "ps1":
+                case "psx":
+                case "playstation":
+                case "sonyps1":
+                case "sony ps1":
+                case "sonypsx":
+                case "sony psx":
+                case "sonyplaystation":
+                case "sony playstation":
+                    return RedumpSystem.SonyPlayStation;
+                case "ps2":
+                case "playstation2":
+                case "playstation 2":
+                case "sonyps2":
+                case "sony ps2":
+                case "sonyplaystation2":
+                case "sony playstation 2":
+                    return RedumpSystem.SonyPlayStation2;
+                case "ps3":
+                case "playstation3":
+                case "playstation 3":
+                case "sonyps3":
+                case "sony ps3":
+                case "sonyplaystation3":
+                case "sony playstation 3":
+                    return RedumpSystem.SonyPlayStation3;
+                case "ps4":
+                case "playstation4":
+                case "playstation 4":
+                case "sonyps4":
+                case "sony ps4":
+                case "sonyplaystation4":
+                case "sony playstation 4":
+                    return RedumpSystem.SonyPlayStation4;
+                case "psp":
+                case "playstationportable":
+                case "playstation portable":
+                case "sonypsp":
+                case "sony psp":
+                case "sonyplaystationportable":
+                case "sony playstation portable":
+                    return RedumpSystem.SonyPlayStationPortable;
+                case "quizard":
+                case "tabaustriaquizard":
+                case "tab-austria quizard":
+                    return RedumpSystem.TABAustriaQuizard;
+                case "iktv":
+                case "taoiktv":
+                case "tao iktv":
+                    return RedumpSystem.TaoiKTV;
+                case "kisssite":
+                case "kiss-site":
+                case "tomykisssite":
+                case "tomy kisssite":
+                case "tomy kiss-site":
+                    return RedumpSystem.TomyKissSite;
+                case "vcd":
+                case "videocd":
+                case "video cd":
+                    return RedumpSystem.VideoCD;
+                case "nuon":
+                case "vmlabsnuon":
+                case "vm labs nuon":
+                    return RedumpSystem.VMLabsNUON;
+                case "vflash":
+                case "vsmile":
+                case "vsmilepro":
+                case "vsmile pro":
+                case "v.flash":
+                case "v.smile":
+                case "v.smilepro":
+                case "v.smile pro":
+                case "vtechvflash":
+                case "vtech vflash":
+                case "vtech v.flash":
+                case "vtechvsmile":
+                case "vtech vsmile":
+                case "vtech v.smile":
+                case "vtechvsmilepro":
+                case "vtech vsmile pro":
+                case "vtech v.smile pro":
+                case "vtech v.flash - v.smile pro":
+                    return RedumpSystem.VTechVFlashVSmilePro;
+                case "gamewave":
+                case "game wave":
+                case "zapit":
+                case "zapitgamewave":
+                case "zapit game wave":
+                case "zapit games game wave family entertainment system":
+                    return RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
+
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
         /// Get the Region enum value for a given string
         /// </summary>
         /// <param name="region">String value to convert</param>
@@ -3229,6 +3827,8 @@ namespace DICUI.Utilities
                     return Region.SouthAfrica;
                 case "S":
                     return Region.Spain;
+                case "S,Pt":
+                    return Region.SpainPortugal;
                 case "Sw":
                     return Region.Sweden;
                 case "Ch":
@@ -3257,6 +3857,8 @@ namespace DICUI.Utilities
                     return Region.USACanada;
                 case "U,E":
                     return Region.USAEurope;
+                case "U,G":
+                    return Region.USAGermany;
                 case "U,J":
                     return Region.USAJapan;
                 case "W":

@@ -663,7 +663,7 @@ namespace DICUI.Utilities
                     ForeignTitleNonLatin = (AddPlaceholders ? Template.OptionalValue : ""),
                     DiscNumberLetter = (AddPlaceholders ? Template.OptionalValue : ""),
                     DiscTitle = (AddPlaceholders ? Template.OptionalValue : ""),
-                    Category = Category.Games,
+                    Category = DiscCategory.Games,
                     Region = null,
                     Languages = null,
                     Serial = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),

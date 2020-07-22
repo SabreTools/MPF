@@ -166,6 +166,7 @@ namespace DICUI.Web
         public List<int> ProcessSearch(CookieAwareWebClient wc, string query)
         {
             List<int> ids = new List<int>();
+            query = query.ToLowerInvariant().Replace(' ', '-');
 
             // Keep getting quicksearch pages until there are none left
             int pageNumber = 1;

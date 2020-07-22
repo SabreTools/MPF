@@ -148,7 +148,7 @@ namespace DICUI.Data
             if (match.Success)
                 this.CommonDiscInfo.Category = Converters.ToCategory(match.Groups[1].Value);
             else
-                this.CommonDiscInfo.Category = Data.Category.Games;
+                this.CommonDiscInfo.Category = Data.DiscCategory.Games;
 
             // Region
             match = regionRegex.Match(discData);
@@ -273,7 +273,7 @@ namespace DICUI.Data
         public string DiscTitle { get; set; }
 
         [JsonProperty(PropertyName = "d_category", Required = Required.AllowNull)]
-        public Category? Category { get; set; }
+        public DiscCategory? Category { get; set; }
 
         [JsonProperty(PropertyName = "d_region", Required = Required.AllowNull)]
         [JsonConverter(typeof(RegionConverter))]

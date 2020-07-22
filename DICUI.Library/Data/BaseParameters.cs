@@ -600,16 +600,16 @@ namespace DICUI.Data
         /// </summary>
         /// <param name="region">String representing the category</param>
         /// <returns>Category, if possible</returns>
-        protected static Category? GetUMDCategory(string category)
+        protected static DiscCategory? GetUMDCategory(string category)
         {
             switch (category)
             {
                 case "GAME":
-                    return Category.Games;
+                    return DiscCategory.Games;
                 case "VIDEO":
-                    return Category.Video;
+                    return DiscCategory.Video;
                 case "AUDIO":
-                    return Category.Audio;
+                    return DiscCategory.Audio;
                 default:
                     return null;
             }
