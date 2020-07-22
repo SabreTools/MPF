@@ -375,6 +375,13 @@ namespace DICUI.Aaru
                     parameters.Add(Converters.LongName(Flag.DuplicatedSectors));
             }
 
+            // Eject
+            if (GetSupportedCommands(Flag.Eject).Contains(BaseCommand))
+            {
+                if (this[Flag.Eject] == true)
+                    parameters.Add(Converters.LongName(Flag.Eject));
+            }
+
             // Extended Attributes
             if (GetSupportedCommands(Flag.ExtendedAttributes).Contains(BaseCommand))
             {
@@ -403,6 +410,27 @@ namespace DICUI.Aaru
                     parameters.Add(Converters.LongName(Flag.FixOffset));
             }
 
+            // Fix Subchannel
+            if (GetSupportedCommands(Flag.FixSubchannel).Contains(BaseCommand))
+            {
+                if (this[Flag.FixSubchannel] == true)
+                    parameters.Add(Converters.LongName(Flag.FixSubchannel));
+            }
+
+            // Fix Subchannel CRC
+            if (GetSupportedCommands(Flag.FixSubchannelCrc).Contains(BaseCommand))
+            {
+                if (this[Flag.FixSubchannelCrc] == true)
+                    parameters.Add(Converters.LongName(Flag.FixSubchannelCrc));
+            }
+
+            // Fix Subchannel Position
+            if (GetSupportedCommands(Flag.FixSubchannelPosition).Contains(BaseCommand))
+            {
+                if (this[Flag.FixSubchannelPosition] == true)
+                    parameters.Add(Converters.LongName(Flag.FixSubchannelPosition));
+            }
+
             // Fletcher-16
             if (GetSupportedCommands(Flag.Fletcher16).Contains(BaseCommand))
             {
@@ -422,6 +450,13 @@ namespace DICUI.Aaru
             {
                 if (this[Flag.Force] == true)
                     parameters.Add(Converters.LongName(Flag.Force));
+            }
+
+            // Generate Subchannels
+            if (GetSupportedCommands(Flag.GenerateSubchannels).Contains(BaseCommand))
+            {
+                if (this[Flag.GenerateSubchannels] == true)
+                    parameters.Add(Converters.LongName(Flag.GenerateSubchannels));
             }
 
             // Long Format
@@ -466,11 +501,25 @@ namespace DICUI.Aaru
                     parameters.Add(Converters.LongName(Flag.Persistent));
             }
 
+            // Private
+            if (GetSupportedCommands(Flag.Private).Contains(BaseCommand))
+            {
+                if (this[Flag.Private] == true)
+                    parameters.Add(Converters.LongName(Flag.Private));
+            }
+
             // Resume
             if (GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
             {
                 if (this[Flag.Resume] == true)
                     parameters.Add(Converters.LongName(Flag.Resume));
+            }
+
+            // Retry Subchannel
+            if (GetSupportedCommands(Flag.RetrySubchannel).Contains(BaseCommand))
+            {
+                if (this[Flag.RetrySubchannel] == true)
+                    parameters.Add(Converters.LongName(Flag.RetrySubchannel));
             }
 
             // Sector Tags
@@ -513,6 +562,13 @@ namespace DICUI.Aaru
             {
                 if (this[Flag.SHA512] == true)
                     parameters.Add(Converters.LongName(Flag.SHA512));
+            }
+
+            // Skip CD-i Ready Hole
+            if (GetSupportedCommands(Flag.SkipCdiReadyHole).Contains(BaseCommand))
+            {
+                if (this[Flag.SkipCdiReadyHole] == true)
+                    parameters.Add(Converters.LongName(Flag.SkipCdiReadyHole));
             }
 
             // SpamSum
@@ -1016,6 +1072,9 @@ namespace DICUI.Aaru
                 // Deduplicated Sectors
                 ProcessFlagParameter(parts, FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, Flag.DuplicatedSectors, ref i);
 
+                // Eject
+                ProcessFlagParameter(parts, null, FlagStrings.EjectLong, Flag.Eject, ref i);
+
                 // Extended Attributes
                 ProcessFlagParameter(parts, FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, Flag.ExtendedAttributes, ref i);
 
@@ -1028,6 +1087,15 @@ namespace DICUI.Aaru
                 // Fix Offset
                 ProcessFlagParameter(parts, null, FlagStrings.FixOffsetLong, Flag.FixOffset, ref i);
 
+                // Fix Subchannel
+                ProcessFlagParameter(parts, null, FlagStrings.FixSubchannelLong, Flag.FixSubchannel, ref i);
+
+                // Fix Subchannel CRC
+                ProcessFlagParameter(parts, null, FlagStrings.FixSubchannelCrcLong, Flag.FixSubchannelCrc, ref i);
+
+                // Fix Subchannel Position
+                ProcessFlagParameter(parts, null, FlagStrings.FixSubchannelPositionLong, Flag.FixSubchannelPosition, ref i);
+
                 // Fletcher-16
                 ProcessFlagParameter(parts, null, FlagStrings.Fletcher16Long, Flag.Fletcher16, ref i);
 
@@ -1036,6 +1104,9 @@ namespace DICUI.Aaru
 
                 // Force
                 ProcessFlagParameter(parts, FlagStrings.ForceShort, FlagStrings.ForceLong, Flag.Force, ref i);
+
+                // Generate Subchannels
+                ProcessFlagParameter(parts, null, FlagStrings.GenerateSubchannelsLong, Flag.GenerateSubchannels, ref i);
 
                 // Long Format
                 ProcessFlagParameter(parts, FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, Flag.LongFormat, ref i);
@@ -1055,8 +1126,14 @@ namespace DICUI.Aaru
                 // Persistent
                 ProcessFlagParameter(parts, null, FlagStrings.PersistentLong, Flag.Persistent, ref i);
 
+                // Private
+                ProcessFlagParameter(parts, null, FlagStrings.PrivateLong, Flag.Private, ref i);
+
                 // Resume
                 ProcessFlagParameter(parts, FlagStrings.ResumeShort, FlagStrings.ResumeLong, Flag.Resume, ref i);
+
+                // Retry Subchannel
+                ProcessFlagParameter(parts, null, FlagStrings.RetrySubchannelLong, Flag.RetrySubchannel, ref i);
 
                 // Sector Tags
                 ProcessFlagParameter(parts, FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, Flag.SectorTags, ref i);
@@ -1075,6 +1152,9 @@ namespace DICUI.Aaru
 
                 // SHA-512
                 ProcessFlagParameter(parts, null, FlagStrings.SHA512Long, Flag.SHA512, ref i);
+
+                // Skip CD-i Ready Hole
+                ProcessFlagParameter(parts, null, FlagStrings.SkipCdiReadyHoleLong, Flag.SkipCdiReadyHole, ref i);
 
                 // SpamSum
                 ProcessFlagParameter(parts, FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, Flag.SpamSum, ref i);
@@ -1575,6 +1655,9 @@ namespace DICUI.Aaru
                 case Flag.DuplicatedSectors:
                     commands.Add(Command.ImageEntropy);
                     break;
+                case Flag.Eject:
+                    commands.Add(Command.MediaDump);
+                    break;
                 case Flag.Encoding:
                     commands.Add(Command.FilesystemExtract);
                     commands.Add(Command.FilesystemList);
@@ -1594,6 +1677,15 @@ namespace DICUI.Aaru
                 case Flag.FixOffset:
                     commands.Add(Command.MediaDump);
                     break;
+                case Flag.FixSubchannel:
+                    commands.Add(Command.MediaDump);
+                    break;
+                case Flag.FixSubchannelCrc:
+                    commands.Add(Command.MediaDump);
+                    break;
+                case Flag.FixSubchannelPosition:
+                    commands.Add(Command.MediaDump);
+                    break;
                 case Flag.Fletcher16:
                     commands.Add(Command.ImageChecksum);
                     break;
@@ -1608,6 +1700,9 @@ namespace DICUI.Aaru
                     commands.Add(Command.ImageConvert);
                     break;
                 case Flag.FormatDump:
+                    commands.Add(Command.MediaDump);
+                    break;
+                case Flag.GenerateSubchannels:
                     commands.Add(Command.MediaDump);
                     break;
                 case Flag.Help:
@@ -1679,6 +1774,9 @@ namespace DICUI.Aaru
                 case Flag.Persistent:
                     commands.Add(Command.MediaDump);
                     break;
+                case Flag.Private:
+                    commands.Add(Command.MediaDump);
+                    break;
                 case Flag.Resume:
                     commands.Add(Command.MediaDump);
                     break;
@@ -1686,6 +1784,9 @@ namespace DICUI.Aaru
                     commands.Add(Command.ImageConvert);
                     break;
                 case Flag.RetryPasses:
+                    commands.Add(Command.MediaDump);
+                    break;
+                case Flag.RetrySubchannel:
                     commands.Add(Command.MediaDump);
                     break;
                 case Flag.SectorTags:
@@ -1708,6 +1809,9 @@ namespace DICUI.Aaru
                     commands.Add(Command.ImageChecksum);
                     break;
                 case Flag.Skip:
+                    commands.Add(Command.MediaDump);
+                    break;
+                case Flag.SkipCdiReadyHole:
                     commands.Add(Command.MediaDump);
                     break;
                 case Flag.SpamSum:

@@ -130,6 +130,8 @@ namespace DICUI.Aaru
                     return FlagStrings.DiskTagsLong;
                 case Flag.DuplicatedSectors:
                     return FlagStrings.DuplicatedSectorsLong;
+                case Flag.Eject:
+                    return FlagStrings.EjectLong;
                 case Flag.ExtendedAttributes:
                     return FlagStrings.ExtendedAttributesLong;
                 case Flag.Filesystems:
@@ -138,12 +140,20 @@ namespace DICUI.Aaru
                     return FlagStrings.FirstPregapLong;
                 case Flag.FixOffset:
                     return FlagStrings.FixOffsetLong;
+                case Flag.FixSubchannel:
+                    return FlagStrings.FixSubchannelLong;
+                case Flag.FixSubchannelCrc:
+                    return FlagStrings.FixSubchannelCrcLong;
+                case Flag.FixSubchannelPosition:
+                    return FlagStrings.FixSubchannelPositionLong;
                 case Flag.Fletcher16:
                     return FlagStrings.Fletcher16Long;
                 case Flag.Fletcher32:
                     return FlagStrings.Fletcher32Long;
                 case Flag.Force:
                     return FlagStrings.ForceLong;
+                case Flag.GenerateSubchannels:
+                    return FlagStrings.GenerateSubchannelsLong;
                 case Flag.Help:
                     return FlagStrings.HelpLong;
                 case Flag.LongFormat:
@@ -158,8 +168,12 @@ namespace DICUI.Aaru
                     return FlagStrings.PartitionsLong;
                 case Flag.Persistent:
                     return FlagStrings.PersistentLong;
+                case Flag.Private:
+                    return FlagStrings.PrivateLong;
                 case Flag.Resume:
                     return FlagStrings.ResumeLong;
+                case Flag.RetrySubchannel:
+                    return FlagStrings.RetrySubchannelLong;
                 case Flag.SectorTags:
                     return FlagStrings.SectorTagsLong;
                 case Flag.SeparatedTracks:
@@ -172,6 +186,8 @@ namespace DICUI.Aaru
                     return FlagStrings.SHA384Long;
                 case Flag.SHA512:
                     return FlagStrings.SHA512Long;
+                case Flag.SkipCdiReadyHole:
+                    return FlagStrings.SkipCdiReadyHoleLong;
                 case Flag.SpamSum:
                     return FlagStrings.SpamSumLong;
                 case Flag.StopOnError:
