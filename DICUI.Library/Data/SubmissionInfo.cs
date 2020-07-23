@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Net;
 using DICUI.Utilities;
+using DICUI.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -146,14 +147,14 @@ namespace DICUI.Data
             // Category
             match = categoryRegex.Match(discData);
             if (match.Success)
-                this.CommonDiscInfo.Category = Converters.ToCategory(match.Groups[1].Value);
+                this.CommonDiscInfo.Category = Web.Extensions.ToCategory(match.Groups[1].Value);
             else
-                this.CommonDiscInfo.Category = Data.DiscCategory.Games;
+                this.CommonDiscInfo.Category = DiscCategory.Games;
 
             // Region
             match = regionRegex.Match(discData);
             if (match.Success)
-                this.CommonDiscInfo.Region = Converters.ToRegion(match.Groups[1].Value);
+                this.CommonDiscInfo.Region = Web.Extensions.ToRegion(match.Groups[1].Value);
 
             // Languages
             var matches = languagesRegex.Matches(discData);
@@ -161,7 +162,7 @@ namespace DICUI.Data
             {
                 List<Language?> tempLanguages = new List<Language?>();
                 foreach (Match submatch in matches)
-                    tempLanguages.Add(Converters.ToLanguage(submatch.Groups[1].Value));
+                    tempLanguages.Add(Web.Extensions.ToLanguage(submatch.Groups[1].Value));
 
                 this.CommonDiscInfo.Languages = tempLanguages.ToArray();
             }

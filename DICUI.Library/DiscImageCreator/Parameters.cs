@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using BurnOutSharp.External.psxt001z;
 using DICUI.Data;
 using DICUI.Utilities;
+using DICUI.Web;
 
 namespace DICUI.DiscImageCreator
 {

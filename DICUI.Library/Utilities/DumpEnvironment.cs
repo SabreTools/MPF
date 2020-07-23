@@ -688,11 +688,10 @@ namespace DICUI.Utilities
                 info.DumpersAndStatus.Dumpers = new string[] { this.Username };
 
                 info.MatchedIDs = new List<int>();
-                using (CookieAwareWebClient wc = new CookieAwareWebClient())
+                using (RedumpWebClient wc = new RedumpWebClient())
                 {
                     // Login to Redump
-                    RedumpAccess access = new RedumpAccess();
-                    if (access.RedumpLogin(wc, this.Username, this.Password))
+                    if (wc.Login(this.Username, this.Password))
                     {
                         // Loop through all of the hashdata to find matching IDs
                         progress?.Report(Result.Success("Finding disc matches on Redump..."));
@@ -701,7 +700,7 @@ namespace DICUI.Utilities
                         {
                             if (GetISOHashValues(hashData, out long size, out string crc32, out string md5, out string sha1))
                             {
-                                List<int> newIds = access.ProcessSearch(wc, sha1.ToLowerInvariant());
+                                List<int> newIds = wc.ListSearchResults(sha1);
                                 if (info.MatchedIDs.Any())
                                     info.MatchedIDs = info.MatchedIDs.Intersect(newIds).ToList();
                                 else
@@ -715,7 +714,7 @@ namespace DICUI.Utilities
                         if (info.MatchedIDs.Count == 1)
                         {
                             progress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
-                            string discData = access.DownloadSingleSiteID(wc, info.MatchedIDs[0]);
+                            string discData = wc.DownloadSingleSiteID(info.MatchedIDs[0]);
                             info.FillFromDiscPage(discData);
                             progress?.Report(Result.Success("Information filling complete!"));
                         }

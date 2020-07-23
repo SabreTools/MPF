@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using DICUI.Data;
 using DICUI.Utilities;
+using DICUI.Web;
 
 namespace DICUI.Aaru
 {

@@ -105,10 +105,9 @@ namespace DICUI.Check
             // If credentials are invalid, alert the user
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
             {
-                using (CookieAwareWebClient wc = new CookieAwareWebClient())
+                using (RedumpWebClient wc = new RedumpWebClient())
                 {
-                    RedumpAccess access = new RedumpAccess();
-                    if (access.RedumpLogin(wc, username, password))
+                    if (wc.Login(username, password))
                         Console.WriteLine("Redump username and password accepted!");
                     else
                         Console.WriteLine("Redump username and password denied!");

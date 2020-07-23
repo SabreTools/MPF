@@ -261,7 +261,7 @@ namespace DICUI.Windows
             string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.MajorRevision != 0 ? $".{assemblyVersion.MajorRevision}" : string.Empty);
 
             // Get the latest tag from GitHub
-            using (var client = new CookieAwareWebClient())
+            using (var client = new RedumpWebClient())
             {
                 client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
 

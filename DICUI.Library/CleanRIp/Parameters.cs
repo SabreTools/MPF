@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using DICUI.Data;
 using DICUI.Utilities;
+using DICUI.Web;
 
 namespace DICUI.CleanRip
 {

@@ -123,10 +123,9 @@ namespace DICUI.Windows
         /// </summary>
         private void OnRedumpTestClick(object sender, EventArgs e)
         {
-            using (CookieAwareWebClient wc = new CookieAwareWebClient())
+            using (RedumpWebClient wc = new RedumpWebClient())
             {
-                RedumpAccess access = new RedumpAccess();
-                if (access.RedumpLogin(wc, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password))
+                if (wc.Login(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password))
                     System.Windows.MessageBox.Show("Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
                     System.Windows.MessageBox.Show("Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
