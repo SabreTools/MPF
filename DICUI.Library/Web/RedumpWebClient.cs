@@ -6,7 +6,6 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using DICUI.Data;
 using DICUI.Utilities;
 
 namespace DICUI.Web

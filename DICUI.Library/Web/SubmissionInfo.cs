@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using DICUI.Data;
 using DICUI.Utilities;
-using DICUI.Web;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace DICUI.Data
+namespace DICUI.Web
 {
     public class SubmissionInfo
     {
