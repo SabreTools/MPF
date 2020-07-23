@@ -714,8 +714,7 @@ namespace DICUI.Utilities
                         if (info.MatchedIDs.Count == 1)
                         {
                             progress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
-                            string discData = wc.DownloadSingleSiteID(info.MatchedIDs[0]);
-                            info.FillFromDiscPage(discData);
+                            wc.FillFromId(info, info.MatchedIDs[0]);
                             progress?.Report(Result.Success("Information filling complete!"));
                         }
                     }

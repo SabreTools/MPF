@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using DICUI.Data;
+using DICUI.Utilities;
 
 namespace DICUI.Web
 {
@@ -355,6 +357,217 @@ namespace DICUI.Web
         }
 
         /// <summary>
+        /// Create a new SubmissionInfo object based on a disc page
+        /// </summary>
+        /// <param name="id">Redump disc ID to retrieve</param>
+        /// <returns>Filled SubmissionInfo object on success, null on error</returns>
+        public SubmissionInfo CreateFromId(int id)
+        {
+            string discData = DownloadSingleSiteID(id);
+            if (string.IsNullOrEmpty(discData))
+                return null;
+
+            // Create the new object
+            SubmissionInfo info = new SubmissionInfo();
+
+            // Added
+            var match = addedRegex.Match(discData);
+            if (match.Success)
+            {
+                if (DateTime.TryParse(match.Groups[1].Value, out DateTime added))
+                    info.Added = added;
+                else
+                    info.Added = null;
+            }
+
+            // Barcode
+            match = barcodeRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Barcode = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // BCA
+            match = bcaRegex.Match(discData);
+            if (match.Success)
+            {
+                info.Extras.BCA = WebUtility.HtmlDecode(match.Groups[1].Value)
+                       .Replace("<br />", "\n")
+                       .Replace("</div>", "");
+                info.Extras.BCA = Regex.Replace(info.Extras.BCA, @"<div .*?>", "");
+            }
+
+            // Category
+            match = categoryRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Category = Extensions.ToCategory(match.Groups[1].Value);
+            else
+                info.CommonDiscInfo.Category = DiscCategory.Games;
+
+            // Comments
+            match = commentsRegex.Match(discData);
+            if (match.Success)
+            {
+                info.CommonDiscInfo.Comments = WebUtility.HtmlDecode(match.Groups[1].Value)
+                    .Replace("<br />", "\n")
+                    .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
+            }
+
+            // Contents
+            match = contentsRegex.Match(discData);
+            if (match.Success)
+            {
+                info.CommonDiscInfo.Contents = WebUtility.HtmlDecode(match.Groups[1].Value)
+                       .Replace("<br />", "\n")
+                       .Replace("</div>", "");
+                info.CommonDiscInfo.Contents = Regex.Replace(info.CommonDiscInfo.Contents, @"<div .*?>", "");
+            }
+
+            // Dumpers
+            var matches = dumpersRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                List<string> tempDumpers = new List<string>();
+                foreach (Match submatch in matches)
+                {
+                    tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
+                }
+
+                info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
+            }
+
+            // Edition
+            match = editionRegex.Match(discData);
+            if (match.Success)
+                info.VersionAndEditions.OtherEditions = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Error Count
+            match = errorCountRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
+
+            // Foreign Title
+            match = foreignTitleRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
+            else
+                info.CommonDiscInfo.ForeignTitleNonLatin = null;
+
+            // Languages
+            matches = languagesRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                List<Language?> tempLanguages = new List<Language?>();
+                foreach (Match submatch in matches)
+                {
+                    tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
+                }
+
+                info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
+            }
+
+            // Last Modified
+            match = lastModifiedRegex.Match(discData);
+            if (match.Success)
+            {
+                if (DateTime.TryParse(match.Groups[1].Value, out DateTime lastModified))
+                    info.LastModified = lastModified;
+                else
+                    info.LastModified = null;
+            }
+
+            // Media
+            match = mediaRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Media = Converters.ToMediaType(match.Groups[1].Value);
+
+            // PVD
+            match = pvdRegex.Match(discData);
+            if (match.Success)
+            {
+                info.Extras.PVD = WebUtility.HtmlDecode(match.Groups[1].Value)
+                       .Replace("<br />", "\n")
+                       .Replace("</div>", "");
+                info.Extras.PVD = Regex.Replace(info.Extras.PVD, @"<div .*?>", "");
+            }
+
+            // Region
+            match = regionRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+
+            // Serial
+            match = serialRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // System
+            match = systemRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.System = Converters.ToKnownSystem(match.Groups[1].Value);
+
+            // Title, Disc Number/Letter, Disc Title
+            match = titleRegex.Match(discData);
+            if (match.Success)
+            {
+                string title = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+                // If we have parenthesis, title is everything before the first one
+                int firstParenLocation = title.IndexOf(" (");
+                if (firstParenLocation >= 0)
+                {
+                    info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
+                    var subMatches = discNumberLetterRegex.Match(title);
+                    for (int i = 1; i < subMatches.Groups.Count; i++)
+                    {
+                        string subMatch = subMatches.Groups[i].Value;
+
+                        // Disc number or letter
+                        if (subMatch.StartsWith("Disc"))
+                            info.CommonDiscInfo.DiscNumberLetter = subMatch.Remove(0, "Disc ".Length);
+
+                        // Disc title
+                        else
+                            info.CommonDiscInfo.DiscTitle = subMatch;
+                    }
+                }
+                // Otherwise, leave the title as-is
+                else
+                {
+                    info.CommonDiscInfo.Title = title;
+                }
+            }
+
+            // Tracks
+            matches = trackRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                List<string> tempTracks = new List<string>();
+                foreach (Match submatch in matches)
+                {
+                    tempTracks.Add(submatch.Groups[1].Value);
+                }
+
+                info.TracksAndWriteOffsets.ClrMameProData = string.Join("\n", tempTracks);
+            }
+
+            // Track Count
+            match = trackCountRegex.Match(discData);
+            if (match.Success)
+                info.TracksAndWriteOffsets.Cuesheet = match.Groups[1].Value;
+
+            // Version
+            match = versionRegex.Match(discData);
+            if (match.Success)
+                info.VersionAndEditions.Version = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Write Offset
+            match = writeOffsetRegex.Match(discData);
+            if (match.Success)
+                info.TracksAndWriteOffsets.OtherWriteOffsets = WebUtility.HtmlDecode(match.Groups[1].Value);                
+
+            return info;
+        }
+
+        /// <summary>
         /// Download the last modified disc pages, until first failure
         /// </summary>
         /// <param name="outDir">Output directory to save data to</param>
@@ -555,6 +768,166 @@ namespace DICUI.Web
         }
 
         /// <summary>
+        /// Fill out an existing SubmissionInfo object based on a disc page
+        /// </summary>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <param name="id">Redump disc ID to retrieve</param>
+        public void FillFromId(SubmissionInfo info, int id)
+        {
+            string discData = DownloadSingleSiteID(id);
+            if (string.IsNullOrEmpty(discData))
+                return;
+
+            // Title, Disc Number/Letter, Disc Title
+            var match = titleRegex.Match(discData);
+            if (match.Success)
+            {
+                string title = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+                // If we have parenthesis, title is everything before the first one
+                int firstParenLocation = title.IndexOf(" (");
+                if (firstParenLocation >= 0)
+                {
+                    info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
+                    var subMatches = discNumberLetterRegex.Match(title);
+                    for (int i = 1; i < subMatches.Groups.Count; i++)
+                    {
+                        string subMatch = subMatches.Groups[i].Value;
+
+                        // Disc number or letter
+                        if (subMatch.StartsWith("Disc"))
+                            info.CommonDiscInfo.DiscNumberLetter = subMatch.Remove(0, "Disc ".Length);
+
+                        // Disc title
+                        else
+                            info.CommonDiscInfo.DiscTitle = subMatch;
+                    }
+                }
+                // Otherwise, leave the title as-is
+                else
+                {
+                    info.CommonDiscInfo.Title = title;
+                }
+            }
+
+            // Foreign Title
+            match = foreignTitleRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
+            else
+                info.CommonDiscInfo.ForeignTitleNonLatin = null;
+
+            // Category
+            match = categoryRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Category = Extensions.ToCategory(match.Groups[1].Value);
+            else
+                info.CommonDiscInfo.Category = DiscCategory.Games;
+
+            // Region
+            match = regionRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+
+            // Languages
+            var matches = languagesRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                List<Language?> tempLanguages = new List<Language?>();
+                foreach (Match submatch in matches)
+                    tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
+
+                info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
+            }
+
+            // Serial
+            match = serialRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Error count
+            match = errorCountRegex.Match(discData);
+            if (match.Success)
+            {
+                // If the error counts don't match, then use the one from the disc page
+                if (!string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount) && match.Groups[1].Value != info.CommonDiscInfo.ErrorsCount)
+                    info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
+            }
+
+            // Version
+            match = versionRegex.Match(discData);
+            if (match.Success)
+                info.VersionAndEditions.Version = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Edition
+            match = editionRegex.Match(discData);
+            if (match.Success)
+                info.VersionAndEditions.OtherEditions = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Dumpers
+            matches = dumpersRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                // Start with any currently listed dumpers
+                List<string> tempDumpers = new List<string>();
+                if (info.DumpersAndStatus.Dumpers.Length > 0)
+                {
+                    foreach (string dumper in info.DumpersAndStatus.Dumpers)
+                        tempDumpers.Add(dumper);
+                }
+
+                foreach (Match submatch in matches)
+                    tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
+
+                info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
+            }
+
+            // Barcode
+            match = barcodeRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Barcode = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Comments
+            match = commentsRegex.Match(discData);
+            if (match.Success)
+            {
+                info.CommonDiscInfo.Comments = WebUtility.HtmlDecode(match.Groups[1].Value)
+                    .Replace("<br />", "\n")
+                    .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
+            }
+
+            // Contents
+            match = contentsRegex.Match(discData);
+            if (match.Success)
+            {
+                info.CommonDiscInfo.Contents = WebUtility.HtmlDecode(match.Groups[1].Value)
+                       .Replace("<br />", "\n")
+                       .Replace("</div>", "");
+                info.CommonDiscInfo.Contents = Regex.Replace(info.CommonDiscInfo.Contents, @"<div .*?>", "");
+            }
+
+            // Added
+            match = addedRegex.Match(discData);
+            if (match.Success)
+            {
+                if (DateTime.TryParse(match.Groups[1].Value, out DateTime added))
+                    info.Added = added;
+                else
+                    info.Added = null;
+            }
+
+            // Last Modified
+            match = lastModifiedRegex.Match(discData);
+            if (match.Success)
+            {
+                if (DateTime.TryParse(match.Groups[1].Value, out DateTime lastModified))
+                    info.LastModified = lastModified;
+                else
+                    info.LastModified = null;
+            }
+        }
+
+        /// <summary>
         /// List the disc IDs associated with a given quicksearch query
         /// </summary>
         /// <param name="query">Query string to attempt to search for</param>
@@ -592,11 +965,11 @@ namespace DICUI.Web
         /// </summary>
         /// <param name="username">Username to check discs for</param>
         /// <returns>All disc IDs for the given user, empty on error</returns>
-        public List<int> ListUser(RedumpWebClient wc, string username)
+        public List<int> ListUser(string username)
         {
             List<int> ids = new List<int>();
 
-            if (!wc.LoggedIn)
+            if (!LoggedIn)
             {
                 Console.WriteLine("User download functionality is only available to Redump members");
                 return ids;
@@ -606,7 +979,7 @@ namespace DICUI.Web
             int pageNumber = 1;
             while (true)
             {
-                List<int> pageIds = wc.CheckSingleSitePage(string.Format(userDumpsUrl, username, pageNumber++));
+                List<int> pageIds = CheckSingleSitePage(string.Format(userDumpsUrl, username, pageNumber++));
                 ids.AddRange(pageIds);
                 if (pageIds.Count <= 1)
                     break;
@@ -624,7 +997,7 @@ namespace DICUI.Web
         /// </summary>
         /// <param name="url">Base URL to download using</param>
         /// <returns>List of IDs from the page, empty on error</returns>
-        internal List<int> CheckSingleSitePage(string url)
+        private List<int> CheckSingleSitePage(string url)
         {
             List<int> ids = new List<int>();
             var dumpsPage = DownloadString(url);
@@ -669,7 +1042,7 @@ namespace DICUI.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="failOnSingle">True to return on first error, false otherwise</param>
         /// <returns>True if the page could be downloaded, false otherwise</returns>
-        internal bool CheckSingleSitePage(string url, string outDir, bool failOnSingle)
+        private bool CheckSingleSitePage(string url, string outDir, bool failOnSingle)
         {
             var dumpsPage = DownloadString(url);
 
@@ -719,7 +1092,7 @@ namespace DICUI.Web
         /// </summary>
         /// <param name="wc">RedumpWebClient to access the packs</param>
         /// <returns>List of IDs from the page, empty on error</returns>
-        internal List<int> CheckSingleWIPPage(string url)
+        private List<int> CheckSingleWIPPage(string url)
         {
             List<int> ids = new List<int>();
             var dumpsPage = DownloadString(url);
@@ -754,7 +1127,7 @@ namespace DICUI.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="failOnSingle">True to return on first error, false otherwise</param>
         /// <returns>True if the page could be downloaded, false otherwise</returns>
-        internal bool CheckSingleWIPPage(string url, string outDir, bool failOnSingle)
+        private bool CheckSingleWIPPage(string url, string outDir, bool failOnSingle)
         {
             var dumpsPage = DownloadString(url);
 
@@ -795,7 +1168,7 @@ namespace DICUI.Web
         /// <param name="url">Base URL to download using</param>
         /// <param name="system">System to download packs for</param>
         /// <returns>Byte array containing the downloaded pack, null on error</returns>
-        internal byte[] DownloadSinglePack(string url, RedumpSystem? system)
+        private byte[] DownloadSinglePack(string url, RedumpSystem? system)
         {
             try
             {
@@ -815,7 +1188,7 @@ namespace DICUI.Web
         /// <param name="system">System to download packs for</param>
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="subfolder">Named subfolder for the pack, used optionally</param>
-        internal void DownloadSinglePack(string url, RedumpSystem? system, string outDir, string subfolder)
+        private void DownloadSinglePack(string url, RedumpSystem? system, string outDir, string subfolder)
         {
             try
             {
@@ -834,7 +1207,7 @@ namespace DICUI.Web
         /// </summary>
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <returns>String containing the page contents if successful, null on error</returns>
-        internal string DownloadSingleSiteID(int id)
+        private string DownloadSingleSiteID(int id)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
             Console.WriteLine($"Processing ID: {paddedId}");
@@ -864,7 +1237,7 @@ namespace DICUI.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="rename">True to rename deleted entries, false otherwise</param>
         /// <returns>True if all data was downloaded, false otherwise</returns>
-        internal bool DownloadSingleSiteID(int id, string outDir, bool rename)
+        private bool DownloadSingleSiteID(int id, string outDir, bool rename)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
             string paddedIdDir = Path.Combine(outDir, paddedId);
@@ -973,7 +1346,7 @@ namespace DICUI.Web
         /// </summary>
         /// <param name="id">Redump WIP disc ID to retrieve</param>
         /// <returns>String containing the page contents if successful, null on error</returns>
-        internal string DownloadSingleWIPID(int id)
+        private string DownloadSingleWIPID(int id)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
             Console.WriteLine($"Processing ID: {paddedId}");
@@ -1003,7 +1376,7 @@ namespace DICUI.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="rename">True to rename deleted entries, false otherwise</param>
         /// <returns>True if all data was downloaded, false otherwise</returns>
-        internal bool DownloadSingleWIPID(int id, string outDir, bool rename)
+        private bool DownloadSingleWIPID(int id, string outDir, bool rename)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
             string paddedIdDir = Path.Combine(outDir, paddedId);
@@ -1083,7 +1456,7 @@ namespace DICUI.Web
         /// <param name="url">Base URL to download using</param>
         /// <param name="system">Systems to download packs for</param>
         /// <param name="title">Name of the pack that is downloading</param>
-        internal Dictionary<RedumpSystem?, byte[]> DownloadPacks(string url, RedumpSystem?[] systems, string title)
+        private Dictionary<RedumpSystem?, byte[]> DownloadPacks(string url, RedumpSystem?[] systems, string title)
         {
             var packsDictionary = new Dictionary<RedumpSystem?, byte[]>();
 
@@ -1114,7 +1487,7 @@ namespace DICUI.Web
         /// <param name="title">Name of the pack that is downloading</param>
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="subfolder">Named subfolder for the pack, used optionally</param>
-        internal void DownloadPacks(string url, RedumpSystem?[] systems, string title, string outDir, string subfolder)
+        private void DownloadPacks(string url, RedumpSystem?[] systems, string title, string outDir, string subfolder)
         {
             // If we didn't have credentials
             if (!LoggedIn)
