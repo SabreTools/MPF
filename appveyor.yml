@@ -32,14 +32,14 @@ build:
 
 # post-build step
 after_build:
-- ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.0.1.2884/aaru-5.0.1.2884-1_windows_x64.zip
+- ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.1.0.3214/aaru-5.1.0.3214-1_windows_x64.zip
 - ps: appveyor DownloadFile http://www.chrysocome.net/downloads/8ab730cd2a29e76ddd89be1f99357942/dd-0.6beta3.zip
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/4931645/DiscImageCreator_20200716.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
-- 7z e aaru-5.0.1.2884-1_windows_x64.zip -oDICUI\bin\Debug\net462\Programs\Aaru *
-- 7z e aaru-5.0.1.2884-1_windows_x64.zip -oDICUI\bin\Debug\net472\Programs\Aaru *
-- 7z e aaru-5.0.1.2884-1_windows_x64.zip -oDICUI\bin\Debug\net48\Programs\Aaru *
-- 7z e aaru-5.0.1.2884-1_windows_x64.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\net462\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\net472\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\net48\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\Aaru *
 - 7z e dd-0.6beta3.zip -oDICUI\bin\Debug\net462\Programs\DD *
 - 7z e dd-0.6beta3.zip -oDICUI\bin\Debug\net472\Programs\DD *
 - 7z e dd-0.6beta3.zip -oDICUI\bin\Debug\net48\Programs\DD *
