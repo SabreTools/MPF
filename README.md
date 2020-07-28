@@ -11,7 +11,7 @@ This is a community project, so if you have some time and knowledge to give, we'
 Even though this is written in C#, this program can only be used on Windows systems due to one of the base programs, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
 
 - Windows 7 (newest version of Windows recommended) or Mono-compatible Linux environment (DICUI.Check only)
-- .NET Framework 4.6.2, .NET Framework 4.7.2, .NET Framework 4.8, or .NET Core 3.1 Runtimes (.NET Core 3.1 is not currently partially functional due to a dependency, use at your own risk)
+- .NET Framework 4.6.2, .NET Framework 4.7.2, .NET Framework 4.8, or .NET Core 3.1 Runtimes (.NET Core 3.1 is only partially functional due to a dependency, use at your own risk)
 - 1 GB of free RAM
 - As much hard drive space as amount of discs you will be dumping (20+ GB recommended)
 
