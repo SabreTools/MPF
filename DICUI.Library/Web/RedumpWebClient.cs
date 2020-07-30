@@ -316,7 +316,6 @@ namespace DICUI.Web
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
             {
                 Console.WriteLine("Credentials entered, will attempt Redump login...");
-                return false;
             }
             else if (!string.IsNullOrWhiteSpace(username) && string.IsNullOrWhiteSpace(password))
             {
