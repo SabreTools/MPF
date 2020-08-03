@@ -663,7 +663,7 @@ namespace DICUI.Utilities
                     ForeignTitleNonLatin = (AddPlaceholders ? Template.OptionalValue : ""),
                     DiscNumberLetter = (AddPlaceholders ? Template.OptionalValue : ""),
                     DiscTitle = (AddPlaceholders ? Template.OptionalValue : ""),
-                    Category = DiscCategory.Games,
+                    Category = null,
                     Region = null,
                     Languages = null,
                     Serial = (AddPlaceholders ? Template.RequiredIfExistsValue : ""),
@@ -945,6 +945,9 @@ namespace DICUI.Utilities
                     info.CopyProtection.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
             }
+
+            // Set the category if it's not overriden
+            info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Games;
 
             // Comments is one of the few fields with odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
