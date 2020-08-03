@@ -833,11 +833,17 @@ namespace DICUI.Utilities
 
                     break;
 
+                case KnownSystem.AudioCD:
+                case KnownSystem.SuperAudioCD:
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
+                    break;
+
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
                 case KnownSystem.BDVideo:
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
                     info.CopyProtection.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
@@ -851,6 +857,10 @@ namespace DICUI.Utilities
 
                 case KnownSystem.CommodoreAmigaCDTV:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case KnownSystem.DVDVideo:
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
                     break;
 
                 case KnownSystem.FujitsuFMTowns:
