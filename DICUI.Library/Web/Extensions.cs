@@ -385,7 +385,7 @@
                 case Language.Ukrainian:
                     return "Ukrainian";
                 default:
-                    return null;
+                    return "Klingon (CHANGE THIS)"; // TODO: Not Redump compatible
             }
         }
 
