@@ -921,11 +921,15 @@ namespace DICUI.Utilities
                 return KnownSystem.DVDAudio;
             }
 
-            // DVD-Video
+            // DVD-Video and Xbox
             if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
                 && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Count() > 0)
             {
-                return KnownSystem.DVDAudio;
+                // TODO: Maybe add video track hashes to compare for Xbox and X360?
+                if (string.Equals(drive.VolumeLabel, "SEP13011042072", StringComparison.OrdinalIgnoreCase))
+                    return KnownSystem.MicrosoftXBOX;
+
+                return KnownSystem.DVDVideo;
             }
 
             // Sega Dreamcast
