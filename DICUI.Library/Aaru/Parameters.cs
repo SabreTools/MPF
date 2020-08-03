@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
+using Schemas;
 
 namespace DICUI.Aaru
 {
@@ -1511,19 +1513,22 @@ namespace DICUI.Aaru
             // TODO: Fill in submission info specifics for Aaru
             string outputDirectory = Path.GetDirectoryName(basePath);
 
+            // Deserialize the sidecar, if possible
+            var sidecar = GenerateSidecar(basePath + ".cicm.xml");
+
             // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(basePath + ".cicm.xml");
+            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(sidecar, basePath);
 
             switch (type)
             {
                 case MediaType.CDROM:
                     // TODO: Can this do GD-ROM?
                     // TODO: Investigate if there's an error count for Aaru
-                    info.Extras.PVD = GeneratePVD(basePath + ".cicm.xml") ?? "Disc has no PVD";
+                    info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
 
-                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(basePath + ".cicm.xml") ?? "";
+                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? "";
 
-                    string cdWriteOffset = GetWriteOffset(basePath + ".cicm.xml") ?? "";
+                    string cdWriteOffset = GetWriteOffset(sidecar) ?? "";
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
                     break;
@@ -1552,7 +1557,6 @@ namespace DICUI.Aaru
             switch (system)
             {
                 // TODO: Can we get DVD protection or SecuROM data out of this?
-                // TODO: Can we get DMI, PFI, and SS hashes for XGD?
                 // TODO: Can we get SS version/ranges?
                 // TODO: Can we get DMI info?
                 // TODO: Can we get Sega Header info?
@@ -1567,6 +1571,43 @@ namespace DICUI.Aaru
                     }
 
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.MicrosoftXBOX:
+                    if (GetXgdAuxInfo(sidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss ?? "";
+                    }
+
+                    if (GetXboxDMIInfo(sidecar, out string serial, out string version, out Region? region))
+                    {
+                        info.CommonDiscInfo.Serial = serial ?? "";
+                        info.VersionAndEditions.Version = version ?? "";
+                        info.CommonDiscInfo.Region = region;
+                    }
+
+                    break;
+
+                case KnownSystem.MicrosoftXBOX360:
+                    if (GetXgdAuxInfo(sidecar, out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss360 ?? "";
+                    }
+
+                    if (GetXbox360DMIInfo(sidecar, out string serial360, out string version360, out Region? region360))
+                    {
+                        info.CommonDiscInfo.Serial = serial360 ?? "";
+                        info.VersionAndEditions.Version = version360 ?? "";
+                        info.CommonDiscInfo.Region = region360;
+                    }
                     break;
 
                 case KnownSystem.SonyPlayStation:
@@ -1871,6 +1912,8 @@ namespace DICUI.Aaru
             return commands;
         }
 
+        #region Process Parameter Helpers
+
         /// <summary>
         /// Process a flag parameter
         /// </summary>
@@ -2081,159 +2124,114 @@ namespace DICUI.Aaru
             return string.Empty;
         }
 
+        #endregion
+
         #region Information Extraction Methods
 
         /// <summary>
         /// Generate a cuesheet string based on CICM sidecar data
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <param name="basePath">Base path for determining file names</param>
         /// <returns>String containing the cuesheet, null on error</returns>
-        private string GenerateCuesheet(string cicmSidecar)
+        private string GenerateCuesheet(CICMMetadataType cicmSidecar, string basePath)
         {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(cicmSidecar))
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
                 return null;
 
             // Required variables
-            int totalTracks = 0;
+            uint totalTracks = 0;
             string cuesheet = string.Empty;
 
-            // Open and read in the XML file
-            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            // If the reader is null for some reason, we can't do anything
-            if (xtr == null)
-                return null;
-
-            // Only care about CICM sidecar files
-            xtr.MoveToContent();
-            if (xtr.Name != "CICMMetadata")
-                return null;
-
             // Only care about OpticalDisc types
-            // TODO: Aaru - Support floppy images
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            if (xtr.Name != "OpticalDisc")
+            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
                 return null;
 
-            // Get track count and all tracks now
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            while (!xtr.EOF)
+            // Loop through each OpticalDisc in the metadata
+            foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
-                // We only want elements
-                if (xtr.NodeType != XmlNodeType.Element)
-                {
-                    xtr.Read();
+                // Only capture the first total track count
+                if (opticalDisc.Tracks != null && opticalDisc.Tracks.Length > 0)
+                    totalTracks = opticalDisc.Tracks[0];
+
+                // If there are no tracks, we can't get a cuesheet
+                if (opticalDisc.Track == null || opticalDisc.Track.Length == 0)
                     continue;
-                }
 
-                switch (xtr.Name)
+                // Loop through each track
+                foreach (TrackType track in opticalDisc.Track)
                 {
-                    // Total track count
-                    case "Tracks":
-                        totalTracks = xtr.ReadElementContentAsInt();
-                        break;
+                    uint trackNumber = track.Sequence?.TrackNumber ?? 0;
+                    TrackTypeTrackType trackType = track.TrackType1;
 
-                    // TODO: Get CATALOG and TRACK flags somehow
+                    // Build the track datfile data and append
+                    string trackName = basePath;
+                    if (totalTracks == 1)
+                        trackName = $"{trackName}.bin";
+                    else if (totalTracks > 1 && totalTracks < 10)
+                        trackName = $"{trackName} (Track {trackNumber}).bin";
+                    else
+                        trackName = $"{trackName} (Track {trackNumber.ToString().PadLeft(2, '0')}).bin";
 
-                    // Individual track data
-                    case "Track":
-                        XmlReader trackReader = xtr.ReadSubtree();
-                        if (trackReader == null)
-                            return null;
+                    // Handle track flags
+                    if (track.Flags != null)
+                    {
+                        string flagString = "FLAGS";
+                        if (track.Flags.CopyPermitted)
+                            flagString += " DCP";
+                        if (track.Flags.Quadraphonic)
+                            flagString += " 4CH";
+                        if (track.Flags.PreEmphasis)
+                            flagString += " PRE";
 
-                        int trackNumber = -1;
-                        string trackType = string.Empty;
+                        cuesheet += $"{flagString}\n";
+                    }
 
-                        trackReader.MoveToContent();
-                        trackReader.Read();
-                        while (!trackReader.EOF)
+                    // Handle ISRC
+                    if (track.ISRC != null)
+                        cuesheet += $"ISRC {track.ISRC}\n";
+
+                    // Add track for each file
+                    cuesheet += $"FILE \"{trackName}\" BINARY\n";
+
+                    // Add track type
+                    string trackTypeString = string.Empty;
+                    switch (trackType)
+                    {
+                        case TrackTypeTrackType.audio:
+                            trackTypeString = "AUDIO";
+                            break;
+                        case TrackTypeTrackType.mode0:
+                            trackTypeString = $"MODE0/{track.BytesPerSector}";
+                            break;
+                        case TrackTypeTrackType.mode1:
+                            trackTypeString = $"MODE1/{track.BytesPerSector}";
+                            break;
+                        case TrackTypeTrackType.mode2:
+                        case TrackTypeTrackType.m2f1:
+                        case TrackTypeTrackType.m2f2:
+                            trackTypeString = $"MODE2/{track.BytesPerSector}";
+                            break;
+                    }
+
+                    cuesheet += $"  TRACK {trackNumber.ToString().PadLeft(2, '0')} {trackTypeString}\n";
+
+                    // Add index data
+                    if (track.Indexes != null && track.Indexes.Length > 0)
+                    {
+                        // Loop through each index
+                        foreach (TrackIndexType trackIndex in track.Indexes)
                         {
-                            // We only want elements
-                            if (trackReader.NodeType != XmlNodeType.Element)
-                            {
-                                trackReader.Read();
-                                continue;
-                            }
-
-                            switch (trackReader.Name)
-                            {
-                                // Track size
-                                case "TrackType":
-                                    trackType = trackReader.ReadElementContentAsString();
-                                    break;
-
-                                // Track number
-                                case "Sequence":
-                                    XmlReader sequenceReader = trackReader.ReadSubtree();
-                                    if (sequenceReader == null)
-                                        return null;
-
-                                    sequenceReader.ReadToDescendant("TrackNumber");
-                                    trackNumber = sequenceReader.ReadElementContentAsInt();
-
-                                    // Skip the sequence now that we've processed it
-                                    trackReader.Skip();
-
-                                    break;
-
-                                default:
-                                    trackReader.Skip();
-                                    break;
-                            }
+                            // TODO: Convert Value to timecode
+                            cuesheet += $"    INDEX {trackIndex.index} {trackIndex.Value}\n";
                         }
-
-                        
-
-                        // Build the track datfile data and append
-                        string trackName = Path.GetFileName(cicmSidecar).Replace(".cicm.xml", string.Empty);
-                        if (totalTracks == 1)
-                            trackName = $"{trackName}.bin";
-                        else if (totalTracks > 1 && totalTracks < 10)
-                            trackName = $"{trackName} (Track {trackNumber}).bin";
-                        else
-                            trackName = $"{trackName} (Track {trackNumber.ToString().PadLeft(2, '0')}).bin";
-
-                        cuesheet += $"FILE \"{trackName}\" BINARY\n";
-
-                        switch (trackType.ToLowerInvariant())
-                        {
-                            case "audio":
-                                trackType = "AUDIO";
-                                break;
-                            case "mode1":
-                                trackType = "MODE1/2352";
-                                break;
-                            case "m2f1":
-                                trackType = "MODE2/2352";
-                                break;
-                        }
-
-                        cuesheet += $"  TRACK {trackNumber.ToString().PadLeft(2, '0')} {trackType}\n";
-
-                        // TODO: How do we get the index data properly?
+                    }
+                    else
+                    {
+                        // Default if index data missing from sidecar
                         cuesheet += "    INDEX 01 00:00:00\n";
-
-                        // Skip the track now that we've processed it
-                        xtr.Skip();
-
-                        break;
-
-                    default:
-                        xtr.Skip();
-                        break;
+                    }
                 }
             }
 
@@ -2244,165 +2242,64 @@ namespace DICUI.Aaru
         /// Generate a CMP XML datfile string based on CICM sidecar data
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <param name="basePath">Base path for determining file names</param>
         /// <returns>String containing the datfile, null on error</returns>
-        private static string GenerateDatfile(string cicmSidecar)
+        private static string GenerateDatfile(CICMMetadataType cicmSidecar, string basePath)
         {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(cicmSidecar))
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
                 return null;
 
             // Required variables
-            int totalTracks = 0;
             string datfile = string.Empty;
 
-            // Open and read in the XML file
-            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+            // Process OpticalDisc, if possible
+            if (cicmSidecar.OpticalDisc != null || cicmSidecar.OpticalDisc.Length > 0)
             {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            // If the reader is null for some reason, we can't do anything
-            if (xtr == null)
-                return null;
-
-            // Only care about CICM sidecar files
-            xtr.MoveToContent();
-            if (xtr.Name != "CICMMetadata")
-                return null;
-
-            // Only care about OpticalDisc types
-            // TODO: Aaru - Support floppy images
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            if (xtr.Name != "OpticalDisc")
-                return null;
-
-            // Get track count and all tracks now
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            while (!xtr.EOF)
-            {
-                // We only want elements
-                if (xtr.NodeType != XmlNodeType.Element)
+                // Loop through each OpticalDisc in the metadata
+                foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
                 {
-                    xtr.Read();
-                    continue;
-                }
+                    // Only capture the first total track count
+                    uint totalTracks = 0;
+                    if (opticalDisc.Tracks != null && opticalDisc.Tracks.Length > 0)
+                        totalTracks = opticalDisc.Tracks[0];
 
-                switch (xtr.Name)
-                {
-                    // Total track count
-                    case "Tracks":
-                        totalTracks = xtr.ReadElementContentAsInt();
-                        break;
+                    // If there are no tracks, we can't get a datfile
+                    if (opticalDisc.Track == null || opticalDisc.Track.Length == 0)
+                        continue;
 
-                    // Individual track data
-                    case "Track":
-                        XmlReader trackReader = xtr.ReadSubtree();
-                        if (trackReader == null)
-                            return null;
-
-                        int trackNumber = -1;
-                        long size = -1;
+                    // Loop through each track
+                    foreach (TrackType track in opticalDisc.Track)
+                    {
+                        uint trackNumber = track.Sequence?.TrackNumber ?? 0;
+                        ulong size = track.Size;
                         string crc32 = string.Empty;
                         string md5 = string.Empty;
                         string sha1 = string.Empty;
 
-                        trackReader.MoveToContent();
-                        trackReader.Read();
-                        while (!trackReader.EOF)
+                        // If we don't have any checksums, we can't get a DAT for this track
+                        if (track.Checksums == null || track.Checksums.Length == 0)
+                            continue;
+
+                        // Extract only relevant checksums
+                        foreach (ChecksumType checksum in track.Checksums)
                         {
-                            // We only want elements
-                            if (trackReader.NodeType != XmlNodeType.Element)
+                            switch (checksum.type)
                             {
-                                trackReader.Read();
-                                continue;
-                            }
-
-                            switch (trackReader.Name)
-                            {
-                                // Track size
-                                case "Size":
-                                    size = trackReader.ReadElementContentAsLong();
+                                case ChecksumTypeType.crc32:
+                                    crc32 = checksum.Value;
                                     break;
-
-                                // Track number
-                                case "Sequence":
-                                    XmlReader sequenceReader = trackReader.ReadSubtree();
-                                    if (sequenceReader == null)
-                                        return null;
-
-                                    sequenceReader.ReadToDescendant("TrackNumber");
-                                    trackNumber = sequenceReader.ReadElementContentAsInt();
-
-                                    // Skip the sequence now that we've processed it
-                                    trackReader.Skip();
-
+                                case ChecksumTypeType.md5:
+                                    md5 = checksum.Value;
                                     break;
-
-                                // Checksums
-                                case "Checksums":
-                                    XmlReader checksumReader = trackReader.ReadSubtree();
-                                    if (checksumReader == null)
-                                        return null;
-
-                                    checksumReader.MoveToContent();
-                                    checksumReader.Read();
-                                    while (!checksumReader.EOF)
-                                    {
-                                        // We only want elements
-                                        if (checksumReader.NodeType != XmlNodeType.Element)
-                                        {
-                                            checksumReader.Read();
-                                            continue;
-                                        }
-
-                                        switch (checksumReader.Name)
-                                        {
-                                            case "Checksum":
-                                                string checksumType = checksumReader.GetAttribute("type");
-                                                string checksumValue = checksumReader.ReadElementContentAsString();
-                                                switch (checksumType)
-                                                {
-                                                    case "crc32":
-                                                        crc32 = checksumValue;
-                                                        break;
-                                                    case "md5":
-                                                        md5 = checksumValue;
-                                                        break;
-                                                    case "sha1":
-                                                        sha1 = checksumValue;
-                                                        break;
-                                                }
-
-                                                break;
-
-                                            default:
-                                                checksumReader.Skip();
-                                                break;
-                                        }
-                                    }
-
-                                    // Skip the checksums now that we've processed it
-                                    trackReader.Skip();
-
-                                    break;
-
-                                default:
-                                    trackReader.Skip();
+                                case ChecksumTypeType.sha1:
+                                    sha1 = checksum.Value;
                                     break;
                             }
                         }
 
                         // Build the track datfile data and append
-                        string trackName = Path.GetFileName(cicmSidecar).Replace(".cicm.xml", string.Empty);
+                        string trackName = basePath;
                         if (totalTracks == 1)
                             trackName = $"{trackName}.bin";
                         else if (totalTracks > 1 && totalTracks < 10)
@@ -2411,15 +2308,45 @@ namespace DICUI.Aaru
                             trackName = $"{trackName} (Track {trackNumber.ToString().PadLeft(2, '0')}).bin";
 
                         datfile += $"<rom name=\"{trackName}\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
+                    }
+                }
+            }
 
-                        // Skip the track now that we've processed it
-                        xtr.Skip();
+            // Process BlockMedia, if possible
+            if (cicmSidecar.BlockMedia != null || cicmSidecar.BlockMedia.Length > 0)
+            {
+                // Loop through each BlockMedia in the metadata
+                foreach (BlockMediaType blockMedia in cicmSidecar.BlockMedia)
+                {
+                    ulong size = blockMedia.Size;
+                    string crc32 = string.Empty;
+                    string md5 = string.Empty;
+                    string sha1 = string.Empty;
 
-                        break;
+                    // If we don't have any checksums, we can't get a DAT for this track
+                    if (blockMedia.Checksums == null || blockMedia.Checksums.Length == 0)
+                        continue;
 
-                    default:
-                        xtr.Skip();
-                        break;
+                    // Extract only relevant checksums
+                    foreach (ChecksumType checksum in blockMedia.Checksums)
+                    {
+                        switch (checksum.type)
+                        {
+                            case ChecksumTypeType.crc32:
+                                crc32 = checksum.Value;
+                                break;
+                            case ChecksumTypeType.md5:
+                                md5 = checksum.Value;
+                                break;
+                            case ChecksumTypeType.sha1:
+                                sha1 = checksum.Value;
+                                break;
+                        }
+                    }
+
+                    // Build the track datfile data and append
+                    string trackName = $"{basePath}.bin";
+                    datfile += $"<rom name=\"{trackName}\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
                 }
             }
 
@@ -2427,259 +2354,415 @@ namespace DICUI.Aaru
         }
 
         /// <summary>
-        /// Generate a Redump-compatible PVD block based on CICM sidecar data
+        /// Generate a Redump-compatible PVD block based on CICM sidecar file
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>String containing the PVD, null on error</returns>
-        private static string GeneratePVD(string cicmSidecar)
+        /// TODO: Fix this string outputting
+        private static string GeneratePVD(CICMMetadataType cicmSidecar)
         {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(cicmSidecar))
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
                 return null;
 
-            // Required variables
-            string creation = string.Empty;
-            string modification = string.Empty;
-            string expiration = string.Empty;
-            string effective = string.Empty;
-
-            // Open and read in the XML file
-            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+            // Process OpticalDisc, if possible
+            if (cicmSidecar.OpticalDisc != null || cicmSidecar.OpticalDisc.Length > 0)
             {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            // If the reader is null for some reason, we can't do anything
-            if (xtr == null)
-                return null;
-
-            // Only care about CICM sidecar files
-            xtr.MoveToContent();
-            if (xtr.Name != "CICMMetadata")
-                return null;
-
-            // Only care about OpticalDisc types
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            if (xtr.Name != "OpticalDisc")
-                return null;
-
-            // Get track count and all tracks now
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            while (!xtr.EOF)
-            {
-                // We only want elements
-                if (xtr.NodeType != XmlNodeType.Element)
+                // Loop through each OpticalDisc in the metadata
+                foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
                 {
-                    xtr.Read();
-                    continue;
-                }
+                    // Required variables
+                    DateTime creation = DateTime.MinValue;
+                    DateTime modification = DateTime.MinValue;
+                    DateTime expiration = DateTime.MinValue;
+                    DateTime effective = DateTime.MinValue;
 
-                switch (xtr.Name)
-                {
-                    // Individual track data
-                    case "Track":
-                        XmlReader trackReader = xtr.ReadSubtree();
-                        if (trackReader == null)
-                            return null;
+                    // If there are no tracks, we can't get a PVD
+                    if (opticalDisc.Track == null || opticalDisc.Track.Length == 0)
+                        continue;
 
-                        trackReader.MoveToContent();
-                        trackReader.ReadToDescendant("FileSystemInformation");
-                        trackReader.ReadToDescendant("Partition");
-                        if (!trackReader.ReadToDescendant("FileSystems"))
-                            break;
+                    // Take the first track only
+                    TrackType track = opticalDisc.Track[0];
 
-                        trackReader.ReadToDescendant("FileSystem");
+                    // If there are no partitions, we can't get a PVD
+                    if (track.FileSystemInformation == null || track.FileSystemInformation.Length == 0)
+                        continue;
 
-                        XmlReader fileSystemReader = trackReader.ReadSubtree();
-                        if (fileSystemReader == null)
-                            return null;
+                    // Loop through each Partition
+                    foreach (PartitionType partition in track.FileSystemInformation)
+                    {
+                        // If the partition has no file systems, we can't get a PVD
+                        if (partition.FileSystems == null || partition.FileSystems.Length == 0)
+                            continue;
 
-                        fileSystemReader.MoveToContent();
-                        fileSystemReader.Read();
-                        while (!fileSystemReader.EOF)
+                        // Loop through each FileSystem until we find a PVD
+                        foreach (FileSystemType fileSystem in partition.FileSystems)
                         {
-                            // We only want elements
-                            if (fileSystemReader.NodeType != XmlNodeType.Element)
+                            // If we don't have a PVD-able filesystem, we can't get a PVD
+                            if (!fileSystem.CreationDateSpecified
+                                && !fileSystem.ModificationDateSpecified
+                                && !fileSystem.ExpirationDateSpecified
+                                && !fileSystem.EffectiveDateSpecified)
                             {
-                                fileSystemReader.Read();
                                 continue;
                             }
 
-                            switch (fileSystemReader.Name)
-                            {
-                                case "CreationDate":
-                                    creation = fileSystemReader.ReadElementContentAsString();
-                                    break;
+                            // Creation Date
+                            if (fileSystem.CreationDateSpecified)
+                                creation = fileSystem.CreationDate;
 
-                                case "ModificationDate":
-                                    modification = fileSystemReader.ReadElementContentAsString();
-                                    break;
+                            // Modification Date
+                            if (fileSystem.ModificationDateSpecified)
+                                modification = fileSystem.ModificationDate;
 
-                                case "ExpirationDate":
-                                    expiration = fileSystemReader.ReadElementContentAsString();
-                                    break;
+                            // Expiration Date
+                            if (fileSystem.ExpirationDateSpecified)
+                                expiration = fileSystem.ExpirationDate;
 
-                                case "EffectiveDate":
-                                    effective = fileSystemReader.ReadElementContentAsString();
-                                    break;
+                            // Effective Date
+                            if (fileSystem.EffectiveDateSpecified)
+                                effective = fileSystem.EffectiveDate;
 
-                                default:
-                                    fileSystemReader.Skip();
-                                    break;
-                            }
+                            break;
                         }
 
-                        // Skip the track now that we've processed it
-                        trackReader.Skip();
+                        // If we found a Partition with PVD data, we break
+                        if (creation != DateTime.MinValue
+                            || modification != DateTime.MinValue
+                            || expiration != DateTime.MinValue
+                            || effective != DateTime.MinValue)
+                        {
+                            break;
+                        }
+                    }
 
-                        break;
+                    /*
+                    Needs to look like this on the other side
+                    0320 : 20 20 20 20 20 20 20 20  20 20 20 20 20 31 39 39                199
+                    0330 : 36 30 39 32 34 31 34 35  34 30 35 30 30 DC 31 39   6092414540500.19
+                    0340 : 39 36 30 39 32 34 31 34  35 34 30 35 30 30 DC 30   96092414540500.0
+                    0350 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 00   000000000000000.
+                    0360 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30   0000000000000000
+                    0370 : 00 01 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
+                    */
 
-                    default:
-                        xtr.Skip();
-                        break;
-                }
-            }
+                    // TODO: Hundredths of seconds are not part of the output, using 00 `30 30` bytes for now
+                    // TODO: Timezones are not part of the output, using UTC `00` byte for now
 
-            /*
-            Date format being used:
-            1997-11-07T08:57:03
-            
-            Needs to look like this on the other side
-            0320 : 20 20 20 20 20 20 20 20  20 20 20 20 20 31 39 39                199
-            0330 : 36 30 39 32 34 31 34 35  34 30 35 30 30 DC 31 39   6092414540500.19
-            0340 : 39 36 30 39 32 34 31 34  35 34 30 35 30 30 DC 30   96092414540500.0
-            0350 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 00   000000000000000.
-            0360 : 30 30 30 30 30 30 30 30  30 30 30 30 30 30 30 30   0000000000000000
-            0370 : 00 01 00 00 00 00 00 00  00 00 00 00 00 00 00 00   ................
-            */
+                    // Build each row in consecutive order
+                    string pvd = string.Empty;
 
-            // TODO: Hundredths of seconds are not part of the output, using 00 `30 30` bytes for now
-            // TODO: Timezones are not part of the output, using UTC `00` byte for now
+                    // String versions of each DateTime
+                    string emptyTime = "0000-00-00T00:00:00.00+00:00";
+                    string creationString = emptyTime;
+                    string modificationString = emptyTime;
+                    string expirationString = emptyTime;
+                    string effectiveString = emptyTime;
 
-            // Build each row in consecutive order
-            string pvd = string.Empty;
+                    // If we don't have default values, set the proper string
+                    if (creation != DateTime.MinValue)
+                        creationString = creation.ToString("yyyy-MM-ddTHH:mm:ss.ffK");
+                    if (modification != DateTime.MinValue)
+                        modificationString = emptyTime;
+                    if (expiration != DateTime.MinValue)
+                        expirationString = emptyTime;
+                    if (effective != DateTime.MinValue)
+                        effectiveString = emptyTime;
 
-            string emptyTime = "0000-00-00T00:00:00";
-            if (string.IsNullOrEmpty(creation) || DateTime.Parse(creation) == DateTime.MinValue)
-                creation = emptyTime;
-            if (string.IsNullOrEmpty(modification) || DateTime.Parse(modification) == DateTime.MinValue)
-                modification = emptyTime;
-            if (string.IsNullOrEmpty(expiration) || DateTime.Parse(expiration) == DateTime.MinValue)
-                expiration = emptyTime;
-            if (string.IsNullOrEmpty(effective) || DateTime.Parse(effective) == DateTime.MinValue)
-                effective = emptyTime;
+                    // Get byte versions of each for the PVD
+                    byte[] effectiveBytes = creationString.ToCharArray().Select(c => (byte)c).ToArray();
+                    byte[] creationBytes = modificationString.ToCharArray().Select(c => (byte)c).ToArray();
+                    byte[] modificationBytes = expirationString.ToCharArray().Select(c => (byte)c).ToArray();
+                    byte[] expirationBytes = effectiveString.ToCharArray().Select(c => (byte)c).ToArray();
 
-            byte[] creationBytes = modification.ToCharArray().Select(c => (byte)c).ToArray();
-            byte[] modificationBytes = expiration.ToCharArray().Select(c => (byte)c).ToArray();
-            byte[] expirationBytes = effective.ToCharArray().Select(c => (byte)c).ToArray();
-            byte[] effectiveBytes = creation.ToCharArray().Select(c => (byte)c).ToArray();
+                    // 0320
+                    pvd += $"0320 : 20 20 20 20 20 20 20 20";
+                    pvd += $"  20 20 20 20 20 {creationBytes[0]:x} {creationBytes[1]:x} {creationBytes[2]:x}";
+                    pvd += $"                {creationString.Substring(0, 3)}\n";
 
-            // 0320
-            pvd += $"0320 : 20 20 20 20 20 20 20 20";
-            pvd += $"  20 20 20 20 20 {creationBytes[0]:x} {creationBytes[1]:x} {creationBytes[2]:x}";
-            pvd += $"                {creation.Substring(0, 3)}\n";
+                    // 0330
+                    pvd += $"0330 : {creationBytes[3]:x} {creationBytes[5]:x} {creationBytes[6]:x} {creationBytes[8]:x} {creationBytes[9]:x} {creationBytes[11]:x} {creationBytes[12]:x} {creationBytes[14]:x}";
+                    pvd += $"  {creationBytes[15]:x} {creationBytes[17]:x} {creationBytes[18]:x} 30 30 00 {modificationBytes[0]:x} {modificationBytes[1]:x}";
+                    pvd += $"   {creationString[3]}{creationString.Substring(5, 2)}{creationString.Substring(8, 2)}{creationString.Substring(11, 2)}{creationString.Substring(14, 2)}{creationString.Substring(17, 2)}00.{modificationString.Substring(0, 2)}\n";
 
-            // 0330
-            pvd += $"0330 : {creationBytes[3]:x} {creationBytes[5]:x} {creationBytes[6]:x} {creationBytes[8]:x} {creationBytes[9]:x} {creationBytes[11]:x} {creationBytes[12]:x} {creationBytes[14]:x}";
-            pvd += $"  {creationBytes[15]:x} {creationBytes[17]:x} {creationBytes[18]:x} 30 30 00 {modificationBytes[0]:x} {modificationBytes[1]:x}";
-            pvd += $"   {creation[3]}{creation.Substring(5, 2)}{creation.Substring(8, 2)}{creation.Substring(11, 2)}{creation.Substring(14, 2)}{creation.Substring(17, 2)}00.{modification.Substring(0, 2)}\n";
+                    // 0340
+                    pvd += $"0340 : {modificationBytes[2]:x} {modificationBytes[3]:x} {modificationBytes[5]:x} {modificationBytes[6]:x} {modificationBytes[8]:x} {modificationBytes[9]:x} {modificationBytes[11]:x} {modificationBytes[12]:x}";
+                    pvd += $"  {modificationBytes[14]:x} {modificationBytes[15]:x} {modificationBytes[17]:x} {modificationBytes[18]:x} 30 30 00 {expirationBytes[0]:x}";
+                    pvd += $"   {modificationString.Substring(2, 2)}{modificationString.Substring(5, 2)}{modificationString.Substring(8, 2)}{modificationString.Substring(11, 2)}{modificationString.Substring(14, 2)}{modificationString.Substring(17, 2)}00.{expirationString[0]}\n";
 
-            // 0340
-            pvd += $"0340 : {modificationBytes[2]:x} {modificationBytes[3]:x} {modificationBytes[5]:x} {modificationBytes[6]:x} {modificationBytes[8]:x} {modificationBytes[9]:x} {modificationBytes[11]:x} {modificationBytes[12]:x}";
-            pvd += $"  {modificationBytes[14]:x} {modificationBytes[15]:x} {modificationBytes[17]:x} {modificationBytes[18]:x} 30 30 00 {expirationBytes[0]:x}";
-            pvd += $"   {modification.Substring(2, 2)}{modification.Substring(5, 2)}{modification.Substring(8, 2)}{modification.Substring(11, 2)}{modification.Substring(14, 2)}{modification.Substring(17, 2)}00.{expiration[0]}\n";
+                    // 0350
+                    pvd += $"0350 : {expirationBytes[1]:x} {expirationBytes[2]:x} {expirationBytes[3]:x} {expirationBytes[5]:x} {expirationBytes[6]:x} {expirationBytes[8]:x} {expirationBytes[9]:x} {expirationBytes[11]:x}";
+                    pvd += $"  {expirationBytes[12]:x} {expirationBytes[14]:x} {expirationBytes[15]:x} {expirationBytes[17]:x} {expirationBytes[18]:x} 30 30 00";
+                    pvd += $"   {expirationString.Substring(1, 3)}{expirationString.Substring(5, 2)}{expirationString.Substring(8, 2)}{expirationString.Substring(11, 2)}{expirationString.Substring(14, 2)}{expirationString.Substring(17, 2)}00.\n";
 
-            // 0350
-            pvd += $"0350 : {expirationBytes[1]:x} {expirationBytes[2]:x} {expirationBytes[3]:x} {expirationBytes[5]:x} {expirationBytes[6]:x} {expirationBytes[8]:x} {expirationBytes[9]:x} {expirationBytes[11]:x}";
-            pvd += $"  {expirationBytes[12]:x} {expirationBytes[14]:x} {expirationBytes[15]:x} {expirationBytes[17]:x} {expirationBytes[18]:x} 30 30 00";
-            pvd += $"   {modification.Substring(1, 3)}{modification.Substring(5, 2)}{modification.Substring(8, 2)}{modification.Substring(11, 2)}{modification.Substring(14, 2)}{modification.Substring(17, 2)}00.\n";
+                    // 0360
+                    pvd += $"0360 : {effectiveBytes[0]:x} {effectiveBytes[1]:x} {effectiveBytes[2]:x} {effectiveBytes[3]:x} {effectiveBytes[5]:x} {effectiveBytes[6]:x} {effectiveBytes[8]:x} {effectiveBytes[9]:x}";
+                    pvd += $"  {effectiveBytes[11]:x} {effectiveBytes[12]:x} {effectiveBytes[14]:x} {effectiveBytes[15]:x} {effectiveBytes[17]:x} {effectiveBytes[18]:x} 30 30";
+                    pvd += $"   {effectiveString.Substring(0, 4)}{effectiveString.Substring(5, 2)}{effectiveString.Substring(8, 2)}{effectiveString.Substring(11, 2)}{effectiveString.Substring(14, 2)}{effectiveString.Substring(17, 2)}00\n";
 
-            // 0360
-            pvd += $"0360 : {effectiveBytes[0]:x} {effectiveBytes[1]:x} {effectiveBytes[2]:x} {effectiveBytes[3]:x} {effectiveBytes[5]:x} {effectiveBytes[6]:x} {effectiveBytes[8]:x} {effectiveBytes[9]:x}";
-            pvd += $"  {effectiveBytes[11]:x} {effectiveBytes[12]:x} {effectiveBytes[14]:x} {effectiveBytes[15]:x} {effectiveBytes[17]:x} {effectiveBytes[18]:x} 30 30";
-            pvd += $"   {effective.Substring(0, 4)}{effective.Substring(5, 2)}{effective.Substring(8, 2)}{effective.Substring(11, 2)}{effective.Substring(14, 2)}{effective.Substring(17, 2)}00\n";
+                    // 0370 - TODO: Get the sometimes burner string that appears in this block
+                    pvd += $"0370 : 00 01 00 00 00 00 00 00";
+                    pvd += $"  00 00 00 00 00 00 00 00";
+                    pvd += $"   ................\n";
 
-            // 0370 - TODO: Get the sometimes burner string that appears in this block
-            pvd += $"0370 : 00 01 00 00 00 00 00 00";
-            pvd += $"  00 00 00 00 00 00 00 00";
-            pvd += $"   ................\n";
-
-            return pvd;
-        }
-
-        /// <summary>
-        /// Get the write offset from the input file, if possible
-        /// </summary>
-        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
-        /// <returns>Sample write offset if possible, null on error</returns>
-        private static string GetWriteOffset(string cicmSidecar)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(cicmSidecar))
-                return null;
-
-            // Open and read in the XML file
-            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
-            {
-                CheckCharacters = false,
-                DtdProcessing = DtdProcessing.Ignore,
-                IgnoreComments = true,
-                IgnoreWhitespace = true,
-                ValidationFlags = XmlSchemaValidationFlags.None,
-                ValidationType = ValidationType.None,
-            });
-
-            // If the reader is null for some reason, we can't do anything
-            if (xtr == null)
-                return null;
-
-            // Only care about CICM sidecar files
-            xtr.MoveToContent();
-            if (xtr.Name != "CICMMetadata")
-                return null;
-
-            // Only care about OpticalDisc types
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            if (xtr.Name != "OpticalDisc")
-                return null;
-
-            // Get track count and all tracks now
-            xtr = xtr.ReadSubtree();
-            xtr.MoveToContent();
-            xtr.Read();
-            while (!xtr.EOF)
-            {
-                // We only want elements
-                if (xtr.NodeType != XmlNodeType.Element)
-                {
-                    xtr.Read();
-                    continue;
-                }
-
-                switch (xtr.Name)
-                {
-                    // Disc offset
-                    case "Offset":
-                        return xtr.ReadElementContentAsString();
-
-                    default:
-                        xtr.Skip();
-                        break;
+                    return pvd;
                 }
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Read the CICM Sidecar as an object
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>Object containing the data, null on error</returns>
+        private static CICMMetadataType GenerateSidecar(string cicmSidecar)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(cicmSidecar))
+                return null;
+
+            // Open and read in the XML file
+            XmlReader xtr = XmlReader.Create(cicmSidecar, new XmlReaderSettings
+            {
+                CheckCharacters = false,
+                DtdProcessing = DtdProcessing.Ignore,
+                IgnoreComments = true,
+                IgnoreWhitespace = true,
+                ValidationFlags = XmlSchemaValidationFlags.None,
+                ValidationType = ValidationType.None,
+            });
+
+            // If the reader is null for some reason, we can't do anything
+            if (xtr == null)
+                return null;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(CICMMetadataType));
+            CICMMetadataType obj = serializer.Deserialize(xtr) as CICMMetadataType;
+
+            return obj;
+        }
+
+        /// <summary>
+        /// Get the write offset from the CICM Sidecar file, if possible
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private static string GetWriteOffset(CICMMetadataType cicmSidecar)
+        {
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
+                return null;
+
+            // Only care about OpticalDisc types
+            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+                return null;
+
+            // Loop through each OpticalDisc in the metadata
+            foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
+            {
+                // If the disc doesn't have an offset specified, we skip it;
+                if (!opticalDisc.OffsetSpecified)
+                    continue;
+
+                return opticalDisc.Offset.ToString();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get the XGD auxiliary info from the CICM Sidecar file, if possible
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetXgdAuxInfo(CICMMetadataType cicmSidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
+        {
+            dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
+
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
+                return false;
+
+            // Only care about OpticalDisc types
+            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+                return false;
+
+            // Loop through each OpticalDisc in the metadata
+            foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
+            {
+                // If the Xbox type isn't set, we can't extract information
+                if (opticalDisc.Xbox == null)
+                    continue;
+
+                // Get the Xbox information
+                XboxType xbox = opticalDisc.Xbox;
+
+                // DMI
+                if (xbox.DMI != null)
+                {
+                    DumpType dmi = xbox.DMI;
+                    if (dmi.Checksums != null && dmi.Checksums.Length != 0)
+                    {
+                        foreach (ChecksumType checksum in dmi.Checksums)
+                        {
+                            // We only care about the CRC32
+                            if (checksum.type == ChecksumTypeType.crc32)
+                            {
+                                dmihash = checksum.Value;
+                                break;
+                            }
+                        }    
+                    }
+                }
+
+                // PFI
+                if (xbox.PFI != null)
+                {
+                    DumpType pfi = xbox.PFI;
+                    if (pfi.Checksums != null && pfi.Checksums.Length != 0)
+                    {
+                        foreach (ChecksumType checksum in pfi.Checksums)
+                        {
+                            // We only care about the CRC32
+                            if (checksum.type == ChecksumTypeType.crc32)
+                            {
+                                pfihash = checksum.Value;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // SS
+                if (xbox.SecuritySectors != null && xbox.SecuritySectors.Length > 0)
+                {
+                    foreach (XboxSecuritySectorsType securitySector in xbox.SecuritySectors)
+                    {
+                        DumpType security = securitySector.SecuritySectors;
+                        if (security.Checksums != null && security.Checksums.Length != 0)
+                        {
+                            foreach (ChecksumType checksum in security.Checksums)
+                            {
+                                // We only care about the CRC32
+                                if (checksum.type == ChecksumTypeType.crc32)
+                                {
+                                    // TODO: Validate correctness for all 3 fields
+                                    ss = security.Image;
+                                    ssver = securitySector.RequestVersion.ToString();
+                                    sshash = checksum.Value;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // If we got a hash, we can break
+                        if (sshash != null)
+                            break;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the Xbox serial info from the CICM Sidecar file, if possible
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetXboxDMIInfo(CICMMetadataType cicmSidecar, out string serial, out string version, out Region? region)
+        {
+            serial = null; version = null; region = Region.World;
+
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
+                return false;
+
+            // Only care about OpticalDisc types
+            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+                return false;
+
+            // Loop through each OpticalDisc in the metadata
+            foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
+            {
+                // If the Xbox type isn't set, we can't extract information
+                if (opticalDisc.Xbox == null)
+                    continue;
+
+                // Get the Xbox information
+                XboxType xbox = opticalDisc.Xbox;
+
+                // DMI
+                if (xbox.DMI != null)
+                {
+                    DumpType dmi = xbox.DMI;
+                    string image = dmi.Image;
+
+                    // TODO: Figure out if `image` is the right thing here
+                    // TODO: Figure out how to extract info from `image`
+                    //br.BaseStream.Seek(8, SeekOrigin.Begin);
+                    //char[] str = br.ReadChars(8);
+
+                    //serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}";
+                    //version = $"1.{str[5]}{str[6]}";
+                    //region = GetXgdRegion(str[7]);
+                    //return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get the Xbox 360 serial info from the CICM Sidecar file, if possible
+        /// </summary>
+        /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetXbox360DMIInfo(CICMMetadataType cicmSidecar, out string serial, out string version, out Region? region)
+        {
+            serial = null; version = null; region = Region.World;
+
+            // If the object is null, we can't get information from it
+            if (cicmSidecar == null)
+                return false;
+
+            // Only care about OpticalDisc types
+            if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
+                return false;
+
+            // Loop through each OpticalDisc in the metadata
+            foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
+            {
+                // If the Xbox type isn't set, we can't extract information
+                if (opticalDisc.Xbox == null)
+                    continue;
+
+                // Get the Xbox information
+                XboxType xbox = opticalDisc.Xbox;
+
+                // DMI
+                if (xbox.DMI != null)
+                {
+                    DumpType dmi = xbox.DMI;
+                    string image = dmi.Image;
+
+                    // TODO: Figure out if `image` is the right thing here
+                    // TODO: Figure out how to extract info from `image`
+                    //br.BaseStream.Seek(64, SeekOrigin.Begin);
+                    //char[] str = br.ReadChars(14);
+
+                    //serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}{str[5]}";
+                    //version = $"1.{str[6]}{str[7]}";
+                    //region = GetXgdRegion(str[8]);
+                    // str[9], str[10], str[11] - unknown purpose
+                    // str[12], str[13] - disc <12> of <13>
+                    //return true;
+                }
+            }
+
+            return false;
         }
 
         #endregion
