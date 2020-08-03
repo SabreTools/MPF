@@ -1507,6 +1507,7 @@ namespace DICUI.DiscImageCreator
             // Some disc types are audio-only
             bool audioOnly = (system == KnownSystem.AtariJaguarCD)
                 || (system == KnownSystem.AudioCD)
+                || (system == KnownSystem.DVDAudio)
                 || (system == KnownSystem.SuperAudioCD);
 
             switch (type)
@@ -1583,6 +1584,7 @@ namespace DICUI.DiscImageCreator
             // Some disc types are audio-only
             bool audioOnly = (system == KnownSystem.AtariJaguarCD)
                 || (system == KnownSystem.AudioCD)
+                || (system == KnownSystem.DVDAudio)
                 || (system == KnownSystem.SuperAudioCD);
 
             // Fill in the hash data
@@ -1691,6 +1693,7 @@ namespace DICUI.DiscImageCreator
 
                     break;
 
+                case KnownSystem.DVDAudio:
                 case KnownSystem.DVDVideo:
                     info.CopyProtection.Protection = GetDVDProtection(basePath + "_CSSKey.txt", basePath + "_disc.txt") ?? "";
                     break;

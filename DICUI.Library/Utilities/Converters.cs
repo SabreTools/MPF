@@ -719,6 +719,8 @@ namespace DICUI.Utilities
                     return "Audio CD";
                 case KnownSystem.BDVideo:
                     return "BD-Video";
+                case KnownSystem.DVDAudio:
+                    return "DVD-Audio";
                 case KnownSystem.DVDVideo:
                     return "DVD-Video";
                 case KnownSystem.EnhancedCD:
@@ -1125,6 +1127,8 @@ namespace DICUI.Utilities
                     return "audio";
                 case KnownSystem.BDVideo:
                     return "bd-video";
+                case KnownSystem.DVDAudio:
+                    return "dvd-audio";
                 case KnownSystem.DVDVideo:
                     return "dvd-video";
                 case KnownSystem.EnhancedCD:
@@ -1951,6 +1955,9 @@ namespace DICUI.Utilities
                 case "blurayvideo":
                 case "bluray video":
                     return KnownSystem.BDVideo;
+                case "dvdaudio":
+                case "dvd-audio":
+                    return KnownSystem.DVDAudio;
                 case "dvdvideo":
                 case "dvd-video":
                     return KnownSystem.DVDVideo;

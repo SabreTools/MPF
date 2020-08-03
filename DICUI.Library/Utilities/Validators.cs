@@ -618,6 +618,11 @@ namespace DICUI.Utilities
                     types.Add(MediaType.BluRay);
                     break;
 
+                // https://en.wikipedia.org/wiki/DVD-Audio
+                case KnownSystem.DVDAudio:
+                    types.Add(MediaType.DVD);
+                    break;
+
                 // https://en.wikipedia.org/wiki/DVD-Video
                 case KnownSystem.DVDVideo:
                     types.Add(MediaType.DVD);
@@ -908,6 +913,20 @@ namespace DICUI.Utilities
             // TODO: Try to be smarter about this
             if (drive.InternalDriveType != InternalDriveType.Optical)
                 return KnownSystem.IBMPCCompatible;
+
+            // DVD-Audio
+            if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
+                && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Count() > 0)
+            {
+                return KnownSystem.DVDAudio;
+            }
+
+            // DVD-Video
+            if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
+                && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Count() > 0)
+            {
+                return KnownSystem.DVDAudio;
+            }
 
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drivePath, "IP.BIN")))

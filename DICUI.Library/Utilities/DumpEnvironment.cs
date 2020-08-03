@@ -834,6 +834,7 @@ namespace DICUI.Utilities
                     break;
 
                 case KnownSystem.AudioCD:
+                case KnownSystem.DVDAudio:
                 case KnownSystem.SuperAudioCD:
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
                     break;

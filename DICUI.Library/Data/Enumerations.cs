@@ -218,6 +218,7 @@ namespace DICUI.Data
 
         AudioCD,
         BDVideo,
+        DVDAudio,
         DVDVideo,
         EnhancedCD,
         HDDVDVideo,
