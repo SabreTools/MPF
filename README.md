@@ -17,6 +17,15 @@ Even though this is written in C#, this program can only be used on Windows syst
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
 
+## Components
+
+The DICUI project contains two actual programs: DICUI and DICUI.Check. Both output the same, standardized submissionInfo format based on Redump submission criteria. Below is a brief comparison of both:
+
+| Program Name | Interface | OS Compatibility | Can Dump Directly | Notes |
+|--------------|-----------|------------------|-------------------|-------|
+| DICUI | GUI | Windows 7+ (.NET 4.6.2 and above) | Yes | Includes tailored profiles that can be selected from the main window for easier dumping with supported programs. It is able to access the disc post-dump to gather more information automatically, including versions and copy protection status. Configuration is either using the Options window within the GUI or directly in the configuration file. |
+| DICUI.Check | Commandline | Windows 7+ (.NET 4.6.2 and above), `mono` | No | Meant as a wrapper around the post-dump steps of DICUI to be run on pre-existing dumps. It does not attempt to accss original media to gather more information, so only data derived from the output files themselves is included. Configuration is purely done by per-run parameters. |
+
 ## Releases
 
 For those who would rather the most recently stable build, ownload the latest release here:
