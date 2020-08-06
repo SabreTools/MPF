@@ -804,31 +804,31 @@ namespace DICUI.Utilities
 
                     #region Possibly useful fields
 
-                    foreach (var property in queryObj.Properties)
-                    {
-                        Console.WriteLine(property);
-                    }
+                    //foreach (var property in queryObj.Properties)
+                    //{
+                    //    Console.WriteLine(property);
+                    //}
 
-                    // Capabilities list
-                    ushort[] capabilities = (ushort[])queryObj["Capabilities"];
+                    //// Capabilities list
+                    //ushort?[] capabilities = (ushort?[])queryObj["Capabilities"];
 
-                    // Internal name of the device
-                    string caption = (string)queryObj["Caption"];
+                    //// Internal name of the device
+                    //string caption = (string)queryObj["Caption"];
 
-                    // Flags for the file system, see FileSystemFlags
-                    uint fileSystemFlagsEx = (uint)queryObj["FileSystemFlagsEx"];
+                    //// Flags for the file system, see FileSystemFlags
+                    //uint? fileSystemFlagsEx = (uint?)queryObj["FileSystemFlagsEx"];
 
-                    // "CD Writer" doesn't fit https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-cdromdrive
-                    string mediaTypeString = (string)queryObj["MediaType"];
+                    //// "CD Writer" doesn't fit https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-cdromdrive
+                    //string mediaTypeString = (string)queryObj["MediaType"];
 
-                    // Internal name of the device (Seems like a duplicate of Caption)
-                    string name = (string)queryObj["Name"];
+                    //// Internal name of the device (Seems like a duplicate of Caption)
+                    //string name = (string)queryObj["Name"];
 
-                    // Full device ID for the drive (Seems like duplicate of DeviceID)
-                    string pnpDeviceId = (string)queryObj["PNPDeviceId"];
+                    //// Full device ID for the drive (Seems like duplicate of DeviceID)
+                    //string pnpDeviceId = (string)queryObj["PNPDeviceId"];
 
-                    // Size of the loaded media (extrapolate disc type from this?)
-                    ulong size = (ulong)queryObj["Size"];
+                    //// Size of the loaded media (extrapolate disc type from this?)
+                    //ulong? size = (ulong?)queryObj["Size"];
 
                     #endregion
                 }
