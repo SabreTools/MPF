@@ -4,8 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI.Avalonia"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450" Width="600" Height="450"
-        x:Class="DICUI.Avalonia.MainWindow"
-        Title="DICUI" WindowStartupLocation="CenterScreen" CanResize="False"
+        x:Class="DICUI.Avalonia.MainWindow"  Icon="Icon.ico" CanResize="False"
+        Title="DICUI" WindowStartupLocation="CenterScreen"
         PositionChanged="MainWindowLocationChanged" Activated="MainWindowActivated" Closing="MainWindowClosing">
 
   <Window.Resources>

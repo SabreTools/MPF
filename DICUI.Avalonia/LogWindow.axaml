@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI.Avalonia"
         mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350" Width="600" Height="350"
-        x:Class="DICUI.Avalonia.LogWindow"
+        x:Class="DICUI.Avalonia.LogWindow" Icon="Icon.ico" CanResize="False"
         Title="Log Window">
 
   <Grid RowDefinitions="40,250,40">

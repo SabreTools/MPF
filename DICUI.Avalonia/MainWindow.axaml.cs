@@ -592,7 +592,7 @@ namespace DICUI.Avalonia
         {
             // Get the current internal version
             var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
-            string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.MajorRevision != 0 ? $".{assemblyVersion.MajorRevision}" : string.Empty);
+            string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
 
             // Get the latest tag from GitHub
             using (var client = new RedumpWebClient())

@@ -1,7 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <Version>1.16.1</Version>
+    <Copyright>Copyright ©  2020</Copyright>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.12" />
@@ -25,5 +28,8 @@
     <Compile Update="OptionsWindow.axaml.cs">
       <DependentUpon>OptionsWindow.axaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Icon.ico" />
   </ItemGroup>
 </Project>

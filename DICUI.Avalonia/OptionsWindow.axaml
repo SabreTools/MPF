@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI.Avalonia"
         mc:Ignorable="d" d:DesignWidth="515.132" d:DesignHeight="600" Width="515.132" Height="600"
-        x:Class="DICUI.Avalonia.OptionsWindow"
+        x:Class="DICUI.Avalonia.OptionsWindow" Icon="Icon.ico" CanResize="False"
         Title="Options">
   
   <Grid RowDefinitions="150,150,150,80,40">
