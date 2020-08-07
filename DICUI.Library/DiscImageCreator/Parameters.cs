@@ -1501,8 +1501,9 @@ namespace DICUI.DiscImageCreator
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="system">KnownSystem type representing the media</param>
         /// <param name="type">MediaType type representing the media</param>
+        /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
+        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
         {
             // Some disc types are audio-only
             bool audioOnly = (system == KnownSystem.AtariJaguarCD)
@@ -1510,51 +1511,116 @@ namespace DICUI.DiscImageCreator
                 || (system == KnownSystem.DVDAudio)
                 || (system == KnownSystem.SuperAudioCD);
 
+            string missingFiles = string.Empty;
             switch (type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    // return File.Exists(basePath + ".c2") // Doesn't output on Linux
-                    return File.Exists(basePath + ".ccd")
-                        && File.Exists(basePath + ".cue")
-                        && File.Exists(basePath + ".dat")
-                        && File.Exists(basePath + ".img")
-                        && (audioOnly || File.Exists(basePath + ".img_EdcEcc.txt") || File.Exists(basePath + ".img_EccEdc.txt"))
-                        && (audioOnly || File.Exists(basePath + ".scm"))
-                        && File.Exists(basePath + ".sub")
-                        // && File.Exists(basePath + "_c2Error.txt") // Doesn't output on Linux
-                        // && File.Exists(basePath + "_cmd.txt") // Replaced by timestamp-named file
-                        && File.Exists(basePath + "_disc.txt")
-                        && File.Exists(basePath + "_drive.txt")
-                        && File.Exists(basePath + "_img.cue")
-                        && File.Exists(basePath + "_mainError.txt")
-                        && File.Exists(basePath + "_mainInfo.txt")
-                        && File.Exists(basePath + "_subError.txt")
-                        && File.Exists(basePath + "_subInfo.txt")
-                        // && File.Exists(basePath + "_subIntention.txt") // Not guaranteed output
-                        && (File.Exists(basePath + "_subReadable.txt") || File.Exists(basePath + "_sub.txt"))
-                        && File.Exists(basePath + "_volDesc.txt");
+                    if (!File.Exists($"{basePath}.ccd"))
+                        missingFiles += $";{basePath}.ccd";
+                    if (!File.Exists($"{basePath}.cue"))
+                        missingFiles += $";{basePath}.cue";
+                    if (!File.Exists($"{basePath}.dat"))
+                        missingFiles += $";{basePath}.dat";
+                    if (!File.Exists($"{basePath}.img"))
+                        missingFiles += $";{basePath}.img";
+                    if (!File.Exists($"{basePath}.sub"))
+                        missingFiles += $";{basePath}.sub";
+                    if (!File.Exists($"{basePath}_disc.txt"))
+                        missingFiles += $";{basePath}_disc.txt";
+                    if (!File.Exists($"{basePath}_drive.txt"))
+                        missingFiles += $";{basePath}_drive.txt";
+                    if (!File.Exists($"{basePath}_img.cue"))
+                        missingFiles += $";{basePath}_img.cue";
+                    if (!File.Exists($"{basePath}_mainError.txt"))
+                        missingFiles += $";{basePath}_mainError.txt";
+                    if (!File.Exists($"{basePath}_mainInfo.txt"))
+                        missingFiles += $";{basePath}_mainInfo.txt";
+                    if (!File.Exists($"{basePath}_subError.txt"))
+                        missingFiles += $";{basePath}_subError.txt";
+                    if (!File.Exists($"{basePath}_subInfo.txt"))
+                        missingFiles += $";{basePath}_subInfo.txt";
+                    if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
+                        missingFiles += $";{basePath}_subReadable.txt";
+                    if (!File.Exists($"{basePath}_volDesc.txt"))
+                        missingFiles += $";{basePath}_volDesc.txt";
+
+                    // Audio-only discs don't output these files
+                    if (!audioOnly)
+                    {
+                        if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
+                            missingFiles += $";{basePath}.img_EdcEcc.txt";
+                        if (!File.Exists($"{basePath}.scm"))
+                            missingFiles += $";{basePath}.scm";
+                    }
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Doesn't output on Linux
+                        if (!File.Exists($"{basePath}.c2"))
+                            missingFiles += $";{basePath}.c2";
+
+                        // Doesn't output on Linux
+                        if (!File.Exists($"{basePath}_c2Error.txt"))
+                            missingFiles += $";{basePath}_c2Error.txt";
+
+                        // Replaced by timestamp-named file
+                        if (!File.Exists($"{basePath}_cmd.txt"))
+                            missingFiles += $";{basePath}_cmd.txt";
+
+                        // Not guaranteed output
+                        if (!File.Exists($"{basePath}_subIntention.txt"))
+                            missingFiles += $";{basePath}_subIntention.txt";
+                    }
+
+                    break;
 
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    bool dicDump = File.Exists(basePath + ".dat")
-                        // && File.Exists(basePath + "_cmd.txt") // Replaced by timestamp-named file
-                        && File.Exists(basePath + "_disc.txt")
-                        && File.Exists(basePath + "_drive.txt")
-                        && File.Exists(basePath + "_mainError.txt")
-                        && File.Exists(basePath + "_mainInfo.txt")
-                        && File.Exists(basePath + "_volDesc.txt");
-                    return dicDump;
+                    if (!File.Exists($"{basePath}.dat"))
+                        missingFiles += $";{basePath}.dat";
+                    if (!File.Exists($"{basePath}_disc.txt"))
+                        missingFiles += $";{basePath}_disc.txt";
+                    if (!File.Exists($"{basePath}_drive.txt"))
+                        missingFiles += $";{basePath}_drive.txt";
+                    if (!File.Exists($"{basePath}_mainError.txt"))
+                        missingFiles += $";{basePath}_mainError.txt";
+                    if (!File.Exists($"{basePath}_mainInfo.txt"))
+                        missingFiles += $";{basePath}_mainInfo.txt";
+                    if (!File.Exists($"{basePath}_volDesc.txt"))
+                        missingFiles += $";{basePath}_volDesc.txt";
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Replaced by timestamp-named file
+                        if (!File.Exists($"{basePath}_cmd.txt"))
+                            missingFiles += $";{basePath}_cmd.txt";
+                    }
+
+                    break;
 
                 case MediaType.FloppyDisk:
                 case MediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
-                    return File.Exists(basePath + ".dat")
-                       // && File.Exists(basePath + "_cmd.txt") // Replaced by timestamp-named file
-                       && File.Exists(basePath + "_disc.txt");
+                    if (!File.Exists($"{basePath}.dat"))
+                        missingFiles += $";{basePath}.dat";
+                    if (!File.Exists($"{basePath}_disc.txt"))
+                        missingFiles += $";{basePath}_disc.txt";
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Replaced by timestamp-named file
+                        if (!File.Exists($"{basePath}_cmd.txt"))
+                            missingFiles += $";{basePath}_cmd.txt";
+                    }
+
+                    break;
 
                 case MediaType.UMD:
                     return File.Exists(basePath + "_disc.txt")
@@ -1562,9 +1628,22 @@ namespace DICUI.DiscImageCreator
                         || File.Exists(basePath + "_mainInfo.txt")
                         || File.Exists(basePath + "_volDesc.txt");
 
+                    break;
+
                 default:
                     // Non-dumping commands will usually produce no output, so this is irrelevant
                     return true;
+            }
+
+            // Use the missing files list as an indicator
+            if (string.IsNullOrEmpty(missingFiles))
+            {
+                return true;
+            }
+            else
+            {
+                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
+                return false;
             }
         }
 

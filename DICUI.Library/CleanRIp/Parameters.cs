@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
@@ -117,19 +118,36 @@ namespace DICUI.CleanRip
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="system">KnownSystem type representing the media</param>
         /// <param name="type">MediaType type representing the media</param>
+        /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
+        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
         {
+            string missingFiles = string.Empty;
             switch (type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    return File.Exists(basePath + "-dumpinfo.txt")
-                        && File.Exists(basePath + ".bca");
+                    if (!File.Exists($"{basePath}-dumpinfo.txt"))
+                        missingFiles += $";{basePath}-dumpinfo.txt";
+                    if (!File.Exists($"{basePath}.bca"))
+                        missingFiles += $";{basePath}.bca";
+
+                    break;
 
                 default:
                     return false;
+            }
+
+            // Use the missing files list as an indicator
+            if (string.IsNullOrEmpty(missingFiles))
+            {
+                return true;
+            }
+            else
+            {
+                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
+                return false;
             }
         }
 

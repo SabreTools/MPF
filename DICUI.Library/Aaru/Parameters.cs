@@ -1476,26 +1476,56 @@ namespace DICUI.Aaru
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="system">KnownSystem type representing the media</param>
         /// <param name="type">MediaType type representing the media</param>
+        /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type)
+        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
         {
+            string missingFiles = string.Empty;
             switch (type)
             {
                 case MediaType.CDROM:
-                    return File.Exists(basePath + ".cicm.xml")
-                        && File.Exists(basePath + ".ibg")
-                        && File.Exists(basePath + ".log")
-                        && File.Exists(basePath + ".mhddlog.bin")
-                        && File.Exists(basePath + ".resume.xml")
-                        && File.Exists(basePath + ".sub.log");
+                    if (!File.Exists($"{basePath}.cicm.xml"))
+                        missingFiles += $";{basePath}.cicm.xml";
+                    if (!File.Exists($"{basePath}.ibg"))
+                        missingFiles += $";{basePath}.ibg";
+                    if (!File.Exists($"{basePath}.log"))
+                        missingFiles += $";{basePath}.log";
+                    if (!File.Exists($"{basePath}.mhddlog.bin"))
+                        missingFiles += $";{basePath}.mhddlog.bin";
+                    if (!File.Exists($"{basePath}.resume.xml"))
+                        missingFiles += $";{basePath}.resume.xml";
+                    if (!File.Exists($"{basePath}.sub.log"))
+                        missingFiles += $";{basePath}.sub.log";
+
+                    break;
+
                 case MediaType.DVD:
-                    return File.Exists(basePath + ".cicm.xml")
-                        && File.Exists(basePath + ".ibg")
-                        && File.Exists(basePath + ".log")
-                        && File.Exists(basePath + ".mhddlog.bin")
-                        && File.Exists(basePath + ".resume.xml");
+                    if (!File.Exists($"{basePath}.cicm.xml"))
+                        missingFiles += $";{basePath}.cicm.xml";
+                    if (!File.Exists($"{basePath}.ibg"))
+                        missingFiles += $";{basePath}.ibg";
+                    if (!File.Exists($"{basePath}.log"))
+                        missingFiles += $";{basePath}.log";
+                    if (!File.Exists($"{basePath}.mhddlog.bin"))
+                        missingFiles += $";{basePath}.mhddlog.bin";
+                    if (!File.Exists($"{basePath}.resume.xml"))
+                        missingFiles += $";{basePath}.resume.xml";
+
+                    break;
+
                 default:
                     return false; // TODO: Figure out more formats
+            }
+
+            // Use the missing files list as an indicator
+            if (string.IsNullOrEmpty(missingFiles))
+            {
+                return true;
+            }
+            else
+            {
+                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
+                return false;
             }
         }
 

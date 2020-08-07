@@ -339,8 +339,9 @@ namespace DICUI.Utilities
         /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
-        /// <returns></returns>
-        public bool FoundAllFiles()
+        /// <param name="progress">Optional result progress callback</param>
+        /// <returns>True if all required files are found, false otherwise</returns>
+        public bool FoundAllFiles(IProgress<Result> progress = null)
         {
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
@@ -349,7 +350,7 @@ namespace DICUI.Utilities
             string basePath = Path.Combine(OutputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
-            return Parameters.CheckAllOutputFilesExist(basePath, this.System, this.Type);
+            return Parameters.CheckAllOutputFilesExist(basePath, this.System, this.Type, progress);
         }
 
         /// <summary>
@@ -448,7 +449,8 @@ namespace DICUI.Utilities
         /// <summary>
         /// Execute the initial invocation of the dumping programs
         /// </summary>
-        public async Task<Result> Run(IProgress<Result> progress)
+        /// <param name="progress">Optional result progress callback</param>
+        public async Task<Result> Run(IProgress<Result> progress = null)
         {
             Result result = IsValidForDump();
 
@@ -495,7 +497,7 @@ namespace DICUI.Utilities
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Check to make sure that the output had all the correct files
-            if (!FoundAllFiles())
+            if (!FoundAllFiles(resultProgress))
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));

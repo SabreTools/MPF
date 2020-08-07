@@ -143,8 +143,9 @@ namespace DICUI.Data
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="system">KnownSystem type representing the media</param>
         /// <param name="type">MediaType type representing the media</param>
+        /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public abstract bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type);
+        public abstract bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null);
 
         /// <summary>
         /// Generate a SubmissionInfo for the output files
