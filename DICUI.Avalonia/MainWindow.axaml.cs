@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using BurnOutSharp;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
@@ -399,6 +400,8 @@ namespace DICUI.Avalonia
                 this.Find<Button>("MediaScanButton").IsEnabled = false;
                 this.Find<Button>("CopyProtectScanButton").IsEnabled = false;
 
+                var progress = new Progress<FileProtection>();
+                progress.ProgressChanged += ProgressUpdated;
                 string protections = await Validators.RunProtectionScanOnPath(Env.Drive.Letter + ":\\");
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
@@ -518,9 +521,14 @@ namespace DICUI.Avalonia
                 this.Find<TextBlock>("StatusLabel").Text = "Beginning dumping process";
                 ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
 
-                var progress = new Progress<Result>();
-                progress.ProgressChanged += ProgressUpdated;
-                Result result = await Env.Run(progress);
+                // Get progress indicators
+                var resultProgress = new Progress<Result>();
+                resultProgress.ProgressChanged += ProgressUpdated;
+                var protectionProgress = new Progress<FileProtection>();
+                protectionProgress.ProgressChanged += ProgressUpdated;
+
+                // Run the program with the parameters
+                Result result = await Env.Run(resultProgress);
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!Env.Parameters.IsDumpingCommand())
@@ -535,7 +543,8 @@ namespace DICUI.Avalonia
                 if (result)
                 {
                     // Verify dump output and save it
-                    result = await Env.VerifyAndSaveDumpOutput(progress,
+                    result = await Env.VerifyAndSaveDumpOutput(resultProgress,
+                        protectionProgress,
                         this.Find<CheckBox>("EjectWhenDoneCheckBox").IsChecked,
                         UIOptions.ResetDriveAfterDump,
                         (si) =>
@@ -763,12 +772,22 @@ namespace DICUI.Avalonia
         }
 
         /// <summary>
-        /// Handler for Progress ProgressChanged event
+        /// Handler for Result ProgressChanged event
         /// </summary>
         private void ProgressUpdated(object sender, Result value)
         {
             this.Find<TextBlock>("StatusLabel").Text = value.Message;
             ViewModels.LoggerViewModel.VerboseLogLn(value.Message);
+        }
+
+        /// <summary>
+        /// Handler for FileProtection ProgressChanged event
+        /// </summary>
+        private void ProgressUpdated(object sender, FileProtection value)
+        {
+            string message = $"{value.Percentage}% - {value.Filename}: {value.Protection}";
+            this.Find<TextBlock>("StatusLabel").Text = message;
+            ViewModels.LoggerViewModel.VerboseLogLn(message);
         }
 
         /// <summary>
