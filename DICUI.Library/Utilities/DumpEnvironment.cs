@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BurnOutSharp;
 using DICUI.Data;
 using DICUI.Web;
 using Newtonsoft.Json;
@@ -478,52 +479,62 @@ namespace DICUI.Utilities
         /// <summary>
         /// Verify that the current environment has a complete dump and create submission info is possible
         /// </summary>
+        /// <param name="resultProgress">Optional result progress callback</param>
+        /// <param name="protectionProgress">Optional protection progress callback</param>
+        /// <param name="ejectDisc">True if disc should be ejected after information is gathered, false otherwise</param>
+        /// <param name="resetDrive">True if drive should be reset after information is gathered, false otherwise</param>
+        /// <param name="showUserPrompt">Optional user prompt to deal with submsision information</param>
         /// <returns>Result instance with the outcome</returns>
-        public async Task<Result> VerifyAndSaveDumpOutput(IProgress<Result> progress, bool? ejectDisc = null, bool resetDrive = false, Func<SubmissionInfo, bool?> ShowUserPrompt = null)
+        public async Task<Result> VerifyAndSaveDumpOutput(
+            IProgress<Result> resultProgress = null,
+            IProgress<FileProtection> protectionProgress = null,
+            bool? ejectDisc = null,
+            bool resetDrive = false,
+            Func<SubmissionInfo, bool?> showUserPrompt = null)
         {
-            progress?.Report(Result.Success("Gathering submission information... please wait!"));
+            resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Check to make sure that the output had all the correct files
             if (!FoundAllFiles())
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
-            progress?.Report(Result.Success("Extracting output information from output files..."));
-            SubmissionInfo submissionInfo = await ExtractOutputInformation(progress);
-            progress?.Report(Result.Success("Extracting information complete!"));
+            resultProgress?.Report(Result.Success("Extracting output information from output files..."));
+            SubmissionInfo submissionInfo = await ExtractOutputInformation(resultProgress, protectionProgress);
+            resultProgress?.Report(Result.Success("Extracting information complete!"));
 
             if (ejectDisc == true)
             {
-                progress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
+                resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
                 EjectDisc();
             }
 
             if (resetDrive)
             {
-                progress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
+                resultProgress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
                 ResetDrive();
             }
 
-            if (PromptForDiscInformation && ShowUserPrompt != null)
+            if (PromptForDiscInformation && showUserPrompt != null)
             {
-                progress?.Report(Result.Success("Waiting for additional disc information..."));
-                bool? filledInfo = ShowUserPrompt(submissionInfo);
-                progress?.Report(Result.Success("Additional disc information added!"));
+                resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
+                bool? filledInfo = showUserPrompt(submissionInfo);
+                resultProgress?.Report(Result.Success("Additional disc information added!"));
             }
 
-            progress?.Report(Result.Success("Formatting extracted information..."));
+            resultProgress?.Report(Result.Success("Formatting extracted information..."));
             List<string> formattedValues = FormatOutputData(submissionInfo);
-            progress?.Report(Result.Success("Formatting complete!"));
+            resultProgress?.Report(Result.Success("Formatting complete!"));
 
-            progress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
+            resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
             bool success = WriteOutputData(formattedValues);
             success &= WriteOutputData(submissionInfo);
 
             if (success)
-                progress?.Report(Result.Success("Writing complete!"));
+                resultProgress?.Report(Result.Success("Writing complete!"));
             else
-                progress?.Report(Result.Failure("Writing could not complete!"));
+                resultProgress?.Report(Result.Failure("Writing could not complete!"));
 
-            progress?.Report(Result.Success("All submission information gathered!"));
+            resultProgress?.Report(Result.Success("All submission information gathered!"));
 
             return Result.Success();
         }
@@ -632,9 +643,12 @@ namespace DICUI.Utilities
         /// <summary>
         /// Extract all of the possible information from a given input combination
         /// </summary>
-        /// <param name="driveLetter">Drive letter to check</param>
+        /// <param name="resultProgress">Optional result progress callback</param>
+        /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
-        private async Task<SubmissionInfo> ExtractOutputInformation(IProgress<Result> progress)
+        private async Task<SubmissionInfo> ExtractOutputInformation(
+            IProgress<Result> resultProgress = null,
+            IProgress<FileProtection> protectionProgress = null)
         {
             // Ensure the current disc combination should exist
             if (!Validators.GetValidMediaTypes(System).Contains(Type))
@@ -694,7 +708,7 @@ namespace DICUI.Utilities
                     if (wc.Login(this.Username, this.Password))
                     {
                         // Loop through all of the hashdata to find matching IDs
-                        progress?.Report(Result.Success("Finding disc matches on Redump..."));
+                        resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
                         string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
                         foreach (string hashData in splitData)
                         {
@@ -708,14 +722,14 @@ namespace DICUI.Utilities
                             }
                         }
 
-                        progress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0 ? "Matched IDs: " + string.Join(",", info.MatchedIDs) : "No matches found")));
+                        resultProgress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0 ? "Matched IDs: " + string.Join(",", info.MatchedIDs) : "No matches found")));
 
                         // If we have exactly 1 ID, we can grab a bunch of info from it
                         if (info.MatchedIDs.Count == 1)
                         {
-                            progress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
+                            resultProgress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
                             wc.FillFromId(info, info.MatchedIDs[0]);
-                            progress?.Report(Result.Success("Information filling complete!"));
+                            resultProgress?.Report(Result.Success("Information filling complete!"));
                         }
                     }
                 }
@@ -827,9 +841,9 @@ namespace DICUI.Utilities
                     if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
                         info.CommonDiscInfo.Comments += $"[T:ISBN] {(AddPlaceholders ? Template.OptionalValue : "")}";
 
-                    progress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    info.CopyProtection.Protection = await GetCopyProtection();
-                    progress?.Report(Result.Success("Copy protection scan complete!"));
+                    resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
+                    info.CopyProtection.Protection = await GetCopyProtection(protectionProgress);
+                    resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 
                     break;
 
@@ -1296,11 +1310,12 @@ namespace DICUI.Utilities
         /// <summary>
         /// Get the current copy protection scheme, if possible
         /// </summary>
+        /// <param name="progress">Optional progress callback</param>
         /// <returns>Copy protection scheme if possible, null on error</returns>
-        private async Task<string> GetCopyProtection()
+        private async Task<string> GetCopyProtection(IProgress<FileProtection> progress = null)
         {
             if (ScanForProtection)
-                return await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\");
+                return await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", progress);
 
             return "(CHECK WITH PROTECTIONID)";
         }

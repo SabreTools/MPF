@@ -1027,16 +1027,17 @@ namespace DICUI.Utilities
         /// <summary>
         /// Run protection scan on a given dump environment
         /// </summary>
-        /// <param name="env">DumpEnvirionment containing all required information</param>
+        /// <param name="path">Path to scan for protection</param>
+        /// <param name="progress">Optional progress callback</param>
         /// <returns>Copy protection detected in the envirionment, if any</returns>
-        public static async Task<string> RunProtectionScanOnPath(string path)
+        public static async Task<string> RunProtectionScanOnPath(string path, IProgress<FileProtection> progress = null)
         {
 #if NET_FRAMEWORK
             try
             {
                 var found = await Task.Run(() =>
                 {
-                    return ProtectionFind.Scan(path);
+                    return ProtectionFind.Scan(path, progress);
                 });
 
                 if (found == null || found.Count == 0)

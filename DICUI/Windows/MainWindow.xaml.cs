@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using WinForms = System.Windows.Forms;
+using BurnOutSharp;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
@@ -187,6 +188,13 @@ namespace DICUI.Windows
         {
             StatusLabel.Content = value.Message;
             ViewModels.LoggerViewModel.VerboseLogLn(value.Message);
+        }
+
+        private void ProgressUpdated(object sender, FileProtection value)
+        {
+            string message = $"{value.Percentage}% - {value.Filename}: {value.Protection}";
+            StatusLabel.Content = message;
+            ViewModels.LoggerViewModel.VerboseLogLn(message);
         }
 
         private void MainWindowLocationChanged(object sender, EventArgs e)
@@ -516,9 +524,14 @@ namespace DICUI.Windows
                 StatusLabel.Content = "Beginning dumping process";
                 ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
 
-                var progress = new Progress<Result>();
-                progress.ProgressChanged += ProgressUpdated;
-                Result result = await _env.Run(progress);
+                // Get progress indicators
+                var resultProgress = new Progress<Result>();
+                resultProgress.ProgressChanged += ProgressUpdated;
+                var protectionProgress = new Progress<FileProtection>();
+                protectionProgress.ProgressChanged += ProgressUpdated;
+
+                // Run the program with the parameters
+                Result result = await _env.Run(resultProgress);
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!_env.Parameters.IsDumpingCommand())
@@ -533,7 +546,8 @@ namespace DICUI.Windows
                 if (result)
                 {
                     // Verify dump output and save it
-                    result = await _env.VerifyAndSaveDumpOutput(progress,
+                    result = await _env.VerifyAndSaveDumpOutput(resultProgress,
+                        protectionProgress,
                         EjectWhenDoneCheckBox.IsChecked,
                         _uiOptions.ResetDriveAfterDump,
                         (si) =>
@@ -646,7 +660,9 @@ namespace DICUI.Windows
                 DiskScanButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
 
-                string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\");
+                var progress = new Progress<FileProtection>();
+                progress.ProgressChanged += ProgressUpdated;
+                string protections = await Validators.RunProtectionScanOnPath(_env.Drive.Letter + ":\\", progress);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
                 if (_env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
