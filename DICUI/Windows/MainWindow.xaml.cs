@@ -192,7 +192,7 @@ namespace DICUI.Windows
 
         private void ProgressUpdated(object sender, FileProtection value)
         {
-            string message = $"{value.Percentage}% - {value.Filename}: {value.Protection}";
+            string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             StatusLabel.Content = message;
             ViewModels.LoggerViewModel.VerboseLogLn(message);
         }
