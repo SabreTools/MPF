@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BurnOutSharp;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
@@ -60,9 +61,13 @@ namespace DICUI.Check
                 return;
             }
 
-            // Check for additional flags
+            // Default values
             string username = null, password = null;
             string internalProgram = "DiscImageCreator";
+            string path = string.Empty;
+            bool scan = false;
+
+            // Loop through and process options
             int startIndex = 2;
             for (; startIndex < args.Length; startIndex++)
             {
@@ -91,6 +96,23 @@ namespace DICUI.Check
                     startIndex++;
                 }
 
+                // Use a device path for physical checks
+                else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
+                {
+                    path = args[startIndex].Split('=')[1];
+                }
+                else if (args[startIndex] == "-p" || args[startIndex] == "--path")
+                {
+                    path = args[startIndex + 1];
+                    startIndex++;
+                }
+
+                // Scan for protection (requires device path)
+                else if (args[startIndex].StartsWith("-s") || args[startIndex].StartsWith("--scan"))
+                {
+                    scan = true;
+                }
+
                 // Default, we fall out
                 else
                 {
@@ -98,9 +120,11 @@ namespace DICUI.Check
                 }
             }
 
-            // Make a new Progress object
-            var progress = new Progress<Result>();
-            progress.ProgressChanged += ProgressUpdated;
+            // Make new Progress objects
+            var resultProgress = new Progress<Result>();
+            resultProgress.ProgressChanged += ProgressUpdated;
+            var protectionProgress = new Progress<FileProtection>();
+            protectionProgress.ProgressChanged += ProgressUpdated;
 
             // If credentials are invalid, alert the user
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
@@ -132,18 +156,22 @@ namespace DICUI.Check
                 var options = new Options
                 {
                     InternalProgram = internalProgram,
-                    ScanForProtection = false,
+                    ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
 
                     Username = username,
                     Password = password,
                 };
 
-                var env = new DumpEnvironment(options, "", filepath, null, knownSystem, mediaType, null);
+                Drive drive = null;
+                if (!string.IsNullOrWhiteSpace(path))
+                    drive = new Drive(null, new DriveInfo(path));
+
+                var env = new DumpEnvironment(options, "", filepath, drive, knownSystem, mediaType, null);
                 env.FixOutputPaths();
 
                 // Finally, attempt to do the output dance
-                var result = env.VerifyAndSaveDumpOutput(progress).ConfigureAwait(false).GetAwaiter().GetResult();
+                var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
                 Console.WriteLine(result.Message);
             }
         }
@@ -160,36 +188,17 @@ namespace DICUI.Check
             Console.WriteLine("Usage:");
             Console.WriteLine("DICUI.Check.exe <mediatype> <system> [options] </path/to/output.bin> ...");
             Console.WriteLine();
-            Console.WriteLine(@"Common Media Types:
-bd / bluray     - BD-ROM
-cd / cdrom      - CD-ROM
-dvd             - DVD-ROM
-fd / floppy     - Floppy Disk
-gd / gdrom      - GD-ROM
-umd             - UMD");
-            Console.WriteLine("Run 'DICUI.Check.exe [-lm|--listmedia' for more options");
+            Console.WriteLine("Standalone Options:");
+            Console.WriteLine("-h, -?                  Show this help text");
+            Console.WriteLine("-lm, --listmedia        List supported media types");
+            Console.WriteLine("-ls, --listsystems      List supported system types");
+            Console.WriteLine("-lp, --listprograms     List supported dumping program outputs");
             Console.WriteLine();
-            Console.WriteLine(@"Common Systems:
-apple / mac     - Apple Macintosh
-cdi             - Philips CD-i
-ibm / ibmpc     - IBM PC Compatible
-psx / ps1       - Sony PlayStation
-ps2             - Sony PlayStation 2
-psp             - Sony PlayStation Portable
-saturn          - Sega Saturn
-xbox            - Microsoft XBOX
-x360            - Microsoft XBOX 360");
-            Console.WriteLine("Run 'DICUI.Check.exe [-ls|--listsystems' for more options");
-            Console.WriteLine();
-            Console.WriteLine(@"Common Options:
--c username password    - Redump credentials
--u                      - Set dumping program");
-            Console.WriteLine();
-            Console.WriteLine(@"Common Dumping Programs:
-aaru / chef     - Aaru
-cr / cleanrip   - CleanRip
-dic             - DiscImageCreator");
-            Console.WriteLine("Run 'DICUI.Check.exe [-lp|--listprograms' for more options");
+            Console.WriteLine("Check Options:");
+            Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password");
+            Console.WriteLine("-u, --use <program>            Dumping program output type");
+            Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
+            Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
             Console.WriteLine();
         }
 
@@ -244,6 +253,14 @@ dic             - DiscImageCreator");
         private static void ProgressUpdated(object sender, Result value)
         {
             Console.WriteLine(value.Message);
+        }
+
+        /// <summary>
+        /// Simple process counter to write to console
+        /// </summary>
+        private static void ProgressUpdated(object sender, FileProtection value)
+        {
+            Console.WriteLine($"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
         }
     }
 }
