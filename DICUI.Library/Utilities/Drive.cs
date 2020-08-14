@@ -30,17 +30,19 @@ namespace DICUI.Utilities
         {
             get
             {
+                string volumeLabel = Template.DiscNotDetected;
                 if (DriveInfo.IsReady)
                 {
                     if (string.IsNullOrWhiteSpace(DriveInfo.VolumeLabel))
-                        return "track";
+                        volumeLabel = "track";
                     else
-                        return DriveInfo.VolumeLabel;
+                        volumeLabel = DriveInfo.VolumeLabel;
                 }
-                else
-                {
-                    return Template.DiscNotDetected;
-                }
+
+                foreach (char c in Path.GetInvalidFileNameChars())
+                    volumeLabel = volumeLabel.Replace(c, '_');
+
+                return volumeLabel;
             }
         }
 
