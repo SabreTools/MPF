@@ -45,13 +45,14 @@ DICUI used to only be a frontend for DiscImageCreator (hence the name) but multi
 |--------------|-----------|----------|-----------|--------------------------|-------|
 | [Aaru](https://github.com/aaru-dps/Aaru) | Claunia | Yes | Yes | Partial | Alternative dumping program, developed to support a wide range of media types. Fully open development with outputs that contain most of what is needed for Redump standards. WIP and beta builds available. |
 | [CleanRip](https://github.com/emukidid/cleanrip) | emukidid | No | Yes | Partial | Output file parsing only, developed for dumping directly on the Wii. Outputs mostly Redump compatible outputs based on parsing of output files. No WIP builds available. |
+| [DCDumper](http://forum.redump.org/topic/9436/new-dreamcast-dumping-program-test-please/) | jamjam | No | No | Yes | Dumping program specifically for GD-ROM. Currently the Redump standard but unsupported by DICUI. No WIP builds available. |
 | [dd for Windows](http://www.chrysocome.net/dd) | chrysocome.net | Yes | No | No | Alternative dumping program, build used built by chrysocome.net. Does not output anything remotely Redump compatible due to block dumping nature of the program and no external metadata file generation. No WIP builds available. |
 | [DiscImageCreator](https://github.com/saramibreak/DiscImageCreator) | Sarami | Yes | Yes | Yes | Default dumping program, developed specifically for dumping to Redump standards. WIP builds partially available. |
 | [UmdImageCreator](https://github.com/saramibreak/UmdImageCreator) | Sarami | No | Yes | Yes | Output file parsing only, developed specifically for dumping to Redump standards. No WIP builds available. |
 
 For users who are concerned about having exact matches to submit or verify against Redump, **DiscImageCreator** is essentially your only option. None of the other supported dumping tools can produce the full array of outputs that are used by Redump submissions. This is considered the standard for the Redump project which will likely not change anytime soon.
 
-**Aaru** is, in the long term, a much better solution for dumping given the amount of disc metadata is included in the default AIF output and associated dumping files. Things like hashes will likely match for verification's sake, but the output AIF files, due to their unique format, will not be an external match. However, AIF outputs can be converted to BIN/CUE using Aaru.
+**Aaru** is, in the long term, a much better solution for dumping given the amount of disc metadata is included in the default AIF output and associated dumping files. Things like hashes will likely match for verification's sake, but the output AIF files, due to their unique format, will not be an external match. However, AIF outputs can be converted to BIN/CUE using Aaru, though not in the split format used by Redump.
 
 **Note:** In general, WIP builds for all above programs are not supported with new flags or features until they make it into the stable release. Sometimes branches will be created for larger upcoming updates to make the transition easier.
 
