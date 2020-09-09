@@ -1970,6 +1970,8 @@ namespace DICUI.Utilities
                 case "enhanced cdrom":
                 case "enhanced cd-rom":
                     return KnownSystem.EnhancedCD;
+                case "hddvd":
+                case "hddvdv":
                 case "hddvdvideo":
                 case "hddvd-video":
                 case "hd-dvd-video":
