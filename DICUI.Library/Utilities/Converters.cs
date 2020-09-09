@@ -1372,12 +1372,12 @@ namespace DICUI.Utilities
                 case "videonow jr":
                 case "hasbrovideonowjr":
                 case "hasbro videonow jr":
-                    return KnownSystem.HasbroVideoNowColor;
+                    return KnownSystem.HasbroVideoNowJr;
                 case "videonowxp":
                 case "videonow xp":
                 case "hasbrovideonowxp":
                 case "hasbro videonow xp":
-                    return KnownSystem.HasbroVideoNowColor;
+                    return KnownSystem.HasbroVideoNowXP;
                 case "ixl":
                 case "mattelixl":
                 case "mattel ixl":
