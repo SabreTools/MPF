@@ -4,11 +4,11 @@ DiscImageCreator/Aaru UI in C#
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts)
 
-This is a community project, so if you have some time and knowledge to give, we'll be glad to add you to the contributor of this project. If you have any suggestions, issues, bugs, or crashes, please look at the [Issues](https://github.com/SabreTools/DICUI/issues) page first to see if it's been reported before and try out the latest AppVeyor WIP build below to see if it'as already been addressed. If it hasn't, please open an issue that's as descriptive as you can be. Help me make this a better program for everyone :)
+This is a community project, so if you have some time and knowledge to give, we'll be glad to add you as a contributor to this project. If you have any suggestions, issues, bugs, or crashes, please look at the [Issues](https://github.com/SabreTools/DICUI/issues) page first to see if it has been reported before and try out the latest AppVeyor WIP build below to see if it has already been addressed. If it hasn't, please open an issue that's as descriptive as you can be. Help me make this a better program for everyone :)
 
 ## Releases
 
-For those who would rather the most recently stable build, ownload the latest release here:
+For those who would rather use the most recent stable build, download the latest release here:
 [Releases Page](https://github.com/SabreTools/DICUI/releases)
 
 For those who like to test the newest features, download the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts)
@@ -20,7 +20,7 @@ Even though this is written in C#, this program can only be used on Windows syst
 - Windows 7 (newest version of Windows recommended) or Mono-compatible Linux environment (DICUI.Check only)
 - .NET Framework 4.6.2, .NET Framework 4.7.2, .NET Framework 4.8, or .NET Core 3.1 Runtimes (.NET Core 3.1 is only partially functional due to a dependency, use at your own risk)
 - 1 GB of free RAM
-- As much hard drive space as amount of discs you will be dumping (20+ GB recommended)
+- As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
 
@@ -30,8 +30,8 @@ The DICUI project contains two actual programs: DICUI and DICUI.Check. Both outp
 
 | Program Name | Interface | OS Compatibility | Can Dump Directly | Notes |
 |--------------|-----------|------------------|-------------------|-------|
-| DICUI | GUI | Windows 7+ (.NET 4.6.2 and above) | Yes | Includes tailored profiles that can be selected from the main window for easier dumping with supported programs. It is able to access the disc post-dump to gather more information automatically, including versions and copy protection status. Configuration is either using the Options window within the GUI or directly in the configuration file. |
-| DICUI.Check | Commandline | Windows 7+ (.NET 4.6.2 and above), `mono` | No | Meant as a wrapper around the post-dump steps of DICUI to be run on pre-existing dumps. It does not attempt to accss original media to gather more information, so only data derived from the output files themselves is included. Configuration is purely done by per-run parameters. |
+| DICUI | GUI | Windows 7+ (.NET 4.6.2 and above) | Yes | Includes tailored profiles that can be selected from the main window for easier dumping with supported programs. It is able to access the disc post-dump to gather more information automatically, including versions and copy protection status. Configuration is done either using the Options window within the GUI or directly in the configuration file. |
+| DICUI.Check | Commandline | Windows 7+ (.NET 4.6.2 and above), `mono` | No | Meant as a wrapper around the post-dump steps of DICUI to be run on pre-existing dumps. It does not attempt to access original media to gather more information, so only data derived from the output files is included. Configuration is purely done by per-run parameters. |
 
 ## Changelist
 
