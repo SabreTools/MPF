@@ -727,7 +727,7 @@
                 case Region.World:
                     return "World";
                 default:
-                    return null;
+                    return "SPACE! (CHANGE THIS)"; // TODO: Not Redump compatible
             }
         }
 
