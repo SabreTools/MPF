@@ -2829,7 +2829,7 @@ namespace DICUI.DiscImageCreator
                             Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
 
                             line = sr.ReadLine().Trim();
-                            while (!line.StartsWith("========== Unlock 2 state(wxripper) =========="))
+                            while (!line.StartsWith("========== TotalLength =========="))
                             {
                                 // If we have a recognized line format, parse it
                                 if (line.StartsWith("Layer "))
