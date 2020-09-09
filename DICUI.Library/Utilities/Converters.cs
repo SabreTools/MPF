@@ -1955,9 +1955,12 @@ namespace DICUI.Utilities
                 case "blurayvideo":
                 case "bluray video":
                     return KnownSystem.BDVideo;
+                case "dvda":
                 case "dvdaudio":
                 case "dvd-audio":
                     return KnownSystem.DVDAudio;
+                case "dvd":
+                case "dvdv":
                 case "dvdvideo":
                 case "dvd-video":
                     return KnownSystem.DVDVideo;
