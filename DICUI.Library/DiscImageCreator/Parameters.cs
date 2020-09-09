@@ -2228,7 +2228,7 @@ namespace DICUI.DiscImageCreator
                 return null;
 
             // Setup all of the individual pieces
-            string region = null, rceProtection = null, copyrightProtectionSystemType = null, encryptedDiscKey = null, playerKey = null, decryptedDiscKey = null;
+            string region = null, rceProtection = null, copyrightProtectionSystemType = null, vobKeys = null, decryptedDiscKey = null;
 
             // Get everything from _disc.txt first
             using (StreamReader sr = File.OpenText(disc))
@@ -2265,12 +2265,28 @@ namespace DICUI.DiscImageCreator
                         {
                             string line = sr.ReadLine().Trim();
 
-                            if (line.StartsWith("[001]"))
-                                encryptedDiscKey = line.Substring("[001]: ".Length);
-                            else if (line.StartsWith("PlayerKey"))
-                                playerKey = line.Substring("PlayerKey[1]: ".Length);
-                            else if (line.StartsWith("DecryptedDiscKey"))
+                            if (line.StartsWith("DecryptedDiscKey"))
+                            {
                                 decryptedDiscKey = line.Substring("DecryptedDiscKey[020]: ".Length);
+                            }
+                            else if (line.StartsWith("LBA:"))
+                            {
+                                // Set the key string if necessary
+                                if (vobKeys == null)
+                                    vobKeys = string.Empty;
+
+                                // No keys
+                                if (line.Contains("No TitleKey"))
+                                {
+                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$");
+                                    vobKeys += $"{match.Groups[1].Value} Title Key: No TitleKey\n";
+                                }
+                                else
+                                {
+                                    var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$");
+                                    vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value}\n";
+                                }
+                            }
                         }
                     }
                     catch { }
@@ -2278,17 +2294,15 @@ namespace DICUI.DiscImageCreator
             }
 
             // Now we format everything we can
-            string protection = "";
+            string protection = string.Empty;
             if (!string.IsNullOrEmpty(region))
                 protection += $"Region: {region}\n";
             if (!string.IsNullOrEmpty(rceProtection))
                 protection += $"RCE Protection: {rceProtection}\n";
             if (!string.IsNullOrEmpty(copyrightProtectionSystemType))
                 protection += $"Copyright Protection System Type: {copyrightProtectionSystemType}\n";
-            if (!string.IsNullOrEmpty(encryptedDiscKey))
-                protection += $"Encrypted Disc Key: {encryptedDiscKey}\n";
-            if (!string.IsNullOrEmpty(playerKey))
-                protection += $"Player Key: {playerKey}\n";
+            if (!string.IsNullOrEmpty(vobKeys))
+                protection += vobKeys;
             if (!string.IsNullOrEmpty(decryptedDiscKey))
                 protection += $"Decrypted Disc Key: {decryptedDiscKey}\n";
 
