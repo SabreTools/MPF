@@ -247,6 +247,7 @@ namespace DICUI.Aaru
             {
                 this[Flag.Debug] = true;
                 this[Flag.Verbose] = true;
+                this[Flag.Private] = true; // This removes identifiable information
             }
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
