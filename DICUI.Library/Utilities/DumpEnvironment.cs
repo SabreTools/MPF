@@ -836,6 +836,10 @@ namespace DICUI.Utilities
             // Extract info based specifically on KnownSystem
             switch (System)
             {
+                case KnownSystem.AcornArchimedes:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UK;
+                    break;
+
                 case KnownSystem.AppleMacintosh:
                 case KnownSystem.EnhancedCD:
                 case KnownSystem.IBMPCCompatible:
@@ -857,6 +861,7 @@ namespace DICUI.Utilities
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.BDVideo:
@@ -870,10 +875,12 @@ namespace DICUI.Utilities
 
                 case KnownSystem.CommodoreAmigaCD32:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
                 case KnownSystem.CommodoreAmigaCDTV:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
                 case KnownSystem.DVDVideo:
@@ -882,6 +889,11 @@ namespace DICUI.Utilities
 
                 case KnownSystem.FujitsuFMTowns:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    break;
+
+                case KnownSystem.FujitsuFMTownsMarty:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.IncredibleTechnologiesEagle:
@@ -918,10 +930,20 @@ namespace DICUI.Utilities
 
                 case KnownSystem.NavisoftNaviken21:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    break;
+
+                case KnownSystem.NECPC88:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.NECPC98:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    break;
+
+                case KnownSystem.NECPCFX:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.SegaChihiro:
@@ -944,6 +966,10 @@ namespace DICUI.Utilities
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
+                case KnownSystem.SharpX68000:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    break;
+
                 case KnownSystem.SNKNeoGeoCD:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
@@ -955,6 +981,10 @@ namespace DICUI.Utilities
                 case KnownSystem.SonyPlayStation3:
                     info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
                     info.Extras.DiscID = (this.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case KnownSystem.TomyKissSite:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
