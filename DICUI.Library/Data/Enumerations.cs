@@ -27,6 +27,7 @@ namespace DICUI.Data
 
         // Verification support only
         CleanRip,
+        DCDumper,
     }
 
     /// <summary>

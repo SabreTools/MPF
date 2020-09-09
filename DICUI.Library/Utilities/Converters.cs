@@ -1279,9 +1279,6 @@ namespace DICUI.Utilities
                 case "dic":
                 case "dicreator":
                 case "discimagecreator":
-                case "umd":
-                case "umdcreator":
-                case "umdimagecreator":
                     return InternalProgram.DiscImageCreator;
                 case "dd":
                     return InternalProgram.DD;
@@ -1290,6 +1287,15 @@ namespace DICUI.Utilities
                 case "cleanrip":
                 case "cr":
                     return InternalProgram.CleanRip;
+                case "dc":
+                case "dcd":
+                case "dcdumper":
+                    return InternalProgram.DCDumper;
+                case "uic":
+                case "umd":
+                case "umdcreator":
+                case "umdimagecreator":
+                    return InternalProgram.DiscImageCreator; // TODO: Make separate internally
 
                 default:
                     return InternalProgram.NONE;
