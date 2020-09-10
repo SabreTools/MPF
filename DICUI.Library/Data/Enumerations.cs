@@ -23,11 +23,12 @@ namespace DICUI.Data
         // Dumping support
         Aaru,
         DD,
-        DiscImageCreator, // Includes UmdImageCreator
+        DiscImageCreator,
 
         // Verification support only
         CleanRip,
         DCDumper,
+        UmdImageCreator,
     }
 
     /// <summary>

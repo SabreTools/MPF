@@ -103,7 +103,6 @@ namespace DICUI.DiscImageCreator
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                 case MediaType.NintendoWiiOpticalDisc:
-                case MediaType.UMD:
                     return ".iso";
                 case MediaType.LaserDisc:
                 case MediaType.NintendoGameCubeGameDisc:

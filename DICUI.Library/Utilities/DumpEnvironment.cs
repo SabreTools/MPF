@@ -208,6 +208,10 @@ namespace DICUI.Utilities
                     this.Parameters = null; // TODO: Create correct parameter type when supported
                     break;
 
+                case InternalProgram.UmdImageCreator:
+                    this.Parameters = new UmdImageCreator.Parameters(parameters);
+                    break;
+
                 // This should never happen, but it needs a fallback
                 default:
                     this.Parameters = new DiscImageCreator.Parameters(parameters);
@@ -242,6 +246,10 @@ namespace DICUI.Utilities
                     break;
 
                 case InternalProgram.DCDumper:
+                    this.Parameters.ExecutablePath = null;
+                    break;
+
+                case InternalProgram.UmdImageCreator:
                     this.Parameters.ExecutablePath = null;
                     break;
 

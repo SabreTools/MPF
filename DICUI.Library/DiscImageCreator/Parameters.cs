@@ -1622,14 +1622,6 @@ namespace DICUI.DiscImageCreator
 
                     break;
 
-                case MediaType.UMD:
-                    return File.Exists(basePath + "_disc.txt")
-                        || File.Exists(basePath + "_mainError.txt")
-                        || File.Exists(basePath + "_mainInfo.txt")
-                        || File.Exists(basePath + "_volDesc.txt");
-
-                    break;
-
                 default:
                     // Non-dumping commands will usually produce no output, so this is irrelevant
                     return true;
@@ -1736,22 +1728,6 @@ namespace DICUI.DiscImageCreator
                     // Bluray-specific options
                     if (type == MediaType.BluRay)
                         info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, "PIC.bin")) ?? "";
-
-                    break;
-
-                case MediaType.UMD:
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
-
-                    if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize))
-                    {
-                        info.CommonDiscInfo.Title = title ?? "";
-                        info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
-                        info.VersionAndEditions.Version = umdversion ?? "";
-                        info.SizeAndChecksums.Size = umdsize;
-
-                        if (!string.IsNullOrWhiteSpace(umdlayer))
-                            info.SizeAndChecksums.Layerbreak = Int64.Parse(umdlayer ?? "-1");
-                    }
 
                     break;
             }
@@ -2730,55 +2706,6 @@ namespace DICUI.DiscImageCreator
                 {
                     // We don't care what the exception is right now
                     return null;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the UMD auxiliary info from the outputted files, if possible
-        /// </summary>
-        /// <param name="disc">_disc.txt file location</param>
-        /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetUMDAuxInfo(string disc, out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize)
-        {
-            title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
-
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(disc))
-                return false;
-
-            using (StreamReader sr = File.OpenText(disc))
-            {
-                try
-                {
-                    // Loop through everything to get the first instance of each required field
-                    string line = string.Empty;
-                    while (!sr.EndOfStream)
-                    {
-                        line = sr.ReadLine().Trim();
-
-                        if (line.StartsWith("TITLE") && title == null)
-                            title = line.Substring("TITLE: ".Length);
-                        else if (line.StartsWith("DISC_VERSION") && umdversion == null)
-                            umdversion = line.Split(' ')[1];
-                        else if (line.StartsWith("pspUmdTypes"))
-                            umdcat = GetUMDCategory(line.Split(' ')[1]);
-                        else if (line.StartsWith("L0 length"))
-                            umdlayer = line.Split(' ')[2];
-                        else if (line.StartsWith("FileSize:"))
-                            umdsize = Int64.Parse(line.Split(' ')[1]);
-                    }
-
-                    // If the L0 length is the size of the full disc, there's no layerbreak
-                    if (Int64.Parse(umdlayer) * 2048 == umdsize)
-                        umdlayer = null;
-
-                    return true;
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return false;
                 }
             }
         }

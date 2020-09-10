@@ -484,6 +484,9 @@ namespace DICUI.Utilities
                 case InternalProgram.DCDumper:
                     return "DCDumper";
 
+                case InternalProgram.UmdImageCreator:
+                    return "UmdImageCreator";
+
                 #endregion
 
                 case InternalProgram.NONE:
@@ -1298,7 +1301,7 @@ namespace DICUI.Utilities
                 case "umd":
                 case "umdcreator":
                 case "umdimagecreator":
-                    return InternalProgram.DiscImageCreator; // TODO: Make separate internally
+                    return InternalProgram.UmdImageCreator;
 
                 default:
                     return InternalProgram.NONE;
