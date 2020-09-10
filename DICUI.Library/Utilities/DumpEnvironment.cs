@@ -204,6 +204,10 @@ namespace DICUI.Utilities
                     this.Parameters = new CleanRip.Parameters(parameters);
                     break;
 
+                case InternalProgram.DCDumper:
+                    this.Parameters = null; // TODO: Create correct parameter type when supported
+                    break;
+
                 // This should never happen, but it needs a fallback
                 default:
                     this.Parameters = new DiscImageCreator.Parameters(parameters);
@@ -234,6 +238,10 @@ namespace DICUI.Utilities
 
                 // Verification support only
                 case InternalProgram.CleanRip:
+                    this.Parameters.ExecutablePath = null;
+                    break;
+
+                case InternalProgram.DCDumper:
                     this.Parameters.ExecutablePath = null;
                     break;
 

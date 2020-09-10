@@ -481,6 +481,9 @@ namespace DICUI.Utilities
                 case InternalProgram.CleanRip:
                     return "CleanRip";
 
+                case InternalProgram.DCDumper:
+                    return "DCDumper";
+
                 #endregion
 
                 case InternalProgram.NONE:
