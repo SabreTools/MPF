@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,7 +12,6 @@ using BurnOutSharp;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
-using Newtonsoft.Json.Linq;
 
 namespace DICUI.Avalonia
 {
@@ -599,36 +597,13 @@ namespace DICUI.Avalonia
         /// </summary>
         private void CheckForUpdatesMenuItemClick(object sender, RoutedEventArgs e)
         {
-            // Get the current internal version
-            var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
-            string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
+            (bool different, string message, string url) = Tools.CheckForNewVersion();
 
-            // Get the latest tag from GitHub
-            using (var client = new RedumpWebClient())
-            {
-                client.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
+            // If we have a new version, put it in the clipboard
+            if (different)
+                Application.Current.Clipboard.SetTextAsync(url);
 
-                // TODO: Figure out a better way than having this hardcoded...
-                string url = "https://api.github.com/repos/SabreTools/DICUI/releases/latest";
-                string latestReleaseJsonString = client.DownloadString(url);
-                var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
-                string latestTag = latestReleaseJson["tag_name"].ToString();
-                string releaseUrl = latestReleaseJson["html_url"].ToString();
-
-                bool different = version != latestTag;
-
-                string message = $"Local version: {version}"
-                    + $"{Environment.NewLine}Remote version: {latestTag}"
-                    + (different
-                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
-                        : $"{Environment.NewLine}You have the newest version!");
-
-                // If we have a new version, put it in the clipboard
-                if (different)
-                    Application.Current.Clipboard.SetTextAsync(releaseUrl);
-
-                MessageBox.Show(this, message, "Version Update Check", MessageBoxButtons.Ok);
-            }
+            MessageBox.Show(this, message, "Version Update Check", MessageBoxButtons.Ok);
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using DICUI.Utilities;
+using Newtonsoft.Json.Linq;
 
 namespace DICUI.Web
 {
@@ -352,6 +353,23 @@ namespace DICUI.Web
                 IsStaff = true;
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the latest version of DICUI from GitHub and the release URL
+        /// </summary>
+        public (string tag, string url) GetRemoteVersionAndUrl()
+        {
+            Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
+
+            // TODO: Figure out a better way than having this hardcoded...
+            string url = "https://api.github.com/repos/SabreTools/DICUI/releases/latest";
+            string latestReleaseJsonString = DownloadString(url);
+            var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
+            string latestTag = latestReleaseJson["tag_name"].ToString();
+            string releaseUrl = latestReleaseJson["html_url"].ToString();
+
+            return (latestTag, releaseUrl);
         }
 
         /// <summary>
