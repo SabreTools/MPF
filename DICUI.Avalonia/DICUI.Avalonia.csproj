@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <Version>1.16.1</Version>
+    <Copyright>Copyright ©  2020</Copyright>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.9.12" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.12" />
+    <PackageReference Include="BurnOutSharp" Version="1.3.9.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DICUI.Library\DICUI.Library.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="DiscInformationWindow.axaml.cs">
+      <DependentUpon>DiscInformationWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="LogWindow.axaml.cs">
+      <DependentUpon>LogWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="MainWindow.axaml.cs">
+      <DependentUpon>MainWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="OptionsWindow.axaml.cs">
+      <DependentUpon>OptionsWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Icon.ico" />
+  </ItemGroup>
+</Project>
