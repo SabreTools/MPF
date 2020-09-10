@@ -1071,7 +1071,7 @@ namespace DICUI.Utilities
                 // EDC section
                 if (info.CommonDiscInfo.System == KnownSystem.SonyPlayStation)
                 {
-                    output.Add("EDC:");
+                    output.Add(""); output.Add("EDC:");
                     AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
                 }
 
@@ -1094,7 +1094,9 @@ namespace DICUI.Utilities
                 }
 
                 // Copy Protection section
-                if (info.CopyProtection.Protection != null || info.EDC.EDC != YesNo.NULL)
+                if (info.CopyProtection.Protection != null
+                    || info.CopyProtection.AntiModchip != YesNo.NULL
+                    || info.CopyProtection.LibCrypt != YesNo.NULL)
                 {
                     output.Add(""); output.Add("Copy Protection:");
                     if (info.CommonDiscInfo.System == KnownSystem.SonyPlayStation)

@@ -1892,7 +1892,12 @@ namespace DICUI.DiscImageCreator
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
-                    bool? psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EdcEcc.txt");
+                    bool? psEdcStatus = null;
+                    if (File.Exists(basePath + ".img_EdcEcc.txt"))
+                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EdcEcc.txt");
+                    else if (File.Exists(basePath + ".img_EccEdc.txt"))
+                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EccEdc.txt");
+
                     if (psEdcStatus == true)
                         info.EDC.EDC = YesNo.Yes;
                     else if (psEdcStatus == false)
