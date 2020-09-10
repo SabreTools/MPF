@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DICUI"
         mc:Ignorable="d"
-        Title="Disc Information" Height="705" Width="515.132" ResizeMode="NoResize"
+        Title="Disc Information" Height="733" Width="515.132" ResizeMode="NoResize"
         Closed="OnClosed">
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="585"/>
             <RowDefinition Height="80"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information">
@@ -152,5 +153,17 @@
                 <TextBox x:Name="EditionTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
             </Grid>
         </GroupBox>
+
+        <!-- Accept / Cancel -->
+        <Grid Height="28" Grid.Row="2" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Button Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
+            <Button Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
+        </Grid>
     </Grid>
 </Window>

@@ -530,7 +530,7 @@ namespace DICUI.Windows
                             // lazy initialization
                             if (_discInformationWindow == null)
                             {
-                                _discInformationWindow = new DiscInformationWindow(this, si);
+                                _discInformationWindow = new DiscInformationWindow(si);
                                 _discInformationWindow.Closed += delegate
                                 {
                                     _discInformationWindow = null;
@@ -539,7 +539,7 @@ namespace DICUI.Windows
 
                             _discInformationWindow.Owner = this;
                             _discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                            _discInformationWindow.Refresh();
+                            _discInformationWindow.Load();
                             return _discInformationWindow.ShowDialog();
                         }
                     );
