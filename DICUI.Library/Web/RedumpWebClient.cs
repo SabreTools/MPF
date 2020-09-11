@@ -865,8 +865,8 @@ namespace DICUI.Web
             match = errorCountRegex.Match(discData);
             if (match.Success)
             {
-                // If the error counts don't match, then use the one from the disc page
-                if (!string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount) && match.Groups[1].Value != info.CommonDiscInfo.ErrorsCount)
+                // If the error count is empty, fill from the page
+                if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
                     info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
             }
 
