@@ -304,7 +304,7 @@ namespace DICUI.Data
         /// <returns>True if it's a valid bool, false otherwise</returns>
         protected static bool IsValidBool(string parameter)
         {
-            return bool.TryParse(parameter, out bool temp);
+            return bool.TryParse(parameter, out bool _);
         }
 
         /// <summary>

@@ -23,11 +23,11 @@ namespace DICUI.Windows
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
 
-        private FlowDocument _document;
-        private Paragraph _paragraph;
-        private List<Matcher> _matchers;
+        private readonly FlowDocument _document;
+        private readonly Paragraph _paragraph;
+        private readonly List<Matcher> _matchers;
 
         volatile Process _process;
 
@@ -370,9 +370,9 @@ namespace DICUI.Windows
             {
                 foreach (var inline in _paragraph.Inlines)
                 {
-                    if (inline is Run)
+                    if (inline is Run run)
                     {
-                        tw.Write(((Run)(inline)).Text);
+                        tw.Write(run.Text);
                     }
                 }
             }

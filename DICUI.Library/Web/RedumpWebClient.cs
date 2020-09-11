@@ -19,17 +19,17 @@ namespace DICUI.Web
         /// <summary>
         /// Regex matching the added field on a disc page
         /// </summary>
-        private Regex addedRegex = new Regex(@"<tr><th>Added</th><td>(.*?)</td></tr>");
+        private readonly Regex addedRegex = new Regex(@"<tr><th>Added</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the barcode field on a disc page
         /// </summary>
-        private Regex barcodeRegex = new Regex(@"<tr><th>Barcode</th></tr><tr><td>(.*?)</td></tr>");
+        private readonly Regex barcodeRegex = new Regex(@"<tr><th>Barcode</th></tr><tr><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the BCA field on a disc page
         /// </summary>
-        private Regex bcaRegex = new Regex(@"<h3>BCA .*?/></h3></td><td .*?></td></tr>"
+        private readonly Regex bcaRegex = new Regex(@"<h3>BCA .*?/></h3></td><td .*?></td></tr>"
             + "<tr><th>Row</th><th>Contents</th><th>ASCII</th></tr>"
             + "<tr><td>(?<row1number>.*?)</td><td>(?<row1contents>.*?)</td><td>(?<row1ascii>.*?)</td></tr>"
             + "<tr><td>(?<row2number>.*?)</td><td>(?<row2contents>.*?)</td><td>(?<row2ascii>.*?)</td></tr>"
@@ -39,82 +39,82 @@ namespace DICUI.Web
         /// <summary>
         /// Regex matching the category field on a disc page
         /// </summary>
-        private Regex categoryRegex = new Regex(@"<tr><th>Category</th><td>(.*?)</td></tr>");
+        private readonly Regex categoryRegex = new Regex(@"<tr><th>Category</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the comments field on a disc page
         /// </summary>
-        private Regex commentsRegex = new Regex(@"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
+        private readonly Regex commentsRegex = new Regex(@"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the contents field on a disc page
         /// </summary>
-        private Regex contentsRegex = new Regex(@"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
+        private readonly Regex contentsRegex = new Regex(@"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching individual disc links on a results page
         /// </summary>
-        private Regex discRegex = new Regex(@"<a href=""/disc/(\d+)/"">");
+        private readonly Regex discRegex = new Regex(@"<a href=""/disc/(\d+)/"">");
 
         /// <summary>
         /// Regex matching the disc number or letter field on a disc page
         /// </summary>
-        private Regex discNumberLetterRegex = new Regex(@"\((.*?)\)");
+        private readonly Regex discNumberLetterRegex = new Regex(@"\((.*?)\)");
 
         /// <summary>
         /// Regex matching the dumpers on a disc page
         /// </summary>
-        private Regex dumpersRegex = new Regex(@"<a href=""/discs/dumper/(.*?)/"">");
+        private readonly Regex dumpersRegex = new Regex(@"<a href=""/discs/dumper/(.*?)/"">");
 
         /// <summary>
         /// Regex matching the edition field on a disc page
         /// </summary>
-        private Regex editionRegex = new Regex(@"<tr><th>Edition</th><td>(.*?)</td></tr>");
+        private readonly Regex editionRegex = new Regex(@"<tr><th>Edition</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the error count field on a disc page
         /// </summary>
-        private Regex errorCountRegex = new Regex(@"<tr><th>Errors count</th><td>(.*?)</td></tr>");
+        private readonly Regex errorCountRegex = new Regex(@"<tr><th>Errors count</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the foreign title field on a disc page
         /// </summary>
-        private Regex foreignTitleRegex = new Regex(@"<h2>(.*?)</h2>");
+        private readonly Regex foreignTitleRegex = new Regex(@"<h2>(.*?)</h2>");
 
         /// <summary>
         /// Regex matching the "full match" ID list from a WIP disc page
         /// </summary>
-        private Regex fullMatchRegex = new Regex(@"<td class=""static"">full match ids: (.*?)</td>");
+        private readonly Regex fullMatchRegex = new Regex(@"<td class=""static"">full match ids: (.*?)</td>");
 
         /// <summary>
         /// Regex matching the languages field on a disc page
         /// </summary>
-        private Regex languagesRegex = new Regex(@"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
+        private readonly Regex languagesRegex = new Regex(@"<img src=""/images/languages/(.*?)\.png"" alt="".*?"" title="".*?"" />\s*");
 
         /// <summary>
         /// Regex matching the last modified field on a disc page
         /// </summary>
-        private Regex lastModifiedRegex = new Regex(@"<tr><th>Last modified</th><td>(.*?)</td></tr>");
+        private readonly Regex lastModifiedRegex = new Regex(@"<tr><th>Last modified</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the media field on a disc page
         /// </summary>
-        private Regex mediaRegex = new Regex(@"<tr><th>Media</th><td>(.*?)</td></tr>");
+        private readonly Regex mediaRegex = new Regex(@"<tr><th>Media</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching individual WIP disc links on a results page
         /// </summary>
-        private Regex newDiscRegex = new Regex(@"<a href=""/newdisc/(\d+)/"">");
+        private readonly Regex newDiscRegex = new Regex(@"<a href=""/newdisc/(\d+)/"">");
 
         /// <summary>
         /// Regex matching the "partial match" ID list from a WIP disc page
         /// </summary>
-        private Regex partialMatchRegex = new Regex(@"<td class=""static"">partial match ids: (.*?)</td>");
+        private readonly Regex partialMatchRegex = new Regex(@"<td class=""static"">partial match ids: (.*?)</td>");
 
         /// <summary>
         /// Regex matching the PVD field on a disc page
         /// </summary>
-        private Regex pvdRegex = new Regex(@"<h3>Primary Volume Descriptor (PVD) <img .*?/></h3></td><td .*?></td></tr>"
+        private readonly Regex pvdRegex = new Regex(@"<h3>Primary Volume Descriptor (PVD) <img .*?/></h3></td><td .*?></td></tr>"
             + @"<tr><th>Record / Entry</th><th>Contents</th><th>Date</th><th>Time</th><th>GMT</th></tr>"
             + @"<tr><td>Creation</td><td>(?<creationbytes>.*?)</td><td>(?<creationdate>.*?)</td><td>(?<creationtime>.*?)</td><td>(?<creationtimezone>.*?)</td></tr>"
             + @"<tr><td>Modification</td><td>(?<modificationbytes>.*?)</td><td>(?<modificationdate>.*?)</td><td>(?<modificationtime>.*?)</td><td>(?<modificationtimezone>.*?)</td></tr>"
@@ -124,57 +124,57 @@ namespace DICUI.Web
         /// <summary>
         /// Regex matching the region field on a disc page
         /// </summary>
-        private Regex regionRegex = new Regex(@"<tr><th>Region</th><td><a href=""/discs/region/(.*?)/"">");
+        private readonly Regex regionRegex = new Regex(@"<tr><th>Region</th><td><a href=""/discs/region/(.*?)/"">");
 
         /// <summary>
         /// Regex matching a double-layer disc ringcode information
         /// </summary>
-        private Regex ringCodeDoubleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
+        private readonly Regex ringCodeDoubleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
 
         /// <summary>
         /// Regex matching a single-layer disc ringcode information
         /// </summary>
-        private Regex ringCodeSingleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
+        private readonly Regex ringCodeSingleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
 
         /// <summary>
         /// Regex matching the serial field on a disc page
         /// </summary>
-        private Regex serialRegex = new Regex(@"<tr><th>Serial</th><td>(.*?)</td></tr>");
+        private readonly Regex serialRegex = new Regex(@"<tr><th>Serial</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the system field on a disc page
         /// </summary>
-        private Regex systemRegex = new Regex(@"<tr><th>System</th><td><a href=""/discs/system/(.*?)/"">");
+        private readonly Regex systemRegex = new Regex(@"<tr><th>System</th><td><a href=""/discs/system/(.*?)/"">");
 
         /// <summary>
         /// Regex matching the title field on a disc page
         /// </summary>
-        private Regex titleRegex = new Regex(@"<h1>(.*?)</h1>");
+        private readonly Regex titleRegex = new Regex(@"<h1>(.*?)</h1>");
 
         /// <summary>
         /// Regex matching the current nonce token for login
         /// </summary>
-        private Regex tokenRegex = new Regex(@"<input type=""hidden"" name=""csrf_token"" value=""(.*?)"" />");
+        private readonly Regex tokenRegex = new Regex(@"<input type=""hidden"" name=""csrf_token"" value=""(.*?)"" />");
 
         /// <summary>
         /// Regex matching a single track on a disc page
         /// </summary>
-        private Regex trackRegex = new Regex(@"<tr><td>(?<number>.*?)</td><td>(?<type>.*?)</td><td>(?<pregap>.*?)</td><td>(?<length>.*?)</td><td>(?<sectors>.*?)</td><td>(?<size>.*?)</td><td>(?<crc32>.*?)</td><td>(?<md5>.*?)</td><td>(?<sha1>.*?)</td></tr>");
+        private readonly Regex trackRegex = new Regex(@"<tr><td>(?<number>.*?)</td><td>(?<type>.*?)</td><td>(?<pregap>.*?)</td><td>(?<length>.*?)</td><td>(?<sectors>.*?)</td><td>(?<size>.*?)</td><td>(?<crc32>.*?)</td><td>(?<md5>.*?)</td><td>(?<sha1>.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the track count on a disc page
         /// </summary>
-        private Regex trackCountRegex = new Regex(@"<tr><th>Number of tracks</th><td>(.*?)</td></tr>");
+        private readonly Regex trackCountRegex = new Regex(@"<tr><th>Number of tracks</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the version field on a disc page
         /// </summary>
-        private Regex versionRegex = new Regex(@"<tr><th>Version</th><td>(.*?)</td></tr>");
+        private readonly Regex versionRegex = new Regex(@"<tr><th>Version</th><td>(.*?)</td></tr>");
 
         /// <summary>
         /// Regex matching the write offset field on a disc page
         /// </summary>
-        private Regex writeOffsetRegex = new Regex(@"<tr><th>Write offset</th><td>(.*?)</td></tr>");
+        private readonly Regex writeOffsetRegex = new Regex(@"<tr><th>Write offset</th><td>(.*?)</td></tr>");
 
         #endregion
 
@@ -294,8 +294,7 @@ namespace DICUI.Web
         protected override WebRequest GetWebRequest(Uri address)
         {
             WebRequest request = base.GetWebRequest(address);
-            HttpWebRequest webRequest = request as HttpWebRequest;
-            if (webRequest != null)
+            if (request is HttpWebRequest webRequest)
             {
                 webRequest.CookieContainer = m_container;
             }

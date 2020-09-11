@@ -64,7 +64,7 @@ namespace DICUI.Windows
         /// <summary>
         /// Current attached LogWindow
         /// </summary>
-        private LogWindow logWindow;
+        private readonly LogWindow logWindow;
 
         /// <summary>
         /// Currently attached OptionsWindow
@@ -122,16 +122,15 @@ namespace DICUI.Windows
         private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            var drive = DriveLetterComboBox.SelectedItem as Drive;
-            if (drive == null)
-                return;
-
-            // Get the current media type
-            if (!UIOptions.SkipMediaTypeDetection)
+            if (DriveLetterComboBox.SelectedItem is Drive drive)
             {
-                ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
-                CurrentMediaType = Validators.GetMediaType(drive);
-                ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect." : ("detected " + CurrentMediaType.LongName() + "."));
+                // Get the current media type
+                if (!UIOptions.SkipMediaTypeDetection)
+                {
+                    ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
+                    CurrentMediaType = Validators.GetMediaType(drive);
+                    ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect." : ("detected " + CurrentMediaType.LongName() + "."));
+                }
             }
         }
 

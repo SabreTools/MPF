@@ -6,7 +6,7 @@ namespace DICUI
 {
     public class OptionsViewModel
     {
-        private UIOptions _uiOptions;
+        private readonly UIOptions _uiOptions;
 
         #region Internal Program
 

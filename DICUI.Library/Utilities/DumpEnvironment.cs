@@ -730,7 +730,7 @@ namespace DICUI.Utilities
                         string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
                         foreach (string hashData in splitData)
                         {
-                            if (GetISOHashValues(hashData, out long size, out string crc32, out string md5, out string sha1))
+                            if (GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
                             {
                                 List<int> newIds = wc.ListSearchResults(sha1);
                                 if (info.MatchedIDs.Any())
@@ -774,7 +774,7 @@ namespace DICUI.Utilities
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums.Layerbreak == default(long))
+                    if (info.SizeAndChecksums.Layerbreak == default)
                     {
                         info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                         info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
@@ -812,7 +812,7 @@ namespace DICUI.Utilities
 
                 case MediaType.NintendoWiiOpticalDisc:
                     // If we have a single-layer disc
-                    if (info.SizeAndChecksums.Layerbreak == default(long))
+                    if (info.SizeAndChecksums.Layerbreak == default)
                     {
                         info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                         info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
@@ -1050,7 +1050,7 @@ namespace DICUI.Utilities
                 output.Add(""); output.Add("\tRingcode Information:");
 
                 // If we have a dual-layer disc
-                if (info.SizeAndChecksums.Layerbreak != default(long))
+                if (info.SizeAndChecksums.Layerbreak != default)
                 {
                     AddIfExists(output, "Inner " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
                     AddIfExists(output, "Inner " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
@@ -1143,7 +1143,7 @@ namespace DICUI.Utilities
                 else
                 {
                     output.Add(""); output.Add("Size & Checksum:");
-                    AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default(long) ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
+                    AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
                     AddIfExists(output, Template.SizeField, info.SizeAndChecksums.Size.ToString(), 1);
                     AddIfExists(output, Template.CRC32Field, info.SizeAndChecksums.CRC32, 1);
                     AddIfExists(output, Template.MD5Field, info.SizeAndChecksums.MD5, 1);
@@ -1252,19 +1252,19 @@ namespace DICUI.Utilities
             switch (mediaType)
             {
                 case MediaType.DVD:
-                    if (layerbreak != default(long))
+                    if (layerbreak != default)
                         return $"{mediaType.LongName()}-9";
                     else
                         return $"{mediaType.LongName()}-5";
 
                 case MediaType.BluRay:
-                    if (layerbreak != default(long))
+                    if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
                     else
                         return $"{mediaType.LongName()}-25";
 
                 case MediaType.UMD:
-                    if (layerbreak != default(long))
+                    if (layerbreak != default)
                         return $"{mediaType.LongName()}-DL";
                     else
                         return $"{mediaType.LongName()}-SL";

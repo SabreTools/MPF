@@ -123,16 +123,15 @@ namespace DICUI.Avalonia
         private void CacheCurrentDiscType()
         {
             // Get the drive letter from the selected item
-            var drive = this.Find<ComboBox>("DriveLetterComboBox").SelectedItem as Drive;
-            if (drive == null)
-                return;
-
-            // Get the current media type
-            if (!UIOptions.SkipMediaTypeDetection)
+            if (this.Find<ComboBox>("DriveLetterComboBox").SelectedItem is Drive drive)
             {
-                ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
-                CurrentMediaType = Validators.GetMediaType(drive);
-                ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect." : ("detected " + CurrentMediaType.LongName() + "."));
+                // Get the current media type
+                if (!UIOptions.SkipMediaTypeDetection)
+                {
+                    ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
+                    CurrentMediaType = Validators.GetMediaType(drive);
+                    ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect." : ("detected " + CurrentMediaType.LongName() + "."));
+                }
             }
         }
 
@@ -328,8 +327,11 @@ namespace DICUI.Avalonia
                         .ToList()
                 );
 
-            Systems = new List<KnownSystemComboBoxItem>();
-            Systems.Add(new KnownSystemComboBoxItem(KnownSystem.NONE));
+            Systems = new List<KnownSystemComboBoxItem>()
+            {
+                new KnownSystemComboBoxItem(KnownSystem.NONE),
+            };
+
             foreach (var group in mapping)
             {
                 Systems.Add(new KnownSystemComboBoxItem(group.Key));
