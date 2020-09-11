@@ -1037,7 +1037,7 @@ namespace DICUI.Utilities
             {
                 var found = await Task.Run(() =>
                 {
-                    return ProtectionFind.Scan(path, progress);
+                    return ProtectionFind.Scan(path, includePosition: false, progress: progress);
                 });
 
                 if (found == null || found.Count == 0)
