@@ -11,6 +11,13 @@ namespace DICUI.Check
     {
         public static void Main(string[] args)
         {
+            args = new string[]
+            {
+                "cd",
+                "psx",
+                "C:\\Users\\Matt\\Downloads\\SLUS-90037\\SLUS-90037.cue"
+            };
+
             // Help options
             if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
             {

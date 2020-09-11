@@ -1888,11 +1888,24 @@ namespace DICUI.DiscImageCreator
                     bool? psLibCryptStatus = GetLibCryptDetected(basePath + ".sub");
                     if (psLibCryptStatus == true)
                     {
-                        info.CopyProtection.LibCrypt = YesNo.Yes;
+                        // Guard against false positives
                         if (File.Exists(basePath + "_subIntention.txt"))
-                            info.CopyProtection.LibCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                        {
+                            string libCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                            if (string.IsNullOrEmpty(libCryptData))
+                            {
+                                info.CopyProtection.LibCrypt = YesNo.No;
+                            }
+                            else
+                            {
+                                info.CopyProtection.LibCrypt = YesNo.Yes;
+                                info.CopyProtection.LibCryptData = libCryptData;
+                            }
+                        }
                         else
-                            info.CopyProtection.LibCryptData = "LibCrypt detected but no subIntention data found!";
+                        {
+                            info.CopyProtection.LibCrypt = YesNo.No;
+                        }
                     }
                     else if (psLibCryptStatus == false)
                     {
