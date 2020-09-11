@@ -855,11 +855,6 @@ namespace DICUI.Web
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
             }
 
-            // Serial
-            match = serialRegex.Match(discData);
-            if (match.Success)
-                info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
-
             // Error count
             match = errorCountRegex.Match(discData);
             if (match.Success)
@@ -873,11 +868,6 @@ namespace DICUI.Web
             match = versionRegex.Match(discData);
             if (match.Success)
                 info.VersionAndEditions.Version = WebUtility.HtmlDecode(match.Groups[1].Value);
-
-            // Edition
-            match = editionRegex.Match(discData);
-            if (match.Success)
-                info.VersionAndEditions.OtherEditions = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Dumpers
             matches = dumpersRegex.Matches(discData);
@@ -896,11 +886,6 @@ namespace DICUI.Web
 
                 info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
             }
-
-            // Barcode
-            match = barcodeRegex.Match(discData);
-            if (match.Success)
-                info.CommonDiscInfo.Barcode = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Comments
             match = commentsRegex.Match(discData);
