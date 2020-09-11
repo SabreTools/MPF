@@ -2433,7 +2433,7 @@ namespace DICUI.DiscImageCreator
             if (!File.Exists(sub))
                 return null;
 
-            return LibCrypt.CheckSubfile(sub);
+            return DICUI.DiscImageCreator.LibCrypt.CheckSubfile(sub);
         }
 
         /// <summary>
