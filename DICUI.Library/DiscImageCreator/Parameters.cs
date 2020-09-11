@@ -2303,6 +2303,9 @@ namespace DICUI.DiscImageCreator
             if (!File.Exists(edcecc))
                 return -1;
 
+            // Get a total error count for after
+            long? totalErrors = null;
+
             // First line of defense is the EdcEcc error file
             using (StreamReader sr = File.OpenText(edcecc))
             {
@@ -2315,19 +2318,29 @@ namespace DICUI.DiscImageCreator
 
                         if (line.StartsWith("[NO ERROR]"))
                         {
-                            return 0;
+                            totalErrors = 0;
+                            break;
                         }
                         else if (line.StartsWith("Total errors"))
                         {
+                            if (totalErrors == null)
+                                totalErrors = 0;
+
                             if (Int64.TryParse(line.Substring("Total errors: ".Length).Trim(), out long te))
-                                return te;
-                            else
-                                return Int64.MinValue;
+                                totalErrors += te;
+                        }
+                        else if (line.StartsWith("Total warnings"))
+                        {
+                            if (totalErrors == null)
+                                totalErrors = 0;
+
+                            if (Int64.TryParse(line.Substring("Total warnings: ".Length).Trim(), out long tw))
+                                totalErrors += tw;
                         }
                     }
 
                     // If we haven't found anything, return -1
-                    return -1;
+                    return totalErrors ?? -1;
                 }
                 catch
                 {
