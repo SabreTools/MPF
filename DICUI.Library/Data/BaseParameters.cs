@@ -457,12 +457,13 @@ namespace DICUI.Data
         /// Get the EXE date from a PlayStation disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <param name="serial">Internal disc serial, if possible</param>
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-        protected static bool GetPlayStationExecutableInfo(char? driveLetter, out Region? region, out string date)
+        protected static bool GetPlayStationExecutableInfo(char? driveLetter, out string serial, out Region? region, out string date)
         {
-            region = null; date = null;
+            serial = null; region = null; date = null;
 
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -500,6 +501,7 @@ namespace DICUI.Data
                 {
                     exeName = match.Groups[1].Value;
                     exeName = exeName.Split(';')[0];
+                    serial = exeName.Replace('_', '-').Replace(".", string.Empty);
                 }
             }
 
