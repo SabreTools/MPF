@@ -2,12 +2,22 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <Prefer32Bit>true</Prefer32Bit>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <Prefer32Bit>true</Prefer32Bit>
+    <Title>DICUI</Title>
+    <AssemblyName>DICUI</AssemblyName>
+    <Description>Frontend for various dumping programs</Description>
+    <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+    <Copyright>Copyright (c)2019-2020</Copyright>
+    <RepositoryUrl>https://github.com/SabreTools/DICUI</RepositoryUrl>
+    <Version>1.17.0</Version>
+    <AssemblyVersion>1.17.0</AssemblyVersion>
+    <FileVersion>1.17.0</FileVersion>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>

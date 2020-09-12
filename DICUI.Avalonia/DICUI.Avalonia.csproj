@@ -1,11 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <OutputType>WinExe</OutputType>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <Version>1.16.1</Version>
-    <Copyright>Copyright ©  2020</Copyright>
+    <Prefer32Bit>true</Prefer32Bit>
+    <Title>DICUI</Title>
+    <AssemblyName>DICUI.Avalonia</AssemblyName>
+    <Description>Frontend for various dumping programs</Description>
+    <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+    <Copyright>Copyright (c)2019-2020</Copyright>
+    <RepositoryUrl>https://github.com/SabreTools/DICUI</RepositoryUrl>
+    <Version>1.17.0</Version>
+    <AssemblyVersion>1.17.0</AssemblyVersion>
+    <FileVersion>1.17.0</FileVersion>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="0.9.12" />
     <PackageReference Include="Avalonia.Desktop" Version="0.9.12" />
@@ -13,9 +25,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
   </ItemGroup>
+    
   <ItemGroup>
     <ProjectReference Include="..\DICUI.Library\DICUI.Library.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
     <Compile Update="DiscInformationWindow.axaml.cs">
       <DependentUpon>DiscInformationWindow.axaml</DependentUpon>
@@ -30,6 +44,7 @@
       <DependentUpon>OptionsWindow.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
+  
   <ItemGroup>
     <AvaloniaResource Include="Icon.ico" />
   </ItemGroup>

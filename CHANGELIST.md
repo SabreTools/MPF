@@ -1,3 +1,16 @@
+### 1.17 (2020-09-12)
+- Updated to Aaru version 5.1
+- Updated to BurnOutSharp version 1.4.0
+- Updated to DIC version 20200716
+- Added experimental Avalonia UI
+- Created wiki
+- Removed .NET 4.6.2 and .NET Core 3.0 builds
+- Added .NET 4.8 and .NET Core 3.1 builds
+- Fix numerous things related to PS1/PS2
+- Make subdump running optional
+- Overhaul DICUI.Check with more options
+- Numerous small bug- and regression-fixes
+
 ### 1.16.1 (2020-05-07)
 
 - Add preliminary support for DD for Windows (end to end still NW)
