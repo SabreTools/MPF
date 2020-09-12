@@ -184,6 +184,8 @@ namespace DICUI.Data
             this._settings = settings ?? new Dictionary<string, string>();
         }
 
+        #region Helpers
+
         /// <summary>
         /// Get a Boolean setting from a settings, dictionary
         /// </summary>
@@ -242,6 +244,8 @@ namespace DICUI.Data
             else
                 return defaultValue;
         }
+
+        #endregion
 
         #region IDictionary implementations
 

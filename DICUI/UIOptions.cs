@@ -9,18 +9,6 @@ namespace DICUI
         // TODO: Is there any way that this can be made private?
         public Options Options { get; set; }
 
-        #region Passthrough readonly values
-
-        // TODO: Can any of these be removed?
-        public string DefaultOutputPath { get { return Options.DefaultOutputPath; } }
-        public bool IgnoreFixedDrives { get { return Options.IgnoreFixedDrives; } }
-        public bool ResetDriveAfterDump { get { return Options.ResetDriveAfterDump; } }
-        public bool SkipMediaTypeDetection { get { return Options.SkipMediaTypeDetection; } }
-        public bool SkipSystemDetection { get { return Options.SkipSystemDetection; } }
-        public bool OpenLogWindowAtStartup { get { return Options.OpenLogWindowAtStartup; } }
-
-        #endregion
-
         /// <summary>
         /// Default constructor
         /// </summary>

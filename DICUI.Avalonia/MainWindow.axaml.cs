@@ -87,7 +87,7 @@ namespace DICUI.Avalonia
 
             // TODO: If log window open, "dock" it to the current Window
 
-            if (UIOptions.OpenLogWindowAtStartup)
+            if (UIOptions.Options.OpenLogWindowAtStartup)
             {
                 //TODO: this should be bound directly to WindowVisible property in two way fashion
                 // we need to study how to properly do it in XAML
@@ -126,7 +126,7 @@ namespace DICUI.Avalonia
             if (this.Find<ComboBox>("DriveLetterComboBox").SelectedItem is Drive drive)
             {
                 // Get the current media type
-                if (!UIOptions.SkipMediaTypeDetection)
+                if (!UIOptions.Options.SkipMediaTypeDetection)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                     CurrentMediaType = Validators.GetMediaType(drive);
@@ -210,7 +210,7 @@ namespace DICUI.Avalonia
 
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(this.Find<TextBox>("OutputDirectoryTextBox").Text))
-                this.Find<TextBox>("OutputDirectoryTextBox").Text = Path.Combine(UIOptions.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
+                this.Find<TextBox>("OutputDirectoryTextBox").Text = Path.Combine(UIOptions.Options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
             // Get the extension for the file for the next two statements
             string extension = Env?.GetExtension(mediaType);
@@ -236,7 +236,7 @@ namespace DICUI.Avalonia
             this.Find<Button>("MediaScanButton").IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Validators.CreateListOfDrives(UIOptions.IgnoreFixedDrives);
+            Drives = Validators.CreateListOfDrives(UIOptions.Options.IgnoreFixedDrives);
             this.Find<ComboBox>("DriveLetterComboBox").Items = Drives;
 
             if (Drives.Any())
@@ -258,7 +258,7 @@ namespace DICUI.Avalonia
                 this.Find<Button>("CopyProtectScanButton").IsEnabled = true;
 
                 // Get the current media type
-                if (!UIOptions.SkipSystemDetection && index != -1)
+                if (!UIOptions.Options.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", Drives[index].Letter);
                     var currentSystem = Validators.GetKnownSystem(Drives[index]);
@@ -546,7 +546,7 @@ namespace DICUI.Avalonia
                     result = await Env.VerifyAndSaveDumpOutput(resultProgress,
                         protectionProgress,
                         this.Find<CheckBox>("EjectWhenDoneCheckBox").IsChecked,
-                        UIOptions.ResetDriveAfterDump,
+                        UIOptions.Options.ResetDriveAfterDump,
                         (si) =>
                         {
                             var discInformationWindow = new DiscInformationWindow();
@@ -789,7 +789,7 @@ namespace DICUI.Avalonia
                     Env.EjectDisc();
                 }
 
-                if (UIOptions.ResetDriveAfterDump)
+                if (UIOptions.Options.ResetDriveAfterDump)
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
                     Env.ResetDrive();
