@@ -10,8 +10,8 @@ namespace DICUI.Test.Data
         [InlineData(MediaType.CDROM, 72)]
         [InlineData(MediaType.DVD, 24)]
         [InlineData(MediaType.BluRay, 16)]
-        [InlineData(MediaType.LaserDisc, 72)] // TODO: Update when fully determined
-        [InlineData(null, 72)] // TODO: Update when fully determined
+        [InlineData(MediaType.LaserDisc, 1)]
+        [InlineData(null, 1)]
         public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
         {
             var actual = Interface.GetSpeedsForMediaType(mediaType);
