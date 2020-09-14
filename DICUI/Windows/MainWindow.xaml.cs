@@ -61,11 +61,6 @@ namespace DICUI.Windows
         /// </summary>
         private readonly LogWindow logWindow;
 
-        /// <summary>
-        /// Currently attached OptionsWindow
-        /// </summary>
-        private OptionsWindow optionsWindow;
-
         #endregion
 
         public MainWindow()
@@ -736,21 +731,13 @@ namespace DICUI.Windows
         /// <summary>
         /// Handler for OptionsMenuItem Click event
         /// </summary>
-        /// TODO: Re-evaluate this based on Avalonia code
         private void OptionsMenuItemClick(object sender, RoutedEventArgs e)
         {
-            // lazy initialization
-            if (optionsWindow == null)
-            {
-                optionsWindow = new OptionsWindow(this, UIOptions);
-                optionsWindow.Closed += delegate
-                {
-                    optionsWindow = null;
-                };
-            }
-
+            // Show the window and wait for the response
+            var optionsWindow = new OptionsWindow();
+            optionsWindow.UIOptions = UIOptions;
             optionsWindow.Owner = this;
-            optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             optionsWindow.Refresh();
             optionsWindow.Show();
         }

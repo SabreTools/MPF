@@ -13,14 +13,18 @@ namespace DICUI.Windows
     /// </summary>
     public partial class OptionsWindow : Window
     {
-        private readonly MainWindow _mainWindow;
-        private readonly UIOptions _uiOptions;
+        #region Fields
 
-        public OptionsWindow(MainWindow mainWindow, UIOptions options)
+        /// <summary>
+        /// Current UI options
+        /// </summary>
+        public UIOptions UIOptions { get; set; }
+
+        #endregion
+
+        public OptionsWindow()
         {
             InitializeComponent();
-            _mainWindow = mainWindow;
-            _uiOptions = options;
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -96,7 +100,7 @@ namespace DICUI.Windows
         public void Refresh()
         {
             // Handle non-bindable fields
-            RedumpPasswordBox.Password = _uiOptions.Options.Password;
+            RedumpPasswordBox.Password = UIOptions.Options.Password;
         }
 
         #region Event Handlers
@@ -104,12 +108,12 @@ namespace DICUI.Windows
         private void OnAcceptClick(object sender, EventArgs e)
         {
             // Handle non-bindable fields
-            _uiOptions.Options.Password = RedumpPasswordBox.Password;
+            UIOptions.Options.Password = RedumpPasswordBox.Password;
 
-            _uiOptions.Save();
+            UIOptions.Save();
             Hide();
 
-            _mainWindow.OnOptionsUpdated();
+            (Owner as MainWindow).OnOptionsUpdated();
         }
 
         private void OnCancelClick(object sender, EventArgs e)
