@@ -1,5 +1,48 @@
-﻿namespace DICUI.Data
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DICUI.Data
 {
+    /// <summary>
+    /// Constant values for UI
+    /// </summary>
+    public static class Interface
+    {
+        // Button values
+        public const string StartDumping = "Start Dumping";
+        public const string StopDumping = "Stop Dumping";
+
+        // Private lists of known drive speed ranges
+        private static IReadOnlyList<int> cd { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+        private static IReadOnlyList<int> dvd { get; } = cd.Where(s => s <= 24).ToList();
+        private static IReadOnlyList<int> bd { get; } = cd.Where(s => s <= 16).ToList();
+        private static IReadOnlyList<int> unknown { get; } = new List<int> { 1 };
+
+        /// <summary>
+        /// Get list of all drive speeds for a given MediaType
+        /// </summary>
+        /// <param name="type">MediaType? that represents the current item</param>
+        /// <returns>Read-only list of drive speeds</returns>
+        public static IReadOnlyList<int> GetSpeedsForMediaType(MediaType? type)
+        {
+            switch (type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM:
+                    return cd;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    return dvd;
+                case MediaType.BluRay:
+                    return bd;
+                default:
+                    return unknown;
+            }
+        }
+    }
+
     /// <summary>
     /// Template field values for submission info
     /// </summary>

@@ -14,7 +14,7 @@ namespace DICUI.Test.Data
         [InlineData(null, 72)] // TODO: Update when fully determined
         public void GetAllowedDriveSpeedForMediaTypeTest(MediaType? mediaType, int maxExpected)
         {
-            var actual = Constants.GetSpeedsForMediaType(mediaType);
+            var actual = Interface.GetSpeedsForMediaType(mediaType);
             Assert.Equal(maxExpected, actual.Last());
         }
     }
