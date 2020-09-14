@@ -57,11 +57,6 @@ namespace DICUI.Windows
         private bool alreadyShown;
 
         /// <summary>
-        /// Current attached DiscInformationWindow
-        /// </summary>
-        private DiscInformationWindow discInformationWindow;
-
-        /// <summary>
         /// Current attached LogWindow
         /// </summary>
         private readonly LogWindow logWindow;
@@ -444,7 +439,7 @@ namespace DICUI.Windows
         private void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            var values = Constants.GetSpeedsForMediaType(CurrentMediaType);
+            var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
             DriveSpeedComboBox.ItemsSource = values;
             ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
 
@@ -452,6 +447,21 @@ namespace DICUI.Windows
             int speed = UIOptions.GetPreferredDumpSpeedForMediaType(CurrentMediaType);
             ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", speed);
             DriveSpeedComboBox.SelectedValue = speed;
+        }
+
+        /// <summary>
+        /// Show the disc information window
+        /// </summary>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
+        private bool? ShowDiscInformationWindow(SubmissionInfo submissionInfo)
+        {
+            var discInformationWindow = new DiscInformationWindow();
+            discInformationWindow.SubmissionInfo = submissionInfo;
+            discInformationWindow.Owner = this;
+            discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            discInformationWindow.Load();
+            return discInformationWindow.ShowDialog();
         }
 
         /// <summary>
@@ -504,7 +514,7 @@ namespace DICUI.Windows
                     }
                 }
 
-                StartStopButton.Content = Constants.StopDumping;
+                StartStopButton.Content = Interface.StopDumping;
                 CopyProtectScanButton.IsEnabled = false;
                 StatusLabel.Content = "Beginning dumping process";
                 ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
@@ -523,7 +533,7 @@ namespace DICUI.Windows
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
                     StatusLabel.Content = "Execution complete!";
-                    StartStopButton.Content = Constants.StartDumping;
+                    StartStopButton.Content = Interface.StartDumping;
                     CopyProtectScanButton.IsEnabled = true;
                     return;
                 }
@@ -535,23 +545,7 @@ namespace DICUI.Windows
                         protectionProgress,
                         EjectWhenDoneCheckBox.IsChecked,
                         UIOptions.Options.ResetDriveAfterDump,
-                        (si) =>
-                        {
-                            // lazy initialization
-                            if (discInformationWindow == null)
-                            {
-                                discInformationWindow = new DiscInformationWindow(si);
-                                discInformationWindow.Closed += delegate
-                                {
-                                    discInformationWindow = null;
-                                };
-                            }
-
-                            discInformationWindow.Owner = this;
-                            discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                            discInformationWindow.Load();
-                            return discInformationWindow.ShowDialog();
-                        }
+                        ShowDiscInformationWindow
                     );
                 }
             }
@@ -561,7 +555,7 @@ namespace DICUI.Windows
             }
             finally
             {
-                StartStopButton.Content = Constants.StartDumping;
+                StartStopButton.Content = Interface.StartDumping;
                 CopyProtectScanButton.IsEnabled = true;
             }
         }
@@ -811,11 +805,11 @@ namespace DICUI.Windows
         private void StartStopButtonClick(object sender, RoutedEventArgs e)
         {
             // Dump or stop the dump
-            if ((string)StartStopButton.Content == Constants.StartDumping)
+            if ((string)StartStopButton.Content == Interface.StartDumping)
             {
                 StartDumping();
             }
-            else if ((string)StartStopButton.Content == Constants.StopDumping)
+            else if ((string)StartStopButton.Content == Interface.StopDumping)
             {
                 ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
                 Env.CancelDumping();

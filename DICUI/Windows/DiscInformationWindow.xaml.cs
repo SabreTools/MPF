@@ -12,6 +12,8 @@ namespace DICUI.Windows
     /// </summary>
     public partial class DiscInformationWindow : Window
     {
+        #region Fields
+
         /// <summary>
         /// List of available disc categories
         /// </summary>
@@ -32,10 +34,11 @@ namespace DICUI.Windows
         /// </summary>
         public List<LanguageComboBoxItem> Languages { get; private set; }
 
-        public DiscInformationWindow(SubmissionInfo submissionInfo)
+        #endregion
+
+        public DiscInformationWindow()
         {
             InitializeComponent();
-            SubmissionInfo = submissionInfo;
 
             PopulateCategories();
             PopulateRegions();

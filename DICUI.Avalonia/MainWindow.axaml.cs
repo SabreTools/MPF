@@ -454,7 +454,7 @@ namespace DICUI.Avalonia
         private void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            var values = Constants.GetSpeedsForMediaType(CurrentMediaType);
+            var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
             this.Find<ComboBox>("DriveSpeedComboBox").Items = values;
             ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
 
@@ -462,6 +462,21 @@ namespace DICUI.Avalonia
             int speed = UIOptions.GetPreferredDumpSpeedForMediaType(CurrentMediaType);
             ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", speed);
             this.Find<ComboBox>("DriveSpeedComboBox").SelectedItem = speed;
+        }
+
+        /// <summary>
+        /// Show the disc information window
+        /// </summary>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
+        private bool? ShowDiscInformationWindow(SubmissionInfo submissionInfo)
+        {
+            var discInformationWindow = new DiscInformationWindow();
+            discInformationWindow.SubmissionInfo = submissionInfo;
+            discInformationWindow.Load();
+            discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            discInformationWindow.ShowDialog(this).ConfigureAwait(false).GetAwaiter().GetResult();
+            return true;
         }
 
         /// <summary>
@@ -516,7 +531,7 @@ namespace DICUI.Avalonia
                     }
                 }
 
-                this.Find<Button>("StartStopButton").Content = Constants.StopDumping;
+                this.Find<Button>("StartStopButton").Content = Interface.StopDumping;
                 this.Find<Button>("CopyProtectScanButton").IsEnabled = false;
                 this.Find<TextBlock>("StatusLabel").Text = "Beginning dumping process";
                 ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
@@ -535,7 +550,7 @@ namespace DICUI.Avalonia
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
                     this.Find<TextBlock>("StatusLabel").Text = "Execution complete!";
-                    this.Find<Button>("StartStopButton").Content = Constants.StartDumping;
+                    this.Find<Button>("StartStopButton").Content = Interface.StartDumping;
                     this.Find<Button>("CopyProtectScanButton").IsEnabled = true;
                     return;
                 }
@@ -547,15 +562,7 @@ namespace DICUI.Avalonia
                         protectionProgress,
                         this.Find<CheckBox>("EjectWhenDoneCheckBox").IsChecked,
                         UIOptions.Options.ResetDriveAfterDump,
-                        (si) =>
-                        {
-                            var discInformationWindow = new DiscInformationWindow();
-                            discInformationWindow.SubmissionInfo = si;
-                            discInformationWindow.Load();
-                            discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                            discInformationWindow.ShowDialog(this).ConfigureAwait(false).GetAwaiter().GetResult();
-                            return true;
-                        }
+                        ShowDiscInformationWindow
                     );
                 }
             }
@@ -565,7 +572,7 @@ namespace DICUI.Avalonia
             }
             finally
             {
-                this.Find<Button>("StartStopButton").Content = Constants.StartDumping;
+                this.Find<Button>("StartStopButton").Content = Interface.StartDumping;
                 this.Find<Button>("CopyProtectScanButton").IsEnabled = true;
             }
         }
@@ -773,11 +780,11 @@ namespace DICUI.Avalonia
         private void StartStopButtonClick(object sender, RoutedEventArgs e)
         {
             // Dump or stop the dump
-            if ((string)this.Find<Button>("StartStopButton").Content == Constants.StartDumping)
+            if ((string)this.Find<Button>("StartStopButton").Content == Interface.StartDumping)
             {
                 StartDumping();
             }
-            else if ((string)this.Find<Button>("StartStopButton").Content == Constants.StopDumping)
+            else if ((string)this.Find<Button>("StartStopButton").Content == Interface.StopDumping)
             {
                 ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
                 Env.CancelDumping();
