@@ -77,7 +77,7 @@ namespace DICUI.DiscImageCreator
         #region Flag Values
 
         /// <summary>
-        /// Manual offset for Audio CD
+        /// Manual offset for Audio CD (default 0)
         /// </summary>
         public int? AddOffsetValue { get; set; }
 
@@ -85,16 +85,22 @@ namespace DICUI.DiscImageCreator
         /// 0xbe opcode value for dumping
         /// Possible values: raw (default), pack
         /// </summary>
+        /// TODO: Make this an enum
         public string BEOpcodeValue { get; set; }
 
         /// <summary>
         /// C2 reread options for dumping
-        /// [0] - Reread value
+        /// [0] - Reread value (default 4000)
         /// [1] - 0 reread issue sector (default), 1 reread all
         /// [2] - First LBA to reread (default 0)
         /// [3] - Last LBA to reread (default EOS)
         /// </summary>
         public int?[] C2OpcodeValue { get; set; } = new int?[4];
+
+        /// <summary>
+        /// End LBA for fixing
+        /// </summary>
+        public int? FixValue { get; set; }
 
         /// <summary>
         /// Set the force unit access flag value (default 1)
@@ -107,12 +113,22 @@ namespace DICUI.DiscImageCreator
         public int? NoSkipSecuritySectorValue { get; set; }
 
         /// <summary>
+        /// Set the reverse End LBA value (required for DVD)
+        /// </summary>
+        public int? ReverseEndLBAValue { get; set; }
+
+        /// <summary>
+        /// Set the reverse Start LBA value (required for DVD)
+        /// </summary>
+        public int? ReverseStartLBAValue { get; set; }
+
+        /// <summary>
         /// Set scan file timeout value (default 60)
         /// </summary>
         public int? ScanFileProtectValue { get; set; }
 
         /// <summary>
-        /// Beginning and ending sectors to skip for physical protection
+        /// Beginning and ending sectors to skip for physical protection (both default 0)
         /// </summary>
         public int?[] SkipSectorValue { get; set; } = new int?[2];
 
@@ -123,7 +139,7 @@ namespace DICUI.DiscImageCreator
         public int? SubchannelReadLevelValue { get; set; }
 
         /// <summary>
-        /// Set number of empty bytes to insert at the head of first track for VideoNow
+        /// Set number of empty bytes to insert at the head of first track for VideoNow (default 0)
         /// </summary>
         public int? VideoNowValue { get; set; }
 
@@ -275,8 +291,6 @@ namespace DICUI.DiscImageCreator
                     parameters.Add(Converters.LongName(Flag.AddOffset));
                     if (AddOffsetValue != null)
                         parameters.Add(AddOffsetValue.ToString());
-                    else
-                        return null;
                 }
             }
 
@@ -322,7 +336,9 @@ namespace DICUI.DiscImageCreator
                     if (C2OpcodeValue[1] != null)
                     {
                         if (C2OpcodeValue[1] == 0)
+                        {
                             parameters.Add(C2OpcodeValue[1].ToString());
+                        }
                         else if (C2OpcodeValue[1] == 1)
                         {
                             parameters.Add(C2OpcodeValue[1].ToString());
@@ -334,11 +350,15 @@ namespace DICUI.DiscImageCreator
                                     parameters.Add(C2OpcodeValue[3].ToString());
                                 }
                                 else
+                                {
                                     return null;
+                                }
                             }
                         }
                         else
+                        {
                             return null;
+                        }
                     }
                 }
             }
@@ -364,6 +384,26 @@ namespace DICUI.DiscImageCreator
                     parameters.Add(Converters.LongName(Flag.DisableBeep));
             }
 
+            // Extract MicroSoftCabFile
+            if (GetSupportedCommands(Flag.ExtractMicroSoftCabFile).Contains(BaseCommand))
+            {
+                if (this[Flag.ExtractMicroSoftCabFile] == true)
+                    parameters.Add(Converters.LongName(Flag.ExtractMicroSoftCabFile));
+            }
+
+            // Fix
+            if (GetSupportedCommands(Flag.Fix).Contains(BaseCommand))
+            {
+                if (this[Flag.Fix] == true)
+                {
+                    parameters.Add(Converters.LongName(Flag.Fix));
+                    if (FixValue != null)
+                        parameters.Add(FixValue.ToString());
+                    else
+                        return null;
+                }
+            }
+
             // Force Unit Access
             if (GetSupportedCommands(Flag.ForceUnitAccess).Contains(BaseCommand))
             {
@@ -373,13 +413,6 @@ namespace DICUI.DiscImageCreator
                     if (ForceUnitAccessValue != null)
                         parameters.Add(ForceUnitAccessValue.ToString());
                 }
-            }
-
-            // Extract MicroSoftCabFile
-            if (GetSupportedCommands(Flag.ExtractMicroSoftCabFile).Contains(BaseCommand))
-            {
-                if (this[Flag.ExtractMicroSoftCabFile] == true)
-                    parameters.Add(Converters.LongName(Flag.ExtractMicroSoftCabFile));
             }
 
             // Multi-Session
@@ -442,11 +475,29 @@ namespace DICUI.DiscImageCreator
                     parameters.Add(Converters.LongName(Flag.Raw));
             }
 
+            // Resume
+            if (GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
+            {
+                if (this[Flag.Resume] == true)
+                    parameters.Add(Converters.LongName(Flag.Resume));
+            }
+
             // Reverse read
             if (GetSupportedCommands(Flag.Reverse).Contains(BaseCommand))
             {
                 if (this[Flag.Reverse] == true)
+                {
                     parameters.Add(Converters.LongName(Flag.Reverse));
+
+                    if (BaseCommand == Command.DigitalVideoDisc)
+                    {
+                        if (ReverseStartLBAValue == null || ReverseEndLBAValue == null)
+                            return null;
+
+                        parameters.Add(ReverseStartLBAValue.ToString());
+                        parameters.Add(ReverseEndLBAValue.ToString());
+                    }
+                }
             }
 
             // Scan PlayStation anti-mod strings
@@ -491,19 +542,19 @@ namespace DICUI.DiscImageCreator
             {
                 if (this[Flag.SkipSector] == true)
                 {
-                    if (SkipSectorValue[0] != null && SkipSectorValue[1] != null)
+                    parameters.Add(Converters.LongName(Flag.SkipSector));
+                    if (SkipSectorValue[0] != null)
                     {
-                        parameters.Add(Converters.LongName(Flag.SkipSector));
-                        if (SkipSectorValue[0] >= 0 && SkipSectorValue[1] >= 0)
-                        {
+                        if (SkipSectorValue[0] > 0)
                             parameters.Add(SkipSectorValue[0].ToString());
-                            parameters.Add(SkipSectorValue[1].ToString());
-                        }
                         else
                             return null;
                     }
-                    else
-                        return null;
+                    if (SkipSectorValue[1] != null)
+                    {
+                        if (SkipSectorValue[1] == 0)
+                            parameters.Add(SkipSectorValue[1].ToString());
+                    }
                 }
             }
 
@@ -643,6 +694,7 @@ namespace DICUI.DiscImageCreator
             AddOffsetValue = null;
             BEOpcodeValue = null;
             C2OpcodeValue = new int?[4];
+            FixValue = null;
             ForceUnitAccessValue = null;
             NoSkipSecuritySectorValue = null;
             ScanFileProtectValue = null;
@@ -1171,11 +1223,23 @@ namespace DICUI.DiscImageCreator
                     {
                         case FlagStrings.AddOffset:
                             if (!GetSupportedCommands(Flag.AddOffset).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
-                                return false;
+                            {
+                                this[Flag.AddOffset] = true;
+                                break;
+                            }
+                            else if (IsFlag(parts[i + 1]))
+                            {
+                                this[Flag.AddOffset] = true;
+                                break;
+                            }
                             else if (!IsValidInt32(parts[i + 1]))
+                            {
                                 return false;
+                            }
 
                             this[Flag.AddOffset] = true;
                             AddOffsetValue = Int32.Parse(parts[i + 1]);
@@ -1198,7 +1262,9 @@ namespace DICUI.DiscImageCreator
 
                         case FlagStrings.BEOpcode:
                             if (!GetSupportedCommands(Flag.BEOpcode).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[Flag.BEOpcode] = true;
@@ -1209,11 +1275,14 @@ namespace DICUI.DiscImageCreator
                                 this[Flag.BEOpcode] = true;
                                 break;
                             }
-                            else if (parts[i + 1] != "raw" && (parts[i + 1] != "pack"))
+                            else if (!string.Equals(parts[i + 1], "raw", StringComparison.OrdinalIgnoreCase)
+                                && !string.Equals(parts[i + 1], "pack", StringComparison.OrdinalIgnoreCase))
+                            {
                                 return false;
+                            }
 
                             this[Flag.BEOpcode] = true;
-                            BEOpcodeValue = parts[i + 1];
+                            BEOpcodeValue = parts[i + 1].ToLowerInvariant();
                             i++;
                             break;
 
@@ -1225,11 +1294,17 @@ namespace DICUI.DiscImageCreator
                             for (int j = 0; j < 4; j++)
                             {
                                 if (!DoesExist(parts, i + 1))
+                                {
                                     break;
+                                }
                                 else if (IsFlag(parts[i + 1]))
+                                {
                                     break;
+                                }
                                 else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                                {
                                     return false;
+                                }
                                 else
                                 {
                                     C2OpcodeValue[j] = Int32.Parse(parts[i + 1]);
@@ -1267,9 +1342,24 @@ namespace DICUI.DiscImageCreator
                             this[Flag.ExtractMicroSoftCabFile] = true;
                             break;
 
+                        case FlagStrings.Fix:
+                            if (!GetSupportedCommands(Flag.Fix).Contains(BaseCommand))
+                                return false;
+                            else if (!DoesExist(parts, i + 1))
+                                return false;
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                                return false;
+
+                            this[Flag.Fix] = true;
+                            FixValue = Int32.Parse(parts[i + 1]);
+                            i++;
+                            break;
+
                         case FlagStrings.ForceUnitAccess:
                             if (!GetSupportedCommands(Flag.ForceUnitAccess).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[Flag.ForceUnitAccess] = true;
@@ -1281,7 +1371,9 @@ namespace DICUI.DiscImageCreator
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                            {
                                 return false;
+                            }
 
                             this[Flag.ForceUnitAccess] = true;
                             ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
@@ -1316,13 +1408,6 @@ namespace DICUI.DiscImageCreator
                             this[Flag.NoFixSubQLibCrypt] = true;
                             break;
 
-                        case FlagStrings.NoFixSubRtoW:
-                            if (!GetSupportedCommands(Flag.NoFixSubRtoW).Contains(BaseCommand))
-                                return false;
-
-                            this[Flag.NoFixSubRtoW] = true;
-                            break;
-
                         case FlagStrings.NoFixSubQSecuROM:
                             if (!GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(BaseCommand))
                                 return false;
@@ -1330,9 +1415,18 @@ namespace DICUI.DiscImageCreator
                             this[Flag.NoFixSubQSecuROM] = true;
                             break;
 
+                        case FlagStrings.NoFixSubRtoW:
+                            if (!GetSupportedCommands(Flag.NoFixSubRtoW).Contains(BaseCommand))
+                                return false;
+
+                            this[Flag.NoFixSubRtoW] = true;
+                            break;
+
                         case FlagStrings.NoSkipSS:
                             if (!GetSupportedCommands(Flag.NoSkipSS).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[Flag.NoSkipSS] = true;
@@ -1344,10 +1438,12 @@ namespace DICUI.DiscImageCreator
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                            {
                                 return false;
+                            }
 
                             this[Flag.NoSkipSS] = true;
-                            ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
+                            NoSkipSecuritySectorValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
@@ -1358,9 +1454,29 @@ namespace DICUI.DiscImageCreator
                             this[Flag.Raw] = true;
                             break;
 
+                        case FlagStrings.Resume:
+                            if (!GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
+                                return false;
+
+                            this[Flag.Resume] = true;
+                            break;
+
                         case FlagStrings.Reverse:
                             if (!GetSupportedCommands(Flag.Reverse).Contains(BaseCommand))
                                 return false;
+
+                            // DVD specifically requires StartLBA and EndLBA
+                            if (BaseCommand == Command.DigitalVideoDisc)
+                            {
+                                if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
+                                    return false;
+                                else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
+                                    return false;
+
+                                ReverseStartLBAValue = Int32.Parse(parts[i + 1]);
+                                ReverseEndLBAValue = Int32.Parse(parts[i + 2]);
+                                i += 2;
+                            }
 
                             this[Flag.Reverse] = true;
                             break;
@@ -1374,7 +1490,9 @@ namespace DICUI.DiscImageCreator
 
                         case FlagStrings.ScanFileProtect:
                             if (!GetSupportedCommands(Flag.ScanFileProtect).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[Flag.ScanFileProtect] = true;
@@ -1386,7 +1504,9 @@ namespace DICUI.DiscImageCreator
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                            {
                                 return false;
+                            }
 
                             this[Flag.ScanFileProtect] = true;
                             ScanFileProtectValue = Int32.Parse(parts[i + 1]);
@@ -1410,22 +1530,36 @@ namespace DICUI.DiscImageCreator
                         case FlagStrings.SkipSector:
                             if (!GetSupportedCommands(Flag.SkipSector).Contains(BaseCommand))
                                 return false;
-                            else if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
-                                return false;
-                            else if (IsFlag(parts[i + 1]) || IsFlag(parts[i + 2]))
-                                return false;
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
-                                return false;
 
                             this[Flag.SkipSector] = true;
-                            SkipSectorValue[0] = Int32.Parse(parts[i + 1]);
-                            SkipSectorValue[1] = Int32.Parse(parts[i + 2]);
-                            i += 2;
+                            for (int j = 0; j < 2; j++)
+                            {
+                                if (!DoesExist(parts, i + 1))
+                                {
+                                    break;
+                                }
+                                else if (IsFlag(parts[i + 1]))
+                                {
+                                    break;
+                                }
+                                else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                                {
+                                    return false;
+                                }
+                                else
+                                {
+                                    SkipSectorValue[j] = Int32.Parse(parts[i + 1]);
+                                    i++;
+                                }
+                            }
+
                             break;
 
                         case FlagStrings.SubchannelReadLevel:
                             if (!GetSupportedCommands(Flag.SubchannelReadLevel).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[Flag.SubchannelReadLevel] = true;
@@ -1437,7 +1571,9 @@ namespace DICUI.DiscImageCreator
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0, upperBound: 2))
+                            {
                                 return false;
+                            }
 
                             this[Flag.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
@@ -1453,7 +1589,9 @@ namespace DICUI.DiscImageCreator
 
                         case FlagStrings.VideoNow:
                             if (!GetSupportedCommands(Flag.VideoNow).Contains(BaseCommand))
+                            {
                                 return false;
+                            }
                             else if (!DoesExist(parts, i + 1))
                             {
                                 this[Flag.VideoNow] = true;
@@ -1465,7 +1603,9 @@ namespace DICUI.DiscImageCreator
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                            {
                                 return false;
+                            }
 
                             this[Flag.VideoNow] = true;
                             VideoNowValue = Int32.Parse(parts[i + 1]);
@@ -1986,9 +2126,15 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.SACD);
                     commands.Add(Command.Swap);
                     commands.Add(Command.XBOX);
+                    commands.Add(Command.XBOXSwap);
+                    commands.Add(Command.XGD2Swap);
+                    commands.Add(Command.XGD3Swap);
                     break;
                 case Flag.ExtractMicroSoftCabFile:
                     commands.Add(Command.CompactDisc);
+                    break;
+                case Flag.Fix:
+                    commands.Add(Command.DigitalVideoDisc);
                     break;
                 case Flag.ForceUnitAccess:
                     commands.Add(Command.Audio);
@@ -1996,12 +2142,19 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.CompactDisc);
                     commands.Add(Command.Data);
                     commands.Add(Command.DigitalVideoDisc);
+                    commands.Add(Command.GDROM);
                     commands.Add(Command.SACD);
                     commands.Add(Command.Swap);
                     commands.Add(Command.XBOX);
+                    commands.Add(Command.XBOXSwap);
+                    commands.Add(Command.XGD2Swap);
+                    commands.Add(Command.XGD3Swap);
                     break;
                 case Flag.MultiSession:
+                    commands.Add(Command.Audio);
                     commands.Add(Command.CompactDisc);
+                    commands.Add(Command.Data);
+                    commands.Add(Command.Swap);
                     break;
                 case Flag.NoFixSubP:
                     commands.Add(Command.Audio);
@@ -2018,17 +2171,11 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.Swap);
                     break;
                 case Flag.NoFixSubQLibCrypt:
-                    commands.Add(Command.Audio);
                     commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
                     commands.Add(Command.Swap);
                     break;
                 case Flag.NoFixSubQSecuROM:
-                    commands.Add(Command.Audio);
                     commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
                     commands.Add(Command.Swap);
                     break;
                 case Flag.NoFixSubRtoW:
@@ -2039,6 +2186,7 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.Swap);
                     break;
                 case Flag.NoSkipSS:
+                    commands.Add(Command.BluRay);
                     commands.Add(Command.XBOX);
                     commands.Add(Command.XBOXSwap);
                     commands.Add(Command.XGD2Swap);
@@ -2047,14 +2195,19 @@ namespace DICUI.DiscImageCreator
                 case Flag.Raw:
                     commands.Add(Command.DigitalVideoDisc);
                     break;
+                case Flag.Resume:
+                    commands.Add(Command.DigitalVideoDisc);
+                    break;
                 case Flag.Reverse:
-                    commands.Add(Command.CompactDisc);
+                    commands.Add(Command.Audio);
                     commands.Add(Command.Data);
                     commands.Add(Command.DigitalVideoDisc);
                     break;
                 case Flag.ScanAntiMod:
+                    commands.Add(Command.Audio);
                     commands.Add(Command.CompactDisc);
                     commands.Add(Command.Data);
+                    commands.Add(Command.Swap);
                     break;
                 case Flag.ScanFileProtect:
                     commands.Add(Command.Audio);
@@ -2064,14 +2217,17 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.Swap);
                     break;
                 case Flag.ScanSectorProtect:
+                    commands.Add(Command.Audio);
                     commands.Add(Command.CompactDisc);
                     commands.Add(Command.Data);
                     commands.Add(Command.Swap);
                     break;
                 case Flag.SeventyFour:
+                    commands.Add(Command.CompactDisc);
                     commands.Add(Command.Swap);
                     break;
                 case Flag.SkipSector:
+                    commands.Add(Command.Audio);
                     commands.Add(Command.Data);
                     break;
                 case Flag.SubchannelReadLevel:
@@ -2088,12 +2244,15 @@ namespace DICUI.DiscImageCreator
                     break;
                 case Flag.VideoNow:
                     commands.Add(Command.CompactDisc);
+                    commands.Add(Command.Swap);
                     break;
                 case Flag.VideoNowColor:
                     commands.Add(Command.CompactDisc);
+                    commands.Add(Command.Swap);
                     break;
                 case Flag.VideoNowXP:
                     commands.Add(Command.CompactDisc);
+                    commands.Add(Command.Swap);
                     break;
 
                 case Flag.NONE:

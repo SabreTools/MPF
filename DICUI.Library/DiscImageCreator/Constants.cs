@@ -45,6 +45,7 @@ namespace DICUI.DiscImageCreator
         public const string D8Opcode = "/d8";
         public const string DisableBeep = "/q";
         public const string ExtractMicroSoftCabFile = "/mscf";
+        public const string Fix = "/fix";
         public const string ForceUnitAccess = "/f";
         public const string MultiSession = "/ms";
         public const string NoFixSubP = "/np";
@@ -54,6 +55,7 @@ namespace DICUI.DiscImageCreator
         public const string NoFixSubQSecuROM = "/ns";
         public const string NoSkipSS = "/nss";
         public const string Raw = "/raw";
+        public const string Resume = "/re";
         public const string Reverse = "/r";
         public const string ScanAntiMod = "/am";
         public const string ScanFileProtect = "/sf";

@@ -214,6 +214,8 @@ namespace DICUI.DiscImageCreator
                     return FlagStrings.DisableBeep;
                 case Flag.ExtractMicroSoftCabFile:
                     return FlagStrings.ExtractMicroSoftCabFile;
+                case Flag.Fix:
+                    return FlagStrings.Fix;
                 case Flag.ForceUnitAccess:
                     return FlagStrings.ForceUnitAccess;
                 case Flag.MultiSession:
@@ -232,6 +234,8 @@ namespace DICUI.DiscImageCreator
                     return FlagStrings.NoSkipSS;
                 case Flag.Raw:
                     return FlagStrings.Raw;
+                case Flag.Resume:
+                    return FlagStrings.Resume;
                 case Flag.Reverse:
                     return FlagStrings.Reverse;
                 case Flag.ScanAntiMod:
