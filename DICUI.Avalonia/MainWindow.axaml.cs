@@ -471,8 +471,7 @@ namespace DICUI.Avalonia
         /// <returns>Dialog open result</returns>
         private bool? ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
-            var discInformationWindow = new DiscInformationWindow();
-            discInformationWindow.SubmissionInfo = submissionInfo;
+            var discInformationWindow = new DiscInformationWindow(submissionInfo);
             discInformationWindow.Load();
             discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             discInformationWindow.ShowDialog(this).ConfigureAwait(false).GetAwaiter().GetResult();

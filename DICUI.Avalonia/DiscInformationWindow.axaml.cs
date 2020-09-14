@@ -37,14 +37,20 @@ namespace DICUI.Avalonia
         #endregion
 
         public DiscInformationWindow()
+            : this(new SubmissionInfo())
         {
+        }
+
+        public DiscInformationWindow(SubmissionInfo submissionInfo)
+        {
+            this.SubmissionInfo = submissionInfo;
             this.InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif
         }
 
-        private void InitializeComponent()
+            private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
 
@@ -62,7 +68,7 @@ namespace DICUI.Avalonia
         private void DisableFieldsIfNeeded()
         {
             // Only disable for single-layer discs
-            if (SubmissionInfo.SizeAndChecksums?.Layerbreak == default(long))
+            if (SubmissionInfo?.SizeAndChecksums?.Layerbreak == default(long))
             {
                 this.Find<TextBox>("L1MasteringRingTextBox").IsEnabled = false;
                 this.Find<TextBox>("L1MasteringRingTextBox").Background = Brushes.Gray;

@@ -36,8 +36,9 @@ namespace DICUI.Windows
 
         #endregion
 
-        public DiscInformationWindow()
+        public DiscInformationWindow(SubmissionInfo submissionInfo)
         {
+            this.SubmissionInfo = submissionInfo;
             InitializeComponent();
 
             PopulateCategories();
@@ -52,7 +53,7 @@ namespace DICUI.Windows
         private void DisableFieldsIfNeeded()
         {
             // Only disable for single-layer discs
-            if (SubmissionInfo.SizeAndChecksums.Layerbreak == default(long))
+            if (SubmissionInfo?.SizeAndChecksums?.Layerbreak == default(long))
             {
                 L1MasteringRingTextBox.IsEnabled = false;
                 L1MasteringRingTextBox.Background = Brushes.Gray;

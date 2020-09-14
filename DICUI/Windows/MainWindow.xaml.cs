@@ -451,8 +451,7 @@ namespace DICUI.Windows
         /// <returns>Dialog open result</returns>
         private bool? ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
-            var discInformationWindow = new DiscInformationWindow();
-            discInformationWindow.SubmissionInfo = submissionInfo;
+            var discInformationWindow = new DiscInformationWindow(submissionInfo);
             discInformationWindow.Owner = this;
             discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             discInformationWindow.Load();
