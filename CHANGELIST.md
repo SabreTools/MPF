@@ -1,3 +1,10 @@
+### 1.17.1 (2020-09-14)
+- Shuffled some shared, internal UI variables
+- Synced WPF and Avalonia UI internals
+- Made the disc information window less prone to bugs
+- Fixed DIC flags based on code (not documentation)
+- Added support for old(?) DIC flags: `/fix` and `/re`
+
 ### 1.17 (2020-09-12)
 - Updated to Aaru version 5.1
 - Updated to BurnOutSharp version 1.4.0

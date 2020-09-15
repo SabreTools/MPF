@@ -8,9 +8,9 @@
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2020</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/DICUI</RepositoryUrl>
-    <Version>1.17.0</Version>
-    <AssemblyVersion>1.17.0</AssemblyVersion>
-    <FileVersion>1.17.0</FileVersion>
+    <Version>1.17.1</Version>
+    <AssemblyVersion>1.17.1</AssemblyVersion>
+    <FileVersion>1.17.1</FileVersion>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
