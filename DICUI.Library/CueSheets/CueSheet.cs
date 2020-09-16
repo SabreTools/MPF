@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 /// <remarks>
 /// Information sourced from http://web.archive.org/web/20070221154246/http://www.goldenhawk.com/download/cdrwin.pdf
@@ -68,79 +70,83 @@ namespace DICUI.CueSheets
             }
 
             // Open the file and begin reading
-            using (var sr = new StreamReader(filename))
+            string[] cueLines = File.ReadAllLines(filename);
+            for (int i = 0; i < cueLines.Length; i++)
             {
-                while (!sr.EndOfStream)
+                string line = cueLines[i].Trim();
+
+                // http://stackoverflow.com/questions/554013/regular-expression-to-split-on-spaces-unless-in-quotes
+                string[] splitLine = Regex
+                    .Matches(line, @"[^\s""]+|""[^""]*""")
+                    .Cast<Match>()
+                    .Select(m => m.Groups[0].Value)
+                    .ToArray();
+
+                // If we have an empty line, we skip
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                switch (splitLine[0])
                 {
-                    string line = sr.ReadLine().Trim();
-                    string[] splitLine = line.Split(' ');
+                    // Read comments
+                    case "REM":
+                        // We ignore all comments for now
+                        break;
 
-                    // If we have an empty line, we skip
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
+                    // Read MCN
+                    case "CATALOG":
+                        if (splitLine.Length < 2)
+                            continue; // TODO: Make this throw an exception
 
-                    switch (splitLine[0])
-                    {
-                        // Read comments
-                        case "REM":
-                            // We ignore all comments for now
-                            break;
+                        this.Catalog = splitLine[1];
+                        break;
 
-                        // Read MCN
-                        case "CATALOG":
-                            if (splitLine.Length < 2)
-                                continue; // TODO: Make this throw an exception
+                    // Read external CD-Text file path
+                    case "CDTEXTFILE":
+                        if (splitLine.Length < 2)
+                            continue; // TODO: Make this throw an exception
 
-                            this.Catalog = splitLine[1];
-                            break;
+                        this.CdTextFile = splitLine[1];
+                        break;
 
-                        // Read external CD-Text file path
-                        case "CDTEXTFILE":
-                            if (splitLine.Length < 2)
-                                continue; // TODO: Make this throw an exception
+                    // Read CD-Text enhanced performer
+                    case "PERFORMER":
+                        if (splitLine.Length < 2)
+                            continue; // TODO: Make this throw an exception
 
-                            this.CdTextFile = splitLine[1];
-                            break;
+                        this.Performer = splitLine[1];
+                        break;
 
-                        // Read CD-Text enhanced performer
-                        case "PERFORMER":
-                            if (splitLine.Length < 2)
-                                continue; // TODO: Make this throw an exception
+                    // Read CD-Text enhanced songwriter
+                    case "SONGWRITER":
+                        if (splitLine.Length < 2)
+                            continue; // TODO: Make this throw an exception
 
-                            this.Performer = splitLine[1];
-                            break;
+                        this.Songwriter = splitLine[1];
+                        break;
 
-                        // Read CD-Text enhanced songwriter
-                        case "SONGWRITER":
-                            if (splitLine.Length < 2)
-                                continue; // TODO: Make this throw an exception
+                    // Read CD-Text enhanced title
+                    case "TITLE":
+                        if (splitLine.Length < 2)
+                            continue; // TODO: Make this throw an exception
 
-                            this.Songwriter = splitLine[1];
-                            break;
+                        this.Title = splitLine[1];
+                        break;
 
-                        // Read CD-Text enhanced title
-                        case "TITLE":
-                            if (splitLine.Length < 2)
-                                continue; // TODO: Make this throw an exception
+                    // Read file information
+                    case "FILE":
+                        if (splitLine.Length < 3)
+                            continue; // TODO: Make this throw an exception
 
-                            this.Title = splitLine[1];
-                            break;
+                        if (this.Files == null)
+                            this.Files = new List<CueFile>();
 
-                        // Read file information
-                        case "FILE":
-                            if (splitLine.Length < 3)
-                                continue; // TODO: Make this throw an exception
+                        var file = new CueFile(splitLine[1], splitLine[2], cueLines, ref i);
+                        if (file == default)
+                            continue; // TODO: Make this throw an exception
 
-                            if (this.Files == null)
-                                this.Files = new List<CueFile>();
-
-                            var file = new CueFile(splitLine[1], splitLine[2], sr);
-                            if (file == default)
-                                continue; // TODO: Make this throw an exception
-
-                            this.Files.Add(file);
-                            break;
-                    }
+                        this.Files.Add(file);
+                        break;
                 }
             }
         }

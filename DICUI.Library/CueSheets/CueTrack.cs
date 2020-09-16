@@ -154,11 +154,12 @@ namespace DICUI.CueSheets
         /// </summary>
         /// <param name="number">Number to set</param>
         /// <param name="dataType">Data type to set</param>
-        /// <param name="sr">StreamReader to pull from</param>
-        public CueTrack(string number, string dataType, StreamReader sr)
+        /// <param name="cueLines">Lines array to pull from</param>
+        /// <param name="i">Reference to index in array</param>
+        public CueTrack(string number, string dataType, string[] cueLines, ref int i)
         {
-            if (sr == null)
-                return;
+            if (cueLines == null || i < 0 || i > cueLines.Length)
+                return; // TODO: Make this throw an exception
 
             // Set the current fields
             if (!int.TryParse(number, out int parsedNumber))
@@ -169,9 +170,12 @@ namespace DICUI.CueSheets
             this.Number = parsedNumber;
             this.DataType = GetDataType(dataType);
 
-            while (!sr.EndOfStream)
+            // Increment to start
+            i++;
+
+            for (; i < cueLines.Length; i++)
             {
-                string line = sr.ReadLine().Trim();
+                string line = cueLines[i].Trim();
                 string[] splitLine = line.Split(' ');
 
                 // If we have an empty line, we skip
@@ -266,6 +270,7 @@ namespace DICUI.CueSheets
 
                     // Default means return
                     default:
+                        i--;
                         return;
                 }
             }

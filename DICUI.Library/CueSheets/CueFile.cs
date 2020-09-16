@@ -69,19 +69,23 @@ namespace DICUI.CueSheets
         /// </summary>
         /// <param name="fileName">File name to set</param>
         /// <param name="fileType">File type to set</param>
-        /// <param name="sr">StreamReader to pull from</param>
-        public CueFile(string fileName, string fileType, StreamReader sr)
+        /// <param name="cueLines">Lines array to pull from</param>
+        /// <param name="i">Reference to index in array</param>
+        public CueFile(string fileName, string fileType, string[] cueLines, ref int i)
         {
-            if (sr == null)
-                return;
+            if (cueLines == null || i < 0 || i > cueLines.Length)
+                return; // TODO: Make this throw an exception
 
             // Set the current fields
-            this.FileName = fileName;
+            this.FileName = fileName.Trim('"');
             this.FileType = GetFileType(fileType);
 
-            while (!sr.EndOfStream)
+            // Increment to start
+            i++;
+
+            for (; i < cueLines.Length; i++)
             {
-                string line = sr.ReadLine().Trim();
+                string line = cueLines[i].Trim();
                 string[] splitLine = line.Split(' ');
 
                 // If we have an empty line, we skip
@@ -103,7 +107,7 @@ namespace DICUI.CueSheets
                         if (this.Tracks == null)
                             this.Tracks = new List<CueTrack>();
 
-                        var track = new CueTrack(splitLine[1], splitLine[2], sr);
+                        var track = new CueTrack(splitLine[1], splitLine[2], cueLines, ref i);
                         if (track == default)
                             continue; // TODO: Make this throw an exception
 
@@ -112,6 +116,7 @@ namespace DICUI.CueSheets
 
                     // Default means return
                     default:
+                        i--;
                         return;
                 }
             }
