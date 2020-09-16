@@ -11,6 +11,14 @@ namespace DICUI.Check
     {
         public static void Main(string[] args)
         {
+            args = new string[]
+            {
+                "cd",
+                "ibm",
+                "--use", "aaru",
+                "B:\\_TEMP\\Aaru Dumps\\MONKEY4_CD2\\MONKEY4_CD2.aif"
+            };
+
             // Help options
             if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
             {
