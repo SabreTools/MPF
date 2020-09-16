@@ -1044,7 +1044,10 @@ namespace DICUI.Utilities
                     return "None found";
 
                 // Strip out "CD Check" instances due to false positives
-                return string.Join("\n", found.Where(kvp => !kvp.Value.Equals("CD Check", StringComparison.OrdinalIgnoreCase)).Select(kvp => kvp.Key + ": " + kvp.Value).ToArray());
+                return string.Join("\n", found
+                    .Where(kvp => !kvp.Value.Equals("CD Check", StringComparison.OrdinalIgnoreCase))
+                    .Select(kvp => kvp.Key + ": " + kvp.Value.Replace("CD Check,", string.Empty).Replace("CD Check", string.Empty).Trim())
+                    .ToArray());
             }
             catch (Exception ex)
             {
