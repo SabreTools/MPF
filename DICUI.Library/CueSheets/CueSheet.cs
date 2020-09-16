@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 /// <remarks>
@@ -173,7 +174,7 @@ namespace DICUI.CueSheets
             if (this.Files == null || this.Files.Count == 0)
                 return; // TODO: Make this throw an exception
 
-            using (var sw = new StreamWriter(stream))
+            using (var sw = new StreamWriter(stream, Encoding.ASCII, 1024, true))
             {
                 if (!string.IsNullOrEmpty(this.Catalog))
                     sw.WriteLine($"CATALOG {this.Catalog}");
