@@ -65,7 +65,7 @@ namespace DICUI.CueSheets
         }
 
         /// <summary>
-        /// Fill a FILE from a stream reader
+        /// Fill a FILE from an array of lines
         /// </summary>
         /// <param name="fileName">File name to set</param>
         /// <param name="fileType">File type to set</param>
@@ -123,10 +123,28 @@ namespace DICUI.CueSheets
         }
 
         /// <summary>
+        /// Write the FILE out to a stream
+        /// </summary>
+        /// <param name="sw">StreamWriter to write to</param>
+        public void Write(StreamWriter sw)
+        {
+            // If we don't have any tracks, it's invalid
+            if (this.Tracks == null || this.Tracks.Count == 0)
+                return; // TODO: Make this throw an exception
+
+            sw.WriteLine($"FILE \"{this.FileName}\" {FromFileType(this.FileType)}");
+
+            foreach (var track in Tracks)
+            {
+                track.Write(sw);
+            }
+        }
+
+        /// <summary>
         /// Get the file type from a given string
         /// </summary>
         /// <param name="fileType">String to get value from</param>
-        /// <returns>CueFileType, if possible (default BINARY)</returns>
+        /// <returns>CueFileType, if possible</returns>
         private CueFileType GetFileType(string fileType)
         {
             switch (fileType.ToLowerInvariant())
@@ -148,6 +166,35 @@ namespace DICUI.CueSheets
 
                 default:
                     return CueFileType.BINARY;
+            }
+        }
+
+        /// <summary>
+        /// Get the string from a given file type
+        /// </summary>
+        /// <param name="fileType">CueFileType to get value from</param>
+        /// <returns>String, if possible (default BINARY)</returns>
+        private string FromFileType(CueFileType fileType)
+        {
+            switch (fileType)
+            {
+                case CueFileType.BINARY:
+                    return "BINARY";
+
+                case CueFileType.MOTOROLA:
+                    return "MOTOROLA";
+
+                case CueFileType.AIFF:
+                    return "AIFF";
+
+                case CueFileType.WAVE:
+                    return "WAVE";
+
+                case CueFileType.MP3:
+                    return "MP3";
+
+                default:
+                    return string.Empty;
             }
         }
     }

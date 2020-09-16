@@ -150,7 +150,7 @@ namespace DICUI.CueSheets
         }
 
         /// <summary>
-        /// Fill a TRACK from a stream reader
+        /// Fill a TRACK from an array of lines
         /// </summary>
         /// <param name="number">Number to set</param>
         /// <param name="dataType">Data type to set</param>
@@ -277,6 +277,45 @@ namespace DICUI.CueSheets
         }
 
         /// <summary>
+        /// Write the TRACK out to a stream
+        /// </summary>
+        /// <param name="sw">StreamWriter to write to</param>
+        public void Write(StreamWriter sw)
+        {
+            // If we don't have any indices, it's invalid
+            if (this.Indices == null || this.Indices.Count == 0)
+                return; // TODO: Make this throw an exception
+
+            sw.WriteLine($"  TRACK {this.Number:D2} {FromDataType(this.DataType)}");
+
+            if (this.Flags != 0)
+                sw.WriteLine($"    FLAGS {FromFlags(this.Flags)}");
+
+            if (!string.IsNullOrEmpty(this.ISRC))
+                sw.WriteLine($"ISRC {this.ISRC}");
+
+            if (!string.IsNullOrEmpty(this.Performer))
+                sw.WriteLine($"PERFORMER {this.Performer}");
+
+            if (!string.IsNullOrEmpty(this.Songwriter))
+                sw.WriteLine($"SONGWRITER {this.Songwriter}");
+
+            if (!string.IsNullOrEmpty(this.Title))
+                sw.WriteLine($"TITLE {this.Title}");
+
+            if (this.PreGap != null)
+                this.PreGap.Write(sw);
+
+            foreach (var index in Indices)
+            {
+                index.Write(sw);
+            }
+
+            if (this.PostGap != null)
+                this.PostGap.Write(sw);
+        }
+
+        /// <summary>
         /// Get the data type from a given string
         /// </summary>
         /// <param name="dataType">String to get value from</param>
@@ -311,6 +350,44 @@ namespace DICUI.CueSheets
 
                 default:
                     return CueTrackDataType.AUDIO;
+            }
+        }
+
+        /// <summary>
+        /// Get the string from a given data type
+        /// </summary>
+        /// <param name="dataType">CueTrackDataType to get value from</param>
+        /// <returns>string, if possible</returns>
+        private string FromDataType(CueTrackDataType dataType)
+        {
+            switch (dataType)
+            {
+                case CueTrackDataType.AUDIO:
+                    return "AUDIO";
+
+                case CueTrackDataType.CDG:
+                    return "CDG";
+
+                case CueTrackDataType.MODE1_2048:
+                    return "MODE1/2048";
+
+                case CueTrackDataType.MODE1_2352:
+                    return "MODE1/2352";
+
+                case CueTrackDataType.MODE2_2336:
+                    return "MODE2/2336";
+
+                case CueTrackDataType.MODE2_2352:
+                    return "MODE2/2352";
+
+                case CueTrackDataType.CDI_2336:
+                    return "CDI/2336";
+
+                case CueTrackDataType.CDI_2352:
+                    return "CDI/2352";
+
+                default:
+                    return string.Empty;
             }
         }
 
@@ -355,6 +432,33 @@ namespace DICUI.CueSheets
             }
 
             return flag;
+        }
+
+        /// <summary>
+        /// Get the string value for a set of track flags
+        /// </summary>
+        /// <param name="flags">CueTrackFlag to get value from</param>
+        /// <returns>String value representing the CueTrackFlag, if possible</returns>
+        private string FromFlags(CueTrackFlag flags)
+        {
+            string outputFlagString = string.Empty;
+
+            if (flags.HasFlag(CueTrackFlag.DCP))
+                outputFlagString += "DCP ";
+
+            if (flags.HasFlag(CueTrackFlag.FourCH))
+                outputFlagString += "4CH ";
+
+            if (flags.HasFlag(CueTrackFlag.PRE))
+                outputFlagString += "PRE ";
+
+            if (flags.HasFlag(CueTrackFlag.SCMS))
+                outputFlagString += "SCMS ";
+
+            if (flags.HasFlag(CueTrackFlag.DATA))
+                outputFlagString += "DATA ";
+
+            return outputFlagString.Trim();
         }
     }
 }

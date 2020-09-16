@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 /// <remarks>
 /// Information sourced from http://web.archive.org/web/20070221154246/http://www.goldenhawk.com/download/cdrwin.pdf
@@ -40,7 +41,7 @@ namespace DICUI.CueSheets
         }
 
         /// <summary>
-        /// Fill a INDEX from a stream reader
+        /// Fill a INDEX from an array of lines
         /// </summary>
         /// <param name="index">Index to set</param>
         /// <param name="startTime">Start time to set</param>
@@ -91,6 +92,15 @@ namespace DICUI.CueSheets
             this.Minutes = lengthSegments[0];
             this.Seconds = lengthSegments[1];
             this.Frames = lengthSegments[2];
+        }
+
+        /// <summary>
+        /// Write the INDEX out to a stream
+        /// </summary>
+        /// <param name="sw">StreamWriter to write to</param>
+        public void Write(StreamWriter sw)
+        {
+            sw.WriteLine($"    INDEX {this.Index:D2} {this.Minutes:D2}:{this.Seconds:D2}:{this.Frames:D2}");
         }
     }
 }

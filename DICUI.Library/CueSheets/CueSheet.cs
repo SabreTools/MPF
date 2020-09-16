@@ -150,5 +150,51 @@ namespace DICUI.CueSheets
                 }
             }
         }
+
+        /// <summary>
+        /// Write the cuesheet out to a file
+        /// </summary>
+        /// <param name="filename">File path to write to</param>
+        public void Write(string filename)
+        {
+            using (var fs = File.Open(filename, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+            {
+                Write(fs);
+            }
+        }
+
+        /// <summary>
+        /// Write the cuesheet out to a stream
+        /// </summary>
+        /// <param name="stream">Stream to write to</param>
+        public void Write(Stream stream)
+        {
+            // If we don't have any files, it's invalid
+            if (this.Files == null || this.Files.Count == 0)
+                return; // TODO: Make this throw an exception
+
+            using (var sw = new StreamWriter(stream))
+            {
+                if (!string.IsNullOrEmpty(this.Catalog))
+                    sw.WriteLine($"CATALOG {this.Catalog}");
+
+                if (!string.IsNullOrEmpty(this.CdTextFile))
+                    sw.WriteLine($"CDTEXTFILE {this.CdTextFile}");
+
+                if (!string.IsNullOrEmpty(this.Performer))
+                    sw.WriteLine($"PERFORMER {this.Performer}");
+
+                if (!string.IsNullOrEmpty(this.Songwriter))
+                    sw.WriteLine($"SONGWRITER {this.Songwriter}");
+
+                if (!string.IsNullOrEmpty(this.Title))
+                    sw.WriteLine($"TITLE {this.Title}");
+
+                foreach (var file in Files)
+                {
+                    file.Write(sw);
+                }
+            }
+        }
     }
 }

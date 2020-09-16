@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 /// <remarks>
 /// Information sourced from http://web.archive.org/web/20070221154246/http://www.goldenhawk.com/download/cdrwin.pdf
@@ -77,6 +78,15 @@ namespace DICUI.CueSheets
             this.Minutes = lengthSegments[0];
             this.Seconds = lengthSegments[1];
             this.Frames = lengthSegments[2];
+        }
+
+        /// <summary>
+        /// Write the POSTGAP out to a stream
+        /// </summary>
+        /// <param name="sw">StreamWriter to write to</param>
+        public void Write(StreamWriter sw)
+        {
+            sw.WriteLine($"    POSTGAP {this.Minutes:D2}:{this.Seconds:D2}:{this.Frames:D2}");
         }
     }
 }
