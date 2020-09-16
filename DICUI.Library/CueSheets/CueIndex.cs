@@ -49,7 +49,7 @@ namespace DICUI.CueSheets
             // Set the current fields
             if (!int.TryParse(index, out int parsedIndex))
                 return; // TODO: Make this throw an exception
-            else if (parsedIndex < 1 || parsedIndex > 99)
+            else if (parsedIndex < 0 || parsedIndex > 99)
                 return; // TODO: Make this throw an exception
 
             // Ignore empty lines
