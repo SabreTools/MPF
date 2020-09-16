@@ -1192,6 +1192,7 @@ namespace DICUI.Utilities
                 prefix += "\t";
 
             // If the value contains a newline
+            value = value.Replace("\r\n", "\n");
             if (value.Contains("\n"))
             {
                 output.Add(prefix + key + ":"); output.Add("");
