@@ -1590,7 +1590,7 @@ namespace DICUI.Aaru
                     if (type == MediaType.DVD)
                         layerbreak = GetLayerbreak(sidecar) ?? "";
                     else if (type == MediaType.BluRay)
-                        layerbreak = (info.SizeAndChecksums.Size > 25025314816 ? "25025314816" : null);
+                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
                     if (string.IsNullOrWhiteSpace(layerbreak))
@@ -1605,7 +1605,6 @@ namespace DICUI.Aaru
                     }
 
                     // TODO: Investigate XGD disc outputs
-                    // TODO: Get layerbreak information
                     // TODO: Investigate BD specifics like PIC
 
                     break;
@@ -2822,7 +2821,11 @@ namespace DICUI.Aaru
             // Find and return the layerbreak, if possible
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
             {
-                // TODO: Determine how to find the layerbreak from the CICM
+                // If there's no layer information, skip
+                if (opticalDisc.Layers == null)
+                    continue;
+
+                // TODO: Determine how to find the layerbreak from the CICM or other outputs
             }
 
             return layerbreak;

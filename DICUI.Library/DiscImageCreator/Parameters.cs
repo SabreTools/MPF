@@ -1853,7 +1853,7 @@ namespace DICUI.DiscImageCreator
                     if (type == MediaType.DVD)
                         layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
                     else if (type == MediaType.BluRay)
-                        layerbreak = (info.SizeAndChecksums.Size > 25025314816 ? "25025314816" : null);
+                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
                     if (string.IsNullOrWhiteSpace(layerbreak))
