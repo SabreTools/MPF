@@ -1556,8 +1556,13 @@ namespace DICUI.Aaru
             {
                 case MediaType.CDROM:
                     // TODO: Can this do GD-ROM?
-                    // TODO: Investigate if there's an error count for Aaru
                     info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+
+                    long errorCount = -1;
+                    if (File.Exists(basePath + ".resume.xml"))
+                        errorCount = GetErrorCount(basePath + ".resume.xml");
+
+                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
                     info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? "";
 
@@ -2593,7 +2598,15 @@ namespace DICUI.Aaru
                 dateTimeString = dateTime.ToString("yyyyMMddHHmmssff");
 
                 // Get timezone offset (0 == GMT, up and down in 15-minute increments)
-                string timeZoneString = dateTime.ToString("zzz");
+                string timeZoneString;
+                try
+                {
+                    timeZoneString = dateTime.ToString("zzz");
+                }
+                catch
+                {
+                    timeZoneString = "00:00";
+                }
 
                 // Format is hh:mm
                 string[] splitTimeZoneString = timeZoneString.Split(':');
@@ -2657,6 +2670,50 @@ namespace DICUI.Aaru
             CICMMetadataType obj = serializer.Deserialize(xtr) as CICMMetadataType;
 
             return obj;
+        }
+
+        /// <summary>
+        /// Get the detected error count from the input files, if possible
+        /// </summary>
+        /// <param name="resume">.resume.xml file location</param>
+        /// <returns>Error count if possible, -1 on error</returns>
+        private static long GetErrorCount(string resume)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(resume))
+                return -1;
+
+            // Get a total error count for after
+            long? totalErrors = null;
+
+            // Parse the resume XML file
+            using (StreamReader sr = File.OpenText(resume))
+            {
+                try
+                {
+                    // Read in the error count whenever we find it
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+
+                        // Initialize on seeing the open tag
+                        if (line.StartsWith("<BadBlocks>"))
+                            totalErrors = 0;
+                        else if (line.StartsWith("</BadBlocks>"))
+                            return totalErrors ?? -1;
+                        else if (line.StartsWith("<Block>") && totalErrors != null)
+                            totalErrors++;
+                    }
+
+                    // If we haven't found anything, return -1
+                    return totalErrors ?? -1;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return Int64.MaxValue;
+                }
+            }
         }
 
         /// <summary>

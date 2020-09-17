@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BurnOutSharp.External.psxt001z;
+using DICUI.CueSheets;
 using DICUI.Data;
 using DICUI.Utilities;
 using DICUI.Web;
@@ -1825,6 +1826,7 @@ namespace DICUI.DiscImageCreator
                     }
 
                     info.TracksAndWriteOffsets.Cuesheet = GetFullFile(basePath + ".cue") ?? "";
+                    var cueSheet = new CueSheet(basePath + ".cue"); // TODO: Do something with this
 
                     string cdWriteOffset = GetWriteOffset(basePath + "_disc.txt") ?? "";
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
