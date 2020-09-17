@@ -2280,8 +2280,20 @@ namespace DICUI.Aaru
                         // Loop through each index
                         foreach (TrackIndexType trackIndex in track.Indexes)
                         {
-                            // TODO: Convert Value to timecode
-                            cueTrack.Indices.Add(new CueIndex(trackIndex.index.ToString(), trackIndex.Value.ToString()));
+                            // Get timestamp from frame count
+                            int absoluteLength = Math.Abs(trackIndex.Value);
+                            int frames = absoluteLength % 75;
+                            int seconds = (absoluteLength / 75) % 60;
+                            int minutes = (absoluteLength / 75 / 60);
+                            string timeString = $"{minutes:D2}:{seconds:D2}:{frames:D2}";
+
+                            // Pregap information
+                            if (trackIndex.Value < 0)
+                                cueTrack.PreGap = new PreGap(timeString);
+
+                            // Individual indexes
+                            else
+                                cueTrack.Indices.Add(new CueIndex(trackIndex.index.ToString(), timeString));
                         }
                     }
                     else
