@@ -328,30 +328,38 @@ namespace DICUI.Web
                 return false;
             }
 
-            // Get the current token from the login page
-            var loginPage = DownloadString(loginUrl);
-            string token = this.tokenRegex.Match(loginPage).Groups[1].Value;
-
-            // Construct the login request
-            Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-            Encoding = Encoding.UTF8;
-            var response = UploadString(loginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0");
-
-            if (response.Contains("Incorrect username and/or password."))
+            try
             {
-                Console.WriteLine("Invalid credentials entered, continuing without logging in...");
+                // Get the current token from the login page
+                var loginPage = DownloadString(loginUrl);
+                string token = this.tokenRegex.Match(loginPage).Groups[1].Value;
+
+                // Construct the login request
+                Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                Encoding = Encoding.UTF8;
+                var response = UploadString(loginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0");
+
+                if (response.Contains("Incorrect username and/or password."))
+                {
+                    Console.WriteLine("Invalid credentials entered, continuing without logging in...");
+                    return false;
+                }
+
+                // The user was able to be logged in
+                Console.WriteLine("Credentials accepted! Logged into Redump...");
+                LoggedIn = true;
+
+                // If the user is a moderator or staff, set accordingly
+                if (response.Contains("http://forum.redump.org/forum/9/staff/"))
+                    IsStaff = true;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An exception occurred while trying to log in: {ex}");
                 return false;
             }
-            else
-            {
-                Console.WriteLine("Credentials accepted! Logged into Redump...");
-            }
-
-            // If the user is a moderator or staff, set accordingly
-            if (response.Contains("http://forum.redump.org/forum/9/staff/"))
-                IsStaff = true;
-
-            return true;
         }
 
         /// <summary>
