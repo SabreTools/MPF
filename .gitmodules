@@ -1,0 +1,3 @@
+[submodule "DICUI.Library\\Aaru\\CICMMetadata"]
+	path = DICUI.Library\\Aaru\\CICMMetadata
+	url = https://github.com/claunia/CICMMetadata.git
