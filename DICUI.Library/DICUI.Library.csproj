@@ -42,6 +42,31 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Aaru\CICMMetadata\CICMMetadataEditor\**" />
+    <Compile Remove="Aaru\CICMMetadata\java\**" />
+    <Compile Remove="Aaru\CICMMetadata\samples\**" />
+    <EmbeddedResource Remove="Aaru\CICMMetadata\CICMMetadataEditor\**" />
+    <EmbeddedResource Remove="Aaru\CICMMetadata\java\**" />
+    <EmbeddedResource Remove="Aaru\CICMMetadata\samples\**" />
+    <None Remove="Aaru\CICMMetadata\CICMMetadataEditor\**" />
+    <None Remove="Aaru\CICMMetadata\java\**" />
+    <None Remove="Aaru\CICMMetadata\samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Aaru\CICMMetadata\.editorconfig" />
+    <None Remove="Aaru\CICMMetadata\.git" />
+    <None Remove="Aaru\CICMMetadata\.gitignore" />
+    <None Remove="Aaru\CICMMetadata\.project" />
+    <None Remove="Aaru\CICMMetadata\build.sh" />
+    <None Remove="Aaru\CICMMetadata\cicm.xml" />
+    <None Remove="Aaru\CICMMetadata\cicm.xsd" />
+    <None Remove="Aaru\CICMMetadata\CICMMetadata.iml" />
+    <None Remove="Aaru\CICMMetadata\dotnet\cicm.vb" />
+    <None Remove="Aaru\CICMMetadata\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BurnOutSharp" Version="1.4.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Management" Version="4.7.0" />
@@ -49,6 +74,18 @@
 
   <ItemGroup>
     <Reference Include="System.Management" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="B:\Programs\GitHub\DICUI\DICUI.Library\Aaru\CICMMetadata\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="B:\Programs\GitHub\DICUI\DICUI.Library\Aaru\CICMMetadata\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="B:\Programs\GitHub\DICUI\DICUI.Library\Aaru\CICMMetadata\.editorconfig" />
   </ItemGroup>
 
 </Project>
