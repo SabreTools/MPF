@@ -2508,12 +2508,12 @@ namespace DICUI.Aaru
 
                     // Build each row in consecutive order
                     string pvd = string.Empty;
-                    pvd += GeneratePVDOutputLine("0320", new ReadOnlySpan<byte>(pvdData, 0, 16));
-                    pvd += GeneratePVDOutputLine("0330", new ReadOnlySpan<byte>(pvdData, 16, 16));
-                    pvd += GeneratePVDOutputLine("0340", new ReadOnlySpan<byte>(pvdData, 32, 16));
-                    pvd += GeneratePVDOutputLine("0350", new ReadOnlySpan<byte>(pvdData, 48, 16));
-                    pvd += GeneratePVDOutputLine("0360", new ReadOnlySpan<byte>(pvdData, 64, 16));
-                    pvd += GeneratePVDOutputLine("0370", new ReadOnlySpan<byte>(pvdData, 80, 16));
+                    pvd += GenerateSectorOutputLine("0320", new ReadOnlySpan<byte>(pvdData, 0, 16));
+                    pvd += GenerateSectorOutputLine("0330", new ReadOnlySpan<byte>(pvdData, 16, 16));
+                    pvd += GenerateSectorOutputLine("0340", new ReadOnlySpan<byte>(pvdData, 32, 16));
+                    pvd += GenerateSectorOutputLine("0350", new ReadOnlySpan<byte>(pvdData, 48, 16));
+                    pvd += GenerateSectorOutputLine("0360", new ReadOnlySpan<byte>(pvdData, 64, 16));
+                    pvd += GenerateSectorOutputLine("0370", new ReadOnlySpan<byte>(pvdData, 80, 16));
 
                     return pvd;
                 }
@@ -2610,7 +2610,8 @@ namespace DICUI.Aaru
             pvdData.AddRange(GeneratePVDDateTimeBytes(modification));
             pvdData.AddRange(GeneratePVDDateTimeBytes(expiration));
             pvdData.AddRange(GeneratePVDDateTimeBytes(effective));
-            pvdData.AddRange(new string((char)0, 15).ToCharArray().Select(c => (byte)c));
+            pvdData.Add(0x01);
+            pvdData.AddRange(new string((char)0, 14).ToCharArray().Select(c => (byte)c));
 
             // Return the filled array
             return pvdData.ToArray();
@@ -2658,9 +2659,9 @@ namespace DICUI.Aaru
         }
 
         /// <summary>
-        /// Generate a single PVD line from a byte array
+        /// Generate a single 16-byte sector line from a byte array
         /// </summary>
-        private static string GeneratePVDOutputLine(string row, ReadOnlySpan<byte> bytes)
+        private static string GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
         {
             string pvdLine = string.Empty;
 
