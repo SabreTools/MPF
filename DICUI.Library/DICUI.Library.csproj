@@ -76,16 +76,4 @@
     <Reference Include="System.Management" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Remove="B:\Programs\GitHub\DICUI\DICUI.Library\Aaru\CICMMetadata\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EditorConfigFiles Remove="B:\Programs\GitHub\DICUI\DICUI.Library\Aaru\CICMMetadata\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EditorConfigFiles Remove="B:\Programs\GitHub\DICUI\DICUI.Library\Aaru\CICMMetadata\.editorconfig" />
-  </ItemGroup>
-
 </Project>
