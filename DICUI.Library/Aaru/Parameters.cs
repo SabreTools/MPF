@@ -2195,6 +2195,9 @@ namespace DICUI.Aaru
         /// <summary>
         /// Convert the TrackTypeTrackType value to a CueTrackDataType
         /// </summary>
+        /// <param name="trackType">TrackTypeTrackType to convert</param>
+        /// <param name="bytesPerSector">Sector size to help with specific subtypes</param>
+        /// <returns>CueTrackDataType representing the input data</returns>
         private CueTrackDataType ConvertToDataType(TrackTypeTrackType trackType, uint bytesPerSector)
         {
             switch (trackType)
@@ -2224,6 +2227,8 @@ namespace DICUI.Aaru
         /// <summary>
         /// Convert the TrackFlagsType value to a CueTrackFlag
         /// </summary>
+        /// <param name="trackFlagsType">TrackFlagsType containing flag data</param>
+        /// <returns>CueTrackFlag representing the flags</returns>
         private CueTrackFlag ConvertToTrackFlag(TrackFlagsType trackFlagsType)
         {
             if (trackFlagsType == null)
@@ -2291,7 +2296,7 @@ namespace DICUI.Aaru
 
                     // Create cue file entry
                     CueFile cueFile = new CueFile();
-                    cueFile.FileName = GenerateTrackName(basePath, (int)totalTracks, cueTrack.Number, track.TrackType1);
+                    cueFile.FileName = GenerateTrackName(basePath, (int)totalTracks, cueTrack.Number, opticalDisc.DiscType);
                     cueFile.FileType = CueFileType.BINARY;
                     cueFile.Tracks = new List<CueTrack>();
 
@@ -2412,7 +2417,7 @@ namespace DICUI.Aaru
                         }
 
                         // Build the track datfile data and append
-                        string trackName = GenerateTrackName(basePath, (int)totalTracks, (int)trackNumber, track.TrackType1);
+                        string trackName = GenerateTrackName(basePath, (int)totalTracks, (int)trackNumber, opticalDisc.DiscType);
                         datfile += $"<rom name=\"{trackName}\" size=\"{size}\" crc=\"{crc32}\" md5=\"{md5}\" sha1=\"{sha1}\" />\n";
                     }
                 }
@@ -2462,15 +2467,16 @@ namespace DICUI.Aaru
         /// <summary>
         /// Generate a track name based on current path and tracks
         /// </summary>
-        private static string GenerateTrackName(string basePath, int totalTracks, int trackNumber, TrackTypeTrackType trackType)
+        /// <param name="basePath">Base path for determining file names</param>
+        /// <param name="totalTracks">Total number of tracks in the media</param>
+        /// <param name="trackNumber">Current track index</param>
+        /// <param name="discType">Current disc type, used for determining extension</param>
+        /// <returns>Formatted string representing the track name according to Redump standards</returns>
+        private static string GenerateTrackName(string basePath, int totalTracks, int trackNumber, string discType)
         {
             string extension = "bin";
-            if (trackType == TrackTypeTrackType.bluray
-                || trackType == TrackTypeTrackType.dvd
-                || trackType == TrackTypeTrackType.hddvd)
-            {
+            if (discType.Contains("BD") || discType.Contains("DVD"))
                 extension = "iso";
-            }
 
             string trackName = Path.GetFileNameWithoutExtension(basePath);
             if (totalTracks == 1)
@@ -2661,11 +2667,16 @@ namespace DICUI.Aaru
         /// <summary>
         /// Generate a single 16-byte sector line from a byte array
         /// </summary>
+        /// <param name="row">Row ID for outputting</param>
+        /// <param name="bytes">Byte span representing the data to write</param>
+        /// <returns>Formatted string representing the sector line</returns>
         private static string GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
         {
-            string pvdLine = string.Empty;
+            // If the data isn't correct, return null
+            if (bytes == null || bytes.Length != 16)
+                return null;
 
-            pvdLine += $"{row} : ";
+            string pvdLine = $"{row} : ";
             pvdLine += BitConverter.ToString(bytes.Slice(0, 8).ToArray()).Replace("-", " ");
             pvdLine += "  ";
             pvdLine += BitConverter.ToString(bytes.Slice(8, 8).ToArray().ToArray()).Replace("-", " ");
