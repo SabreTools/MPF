@@ -2728,9 +2728,7 @@ namespace DICUI.DiscImageCreator
             {
                 try
                 {
-                    // Make sure we're in the right sector
-                    while (!sr.ReadLine().StartsWith("========== LBA[000016, 0x00010]: Main Channel ==========")) ;
-
+                    // We assume the first sector listed is the proper one
                     // Fast forward to the PVD
                     while (!sr.ReadLine().StartsWith("0310")) ;
 
