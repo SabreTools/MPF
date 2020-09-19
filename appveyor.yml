@@ -31,6 +31,7 @@ before_build:
 # build step
 build:
   verbosity: minimal
+  project: DICUI.sln
 
 # post-build step
 after_build:
