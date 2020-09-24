@@ -104,7 +104,7 @@ namespace DICUI.Web
         /// <summary>
         /// Regex matching individual WIP disc links on a results page
         /// </summary>
-        private readonly Regex newDiscRegex = new Regex(@"<a href=""/newdisc/(\d+)/"">");
+        private readonly Regex newDiscRegex = new Regex(@"<a (style=.*)?href=""/newdisc/(\d+)/"">");
 
         /// <summary>
         /// Regex matching the "partial match" ID list from a WIP disc page
@@ -254,8 +254,9 @@ namespace DICUI.Web
 
         #region URL Extensions
 
-        private const string changesExt = "/changes/";
+        private const string changesExt = "changes/";
         private const string cueExt = "cue/";
+        private const string editExt = "edit/";
         private const string gdiExt = "gdi/";
         private const string keyExt = "key/";
         private const string lsdExt = "lsd/";
@@ -1115,7 +1116,7 @@ namespace DICUI.Web
             {
                 try
                 {
-                    if (int.TryParse(match.Groups[1].Value, out int value))
+                    if (int.TryParse(match.Groups[2].Value, out int value))
                         ids.Add(value);
                 }
                 catch (Exception ex)
@@ -1149,7 +1150,7 @@ namespace DICUI.Web
             {
                 try
                 {
-                    if (int.TryParse(match.Groups[1].Value, out int value))
+                    if (int.TryParse(match.Groups[2].Value, out int value))
                     {
                         bool downloaded = DownloadSingleWIPID(value, outDir, false);
                         if (!downloaded && failOnSingle)
@@ -1299,17 +1300,17 @@ namespace DICUI.Web
                 // Create ID subdirectory
                 Directory.CreateDirectory(paddedIdDir);
 
-                // HTML
-                using (var discStreamWriter = File.CreateText(Path.Combine(paddedIdDir, "disc.html")))
-                {
-                    discStreamWriter.Write(discPage);
-                }
-
-                DownloadFile(string.Format(discPageUrl, +id) + changesExt, Path.Combine(paddedIdDir, "changes.html"));
+                // View Edit History
+                if (discPage.Contains($"<a href=\"/disc/{id}/changes/\""))
+                    DownloadFile(string.Format(discPageUrl, +id) + changesExt, Path.Combine(paddedIdDir, "changes.html"));
 
                 // CUE
                 if (discPage.Contains($"<a href=\"/disc/{id}/cue/\""))
                     DownloadFile(string.Format(discPageUrl, +id) + cueExt, Path.Combine(paddedIdDir, paddedId + ".cue"));
+
+                // Edit disc
+                if (discPage.Contains($"<a href=\"/disc/{id}/edit/\""))
+                    DownloadFile(string.Format(discPageUrl, +id) + editExt, Path.Combine(paddedIdDir, "edit.html"));
 
                 // GDI
                 if (discPage.Contains($"<a href=\"/disc/{id}/gdi/\""))
@@ -1327,6 +1328,13 @@ namespace DICUI.Web
                 if (discPage.Contains($"<a href=\"/disc/{id}/md5/\""))
                     DownloadFile(string.Format(discPageUrl, +id) + md5Ext, Path.Combine(paddedIdDir, paddedId + ".md5"));
 
+                // Review WIP entry
+                if (newDiscRegex.IsMatch(discPage))
+                {
+                    var match = newDiscRegex.Match(discPage);
+                    DownloadFile(string.Format(wipDiscPageUrl, match.Groups[2].Value), Path.Combine(paddedIdDir, "newdisc.html"));
+                }
+
                 // SBI
                 if (discPage.Contains($"<a href=\"/disc/{id}/sbi/\""))
                     DownloadFile(string.Format(discPageUrl, +id) + sbiExt, Path.Combine(paddedIdDir, paddedId + ".sbi"));
@@ -1338,6 +1346,12 @@ namespace DICUI.Web
                 // SHA1
                 if (discPage.Contains($"<a href=\"/disc/{id}/sha1/\""))
                     DownloadFile(string.Format(discPageUrl, +id) + sha1Ext, Path.Combine(paddedIdDir, paddedId + ".sha1"));
+
+                // HTML (Last in case of errors)
+                using (var discStreamWriter = File.CreateText(Path.Combine(paddedIdDir, "disc.html")))
+                {
+                    discStreamWriter.Write(discPage);
+                }
 
                 Console.WriteLine($"ID {paddedId} has been successfully downloaded");
                 return true;
