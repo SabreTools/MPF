@@ -1945,7 +1945,20 @@ namespace DICUI.DiscImageCreator
 
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     if (type == MediaType.CDROM)
+                    {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
 
                     break;
 
@@ -1966,25 +1979,77 @@ namespace DICUI.DiscImageCreator
 
                 case KnownSystem.SegaChihiro:
                     if (type == MediaType.CDROM)
+                    {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
 
                     break;
 
                 case KnownSystem.SegaDreamcast:
                     if (type == MediaType.CDROM)
+                    {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
 
                     break;
 
                 case KnownSystem.SegaNaomi:
                     if (type == MediaType.CDROM)
+                    {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
 
                     break;
 
                 case KnownSystem.SegaNaomi2:
                     if (type == MediaType.CDROM)
+                    {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
 
                     break;
 
@@ -2356,14 +2421,14 @@ namespace DICUI.DiscImageCreator
                     sr.ReadLine(); // <description>Plextor</description>
 
                     // Now that we're at the relevant entries, read each line in and concatenate
-                    string pvd = "", line = sr.ReadLine().Trim();
+                    string datString = "", line = sr.ReadLine().Trim();
                     while (line.StartsWith("<rom"))
                     {
-                        pvd += line + "\n";
+                        datString += line + "\n";
                         line = sr.ReadLine().Trim();
                     }
 
-                    return pvd.TrimEnd('\n');
+                    return datString.TrimEnd('\n');
                 }
                 catch
                 {
@@ -2524,6 +2589,38 @@ namespace DICUI.DiscImageCreator
                     // We don't care what the exception is right now
                     return Int64.MaxValue;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a GD-ROM LD area, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the GD-ROM header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetGDROMBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        {
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (string.IsNullOrWhiteSpace(segaHeader))
+                return false;
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader.Split('\n');
+                string serialLine = header[2].Substring(58);
+                string versionLine = header[4].Substring(58);
+                string dateLine = header[5].Substring(58);
+                serial = serialLine.Substring(0, 4);
+                version = versionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine.Substring(0, 8);
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
             }
         }
 
@@ -2728,7 +2825,11 @@ namespace DICUI.DiscImageCreator
             {
                 try
                 {
-                    // We assume the first sector listed is the proper one
+                    // If we have a Sega disc, skip sector 0
+                    if (sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
+                        while (!sr.ReadLine().StartsWith("========== LBA")) ;
+
+                    // We assume the first non-LBA0 sector listed is the proper one
                     // Fast forward to the PVD
                     while (!sr.ReadLine().StartsWith("0310")) ;
 
