@@ -1958,7 +1958,7 @@ namespace DICUI.DiscImageCreator
 
                     if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
                     {
-                        info.CommonDiscInfo.Serial = scdSerial ?? "";
+                        info.CommonDiscInfo.Comments += $"Internal Serial: {scdSerial ?? ""}";
                         info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
                     }
 
