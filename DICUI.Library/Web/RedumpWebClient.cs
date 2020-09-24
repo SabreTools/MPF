@@ -900,7 +900,8 @@ namespace DICUI.Web
             match = commentsRegex.Match(discData);
             if (match.Success)
             {
-                info.CommonDiscInfo.Comments = WebUtility.HtmlDecode(match.Groups[1].Value)
+                info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
+                    + WebUtility.HtmlDecode(match.Groups[1].Value)
                     .Replace("<br />", "\n")
                     .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
             }

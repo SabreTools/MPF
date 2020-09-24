@@ -675,10 +675,6 @@ namespace DICUI.Utilities
             // Sanitize the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
-            // TODO: Notes about Aaru outputs:
-            // - `image convert` might be able to help generate CUE, CCD, SUB?
-            // - NEED CONFIRMATION OF TRACK SPLITTING ON CD
-
             // Check that all of the relevant files are there
             if (!FoundAllFiles())
                 return null;
