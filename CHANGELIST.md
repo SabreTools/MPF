@@ -1,3 +1,11 @@
+### WIP (xxxx-xx-xx)
+- Add more information extraction and generation for Aaru
+- Remove instances of CD Check from copy protection (again, sorry)
+- Fix multiline submission info outputs
+- Fix PVD retrieval for multi-session discs
+- Updated to DIC version 20200921
+- Add and fix multiple Sega disc header pieces or submission info
+
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables
 - Synced WPF and Avalonia UI internals
