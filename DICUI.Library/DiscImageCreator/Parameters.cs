@@ -1997,7 +1997,7 @@ namespace DICUI.DiscImageCreator
 
                     if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
                     {
-                        info.CommonDiscInfo.Serial = saturnSerial ?? "";
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {saturnSerial ?? ""}";
                         info.VersionAndEditions.Version = saturnVersion ?? "";
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
                     }
@@ -2007,7 +2007,7 @@ namespace DICUI.DiscImageCreator
                 case KnownSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial ?? ""}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
@@ -2767,7 +2767,7 @@ namespace DICUI.DiscImageCreator
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 8);
-                version = serialVersionLine.Substring(10, 6);
+                version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
                 return true;
             }
