@@ -5,6 +5,7 @@
 - Fix PVD retrieval for multi-session discs
 - Updated to DIC version 20200921
 - Add and fix multiple Sega disc header pieces or submission info
+- Fixed issues in parsing the alternate mainInfo format
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables

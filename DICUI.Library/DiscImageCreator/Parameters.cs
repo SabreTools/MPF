@@ -2825,13 +2825,41 @@ namespace DICUI.DiscImageCreator
             {
                 try
                 {
-                    // If we have a Sega disc, skip sector 0
-                    if (sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
-                        while (!sr.ReadLine().StartsWith("========== LBA")) ;
+                    // If we're in a new mainInfo, the location of the header changed
+                    string line = sr.ReadLine();
+                    if (line.StartsWith("========== OpCode"))
+                    {
+                        // Scrambled LBA0, instance 1
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
 
-                    // We assume the first non-LBA0 sector listed is the proper one
+                        // Scrambled LBA0, instance 2
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+
+                        // Scrambled LBA0, instance 3
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+
+                        // Start of second OpCode area
+                        while (!(line = sr.ReadLine()).StartsWith("========== OpCode")) ;
+
+                        // Read the next line so the search goes properly
+                        line = sr.ReadLine();
+                    }
+
+                    // Make sure we're in the area
+                    if (!line.StartsWith("========== LBA"))
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA")) ;
+
+                    // If we have a Sega disc, skip sector 0
+                    if (line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA")) ;
+
+                    // If we have a PlayStation disc, skip sector 4
+                    if (line.StartsWith("========== LBA[000004, 0x00004]: Main Channel =========="))
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA")) ;
+
+                    // We assume the first non-LBA0/4 sector listed is the proper one
                     // Fast forward to the PVD
-                    while (!sr.ReadLine().StartsWith("0310")) ;
+                    while (!(line = sr.ReadLine()).StartsWith("0310")) ;
 
                     // Now that we're at the PVD, read each line in and concatenate
                     string pvd = "";
@@ -2978,11 +3006,32 @@ namespace DICUI.DiscImageCreator
             {
                 try
                 {
+                    // If we're in a new mainInfo, the location of the header changed
+                    string line = sr.ReadLine();
+                    if (line.StartsWith("========== OpCode"))
+                    {
+                        // Scrambled LBA0, instance 1
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+
+                        // Scrambled LBA0, instance 2
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+
+                        // Scrambled LBA0, instance 3
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+
+                        // Start of second OpCode area
+                        while (!(line = sr.ReadLine()).StartsWith("========== OpCode")) ;
+
+                        // Read the next line so the search goes properly
+                        line = sr.ReadLine();
+                    }
+
                     // Make sure we're in the right sector
-                    while (!sr.ReadLine().StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
+                    if (!line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
 
                     // Fast forward to the header
-                    while (!sr.ReadLine().Trim().StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")) ;
+                    while (!(line = sr.ReadLine()).Trim().StartsWith("+0 +1 +2 +3 +4 +5 +6 +7  +8 +9 +A +B +C +D +E +F")) ;
 
                     // Now that we're at the Header, read each line in and concatenate
                     string header = "";
