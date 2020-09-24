@@ -30,7 +30,7 @@ For all additional information, including information about the individual compo
 
 ## Changelist
 
-A list of all changes in each stable release can now be found [here](https://github.com/SabreTools/DICUI/blob/master/CHANGELIST.md).
+A list of all changes in each stable release and current WIP builds can now be found [here](https://github.com/SabreTools/DICUI/blob/master/CHANGELIST.md).
 
 ## External Libraries
 
