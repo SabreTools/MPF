@@ -25,8 +25,8 @@ namespace DICUI.Windows
 
         private readonly MainWindow _mainWindow;
 
-        private readonly FlowDocument _document;
-        private readonly Paragraph _paragraph;
+        private FlowDocument _document;
+        private Paragraph _paragraph;
         private readonly List<Matcher> _matchers;
 
         volatile Process _process;
@@ -362,6 +362,8 @@ namespace DICUI.Windows
         private void OnClearButton(object sender, EventArgs e)
         {
             output.Document.Blocks.Clear();
+            _paragraph = new Paragraph();
+            _document.Blocks.Add(_paragraph);
         }
         
         private void OnSaveButton(object sender, EventArgs e)
