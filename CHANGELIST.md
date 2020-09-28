@@ -6,6 +6,7 @@
 - Updated to DIC version 20200921
 - Add and fix multiple Sega disc header pieces or submission info
 - Fixed issues in parsing the alternate mainInfo format
+- Fixed issue with logging clear not working properly
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables
