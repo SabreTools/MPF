@@ -22,7 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BurnOutSharp" Version="1.4.0" />
+    <PackageReference Include="BurnOutSharp" PrivateAssets="analyzers;build" ExcludeAssets="contentFiles" Version="1.4.1" GeneratePathProperty="true" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true"/>
   </ItemGroup>
 
   <ItemGroup>
