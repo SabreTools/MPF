@@ -86,14 +86,14 @@ after_build:
 - 7z a DICUI_netcoreapp3.1.zip netcoreapp3.1\*
 
 - cd ..\..\..\DICUI.Avalonia\bin\Debug
-- 7z a DICUI_Avalonia-net472.zip net472\*
-- 7z a DICUI_Avalonia-net48.zip net48\*
-- 7z a DICUI_Avalonia-netcoreapp3.1.zip netcoreapp3.1\*
+- 7z a DICUI-Avalonia_net472.zip net472\*
+- 7z a DICUI-Avalonia_net48.zip net48\*
+- 7z a DICUI-Avalonia_netcoreapp3.1.zip netcoreapp3.1\*
 
 - cd ..\..\..\DICUI.Check\bin\Debug
-- 7z a DICUI_Check-net472.zip net472\*
-- 7z a DICUI_Check-net48.zip net48\*
-- 7z a DICUI_Check-netcoreapp3.1.zip netcoreapp3.1\*
+- 7z a DICUI-Check_net472.zip net472\*
+- 7z a DICUI-Check_net48.zip net48\*
+- 7z a DICUI-Check_netcoreapp3.1.zip netcoreapp3.1\*
 
 # artifact linking
 artifacts:
