@@ -80,15 +80,40 @@ after_build:
 - mkdir DICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Subdump
 - mv DICUI.Avalonia\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe DICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
 
-- 7z a DICUI.zip DICUI\bin\Debug\*
-- 7z a DICUI-Avalonia.zip DICUI.Avalonia\bin\Debug\*
-- 7z a DICUI-Check.zip DICUI.Check\bin\Debug\*
+- cd DICUI\bin\Debug
+- 7z a DICUI_net472.zip net472\*
+- 7z a DICUI_net48.zip net48\*
+- 7z a DICUI_netcoreapp3.1.zip netcoreapp3.1\*
+
+- cd ..\..\..\DICUI.Avalonia\bin\Debug
+- 7z a DICUI_Avalonia-net472.zip net472\*
+- 7z a DICUI_Avalonia-net48.zip net48\*
+- 7z a DICUI_Avalonia-netcoreapp3.1.zip netcoreapp3.1\*
+
+- cd ..\..\..\DICUI.Check\bin\Debug
+- 7z a DICUI_Check-net472.zip net472\*
+- 7z a DICUI_Check-net48.zip net48\*
+- 7z a DICUI_Check-netcoreapp3.1.zip netcoreapp3.1\*
 
 # artifact linking
 artifacts:
-- path: DICUI.zip
-  name: DICUI (WPF UI)
-- path: DICUI-Avalonia.zip
-  name: DICUI (Avalonia UI)
-- path: DICUI-Check.zip
-  name: DICUI Check
+- path: DICUI\bin\Debug\DICUI_net472.zip
+  name: DICUI (WPF UI) (.NET Framework 4.7.2)
+- path: DICUI\bin\Debug\DICUI_net48.zip
+  name: DICUI (WPF UI) (.NET Framework 4.8)
+- path: DICUI\bin\Debug\DICUI_netcoreapp3.1.zip
+  name: DICUI (WPF UI) (.NET Core 3.1)
+
+- path: DICUI.Avalonia\bin\Debug\DICUI-Avalonia_net472.zip
+  name: DICUI (Avalonia UI) (.NET Framework 4.7.2)
+- path: DICUI.Avalonia\bin\Debug\DICUI-Avalonia_net48.zip
+  name: DICUI (Avalonia UI) (.NET Framework 4.8)
+- path: DICUI.Avalonia\bin\Debug\DICUI-Avalonia_netcoreapp3.1.zip
+  name: DICUI (Avalonia UI) (.NET Core 3.1)
+
+- path: DICUI.Check\bin\Debug\DICUI-Check_net472.zip
+  name: DICUI Check (.NET Framework 4.7.2)
+- path: DICUI.Check\bin\Debug\DICUI-Check_net48.zip
+  name: DICUI Check (.NET Framework 4.8)
+- path: DICUI.Check\bin\Debug\DICUI-Check_netcoreapp3.1.zip
+  name: DICUI Check (.NET Core 3.1)
