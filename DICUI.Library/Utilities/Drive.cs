@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using DICUI.Data;
 
 namespace DICUI.Utilities
@@ -71,7 +70,7 @@ namespace DICUI.Utilities
         public byte[] ReadSector(long sector)
         {
             // Missing drive leter is not supported
-            if (string.IsNullOrEmpty(DriveInfo?.Name))
+            if (string.IsNullOrEmpty(this.DriveInfo?.Name))
                 return null;
 
             // We don't support negative sectors
@@ -85,7 +84,7 @@ namespace DICUI.Utilities
             // Try to read the sector from the device
             try
             {
-                var fs = File.OpenRead(@"\\?\E:");
+                var fs = File.OpenRead($"\\\\?\\{this.Letter}:");
                 fs.Seek(start, SeekOrigin.Begin);
                 byte[] buffer = new byte[sectorSize];
                 fs.Read(buffer, 0, sectorSize);
