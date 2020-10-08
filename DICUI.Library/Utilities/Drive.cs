@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using DICUI.Data;
 
 namespace DICUI.Utilities
@@ -60,6 +61,40 @@ namespace DICUI.Utilities
         {
             this.InternalDriveType = driveType;
             this.DriveInfo = driveInfo;
+        }
+
+        /// <summary>
+        /// Read a sector from the given drive
+        /// </summary>
+        /// <param name="sector">Sector number</param>
+        /// <returns>Byte array representing the sector, null on error</returns>
+        public byte[] ReadSector(long sector)
+        {
+            // Missing drive leter is not supported
+            if (string.IsNullOrEmpty(DriveInfo?.Name))
+                return null;
+
+            // We don't support negative sectors
+            if (sector < 0)
+                return null;
+
+            // Get the starting point
+            int sectorSize = 2048;
+            long start = sector * sectorSize; 
+
+            // Try to read the sector from the device
+            try
+            {
+                var fs = File.OpenRead(@"\\?\E:");
+                fs.Seek(start, SeekOrigin.Begin);
+                byte[] buffer = new byte[sectorSize];
+                fs.Read(buffer, 0, sectorSize);
+                return buffer;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
