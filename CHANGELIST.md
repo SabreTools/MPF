@@ -10,6 +10,10 @@
 - Updated to BurnOutSharp 1.4.1
 - Added split archives for AppVeyor builds
 - Remove subdump from both UI and run steps
+- Removed default config file
+- Fixed copy protect scan using wrong drive when using UI option
+- Changed default to skip fixed drives
+- Fixed default media type when skipping type detection
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables

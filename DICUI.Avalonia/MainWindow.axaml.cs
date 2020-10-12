@@ -125,8 +125,13 @@ namespace DICUI.Avalonia
             // Get the drive letter from the selected item
             if (this.Find<ComboBox>("DriveLetterComboBox").SelectedItem is Drive drive)
             {
-                // Get the current media type
-                if (!UIOptions.Options.SkipMediaTypeDetection)
+                // Get the current media type, if possible
+                if (UIOptions.Options.SkipMediaTypeDetection)
+                {
+                    ViewModels.LoggerViewModel.VerboseLog("Media type detection disabled, defaulting to CD-ROM");
+                    CurrentMediaType = MediaType.CDROM;
+                }
+                else
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                     CurrentMediaType = Validators.GetMediaType(drive);
