@@ -728,6 +728,7 @@ namespace DICUI.Avalonia
             var optionsWindow = new OptionsWindow();
             optionsWindow.UIOptions = UIOptions;
             optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            optionsWindow.Refresh();
             await optionsWindow.ShowDialog(this);
 
             // Set any new options

@@ -16,6 +16,7 @@
 - Fixed default media type when skipping type detection
 - Attempt sector reading for Saturn system detection
 - Fixed default media type when detection fails
+- Add option to allow users to select dumping program
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables

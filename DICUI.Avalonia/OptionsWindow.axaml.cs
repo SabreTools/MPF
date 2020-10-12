@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using DICUI.Data;
+using DICUI.Utilities;
 using DICUI.Web;
 
 namespace DICUI.Avalonia
@@ -17,6 +20,11 @@ namespace DICUI.Avalonia
         /// </summary>
         public UIOptions UIOptions { get; set; }
 
+        /// <summary>
+        /// List of available internal programs
+        /// </summary>
+        public List<InternalProgramComboBoxItem> InternalPrograms { get; private set; }
+
         #endregion
 
         public OptionsWindow()
@@ -25,6 +33,8 @@ namespace DICUI.Avalonia
 #if DEBUG
             this.AttachDevTools();
 #endif
+
+            PopulateInternalPrograms();
         }
 
         private void InitializeComponent()
@@ -33,6 +43,34 @@ namespace DICUI.Avalonia
         }
 
         #region Helpers
+
+        /// <summary>
+        /// Get a complete list of internal programs and fill the combo box
+        /// </summary>
+        private void PopulateInternalPrograms()
+        {
+            // We only support certain programs for dumping
+            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
+            ViewModels.LoggerViewModel.VerboseLogLn("Populating internal programs, {0} internal programs found.", internalPrograms.Count);
+
+            InternalPrograms = new List<InternalProgramComboBoxItem>();
+            foreach (var internalProgram in internalPrograms)
+            {
+                InternalPrograms.Add(new InternalProgramComboBoxItem(internalProgram));
+            }
+
+            this.Find<ComboBox>("InternalProgramComboBox").Items = InternalPrograms;
+            this.Find<ComboBox>("InternalProgramComboBox").SelectedIndex = 0;
+        }
+
+        /// <summary>
+        /// Refresh any options-related elements
+        /// </summary>
+        public void Refresh()
+        {
+            // Handle non-bindable fields
+            this.Find<ComboBox>("InternalProgramComboBox").SelectedIndex = InternalPrograms.FindIndex(r => r == Converters.ToInternalProgram(UIOptions.Options.InternalProgram));
+        }
 
         /// <summary>
         /// Find a TextBox by setting name
@@ -95,6 +133,9 @@ namespace DICUI.Avalonia
         /// </summary>
         private void OnAcceptClick(object sender, RoutedEventArgs e)
         {
+            // Handle non-bindable fields
+            UIOptions.Options.InternalProgram = (this.Find<ComboBox>("InternalProgramComboBox").SelectedItem as InternalProgramComboBoxItem)?.Name ?? InternalProgram.DiscImageCreator.ToString();
+
             UIOptions.Save();
             Hide();
         }

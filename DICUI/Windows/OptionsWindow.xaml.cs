@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using DICUI.Data;
+using DICUI.Utilities;
 using DICUI.Web;
 using Button = System.Windows.Controls.Button;
 using TextBox = System.Windows.Controls.TextBox;
@@ -20,11 +23,26 @@ namespace DICUI.Windows
         /// </summary>
         public UIOptions UIOptions { get; set; }
 
+        /// <summary>
+        /// List of available internal programs
+        /// </summary>
+        public List<InternalProgramComboBoxItem> InternalPrograms { get; private set; }
+
         #endregion
 
         public OptionsWindow()
         {
             InitializeComponent();
+
+            PopulateInternalPrograms();
+        }
+
+        #region Helpers
+
+        private FolderBrowserDialog CreateFolderBrowserDialog()
+        {
+            FolderBrowserDialog dialog = new FolderBrowserDialog();
+            return dialog;
         }
 
         private OpenFileDialog CreateOpenFileDialog()
@@ -39,17 +57,52 @@ namespace DICUI.Windows
             return dialog;
         }
 
-        private FolderBrowserDialog CreateFolderBrowserDialog()
+        /// <summary>
+        /// Get a complete list of internal programs and fill the combo box
+        /// </summary>
+        private void PopulateInternalPrograms()
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            return dialog;
+            // We only support certain programs for dumping
+            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
+            ViewModels.LoggerViewModel.VerboseLogLn("Populating internal programs, {0} internal programs found.", internalPrograms.Count);
+
+            InternalPrograms = new List<InternalProgramComboBoxItem>();
+            foreach (var internalProgram in internalPrograms)
+            {
+                InternalPrograms.Add(new InternalProgramComboBoxItem(internalProgram));
+            }
+
+            InternalProgramComboBox.ItemsSource = InternalPrograms;
+            InternalProgramComboBox.SelectedIndex = 0;
         }
 
+        /// <summary>
+        /// Refresh any options-related elements
+        /// </summary>
+        public void Refresh()
+        {
+            // Handle non-bindable fields
+            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Converters.ToInternalProgram(UIOptions.Options.InternalProgram));
+            RedumpPasswordBox.Password = UIOptions.Options.Password;
+        }
+
+        /// <summary>
+        /// Find a TextBox by setting name
+        /// </summary>
+        /// <param name="name">Setting name to find</param>
+        /// <returns>TextBox for that setting</returns>
         private TextBox TextBoxForPathSetting(string name)
         {
             return FindName(name + "TextBox") as TextBox;
         }
 
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
         private void BrowseForPathClick(object sender, EventArgs e)
         {
             Button button = sender as Button;
@@ -97,17 +150,13 @@ namespace DICUI.Windows
             }
         }
 
-        public void Refresh()
-        {
-            // Handle non-bindable fields
-            RedumpPasswordBox.Password = UIOptions.Options.Password;
-        }
-
-        #region Event Handlers
-
+        /// <summary>
+        /// Handler for AcceptButton Click event
+        /// </summary>
         private void OnAcceptClick(object sender, EventArgs e)
         {
             // Handle non-bindable fields
+            UIOptions.Options.InternalProgram = (InternalProgramComboBox.SelectedItem as InternalProgramComboBoxItem)?.Name ?? InternalProgram.DiscImageCreator.ToString();
             UIOptions.Options.Password = RedumpPasswordBox.Password;
 
             UIOptions.Save();
@@ -116,6 +165,9 @@ namespace DICUI.Windows
             (Owner as MainWindow).OnOptionsUpdated();
         }
 
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
         private void OnCancelClick(object sender, EventArgs e)
         {
             // just hide the window and don't care
