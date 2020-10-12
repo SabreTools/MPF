@@ -26,11 +26,6 @@ namespace DICUI.Utilities
         /// <remarks>DiscImageCreator is both used as an internal tool and an extra tool</remarks>
         public string DiscImageCreatorPath { get; set; }
 
-        /// <summary>
-        /// Path to Subdump executable
-        /// </summary>
-        public string SubdumpPath { get; set; }
-
         #endregion
 
         #region Output paths
@@ -149,7 +144,6 @@ namespace DICUI.Utilities
         {
             // Tool paths
             this.DiscImageCreatorPath = options.CreatorPath;
-            this.SubdumpPath = options.SubDumpPath;
 
             // Output paths
             this.OutputDirectory = outputDirectory;
@@ -587,17 +581,6 @@ namespace DICUI.Utilities
         /// <returns>Result instance with the outcome</returns>
         private Result ExecuteAdditionalTools()
         {
-            // Special cases
-            switch (System)
-            {
-                case KnownSystem.SegaSaturn:
-                    if (!File.Exists(SubdumpPath))
-                        return Result.Success("Could not find subdump! Skipping execution...");
-
-                    ExecuteSubdump();
-                    return Result.Success("subdump has finished!");
-            }
-
             return Result.Success("No external tools needed!");
         }
 
@@ -636,26 +619,6 @@ namespace DICUI.Utilities
             });
 
             return output;
-        }
-
-        /// <summary>
-        /// Execute subdump for a (potential) Sega Saturn dump
-        /// </summary>
-        private async void ExecuteSubdump()
-        {
-            await Task.Run(() =>
-            {
-                Process childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = SubdumpPath,
-                        Arguments = "-i " + Drive.Letter + ": -f " + Path.Combine(OutputDirectory, Path.GetFileNameWithoutExtension(OutputFilename) + "_subdump.sub") + "-mode 6 -rereadnum 25 -fix 2",
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit();
-            });
         }
 
         /// <summary>

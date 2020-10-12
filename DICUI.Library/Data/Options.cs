@@ -44,12 +44,6 @@ namespace DICUI.Data
             set { _settings["DefaultOutputPath"] = value; }
         }
 
-        public string SubDumpPath
-        {
-            get { return GetStringSetting(_settings, "SubDumpPath", "Programs\\Subdump\\subdump.exe"); }
-            set { _settings["SubDumpPath"] = value; }
-        }
-
         #endregion
 
         #region Dumping Speeds

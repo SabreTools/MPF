@@ -43,12 +43,6 @@ namespace DICUI.Avalonia
             set { _uiOptions.Options.DefaultOutputPath = value; }
         }
 
-        public string SubDumpPath
-        {
-            get { return _uiOptions.Options.SubDumpPath; }
-            set { _uiOptions.Options.SubDumpPath = value; }
-        }
-
         #endregion
 
         #region Dumping Speeds

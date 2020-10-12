@@ -27,18 +27,12 @@
       <Button Name="CreatorPathButton" Grid.Row="1" Grid.Column="2" Height="25" Width="25" Content="..." Click="BrowseForPathClick" />
 
       <!--
-      <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Text="dd Path" />
-      <TextBox Name="DDPathTextBox" Grid.Row="0" Grid.Column="1" Height="25" HorizontalAlignment="Stretch"
+      <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Text="dd Path" />
+      <TextBox Name="DDPathTextBox" Grid.Row="2" Grid.Column="1" Height="25" HorizontalAlignment="Stretch"
                DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                Text="{Binding Path=DDPath}" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
-      <Button Name="DDPathButton" Grid.Row="0" Grid.Column="2" Height="25" Width="25" Content="..." Click="BrowseForPathClick" />
+      <Button Name="DDPathButton" Grid.Row="2" Grid.Column="2" Height="25" Width="25" Content="..." Click="BrowseForPathClick" />
       -->
-
-      <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Text="Subdump Path" />
-      <TextBox Name="SubDumpPathTextBox" Grid.Row="2" Grid.Column="1" Height="25" HorizontalAlignment="Stretch"
-               DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-               Text="{Binding Path=SubDumpPath}" ScrollViewer.VerticalScrollBarVisibility="Disabled" />
-      <Button Name="SubDumpPathButton" Grid.Row="2" Grid.Column="2" Height="25" Width="25" Content="..." Click="BrowseForPathClick" />
 
       <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5" Text="Default Output Path" />
       <TextBox Name="DefaultOutputPathTextBox" Grid.Row="3" Grid.Column="1" Height="25" HorizontalAlignment="Stretch"

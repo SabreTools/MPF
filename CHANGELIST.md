@@ -9,6 +9,7 @@
 - Fixed issue with logging clear not working properly
 - Updated to BurnOutSharp 1.4.1
 - Added split archives for AppVeyor builds
+- Remove subdump from both UI and run steps
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables
