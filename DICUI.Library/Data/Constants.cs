@@ -12,6 +12,9 @@ namespace DICUI.Data
         public const string StartDumping = "Start Dumping";
         public const string StopDumping = "Stop Dumping";
 
+        // Byte arrays for signatures
+        public static readonly byte[] SaturnSectorZeroStart = new byte[] { 0x53, 0x45, 0x47, 0x41, 0x20, 0x53, 0x45, 0x47, 0x41, 0x53, 0x41, 0x54, 0x55, 0x52, 0x4E, 0x20 };
+
         // Private lists of known drive speed ranges
         private static IReadOnlyList<int> cd { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
         private static IReadOnlyList<int> dvd { get; } = cd.Where(s => s <= 24).ToList();

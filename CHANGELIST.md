@@ -14,6 +14,8 @@
 - Fixed copy protect scan using wrong drive when using UI option
 - Changed default to skip fixed drives
 - Fixed default media type when skipping type detection
+- Attempt sector reading for Saturn system detection
+- Fixed default media type when detection fails
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables

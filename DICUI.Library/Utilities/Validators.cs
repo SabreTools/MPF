@@ -947,6 +947,18 @@ namespace DICUI.Utilities
                 return KnownSystem.SegaCDMegaCD;
             }
 
+            // Sega Saturn
+            try
+            {
+                byte[] sector = drive?.ReadSector(0);
+                if (sector != null)
+                {
+                    if (sector.StartsWith(Interface.SaturnSectorZeroStart))
+                        return KnownSystem.SegaSaturn;
+                }
+            }
+            catch { }
+
             // Sony PlayStation and Sony PlayStation 2
             string psxExePath = Path.Combine(drivePath, "PSX.EXE");
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
