@@ -387,12 +387,15 @@ namespace DICUI.Avalonia
         /// </summary>
         private async void ScanAndShowProtection()
         {
+            // Determine current environment, just in case
             if (Env == null)
                 Env = DetermineEnvironment();
 
-            if (Env.Drive.Letter != default(char))
+            // Pull the drive letter from the UI directly, just in case
+            var drive = this.Find<ComboBox>("DriveLetterComboBox").SelectedItem as Drive;
+            if (drive.Letter != default(char))
             {
-                ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", Env.Drive.Letter);
+                ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", drive.Letter);
 
                 var tempContent = this.Find<TextBlock>("StatusLabel").Text;
                 this.Find<TextBlock>("StatusLabel").Text = "Scanning for copy protection... this might take a while!";
@@ -402,7 +405,7 @@ namespace DICUI.Avalonia
 
                 var progress = new Progress<FileProtection>();
                 progress.ProgressChanged += ProgressUpdated;
-                string protections = await Validators.RunProtectionScanOnPath(Env.Drive.Letter + ":\\");
+                string protections = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\");
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
                 if (Env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
@@ -422,7 +425,7 @@ namespace DICUI.Avalonia
                     }.ShowDialog(this);
                 }
 
-                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", Env.Drive.Letter, protections);
+                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", drive.Letter, protections);
 
                 this.Find<TextBlock>("StatusLabel").Text = tempContent;
                 this.Find<Button>("StartStopButton").IsEnabled = true;

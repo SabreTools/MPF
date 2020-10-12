@@ -376,12 +376,15 @@ namespace DICUI.Windows
         /// </summary>
         private async void ScanAndShowProtection()
         {
+            // Determine current environment, just in case
             if (Env == null)
                 Env = DetermineEnvironment();
 
-            if (Env.Drive.Letter != default(char))
+            // Pull the drive letter from the UI directly, just in case
+            var drive = DriveLetterComboBox.SelectedItem as Drive;
+            if (drive.Letter != default(char))
             {
-                ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", Env.Drive.Letter);
+                ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", drive.Letter);
 
                 var tempContent = StatusLabel.Content;
                 StatusLabel.Content = "Scanning for copy protection... this might take a while!";
@@ -391,7 +394,7 @@ namespace DICUI.Windows
 
                 var progress = new Progress<FileProtection>();
                 progress.ProgressChanged += ProgressUpdated;
-                string protections = await Validators.RunProtectionScanOnPath(Env.Drive.Letter + ":\\", progress);
+                string protections = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", progress);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
                 if (Env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
@@ -402,7 +405,8 @@ namespace DICUI.Windows
 
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
-                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", Env.Drive.Letter, protections);
+                
+                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", drive.Letter, protections);
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
