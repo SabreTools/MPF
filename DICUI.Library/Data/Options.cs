@@ -108,7 +108,7 @@ namespace DICUI.Data
 
         public bool IgnoreFixedDrives
         {
-            get { return GetBooleanSetting(_settings, "IgnoreFixedDrives", false); }
+            get { return GetBooleanSetting(_settings, "IgnoreFixedDrives", true); }
             set { _settings["IgnoreFixedDrives"] = value.ToString(); }
         }
 
