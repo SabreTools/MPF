@@ -135,7 +135,9 @@ namespace DICUI.Avalonia
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                     CurrentMediaType = Validators.GetMediaType(drive);
-                    ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect." : ("detected " + CurrentMediaType.LongName() + "."));
+                    ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect, defaulting to CD-ROM." : ($"detected {CurrentMediaType.LongName()}."));
+                    if (CurrentMediaType == null)
+                        CurrentMediaType = MediaType.CDROM;
                 }
             }
         }
