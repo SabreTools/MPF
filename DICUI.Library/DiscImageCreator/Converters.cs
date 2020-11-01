@@ -232,6 +232,8 @@ namespace DICUI.DiscImageCreator
                     return FlagStrings.NoFixSubQSecuROM;
                 case Flag.NoSkipSS:
                     return FlagStrings.NoSkipSS;
+                case Flag.PadSector:
+                    return FlagStrings.PadSector;
                 case Flag.Raw:
                     return FlagStrings.Raw;
                 case Flag.Resume:

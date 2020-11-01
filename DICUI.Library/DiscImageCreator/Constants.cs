@@ -54,6 +54,7 @@ namespace DICUI.DiscImageCreator
         public const string NoFixSubRtoW = "/nr";
         public const string NoFixSubQSecuROM = "/ns";
         public const string NoSkipSS = "/nss";
+        public const string PadSector = "/ps";
         public const string Raw = "/raw";
         public const string Resume = "/re";
         public const string Reverse = "/r";

@@ -56,6 +56,7 @@ namespace DICUI.DiscImageCreator
         NoFixSubRtoW,
         NoFixSubQSecuROM,
         NoSkipSS,
+        PadSector,
         Raw,
         Resume,
         Reverse,

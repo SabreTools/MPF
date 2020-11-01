@@ -114,6 +114,11 @@ namespace DICUI.DiscImageCreator
         public int? NoSkipSecuritySectorValue { get; set; }
 
         /// <summary>
+        /// Set the pad sector flag value (default 0)
+        /// </summary>
+        public int? PadSectorValue { get; set; }
+
+        /// <summary>
         /// Set the reverse End LBA value (required for DVD)
         /// </summary>
         public int? ReverseEndLBAValue { get; set; }
@@ -466,6 +471,17 @@ namespace DICUI.DiscImageCreator
                     parameters.Add(Converters.LongName(Flag.NoSkipSS));
                     if (NoSkipSecuritySectorValue != null)
                         parameters.Add(NoSkipSecuritySectorValue.ToString());
+                }
+            }
+
+            // Pad sectors
+            if (GetSupportedCommands(Flag.PadSector).Contains(BaseCommand))
+            {
+                if (this[Flag.PadSector] == true)
+                {
+                    parameters.Add(Converters.LongName(Flag.PadSector));
+                    if (PadSectorValue != null)
+                        parameters.Add(PadSectorValue.ToString());
                 }
             }
 
@@ -1448,6 +1464,31 @@ namespace DICUI.DiscImageCreator
                             i++;
                             break;
 
+                        case FlagStrings.PadSector:
+                            if (!GetSupportedCommands(Flag.PadSector).Contains(BaseCommand))
+                            {
+                                return false;
+                            }
+                            else if (!DoesExist(parts, i + 1))
+                            {
+                                this[Flag.PadSector] = true;
+                                break;
+                            }
+                            else if (IsFlag(parts[i + 1]))
+                            {
+                                this[Flag.PadSector] = true;
+                                break;
+                            }
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0, upperBound: 1))
+                            {
+                                return false;
+                            }
+
+                            this[Flag.PadSector] = true;
+                            PadSectorValue = Int32.Parse(parts[i + 1]);
+                            i++;
+                            break;
+
                         case FlagStrings.Raw:
                             if (!GetSupportedCommands(Flag.Raw).Contains(BaseCommand))
                                 return false;
@@ -2258,6 +2299,9 @@ namespace DICUI.DiscImageCreator
                     commands.Add(Command.XBOXSwap);
                     commands.Add(Command.XGD2Swap);
                     commands.Add(Command.XGD3Swap);
+                    break;
+                case Flag.PadSector:
+                    commands.Add(Command.DigitalVideoDisc);
                     break;
                 case Flag.Raw:
                     commands.Add(Command.DigitalVideoDisc);
