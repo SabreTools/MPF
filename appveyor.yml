@@ -37,7 +37,7 @@ build:
 after_build:
 - ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.1.0.3214/aaru-5.1.0.3214-1_windows_x64.zip
 - ps: appveyor DownloadFile http://www.chrysocome.net/downloads/8ab730cd2a29e76ddd89be1f99357942/dd-0.6beta3.zip
-- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/5470153/DiscImageCreator_20201101.zip
+- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/5253259/DiscImageCreator_20200921.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 
 - 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\net472\Programs\Aaru *
@@ -54,12 +54,12 @@ after_build:
 - 7z e dd-0.6beta3.zip -oDICUI.Avalonia\bin\Debug\net48\Programs\DD *
 - 7z e dd-0.6beta3.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\DD *
 
-- 7z e DiscImageCreator_20201101.zip -oDICUI\bin\Debug\net472\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20201101.zip -oDICUI\bin\Debug\net48\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20201101.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20201101.zip -oDICUI.Avalonia\bin\Debug\net472\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20201101.zip -oDICUI.Avalonia\bin\Debug\net48\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20201101.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oDICUI\bin\Debug\net472\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oDICUI\bin\Debug\net48\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oDICUI.Avalonia\bin\Debug\net472\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oDICUI.Avalonia\bin\Debug\net48\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
 
 - 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net472 *
 - mkdir DICUI\bin\Debug\net472\Programs\Subdump
