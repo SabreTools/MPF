@@ -1044,30 +1044,32 @@ namespace DICUI.Utilities
         /// <returns>Copy protection detected in the envirionment, if any</returns>
         public static async Task<string> RunProtectionScanOnPath(string path, IProgress<FileProtection> progress = null)
         {
-#if NET_FRAMEWORK
             try
             {
                 var found = await Task.Run(() =>
                 {
-                    return ProtectionFind.Scan(path, includePosition: false, progress: progress);
+                    var scanner = new Scanner(progress)
+                    {
+                        IncludePosition = false, // Debug flag to include protection position in file
+                        ScanAllFiles = false, // Forces all files to be scanned as executables
+                        ScanArchives = true, // Allows archives to have internals extracted and scanned
+                        ScanPackers = false, // Allows executable packers to be detected
+                    };
+                    return scanner.GetProtections(path);
                 });
 
                 if (found == null || found.Count == 0)
                     return "None found";
 
-                // Strip out "CD Check" instances due to false positives
+                // Join the output protections for writing
                 return string.Join("\n", found
-                    .Where(kvp => !kvp.Value.Equals("CD Check", StringComparison.OrdinalIgnoreCase))
-                    .Select(kvp => kvp.Key + ": " + kvp.Value.Replace("CD Check,", string.Empty).Replace("CD Check", string.Empty).Trim())
-                    .ToArray());
+                    .Where(kvp => kvp.Value != null && kvp.Value.Any())
+                    .Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
             }
             catch (Exception ex)
             {
                 return $"Path could not be scanned! {ex}";
             }
-#else
-            return "Copy protection scanning is not available on .NET Core builds";
-#endif
         }
     }
 }

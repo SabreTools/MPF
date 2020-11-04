@@ -19,6 +19,7 @@
 - Add option to allow users to select dumping program
 - ~~Updated to DIC version 20201101~~
 - Add support for `/ps` DIC flag
+- Updated to BurnOutSharp 1.5.0
 
 ### 1.17.1 (2020-09-14)
 - Shuffled some shared, internal UI variables
