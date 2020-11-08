@@ -932,6 +932,13 @@ namespace DICUI.Utilities
                 return KnownSystem.DVDVideo;
             }
 
+            // HD-DVD-Video
+            if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
+                && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Count() > 0)
+            {
+                return KnownSystem.HDDVDVideo;
+            }
+
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
             {
