@@ -18,7 +18,7 @@ For those who like to test the newest features, download the latest AppVeyor WIP
 Even though this is written in C#, this program can only be used on Windows systems due to one of the base programs, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
 
 - Windows 7 (newest version of Windows recommended) or Mono-compatible Linux environment (DICUI.Check only)
-- .NET Framework 4.7.2, .NET Framework 4.8, or .NET Core 3.1 Runtimes (.NET Core 3.1 is only partially functional due to a dependency, use at your own risk)
+- .NET Framework 4.7.2, .NET Framework 4.8, or .NET Core 3.1 Runtimes (.NET Core 3.1 is mostly functional due to a dependency issues but may be unstable in some situations)
 - 1 GB of free RAM
 - As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 

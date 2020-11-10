@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
 - Remove instances of CD Check from copy protection (again, sorry)
 - Fix multiline submission info outputs
@@ -7,7 +7,7 @@
 - Add and fix multiple Sega disc header pieces or submission info
 - Fixed issues in parsing the alternate mainInfo format
 - Fixed issue with logging clear not working properly
-- Updated to BurnOutSharp 1.4.1
+- ~~Updated to BurnOutSharp 1.4.1~~
 - Added split archives for AppVeyor builds
 - Remove subdump from both UI and run steps
 - Removed default config file
