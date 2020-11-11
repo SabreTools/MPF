@@ -1,0 +1,40 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MPF.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="350" Width="600" Height="350"
+        x:Class="MPF.Avalonia.LogWindow" Icon="Icon.ico" CanResize="False"
+        Title="Log Window">
+
+  <Grid RowDefinitions="40,250,40">
+
+    <!-- Progress Bar -->
+    <Grid Grid.Row="0" Height="25" Margin="10 10 10 0">
+      <ProgressBar Name="ProgressBar" />
+      <TextBlock Name="ProgressLabel" Grid.Row="0" Height="25" HorizontalAlignment="Center" VerticalAlignment="Center" />
+    </Grid>
+
+    <!-- Log Area -->
+    <Border Grid.Row="1" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
+      <ScrollViewer Name="OutputViewer">
+        <TextBox Name="Output" FontFamily="Consolas" Background="Gray" IsReadOnly="True" />
+      </ScrollViewer>
+    </Border>
+
+    <!-- Options -->
+    <Grid Grid.Row="2" RowDefinitions="Auto" ColumnDefinitions="Auto,Auto,3*,Auto,Auto,Auto">
+      <CheckBox Name="VerboseCheckBox" Grid.Column="0" Height="25" VerticalAlignment="Center" Margin="10 0 0 10"
+                Content="Verbose" DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                IsChecked="{Binding Path=VerboseLogging}"
+                ToolTip.Tip="Enable verbose logging of tasks" />
+      <CheckBox Name="OpenAtStartupCheckBox" Grid.Column="1" Grid.ColumnSpan="2" Height="25" VerticalAlignment="Center" Margin="10 0 0 10"
+                Content="Open at startup" DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                IsChecked="{Binding Path=OpenLogWindowAtStartup}"
+                ToolTip.Tip="Open this window at startup" />
+      <Button Margin="0 0 10 10" Grid.Column="3" Height="25" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
+      <Button Margin="0 0 10 10" Grid.Column="4" Height="25" Width="60" Content="Hide" HorizontalAlignment="Right" Click="OnHideButton" />
+      <Button Margin="0 0 10 10" Grid.Column="5" Height="25" Width="60" Content="Save" HorizontalAlignment="Right" Click="OnSaveButton" />
+    </Grid>
+  </Grid>
+</Window>

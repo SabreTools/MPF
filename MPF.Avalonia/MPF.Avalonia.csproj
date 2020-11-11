@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <OutputType>WinExe</OutputType>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <Prefer32Bit>true</Prefer32Bit>
+    <Title>MPF</Title>
+    <AssemblyName>MPF.Avalonia</AssemblyName>
+    <Description>Frontend for various dumping programs</Description>
+    <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+    <Copyright>Copyright (c)2019-2020</Copyright>
+    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+    <Version>1.18</Version>
+    <AssemblyVersion>1.18</AssemblyVersion>
+    <FileVersion>1.18</FileVersion>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="0.9.12" />
+    <PackageReference Include="Avalonia.Desktop" Version="0.9.12" />
+    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.5.0" GeneratePathProperty="true">
+      <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
+  </ItemGroup>
+    
+  <ItemGroup>
+    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="DiscInformationWindow.axaml.cs">
+      <DependentUpon>DiscInformationWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="LogWindow.axaml.cs">
+      <DependentUpon>LogWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="MainWindow.axaml.cs">
+      <DependentUpon>MainWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="OptionsWindow.axaml.cs">
+      <DependentUpon>OptionsWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AvaloniaResource Include="Icon.ico" />
+  </ItemGroup>
+</Project>

@@ -1,3 +1,6 @@
+### WIP (xxxx-xx-xx)
+- Rename DICUI to Media Preservation Frontend (MPF)
+
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
 - Remove instances of CD Check from copy protection (again, sorry)

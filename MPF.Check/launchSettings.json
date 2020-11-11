@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "MPF.Check": {
+      "commandName": "Project"
+    }
+  }
+}

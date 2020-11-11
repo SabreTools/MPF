@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/DICUI/bin/Debug/netcoreapp3.1/DICUI.dll",
+            "program": "${workspaceFolder}/MPF/bin/Debug/netcoreapp3.1/MPF.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/DICUI",
+            "cwd": "${workspaceFolder}/MPF",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

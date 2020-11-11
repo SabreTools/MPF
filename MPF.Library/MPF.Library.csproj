@@ -1,0 +1,85 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <Title>MPF Library</Title>
+    <AssemblyName>MPF.Library</AssemblyName>
+    <Description>Library code for MPF and MPF.Check</Description>
+    <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+    <Copyright>Copyright (c)2019-2020</Copyright>
+    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+    <Version>1.18</Version>
+    <AssemblyVersion>1.18</AssemblyVersion>
+    <FileVersion>1.18</FileVersion>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
+    <DefineConstants>NET_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
+    <COMReference Include="IMAPI2">
+      <Guid>{2735412F-7F64-5B0F-8F00-5D77AFBE261E}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="IMAPI2FS">
+      <Guid>{2C941FD0-975B-59BE-A960-9A2A262853A5}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Aaru\CICMMetadata\CICMMetadataEditor\**" />
+    <Compile Remove="Aaru\CICMMetadata\java\**" />
+    <Compile Remove="Aaru\CICMMetadata\samples\**" />
+    <EmbeddedResource Remove="Aaru\CICMMetadata\CICMMetadataEditor\**" />
+    <EmbeddedResource Remove="Aaru\CICMMetadata\java\**" />
+    <EmbeddedResource Remove="Aaru\CICMMetadata\samples\**" />
+    <None Remove="Aaru\CICMMetadata\CICMMetadataEditor\**" />
+    <None Remove="Aaru\CICMMetadata\java\**" />
+    <None Remove="Aaru\CICMMetadata\samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Aaru\CICMMetadata\.editorconfig" />
+    <None Remove="Aaru\CICMMetadata\.git" />
+    <None Remove="Aaru\CICMMetadata\.gitignore" />
+    <None Remove="Aaru\CICMMetadata\.project" />
+    <None Remove="Aaru\CICMMetadata\build.sh" />
+    <None Remove="Aaru\CICMMetadata\cicm.xml" />
+    <None Remove="Aaru\CICMMetadata\cicm.xsd" />
+    <None Remove="Aaru\CICMMetadata\CICMMetadata.iml" />
+    <None Remove="Aaru\CICMMetadata\dotnet\cicm.vb" />
+    <None Remove="Aaru\CICMMetadata\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.5.0" GeneratePathProperty="true">
+      <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="System.Management" Version="4.7.0" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Management" />
+  </ItemGroup>
+
+</Project>

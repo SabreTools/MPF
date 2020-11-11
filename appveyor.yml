@@ -31,7 +31,7 @@ before_build:
 # build step
 build:
   verbosity: minimal
-  project: DICUI.sln
+  project: MPF.sln
 
 # post-build step
 after_build:
@@ -40,80 +40,80 @@ after_build:
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/5253259/DiscImageCreator_20200921.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 
-- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\net472\Programs\Aaru *
-- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\net48\Programs\Aaru *
-- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\Aaru *
-- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI.Avalonia\bin\Debug\net472\Programs\Aaru *
-- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI.Avalonia\bin\Debug\net48\Programs\Aaru *
-- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oMPF\bin\Debug\net472\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oMPF\bin\Debug\net48\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oMPF.Avalonia\bin\Debug\net472\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oMPF.Avalonia\bin\Debug\net48\Programs\Aaru *
+- 7z e aaru-5.1.0.3214-1_windows_x64.zip -oMPF.Avalonia\bin\Debug\netcoreapp3.1\Programs\Aaru *
 
-- 7z e dd-0.6beta3.zip -oDICUI\bin\Debug\net472\Programs\DD *
-- 7z e dd-0.6beta3.zip -oDICUI\bin\Debug\net48\Programs\DD *
-- 7z e dd-0.6beta3.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\DD *
-- 7z e dd-0.6beta3.zip -oDICUI.Avalonia\bin\Debug\net472\Programs\DD *
-- 7z e dd-0.6beta3.zip -oDICUI.Avalonia\bin\Debug\net48\Programs\DD *
-- 7z e dd-0.6beta3.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net472\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net48\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF.Avalonia\bin\Debug\net472\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF.Avalonia\bin\Debug\net48\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF.Avalonia\bin\Debug\netcoreapp3.1\Programs\DD *
 
-- 7z e DiscImageCreator_20200921.zip -oDICUI\bin\Debug\net472\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20200921.zip -oDICUI\bin\Debug\net48\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20200921.zip -oDICUI\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20200921.zip -oDICUI.Avalonia\bin\Debug\net472\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20200921.zip -oDICUI.Avalonia\bin\Debug\net48\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20200921.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oMPF\bin\Debug\net472\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oMPF\bin\Debug\net48\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oMPF.Avalonia\bin\Debug\net472\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oMPF.Avalonia\bin\Debug\net48\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20200921.zip -oMPF.Avalonia\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
 
-- 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net472 *
-- mkdir DICUI\bin\Debug\net472\Programs\Subdump
-- mv DICUI\bin\Debug\net472\subdump_fua_0x28.exe DICUI\bin\Debug\net472\Programs\Subdump\subdump.exe
-- 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\net48 *
-- mkdir DICUI\bin\Debug\net48\Programs\Subdump
-- mv DICUI\bin\Debug\net48\subdump_fua_0x28.exe DICUI\bin\Debug\net48\Programs\Subdump\subdump.exe
-- 7z e subdump_fua_0x28.zip -oDICUI\bin\Debug\netcoreapp3.1 *
-- mkdir DICUI\bin\Debug\netcoreapp3.1\Programs\Subdump
-- mv DICUI\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe DICUI\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
-- 7z e subdump_fua_0x28.zip -oDICUI.Avalonia\bin\Debug\net472 *
-- mkdir DICUI.Avalonia\bin\Debug\net472\Programs\Subdump
-- mv DICUI.Avalonia\bin\Debug\net472\subdump_fua_0x28.exe DICUI.Avalonia\bin\Debug\net472\Programs\Subdump\subdump.exe
-- 7z e subdump_fua_0x28.zip -oDICUI.Avalonia\bin\Debug\net48 *
-- mkdir DICUI.Avalonia\bin\Debug\net48\Programs\Subdump
-- mv DICUI.Avalonia\bin\Debug\net48\subdump_fua_0x28.exe DICUI.Avalonia\bin\Debug\net48\Programs\Subdump\subdump.exe
-- 7z e subdump_fua_0x28.zip -oDICUI.Avalonia\bin\Debug\netcoreapp3.1 *
-- mkdir DICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Subdump
-- mv DICUI.Avalonia\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe DICUI.Avalonia\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net472 *
+- mkdir MPF\bin\Debug\net472\Programs\Subdump
+- mv MPF\bin\Debug\net472\subdump_fua_0x28.exe MPF\bin\Debug\net472\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net48 *
+- mkdir MPF\bin\Debug\net48\Programs\Subdump
+- mv MPF\bin\Debug\net48\subdump_fua_0x28.exe MPF\bin\Debug\net48\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\netcoreapp3.1 *
+- mkdir MPF\bin\Debug\netcoreapp3.1\Programs\Subdump
+- mv MPF\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe MPF\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oMPF.Avalonia\bin\Debug\net472 *
+- mkdir MPF.Avalonia\bin\Debug\net472\Programs\Subdump
+- mv MPF.Avalonia\bin\Debug\net472\subdump_fua_0x28.exe MPF.Avalonia\bin\Debug\net472\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oMPF.Avalonia\bin\Debug\net48 *
+- mkdir MPF.Avalonia\bin\Debug\net48\Programs\Subdump
+- mv MPF.Avalonia\bin\Debug\net48\subdump_fua_0x28.exe MPF.Avalonia\bin\Debug\net48\Programs\Subdump\subdump.exe
+- 7z e subdump_fua_0x28.zip -oMPF.Avalonia\bin\Debug\netcoreapp3.1 *
+- mkdir MPF.Avalonia\bin\Debug\netcoreapp3.1\Programs\Subdump
+- mv MPF.Avalonia\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe MPF.Avalonia\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
 
-- cd DICUI\bin\Debug
-- 7z a DICUI_net472.zip net472\*
-- 7z a DICUI_net48.zip net48\*
-- 7z a DICUI_netcoreapp3.1.zip netcoreapp3.1\*
+- cd MPF\bin\Debug
+- 7z a MPF_net472.zip net472\*
+- 7z a MPF_net48.zip net48\*
+- 7z a MPF_netcoreapp3.1.zip netcoreapp3.1\*
 
-- cd ..\..\..\DICUI.Avalonia\bin\Debug
-- 7z a DICUI-Avalonia_net472.zip net472\*
-- 7z a DICUI-Avalonia_net48.zip net48\*
-- 7z a DICUI-Avalonia_netcoreapp3.1.zip netcoreapp3.1\*
+- cd ..\..\..\MPF.Avalonia\bin\Debug
+- 7z a MPF-Avalonia_net472.zip net472\*
+- 7z a MPF-Avalonia_net48.zip net48\*
+- 7z a MPF-Avalonia_netcoreapp3.1.zip netcoreapp3.1\*
 
-- cd ..\..\..\DICUI.Check\bin\Debug
-- 7z a DICUI-Check_net472.zip net472\*
-- 7z a DICUI-Check_net48.zip net48\*
-- 7z a DICUI-Check_netcoreapp3.1.zip netcoreapp3.1\*
+- cd ..\..\..\MPF.Check\bin\Debug
+- 7z a MPF-Check_net472.zip net472\*
+- 7z a MPF-Check_net48.zip net48\*
+- 7z a MPF-Check_netcoreapp3.1.zip netcoreapp3.1\*
 
 # artifact linking
 artifacts:
-- path: DICUI\bin\Debug\DICUI_net472.zip
-  name: DICUI (WPF UI) (.NET Framework 4.7.2)
-- path: DICUI\bin\Debug\DICUI_net48.zip
-  name: DICUI (WPF UI) (.NET Framework 4.8)
-- path: DICUI\bin\Debug\DICUI_netcoreapp3.1.zip
-  name: DICUI (WPF UI) (.NET Core 3.1)
+- path: MPF\bin\Debug\MPF_net472.zip
+  name: MPF (WPF UI) (.NET Framework 4.7.2)
+- path: MPF\bin\Debug\MPF_net48.zip
+  name: MPF (WPF UI) (.NET Framework 4.8)
+- path: MPF\bin\Debug\MPF_netcoreapp3.1.zip
+  name: MPF (WPF UI) (.NET Core 3.1)
 
-- path: DICUI.Avalonia\bin\Debug\DICUI-Avalonia_net472.zip
-  name: DICUI (Avalonia UI) (.NET Framework 4.7.2)
-- path: DICUI.Avalonia\bin\Debug\DICUI-Avalonia_net48.zip
-  name: DICUI (Avalonia UI) (.NET Framework 4.8)
-- path: DICUI.Avalonia\bin\Debug\DICUI-Avalonia_netcoreapp3.1.zip
-  name: DICUI (Avalonia UI) (.NET Core 3.1)
+- path: MPF.Avalonia\bin\Debug\MPF-Avalonia_net472.zip
+  name: MPF (Avalonia UI) (.NET Framework 4.7.2)
+- path: MPF.Avalonia\bin\Debug\MPF-Avalonia_net48.zip
+  name: MPF (Avalonia UI) (.NET Framework 4.8)
+- path: MPF.Avalonia\bin\Debug\MPF-Avalonia_netcoreapp3.1.zip
+  name: MPF (Avalonia UI) (.NET Core 3.1)
 
-- path: DICUI.Check\bin\Debug\DICUI-Check_net472.zip
-  name: DICUI Check (.NET Framework 4.7.2)
-- path: DICUI.Check\bin\Debug\DICUI-Check_net48.zip
-  name: DICUI Check (.NET Framework 4.8)
-- path: DICUI.Check\bin\Debug\DICUI-Check_netcoreapp3.1.zip
-  name: DICUI Check (.NET Core 3.1)
+- path: MPF.Check\bin\Debug\MPF-Check_net472.zip
+  name: MPF Check (.NET Framework 4.7.2)
+- path: MPF.Check\bin\Debug\MPF-Check_net48.zip
+  name: MPF Check (.NET Framework 4.8)
+- path: MPF.Check\bin\Debug\MPF-Check_netcoreapp3.1.zip
+  name: MPF Check (.NET Core 3.1)
