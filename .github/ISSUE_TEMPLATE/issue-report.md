@@ -8,7 +8,7 @@ assignees: mnadareski
 ---
 
 **Before You Submit**
-- Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts) to see if the issue has already been addressed.
+- Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the issue has already been addressed.
 - .NET Core 3.1 has known issues, please try using another build to reproduce the error
 - Check multiple discs to help narrow down the issue
 - Check the Options to see if changing any of those affects your issue.

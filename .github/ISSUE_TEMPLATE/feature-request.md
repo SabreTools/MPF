@@ -8,9 +8,9 @@ assignees: mnadareski
 ---
 
 **Before You Submit**
-- Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/dicui/build/artifacts) to see if the feature already exists.
+- Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the feature already exists.
 - .NET Core 3.1 has known limitations, so make sure that what you're asking for isn't already in another build.
-- Check [previous issues](https://github.com/SabreTools/DICUI/issues) to see if any of those are related to what you're about to ask for.
+- Check [previous issues](https://github.com/SabreTools/MPF/issues) to see if any of those are related to what you're about to ask for.
 
 If none of those apply, then continue...
 
