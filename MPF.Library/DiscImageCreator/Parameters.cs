@@ -2873,17 +2873,8 @@ namespace MPF.DiscImageCreator
                     string line = sr.ReadLine();
                     if (line.StartsWith("========== OpCode"))
                     {
-                        // Scrambled LBA0, instance 1
-                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
-
-                        // Scrambled LBA0, instance 2
-                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
-
-                        // Scrambled LBA0, instance 3
-                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
-
-                        // Start of second OpCode area
-                        while (!(line = sr.ReadLine()).StartsWith("========== OpCode")) ;
+                        // Seek to unscrambled data
+                        while (!(line = sr.ReadLine()).StartsWith("========== Check Volume Descriptor ==========")) ;
 
                         // Read the next line so the search goes properly
                         line = sr.ReadLine();
