@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using MPF.Data;
 using MPF.Web;
 
 namespace MPF.Windows
@@ -64,8 +65,14 @@ namespace MPF.Windows
                 L1ToolstampTextBox.IsEnabled = false;
                 L1ToolstampTextBox.Background = Brushes.Gray;
 
-                L1MouldSIDTextBox.IsEnabled = false;
-                L1MouldSIDTextBox.Background = Brushes.Gray;
+                // DVD, HD-DVD, and BD should all allow for label-side moulds
+                if (SubmissionInfo?.CommonDiscInfo.Media != MediaType.DVD
+                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.HDDVD
+                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.BluRay)
+                {
+                    L1MouldSIDTextBox.IsEnabled = false;
+                    L1MouldSIDTextBox.Background = Brushes.Gray;
+                }
 
                 L1AdditionalMouldTextBox.IsEnabled = false;
                 L1AdditionalMouldTextBox.Background = Brushes.Gray;
