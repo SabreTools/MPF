@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Media;
+using MPF.Data;
 using MPF.Web;
 
 namespace MPF.Avalonia
@@ -79,8 +80,14 @@ namespace MPF.Avalonia
                 this.Find<TextBox>("L1ToolstampTextBox").IsEnabled = false;
                 this.Find<TextBox>("L1ToolstampTextBox").Background = Brushes.Gray;
 
-                this.Find<TextBox>("L1MouldSIDTextBox").IsEnabled = false;
-                this.Find<TextBox>("L1MouldSIDTextBox").Background = Brushes.Gray;
+                // DVD, HD-DVD, and BD should all allow for label-side moulds
+                if (SubmissionInfo?.CommonDiscInfo.Media != MediaType.DVD
+                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.HDDVD
+                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.BluRay)
+                {
+                    this.Find<TextBox>("L1MouldSIDTextBox").IsEnabled = false;
+                    this.Find<TextBox>("L1MouldSIDTextBox").Background = Brushes.Gray;
+                }
 
                 this.Find<TextBox>("L1AdditionalMouldTextBox").IsEnabled = false;
                 this.Find<TextBox>("L1AdditionalMouldTextBox").Background = Brushes.Gray;
