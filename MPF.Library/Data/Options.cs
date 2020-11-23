@@ -36,12 +36,18 @@ namespace MPF.Data
 
         #endregion
 
-        #region Extra Paths
+        #region UI Defaults
 
         public string DefaultOutputPath
         {
             get { return GetStringSetting(_settings, "DefaultOutputPath", "ISO"); }
             set { _settings["DefaultOutputPath"] = value; }
+        }
+
+        public string DefaultSystem
+        {
+            get { return GetStringSetting(_settings, "DefaultSystem", KnownSystem.NONE.ToString()); }
+            set { _settings["DefaultSystem"] = value; }
         }
 
         #endregion

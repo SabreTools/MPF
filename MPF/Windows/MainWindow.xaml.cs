@@ -169,7 +169,7 @@ namespace MPF.Windows
 
             // Take care of null cases
             if (Env.System == null)
-                Env.System = KnownSystem.NONE;
+                Env.System = Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
             if (Env.Type == null)
                 Env.Type = MediaType.NONE;
 
@@ -257,7 +257,7 @@ namespace MPF.Windows
                 if (!UIOptions.Options.SkipSystemDetection && index != -1)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", Drives[index].Letter);
-                    var currentSystem = Validators.GetKnownSystem(Drives[index]);
+                    var currentSystem = Validators.GetKnownSystem(Drives[index]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
                     ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
 
                     if (currentSystem != null && currentSystem != KnownSystem.NONE)

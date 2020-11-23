@@ -36,12 +36,18 @@ namespace MPF
 
         #endregion
 
-        #region Extra Paths
+        #region UI Defaults
 
         public string DefaultOutputPath
         {
             get { return _uiOptions.Options.DefaultOutputPath; }
             set { _uiOptions.Options.DefaultOutputPath = value; }
+        }
+
+        public string DefaultSystem
+        {
+            get { return _uiOptions.Options.DefaultSystem; }
+            set { _uiOptions.Options.DefaultSystem = value; }
         }
 
         #endregion
