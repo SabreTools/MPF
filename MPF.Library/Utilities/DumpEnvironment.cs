@@ -639,7 +639,7 @@ namespace MPF.Utilities
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
             // Check that all of the relevant files are there
-            if (!FoundAllFiles())
+            if (!FoundAllFiles(resultProgress))
                 return null;
 
             // Create the SubmissionInfo object with all user-inputted values by default
