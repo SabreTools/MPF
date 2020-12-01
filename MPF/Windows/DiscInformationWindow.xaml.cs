@@ -45,37 +45,67 @@ namespace MPF.Windows
             PopulateCategories();
             PopulateRegions();
             PopulateLanguages();
-            DisableFieldsIfNeeded();
+            ManipulateFields();
         }
 
         /// <summary>
-        /// Disable fields that aren't applicable to the current disc
+        /// Manipulate fields based on the current disc
         /// </summary>
-        private void DisableFieldsIfNeeded()
+        private void ManipulateFields()
         {
-            // Only disable for single-layer discs
-            if (SubmissionInfo?.SizeAndChecksums?.Layerbreak == default(long))
+            // Different media types mean different fields available
+            switch (SubmissionInfo?.CommonDiscInfo.Media)
             {
-                L1MasteringRingTextBox.IsEnabled = false;
-                L1MasteringRingTextBox.Background = Brushes.Gray;
+                case MediaType.CDROM:
+                case MediaType.GDROM:
+                    L0MasteringRingLabel.Content = "Data-Side Mastering Ring";
+                    L0MasteringSIDLabel.Content = "Data-Side Mastering SID";
+                    L0ToolstampLabel.Content = "Data-Side Toolstamp/Mastering Code";
+                    L0MouldSIDLabel.Content = "Data-Side Mould SID";
+                    L0AdditionalMouldLabel.Content = "Data-Side Additional Mould";
+                    L1MasteringRingLabel.Content = "Label-Side Mastering Ring";
+                    L1MasteringSIDLabel.Content = "Label-Side Mastering SID";
+                    L1ToolstampLabel.Content = "Label-Side Toolstamp/Mastering Code";
+                    L1MouldSIDLabel.Content = "Label-Side Mould SID";
+                    L1AdditionalMouldLabel.Content = "Label-Side Additional Mould";
+                    break;
 
-                L1MasteringSIDTextBox.IsEnabled = false;
-                L1MasteringSIDTextBox.Background = Brushes.Gray;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
+                    // Single-layer discs should read the same as CDs
+                    if (SubmissionInfo?.SizeAndChecksums?.Layerbreak == default(long))
+                    {
+                        L0MasteringRingLabel.Content = "Data-Side Mastering Ring";
+                        L0MasteringSIDLabel.Content = "Data-Side Mastering SID";
+                        L0ToolstampLabel.Content = "Data-Side Toolstamp/Mastering Code";
+                        L0MouldSIDLabel.Content = "Data-Side Mould SID";
+                        L0AdditionalMouldLabel.Content = "Data-Side Additional Mould";
+                        L1MasteringRingLabel.Content = "Label-Side Mastering Ring";
+                        L1MasteringSIDLabel.Content = "Label-Side Mastering SID";
+                        L1ToolstampLabel.Content = "Label-Side Toolstamp/Mastering Code";
+                        L1MouldSIDLabel.Content = "Label-Side Mould SID";
+                        L1AdditionalMouldLabel.Content = "Label-Side Additional Mould";
+                    }
+                    // Double-layer discs should have different naming
+                    else
+                    {
+                        L0MasteringRingLabel.Content = "Layer 0 Mastering Ring";
+                        L0MasteringSIDLabel.Content = "Layer 0 Mastering SID";
+                        L0ToolstampLabel.Content = "Layer 0 Toolstamp/Mastering Code";
+                        L0MouldSIDLabel.Content = "Data-Side Mould SID";
+                        L0AdditionalMouldLabel.Content = "Data-Side Additional Mould";
+                        L1MasteringRingLabel.Content = "Layer 1 Mastering Ring";
+                        L1MasteringSIDLabel.Content = "Layer 1 Mastering SID";
+                        L1ToolstampLabel.Content = "Layer 1 Toolstamp/Mastering Code";
+                        L1MouldSIDLabel.Content = "Label-Side Mould SID";
+                        L1AdditionalMouldLabel.Content = "Label-Side Additional Mould";
+                    }
 
-                L1ToolstampTextBox.IsEnabled = false;
-                L1ToolstampTextBox.Background = Brushes.Gray;
-
-                // DVD, HD-DVD, and BD should all allow for label-side moulds
-                if (SubmissionInfo?.CommonDiscInfo.Media != MediaType.DVD
-                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.HDDVD
-                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.BluRay)
-                {
-                    L1MouldSIDTextBox.IsEnabled = false;
-                    L1MouldSIDTextBox.Background = Brushes.Gray;
-                }
-
-                L1AdditionalMouldTextBox.IsEnabled = false;
-                L1AdditionalMouldTextBox.Background = Brushes.Gray;
+                    break;
             }
         }
 

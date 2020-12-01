@@ -58,39 +58,69 @@ namespace MPF.Avalonia
             PopulateCategories();
             PopulateRegions();
             PopulateLanguages();
-            DisableFieldsIfNeeded();
+            ManipulateFields();
         }
 
         #region Helpers
 
         /// <summary>
-        /// Disable fields that aren't applicable to the current disc
+        /// Manipulate fields based on the current disc
         /// </summary>
-        private void DisableFieldsIfNeeded()
+        private void ManipulateFields()
         {
-            // Only disable for single-layer discs
-            if (SubmissionInfo?.SizeAndChecksums?.Layerbreak == default(long))
+            // Different media types mean different fields available
+            switch (SubmissionInfo?.CommonDiscInfo.Media)
             {
-                this.Find<TextBox>("L1MasteringRingTextBox").IsEnabled = false;
-                this.Find<TextBox>("L1MasteringRingTextBox").Background = Brushes.Gray;
+                case MediaType.CDROM:
+                case MediaType.GDROM:
+                    this.Find<TextBlock>("L0MasteringRingTextBlock").Text = "Data-Side Mastering Ring";
+                    this.Find<TextBlock>("L0MasteringSIDTextBlock").Text = "Data-Side Mastering SID";
+                    this.Find<TextBlock>("L0ToolstampTextBlock").Text = "Data-Side Toolstamp/Mastering Code";
+                    this.Find<TextBlock>("L0MouldSIDTextBlock").Text = "Data-Side Mould SID";
+                    this.Find<TextBlock>("L0AdditionalMouldTextBlock").Text = "Data-Side Additional Mould";
+                    this.Find<TextBlock>("L1MasteringRingTextBlock").Text = "Label-Side Mastering Ring";
+                    this.Find<TextBlock>("L1MasteringSIDTextBlock").Text = "Label-Side Mastering SID";
+                    this.Find<TextBlock>("L1ToolstampTextBlock").Text = "Label-Side Toolstamp/Mastering Code";
+                    this.Find<TextBlock>("L1MouldSIDTextBlock").Text = "Label-Side Mould SID";
+                    this.Find<TextBlock>("L1AdditionalMouldTextBlock").Text = "Label-Side Additional Mould";
+                    break;
 
-                this.Find<TextBox>("L1MasteringSIDTextBox").IsEnabled = false;
-                this.Find<TextBox>("L1MasteringSIDTextBox").Background = Brushes.Gray;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                case MediaType.NintendoWiiUOpticalDisc:
+                    // Single-layer discs should read the same as CDs
+                    if (SubmissionInfo?.SizeAndChecksums?.Layerbreak == default(long))
+                    {
+                        this.Find<TextBlock>("L0MasteringRingTextBlock").Text = "Data-Side Mastering Ring";
+                        this.Find<TextBlock>("L0MasteringSIDTextBlock").Text = "Data-Side Mastering SID";
+                        this.Find<TextBlock>("L0ToolstampTextBlock").Text = "Data-Side Toolstamp/Mastering Code";
+                        this.Find<TextBlock>("L0MouldSIDTextBlock").Text = "Data-Side Mould SID";
+                        this.Find<TextBlock>("L0AdditionalMouldTextBlock").Text = "Data-Side Additional Mould";
+                        this.Find<TextBlock>("L1MasteringRingTextBlock").Text = "Label-Side Mastering Ring";
+                        this.Find<TextBlock>("L1MasteringSIDTextBlock").Text = "Label-Side Mastering SID";
+                        this.Find<TextBlock>("L1ToolstampTextBlock").Text = "Label-Side Toolstamp/Mastering Code";
+                        this.Find<TextBlock>("L1MouldSIDTextBlock").Text = "Label-Side Mould SID";
+                        this.Find<TextBlock>("L1AdditionalMouldTextBlock").Text = "Label-Side Additional Mould";
+                    }
+                    // Double-layer discs should have different naming
+                    else
+                    {
+                        this.Find<TextBlock>("L0MasteringRingTextBlock").Text = "Layer 0 Mastering Ring";
+                        this.Find<TextBlock>("L0MasteringSIDTextBlock").Text = "Layer 0 Mastering SID";
+                        this.Find<TextBlock>("L0ToolstampTextBlock").Text = "Layer 0 Toolstamp/Mastering Code";
+                        this.Find<TextBlock>("L0MouldSIDTextBlock").Text = "Data-Side Mould SID";
+                        this.Find<TextBlock>("L0AdditionalMouldTextBlock").Text = "Data-Side Additional Mould";
+                        this.Find<TextBlock>("L1MasteringRingTextBlock").Text = "Layer 1 Mastering Ring";
+                        this.Find<TextBlock>("L1MasteringSIDTextBlock").Text = "Layer 1 Mastering SID";
+                        this.Find<TextBlock>("L1ToolstampTextBlock").Text = "Layer 1 Toolstamp/Mastering Code";
+                        this.Find<TextBlock>("L1MouldSIDTextBlock").Text = "Label-Side Mould SID";
+                        this.Find<TextBlock>("L1AdditionalMouldTextBlock").Text = "Label-Side Additional Mould";
+                    }
 
-                this.Find<TextBox>("L1ToolstampTextBox").IsEnabled = false;
-                this.Find<TextBox>("L1ToolstampTextBox").Background = Brushes.Gray;
-
-                // DVD, HD-DVD, and BD should all allow for label-side moulds
-                if (SubmissionInfo?.CommonDiscInfo.Media != MediaType.DVD
-                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.HDDVD
-                    && SubmissionInfo?.CommonDiscInfo.Media != MediaType.BluRay)
-                {
-                    this.Find<TextBox>("L1MouldSIDTextBox").IsEnabled = false;
-                    this.Find<TextBox>("L1MouldSIDTextBox").Background = Brushes.Gray;
-                }
-
-                this.Find<TextBox>("L1AdditionalMouldTextBox").IsEnabled = false;
-                this.Find<TextBox>("L1AdditionalMouldTextBox").Background = Brushes.Gray;
+                    break;
             }
         }
 

@@ -47,19 +47,19 @@
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Title" />
+                <Label x:Name="TitleLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Title" />
                 <TextBox x:Name="TitleTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Foreign Title (Non-Latin)" />
+                <Label x:Name="ForeignTitleLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Foreign Title (Non-Latin)" />
                 <TextBox x:Name="ForeignTitleTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Number / Letter" />
+                <Label x:Name="DiscNumberLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Number / Letter" />
                 <TextBox x:Name="DiscNumberLetterTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Title" />
+                <Label x:Name="DiscTitleLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Title" />
                 <TextBox x:Name="DiscTitleTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                <Label x:Name="CategoryLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
                 <ComboBox x:Name="CategoryComboBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -68,7 +68,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                <Label x:Name="RegionLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
                 <ComboBox x:Name="RegionComboBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -77,7 +77,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Label Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                <Label x:Name="LanguagesLabel" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
                 <ComboBox x:Name="LanguagesComboBox" Grid.Row="6" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
@@ -86,50 +86,50 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Label Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Serial" />
+                <Label x:Name="SerialLabel" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Serial" />
                 <TextBox x:Name="SerialTextBox" Grid.Row="7" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
                 <!-- Layer 0 / Data Side -->
-                <Label Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering Ring" />
+                <Label x:Name="L0MasteringRingLabel" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering Ring" />
                 <TextBox x:Name="L0MasteringRingTextBox" Grid.Row="8" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsTab="True" />
 
-                <Label Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering SID" />
+                <Label x:Name="L0MasteringSIDLabel" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering SID" />
                 <TextBox x:Name="L0MasteringSIDTextBox" Grid.Row="9" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Toolstamp/Mastering Code" />
+                <Label x:Name="L0ToolstampLabel" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Toolstamp/Mastering Code" />
                 <TextBox x:Name="L0ToolstampTextBox" Grid.Row="10" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mould SID" />
+                <Label x:Name="L0MouldSIDLabel" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mould SID" />
                 <TextBox x:Name="L0MouldSIDTextBox" Grid.Row="11" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Additional Mould" />
+                <Label x:Name="L0AdditionalMouldLabel" Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Additional Mould" />
                 <TextBox x:Name="L0AdditionalMouldTextBox" Grid.Row="12" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
                 <!-- Layer 1 / Label Side -->
-                <Label Grid.Row="13" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering Ring" />
+                <Label x:Name="L1MasteringRingLabel" Grid.Row="13" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering Ring" />
                 <TextBox x:Name="L1MasteringRingTextBox" Grid.Row="13" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsTab="True" />
 
-                <Label Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering SID" />
+                <Label x:Name="L1MasteringSIDLabel" Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering SID" />
                 <TextBox x:Name="L1MasteringSIDTextBox" Grid.Row="14" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="15" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Toolstamp/Mastering Code" />
+                <Label x:Name="L1ToolstampLabel" Grid.Row="15" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Toolstamp/Mastering Code" />
                 <TextBox x:Name="L1ToolstampTextBox" Grid.Row="15" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mould SID" />
+                <Label x:Name="L1MouldSIDLabel" Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mould SID" />
                 <TextBox x:Name="L1MouldSIDTextBox" Grid.Row="16" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="17" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Additional Mould" />
+                <Label x:Name="L1AdditionalMouldLabel" Grid.Row="17" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Additional Mould" />
                 <TextBox x:Name="L1AdditionalMouldTextBox" Grid.Row="17" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
-                <Label Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Barcode" />
+                <Label x:Name="BarcodeLabel" Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Barcode" />
                 <TextBox x:Name="BarcodeTextBox" Grid.Row="18" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
 
                 <!-- This needs to be a multiline textbox -->
-                <Label Grid.Row="19" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Comments" />
+                <Label x:Name="CommentsLabel" Grid.Row="19" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Comments" />
                 <TextBox x:Name="CommentsTextBox" Grid.Row="19" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
 
                 <!-- This needs to be a multiline textbox -->
-                <Label Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Contents" />
+                <Label x:Name="ContentsLabel" Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Contents" />
                 <TextBox x:Name="ContentsTextBox" Grid.Row="20" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"/>
             </Grid>
         </GroupBox>
