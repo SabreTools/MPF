@@ -1,5 +1,9 @@
 ### WIP (xxxx-xx-xx)
 - Rename DICUI to Media Preservation Frontend (MPF)
+- Add handling for BEh drive _mainInfo.txt changes
+- Fix multiline regex fields during info pulling
+- Add preliminary support for user-defined default system
+- Change labels in media info window depending on media type
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
