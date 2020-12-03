@@ -4,7 +4,7 @@
 - Fix multiline regex fields during info pulling
 - Add preliminary support for user-defined default system
 - Change labels in media info window depending on media type
-
+- Update to Aaru v5.2
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
 - Remove instances of CD Check from copy protection (again, sorry)
