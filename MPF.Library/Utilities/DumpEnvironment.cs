@@ -691,9 +691,21 @@ namespace MPF.Utilities
                         {
                             if (GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
                             {
+                                // Get all matching IDs for the track
                                 List<int> newIds = wc.ListSearchResults(sha1);
+
+                                // If no IDs match any track, then we don't match a disc at all
+                                if (!newIds.Any())
+                                {
+                                    info.MatchedIDs = new List<int>();
+                                    break;
+                                }
+
+                                // If we have multiple tracks, only take IDs that are in common
                                 if (info.MatchedIDs.Any())
                                     info.MatchedIDs = info.MatchedIDs.Intersect(newIds).ToList();
+
+                                // If we're on the first track, all IDs are added
                                 else
                                     info.MatchedIDs = newIds;
                             }

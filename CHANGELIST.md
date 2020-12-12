@@ -5,6 +5,8 @@
 - Add preliminary support for user-defined default system
 - Change labels in media info window depending on media type
 - Update to Aaru v5.2
+- Only pull disc information if every track returns at least one ID
+
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
 - Remove instances of CD Check from copy protection (again, sorry)
