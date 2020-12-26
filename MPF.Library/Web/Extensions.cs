@@ -790,7 +790,7 @@
                     return "E,Au";
                 case Region.EuropeCanada:
                     return "E,Ca";
-                case Region.EuropeGermany;
+                case Region.EuropeGermany:
                     return "E,G";
                 case Region.Finland:
                     return "Fi";
