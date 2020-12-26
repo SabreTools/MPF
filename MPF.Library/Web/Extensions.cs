@@ -608,6 +608,8 @@
                     return "Asia, USA";
                 case Region.Australia:
                     return "Australia";
+                case Region.AustraliaNewZealand:
+                    return "Australia, New Zealand";
                 case Region.Austria:
                     return "Austria";
                 case Region.AustriaSwitzerland:
@@ -634,6 +636,10 @@
                     return "Europe, Asia";
                 case Region.EuropeAustralia:
                     return "Europe, Australia";
+                case Region.EuropeCanada:
+                    return "Europe, Canada";
+                case Region.EuropeGermany:
+                    return "Europe, Germany";
                 case Region.Finland:
                     return "Finland";
                 case Region.France:
@@ -678,6 +684,8 @@
                     return "Poland";
                 case Region.Portugal:
                     return "Portugal";
+                case Region.Romania:
+                    return "Romania";
                 case Region.Russia:
                     return "Russia";
                 case Region.Scandinavia:
@@ -724,6 +732,8 @@
                     return "USA, Germany";
                 case Region.USAJapan:
                     return "USA, Japan";
+                case Region.USAKorea:
+                    return "USA, Korea";
                 case Region.World:
                     return "World";
                 default:
@@ -750,6 +760,8 @@
                     return "A,U";
                 case Region.Australia:
                     return "Au";
+                case Region.AustraliaNewZealand:
+                    return "Au,Nz";
                 case Region.Austria:
                     return "At";
                 case Region.AustriaSwitzerland:
@@ -776,6 +788,10 @@
                     return "E,A";
                 case Region.EuropeAustralia:
                     return "E,Au";
+                case Region.EuropeCanada:
+                    return "E,Ca";
+                case Region.EuropeGermany;
+                    return "E,G";
                 case Region.Finland:
                     return "Fi";
                 case Region.France:
@@ -820,6 +836,8 @@
                     return "P";
                 case Region.Portugal:
                     return "Pt";
+                case Region.Romania:
+                    return "Ro";
                 case Region.Russia:
                     return "R";
                 case Region.Scandinavia:
@@ -866,6 +884,8 @@
                     return "U,G";
                 case Region.USAJapan:
                     return "U,J";
+                case Region.USAKorea:
+                    return "U,K";
                 case Region.World:
                     return "W";
                 default:
@@ -892,6 +912,8 @@
                     return Region.AsiaUSA;
                 case "Au":
                     return Region.Australia;
+                case "Au,Nz":
+                    return Region.AustraliaNewZealand;
                 case "At":
                     return Region.Austria;
                 case "At,Ch":
@@ -918,6 +940,10 @@
                     return Region.EuropeAsia;
                 case "E,Au":
                     return Region.EuropeAustralia;
+                case "E,Ca":
+                    return Region.EuropeCanada;
+                case "E,G":
+                    return Region.EuropeGermany;
                 case "Fi":
                     return Region.Finland;
                 case "F":
@@ -962,6 +988,8 @@
                     return Region.Poland;
                 case "Pt":
                     return Region.Portugal;
+                case "Ro":
+                    return Region.Romania;
                 case "R":
                     return Region.Russia;
                 case "Sca":
@@ -1008,6 +1036,8 @@
                     return Region.USAGermany;
                 case "U,J":
                     return Region.USAJapan;
+                case "U,K":
+                    return Region.USAKorea;
                 case "W":
                     return Region.World;
                 default:

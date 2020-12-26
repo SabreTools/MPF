@@ -181,6 +181,7 @@
         AsiaEurope,
         AsiaUSA,
         Australia,
+        AustraliaNewZealand,
         Austria,
         AustriaSwitzerland,
         Belgium,
@@ -194,6 +195,8 @@
         Europe,
         EuropeAsia,
         EuropeAustralia,
+        EuropeCanada,
+        EuropeGermany,
         Finland,
         France,
         FranceSpain,
@@ -216,6 +219,7 @@
         Norway,
         Poland,
         Portugal,
+        Romania,
         Russia,
         Scandinavia,
         Singapore,
@@ -239,6 +243,7 @@
         USAEurope,
         USAGermany,
         USAJapan,
+        USAKorea,
         World,
     }
 }
