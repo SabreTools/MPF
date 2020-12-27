@@ -648,11 +648,6 @@ namespace MPF.Utilities
                     types.Add(MediaType.CDROM);
                     break;
 
-                // UNKNOWN
-                case KnownSystem.PhilipsCDiDigitalVideo:
-                    types.Add(MediaType.CDROM);
-                    break;
-
                 // https://en.wikipedia.org/wiki/Photo_CD
                 case KnownSystem.PhotoCD:
                     types.Add(MediaType.CDROM);

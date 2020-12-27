@@ -26,7 +26,6 @@
             RedumpSystem.NintendoWii,
             RedumpSystem.NintendoWiiU,
             RedumpSystem.PanasonicM2,
-            RedumpSystem.PhilipsCDiDigitalVideo,
             RedumpSystem.SegaPrologue21,
             RedumpSystem.SegaRingEdge,
             RedumpSystem.SegaRingEdge2,
@@ -76,7 +75,6 @@
             RedumpSystem.Panasonic3DOInteractiveMultiplayer,
             RedumpSystem.PanasonicM2,
             RedumpSystem.PhilipsCDi,
-            RedumpSystem.PhilipsCDiDigitalVideo,
             RedumpSystem.PhotoCD,
             RedumpSystem.PlayStationGameSharkUpdates,
             RedumpSystem.SegaChihiro,
@@ -148,7 +146,6 @@
             RedumpSystem.Panasonic3DOInteractiveMultiplayer,
             RedumpSystem.PanasonicM2,
             RedumpSystem.PhilipsCDi,
-            RedumpSystem.PhilipsCDiDigitalVideo,
             RedumpSystem.PhotoCD,
             RedumpSystem.PlayStationGameSharkUpdates,
             RedumpSystem.SegaChihiro,
@@ -1163,8 +1160,6 @@
                     return "Panasonic M2";
                 case RedumpSystem.PhilipsCDi:
                     return "Philips CD-i";
-                case RedumpSystem.PhilipsCDiDigitalVideo:
-                    return "Philips CD-i Digital Video";
                 case RedumpSystem.PhotoCD:
                     return "Photo CD";
                 case RedumpSystem.PlayStationGameSharkUpdates:
@@ -1338,8 +1333,6 @@
                     return "m2";
                 case RedumpSystem.PhilipsCDi:
                     return "cdi";
-                case RedumpSystem.PhilipsCDiDigitalVideo:
-                    return "cdi-video";
                 case RedumpSystem.PhotoCD:
                     return "photo-cd";
                 case RedumpSystem.PlayStationGameSharkUpdates:
@@ -1747,14 +1740,6 @@
                 case "philips cdi":
                 case "philips cd-i":
                     return RedumpSystem.PhilipsCDi;
-                case "cdidv":
-                case "cdidigitalvideo":
-                case "cdi digital video":
-                case "cd-i digital video":
-                case "philipscdidigitalvideo":
-                case "philips cdi digital video":
-                case "philips cd-i digital video":
-                    return RedumpSystem.PhilipsCDiDigitalVideo;
                 case "photo":
                 case "photocd":
                 case "photo cd":

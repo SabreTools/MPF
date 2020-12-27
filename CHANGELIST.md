@@ -6,6 +6,8 @@
 - Change labels in media info window depending on media type
 - Update to Aaru v5.2
 - Only pull disc information if every track returns at least one ID
+- Add new supported Redump regions
+- Remove Philips CD-i Digital Video from supported profiles
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

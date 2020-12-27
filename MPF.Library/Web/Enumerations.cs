@@ -141,7 +141,6 @@
         Panasonic3DOInteractiveMultiplayer,
         PanasonicM2,
         PhilipsCDi,
-        PhilipsCDiDigitalVideo,
         PhotoCD,
         PlayStationGameSharkUpdates,
         SegaChihiro,

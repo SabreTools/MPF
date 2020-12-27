@@ -226,7 +226,6 @@ namespace MPF.Data
         HDDVDVideo,
         NavisoftNaviken21,
         PalmOS,
-        PhilipsCDiDigitalVideo,
         PhotoCD,
         PlayStationGameSharkUpdates,
         RainbowDisc,

@@ -146,8 +146,6 @@ namespace MPF.Utilities
                     return KnownSystem.PanasonicM2;
                 case RedumpSystem.PhilipsCDi:
                     return KnownSystem.PhilipsCDi;
-                case RedumpSystem.PhilipsCDiDigitalVideo:
-                    return KnownSystem.PhilipsCDiDigitalVideo;
                 case RedumpSystem.PhotoCD:
                     return KnownSystem.PhotoCD;
                 case RedumpSystem.PlayStationGameSharkUpdates:
@@ -391,8 +389,6 @@ namespace MPF.Utilities
                     return RedumpSystem.PanasonicM2;
                 case KnownSystem.PhilipsCDi:
                     return RedumpSystem.PhilipsCDi;
-                case KnownSystem.PhilipsCDiDigitalVideo:
-                    return RedumpSystem.PhilipsCDiDigitalVideo;
                 case KnownSystem.PhotoCD:
                     return RedumpSystem.PhotoCD;
                 case KnownSystem.PlayStationGameSharkUpdates:
@@ -737,8 +733,6 @@ namespace MPF.Utilities
                     return "Navisoft Naviken 2.1";
                 case KnownSystem.PalmOS:
                     return "PalmOS";
-                case KnownSystem.PhilipsCDiDigitalVideo:
-                    return "Philips CD-i Digital Video";
                 case KnownSystem.PhotoCD:
                     return "Photo CD";
                 case KnownSystem.PlayStationGameSharkUpdates:
@@ -1145,8 +1139,6 @@ namespace MPF.Utilities
                     return "naviken";
                 case KnownSystem.PalmOS:
                     return "palmos";
-                case KnownSystem.PhilipsCDiDigitalVideo:
-                    return "cdi digital video";
                 case KnownSystem.PhotoCD:
                     return "photo cd";
                 case KnownSystem.PlayStationGameSharkUpdates:
@@ -1999,14 +1991,6 @@ namespace MPF.Utilities
                 case "palm":
                 case "palmos":
                     return KnownSystem.PalmOS;
-                case "cdidv":
-                case "cdidigitalvideo":
-                case "cdi digital video":
-                case "cd-i digital video":
-                case "philipscdidigitalvideo":
-                case "philips cdi digital video":
-                case "philips cd-i digital video":
-                    return KnownSystem.PhilipsCDiDigitalVideo;
                 case "photo":
                 case "photocd":
                 case "photo cd":
