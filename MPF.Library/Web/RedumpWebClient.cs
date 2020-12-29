@@ -958,13 +958,20 @@ namespace MPF.Web
             query = query.ToLowerInvariant();
 
             // Keep getting quicksearch pages until there are none left
-            int pageNumber = 1;
-            while (true)
+            try
             {
-                List<int> pageIds = CheckSingleSitePage(string.Format(quickSearchUrl, query, pageNumber++));
-                ids.AddRange(pageIds);
-                if (pageIds.Count <= 1)
-                    break;
+                int pageNumber = 1;
+                while (true)
+                {
+                    List<int> pageIds = CheckSingleSitePage(string.Format(quickSearchUrl, query, pageNumber++));
+                    ids.AddRange(pageIds);
+                    if (pageIds.Count <= 1)
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An exception occurred while trying to log in: {ex}");
             }
 
             return ids;
@@ -986,13 +993,20 @@ namespace MPF.Web
             }
 
             // Keep getting user pages until there are none left
-            int pageNumber = 1;
-            while (true)
+            try
             {
-                List<int> pageIds = CheckSingleSitePage(string.Format(userDumpsUrl, username, pageNumber++));
-                ids.AddRange(pageIds);
-                if (pageIds.Count <= 1)
-                    break;
+                int pageNumber = 1;
+                while (true)
+                {
+                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(userDumpsUrl, username, pageNumber++));
+                    ids.AddRange(pageIds);
+                    if (pageIds.Count <= 1)
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An exception occurred while trying to log in: {ex}");
             }
 
             return ids;
