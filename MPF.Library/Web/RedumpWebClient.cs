@@ -998,7 +998,7 @@ namespace MPF.Web
                 int pageNumber = 1;
                 while (true)
                 {
-                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(userDumpsUrl, username, pageNumber++));
+                    List<int> pageIds = CheckSingleSitePage(string.Format(userDumpsUrl, username, pageNumber++));
                     ids.AddRange(pageIds);
                     if (pageIds.Count <= 1)
                         break;
