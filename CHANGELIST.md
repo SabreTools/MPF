@@ -8,6 +8,7 @@
 - Only pull disc information if every track returns at least one ID
 - Add new supported Redump regions
 - Remove Philips CD-i Digital Video from supported profiles
+- Remove experimental Avalonia UI, will wait for MAUI next year
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
