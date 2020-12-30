@@ -310,8 +310,8 @@ namespace MPF.Web
         /// </summary>
         /// <param name="username">Redump username</param>
         /// <param name="password">Redump password</param>
-        /// <returns>True if the user could be logged in, false otherwise, false otherwise</returns>
-        public bool Login(string username, string password)
+        /// <returns>True if the user could be logged in, false otherwise, null on error</returns>
+        public bool? Login(string username, string password)
         {
             // Credentials verification
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
@@ -359,7 +359,7 @@ namespace MPF.Web
             catch (Exception ex)
             {
                 Console.WriteLine($"An exception occurred while trying to log in: {ex}");
-                return false;
+                return null;
             }
         }
 
@@ -941,7 +941,7 @@ namespace MPF.Web
         /// List the disc IDs associated with a given quicksearch query
         /// </summary>
         /// <param name="query">Query string to attempt to search for</param>
-        /// <returns>All disc IDs for the given query, empty on error</returns>
+        /// <returns>All disc IDs for the given query, null on error</returns>
         public List<int> ListSearchResults(string query)
         {
             List<int> ids = new List<int>();
@@ -972,6 +972,7 @@ namespace MPF.Web
             catch (Exception ex)
             {
                 Console.WriteLine($"An exception occurred while trying to log in: {ex}");
+                return null;
             }
 
             return ids;
@@ -981,7 +982,7 @@ namespace MPF.Web
         /// List the disc IDs associated with the given user
         /// </summary>
         /// <param name="username">Username to check discs for</param>
-        /// <returns>All disc IDs for the given user, empty on error</returns>
+        /// <returns>All disc IDs for the given user, null on error</returns>
         public List<int> ListUser(string username)
         {
             List<int> ids = new List<int>();
@@ -1007,6 +1008,7 @@ namespace MPF.Web
             catch (Exception ex)
             {
                 Console.WriteLine($"An exception occurred while trying to log in: {ex}");
+                return null;
             }
 
             return ids;

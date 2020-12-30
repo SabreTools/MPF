@@ -131,10 +131,13 @@ namespace MPF.Check
             {
                 using (RedumpWebClient wc = new RedumpWebClient())
                 {
-                    if (wc.Login(username, password))
+                    bool? loggedIn = wc.Login(username, password);
+                    if (loggedIn == true)
                         Console.WriteLine("Redump username and password accepted!");
-                    else
+                    else if (loggedIn == false)
                         Console.WriteLine("Redump username and password denied!");
+                    else
+                        Console.WriteLine("An error occurred validating your crendentials!");
                 }
             }
 

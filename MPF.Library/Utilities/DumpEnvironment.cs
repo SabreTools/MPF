@@ -682,7 +682,12 @@ namespace MPF.Utilities
                 using (RedumpWebClient wc = new RedumpWebClient())
                 {
                     // Login to Redump
-                    if (wc.Login(this.Username, this.Password))
+                    bool? loggedIn = wc.Login(this.Username, this.Password);
+                    if (loggedIn == null)
+                    {
+                        resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
+                    }
+                    else if (loggedIn == true)
                     {
                         // Loop through all of the hashdata to find matching IDs
                         resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
@@ -693,6 +698,13 @@ namespace MPF.Utilities
                             {
                                 // Get all matching IDs for the track
                                 List<int> newIds = wc.ListSearchResults(sha1);
+
+                                // If we got null back, there was an error
+                                if (newIds == null)
+                                {
+                                    resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
+                                    break;
+                                }
 
                                 // If no IDs match any track, then we don't match a disc at all
                                 if (!newIds.Any())
