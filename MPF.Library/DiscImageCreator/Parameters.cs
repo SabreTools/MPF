@@ -722,31 +722,27 @@ namespace MPF.DiscImageCreator
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
         /// <param name="retryCount">User-defined reread count</param>
         protected override void SetDefaultParameters(
-            KnownSystem? system,
-            MediaType? type,
             char driveLetter,
             string filename,
             int? driveSpeed,
             bool paranoid,
             int retryCount)
         {
-            SetBaseCommand(system, type);
+            SetBaseCommand(this.System, this.Type);
 
             DriveLetter = driveLetter.ToString();
             DriveSpeed = driveSpeed;
             Filename = filename;
 
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Utilities.Validators.GetValidMediaTypes(system);
-            if (!validTypes.Contains(type))
+            var validTypes = Validators.GetValidMediaTypes(this.System);
+            if (!validTypes.Contains(this.Type))
                 return;
 
             // Set the C2 reread count
@@ -764,12 +760,12 @@ namespace MPF.DiscImageCreator
             }
 
             // Now sort based on disc type
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.CDROM:
                     this[Flag.C2Opcode] = true;
 
-                    switch (system)
+                    switch (this.System)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
@@ -1681,11 +1677,9 @@ namespace MPF.DiscImageCreator
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
+        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
         {
             /*
             If there are no external programs, such as error checking, etc., DIC outputs
@@ -1710,7 +1704,7 @@ namespace MPF.DiscImageCreator
             */
 
             string missingFiles = string.Empty;
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
@@ -1744,7 +1738,7 @@ namespace MPF.DiscImageCreator
                         missingFiles += $";{basePath}_volDesc.txt";
 
                     // Audio-only discs don't output these files
-                    if (!system.IsAudio())
+                    if (!this.System.IsAudio())
                     {
                         if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
                             missingFiles += $";{basePath}.img_EdcEcc.txt";
@@ -1842,11 +1836,9 @@ namespace MPF.DiscImageCreator
         /// </summary>
         /// <param name="info">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
         /// <returns></returns>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
         {
             string outputDirectory = Path.GetDirectoryName(basePath);
 
@@ -1854,14 +1846,14 @@ namespace MPF.DiscImageCreator
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
 
             // Extract info based generically on MediaType
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
-                    if (system.IsAudio())
+                    if (this.System.IsAudio())
                     {
                         info.CommonDiscInfo.ErrorsCount = "0";
                     }
@@ -1888,7 +1880,7 @@ namespace MPF.DiscImageCreator
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    bool xgd = (system == KnownSystem.MicrosoftXBOX || system == KnownSystem.MicrosoftXBOX360);
+                    bool xgd = (this.System == KnownSystem.MicrosoftXBOX || this.System == KnownSystem.MicrosoftXBOX360);
 
                     // Get the individual hash data, as per internal
                     if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
@@ -1901,9 +1893,9 @@ namespace MPF.DiscImageCreator
 
                     // Deal with the layerbreak
                     string layerbreak = null;
-                    if (type == MediaType.DVD)
+                    if (this.Type == MediaType.DVD)
                         layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
-                    else if (type == MediaType.BluRay)
+                    else if (this.Type == MediaType.BluRay)
                         layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
@@ -1919,14 +1911,14 @@ namespace MPF.DiscImageCreator
                     }
 
                     // Bluray-specific options
-                    if (type == MediaType.BluRay)
+                    if (this.Type == MediaType.BluRay)
                         info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, "PIC.bin")) ?? "";
 
                     break;
             }
 
             // Extract info based specifically on KnownSystem
-            switch (system)
+            switch (this.System)
             {
                 case KnownSystem.AppleMacintosh:
                 case KnownSystem.EnhancedCD:
@@ -1995,7 +1987,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.NamcoSegaNintendoTriforce:
-                    if (type == MediaType.CDROM)
+                    if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 
@@ -2029,7 +2021,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.SegaChihiro:
-                    if (type == MediaType.CDROM)
+                    if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 
@@ -2048,7 +2040,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.SegaDreamcast:
-                    if (type == MediaType.CDROM)
+                    if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 
@@ -2067,7 +2059,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.SegaNaomi:
-                    if (type == MediaType.CDROM)
+                    if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 
@@ -2086,7 +2078,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.SegaNaomi2:
-                    if (type == MediaType.CDROM)
+                    if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 

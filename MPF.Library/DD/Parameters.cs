@@ -247,16 +247,12 @@ namespace MPF.DD
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
         /// <param name="retryCount">User-defined reread count</param>
         protected override void SetDefaultParameters(
-            KnownSystem? system,
-            MediaType? type,
             char driveLetter,
             string filename,
             int? driveSpeed,
@@ -273,7 +269,7 @@ namespace MPF.DD
 
             // TODO: Add more common block sizes
             this[Flag.BlockSize] = true;
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.FloppyDisk:
                     BlockSizeValue = 1440 * 1024;
@@ -397,10 +393,9 @@ namespace MPF.DD
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
+        /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
+        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
         {
             // TODO: Figure out what sort of output files are expected... just `.bin`?
             return true;
@@ -411,21 +406,19 @@ namespace MPF.DD
         /// </summary>
         /// <param name="info">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
         /// <returns></returns>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
         {
             // TODO: Fill in submission info specifics for DD
             string outputDirectory = Path.GetDirectoryName(basePath);
 
-            switch (type)
+            switch (this.Type)
             {
                 // Determine type-specific differences
             }
 
-            switch (system)
+            switch (this.System)
             {
                 case KnownSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))

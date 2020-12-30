@@ -17,6 +17,16 @@ namespace MPF.Data
         public string ExecutablePath { get; set; }
 
         /// <summary>
+        /// Currently represented system
+        /// </summary>
+        public KnownSystem? System { get; set; }
+
+        /// <summary>
+        /// Currently represented media type
+        /// </summary>
+        public MediaType? Type { get; set; }
+
+        /// <summary>
         /// Program that this set of parameters represents
         /// </summary>
         public InternalProgram InternalProgram { get; set; }
@@ -52,7 +62,9 @@ namespace MPF.Data
         /// <param name="retryCount">User-defined reread count</param>
         public BaseParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, bool quietMode, int retryCount)
         {
-            SetDefaultParameters(system, type, driveLetter, filename, driveSpeed, paranoid, retryCount);
+            this.System = system;
+            this.Type = type;
+            SetDefaultParameters(driveLetter, filename, driveSpeed, paranoid, retryCount);
         }
 
         /// <summary>
@@ -114,16 +126,12 @@ namespace MPF.Data
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
         /// <param name="retryCount">User-defined reread count</param>
         protected abstract void SetDefaultParameters(
-            KnownSystem? system,
-            MediaType? type,
             char driveLetter,
             string filename,
             int? driveSpeed,
@@ -141,21 +149,17 @@ namespace MPF.Data
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public abstract bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null);
+        public abstract bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null);
 
         /// <summary>
         /// Generate a SubmissionInfo for the output files
         /// </summary>
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, KnownSystem? system, MediaType? type, Drive drive);
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive);
 
         /// <summary>
         /// Run internal program

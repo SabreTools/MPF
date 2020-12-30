@@ -87,16 +87,12 @@ namespace MPF.UmdImageCreator
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
         /// <param name="retryCount">User-defined reread count</param>
         protected override void SetDefaultParameters(
-            KnownSystem? system,
-            MediaType? type,
             char driveLetter,
             string filename,
             int? driveSpeed,
@@ -116,14 +112,12 @@ namespace MPF.UmdImageCreator
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
+        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
         {
             string missingFiles = string.Empty;
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.UMD:
                     if (!File.Exists($"{basePath}_disc.txt"))
@@ -159,17 +153,15 @@ namespace MPF.UmdImageCreator
         /// </summary>
         /// <param name="info">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
         /// <returns></returns>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
         {
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
 
             // Extract info based generically on MediaType
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.UMD:
                     info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";

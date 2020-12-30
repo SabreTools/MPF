@@ -203,16 +203,12 @@ namespace MPF.Aaru
         /// <summary>
         /// Set default parameters for a given system and media type
         /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
         /// <param name="retryCount">User-defined reread count</param>
         protected override void SetDefaultParameters(
-            KnownSystem? system,
-            MediaType? type,
             char driveLetter,
             string filename,
             int? driveSpeed,
@@ -233,8 +229,8 @@ namespace MPF.Aaru
             }
 
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validators.GetValidMediaTypes(system);
-            if (!validTypes.Contains(type))
+            var validTypes = Validators.GetValidMediaTypes(this.System);
+            if (!validTypes.Contains(this.Type))
                 return;
 
             // Set retry count
@@ -254,7 +250,7 @@ namespace MPF.Aaru
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.CDROM:
                     this[Flag.FirstPregap] = true;
@@ -1477,14 +1473,12 @@ namespace MPF.Aaru
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="progress">Optional result progress callback</param>
         /// <returns></returns>
-        public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
+        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
         {
             string missingFiles = string.Empty;
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.CDROM:
                     if (!File.Exists($"{basePath}.cicm.xml"))
@@ -1537,11 +1531,9 @@ namespace MPF.Aaru
         /// </summary>
         /// <param name="info">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="system">KnownSystem type representing the media</param>
-        /// <param name="type">MediaType type representing the media</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
         /// <returns></returns>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, KnownSystem? system, MediaType? type, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
         {
             // TODO: Fill in submission info specifics for Aaru
             string outputDirectory = Path.GetDirectoryName(basePath);
@@ -1552,7 +1544,7 @@ namespace MPF.Aaru
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(sidecar, basePath);
 
-            switch (type)
+            switch (this.Type)
             {
                 case MediaType.CDROM:
                     // TODO: Can this do GD-ROM?
@@ -1574,7 +1566,7 @@ namespace MPF.Aaru
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    bool xgd = (system == KnownSystem.MicrosoftXBOX || system == KnownSystem.MicrosoftXBOX360);
+                    bool xgd = (this.System == KnownSystem.MicrosoftXBOX || this.System == KnownSystem.MicrosoftXBOX360);
 
                     // Get the individual hash data, as per internal
                     if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
@@ -1587,9 +1579,9 @@ namespace MPF.Aaru
 
                     // Deal with the layerbreak
                     string layerbreak = null;
-                    if (type == MediaType.DVD)
+                    if (this.Type == MediaType.DVD)
                         layerbreak = GetLayerbreak(sidecar) ?? "";
-                    else if (type == MediaType.BluRay)
+                    else if (this.Type == MediaType.BluRay)
                         layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
 
                     // If we have a single-layer disc
@@ -1610,7 +1602,7 @@ namespace MPF.Aaru
                     break;
             }
 
-            switch (system)
+            switch (this.System)
             {
                 // TODO: Can we get SecuROM data?
                 // TODO: Can we get SS version/ranges?

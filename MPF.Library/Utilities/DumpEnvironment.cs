@@ -360,7 +360,7 @@ namespace MPF.Utilities
             string basePath = Path.Combine(OutputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
-            return Parameters.CheckAllOutputFilesExist(basePath, this.System, this.Type, progress);
+            return Parameters.CheckAllOutputFilesExist(basePath, progress);
         }
 
         /// <summary>
@@ -670,7 +670,7 @@ namespace MPF.Utilities
             };
 
             // Get specific tool output handling
-            Parameters.GenerateSubmissionInfo(info, combinedBase, this.System, this.Type, this.Drive);
+            Parameters.GenerateSubmissionInfo(info, combinedBase, this.Drive);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && HasRedumpLogin)
