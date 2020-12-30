@@ -4,23 +4,11 @@ namespace MPF.Utilities
 {
     public static class Extensions
     {
-        public static bool DoesSupportDriveSpeed(this MediaType? type)
-        {
-            switch (type)
-            {
-                case MediaType.CDROM:
-                case MediaType.DVD:
-                case MediaType.GDROM:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
+        /// <summary>
+        /// Determine the category based on the system
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <returns>KnownSystemCategory related to the system</returns>
         public static KnownSystemCategory Category(this KnownSystem? system)
         {
             if (system < KnownSystem.MarkerDiscBasedConsoleEnd)
@@ -39,6 +27,52 @@ namespace MPF.Utilities
                 return KnownSystemCategory.Custom;
         }
 
+        /// <summary>
+        /// Determine if the media supports drive speeds
+        /// </summary>
+        /// <param name="type">MediaType value to check</param>
+        /// <returns>True if the media has variable dumping speeds, false otherwise</returns>
+        public static bool DoesSupportDriveSpeed(this MediaType? type)
+        {
+            switch (type)
+            {
+                case MediaType.CDROM:
+                case MediaType.DVD:
+                case MediaType.GDROM:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determine if a system is considered audio-only
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <returns>True if the system is audio-only, false otherwise</returns>
+        public static bool IsAudio(this KnownSystem? system)
+        {
+            switch (system)
+            {
+                case KnownSystem.AtariJaguarCD:
+                case KnownSystem.AudioCD:
+                case KnownSystem.DVDAudio:
+                case KnownSystem.SuperAudioCD:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Determine if a system is a marker value
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <returns>True if the system is a marker value, false otherwise</returns>
         public static bool IsMarker(this KnownSystem? system)
         {
             switch (system)

@@ -1687,12 +1687,6 @@ namespace MPF.DiscImageCreator
         /// <returns></returns>
         public override bool CheckAllOutputFilesExist(string basePath, KnownSystem? system, MediaType? type, IProgress<Result> progress = null)
         {
-            // Some disc types are audio-only
-            bool audioOnly = (system == KnownSystem.AtariJaguarCD)
-                || (system == KnownSystem.AudioCD)
-                || (system == KnownSystem.DVDAudio)
-                || (system == KnownSystem.SuperAudioCD);
-
             /*
             If there are no external programs, such as error checking, etc., DIC outputs
             a slightly different set of files. This reduced set needs to be documented in
@@ -1750,7 +1744,7 @@ namespace MPF.DiscImageCreator
                         missingFiles += $";{basePath}_volDesc.txt";
 
                     // Audio-only discs don't output these files
-                    if (!audioOnly)
+                    if (!system.IsAudio())
                     {
                         if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
                             missingFiles += $";{basePath}.img_EdcEcc.txt";
@@ -1856,12 +1850,6 @@ namespace MPF.DiscImageCreator
         {
             string outputDirectory = Path.GetDirectoryName(basePath);
 
-            // Some disc types are audio-only
-            bool audioOnly = (system == KnownSystem.AtariJaguarCD)
-                || (system == KnownSystem.AudioCD)
-                || (system == KnownSystem.DVDAudio)
-                || (system == KnownSystem.SuperAudioCD);
-
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
 
@@ -1873,7 +1861,7 @@ namespace MPF.DiscImageCreator
                     info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
-                    if (audioOnly)
+                    if (system.IsAudio())
                     {
                         info.CommonDiscInfo.ErrorsCount = "0";
                     }
