@@ -1693,6 +1693,28 @@ namespace MPF.DiscImageCreator
                 || (system == KnownSystem.DVDAudio)
                 || (system == KnownSystem.SuperAudioCD);
 
+            /*
+            If there are no external programs, such as error checking, etc., DIC outputs
+            a slightly different set of files. This reduced set needs to be documented in
+            order for special use cases, such as self-built versions of DIC or removed
+            helper programs, can be detected to the best of our ability. Below is the list
+            of files that are generated in that case:
+
+                .bin
+                .c2
+                .ccd
+                .cue
+                .img
+                .scm
+                .sub
+                _cmd.txt (formerly)
+                _img.cue
+
+            This list needs to be translated into the minimum viable set of information
+            such that things like error checking can be passed back as a flag, or some
+            similar method.
+            */
+
             string missingFiles = string.Empty;
             switch (type)
             {
