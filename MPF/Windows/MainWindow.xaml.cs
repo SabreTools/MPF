@@ -114,19 +114,38 @@ namespace MPF.Windows
             // Get the drive letter from the selected item
             if (DriveLetterComboBox.SelectedItem is Drive drive)
             {
+                // Get reasonable default values based on the current system
+                KnownSystem? currentSystem = Systems[SystemTypeComboBox.SelectedIndex];
+                MediaType? defaultMediaType = Validators.GetValidMediaTypes(currentSystem).FirstOrDefault() ?? MediaType.CDROM;
+                if (defaultMediaType == MediaType.NONE)
+                    defaultMediaType = MediaType.CDROM;
+
                 // Get the current media type, if possible
                 if (UIOptions.Options.SkipMediaTypeDetection)
                 {
-                    ViewModels.LoggerViewModel.VerboseLog("Media type detection disabled, defaulting to CD-ROM");
-                    CurrentMediaType = MediaType.CDROM;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
+                    CurrentMediaType = defaultMediaType;
                 }
-                else
+                else if (drive.MarkedActive)
                 {
                     ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
                     CurrentMediaType = Validators.GetMediaType(drive);
-                    ViewModels.LoggerViewModel.VerboseLogLn(CurrentMediaType == null ? "unable to detect, defaulting to CD-ROM." : ($"detected {CurrentMediaType.LongName()}."));
+
+                    // If we got either an error or no media, default to the current System default
                     if (CurrentMediaType == null)
-                        CurrentMediaType = MediaType.CDROM;
+                    {
+                        ViewModels.LoggerViewModel.VerboseLogLn($"unable to detect, defaulting to {defaultMediaType.LongName()}.");
+                        CurrentMediaType = defaultMediaType;
+                    }
+                    else
+                    {
+                        ViewModels.LoggerViewModel.VerboseLogLn($"detected {CurrentMediaType.LongName()}.");
+                    }
+                }
+                else
+                {
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
+                    CurrentMediaType = defaultMediaType;
                 }
             }
         }
@@ -157,6 +176,25 @@ namespace MPF.Windows
             OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
 
             return env;
+        }
+
+        /// <summary>
+        /// Determine and set the current system type, if Allowed
+        /// </summary>
+        private void DetermineSystemType()
+        {
+            if (!UIOptions.Options.SkipSystemDetection)
+            {
+                ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", Drives[DriveLetterComboBox.SelectedIndex].Letter);
+                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
+                ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
+
+                if (currentSystem != null && currentSystem != KnownSystem.NONE)
+                {
+                    int sysIndex = Systems.FindIndex(s => s == currentSystem);
+                    SystemTypeComboBox.SelectedIndex = sysIndex;
+                }
+            }
         }
 
         /// <summary>
@@ -253,19 +291,9 @@ namespace MPF.Windows
                 StatusLabel.Content = "Valid drive found! Choose your Media Type";
                 CopyProtectScanButton.IsEnabled = true;
 
-                // Get the current media type
-                if (!UIOptions.Options.SkipSystemDetection && index != -1)
-                {
-                    ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", Drives[index].Letter);
-                    var currentSystem = Validators.GetKnownSystem(Drives[index]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
-                    ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
-
-                    if (currentSystem != null && currentSystem != KnownSystem.NONE)
-                    {
-                        int sysIndex = Systems.FindIndex(s => s == currentSystem);
-                        SystemTypeComboBox.SelectedIndex = sysIndex;
-                    }
-                }
+                // Get the current system type
+                if (index != -1)
+                    DetermineSystemType();
 
                 // Only enable the start/stop if we don't have the default selected
                 StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
@@ -615,6 +643,7 @@ namespace MPF.Windows
         /// </summary>
         private void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            DetermineSystemType();
             CacheCurrentDiscType();
             SetCurrentDiscType();
             GetOutputNames(true);
