@@ -771,7 +771,9 @@ namespace MPF.Utilities
         /// <param name="drive"></param>
         /// <returns></returns>
         /// <remarks>
-        /// https://stackoverflow.com/questions/11420365/detecting-if-disc-is-in-dvd-drive
+        /// This may eventually be replaced by Aaru.Devices being able to be about 10x more accurate.
+        /// This will also end up making it so that IMAPI2 is no longer necessary. Unfortunately, that
+        /// will only work for .NET Core 3.1 and beyond.
         /// </remarks>
         public static MediaType? GetMediaType(Drive drive)
         {
