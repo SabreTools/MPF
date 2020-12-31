@@ -155,6 +155,8 @@ namespace MPF.Utilities
             this.Type = type;
             this.InternalProgram = Converters.ToInternalProgram(options.InternalProgram);
             SetParameters(parameters);
+            this.Parameters.System = system;
+            this.Parameters.Type = type;
             SetInternalToolPath(options);
             this.ScanForProtection = options.ScanForProtection;
             this.AddPlaceholders = options.AddPlaceholders;
