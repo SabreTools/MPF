@@ -188,7 +188,7 @@ namespace MPF.Windows
         /// </summary>
         private void DetermineSystemType()
         {
-            if (!UIOptions.Options.SkipSystemDetection)
+            if (!UIOptions.Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
             {
                 ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", Drives[DriveLetterComboBox.SelectedIndex].Letter);
                 var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
