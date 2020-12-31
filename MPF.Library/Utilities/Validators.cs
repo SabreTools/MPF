@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using BurnOutSharp;
 using MPF.Data;
 #if NET_FRAMEWORK
-using System.Runtime.InteropServices;
 using IMAPI2;
 #endif
 
@@ -775,16 +774,16 @@ namespace MPF.Utilities
         /// This will also end up making it so that IMAPI2 is no longer necessary. Unfortunately, that
         /// will only work for .NET Core 3.1 and beyond.
         /// </remarks>
-        public static MediaType? GetMediaType(Drive drive)
+        public static (MediaType?, string) GetMediaType(Drive drive)
         {
             // Take care of the non-optical stuff first
             // TODO: See if any of these can be more granular, like Optical is
             if (drive.InternalDriveType == InternalDriveType.Floppy)
-                return MediaType.FloppyDisk;
+                return (MediaType.FloppyDisk, null);
             else if (drive.InternalDriveType == InternalDriveType.HardDisk)
-                return MediaType.HardDisk;
+                return (MediaType.HardDisk, null);
             else if (drive.InternalDriveType == InternalDriveType.Removable)
-                return MediaType.FlashDrive;
+                return (MediaType.FlashDrive, null);
 
             // Get the current drive information
             string deviceId = null;
@@ -803,8 +802,10 @@ namespace MPF.Utilities
                 }
 
                 // If we got no valid device, we don't care and just return
-                if (deviceId == null || !loaded)
-                    return null;
+                if (deviceId == null)
+                    return (null, "Device could not be found");
+                else if (!loaded)
+                    return (null, "Device is not reporting media loaded");
 
 #if NET_FRAMEWORK
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
@@ -818,45 +819,34 @@ namespace MPF.Utilities
 
                 // If we couldn't find the drive, we don't care and return
                 if (id == null)
-                    return null;
+                    return (null, "Device ID could not be found");
 
-                try
-                {
-                    // Create the required objects for reading from the drive
-                    MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-                    recorder.InitializeDiscRecorder(id);
-                    MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+                // Create the required objects for reading from the drive
+                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                recorder.InitializeDiscRecorder(id);
+                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
 
-                    // If the recorder is not supported, just return
-                    if (!dataWriter.IsRecorderSupported(recorder))
-                        return null;
+                // If the recorder is not supported, just return
+                if (!dataWriter.IsRecorderSupported(recorder))
+                    return (null, "IMAPI2 recorder not supported");
 
-                    // Otherwise, set the recorder to get information from
-                    dataWriter.Recorder = recorder;
+                // Otherwise, set the recorder to get information from
+                dataWriter.Recorder = recorder;
 
-                    var media = dataWriter.CurrentPhysicalMediaType;
-                    return media.IMAPIToMediaType();
-                }
-                catch (COMException ex)
-                {
-                    if (ex.Message.Contains("There is no media in the device."))
-                        return null;
-                }
-
-                return null;
+                var media = dataWriter.CurrentPhysicalMediaType;
+                return (media.IMAPIToMediaType(), null);
 #else
                 // TODO: This entire .NET Core path still doesn't work
                 // This may honestly require an entire import of IMAPI2 stuff and then try
                 // as best as possible to get it working.
 
-                return null;
+                return (null, "Media detection only supported on .NET Framework");
 #endif
 
             }
-            catch
+            catch (Exception ex)
             {
-                // We don't care what the error was
-                return null;
+                return (null, ex.Message);
             }
         }
 
