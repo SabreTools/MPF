@@ -280,6 +280,8 @@ namespace MPF.Windows
 
             if (DriveLetterComboBox.Items.Count > 0)
             {
+                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", Drives.Count, string.Join(", ", Drives.Select(d => d.Letter)));
+
                 // Check for active optical drives first
                 int index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
 
@@ -302,17 +304,14 @@ namespace MPF.Windows
 
                 // Only enable the start/stop if we don't have the default selected
                 StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
-
-                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", Drives.Count, string.Join(", ", Drives.Select(d => d.Letter)));
             }
             else
             {
+                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives");
                 DriveLetterComboBox.SelectedIndex = -1;
                 StatusLabel.Content = "No valid drive found!";
                 StartStopButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
-
-                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives");
             }
         }
 
@@ -756,9 +755,31 @@ namespace MPF.Windows
             StatusLabel.Content = "Creating system list, please wait!";
             PopulateSystems();
 
-            // Populate the list of drives
+            // Populate the list of media types for system
+            StatusLabel.Content = "Creating media type list, please wait!";
+            PopulateMediaType();
+
+            // Populate the list of drives and determine the system
             StatusLabel.Content = "Creating drive list, please wait!";
             PopulateDrives();
+
+            // Determine current media type, if possible
+            PopulateMediaType();
+            CacheCurrentDiscType();
+            SetCurrentDiscType();
+
+            // Set the initial environment and UI values
+            Env = DetermineEnvironment();
+            GetOutputNames(false);
+            SetSupportedDriveSpeed();
+
+            // Add event handlers
+            SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
+            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
+            DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
+            DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
         }
 
         /// <summary>
