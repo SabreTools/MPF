@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BurnOutSharp;
 using MPF.Data;
 #if NET_FRAMEWORK
+using System.Runtime.InteropServices;
 using IMAPI2;
 #endif
 
@@ -783,9 +784,9 @@ namespace MPF.Utilities
             else if (drive.InternalDriveType == InternalDriveType.Removable)
                 return MediaType.FlashDrive;
 
-            // Get the DeviceID and MediaType from the current drive letter
+            // Get the current drive information
             string deviceId = null;
-            int mediaType = 0;
+            bool loaded = false;
             try
             {
                 // Get the device ID first
@@ -796,45 +797,16 @@ namespace MPF.Utilities
                 foreach (ManagementObject queryObj in searcher.Get())
                 {
                     deviceId = (string)queryObj["DeviceID"];
-
-                    #region Possibly useful fields
-
-                    //foreach (var property in queryObj.Properties)
-                    //{
-                    //    Console.WriteLine(property);
-                    //}
-
-                    //// Capabilities list
-                    //ushort?[] capabilities = (ushort?[])queryObj["Capabilities"];
-
-                    //// Internal name of the device
-                    //string caption = (string)queryObj["Caption"];
-
-                    //// Flags for the file system, see FileSystemFlags
-                    //uint? fileSystemFlagsEx = (uint?)queryObj["FileSystemFlagsEx"];
-
-                    //// "CD Writer" doesn't fit https://docs.microsoft.com/en-us/windows/win32/cimwin32prov/win32-cdromdrive
-                    //string mediaTypeString = (string)queryObj["MediaType"];
-
-                    //// Internal name of the device (Seems like a duplicate of Caption)
-                    //string name = (string)queryObj["Name"];
-
-                    //// Full device ID for the drive (Seems like duplicate of DeviceID)
-                    //string pnpDeviceId = (string)queryObj["PNPDeviceId"];
-
-                    //// Size of the loaded media (extrapolate disc type from this?)
-                    //ulong? size = (ulong?)queryObj["Size"];
-
-                    #endregion
+                    loaded = (bool)queryObj["MediaLoaded"];
                 }
 
                 // If we got no valid device, we don't care and just return
-                if (deviceId == null)
+                if (deviceId == null || !loaded)
                     return null;
 
 #if NET_FRAMEWORK
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-                deviceId = deviceId.ToLower().Replace('\\', '#');
+                deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
                 string id = null;
                 foreach (var disc in discMaster)
                 {
@@ -846,14 +818,28 @@ namespace MPF.Utilities
                 if (id == null)
                     return null;
 
-                // Otherwise, we get the media type, if any
-                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-                recorder.InitializeDiscRecorder(id);
-                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-                dataWriter.Recorder = recorder;
-                var media = dataWriter.CurrentPhysicalMediaType;
-                if (media != IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN)
+                try
+                {
+                    // Create the required objects for reading from the drive
+                    MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                    recorder.InitializeDiscRecorder(id);
+                    MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+
+                    // If the recorder is not supported, just return
+                    if (!dataWriter.IsRecorderSupported(recorder))
+                        return null;
+
+                    // Otherwise, set the recorder to get information from
+                    dataWriter.Recorder = recorder;
+
+                    var media = dataWriter.CurrentPhysicalMediaType;
                     return media.IMAPIToMediaType();
+                }
+                catch (COMException ex)
+                {
+                    if (ex.Message.Contains("There is no media in the device."))
+                        return null;
+                }
 
                 return null;
 #else
@@ -861,22 +847,7 @@ namespace MPF.Utilities
                 // This may honestly require an entire import of IMAPI2 stuff and then try
                 // as best as possible to get it working.
 
-                // Now try to get the physical media associated
-                searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    $"SELECT * FROM Win32_PhysicalMedia");
-
-                foreach (ManagementObject queryObj in searcher.Get())
-                {
-                    foreach (var property in queryObj.Properties)
-                    {
-                        Console.WriteLine(property);
-                    }
-
-                    mediaType = (int)(queryObj["MediaType"] ?? 0);
-                }
-
-                return ((PhysicalMediaType)mediaType).ToMediaType();
+                return null;
 #endif
 
             }
