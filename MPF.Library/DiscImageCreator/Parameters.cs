@@ -2890,7 +2890,7 @@ namespace MPF.DiscImageCreator
                 {
                     // If we're in a new mainInfo, the location of the header changed
                     string line = sr.ReadLine();
-                    if (line.StartsWith("========== OpCode"))
+                    if (line.StartsWith("========== OpCode") || line.StartsWith("========== TOC (Binary)"))
                     {
                         // Seek to unscrambled data
                         while (!(line = sr.ReadLine()).StartsWith("========== Check Volume Descriptor ==========")) ;
@@ -3062,23 +3062,18 @@ namespace MPF.DiscImageCreator
                 {
                     // If we're in a new mainInfo, the location of the header changed
                     string line = sr.ReadLine();
-                    if (line.StartsWith("========== OpCode"))
+                    if (line.StartsWith("========== OpCode") || line.StartsWith("========== TOC (Binary)"))
                     {
-                        // Scrambled LBA0, instance 1
-                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
-
-                        // Scrambled LBA0, instance 2
-                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
-
-                        // Scrambled LBA0, instance 3
-                        while (!(line = sr.ReadLine()).StartsWith("========== LBA[000000, 0000000]: Main Channel ==========")) ;
-
-                        // Start of second OpCode area
-                        while (!(line = sr.ReadLine()).StartsWith("========== OpCode")) ;
+                        // Seek to unscrambled data
+                        while (!(line = sr.ReadLine()).StartsWith("========== Check Volume Descriptor ==========")) ;
 
                         // Read the next line so the search goes properly
                         line = sr.ReadLine();
                     }
+
+                    // Make sure we're in the area
+                    if (!line.StartsWith("========== LBA"))
+                        while (!(line = sr.ReadLine()).StartsWith("========== LBA")) ;
 
                     // Make sure we're in the right sector
                     if (!line.StartsWith("========== LBA[000000, 0000000]: Main Channel =========="))
