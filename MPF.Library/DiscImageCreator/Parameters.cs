@@ -421,6 +421,13 @@ namespace MPF.DiscImageCreator
                 }
             }
 
+            // Multi-Sector Read
+            if (GetSupportedCommands(Flag.MultiSectorRead).Contains(BaseCommand))
+            {
+                if (this[Flag.MultiSectorRead] == true)
+                    parameters.Add(Converters.LongName(Flag.MultiSectorRead));
+            }
+
             // Multi-Session
             if (GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
             {
@@ -1393,6 +1400,13 @@ namespace MPF.DiscImageCreator
                             i++;
                             break;
 
+                        case FlagStrings.MultiSectorRead:
+                            if (!GetSupportedCommands(Flag.MultiSectorRead).Contains(BaseCommand))
+                                return false;
+
+                            this[Flag.MultiSectorRead] = true;
+                            break;
+
                         case FlagStrings.MultiSession:
                             if (!GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
                                 return false;
@@ -2259,6 +2273,9 @@ namespace MPF.DiscImageCreator
                     commands.Add(Command.XBOXSwap);
                     commands.Add(Command.XGD2Swap);
                     commands.Add(Command.XGD3Swap);
+                    break;
+                case Flag.MultiSectorRead:
+                    commands.Add(Command.CompactDisc);
                     break;
                 case Flag.MultiSession:
                     commands.Add(Command.Audio);

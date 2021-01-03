@@ -49,6 +49,7 @@ namespace MPF.DiscImageCreator
         ExtractMicroSoftCabFile,
         Fix,
         ForceUnitAccess,
+        MultiSectorRead,
         MultiSession,
         NoFixSubP,
         NoFixSubQ,

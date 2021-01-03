@@ -218,6 +218,8 @@ namespace MPF.DiscImageCreator
                     return FlagStrings.Fix;
                 case Flag.ForceUnitAccess:
                     return FlagStrings.ForceUnitAccess;
+                case Flag.MultiSectorRead:
+                    return FlagStrings.MultiSectorRead;
                 case Flag.MultiSession:
                     return FlagStrings.MultiSession;
                 case Flag.NoFixSubP:

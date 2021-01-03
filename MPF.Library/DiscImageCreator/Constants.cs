@@ -47,6 +47,7 @@ namespace MPF.DiscImageCreator
         public const string ExtractMicroSoftCabFile = "/mscf";
         public const string Fix = "/fix";
         public const string ForceUnitAccess = "/f";
+        public const string MultiSectorRead = "/mr";
         public const string MultiSession = "/ms";
         public const string NoFixSubP = "/np";
         public const string NoFixSubQ = "/nq";
