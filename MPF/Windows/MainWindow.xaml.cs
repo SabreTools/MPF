@@ -93,6 +93,19 @@ namespace MPF.Windows
         #region Helpers
 
         /// <summary>
+        /// Add all textbox and combobox event handlers
+        /// </summary>
+        private void AddEventHandlers()
+        {
+            SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
+            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
+            DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
+            DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+        }
+
+        /// <summary>
         /// Browse for an output folder
         /// </summary>
         private void BrowseFolder()
@@ -411,6 +424,54 @@ namespace MPF.Windows
         }
 
         /// <summary>
+        /// Remove all textbox and combobox event handlers
+        /// </summary>
+        private void RemoveEventHandlers()
+        {
+            SystemTypeComboBox.SelectionChanged -= SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox.SelectionChanged -= MediaTypeComboBoxSelectionChanged;
+            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
+            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
+            DriveLetterComboBox.SelectionChanged -= DriveLetterComboBoxSelectionChanged;
+            DriveSpeedComboBox.SelectionChanged -= DriveSpeedComboBoxSelectionChanged;
+        }
+
+        /// <summary>
+        /// Performs UI value setup end to end
+        /// </summary>
+        /// <param name="removeFirst">Whether event handlers need to be removed first</param>
+        private void InitializeUIValues(bool removeFirst)
+        {
+            // Disable the dumping button
+            StartStopButton.IsEnabled = false;
+
+            // Remove event handlers to ensure ordering
+            if (removeFirst)
+                RemoveEventHandlers();
+
+            // Populate the list of drives and determine the system
+            StatusLabel.Content = "Creating drive list, please wait!";
+            PopulateDrives();
+
+            // Determine current media type, if possible
+            PopulateMediaType();
+            CacheCurrentDiscType();
+            SetCurrentDiscType();
+
+            // Set the initial environment and UI values
+            SetSupportedDriveSpeed();
+            Env = DetermineEnvironment();
+            GetOutputNames(false);
+            EnsureDiscInformation();
+
+            // Add event handlers
+            AddEventHandlers();
+
+            // Enable the dumping button
+            StartStopButton.IsEnabled = true;
+        }
+
+        /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
         private async void ScanAndShowProtection()
@@ -697,7 +758,7 @@ namespace MPF.Windows
         /// </summary>
         private void MediaScanButtonClick(object sender, RoutedEventArgs e)
         {
-            PopulateDrives();
+            InitializeUIValues(true);
         }
 
         /// <summary>
@@ -759,38 +820,17 @@ namespace MPF.Windows
             StatusLabel.Content = "Creating media type list, please wait!";
             PopulateMediaType();
 
-            // Populate the list of drives and determine the system
-            StatusLabel.Content = "Creating drive list, please wait!";
-            PopulateDrives();
-
-            // Determine current media type, if possible
-            PopulateMediaType();
-            CacheCurrentDiscType();
-            SetCurrentDiscType();
-
-            // Set the initial environment and UI values
-            Env = DetermineEnvironment();
-            GetOutputNames(false);
-            SetSupportedDriveSpeed();
-
-            // Add event handlers
-            SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
-            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
-            DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            // Initialize drives and UI values
+            InitializeUIValues(false);
         }
 
         /// <summary>
         /// Handler for OptionsWindow OnUpdated event
         /// </summary>
+        /// <remarks>Identical to MediaScanButtonClick</remarks>
         public void OnOptionsUpdated()
         {
-            PopulateDrives();
-            GetOutputNames(false);
-            SetSupportedDriveSpeed();
-            EnsureDiscInformation();
+            InitializeUIValues(true);
         }
 
         /// <summary>
