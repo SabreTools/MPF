@@ -11,6 +11,7 @@
 - Remove experimental Avalonia UI, will wait for MAUI next year
 - Updated to DIC version 20210102
 - Add support for `/mr` DIC flag
+- UI initialization code refactored to have more consistent results
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
