@@ -12,6 +12,7 @@
 - Updated to DIC version 20210102
 - Add support for `/mr` DIC flag
 - UI initialization code refactored to have more consistent results
+- Support DIC `.imgtmp`, `.scmtmp`, and `.subtmp` possible output files
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

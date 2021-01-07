@@ -1706,9 +1706,9 @@ namespace MPF.DiscImageCreator
                 .c2
                 .ccd
                 .cue
-                .img
-                .scm
-                .sub
+                .img/.imgtmp
+                .scm/.scmtmp
+                .sub/.subtmp
                 _cmd.txt (formerly)
                 _img.cue
 
@@ -1728,9 +1728,9 @@ namespace MPF.DiscImageCreator
                         missingFiles += $";{basePath}.cue";
                     if (!File.Exists($"{basePath}.dat"))
                         missingFiles += $";{basePath}.dat";
-                    if (!File.Exists($"{basePath}.img"))
+                    if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
                         missingFiles += $";{basePath}.img";
-                    if (!File.Exists($"{basePath}.sub"))
+                    if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
                         missingFiles += $";{basePath}.sub";
                     if (!File.Exists($"{basePath}_disc.txt"))
                         missingFiles += $";{basePath}_disc.txt";
@@ -1756,7 +1756,7 @@ namespace MPF.DiscImageCreator
                     {
                         if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
                             missingFiles += $";{basePath}.img_EdcEcc.txt";
-                        if (!File.Exists($"{basePath}.scm"))
+                        if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
                             missingFiles += $";{basePath}.scm";
                     }
 
