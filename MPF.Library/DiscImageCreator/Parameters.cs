@@ -2771,8 +2771,7 @@ namespace MPF.DiscImageCreator
 
             try
             {
-                byte[] picBytes = File.ReadAllBytes(picPath);
-                string hex = BitConverter.ToString(picBytes).Replace("-", string.Empty);
+                string hex = GetFullFile(picPath, true);
                 return Regex.Replace(hex, ".{32}", "$0\n");
             }
             catch

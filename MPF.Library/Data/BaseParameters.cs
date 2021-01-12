@@ -261,15 +261,8 @@ namespace MPF.Data
             // If we're reading as binary
             if (binary)
             {
-                string hex = string.Empty;
-                using (BinaryReader br = new BinaryReader(File.OpenRead(filename)))
-                {
-                    while (br.BaseStream.Position < br.BaseStream.Length)
-                    {
-                        hex += Convert.ToString(br.ReadByte(), 16);
-                    }
-                }
-                return hex;
+                byte[] bytes = File.ReadAllBytes(filename);
+                return BitConverter.ToString(bytes).Replace("-", string.Empty);
             }
 
             return string.Join("\n", File.ReadAllLines(filename));

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using MPF.Data;
 using MPF.Utilities;
 using MPF.Web;
@@ -176,7 +177,7 @@ namespace MPF.CleanRip
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     if (File.Exists(basePath + ".bca"))
-                        info.Extras.BCA = GetFullFile(basePath + ".bca", true);
+                        info.Extras.BCA = GetBCA(basePath + ".bca");
 
                     if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion))
                     {
@@ -189,6 +190,30 @@ namespace MPF.CleanRip
         }
 
         #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the hex contents of the BCA file
+        /// </summary>
+        /// <param name="bcaPath">Path to the BCA file associated with the dump</param>
+        /// <returns>BCA data as a hex string if possible, null on error</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        private static string GetBCA(string bcaPath)
+        {
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(bcaPath))
+                return null;
+
+            try
+            {
+                string hex = GetFullFile(bcaPath, true);
+                return Regex.Replace(hex, ".{32}", "$0\n");
+            }
+            catch
+            {
+                // We don't care what the error was right now
+                return null;
+            }
+        }
 
         /// <summary>
         /// Get a formatted datfile from the cleanrip output, if possible
