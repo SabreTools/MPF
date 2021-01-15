@@ -157,9 +157,6 @@ namespace MPF.UmdImageCreator
         /// <returns></returns>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
         {
-            // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
-
             // Extract info based generically on MediaType
             switch (this.Type)
             {
@@ -182,50 +179,6 @@ namespace MPF.UmdImageCreator
         }
 
         #region Information Extraction Methods
-
-        /// <summary>
-        /// Get the proper datfile from the input file, if possible
-        /// </summary>
-        /// <param name="dat">.dat file location</param>
-        /// <returns>Relevant pieces of the datfile, null on error</returns>
-        private static string GetDatfile(string dat)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(dat))
-                return null;
-
-            using (StreamReader sr = File.OpenText(dat))
-            {
-                try
-                {
-                    // Make sure this file is a .dat
-                    if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-                        return null;
-                    if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
-                        return null;
-
-                    // Fast forward to the rom lines
-                    while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
-                    sr.ReadLine(); // <category>Games</category>
-                    sr.ReadLine(); // <description>Plextor</description>
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    string pvd = "", line = sr.ReadLine().Trim();
-                    while (line.StartsWith("<rom"))
-                    {
-                        pvd += line + "\n";
-                        line = sr.ReadLine().Trim();
-                    }
-
-                    return pvd.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
 
         /// <summary>
         /// Get the PVD from the input file, if possible
