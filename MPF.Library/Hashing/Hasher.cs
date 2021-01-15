@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using MPF.Data;
 using OptimizedCRC;
 
-namespace MPF.Utilities
+namespace MPF.Hashing
 {
     /// <summary>
     /// Async hashing class wraper
@@ -82,7 +82,7 @@ namespace MPF.Utilities
         /// <summary>
         /// Finalize the internal hash algorigthm
         /// </summary>
-        public void Finalize()
+        public void Terminate()
         {
             byte[] emptyBuffer = new byte[0];
             switch (HashType)
@@ -120,6 +120,41 @@ namespace MPF.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Get internal hash as a string
+        /// </summary>
+        public string GetHashString()
+        {
+            byte[] hash = GetHash();
+            if (hash == null)
+                return null;
+            
+            return ByteArrayToString(hash);
+        }
+
+        /// <summary>
+        /// Convert a byte array to a hex string
+        /// </summary>
+        /// <param name="bytes">Byte array to convert</param>
+        /// <returns>Hex string representing the byte array</returns>
+        /// <link>http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa</link>
+        private static string ByteArrayToString(byte[] bytes)
+        {
+            // If we get null in, we send null out
+            if (bytes == null)
+                return null;
+
+            try
+            {
+                string hex = BitConverter.ToString(bytes);
+                return hex.Replace("-", string.Empty).ToLowerInvariant();
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }
