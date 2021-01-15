@@ -163,6 +163,14 @@ namespace MPF.UmdImageCreator
                 case MediaType.UMD:
                     info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
 
+                    if (GetFileHashes(basePath + ".iso", out long filesize, out string crc32, out string md5, out string sha1))
+                    {
+                        info.SizeAndChecksums.Size = filesize;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                    }
+
                     if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize))
                     {
                         info.CommonDiscInfo.Title = title ?? "";
