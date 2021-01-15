@@ -827,9 +827,30 @@ namespace MPF.Utilities
                     break;
 
                 case MediaType.UMD:
-                    info.SizeAndChecksums.CRC32 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.SizeAndChecksums.MD5 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.SizeAndChecksums.SHA1 = (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    // If we have a single-layer disc
+                    if (info.SizeAndChecksums.Layerbreak == default)
+                    {
+                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    }
+                    // If we have a dual-layer disc
+                    else
+                    {
+                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+
+                        info.CommonDiscInfo.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    }
+
+                    info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 == null ? (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.CRC32;
+                    info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 == null ? (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.MD5;
+                    info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 == null ? (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.SHA1;
                     info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }

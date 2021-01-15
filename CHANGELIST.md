@@ -14,6 +14,8 @@
 - UI initialization code refactored to have more consistent results
 - Support DIC `.imgtmp`, `.scmtmp`, and `.subtmp` possible output files
 - Fix BCA formatting for CleanRip outputs
+- Add hashing for UMDs from UIC outputs
+- Fix information gathering for UIC outputs
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
