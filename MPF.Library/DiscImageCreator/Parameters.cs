@@ -3141,6 +3141,9 @@ namespace MPF.DiscImageCreator
             if (!File.Exists(disc))
                 return false;
 
+            // This flag is needed because recent versions of DIC include security data twice
+            bool foundSecuritySectors = false;
+
             using (StreamReader sr = File.OpenText(disc))
             {
                 try
@@ -3156,12 +3159,16 @@ namespace MPF.DiscImageCreator
                         }
 
                         // Security Sector ranges
-                        else if (line.StartsWith("Number of security sector ranges:"))
+                        else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
                         {
+                            // Set the flag so we don't read duplicate data
+                            foundSecuritySectors = true;
+
                             Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
 
                             line = sr.ReadLine().Trim();
-                            while (!line.StartsWith("========== TotalLength =========="))
+                            while (!line.StartsWith("========== TotalLength ==========")
+                                && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
                             {
                                 // If we have a recognized line format, parse it
                                 if (line.StartsWith("Layer "))
