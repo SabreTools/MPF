@@ -9,7 +9,8 @@ assignees: mnadareski
 
 **Before You Submit**
 - Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the issue has already been addressed.
-- .NET Core 3.1 has known issues, please try using another build to reproduce the error
+- Is it copy protection related? If so, report the issue [here](https://github.com/mnadareski/BurnOutSharp/issues) instead.
+- .NET Core 3.1 and .NET 5.0 have known issues, please try using another build to reproduce the error
 - Check multiple discs to help narrow down the issue
 - Check the Options to see if changing any of those affects your issue.
 
