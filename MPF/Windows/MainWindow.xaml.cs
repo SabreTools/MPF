@@ -492,7 +492,7 @@ namespace MPF.Windows
                 MediaScanButton.IsEnabled = false;
                 CopyProtectScanButton.IsEnabled = false;
 
-                var progress = new Progress<FileProtection>();
+                var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
                 string protections = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", progress);
 
@@ -620,7 +620,7 @@ namespace MPF.Windows
                 // Get progress indicators
                 var resultProgress = new Progress<Result>();
                 resultProgress.ProgressChanged += ProgressUpdated;
-                var protectionProgress = new Progress<FileProtection>();
+                var protectionProgress = new Progress<ProtectionProgress>();
                 protectionProgress.ProgressChanged += ProgressUpdated;
 
                 // Run the program with the parameters
@@ -882,9 +882,9 @@ namespace MPF.Windows
         }
 
         /// <summary>
-        /// Handler for FileProtection ProgressChanged event
+        /// Handler for ProtectionProgress ProgressChanged event
         /// </summary>
-        private void ProgressUpdated(object sender, FileProtection value)
+        private void ProgressUpdated(object sender, ProtectionProgress value)
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             StatusLabel.Content = message;

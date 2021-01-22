@@ -1007,7 +1007,7 @@ namespace MPF.Utilities
         /// <param name="path">Path to scan for protection</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Copy protection detected in the envirionment, if any</returns>
-        public static async Task<string> RunProtectionScanOnPath(string path, IProgress<FileProtection> progress = null)
+        public static async Task<string> RunProtectionScanOnPath(string path, IProgress<ProtectionProgress> progress = null)
         {
             try
             {

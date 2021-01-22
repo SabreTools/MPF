@@ -501,7 +501,7 @@ namespace MPF.Utilities
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result> resultProgress = null,
-            IProgress<FileProtection> protectionProgress = null,
+            IProgress<ProtectionProgress> protectionProgress = null,
             bool? ejectDisc = null,
             bool resetDrive = false,
             Func<SubmissionInfo, bool?> showUserPrompt = null)
@@ -631,7 +631,7 @@ namespace MPF.Utilities
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
         private async Task<SubmissionInfo> ExtractOutputInformation(
             IProgress<Result> resultProgress = null,
-            IProgress<FileProtection> protectionProgress = null)
+            IProgress<ProtectionProgress> protectionProgress = null)
         {
             // Ensure the current disc combination should exist
             if (!Validators.GetValidMediaTypes(System).Contains(Type))
@@ -1369,7 +1369,7 @@ namespace MPF.Utilities
         /// </summary>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Copy protection scheme if possible, null on error</returns>
-        private async Task<string> GetCopyProtection(IProgress<FileProtection> progress = null)
+        private async Task<string> GetCopyProtection(IProgress<ProtectionProgress> progress = null)
         {
             if (ScanForProtection)
                 return await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", progress);

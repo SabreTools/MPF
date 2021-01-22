@@ -17,6 +17,7 @@
 - Add hashing for UMDs from UIC outputs
 - Fix information gathering for UIC outputs
 - Fix issue with duplicate security sector data in XGD DiscImageCreator outputs
+- Update to BurnOutSharp 1.5.1
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

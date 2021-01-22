@@ -123,7 +123,7 @@ namespace MPF.Check
             // Make new Progress objects
             var resultProgress = new Progress<Result>();
             resultProgress.ProgressChanged += ProgressUpdated;
-            var protectionProgress = new Progress<FileProtection>();
+            var protectionProgress = new Progress<ProtectionProgress>();
             protectionProgress.ProgressChanged += ProgressUpdated;
 
             // If credentials are invalid, alert the user
@@ -261,7 +261,7 @@ namespace MPF.Check
         /// <summary>
         /// Simple process counter to write to console
         /// </summary>
-        private static void ProgressUpdated(object sender, FileProtection value)
+        private static void ProgressUpdated(object sender, ProtectionProgress value)
         {
             Console.WriteLine($"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
         }

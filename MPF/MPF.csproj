@@ -21,10 +21,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.5.0" GeneratePathProperty="true">
+    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.5.1" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
