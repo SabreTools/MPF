@@ -219,8 +219,7 @@ namespace MPF
                 _logWindow.AppendToTextBox(text, Brushes.Yellow);
         }
 
-        public void VerboseLog(string format, params object[] args) => VerboseLog(string.Format(format, args));
-        public void VerboseLogLn(string format, params object[] args) => VerboseLog(string.Format(format, args) + "\n");
+        public void VerboseLogLn(string format) => VerboseLog(format + "\n");
     }
 
     public static class ViewModels

@@ -141,7 +141,7 @@ namespace MPF.Windows
                 }
                 else if (drive.MarkedActive)
                 {
-                    ViewModels.LoggerViewModel.VerboseLog("Trying to detect media type for drive {0}.. ", drive.Letter);
+                    ViewModels.LoggerViewModel.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
                     string errorMessage;
                     (CurrentMediaType, errorMessage) = Validators.GetMediaType(drive);
 
@@ -203,7 +203,7 @@ namespace MPF.Windows
         {
             if (!UIOptions.Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
             {
-                ViewModels.LoggerViewModel.VerboseLog("Trying to detect system for drive {0}.. ", Drives[DriveLetterComboBox.SelectedIndex].Letter);
+                ViewModels.LoggerViewModel.VerboseLog($"Trying to detect system for drive {Drives[DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
                 ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
 
@@ -293,7 +293,7 @@ namespace MPF.Windows
 
             if (DriveLetterComboBox.Items.Count > 0)
             {
-                ViewModels.LoggerViewModel.VerboseLogLn("Found {0} drives: {1}", Drives.Count, string.Join(", ", Drives.Select(d => d.Letter)));
+                ViewModels.LoggerViewModel.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
 
                 // Check for active optical drives first
                 int index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
@@ -358,7 +358,7 @@ namespace MPF.Windows
         {
             var knownSystems = Validators.CreateListOfSystems();
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Populating systems, {0} systems found.", knownSystems.Count);
+            ViewModels.LoggerViewModel.VerboseLogLn($"Populating systems, {knownSystems.Count} systems found.");
 
             Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = knownSystems
                 .GroupBy(s => s.Category())
@@ -484,7 +484,7 @@ namespace MPF.Windows
             var drive = DriveLetterComboBox.SelectedItem as Drive;
             if (drive.Letter != default(char))
             {
-                ViewModels.LoggerViewModel.VerboseLogLn("Scanning for copy protection in {0}", drive.Letter);
+                ViewModels.LoggerViewModel.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
 
                 var tempContent = StatusLabel.Content;
                 StatusLabel.Content = "Scanning for copy protection... this might take a while!";
@@ -506,7 +506,7 @@ namespace MPF.Windows
                 if (!ViewModels.LoggerViewModel.WindowVisible)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
                 
-                ViewModels.LoggerViewModel.VerboseLog("Detected the following protections in {0}:\r\n\r\n{1}", drive.Letter, protections);
+                ViewModels.LoggerViewModel.VerboseLog($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
@@ -540,11 +540,11 @@ namespace MPF.Windows
             // Set the drive speed list that's appropriate
             var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
             DriveSpeedComboBox.ItemsSource = values;
-            ViewModels.LoggerViewModel.VerboseLogLn("Supported media speeds: {0}", string.Join(",", values));
+            ViewModels.LoggerViewModel.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
 
             // Set the selected speed
             int speed = UIOptions.GetPreferredDumpSpeedForMediaType(CurrentMediaType);
-            ViewModels.LoggerViewModel.VerboseLogLn("Setting drive speed to: {0}", speed);
+            ViewModels.LoggerViewModel.VerboseLogLn($"Setting drive speed to: {speed}");
             DriveSpeedComboBox.SelectedValue = speed;
         }
 
@@ -933,7 +933,7 @@ namespace MPF.Windows
                 return;
             }
 
-            ViewModels.LoggerViewModel.VerboseLogLn("Changed system to: {0}", (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name);
+            ViewModels.LoggerViewModel.VerboseLogLn($"Changed system to: {(SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name}");
             PopulateMediaType();
             GetOutputNames(false);
             EnsureDiscInformation();
