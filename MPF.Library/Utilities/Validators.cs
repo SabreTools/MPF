@@ -979,25 +979,25 @@ namespace MPF.Utilities
                 case MediaType.SDCard:
                 case MediaType.FlashDrive:
                 case MediaType.HDDVD:
-                    return Result.Success("{0} ready to dump", type.LongName());
+                    return Result.Success($"{type.LongName()} ready to dump");
 
                 // Partially supported types
                 case MediaType.GDROM:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    return Result.Success("{0} partially supported for dumping", type.LongName());
+                    return Result.Success($"{type.LongName()} partially supported for dumping");
 
                 // Special case for other supported tools
                 case MediaType.UMD:
-                    return Result.Success("{0} supported for submission info parsing", type.LongName());
+                    return Result.Failure($"{type.LongName()} supported for submission info parsing");
 
                 // Specifically unknown type
                 case MediaType.NONE:
-                    return Result.Failure("Please select a valid media type");
+                    return Result.Failure($"Please select a valid media type");
 
                 // Undumpable but recognized types
                 default:
-                    return Result.Failure("{0} media are not supported for dumping", type.LongName());
+                    return Result.Failure($"{type.LongName()} media are not supported for dumping");
             }
         }
 

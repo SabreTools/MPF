@@ -464,35 +464,21 @@ namespace MPF.Utilities
         /// <param name="progress">Optional result progress callback</param>
         public async Task<Result> Run(IProgress<Result> progress = null)
         {
+            // Check that we have the basics for dumping
             Result result = IsValidForDump();
+            if (!result)
+                return result;
 
-            // Execute dumping program and external tools, if needed
-            if (Validators.GetSupportStatus(System, Type)
-                && !result.Message.Contains("not supported") // Completely unsupported media
-                && !result.Message.Contains("submission info")) // Submission info-only media
-            {
-                // If the environment is invalid, return
-                if (!result)
-                    return result;
+            // Execute internal tool
+            progress?.Report(Result.Success($"Executing {this.InternalProgram}... please wait!"));
+            Directory.CreateDirectory(OutputDirectory);
+            await Task.Run(() => Parameters.ExecuteInternalProgram());
+            progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
 
-                // Check that the internal tool exists
-                if (!Parameters.InternalProgramExists())
-                {
-                    progress?.Report(Result.Success($"Could not find executable for {this.InternalProgram}!"));
-                    return Result.Failure($"Could not find executable for {this.InternalProgram}!");
-                }
-
-                // Execute internal tool
-                progress?.Report(Result.Success($"Executing {this.InternalProgram}... please wait!"));
-                Directory.CreateDirectory(OutputDirectory);
-                await Task.Run(() => Parameters.ExecuteInternalProgram());
-                progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
-
-                // Execute additional tools
-                progress?.Report(Result.Success("Running any additional tools... please wait!"));
-                result = await Task.Run(() => ExecuteAdditionalTools());
-                progress?.Report(result);
-            }
+            // Execute additional tools
+            progress?.Report(Result.Success("Running any additional tools... please wait!"));
+            result = await Task.Run(() => ExecuteAdditionalTools());
+            progress?.Report(result);
 
             return result;
         }
@@ -1298,15 +1284,17 @@ namespace MPF.Utilities
             if (!ParametersValid())
                 return Result.Failure("Error! Current configuration is not supported!");
 
+            // Fix the output paths, just in case
             FixOutputPaths();
 
             // Validate that the required program exists
             if (!File.Exists(Parameters.ExecutablePath))
-                return Result.Failure("Error! Could not find the program!");
+                return Result.Failure($"Error! {Parameters.ExecutablePath} does not exist!");
 
             // TODO: Ensure output path not the same as input drive OR executable location
 
-            return Result.Success();
+            // Validate that the current configuration is supported
+            return Validators.GetSupportStatus(System, Type);
         }
 
         /// <summary>
