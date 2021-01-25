@@ -650,13 +650,12 @@ namespace MPF.Windows
                 {
                     ViewModels.LoggerViewModel.VerboseLogLn(result.Message);
                     StatusLabel.Content = "Execution failed!";
-                    StartStopButton.Content = Interface.StartDumping;
-                    CopyProtectScanButton.IsEnabled = true;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // No-op, we don't care what it was
+                ViewModels.LoggerViewModel.VerboseLogLn(ex.Message);
+                StatusLabel.Content = "An exception occurred!";
             }
             finally
             {
