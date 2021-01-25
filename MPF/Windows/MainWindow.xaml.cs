@@ -646,6 +646,13 @@ namespace MPF.Windows
                         ShowDiscInformationWindow
                     );
                 }
+                else
+                {
+                    ViewModels.LoggerViewModel.VerboseLogLn(result.Message);
+                    StatusLabel.Content = "Execution failed!";
+                    StartStopButton.Content = Interface.StartDumping;
+                    CopyProtectScanButton.IsEnabled = true;
+                }
             }
             catch
             {

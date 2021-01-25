@@ -475,6 +475,13 @@ namespace MPF.Utilities
                 if (!result)
                     return result;
 
+                // Check that the internal tool exists
+                if (!Parameters.InternalProgramExists())
+                {
+                    progress?.Report(Result.Success($"Could not find executable for {this.InternalProgram}!"));
+                    return Result.Failure($"Could not find executable for {this.InternalProgram}!");
+                }
+
                 // Execute internal tool
                 progress?.Report(Result.Success($"Executing {this.InternalProgram}... please wait!"));
                 Directory.CreateDirectory(OutputDirectory);

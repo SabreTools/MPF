@@ -165,10 +165,27 @@ namespace MPF.Data
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive);
 
         /// <summary>
+        /// Returns if the related executable exists in the configured path or not
+        /// </summary>
+        /// <returns>True if the executable exists, false otherwise</returns>
+        public bool InternalProgramExists()
+        {
+            // Missing path information means we can't invoke anyway
+            if (string.IsNullOrWhiteSpace(ExecutablePath))
+                return false;
+
+            return File.Exists(ExecutablePath);
+        }
+
+        /// <summary>
         /// Run internal program
         /// </summary>
         public void ExecuteInternalProgram()
         {
+            // Invalid path means we shouldn't try to invoke
+            if (!InternalProgramExists())
+                return;
+
             process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
