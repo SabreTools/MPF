@@ -2214,8 +2214,8 @@ namespace MPF.DiscImageCreator
                 info.Artifacts["dat"] = GetBase64(GetFullFile(basePath + ".dat"));
             if (File.Exists(basePath + "_disc.txt"))
                 info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
-            if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
-                info.Artifacts["dmi"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "DMI.bin"), binary: true));
+            //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
+            //    info.Artifacts["dmi"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "DMI.bin"), binary: true));
             if (File.Exists(basePath + "_drive.txt"))
                 info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
             if (File.Exists(basePath + "_img.cue"))
@@ -2228,10 +2228,10 @@ namespace MPF.DiscImageCreator
                 info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
             if (File.Exists(basePath + "_mainInfo.txt"))
                 info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
-            if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
-                info.Artifacts["pfi"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "PFI.bin"), binary: true));
-            if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
-                info.Artifacts["ss"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "SS.bin"), binary: true));
+            //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
+            //    info.Artifacts["pfi"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "PFI.bin"), binary: true));
+            //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
+            //    info.Artifacts["ss"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "SS.bin"), binary: true));
             if (File.Exists(basePath + ".sub"))
                 info.Artifacts["sub"] = GetBase64(GetFullFile(basePath + ".sub", binary: true));
             if (File.Exists(basePath + "_subError.txt"))
