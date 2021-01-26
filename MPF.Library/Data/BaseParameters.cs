@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Compress.ThreadReaders;
@@ -247,6 +248,20 @@ namespace MPF.Data
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the Base64 representation of a string
+        /// </summary>
+        /// <param name="content">String content to encode</param>
+        /// <returns>Base64-encoded contents, if possible</returns>
+        protected static string GetBase64(string content)
+        {
+            if (string.IsNullOrEmpty(content))
+                return null;
+
+            byte[] temp = Encoding.UTF8.GetBytes(content);
+            return Convert.ToBase64String(temp);
         }
 
         /// <summary>

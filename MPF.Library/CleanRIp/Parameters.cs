@@ -187,6 +187,12 @@ namespace MPF.CleanRip
 
                     break;
             }
+
+            // Fill in any artifacts that exist, Base64-encoded
+            if (File.Exists(basePath + ".bca"))
+                info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true));
+            if (File.Exists(basePath + "-dumpinfo.txt"))
+                info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt"));
         }
 
         #region Information Extraction Methods

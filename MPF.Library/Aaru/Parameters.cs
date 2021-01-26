@@ -1690,6 +1690,20 @@ namespace MPF.Aaru
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
                     break;
             }
+
+            // Fill in any artifacts that exist, Base64-encoded
+            if (File.Exists(basePath + ".cicm.xml"))
+                info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
+            if (File.Exists(basePath + ".ibg"))
+                info.Artifacts["ibg"] = GetBase64(GetFullFile(basePath + ".ibg", binary: true));
+            if (File.Exists(basePath + ".log"))
+                info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
+            if (File.Exists(basePath + ".mhddlog.bin"))
+                info.Artifacts["mhddlog_bin"] = GetBase64(GetFullFile(basePath + ".mhddlog.bin", binary: true));
+            if (File.Exists(basePath + ".resume.xml"))
+                info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
+            if (File.Exists(basePath + ".sub.log"))
+                info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log"));
         }
 
         /// <summary>
