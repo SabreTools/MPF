@@ -10,6 +10,12 @@ namespace MPF.Web
     public class SubmissionInfo
     {
         /// <summary>
+        /// Version of the generated submission information
+        /// </summary>
+        [JsonProperty(PropertyName = "version", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int SubmissionInfoVersion { get; set; } = 1;
+
+        /// <summary>
         /// List of matched Redump IDs
         /// </summary>
         [JsonIgnore]
