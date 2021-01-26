@@ -59,6 +59,9 @@ namespace MPF.Web
 
         [JsonProperty(PropertyName = "size_and_checksums", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public SizeAndChecksumsSection SizeAndChecksums { get; set; } = new SizeAndChecksumsSection();
+
+        [JsonProperty(PropertyName = "artifacts", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public Dictionary<string, string> Artifacts { get; set; } = new Dictionary<string, string>();
     }
 
     /// <summary>
