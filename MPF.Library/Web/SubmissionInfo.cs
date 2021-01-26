@@ -10,10 +10,10 @@ namespace MPF.Web
     public class SubmissionInfo
     {
         /// <summary>
-        /// Version of the generated submission information
+        /// Version of the current schema
         /// </summary>
-        [JsonProperty(PropertyName = "version", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int SubmissionInfoVersion { get; set; } = 1;
+        [JsonProperty(PropertyName = "schema_version", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public int SchemaVersion { get; set; } = 1;
 
         /// <summary>
         /// List of matched Redump IDs
