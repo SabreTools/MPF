@@ -1715,6 +1715,30 @@ namespace MPF.DiscImageCreator
             This list needs to be translated into the minimum viable set of information
             such that things like error checking can be passed back as a flag, or some
             similar method.
+
+            Here are some notes about the various output files and what they represent:
+            - bin           - Final split output disc image (CD/GD only)
+            - c2            - Represents each byte per sector as one bit; 0 means no error, 1 means error
+            - c2Error       - Human-readable version of `c2`; only errors are printed
+            - ccd           - CloneCD control file referencing the `img` file
+            - cmd           - Represents the commandline that was run
+            - cue           - CDRWIN cuesheet referencing the `bin` file(s)
+            - dat           - Logiqx datfile referencing the `bin` file(s)
+            - disc          - Disc metadata and information
+            - drive         - Drive metadata and information
+            - img           - CloneCD output disc image (CD/GD only)
+            - img.cue       - CDRWIN cuesheet referencing the `img` file
+            - img_EdcEcc    - ECC check output as run on the `img` file
+            - iso           - Final output disc image (DVD/BD only)
+            - mainError     - Read, drive, or system errors
+            - mainInfo      - ISOBuster-formatted sector information
+            - scm           - Scrambled disc image
+            - sub           - Binary subchannel data as read from the disc
+            - subError      - Subchannel read errors
+            - subInfo       - Subchannel informational messages
+            - subIntention  - Subchannel intentional error information
+            - subReadable   - Human-readable version of `sub`
+            - volDesc       - Volume descriptor information
             */
 
             string missingFiles = string.Empty;
@@ -2200,8 +2224,8 @@ namespace MPF.DiscImageCreator
             }
 
             // Fill in any artifacts that exist, Base64-encoded
-            if (File.Exists(basePath + ".c2"))
-                info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
+            //if (File.Exists(basePath + ".c2"))
+            //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
             if (File.Exists(basePath + "_c2Error.txt"))
                 info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
             if (File.Exists(basePath + ".ccd"))
@@ -2240,10 +2264,10 @@ namespace MPF.DiscImageCreator
                 info.Artifacts["subInfo"] = GetBase64(GetFullFile(basePath + "_subInfo.txt"));
             if (File.Exists(basePath + "_subIntention.txt"))
                 info.Artifacts["subIntention"] = GetBase64(GetFullFile(basePath + "_subIntention.txt"));
-            if (File.Exists(basePath + "_sub.txt"))
-                info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
-            if (File.Exists(basePath + "_subReadable.txt"))
-                info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
+            //if (File.Exists(basePath + "_sub.txt"))
+            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
+            //if (File.Exists(basePath + "_subReadable.txt"))
+            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
             if (File.Exists(basePath + "_volDesc.txt"))
                 info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
         }
