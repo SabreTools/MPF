@@ -506,44 +506,58 @@ namespace MPF.Utilities
             if (!FoundAllFiles(resultProgress))
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
 
+            // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
             SubmissionInfo submissionInfo = await ExtractOutputInformation(resultProgress, protectionProgress);
             resultProgress?.Report(Result.Success("Extracting information complete!"));
 
+            // Eject the disc automatically if confugured to
             if (ejectDisc == true)
             {
                 resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
                 EjectDisc();
             }
 
+            // Reset the drive automatically if confugured to
             if (resetDrive)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
                 ResetDrive();
             }
 
+            // Get user-modifyable information if confugured to
             if (PromptForDiscInformation && showUserPrompt != null)
             {
                 resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
                 bool? filledInfo = showUserPrompt(submissionInfo);
-                resultProgress?.Report(Result.Success("Additional disc information added!"));
+                if (filledInfo == true)
+                    resultProgress?.Report(Result.Success("Additional disc information added!"));
+                else
+                    resultProgress?.Report(Result.Success("Disc information skipped!"));
             }
 
-            resultProgress?.Report(Result.Success("Formatting extracted information..."));
+            // Format the information for the text output
+            resultProgress?.Report(Result.Success("Formatting information..."));
             List<string> formattedValues = FormatOutputData(submissionInfo);
             resultProgress?.Report(Result.Success("Formatting complete!"));
 
+            // Write the text output
             resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
             bool success = WriteOutputData(formattedValues);
-            success &= WriteOutputData(submissionInfo);
-
             if (success)
                 resultProgress?.Report(Result.Success("Writing complete!"));
             else
                 resultProgress?.Report(Result.Failure("Writing could not complete!"));
 
-            resultProgress?.Report(Result.Success("All submission information gathered!"));
+            // Write the JSON output
+            resultProgress?.Report(Result.Success("Writing information to !submissionInfo.json.gz..."));
+            success = WriteOutputData(submissionInfo);
+            if (success)
+                resultProgress?.Report(Result.Success("Writing complete!"));
+            else
+                resultProgress?.Report(Result.Failure("Writing could not complete!"));
 
+            resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
         }
 
