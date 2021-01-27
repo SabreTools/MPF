@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -1329,7 +1330,7 @@ namespace MPF.Utilities
         /// <summary>
         /// Write the data to the output folder
         /// </summary>
-        /// <param name="info">SubmissionInfo object representign the JSON to write out to the file</param>
+        /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
         /// <returns>True on success, false on error</returns>
         private bool WriteOutputData(SubmissionInfo info)
         {
@@ -1337,13 +1338,15 @@ namespace MPF.Utilities
             if (info == null)
                 return false;
 
-            // Now write out to a generic file
+            // Now write out to the JSON
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(OutputDirectory, "!submissionInfo.json"), FileMode.Create, FileAccess.Write)))
+                using (var fs = File.Create(Path.Combine(OutputDirectory, "!submissionInfo.json.gz")))
+                using (var gs = new GZipStream(fs, CompressionMode.Compress))
                 {
-                    string json = JsonConvert.SerializeObject(info, Newtonsoft.Json.Formatting.Indented);
-                    sw.WriteLine(json);
+                    string json = JsonConvert.SerializeObject(info, Formatting.Indented);
+                    byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+                    gs.Write(jsonBytes, 0, jsonBytes.Length);
                 }
             }
             catch
