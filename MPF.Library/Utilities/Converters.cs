@@ -2229,7 +2229,7 @@ namespace MPF.Utilities
 
         public override void WriteJson(JsonWriter writer, KnownSystem? value, JsonSerializer serializer)
         {
-            JToken t = JToken.FromObject(value.ToRedumpSystem().ShortName() ?? value.ShortName());
+            JToken t = JToken.FromObject(value.ToRedumpSystem().ShortName() ?? value.ShortName() ?? string.Empty);
             t.WriteTo(writer);
         }
     }
@@ -2251,7 +2251,7 @@ namespace MPF.Utilities
             JArray array = new JArray();
             foreach (var val in value)
             {
-                JToken t = JToken.FromObject(val.ShortName());
+                JToken t = JToken.FromObject(val.ShortName() ?? string.Empty);
                 array.Add(t);
             }
 
@@ -2276,7 +2276,7 @@ namespace MPF.Utilities
             JArray array = new JArray();
             foreach (var val in value)
             {
-                JToken t = JToken.FromObject(val.LongName());
+                JToken t = JToken.FromObject(val.LongName() ?? string.Empty);
                 array.Add(t);
             }
 
@@ -2298,7 +2298,7 @@ namespace MPF.Utilities
 
         public override void WriteJson(JsonWriter writer, MediaType? value, JsonSerializer serializer)
         {
-            JToken t = JToken.FromObject(value.ShortName());
+            JToken t = JToken.FromObject(value.ShortName() ?? string.Empty);
             t.WriteTo(writer);
         }
     }
@@ -2317,7 +2317,7 @@ namespace MPF.Utilities
 
         public override void WriteJson(JsonWriter writer, Region? value, JsonSerializer serializer)
         {
-            JToken t = JToken.FromObject(value.ShortName());
+            JToken t = JToken.FromObject(value.ShortName() ?? string.Empty);
             t.WriteTo(writer);
         }
     }
