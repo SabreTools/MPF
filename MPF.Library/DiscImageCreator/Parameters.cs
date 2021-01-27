@@ -2201,7 +2201,7 @@ namespace MPF.DiscImageCreator
 
             // Fill in any artifacts that exist, Base64-encoded
             if (File.Exists(basePath + ".c2"))
-                info.Artifacts["c2"] = GetBase64(GetFullFile(basePath + ".c2", binary: true));
+                info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
             if (File.Exists(basePath + "_c2Error.txt"))
                 info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
             if (File.Exists(basePath + ".ccd"))
@@ -2215,7 +2215,7 @@ namespace MPF.DiscImageCreator
             if (File.Exists(basePath + "_disc.txt"))
                 info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
             //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
-            //    info.Artifacts["dmi"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "DMI.bin"), binary: true));
+            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "DMI.bin")));
             if (File.Exists(basePath + "_drive.txt"))
                 info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
             if (File.Exists(basePath + "_img.cue"))
@@ -2229,11 +2229,11 @@ namespace MPF.DiscImageCreator
             if (File.Exists(basePath + "_mainInfo.txt"))
                 info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
             //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
-            //    info.Artifacts["pfi"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "PFI.bin"), binary: true));
+            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "PFI.bin")));
             //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
-            //    info.Artifacts["ss"] = GetBase64(GetFullFile(Path.Combine(outputDirectory, "SS.bin"), binary: true));
+            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "SS.bin")));
             if (File.Exists(basePath + ".sub"))
-                info.Artifacts["sub"] = GetBase64(GetFullFile(basePath + ".sub", binary: true));
+                info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".sub"));
             if (File.Exists(basePath + "_subError.txt"))
                 info.Artifacts["subError"] = GetBase64(GetFullFile(basePath + "_subError.txt"));
             if (File.Exists(basePath + "_subInfo.txt"))

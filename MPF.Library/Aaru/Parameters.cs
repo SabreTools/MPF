@@ -1695,11 +1695,11 @@ namespace MPF.Aaru
             if (File.Exists(basePath + ".cicm.xml"))
                 info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
             if (File.Exists(basePath + ".ibg"))
-                info.Artifacts["ibg"] = GetBase64(GetFullFile(basePath + ".ibg", binary: true));
+                info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
             if (File.Exists(basePath + ".log"))
                 info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
             if (File.Exists(basePath + ".mhddlog.bin"))
-                info.Artifacts["mhddlog_bin"] = GetBase64(GetFullFile(basePath + ".mhddlog.bin", binary: true));
+                info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
             if (File.Exists(basePath + ".resume.xml"))
                 info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
             if (File.Exists(basePath + ".sub.log"))
