@@ -953,6 +953,13 @@ namespace MPF.Utilities
                 return KnownSystem.VTechVFlashVSmilePro;
             }
 
+            // VCD
+            if (Directory.Exists(Path.Combine(drivePath, "VCD"))
+                && Directory.EnumerateFiles(Path.Combine(drivePath, "VCD")).Count() > 0)
+            {
+                return KnownSystem.VideoCD;
+            }
+
             // Default return
             return KnownSystem.NONE;
         }
