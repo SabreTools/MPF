@@ -14,14 +14,19 @@ namespace MPF.Utilities
         public InternalDriveType? InternalDriveType { get; set; }
 
         /// <summary>
-        /// DriveInfo object representing the drive, if possible
+        /// Drive partition format
         /// </summary>
-        public DriveInfo DriveInfo { get; private set; }
+        public string DriveFormat { get { return driveInfo.DriveFormat; } }
 
         /// <summary>
         /// Windows drive letter
         /// </summary>
-        public char Letter { get { return DriveInfo?.Name[0] ?? '\0'; } }
+        public char Letter { get { return driveInfo?.Name[0] ?? '\0'; } }
+
+        /// <summary>
+        /// Represents if Windows has marked the drive as active
+        /// </summary>
+        public bool MarkedActive { get { return driveInfo.IsReady; } }
 
         /// <summary>
         /// Media label as read by Windows
@@ -31,12 +36,12 @@ namespace MPF.Utilities
             get
             {
                 string volumeLabel = Template.DiscNotDetected;
-                if (DriveInfo.IsReady)
+                if (driveInfo.IsReady)
                 {
-                    if (string.IsNullOrWhiteSpace(DriveInfo.VolumeLabel))
+                    if (string.IsNullOrWhiteSpace(driveInfo.VolumeLabel))
                         volumeLabel = "track";
                     else
-                        volumeLabel = DriveInfo.VolumeLabel;
+                        volumeLabel = driveInfo.VolumeLabel;
                 }
 
                 foreach (char c in Path.GetInvalidFileNameChars())
@@ -47,19 +52,14 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Drive partition format
+        /// DriveInfo object representing the drive, if possible
         /// </summary>
-        public string DriveFormat { get { return DriveInfo.DriveFormat; } }
-
-        /// <summary>
-        /// Represents if Windows has marked the drive as active
-        /// </summary>
-        public bool MarkedActive { get { return DriveInfo.IsReady; } }
+        private DriveInfo driveInfo = null;
 
         public Drive(InternalDriveType? driveType, DriveInfo driveInfo)
         {
             this.InternalDriveType = driveType;
-            this.DriveInfo = driveInfo;
+            this.driveInfo = driveInfo;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace MPF.Utilities
         public byte[] ReadSector(long num, int size = 2048)
         {
             // Missing drive leter is not supported
-            if (string.IsNullOrEmpty(this.DriveInfo?.Name))
+            if (string.IsNullOrEmpty(this.driveInfo?.Name))
                 return null;
 
             // We don't support negative sectors
