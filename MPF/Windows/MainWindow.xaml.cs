@@ -124,47 +124,51 @@ namespace MPF.Windows
         /// </summary>
         private void CacheCurrentDiscType()
         {
-            // Get the drive letter from the selected item
-            if (DriveLetterComboBox.SelectedItem is Drive drive)
+            // If the selected item is invalid, we just skip
+            if (!(DriveLetterComboBox.SelectedItem is Drive drive))
+                return;
+
+            // Get reasonable default values based on the current system
+            KnownSystem? currentSystem = Systems[SystemTypeComboBox.SelectedIndex];
+            MediaType? defaultMediaType = Validators.GetValidMediaTypes(currentSystem).FirstOrDefault() ?? MediaType.CDROM;
+            if (defaultMediaType == MediaType.NONE)
+                defaultMediaType = MediaType.CDROM;
+
+            // If we're skipping detection, set the default value
+            if (UIOptions.Options.SkipMediaTypeDetection)
             {
-                // Get reasonable default values based on the current system
-                KnownSystem? currentSystem = Systems[SystemTypeComboBox.SelectedIndex];
-                MediaType? defaultMediaType = Validators.GetValidMediaTypes(currentSystem).FirstOrDefault() ?? MediaType.CDROM;
-                if (defaultMediaType == MediaType.NONE)
-                    defaultMediaType = MediaType.CDROM;
+                ViewModels.LoggerViewModel.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
+                CurrentMediaType = defaultMediaType;
+            }
 
-                // Get the current media type, if possible
-                if (UIOptions.Options.SkipMediaTypeDetection)
+            // If the drive is marked active, try to read from it
+            else if (drive.MarkedActive)
+            {
+                ViewModels.LoggerViewModel.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
+                (MediaType? detectedMediaType, string errorMessage) = Validators.GetMediaType(drive);
+
+                // If we got an error message, post it to the log
+                if (errorMessage != null)
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Error in detecting media type: {errorMessage}");
+
+                // If we got either an error or no media, default to the current System default
+                if (detectedMediaType == null)
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
                     CurrentMediaType = defaultMediaType;
-                }
-                else if (drive.MarkedActive)
-                {
-                    ViewModels.LoggerViewModel.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
-                    string errorMessage;
-                    (CurrentMediaType, errorMessage) = Validators.GetMediaType(drive);
-
-                    // If we got an error message, post it to the log
-                    if (errorMessage != null)
-                        ViewModels.LoggerViewModel.VerboseLogLn($"Error in detecting media type: {errorMessage}");
-
-                    // If we got either an error or no media, default to the current System default
-                    if (CurrentMediaType == null)
-                    {
-                        ViewModels.LoggerViewModel.VerboseLogLn($"unable to detect, defaulting to {defaultMediaType.LongName()}.");
-                        CurrentMediaType = defaultMediaType;
-                    }
-                    else
-                    {
-                        ViewModels.LoggerViewModel.VerboseLogLn($"detected {CurrentMediaType.LongName()}.");
-                    }
                 }
                 else
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
-                    CurrentMediaType = defaultMediaType;
+                    ViewModels.LoggerViewModel.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
+                    CurrentMediaType = detectedMediaType;
                 }
+            }
+
+            // All other cases, just use the default
+            else
+            {
+                ViewModels.LoggerViewModel.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
+                CurrentMediaType = defaultMediaType;
             }
         }
 
@@ -439,19 +443,27 @@ namespace MPF.Windows
         /// <summary>
         /// Performs UI value setup end to end
         /// </summary>
-        /// <param name="removeFirst">Whether event handlers need to be removed first</param>
-        private void InitializeUIValues(bool removeFirst)
+        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
+        /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
+        private void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
         {
             // Disable the dumping button
             StartStopButton.IsEnabled = false;
 
             // Remove event handlers to ensure ordering
-            if (removeFirst)
+            if (removeEventHandlers)
                 RemoveEventHandlers();
 
             // Populate the list of drives and determine the system
-            StatusLabel.Content = "Creating drive list, please wait!";
-            PopulateDrives();
+            if (rescanDrives)
+            {
+                StatusLabel.Content = "Creating drive list, please wait!";
+                PopulateDrives();
+            }
+            else
+            {
+                DetermineSystemType();
+            }
 
             // Determine current media type, if possible
             PopulateMediaType();
@@ -461,7 +473,7 @@ namespace MPF.Windows
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
             Env = DetermineEnvironment();
-            GetOutputNames(false);
+            GetOutputNames(!rescanDrives);
             EnsureDiscInformation();
 
             // Add event handlers
@@ -714,11 +726,7 @@ namespace MPF.Windows
         /// </summary>
         private void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DetermineSystemType();
-            CacheCurrentDiscType();
-            SetCurrentDiscType();
-            GetOutputNames(true);
-            SetSupportedDriveSpeed();
+            InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
         }
 
         /// <summary>
@@ -764,7 +772,7 @@ namespace MPF.Windows
         /// </summary>
         private void MediaScanButtonClick(object sender, RoutedEventArgs e)
         {
-            InitializeUIValues(true);
+            InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
         }
 
         /// <summary>
@@ -827,7 +835,7 @@ namespace MPF.Windows
             PopulateMediaType();
 
             // Initialize drives and UI values
-            InitializeUIValues(false);
+            InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
         }
 
         /// <summary>
@@ -836,7 +844,7 @@ namespace MPF.Windows
         /// <remarks>Identical to MediaScanButtonClick</remarks>
         public void OnOptionsUpdated()
         {
-            InitializeUIValues(true);
+            InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
         }
 
         /// <summary>
