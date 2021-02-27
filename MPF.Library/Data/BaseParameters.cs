@@ -724,8 +724,34 @@ namespace MPF.Data
         /// <returns>Game version if possible, null on error</returns>
         protected static string GetPlayStation5Version(char? driveLetter)
         {
-            // TODO: Implement PS5 version finding
-            return null;
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.json, we don't have a PlayStation 5 disc
+            string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
+            if (!File.Exists(paramJsonPath))
+                return null;
+
+            // Let's try reading param.json to find the version in the unencrypted JSON
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                {
+                    br.BaseStream.Seek(0x89E, SeekOrigin.Begin);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
         }
 
         #endregion
