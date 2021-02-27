@@ -155,6 +155,15 @@ namespace MPF.Web
         [JsonProperty(PropertyName = "d_ring_0_ts3", NullValueHandling = NullValueHandling.Ignore)]
         public string ToolstampMasteringCodeThirdLayer { get; set; }
 
+        [JsonProperty(PropertyName = "d_ring_0_ma4", Required = Required.AllowNull)]
+        public string MasteringRingFourthLayer { get; set; }
+
+        [JsonProperty(PropertyName = "d_ring_0_ma4_sid", NullValueHandling = NullValueHandling.Ignore)]
+        public string MasteringSIDCodeFourthLayer { get; set; }
+
+        [JsonProperty(PropertyName = "d_ring_0_ts4", NullValueHandling = NullValueHandling.Ignore)]
+        public string ToolstampMasteringCodeFourthLayer { get; set; }
+
         [JsonProperty(PropertyName = "d_ring_0_offsets", NullValueHandling = NullValueHandling.Ignore)]
         public string RingOffsetsHidden { get { return "1"; } }
 
@@ -316,6 +325,9 @@ namespace MPF.Web
 
         [JsonProperty(PropertyName = "d_layerbreak_2", NullValueHandling = NullValueHandling.Ignore)]
         public long Layerbreak2 { get; set; }
+
+        [JsonProperty(PropertyName = "d_layerbreak_3", NullValueHandling = NullValueHandling.Ignore)]
+        public long Layerbreak3 { get; set; }
 
         [JsonProperty(PropertyName = "d_size", NullValueHandling = NullValueHandling.Ignore)]
         public long Size { get; set; }
