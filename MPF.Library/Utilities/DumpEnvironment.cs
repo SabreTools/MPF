@@ -1063,8 +1063,24 @@ namespace MPF.Utilities
                 // All ringcode information goes in an indented area
                 output.Add(""); output.Add("\tRingcode Information:");
 
+                // If we have a triple-layer disc
+                if (info.SizeAndChecksums.Layerbreak2 != default)
+                {
+                    AddIfExists(output, "Layer 0 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
+                    AddIfExists(output, "Layer 0 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Layer 0 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingSecondLayerLabelSide, 2);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingThirdLayer, 2);
+                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeThirdLayer, 2);
+                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeThirdLayer, 2);
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
+                }
                 // If we have a dual-layer disc
-                if (info.SizeAndChecksums.Layerbreak != default)
+                else if (info.SizeAndChecksums.Layerbreak != default)
                 {
                     AddIfExists(output, "Inner " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
                     AddIfExists(output, "Inner " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);

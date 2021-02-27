@@ -146,6 +146,15 @@ namespace MPF.Web
         [JsonProperty(PropertyName = "dr_ring_0_mo2", NullValueHandling = NullValueHandling.Ignore)]
         public string AdditionalMouldSecondLayerLabelSide { get; set; }
 
+        [JsonProperty(PropertyName = "d_ring_0_ma3", Required = Required.AllowNull)]
+        public string MasteringRingThirdLayer { get; set; }
+
+        [JsonProperty(PropertyName = "d_ring_0_ma3_sid", NullValueHandling = NullValueHandling.Ignore)]
+        public string MasteringSIDCodeThirdLayer { get; set; }
+
+        [JsonProperty(PropertyName = "d_ring_0_ts3", NullValueHandling = NullValueHandling.Ignore)]
+        public string ToolstampMasteringCodeThirdLayer { get; set; }
+
         [JsonProperty(PropertyName = "d_ring_0_offsets", NullValueHandling = NullValueHandling.Ignore)]
         public string RingOffsetsHidden { get { return "1"; } }
 
@@ -298,12 +307,15 @@ namespace MPF.Web
     }
 
     /// <summary>
-    /// Size & checksums section of New Disc form (DVD/BD/UMD-based)
+    /// Size &amp; checksums section of New Disc form (DVD/BD/UMD-based)
     /// </summary>
     public class SizeAndChecksumsSection
     {
         [JsonProperty(PropertyName = "d_layerbreak", NullValueHandling = NullValueHandling.Ignore)]
         public long Layerbreak { get; set; }
+
+        [JsonProperty(PropertyName = "d_layerbreak_2", NullValueHandling = NullValueHandling.Ignore)]
+        public long Layerbreak2 { get; set; }
 
         [JsonProperty(PropertyName = "d_size", NullValueHandling = NullValueHandling.Ignore)]
         public long Size { get; set; }
