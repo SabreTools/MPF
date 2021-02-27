@@ -505,4 +505,7 @@ namespace MPF.Data
         PowerStateSettable = 5,
         PowerCyclingSupported = 6,
         TimedPowerOnSupported = 7,
- 
+    }
+
+    #endregion
+}

@@ -186,6 +186,8 @@ namespace MPF.Utilities
                     return KnownSystem.SonyPlayStation3;
                 case RedumpSystem.SonyPlayStation4:
                     return KnownSystem.SonyPlayStation4;
+                case RedumpSystem.SonyPlayStation5:
+                    return KnownSystem.SonyPlayStation5;
                 case RedumpSystem.SonyPlayStationPortable:
                     return KnownSystem.SonyPlayStationPortable;
                 case RedumpSystem.TABAustriaQuizard:
@@ -431,6 +433,8 @@ namespace MPF.Utilities
                     return RedumpSystem.SonyPlayStation3;
                 case KnownSystem.SonyPlayStation4:
                     return RedumpSystem.SonyPlayStation4;
+                case KnownSystem.SonyPlayStation5:
+                    return RedumpSystem.SonyPlayStation5;
                 case KnownSystem.SonyPlayStationPortable:
                     return RedumpSystem.SonyPlayStationPortable;
                 case KnownSystem.TABAustriaQuizard:
@@ -574,6 +578,8 @@ namespace MPF.Utilities
                     return "Sony PlayStation 3";
                 case KnownSystem.SonyPlayStation4:
                     return "Sony PlayStation 4";
+                case KnownSystem.SonyPlayStation5:
+                    return "Sony PlayStation 5";
                 case KnownSystem.SonyPlayStationPortable:
                     return "Sony PlayStation Portable";
                 case KnownSystem.TandyMemorexVisualInformationSystem:
@@ -982,6 +988,8 @@ namespace MPF.Utilities
                     return "ps3";
                 case KnownSystem.SonyPlayStation4:
                     return "ps4";
+                case KnownSystem.SonyPlayStation5:
+                    return "ps5";
                 case KnownSystem.SonyPlayStationPortable:
                     return "psp";
                 case KnownSystem.TandyMemorexVisualInformationSystem:
@@ -1585,6 +1593,14 @@ namespace MPF.Utilities
                 case "sonyplaystation4":
                 case "sony playstation 4":
                     return KnownSystem.SonyPlayStation4;
+                case "ps5":
+                case "playstation5":
+                case "playstation 5":
+                case "sonyps5":
+                case "sony ps5":
+                case "sonyplaystation5":
+                case "sony playstation 5":
+                    return KnownSystem.SonyPlayStation5;
                 case "psp":
                 case "playstationportable":
                 case "playstation portable":

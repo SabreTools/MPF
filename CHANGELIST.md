@@ -21,6 +21,7 @@
 - Update to DIC version 20210202
 - Add VCD detection
 - Fix UI not updating properly on drive change
+- Add Xbox Series and PS5 to supported systems
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

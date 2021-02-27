@@ -32,6 +32,7 @@
             RedumpSystem.SegaRingEdge2,
             RedumpSystem.SonyPlayStation3,
             RedumpSystem.SonyPlayStation4,
+            //RedumpSystem.SonyPlayStation5,
             RedumpSystem.VideoCD,
         };
 
@@ -164,6 +165,7 @@
             RedumpSystem.SonyPlayStation2,
             RedumpSystem.SonyPlayStation3,
             RedumpSystem.SonyPlayStation4,
+            //RedumpSystem.SonyPlayStation5,
             RedumpSystem.SonyPlayStationPortable,
             RedumpSystem.TABAustriaQuizard,
             RedumpSystem.TomyKissSite,
@@ -1202,6 +1204,8 @@
                     return "Sony PlayStation 3";
                 case RedumpSystem.SonyPlayStation4:
                     return "Sony PlayStation 4";
+                case RedumpSystem.SonyPlayStation5:
+                    return "Sony PlayStation 5";
                 case RedumpSystem.SonyPlayStationPortable:
                     return "Sony PlayStation Portable";
                 case RedumpSystem.TABAustriaQuizard:
@@ -1377,6 +1381,8 @@
                     return "ps3";
                 case RedumpSystem.SonyPlayStation4:
                     return "ps4";
+                case RedumpSystem.SonyPlayStation5:
+                    return "ps5";
                 case RedumpSystem.SonyPlayStationPortable:
                     return "psp";
                 case RedumpSystem.TABAustriaQuizard:
@@ -1883,6 +1889,14 @@
                 case "sonyplaystation4":
                 case "sony playstation 4":
                     return RedumpSystem.SonyPlayStation4;
+                case "ps5":
+                case "playstation5":
+                case "playstation 5":
+                case "sonyps5":
+                case "sony ps5":
+                case "sonyplaystation5":
+                case "sony playstation 5":
+                    return RedumpSystem.SonyPlayStation5;
                 case "psp":
                 case "playstationportable":
                 case "playstation portable":

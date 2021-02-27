@@ -2221,6 +2221,10 @@ namespace MPF.DiscImageCreator
                 case KnownSystem.SonyPlayStation4:
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
                     break;
+
+                case KnownSystem.SonyPlayStation5:
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
+                    break;
             }
 
             // Fill in any artifacts that exist, Base64-encoded

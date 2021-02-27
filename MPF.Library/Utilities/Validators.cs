@@ -207,6 +207,11 @@ namespace MPF.Utilities
                     types.Add(MediaType.BluRay);
                     break;
 
+                // https://en.wikipedia.org/wiki/PlayStation_5
+                case KnownSystem.SonyPlayStation5:
+                    types.Add(MediaType.BluRay);
+                    break;
+
                 // https://en.wikipedia.org/wiki/PlayStation_Portable
                 case KnownSystem.SonyPlayStationPortable:
                     types.Add(MediaType.UMD);
@@ -950,6 +955,12 @@ namespace MPF.Utilities
             if (drive.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {
                 return KnownSystem.SonyPlayStation4;
+            }
+
+            // Sony PlayStation 5
+            if (drive.VolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
+            {
+                return KnownSystem.SonyPlayStation5;
             }
 
             // V.Tech V.Flash / V.Smile Pro

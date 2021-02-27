@@ -717,6 +717,17 @@ namespace MPF.Data
             }
         }
 
+        /// <summary>
+        /// Get the version from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        protected static string GetPlayStation5Version(char? driveLetter)
+        {
+            // TODO: Implement PS5 version finding
+            return null;
+        }
+
         #endregion
 
         #region Category Extraction
