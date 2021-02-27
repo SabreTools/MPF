@@ -74,6 +74,7 @@ namespace MPF.Data
         MicrosoftXBOX,
         MicrosoftXBOX360,
         MicrosoftXBOXOne,
+        MicrosoftXboxSeriesXS,
         NECPCEngineTurboGrafxCD,
         NECPCFX,
         NintendoGameCube,
@@ -91,6 +92,7 @@ namespace MPF.Data
         SonyPlayStation2,
         SonyPlayStation3,
         SonyPlayStation4,
+        SonyPlayStation5,
         SonyPlayStationPortable,
         TandyMemorexVisualInformationSystem,
         VMLabsNuon,
@@ -503,7 +505,4 @@ namespace MPF.Data
         PowerStateSettable = 5,
         PowerCyclingSupported = 6,
         TimedPowerOnSupported = 7,
-    }
-
-    #endregion
-}
+ 

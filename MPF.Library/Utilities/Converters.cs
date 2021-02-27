@@ -116,6 +116,8 @@ namespace MPF.Utilities
                     return KnownSystem.MicrosoftXBOX360;
                 case RedumpSystem.MicrosoftXboxOne:
                     return KnownSystem.MicrosoftXBOXOne;
+                case RedumpSystem.MicrosoftXboxSeriesXS:
+                    return KnownSystem.MicrosoftXboxSeriesXS;
                 case RedumpSystem.NECPC88series:
                     return KnownSystem.NECPC88;
                 case RedumpSystem.NECPC98series:
@@ -359,6 +361,8 @@ namespace MPF.Utilities
                     return RedumpSystem.MicrosoftXbox360;
                 case KnownSystem.MicrosoftXBOXOne:
                     return RedumpSystem.MicrosoftXboxOne;
+                case KnownSystem.MicrosoftXboxSeriesXS:
+                    return RedumpSystem.MicrosoftXboxSeriesXS;
                 case KnownSystem.NamcoSegaNintendoTriforce:
                     return RedumpSystem.NamcoSegaNintendoTriforce;
                 case KnownSystem.NamcoSystem12:
@@ -534,6 +538,8 @@ namespace MPF.Utilities
                     return "Microsoft XBOX 360";
                 case KnownSystem.MicrosoftXBOXOne:
                     return "Microsoft XBOX One";
+                case KnownSystem.MicrosoftXboxSeriesXS:
+                    return "Microsoft XBOX Series X and S";
                 case KnownSystem.NECPCEngineTurboGrafxCD:
                     return "NEC PC-Engine / TurboGrafx CD";
                 case KnownSystem.NECPCFX:
@@ -940,6 +946,8 @@ namespace MPF.Utilities
                     return "x360";
                 case KnownSystem.MicrosoftXBOXOne:
                     return "xbone";
+                case KnownSystem.MicrosoftXboxSeriesXS:
+                    return "xbseries";
                 case KnownSystem.NECPCEngineTurboGrafxCD:
                     return "pcecd";
                 case KnownSystem.NECPCFX:
@@ -1418,6 +1426,24 @@ namespace MPF.Utilities
                 case "microsoft xbone":
                 case "microsoft xbox one":
                     return KnownSystem.MicrosoftXBOXOne;
+                case "xbs":
+                case "xbseries":
+                case "xbseriess":
+                case "xbseriesx":
+                case "xbseriessx":
+                case "xboxseries":
+                case "xboxseriess":
+                case "xboxseriesx":
+                case "xboxseriesxs":
+                case "microsoftxboxseries":
+                case "microsoftxboxseriess":
+                case "microsoftxboxseriesx":
+                case "microsoftxboxseriesxs":
+                case "microsoft xbox series":
+                case "microsoft xbox series s":
+                case "microsoft xbox series x":
+                case "microsoft xbox series x and s":
+                    return KnownSystem.MicrosoftXboxSeriesXS;
                 case "pcecd":
                 case "pce-cd":
                 case "tgcd":

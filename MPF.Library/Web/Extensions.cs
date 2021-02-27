@@ -22,6 +22,7 @@
             RedumpSystem.KonamiM2,
             RedumpSystem.MicrosoftXbox360,
             RedumpSystem.MicrosoftXboxOne,
+            //RedumpSystem.MicrosoftXboxSeriesXS,
             RedumpSystem.NavisoftNaviken21,
             RedumpSystem.NintendoWii,
             RedumpSystem.NintendoWiiU,
@@ -132,6 +133,7 @@
             RedumpSystem.MicrosoftXbox,
             RedumpSystem.MicrosoftXbox360,
             RedumpSystem.MicrosoftXboxOne,
+            //RedumpSystem.MicrosoftXboxSeriesXS,
             RedumpSystem.NamcoSegaNintendoTriforce,
             RedumpSystem.NamcoSystem246,
             RedumpSystem.NavisoftNaviken21,
@@ -1130,6 +1132,8 @@
                     return "Microsoft Xbox 360";
                 case RedumpSystem.MicrosoftXboxOne:
                     return "Microsoft Xbox One";
+                case RedumpSystem.MicrosoftXboxSeriesXS:
+                    return "Microsoft Xbox Series X and S";
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     return "Namco · Sega · Nintendo Triforce";
                 case RedumpSystem.NamcoSystem12:
@@ -1303,6 +1307,8 @@
                     return "xbox360";
                 case RedumpSystem.MicrosoftXboxOne:
                     return "xboxone";
+                case RedumpSystem.MicrosoftXboxSeriesXS:
+                    return "xboxseries";
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     return "triforce";
                 case RedumpSystem.NamcoSystem12:
@@ -1643,6 +1649,24 @@
                 case "microsoft xbone":
                 case "microsoft xbox one":
                     return RedumpSystem.MicrosoftXboxOne;
+                case "xbs":
+                case "xbseries":
+                case "xbseriess":
+                case "xbseriesx":
+                case "xbseriessx":
+                case "xboxseries":
+                case "xboxseriess":
+                case "xboxseriesx":
+                case "xboxseriesxs":
+                case "microsoftxboxseries":
+                case "microsoftxboxseriess":
+                case "microsoftxboxseriesx":
+                case "microsoftxboxseriesxs":
+                case "microsoft xbox series":
+                case "microsoft xbox series s":
+                case "microsoft xbox series x":
+                case "microsoft xbox series x and s":
+                    return RedumpSystem.MicrosoftXboxSeriesXS;
                 case "triforce":
                 case "namcotriforce":
                 case "namco triforce":

@@ -110,6 +110,11 @@ namespace MPF.Utilities
                     types.Add(MediaType.BluRay);
                     break;
 
+                // https://en.wikipedia.org/wiki/Xbox_Series_X_and_Series_S
+                case KnownSystem.MicrosoftXboxSeriesXS:
+                    types.Add(MediaType.BluRay);
+                    break;
+
                 // https://en.wikipedia.org/wiki/TurboGrafx-16
                 case KnownSystem.NECPCEngineTurboGrafxCD:
                     types.Add(MediaType.CDROM);
