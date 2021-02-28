@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MPF"
+        xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
         Title="Disc Information" Height="733" Width="515.132" ResizeMode="NoResize"
         Closed="OnClosed">
@@ -47,17 +48,10 @@
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
-                <Label x:Name="TitleLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Title" />
-                <TextBox x:Name="TitleTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="ForeignTitleLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Foreign Title (Non-Latin)" />
-                <TextBox x:Name="ForeignTitleTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="DiscNumberLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Number / Letter" />
-                <TextBox x:Name="DiscNumberLetterTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="DiscTitleLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Disc Title" />
-                <TextBox x:Name="DiscTitleTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <controls:UserInput x:Name="Title" Grid.Row="0" Grid.ColumnSpan="2" Label="Title"/>
+                <controls:UserInput x:Name="ForeignTitle" Grid.Row="1" Grid.ColumnSpan="2" Label="Foreign Title (Non-Latin)"/>
+                <controls:UserInput x:Name="DiscNumberLetter" Grid.Row="2" Grid.ColumnSpan="2" Label="Disc Number / Letter"/>
+                <controls:UserInput x:Name="DiscTitle" Grid.Row="3" Grid.ColumnSpan="2" Label="Disc Title"/>
 
                 <Label x:Name="CategoryLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
                 <ComboBox x:Name="CategoryComboBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
@@ -86,71 +80,38 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <Label x:Name="SerialLabel" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Serial" />
-                <TextBox x:Name="SerialTextBox" Grid.Row="7" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <controls:UserInput x:Name="Serial" Grid.Row="7" Grid.ColumnSpan="2" Label="Serial"/>
 
                 <!-- Layer 0 / Data Side -->
-                <Label x:Name="L0MasteringRingLabel" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering Ring" />
-                <TextBox x:Name="L0MasteringRingTextBox" Grid.Row="8" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsTab="True" />
-
-                <Label x:Name="L0MasteringSIDLabel" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mastering SID" />
-                <TextBox x:Name="L0MasteringSIDTextBox" Grid.Row="9" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="L0ToolstampLabel" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Toolstamp/Mastering Code" />
-                <TextBox x:Name="L0ToolstampTextBox" Grid.Row="10" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="L0MouldSIDLabel" Grid.Row="11" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Mould SID" />
-                <TextBox x:Name="L0MouldSIDTextBox" Grid.Row="11" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="L0AdditionalMouldLabel" Grid.Row="12" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Data/L0 Additional Mould" />
-                <TextBox x:Name="L0AdditionalMouldTextBox" Grid.Row="12" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <controls:UserInput x:Name="L0MasteringRing" Grid.Row="8" Grid.ColumnSpan="2" Label="Data/L0 Mastering Ring" Tab="True"/>
+                <controls:UserInput x:Name="L0MasteringSID" Grid.Row="9" Grid.ColumnSpan="2" Label="Data/L0 Mastering SID"/>
+                <controls:UserInput x:Name="L0Toolstamp" Grid.Row="10" Grid.ColumnSpan="2" Label="Data/L0 Toolstamp/Mastering Code"/>
+                <controls:UserInput x:Name="L0MouldSID" Grid.Row="11" Grid.ColumnSpan="2" Label="Data/L0 Mould SID"/>
+                <controls:UserInput x:Name="L0AdditionalMould" Grid.Row="12" Grid.ColumnSpan="2" Label="Data/L0 Additional Mould"/>
 
                 <!-- Layer 1 / Label Side -->
-                <Label x:Name="L1MasteringRingLabel" Grid.Row="13" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering Ring" />
-                <TextBox x:Name="L1MasteringRingTextBox" Grid.Row="13" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsTab="True" />
+                <controls:UserInput x:Name="L1MasteringRing" Grid.Row="13" Grid.ColumnSpan="2" Label="Label/L1 Mastering Ring" Tab="True"/>
+                <controls:UserInput x:Name="L1MasteringSID" Grid.Row="14" Grid.ColumnSpan="2" Label="Label/L1 Mastering SID"/>
+                <controls:UserInput x:Name="L1Toolstamp" Grid.Row="15" Grid.ColumnSpan="2" Label="Label/L1 Toolstamp/Mastering Code"/>
+                <controls:UserInput x:Name="L1MouldSID" Grid.Row="16" Grid.ColumnSpan="2" Label="Label/L1 Mould SID"/>
+                <controls:UserInput x:Name="L1AdditionalMould" Grid.Row="17" Grid.ColumnSpan="2" Label="Label/L1 Additional Mould"/>
 
-                <Label x:Name="L1MasteringSIDLabel" Grid.Row="14" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mastering SID" />
-                <TextBox x:Name="L1MasteringSIDTextBox" Grid.Row="14" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="L1ToolstampLabel" Grid.Row="15" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Toolstamp/Mastering Code" />
-                <TextBox x:Name="L1ToolstampTextBox" Grid.Row="15" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="L1MouldSIDLabel" Grid.Row="16" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Mould SID" />
-                <TextBox x:Name="L1MouldSIDTextBox" Grid.Row="16" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="L1AdditionalMouldLabel" Grid.Row="17" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Label/L1 Additional Mould" />
-                <TextBox x:Name="L1AdditionalMouldTextBox" Grid.Row="17" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label x:Name="BarcodeLabel" Grid.Row="18" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Barcode" />
-                <TextBox x:Name="BarcodeTextBox" Grid.Row="18" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <!-- This needs to be a multiline textbox -->
-                <Label x:Name="CommentsLabel" Grid.Row="19" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Comments" />
-                <TextBox x:Name="CommentsTextBox" Grid.Row="19" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True" />
-
-                <!-- This needs to be a multiline textbox -->
-                <Label x:Name="ContentsLabel" Grid.Row="20" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Contents" />
-                <TextBox x:Name="ContentsTextBox" Grid.Row="20" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" AcceptsReturn="True" AcceptsTab="True"/>
+                <controls:UserInput x:Name="Barcode" Grid.Row="18" Grid.ColumnSpan="2" Label="Barcode"/>
+                <controls:UserInput x:Name="Comments" Grid.Row="19" Grid.ColumnSpan="2" Label="Comments" Tab="True"/> <!-- This needs to be a multiline textbox -->
+                <controls:UserInput x:Name="Contents" Grid.Row="20" Grid.ColumnSpan="2" Label="Contents" Tab="True"/> <!-- This needs to be a multiline textbox -->
             </Grid>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions">
             <Grid Height="60">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="24"/>
                     <RowDefinition Height="24"/>
                 </Grid.RowDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Version" />
-                <TextBox x:Name="VersionTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
-
-                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Edition" />
-                <TextBox x:Name="EditionTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" />
+                <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
+                <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
             </Grid>
         </GroupBox>
 
