@@ -6,125 +6,153 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="Disc Information" Height="733" Width="515.132" ResizeMode="NoResize"
+        Title="Disc Information" Width="515" ResizeMode="NoResize"
+        SizeToContent="Height"
         Closed="OnClosed">
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="585"/>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="25"/>
-        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Width="500">
+            <TabControl Grid.Row="0">
+                <TabItem x:Name="CommonInfo" Header="Common Info">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-        <GroupBox Grid.Row="0" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information">
-            <Grid Margin="10,15,10,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*" />
-                    <ColumnDefinition Width="1*" />
-                </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Row="0" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information">
+                            <Grid Margin="10,15,10,10">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="Title" Label="Title"/>
+                                    <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
+                                    <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
+                                    <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
 
-                <controls:UserInput x:Name="Title" Grid.Row="0" Grid.ColumnSpan="2" Label="Title"/>
-                <controls:UserInput x:Name="ForeignTitle" Grid.Row="1" Grid.ColumnSpan="2" Label="Foreign Title (Non-Latin)"/>
-                <controls:UserInput x:Name="DiscNumberLetter" Grid.Row="2" Grid.ColumnSpan="2" Label="Disc Number / Letter"/>
-                <controls:UserInput x:Name="DiscTitle" Grid.Row="3" Grid.ColumnSpan="2" Label="Disc Title"/>
+                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                                        <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Name}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </Grid>
 
-                <Label x:Name="CategoryLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                <ComboBox x:Name="CategoryComboBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                                        <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Path=Name}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </Grid>
 
-                <Label x:Name="RegionLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                <ComboBox x:Name="RegionComboBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Path=Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
+                                        
+                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                                        <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </Grid>
 
-                <Label x:Name="LanguagesLabel" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                <ComboBox x:Name="LanguagesComboBox" Grid.Row="6" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                    <controls:UserInput x:Name="Serial" Label="Serial"/>
+                                    <controls:UserInput x:Name="Barcode" Label="Barcode"/>
+                                    <controls:UserInput x:Name="Comments" Label="Comments" Tab="True"/> <!-- This needs to be a multiline textbox -->
+                                    <controls:UserInput x:Name="Contents" Label="Contents" Tab="True"/> <!-- This needs to be a multiline textbox -->
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions">
+                            <Grid Height="60">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
+                                    <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
+                                </StackPanel>
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="L0Info" Header="Data/L0 Info">
+                    <Grid>
+                        <StackPanel Orientation="Vertical">
+                            <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Tab="True"/>
+                            <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID"/>
+                            <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code"/>
+                            <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID"/>
+                            <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                
+                <TabItem x:Name="L1Info" Header="Label/L1 Info">
+                    <Grid>
+                        <StackPanel Orientation="Vertical">
+                            <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Tab="True"/>
+                            <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID"/>
+                            <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code"/>
+                            <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID"/>
+                            <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
 
-                <controls:UserInput x:Name="Serial" Grid.Row="7" Grid.ColumnSpan="2" Label="Serial"/>
+                <TabItem x:Name="L2Info" Header="L2 Info" Visibility="Hidden">
+                    <Grid>
+                        <StackPanel Orientation="Vertical">
+                            <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Tab="True"/>
+                            <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID"/>
+                            <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
 
-                <!-- Layer 0 / Data Side -->
-                <controls:UserInput x:Name="L0MasteringRing" Grid.Row="8" Grid.ColumnSpan="2" Label="Data/L0 Mastering Ring" Tab="True"/>
-                <controls:UserInput x:Name="L0MasteringSID" Grid.Row="9" Grid.ColumnSpan="2" Label="Data/L0 Mastering SID"/>
-                <controls:UserInput x:Name="L0Toolstamp" Grid.Row="10" Grid.ColumnSpan="2" Label="Data/L0 Toolstamp/Mastering Code"/>
-                <controls:UserInput x:Name="L0MouldSID" Grid.Row="11" Grid.ColumnSpan="2" Label="Data/L0 Mould SID"/>
-                <controls:UserInput x:Name="L0AdditionalMould" Grid.Row="12" Grid.ColumnSpan="2" Label="Data/L0 Additional Mould"/>
+                <TabItem x:Name="L3Info" Header="L3 Info" Visibility="Hidden">
+                    <Grid>
+                        <StackPanel Orientation="Vertical">
+                            <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Tab="True"/>
+                            <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID"/>
+                            <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
 
-                <!-- Layer 1 / Label Side -->
-                <controls:UserInput x:Name="L1MasteringRing" Grid.Row="13" Grid.ColumnSpan="2" Label="Label/L1 Mastering Ring" Tab="True"/>
-                <controls:UserInput x:Name="L1MasteringSID" Grid.Row="14" Grid.ColumnSpan="2" Label="Label/L1 Mastering SID"/>
-                <controls:UserInput x:Name="L1Toolstamp" Grid.Row="15" Grid.ColumnSpan="2" Label="Label/L1 Toolstamp/Mastering Code"/>
-                <controls:UserInput x:Name="L1MouldSID" Grid.Row="16" Grid.ColumnSpan="2" Label="Label/L1 Mould SID"/>
-                <controls:UserInput x:Name="L1AdditionalMould" Grid.Row="17" Grid.ColumnSpan="2" Label="Label/L1 Additional Mould"/>
+            <!-- Accept / Cancel -->
+            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Height="28">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
 
-                <controls:UserInput x:Name="Barcode" Grid.Row="18" Grid.ColumnSpan="2" Label="Barcode"/>
-                <controls:UserInput x:Name="Comments" Grid.Row="19" Grid.ColumnSpan="2" Label="Comments" Tab="True"/> <!-- This needs to be a multiline textbox -->
-                <controls:UserInput x:Name="Contents" Grid.Row="20" Grid.ColumnSpan="2" Label="Contents" Tab="True"/> <!-- This needs to be a multiline textbox -->
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions">
-            <Grid Height="60">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="24"/>
-                    <RowDefinition Height="24"/>
-                </Grid.RowDefinitions>
-
-                <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
-                <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
-            </Grid>
-        </GroupBox>
-
-        <!-- Accept / Cancel -->
-        <Grid Height="28" Grid.Row="2" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            
-            <Button Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
-            <Button Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
-        </Grid>
+                    <Button Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
+                    <Button Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
+                </Grid>
+            </GroupBox>
+        </StackPanel>
     </Grid>
 </Window>
