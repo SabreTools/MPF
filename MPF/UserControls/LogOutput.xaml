@@ -7,47 +7,35 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Height="22" Margin="10 10 10 0">
-            <ProgressBar x:Name="progressBar" />
-            <TextBlock x:Name="progressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
-        </Grid>
-        <Border Grid.Row="1" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
-            <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
-                <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" TextChanged="OnTextChanged" />
-            </ScrollViewer>
-        </Border>
+        <StackPanel Orientation="Vertical">
+            <Grid Height="22" Margin="10 10 10 0">
+                <ProgressBar x:Name="progressBar" />
+                <TextBlock x:Name="progressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
+            </Grid>
+            
+            <Border Height="200"  Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
+                <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
+                    <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" TextChanged="OnTextChanged" />
+                </ScrollViewer>
+            </Border>
 
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition Width="3*"/>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-            <CheckBox Content="Verbose" Margin="10 0 0 10" Grid.Column="0" VerticalAlignment="Center" 
-                      ToolTip="Enable verbose logging of tasks"
-                      DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
-                      IsChecked="{Binding Path=VerboseLogging}"    
-            />
-            <CheckBox Content="Open at startup" Margin="10 0 0 10" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" 
-                      ToolTip="Open this window at startup"
-                      DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}" 
-                      IsChecked="{Binding Path=OpenLogWindowAtStartup}"    
-            />
-            <Button Margin="0 0 10 10" Grid.Column="3" Height="22" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
-            <Button Margin="0 0 10 10" Grid.Column="5" Height="22" Width="60" Content="Save" HorizontalAlignment="Right" Click="OnSaveButton" />
-            <Button Visibility="Hidden" Name="AbortButton" Margin="0 0 10 10" Grid.Column="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton" />
-        </Grid>
+                <Button Margin="0 0 10 10" Grid.Column="3" Height="22" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
+                <Button Margin="0 0 10 10" Grid.Column="4" Height="22" Width="60" Content="Save" HorizontalAlignment="Right" Click="OnSaveButton" />
+                <Button Visibility="Hidden" Name="AbortButton" Margin="0 0 10 10" Grid.Column="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton" />
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

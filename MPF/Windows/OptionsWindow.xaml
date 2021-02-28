@@ -156,22 +156,34 @@
                           ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
                           />
 
-                    <CheckBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Show Disc Info"
+                    <CheckBox Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" Content="Show Disc Info"
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=PromptForDiscInformation}"
                           ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
                           />
 
-                    <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="No Fixed Drives"
+                    <CheckBox Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="No Fixed Drives"
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=IgnoreFixedDrives}"
                           ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                           />
 
-                    <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Content="Reset After Dump"
+                    <CheckBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Content="Reset After Dump"
                           DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
                           IsChecked="{Binding Path=ResetDriveAfterDump}"
                           ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
+                          />
+
+                    <CheckBox Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Content="Verbose Logging"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                          IsChecked="{Binding Path=VerboseLogging}"
+                          ToolTip="Display all logging statements" Margin="0,4"
+                          />
+
+                    <CheckBox Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" Content="Auto-Open Log"
+                          DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
+                          IsChecked="{Binding Path=OpenLogWindowAtStartup}"
+                          ToolTip="Open the log panel when the program launches" Margin="0,4"
                           />
                 </Grid>
 
