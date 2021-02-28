@@ -1929,24 +1929,29 @@ namespace MPF.DiscImageCreator
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    // Deal with the layerbreak
-                    string layerbreak = null;
+                    // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
-                        layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
+                    {
+                        string layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
+                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                    }
                     else if (this.Type == MediaType.BluRay)
-                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
+                    {
+                        if (GetLayerbreak(Path.Combine(outputDirectory, "PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        {
+                            info.SizeAndChecksums.Layerbreak = layerbreak1 ?? default;
+                            info.SizeAndChecksums.Layerbreak2 = layerbreak2 ?? default;
+                            info.SizeAndChecksums.Layerbreak3 = layerbreak3 ?? default;
+                        }
+                        else
+                        {
+                            string layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
+                            info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        }
+                    }
 
-                    // If we have a single-layer disc
-                    if (string.IsNullOrWhiteSpace(layerbreak))
-                    {
-                        info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
-                    }
-                    // If we have a dual-layer disc
-                    else
-                    {
-                        info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
-                        info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
-                    }
+                    // Read the PVD
+                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
@@ -2816,6 +2821,63 @@ namespace MPF.DiscImageCreator
                     // We don't care what the exception is right now
                     return null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Get the layerbreak info associated with the dump
+        /// </summary>
+        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
+        /// <returns>True if layerbreak info was set, false otherwise</returns>
+        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+        private static bool GetLayerbreak(string picPath, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+        {
+            // Set the default values
+            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
+
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(picPath))
+                return false;
+
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
+                {
+                    // Layerbreak 1
+                    br.BaseStream.Seek(0x1C, SeekOrigin.Begin);
+                    long layerbreak1Offset = br.ReadInt32();
+                    long layerbreak1Value = br.ReadInt32();
+                    if (layerbreak1Value != 17341438)
+                        return false;
+
+                    layerbreak1 = layerbreak1Value - layerbreak1Offset + 2;
+
+                    // Layerbreak 2
+                    br.BaseStream.Seek(0x5C, SeekOrigin.Begin);
+                    long layerbreak2Offset = br.ReadInt32();
+                    long layerbreak2Value = br.ReadInt32();
+                    if (layerbreak2Value != 66060286)
+                        return true;
+
+                    layerbreak2 = layerbreak2Value - layerbreak2Offset + 2;
+
+                    // TODO: Figure out the default value for layerbreak 3
+                    // Layerbreak 3
+                    // br.BaseStream.Seek(0x9C, SeekOrigin.Begin);
+                    // long layerbreak3Offset = br.ReadInt32();
+                    // long layerbreak3Value = br.ReadInt32();
+                    // if (layerbreak3Value != 66060286)
+                    //     return true;
+
+                    // layerbreak3 = layerbreak3Value - layerbreak3Offset + 2;
+
+                    return true;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return false;
             }
         }
 
