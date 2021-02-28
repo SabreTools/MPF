@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="Disc Information" Width="515" ResizeMode="NoResize"
-        SizeToContent="Height"
+        Title="Disc Information" Width="515" ResizeMode="NoResize" SizeToContent="Height"
         Closed="OnClosed">
 
     <Grid>
