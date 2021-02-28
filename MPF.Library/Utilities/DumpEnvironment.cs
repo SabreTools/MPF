@@ -755,12 +755,12 @@ namespace MPF.Utilities
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer1MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0AdditionalMould = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
                 case MediaType.DVD:
@@ -769,37 +769,37 @@ namespace MPF.Utilities
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0AdditionalMould = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0AdditionalMould = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
-                        info.CommonDiscInfo.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
 
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer1MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0AdditionalMould = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     info.Extras.BCA = info.Extras.BCA ?? (this.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
@@ -807,26 +807,26 @@ namespace MPF.Utilities
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0AdditionalMould = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0AdditionalMould = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
-                        info.CommonDiscInfo.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
 
                     info.Extras.DiscKey = (this.AddPlaceholders ? Template.RequiredValue : "");
@@ -838,22 +838,22 @@ namespace MPF.Utilities
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.MasteringRingFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MouldSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
 
-                        info.CommonDiscInfo.MasteringRingSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringRing = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringSID = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
 
                     info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 == null ? (this.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.CRC32;
@@ -1066,60 +1066,69 @@ namespace MPF.Utilities
                 // If we have a triple-layer disc
                 if (info.SizeAndChecksums.Layerbreak3 != default)
                 {
-                    AddIfExists(output, "Layer 0 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
-                    AddIfExists(output, "Layer 0 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Layer 0 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingThirdLayer, 2);
-                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeThirdLayer, 2);
-                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeThirdLayer, 2);
-                    AddIfExists(output, "Layer 3 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFourthLayer, 2);
-                    AddIfExists(output, "Layer 3 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFourthLayer, 2);
-                    AddIfExists(output, "Layer 3 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFourthLayer, 2);
-                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
+                    AddIfExists(output, "Layer 0 " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, "Layer 0 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, "Layer 0 " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 2);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 2);
+                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo.Layer2MasteringRing, 2);
+                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 2);
+                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Layer 3 " + Template.MasteringRingField, info.CommonDiscInfo.Layer3MasteringRing, 2);
+                    AddIfExists(output, "Layer 3 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer3MasteringSID, 2);
+                    AddIfExists(output, "Layer 3 " + Template.ToolstampField, info.CommonDiscInfo.Layer3ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
                 }
                 // If we have a triple-layer disc
                 else if (info.SizeAndChecksums.Layerbreak2 != default)
                 {
-                    AddIfExists(output, "Layer 0 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
-                    AddIfExists(output, "Layer 0 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Layer 0 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingThirdLayer, 2);
-                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeThirdLayer, 2);
-                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeThirdLayer, 2);
-                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
+                    AddIfExists(output, "Layer 0 " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, "Layer 0 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, "Layer 0 " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 2);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 2);
+                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo.Layer2MasteringRing, 2);
+                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 2);
+                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
                 }
                 // If we have a dual-layer disc
                 else if (info.SizeAndChecksums.Layerbreak != default)
                 {
-                    AddIfExists(output, "Inner " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
-                    AddIfExists(output, "Inner " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Inner " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Outer " + Template.MasteringRingField, info.CommonDiscInfo.MasteringRingSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Outer " + Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Outer " + Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
+                    AddIfExists(output, "Inner " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, "Inner " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, "Inner " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Outer " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 2);
+                    AddIfExists(output, "Outer " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 2);
+                    AddIfExists(output, "Outer " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 2);
+
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
                 }
                 // If we have a single-layer disc
                 else
                 {
-                    AddIfExists(output, Template.MasteringRingField, info.CommonDiscInfo.MasteringRingFirstLayerDataSide, 2);
-                    AddIfExists(output, Template.MasteringSIDField, info.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide, 2);
-                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide, 2);
-                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.AdditionalMouldFirstLayerDataSide, 2);
-                    AddIfExists(output, Template.ToolstampField, info.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide, 2);
+                    AddIfExists(output, Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, "Data-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
+                    AddIfExists(output, "Label-Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
+                    AddIfExists(output, Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
+                    AddIfExists(output, Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
                 }
 
                 AddIfExists(output, Template.BarcodeField, info.CommonDiscInfo.Barcode, 1);

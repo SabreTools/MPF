@@ -128,16 +128,27 @@ namespace MPF.Windows
                     Languages.Find(l => l == language).IsChecked = true;
             }
             Serial.Text = SubmissionInfo.CommonDiscInfo.Serial ?? "";
-            L0MasteringRing.Text = SubmissionInfo.CommonDiscInfo.MasteringRingFirstLayerDataSide ?? "";
-            L0MasteringSID.Text = SubmissionInfo.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide ?? "";
-            L0Toolstamp.Text = SubmissionInfo.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide ?? "";
-            L0MouldSID.Text = SubmissionInfo.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide ?? "";
-            L0AdditionalMould.Text = SubmissionInfo.CommonDiscInfo.AdditionalMouldFirstLayerDataSide ?? "";
-            L1MasteringRing.Text = SubmissionInfo.CommonDiscInfo.MasteringRingSecondLayerLabelSide ?? "";
-            L1MasteringSID.Text = SubmissionInfo.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide ?? "";
-            L1Toolstamp.Text = SubmissionInfo.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide ?? "";
-            L1MouldSID.Text = SubmissionInfo.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide ?? "";
-            L1AdditionalMould.Text = SubmissionInfo.CommonDiscInfo.AdditionalMouldSecondLayerLabelSide ?? "";
+
+            L0MasteringRing.Text = SubmissionInfo.CommonDiscInfo.Layer0MasteringRing ?? "";
+            L0MasteringSID.Text = SubmissionInfo.CommonDiscInfo.Layer0MasteringSID ?? "";
+            L0Toolstamp.Text = SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode ?? "";
+            L0MouldSID.Text = SubmissionInfo.CommonDiscInfo.Layer0MouldSID ?? "";
+            L0AdditionalMould.Text = SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould ?? "";
+
+            L1MasteringRing.Text = SubmissionInfo.CommonDiscInfo.Layer1MasteringRing ?? "";
+            L1MasteringSID.Text = SubmissionInfo.CommonDiscInfo.Layer1MasteringSID ?? "";
+            L1Toolstamp.Text = SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode ?? "";
+            L1MouldSID.Text = SubmissionInfo.CommonDiscInfo.Layer1MouldSID ?? "";
+            L1AdditionalMould.Text = SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould ?? "";
+
+            //L2MasteringRing.Text = SubmissionInfo.CommonDiscInfo.Layer2MasteringRing ?? "";
+            //L2MasteringSID.Text = SubmissionInfo.CommonDiscInfo.Layer2MasteringSID ?? "";
+            //L2Toolstamp.Text = SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode ?? "";;
+
+            //L3MasteringRing.Text = SubmissionInfo.CommonDiscInfo.Layer3MasteringRing ?? "";
+            //L3MasteringSID.Text = SubmissionInfo.CommonDiscInfo.Layer3MasteringSID ?? "";
+            //L3Toolstamp.Text = SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode ?? "";
+
             Barcode.Text = SubmissionInfo.CommonDiscInfo.Barcode ?? "";
             Comments.Text = SubmissionInfo.CommonDiscInfo.Comments ?? "";
             Contents.Text = SubmissionInfo.CommonDiscInfo.Contents ?? "";
@@ -224,16 +235,27 @@ namespace MPF.Windows
                 languages.Add(null);
             SubmissionInfo.CommonDiscInfo.Languages = languages.ToArray();
             SubmissionInfo.CommonDiscInfo.Serial = Serial.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.MasteringRingFirstLayerDataSide = L0MasteringRing.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.MasteringSIDCodeFirstLayerDataSide = L0MasteringSID.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.ToolstampMasteringCodeFirstLayerDataSide = L0Toolstamp.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.MouldSIDCodeFirstLayerDataSide = L0MouldSID.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.AdditionalMouldFirstLayerDataSide = L0AdditionalMould.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.MasteringRingSecondLayerLabelSide = L1MasteringRing.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.MasteringSIDCodeSecondLayerLabelSide = L1MasteringSID.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.ToolstampMasteringCodeSecondLayerLabelSide = L1Toolstamp.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.MouldSIDCodeSecondLayerLabelSide = L1MouldSID.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.AdditionalMouldSecondLayerLabelSide = L1AdditionalMould.Text ?? "";
+
+            SubmissionInfo.CommonDiscInfo.Layer0MasteringRing = L0MasteringRing.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer0MasteringSID = L0MasteringSID.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode = L0Toolstamp.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer0MouldSID = L0MouldSID.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould = L0AdditionalMould.Text ?? "";
+
+            SubmissionInfo.CommonDiscInfo.Layer1MasteringRing = L1MasteringRing.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer1MasteringSID = L1MasteringSID.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode = L1Toolstamp.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer1MouldSID = L1MouldSID.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould = L1AdditionalMould.Text ?? "";
+
+            //SubmissionInfo.CommonDiscInfo.Layer2MasteringRing = L2MasteringRing.Text ?? "";
+            //SubmissionInfo.CommonDiscInfo.Layer2MasteringSID = L2MasteringSID.Text ?? "";
+            //SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode = L2Toolstamp.Text ?? "";
+
+            //SubmissionInfo.CommonDiscInfo.Layer3MasteringRing = L3MasteringRing.Text ?? "";
+            //SubmissionInfo.CommonDiscInfo.Layer3MasteringSID = L3MasteringSID.Text ?? "";
+            //SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode = L3Toolstamp.Text ?? "";
+
             SubmissionInfo.CommonDiscInfo.Barcode = Barcode.Text ?? "";
             SubmissionInfo.CommonDiscInfo.Comments = Comments.Text ?? "";
             SubmissionInfo.CommonDiscInfo.Contents = Contents.Text ?? "";

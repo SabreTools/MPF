@@ -117,52 +117,52 @@ namespace MPF.Web
         public string RingId { get; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma1", Required = Required.AllowNull)]
-        public string MasteringRingFirstLayerDataSide { get; set; }
+        public string Layer0MasteringRing { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma1_sid", NullValueHandling = NullValueHandling.Ignore)]
-        public string MasteringSIDCodeFirstLayerDataSide { get; set; }
+        public string Layer0MasteringSID { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ts1", NullValueHandling = NullValueHandling.Ignore)]
-        public string ToolstampMasteringCodeFirstLayerDataSide { get; set; }
+        public string Layer0ToolstampMasteringCode { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_mo1_sid", NullValueHandling = NullValueHandling.Ignore)]
-        public string MouldSIDCodeFirstLayerDataSide { get; set; }
+        public string Layer0MouldSID { get; set; }
 
         [JsonProperty(PropertyName = "dr_ring_0_mo1", NullValueHandling = NullValueHandling.Ignore)]
-        public string AdditionalMouldFirstLayerDataSide { get; set; }
+        public string Layer0AdditionalMould { get; set; }
 
-        [JsonProperty(PropertyName = "d_ring_0_ma2", NullValueHandling = NullValueHandling.Ignore)]
-        public string MasteringRingSecondLayerLabelSide { get; set; }
+        [JsonProperty(PropertyName = "d_ring_0_ma2", Required = Required.AllowNull)]
+        public string Layer1MasteringRing { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma2_sid", NullValueHandling = NullValueHandling.Ignore)]
-        public string MasteringSIDCodeSecondLayerLabelSide { get; set; }
+        public string Layer1MasteringSID { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ts2", NullValueHandling = NullValueHandling.Ignore)]
-        public string ToolstampMasteringCodeSecondLayerLabelSide { get; set; }
+        public string Layer1ToolstampMasteringCode { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_mo2_sid", NullValueHandling = NullValueHandling.Ignore)]
-        public string MouldSIDCodeSecondLayerLabelSide { get; set; }
+        public string Layer1MouldSID { get; set; }
 
         [JsonProperty(PropertyName = "dr_ring_0_mo2", NullValueHandling = NullValueHandling.Ignore)]
-        public string AdditionalMouldSecondLayerLabelSide { get; set; }
+        public string Layer1AdditionalMould { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma3", Required = Required.AllowNull)]
-        public string MasteringRingThirdLayer { get; set; }
+        public string Layer2MasteringRing { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma3_sid", NullValueHandling = NullValueHandling.Ignore)]
-        public string MasteringSIDCodeThirdLayer { get; set; }
+        public string Layer2MasteringSID { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ts3", NullValueHandling = NullValueHandling.Ignore)]
-        public string ToolstampMasteringCodeThirdLayer { get; set; }
+        public string Layer2ToolstampMasteringCode { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma4", Required = Required.AllowNull)]
-        public string MasteringRingFourthLayer { get; set; }
+        public string Layer3MasteringRing { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma4_sid", NullValueHandling = NullValueHandling.Ignore)]
-        public string MasteringSIDCodeFourthLayer { get; set; }
+        public string Layer3MasteringSID { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ts4", NullValueHandling = NullValueHandling.Ignore)]
-        public string ToolstampMasteringCodeFourthLayer { get; set; }
+        public string Layer3ToolstampMasteringCode { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_offsets", NullValueHandling = NullValueHandling.Ignore)]
         public string RingOffsetsHidden { get { return "1"; } }
