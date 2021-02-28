@@ -81,39 +81,6 @@ namespace MPF.UserControls
                 }));
         }
 
-        public void StartDump(string args)
-        {
-            AppendToTextBox(string.Format("Launching DIC with args: {0}\r\n", args), Brushes.Orange);
-
-            Task.Run(() =>
-            {
-                _process = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = @"Programs/DiscImageCreator.exe",
-                        Arguments = args,
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                    },
-                };
-
-                StreamState stdoutState = new StreamState(false);
-                StreamState stderrState = new StreamState(true);
-
-                //_cmd.ErrorDataReceived += (process, text) => Dispatcher.Invoke(() => UpdateConsole(text.Data, Brushes.Red));
-                _process.Start();
-
-                var _1 = ConsumeOutput(_process.StandardOutput, s => Dispatcher.Invoke(() => UpdateConsole(s, stdoutState)));
-                var _2 = ConsumeOutput(_process.StandardError, s => Dispatcher.Invoke(() => UpdateConsole(s, stderrState)));
-
-                _process.EnableRaisingEvents = true;
-                _process.Exited += OnProcessExit;
-            });
-        }
-
         private void GracefullyTerminateProcess()
         {
             if (_process != null)
@@ -326,7 +293,6 @@ namespace MPF.UserControls
 
         void OnProcessExit(object sender, EventArgs e)
         {
-            Dispatcher.Invoke(() => AbortButton.IsEnabled = false);
             GracefullyTerminateProcess();
         }
 
@@ -349,16 +315,6 @@ namespace MPF.UserControls
                     }
                 }
             }
-        }
-
-        private void OnAbortButton(object sender, EventArgs args)
-        {
-            GracefullyTerminateProcess();
-        }
-
-        private void OnStartButton(object sender, EventArgs args)
-        {
-            StartDump("cd e Gam.iso 16");
         }
 
         private void OnTextChanged(object sender, TextChangedEventArgs e)

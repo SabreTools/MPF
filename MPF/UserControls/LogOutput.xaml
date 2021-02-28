@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MPF"
+             xmlns:local="clr-namespace:MPF.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -13,29 +13,25 @@
                 <TextBlock x:Name="progressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
             </Grid>
             
-            <Border Height="200"  Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
+            <Border Height="180" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
                 <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
                     <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" TextChanged="OnTextChanged" />
                 </ScrollViewer>
             </Border>
 
-            <Grid Grid.Row="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+            <GroupBox Grid.Row="2" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Grid Margin="5,5,5,5" Height="28">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
 
-                <Button Margin="0 0 10 10" Grid.Column="3" Height="22" Width="60" Content="Clear" HorizontalAlignment="Right" Click="OnClearButton" />
-                <Button Margin="0 0 10 10" Grid.Column="4" Height="22" Width="60" Content="Save" HorizontalAlignment="Right" Click="OnSaveButton" />
-                <Button Visibility="Hidden" Name="AbortButton" Margin="0 0 10 10" Grid.Column="2" Height="22" Width="80" Content="Abort" HorizontalAlignment="Right" Click="OnAbortButton" />
-            </Grid>
+                    <Button Name="ClearButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Clear" Click="OnClearButton" />
+                    <Button Name="SaveButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Save" Click="OnSaveButton" />
+                </Grid>
+            </GroupBox>
         </StackPanel>
     </Grid>
 </UserControl>
