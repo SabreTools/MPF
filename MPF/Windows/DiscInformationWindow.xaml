@@ -12,85 +12,84 @@
 
     <Grid>
         <StackPanel Orientation="Vertical" Width="500">
-            <TabControl Grid.Row="0">
+            <TabControl>
                 <TabItem x:Name="CommonInfo" Header="Common Info">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical">
+                            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information">
+                                <Grid Margin="10,15,10,10">
+                                    <StackPanel Orientation="Vertical">
+                                        <controls:UserInput x:Name="Title" Label="Title"/>
+                                        <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
+                                        <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
+                                        <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
 
-                        <GroupBox Grid.Row="0" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information">
-                            <Grid Margin="10,15,10,10">
-                                <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Title" Label="Title"/>
-                                    <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
-                                    <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
-                                    <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="1.25*" />
+                                            </Grid.ColumnDefinitions>
 
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="1.25*" />
-                                        </Grid.ColumnDefinitions>
+                                            <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                                            <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Path=Name}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </Grid>
 
-                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                                        <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Name}" />
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-                                    </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="1.25*" />
+                                            </Grid.ColumnDefinitions>
 
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="1.25*" />
-                                        </Grid.ColumnDefinitions>
-                                        
-                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                                        <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Path=Name}" />
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-                                    </Grid>
+                                            <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                                            <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Path=Name}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </Grid>
 
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
-                                            <ColumnDefinition Width="1.25*" />
-                                        </Grid.ColumnDefinitions>
-                                        
-                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                                        <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
-                                            <ComboBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
-                                                </DataTemplate>
-                                            </ComboBox.ItemTemplate>
-                                        </ComboBox>
-                                    </Grid>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*" />
+                                                <ColumnDefinition Width="1.25*" />
+                                            </Grid.ColumnDefinitions>
 
-                                    <controls:UserInput x:Name="Serial" Label="Serial"/>
-                                    <controls:UserInput x:Name="Barcode" Label="Barcode"/>
-                                    <controls:UserInput x:Name="Comments" Label="Comments" Tab="True"/> <!-- This needs to be a multiline textbox -->
-                                    <controls:UserInput x:Name="Contents" Label="Contents" Tab="True"/> <!-- This needs to be a multiline textbox -->
-                                </StackPanel>
-                            </Grid>
-                        </GroupBox>
-                        <GroupBox Grid.Row="1" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions">
-                            <Grid Height="60">
-                                <StackPanel Orientation="Vertical">
-                                    <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
-                                    <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
-                                </StackPanel>
-                            </Grid>
-                        </GroupBox>
+                                            <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                                            <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                        </Grid>
+
+                                        <controls:UserInput x:Name="Serial" Label="Serial"/>
+                                        <controls:UserInput x:Name="Barcode" Label="Barcode"/>
+                                        <controls:UserInput x:Name="Comments" Label="Comments" Tab="True"/>
+                                        <!-- This needs to be a multiline textbox -->
+                                        <controls:UserInput x:Name="Contents" Label="Contents" Tab="True"/>
+                                        <!-- This needs to be a multiline textbox -->
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions">
+                                <Grid>
+                                    <StackPanel Orientation="Vertical">
+                                        <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
+                                        <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
+                                    </StackPanel>
+                                </Grid>
+                            </GroupBox>
+                        </StackPanel>
                     </Grid>
                 </TabItem>
                 
@@ -141,7 +140,7 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid Height="28">
+                <Grid Margin="5,5,5,5" Height="28">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
