@@ -13,6 +13,8 @@
         </Grid.ColumnDefinitions>
         
         <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="{Binding Label}" />
-        <TextBox Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Text}" AcceptsTab="{Binding Tab}" />
+        <TextBox Grid.Row="0" Grid.Column="1" Height="{Binding TextHeight}" HorizontalAlignment="Stretch" Text="{Binding Text}"
+                 AcceptsTab="{Binding Tab}" AcceptsReturn="{Binding Enter}" TextWrapping="{Binding TextWrapping}"
+                 VerticalScrollBarVisibility="{Binding ScrollBarVisibility}"/>
     </Grid>
 </UserControl>

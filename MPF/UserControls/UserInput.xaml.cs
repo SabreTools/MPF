@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace MPF.UserControls
 {
@@ -9,7 +10,11 @@ namespace MPF.UserControls
     {
         public string Label { get; set; }
         public string Text { get; set; }
+        public string TextHeight { get; set; } = "22";
         public bool Tab { get; set; } = false;
+        public bool Enter { get; set; } = false;
+        public TextWrapping TextWrapping { get; set; } = TextWrapping.NoWrap;
+        public ScrollBarVisibility ScrollBarVisibility { get; set; } = ScrollBarVisibility.Auto;
 
         public UserInput()
         {
