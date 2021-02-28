@@ -180,7 +180,7 @@ namespace MPF.Windows
         /// </summary>
         public void Load()
         {
-            Title.Text = SubmissionInfo.CommonDiscInfo.Title ?? "";
+            GameTitlw.Text = SubmissionInfo.CommonDiscInfo.Title ?? "";
             ForeignTitle.Text = SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin ?? "";
             DiscNumberLetter.Text = SubmissionInfo.CommonDiscInfo.DiscNumberLetter ?? "";
             DiscTitle.Text = SubmissionInfo.CommonDiscInfo.DiscTitle ?? "";
@@ -274,7 +274,7 @@ namespace MPF.Windows
         /// </summary>
         private void Save()
         {
-            SubmissionInfo.CommonDiscInfo.Title = Title.Text ?? "";
+            SubmissionInfo.CommonDiscInfo.Title = GameTitlw.Text ?? "";
             SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin = ForeignTitle.Text ?? "";
             SubmissionInfo.CommonDiscInfo.DiscNumberLetter = DiscNumberLetter.Text ?? "";
             SubmissionInfo.CommonDiscInfo.DiscTitle = DiscTitle.Text ?? "";

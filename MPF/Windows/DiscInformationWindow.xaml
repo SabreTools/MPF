@@ -18,7 +18,7 @@
                             <Expander Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
                                 <Grid Margin="10,15,10,10">
                                     <StackPanel Orientation="Vertical">
-                                        <controls:UserInput x:Name="Title" Label="Title"/>
+                                        <controls:UserInput x:Name="GameTitlw" Label="Title"/>
                                         <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
                                         <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
                                         <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
