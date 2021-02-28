@@ -15,7 +15,7 @@
                 <TabItem x:Name="CommonInfo" Header="Common Info">
                     <Grid>
                         <StackPanel Orientation="Vertical">
-                            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information">
+                            <Expander Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
                                 <Grid Margin="10,15,10,10">
                                     <StackPanel Orientation="Vertical">
                                         <controls:UserInput x:Name="Title" Label="Title"/>
@@ -77,15 +77,15 @@
                                         <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
                                     </StackPanel>
                                 </Grid>
-                            </GroupBox>
-                            <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions">
+                            </Expander>
+                            <Expander Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
                                 <Grid>
                                     <StackPanel Orientation="Vertical">
                                         <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
                                         <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
                                     </StackPanel>
                                 </Grid>
-                            </GroupBox>
+                            </Expander>
                         </StackPanel>
                     </Grid>
                 </TabItem>
