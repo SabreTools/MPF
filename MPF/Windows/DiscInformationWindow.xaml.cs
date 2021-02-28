@@ -227,9 +227,6 @@ namespace MPF.Windows
         private void PopulateCategories()
         {
             var categories = Enum.GetValues(typeof(DiscCategory)).OfType<DiscCategory?>().ToList();
-
-            ViewModels.LoggerViewModel.VerboseLogLn($"Populating categories, {categories.Count} categories found.");
-
             Categories = new List<CategoryComboBoxItem>();
             foreach (var category in categories)
             {
@@ -246,9 +243,6 @@ namespace MPF.Windows
         private void PopulateLanguages()
         {
             var languages = Enum.GetValues(typeof(Language)).OfType<Language?>().ToList();
-
-            ViewModels.LoggerViewModel.VerboseLogLn($"Populating languages, {languages.Count} languages found.");
-
             Languages = new List<LanguageComboBoxItem>();
             foreach (var language in languages)
             {
@@ -265,9 +259,6 @@ namespace MPF.Windows
         private void PopulateRegions()
         {
             var regions = Enum.GetValues(typeof(Region)).OfType<Region?>().ToList();
-
-            ViewModels.LoggerViewModel.VerboseLogLn($"Populating regions, {regions.Count} regions found.");
-
             Regions = new List<RegionComboBoxItem>();
             foreach (var region in regions)
             {

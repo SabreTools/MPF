@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Windows.Media;
-using MPF.Windows;
 
 namespace MPF
 {
@@ -192,39 +190,9 @@ namespace MPF
         }
     }
 
-    public class LoggerViewModel
-    {
-        private LogWindow _logWindow;
-
-        public void SetWindow(LogWindow logWindow) => _logWindow = logWindow;
-
-        public bool WindowVisible
-        {
-            get => _logWindow != null ? _logWindow.IsVisible : false;
-            set
-            {
-                if (value)
-                {
-                    _logWindow.AdjustPositionToMainWindow();
-                    _logWindow.Show();
-                }
-                else
-                    _logWindow.Hide();
-            }
-        }
-
-        public void VerboseLog(string text)
-        {
-            if (ViewModels.OptionsViewModel.VerboseLogging)
-                _logWindow.AppendToTextBox(text, Brushes.Yellow);
-        }
-
-        public void VerboseLogLn(string format) => VerboseLog(format + "\n");
-    }
 
     public static class ViewModels
     {
         public static OptionsViewModel OptionsViewModel { get; set; }
-        public static LoggerViewModel LoggerViewModel { get; set; } = new LoggerViewModel();
     }
 }

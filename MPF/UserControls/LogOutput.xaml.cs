@@ -2,40 +2,28 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Interop;
 using System.Windows.Media;
 
-namespace MPF.Windows
+namespace MPF.UserControls
 {
-    public partial class LogWindow : Window
+    public partial class LogOutput : UserControl
     {
-        private const int GWL_STYLE = -16;
-        private const int WS_SYSMENU = 0x80000;
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        private readonly MainWindow _mainWindow;
-
         private FlowDocument _document;
         private Paragraph _paragraph;
         private readonly List<Matcher> _matchers;
 
         volatile Process _process;
 
-        public LogWindow(MainWindow mainWindow)
+        public LogOutput()
         {
             InitializeComponent();
-
-            this._mainWindow = mainWindow;
+            DataContext = this;
 
             _document = new FlowDocument();
             _paragraph = new Paragraph();
@@ -124,12 +112,6 @@ namespace MPF.Windows
                 _process.EnableRaisingEvents = true;
                 _process.Exited += OnProcessExit;
             });
-        }
-
-        public void AdjustPositionToMainWindow()
-        {
-            this.Left = _mainWindow.Left;
-            this.Top = _mainWindow.Top + _mainWindow.Height + Constants.LogWindowMarginFromMainWindow;
         }
 
         private void GracefullyTerminateProcess()
@@ -254,6 +236,14 @@ namespace MPF.Windows
             public void Set(State state) => this.state = state;
         }
 
+        public void VerboseLog(string text)
+        {
+            if (ViewModels.OptionsViewModel.VerboseLogging)
+                AppendToTextBox(text, Brushes.Yellow);
+        }
+
+        public void VerboseLogLn(string format) => VerboseLog(format + "\n");
+
         public void AppendToTextBox(string text, Brush color)
         {
             if (Application.Current.Dispatcher.CheckAccess())
@@ -334,29 +324,10 @@ namespace MPF.Windows
 
         #region EventHandlers
 
-        private void OnWindowClosed(object sender, EventArgs e)
-        {
-            GracefullyTerminateProcess();
-        }
-
-        private void OnWindowLoaded(object sender, EventArgs e)
-        {
-            var hwnd = new WindowInteropHelper(this).Handle;
-            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
-        }
-
         void OnProcessExit(object sender, EventArgs e)
         {
             Dispatcher.Invoke(() => AbortButton.IsEnabled = false);
             GracefullyTerminateProcess();
-        }
-
-        private void OnHideButton(object sender, EventArgs e)
-        {
-            ViewModels.LoggerViewModel.WindowVisible = false;
-            //TODO: this should be bound directly to WindowVisible property in two way fashion
-            // we need to study how to properly do it in XAML
-            _mainWindow.ShowLogMenuItem.IsChecked = false;
         }
 
         private void OnClearButton(object sender, EventArgs e)
@@ -396,6 +367,5 @@ namespace MPF.Windows
         }
 
         #endregion
-
     }
 }

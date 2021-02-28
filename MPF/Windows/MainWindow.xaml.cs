@@ -56,11 +56,6 @@ namespace MPF.Windows
         /// </summary>
         private bool alreadyShown;
 
-        /// <summary>
-        /// Current attached LogWindow
-        /// </summary>
-        private readonly LogWindow logWindow;
-
         #endregion
 
         public MainWindow()
@@ -70,24 +65,13 @@ namespace MPF.Windows
             // Load the options
             ViewModels.OptionsViewModel = new OptionsViewModel(UIOptions);
 
-            // Load the log window
-            logWindow = new LogWindow(this);
-            ViewModels.LoggerViewModel.SetWindow(logWindow);
+            // Load the log output
+            LogPanel.IsExpanded = UIOptions.Options.OpenLogWindowAtStartup;
 
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
             MediaScanButton.IsEnabled = false;
             CopyProtectScanButton.IsEnabled = false;
-
-            if (UIOptions.Options.OpenLogWindowAtStartup)
-            {
-                this.WindowStartupLocation = WindowStartupLocation.Manual;
-                double combinedHeight = this.Height + logWindow.Height + Constants.LogWindowMarginFromMainWindow;
-                Rectangle bounds = GetScaledCoordinates(WinForms.Screen.PrimaryScreen.WorkingArea);
-
-                this.Left = bounds.Left + (bounds.Width - this.Width) / 2;
-                this.Top = bounds.Top + (bounds.Height - combinedHeight) / 2;
-            }
         }
 
         #region Helpers
@@ -137,29 +121,29 @@ namespace MPF.Windows
             // If we're skipping detection, set the default value
             if (UIOptions.Options.SkipMediaTypeDetection)
             {
-                ViewModels.LoggerViewModel.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
+                LogOutput.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
 
             // If the drive is marked active, try to read from it
             else if (drive.MarkedActive)
             {
-                ViewModels.LoggerViewModel.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
+                LogOutput.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
                 (MediaType? detectedMediaType, string errorMessage) = Validators.GetMediaType(drive);
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null)
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Error in detecting media type: {errorMessage}");
+                    LogOutput.VerboseLogLn($"Error in detecting media type: {errorMessage}");
 
                 // If we got either an error or no media, default to the current System default
                 if (detectedMediaType == null)
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
+                    LogOutput.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
                     CurrentMediaType = defaultMediaType;
                 }
                 else
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
+                    LogOutput.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
                     CurrentMediaType = detectedMediaType;
                 }
             }
@@ -167,7 +151,7 @@ namespace MPF.Windows
             // All other cases, just use the default
             else
             {
-                ViewModels.LoggerViewModel.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
+                LogOutput.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
         }
@@ -207,9 +191,9 @@ namespace MPF.Windows
         {
             if (!UIOptions.Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
             {
-                ViewModels.LoggerViewModel.VerboseLog($"Trying to detect system for drive {Drives[DriveLetterComboBox.SelectedIndex].Letter}.. ");
+                LogOutput.VerboseLog($"Trying to detect system for drive {Drives[DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
-                ViewModels.LoggerViewModel.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
+                LogOutput.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
 
                 if (currentSystem != null && currentSystem != KnownSystem.NONE)
                 {
@@ -286,7 +270,7 @@ namespace MPF.Windows
         /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
         private void PopulateDrives()
         {
-            ViewModels.LoggerViewModel.VerboseLogLn("Scanning for drives..");
+            LogOutput.VerboseLogLn("Scanning for drives..");
 
             // Always enable the media scan
             MediaScanButton.IsEnabled = true;
@@ -297,7 +281,7 @@ namespace MPF.Windows
 
             if (DriveLetterComboBox.Items.Count > 0)
             {
-                ViewModels.LoggerViewModel.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
+                LogOutput.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
 
                 // Check for active optical drives first
                 int index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
@@ -324,7 +308,7 @@ namespace MPF.Windows
             }
             else
             {
-                ViewModels.LoggerViewModel.VerboseLogLn("Found no drives");
+                LogOutput.VerboseLogLn("Found no drives");
                 DriveLetterComboBox.SelectedIndex = -1;
                 StatusLabel.Content = "No valid drive found!";
                 StartStopButton.IsEnabled = false;
@@ -362,7 +346,7 @@ namespace MPF.Windows
         {
             var knownSystems = Validators.CreateListOfSystems();
 
-            ViewModels.LoggerViewModel.VerboseLogLn($"Populating systems, {knownSystems.Count} systems found.");
+            LogOutput.VerboseLogLn($"Populating systems, {knownSystems.Count} systems found.");
 
             Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = knownSystems
                 .GroupBy(s => s.Category())
@@ -496,7 +480,7 @@ namespace MPF.Windows
             var drive = DriveLetterComboBox.SelectedItem as Drive;
             if (drive.Letter != default(char))
             {
-                ViewModels.LoggerViewModel.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
+                LogOutput.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
 
                 var tempContent = StatusLabel.Content;
                 StatusLabel.Content = "Scanning for copy protection... this might take a while!";
@@ -512,13 +496,13 @@ namespace MPF.Windows
                 if (Env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
                 {
                     ((DiscImageCreator.Parameters)Env.Parameters)[DiscImageCreator.Flag.ScanFileProtect] = false;
-                    ViewModels.LoggerViewModel.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+                    LogOutput.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 }
 
-                if (!ViewModels.LoggerViewModel.WindowVisible)
+                if (!LogPanel.IsExpanded)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
                 
-                ViewModels.LoggerViewModel.VerboseLog($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
+                LogOutput.VerboseLog($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
@@ -552,11 +536,11 @@ namespace MPF.Windows
             // Set the drive speed list that's appropriate
             var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
             DriveSpeedComboBox.ItemsSource = values;
-            ViewModels.LoggerViewModel.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
+            LogOutput.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
 
             // Set the selected speed
             int speed = UIOptions.GetPreferredDumpSpeedForMediaType(CurrentMediaType);
-            ViewModels.LoggerViewModel.VerboseLogLn($"Setting drive speed to: {speed}");
+            LogOutput.VerboseLogLn($"Setting drive speed to: {speed}");
             DriveSpeedComboBox.SelectedValue = speed;
         }
 
@@ -608,7 +592,7 @@ namespace MPF.Windows
                     MessageBoxResult mbresult = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
-                        ViewModels.LoggerViewModel.VerboseLogLn("Dumping aborted!");
+                        LogOutput.VerboseLogLn("Dumping aborted!");
                         return;
                     }
                 }
@@ -619,7 +603,7 @@ namespace MPF.Windows
                     MessageBoxResult mbresult = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
-                        ViewModels.LoggerViewModel.VerboseLogLn("Dumping aborted!");
+                        LogOutput.VerboseLogLn("Dumping aborted!");
                         return;
                     }
                 }
@@ -627,7 +611,7 @@ namespace MPF.Windows
                 StartStopButton.Content = Interface.StopDumping;
                 CopyProtectScanButton.IsEnabled = false;
                 StatusLabel.Content = "Beginning dumping process";
-                ViewModels.LoggerViewModel.VerboseLogLn("Starting dumping process..");
+                LogOutput.VerboseLogLn("Starting dumping process..");
 
                 // Get progress indicators
                 var resultProgress = new Progress<Result>();
@@ -641,7 +625,7 @@ namespace MPF.Windows
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!Env.Parameters.IsDumpingCommand())
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
+                    LogOutput.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
                     StatusLabel.Content = "Execution complete!";
                     StartStopButton.Content = Interface.StartDumping;
                     CopyProtectScanButton.IsEnabled = true;
@@ -660,13 +644,13 @@ namespace MPF.Windows
                 }
                 else
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn(result.Message);
+                    LogOutput.VerboseLogLn(result.Message);
                     StatusLabel.Content = "Execution failed!";
                 }
             }
             catch (Exception ex)
             {
-                ViewModels.LoggerViewModel.VerboseLogLn(ex.Message);
+                LogOutput.VerboseLogLn(ex.Message);
                 StatusLabel.Content = "An exception occurred!";
             }
             finally
@@ -776,36 +760,6 @@ namespace MPF.Windows
         }
 
         /// <summary>
-        /// Handler for MainWindow Activated event
-        /// </summary>
-        private void MainWindowActivated(object sender, EventArgs e)
-        {
-            if (logWindow.IsVisible && !this.Topmost)
-            {
-                logWindow.Topmost = true;
-                logWindow.Topmost = false;
-            }
-        }
-
-        /// <summary>
-        /// Handler for MainWindow Closing event
-        /// </summary>
-        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (logWindow.IsVisible)
-                logWindow.Close();
-        }
-
-        /// <summary>
-        /// Handler for MainWindow PositionChanged event
-        /// </summary>
-        private void MainWindowLocationChanged(object sender, EventArgs e)
-        {
-            if (logWindow.IsVisible)
-                logWindow.AdjustPositionToMainWindow();
-        }
-
-        /// <summary>
         /// Handler for MainWindow OnContentRendered event
         /// </summary>
         /// <param name="e"></param>
@@ -817,14 +771,6 @@ namespace MPF.Windows
                 return;
 
             alreadyShown = true;
-
-            if (UIOptions.Options.OpenLogWindowAtStartup)
-            {
-                //TODO: this should be bound directly to WindowVisible property in two way fashion
-                // we need to study how to properly do it in XAML
-                ShowLogMenuItem.IsChecked = true;
-                ViewModels.LoggerViewModel.WindowVisible = true;
-            }
 
             // Populate the list of systems
             StatusLabel.Content = "Creating system list, please wait!";
@@ -839,7 +785,7 @@ namespace MPF.Windows
         }
 
         /// <summary>
-        /// Handler for OptionsWindow OnUpdated event
+        /// Handler for DiscInformationWindow OnUpdated event
         /// </summary>
         /// <remarks>Identical to MediaScanButtonClick</remarks>
         public void OnOptionsUpdated()
@@ -892,7 +838,7 @@ namespace MPF.Windows
         private void ProgressUpdated(object sender, Result value)
         {
             StatusLabel.Content = value.Message;
-            ViewModels.LoggerViewModel.VerboseLogLn(value.Message);
+            LogOutput.VerboseLogLn(value.Message);
         }
 
         /// <summary>
@@ -902,7 +848,7 @@ namespace MPF.Windows
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             StatusLabel.Content = message;
-            ViewModels.LoggerViewModel.VerboseLogLn(message);
+            LogOutput.VerboseLogLn(message);
         }
 
         /// <summary>
@@ -917,19 +863,19 @@ namespace MPF.Windows
             }
             else if ((string)StartStopButton.Content == Interface.StopDumping)
             {
-                ViewModels.LoggerViewModel.VerboseLogLn("Canceling dumping process...");
+                LogOutput.VerboseLogLn("Canceling dumping process...");
                 Env.CancelDumping();
                 CopyProtectScanButton.IsEnabled = true;
 
                 if (EjectWhenDoneCheckBox.IsChecked == true)
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
+                    LogOutput.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
                     Env.EjectDisc();
                 }
 
                 if (UIOptions.Options.ResetDriveAfterDump)
                 {
-                    ViewModels.LoggerViewModel.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
+                    LogOutput.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
                     Env.ResetDrive();
                 }
             }
@@ -947,42 +893,10 @@ namespace MPF.Windows
                 return;
             }
 
-            ViewModels.LoggerViewModel.VerboseLogLn($"Changed system to: {(SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name}");
+            LogOutput.VerboseLogLn($"Changed system to: {(SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name}");
             PopulateMediaType();
             GetOutputNames(false);
             EnsureDiscInformation();
-        }
-
-        #endregion
-
-        #region UI Helpers
-
-        /// <summary>
-        /// Get pixel coordinates based on DPI scaling
-        /// </summary>
-        /// <param name="bounds">Rectangle representing the bounds to transform</param>
-        /// <returns>Rectangle representing the scaled bounds</returns>
-        private Rectangle GetScaledCoordinates(Rectangle bounds)
-        {
-            using (Graphics g = Graphics.FromHwnd(IntPtr.Zero))
-            {
-                return new Rectangle(
-                TransformCoordinate(bounds.Left, g.DpiX),
-                TransformCoordinate(bounds.Top, g.DpiY),
-                TransformCoordinate(bounds.Width, g.DpiX),
-                TransformCoordinate(bounds.Height, g.DpiY));
-            }
-        }
-
-        /// <summary>
-        /// Transform an individual coordinate using DPI scaling
-        /// </summary>
-        /// <param name="coord">Current integer coordinate</param>
-        /// <param name="dpi">DPI scaling factor</param>
-        /// <returns>Scaled integer coordinate</returns>
-        private int TransformCoordinate(int coord, float dpi)
-        {
-            return (int)(coord / ((double)dpi / 96));
         }
 
         #endregion

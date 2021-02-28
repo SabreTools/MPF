@@ -10,8 +10,6 @@ namespace MPF
     /// </summary>
     public static class Constants
     {
-        public const int LogWindowMarginFromMainWindow = 10;
-
         // Private lists of known drive speed ranges
         private static IReadOnlyList<int> cd { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
         private static IReadOnlyList<int> dvd { get; } = cd.Where(s => s <= 24).ToList();

@@ -26,6 +26,7 @@
 - Add internal support for 3- and 4-layer discs
 - Revamp disc information window
 - Add PIC layerbreak extraction
+- Overhaul main window and logging panel
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

@@ -64,8 +64,6 @@ namespace MPF.Windows
         {
             // We only support certain programs for dumping
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
-            ViewModels.LoggerViewModel.VerboseLogLn($"Populating internal programs, {internalPrograms.Count} internal programs found.");
-
             InternalPrograms = new List<InternalProgramComboBoxItem>();
             foreach (var internalProgram in internalPrograms)
             {
