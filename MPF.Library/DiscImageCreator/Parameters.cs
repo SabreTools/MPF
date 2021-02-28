@@ -2845,31 +2845,30 @@ namespace MPF.DiscImageCreator
                 {
                     // Layerbreak 1
                     br.BaseStream.Seek(0x1C, SeekOrigin.Begin);
-                    long layerbreak1Offset = br.ReadInt32();
-                    long layerbreak1Value = br.ReadInt32();
-                    if (layerbreak1Value != 17341438)
+                    long layerbreak1Offset = br.ReadInt32BigEndian();
+                    long layerbreak1Value = br.ReadInt32BigEndian();
+                    if (layerbreak1Value == 0)
                         return false;
 
                     layerbreak1 = layerbreak1Value - layerbreak1Offset + 2;
 
                     // Layerbreak 2
                     br.BaseStream.Seek(0x5C, SeekOrigin.Begin);
-                    long layerbreak2Offset = br.ReadInt32();
-                    long layerbreak2Value = br.ReadInt32();
-                    if (layerbreak2Value != 66060286)
+                    long layerbreak2Offset = br.ReadInt32BigEndian();
+                    long layerbreak2Value = br.ReadInt32BigEndian();
+                    if (layerbreak2Value == 0)
                         return true;
 
-                    layerbreak2 = layerbreak2Value - layerbreak2Offset + 2;
+                    layerbreak2 = layerbreak1 + layerbreak2Value - layerbreak2Offset + 2;
 
-                    // TODO: Figure out the default value for layerbreak 3
                     // Layerbreak 3
-                    // br.BaseStream.Seek(0x9C, SeekOrigin.Begin);
-                    // long layerbreak3Offset = br.ReadInt32();
-                    // long layerbreak3Value = br.ReadInt32();
-                    // if (layerbreak3Value != 66060286)
-                    //     return true;
+                    br.BaseStream.Seek(0x9C, SeekOrigin.Begin);
+                    long layerbreak3Offset = br.ReadInt32BigEndian();
+                    long layerbreak3Value = br.ReadInt32BigEndian();
+                    if (layerbreak3Value == 0)
+                        return true;
 
-                    // layerbreak3 = layerbreak3Value - layerbreak3Offset + 2;
+                    layerbreak3 = layerbreak2 + layerbreak3Value - layerbreak3Offset + 2;
 
                     return true;
                 }

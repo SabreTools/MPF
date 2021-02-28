@@ -25,6 +25,7 @@
 - Add PS5 type detection and version extraction
 - Add internal support for 3- and 4-layer discs
 - Revamp disc information window
+- Add PIC layerbreak extraction
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
