@@ -24,6 +24,7 @@
 - Add Xbox Series and PS5 to supported systems
 - Add PS5 type detection and version extraction
 - Add internal support for 3- and 4-layer discs
+- Revamp disc information window
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
