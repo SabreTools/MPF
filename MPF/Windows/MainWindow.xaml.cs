@@ -669,10 +669,13 @@ namespace MPF.Windows
         /// </summary>
         private void AboutClick(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show($"darksabre76 - Project Lead / Backend Design"
-                + $"{Environment.NewLine}ReignStumble - Former Project Lead / UI Design"
-                + $"{Environment.NewLine}Jakz - Primary Feature Contributor"
-                + $"{Environment.NewLine}NHellFire - Feature Contributor", "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Media Presentation Frontend (MPF)"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}A community preservation frontend developed in C#."
+                + $"{Environment.NewLine}Supports DiscImageCreator, Aaru, and DD for Windows."
+                + $"{Environment.NewLine}Originally created to help the Redump project."
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}Thanks to everyone who has supported this project!", "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>

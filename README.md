@@ -43,17 +43,26 @@ MPF uses some external libraries to assist with additional information gathering
 
 Here are the talented people who have contributed to the project so far:
 
-- **darksabre76** - Project Lead / Backend Design
+- **darksabre76** - Project Lead / Backend Design / UI Maintenence
 - **ReignStumble** - Former Project Lead / UI Design
 - **Jakz** - Primary Feature Contributor
 - **NHellFire** - Feature Contributor
+- **Shadów** - UI Support
 
 ## Notable Testers
 
 These are the tireless individuals who have dedicated countless hours to help test the many features of MPF and have worked with the development team closely:
 
-- **Dizzzy/user7** - Concept, ideas, tester
-- **Kludge** - Primary stress tester
-- **ajshell1** - Tester
-- **eientei95** - Tester
-- **VGPC Discord** - Testing and feedback
+- **Dizzzy/user7** - Additonal thanks for the original concept
+- **Kludge**
+- **ajshell1**
+- **Whovian**
+— **Gameboi64**
+- **silasqwerty**
+
+## Community Shout-Outs
+
+Thanks to these communities for their use, teating, and feedback. I can't even hope to be able to thank everyone individually.
+
+- **VGPC Discord** - Fast feedback and a lot of testing
+- **Redump Community** - Near-daily use to assist with metadata gathering
