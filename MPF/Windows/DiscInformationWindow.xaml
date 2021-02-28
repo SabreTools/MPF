@@ -13,125 +13,111 @@
         <StackPanel Orientation="Vertical" Width="500">
             <TabControl>
                 <TabItem x:Name="CommonInfo" Header="Common Info">
-                    <Grid>
-                        <StackPanel Orientation="Vertical">
-                            <Expander Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
-                                <Grid Margin="10,15,10,10">
-                                    <StackPanel Orientation="Vertical">
-                                        <controls:UserInput x:Name="GameTitlw" Label="Title"/>
-                                        <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
-                                        <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
-                                        <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
+                    <StackPanel Orientation="Vertical">
+                        <Expander Margin="5,5,5,5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
+                            <StackPanel Orientation="Vertical">
+                                <controls:UserInput x:Name="GameTitle" Label="Title"/>
+                                <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
+                                <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
+                                <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
 
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="1*" />
-                                                <ColumnDefinition Width="1.25*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                                            <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Path=Name}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </Grid>
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="1*" />
-                                                <ColumnDefinition Width="1.25*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                                            <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <TextBlock Text="{Binding Path=Name}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </Grid>
-
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="1*" />
-                                                <ColumnDefinition Width="1.25*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                                            <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
-                                                <ComboBox.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
-                                                    </DataTemplate>
-                                                </ComboBox.ItemTemplate>
-                                            </ComboBox>
-                                        </Grid>
-
-                                        <controls:UserInput x:Name="Serial" Label="Serial"/>
-                                        <controls:UserInput x:Name="Barcode" Label="Barcode"/>
-                                        <controls:UserInput x:Name="Comments" Label="Comments" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
-                                        <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Expander>
-                            <Expander Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
                                 <Grid>
-                                    <StackPanel Orientation="Vertical">
-                                        <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
-                                        <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
-                                    </StackPanel>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.25*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                                    <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
                                 </Grid>
-                            </Expander>
-                        </StackPanel>
-                    </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.25*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                                    <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Path=Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*" />
+                                        <ColumnDefinition Width="1.25*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                                    <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </Grid>
+
+                                <controls:UserInput x:Name="Serial" Label="Serial"/>
+                                <controls:UserInput x:Name="Barcode" Label="Barcode"/>
+                                <controls:UserInput x:Name="Comments" Label="Comments" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
+                                <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Expander>
+                        <Expander Margin="5,5,5,5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
+                            <StackPanel Orientation="Vertical">
+                                <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
+                                <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
+                            </StackPanel>
+                        </Expander>
+                    </StackPanel>
                 </TabItem>
                 
                 <TabItem x:Name="L0Info" Header="Data/L0 Info">
-                    <Grid>
-                        <StackPanel Orientation="Vertical">
-                            <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Tab="True"/>
-                            <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID"/>
-                            <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code"/>
-                            <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID"/>
-                            <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"/>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Orientation="Vertical">
+                        <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Tab="True"/>
+                        <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID"/>
+                        <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code"/>
+                        <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID"/>
+                        <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"/>
+                    </StackPanel>
                 </TabItem>
                 
                 <TabItem x:Name="L1Info" Header="Label/L1 Info">
-                    <Grid>
-                        <StackPanel Orientation="Vertical">
-                            <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Tab="True"/>
-                            <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID"/>
-                            <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code"/>
-                            <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID"/>
-                            <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould"/>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Orientation="Vertical">
+                        <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Tab="True"/>
+                        <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID"/>
+                        <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code"/>
+                        <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID"/>
+                        <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould"/>
+                    </StackPanel>
                 </TabItem>
 
                 <TabItem x:Name="L2Info" Header="L2 Info" Visibility="Hidden">
-                    <Grid>
-                        <StackPanel Orientation="Vertical">
-                            <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Tab="True"/>
-                            <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID"/>
-                            <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code"/>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Orientation="Vertical">
+                        <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Tab="True"/>
+                        <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID"/>
+                        <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code"/>
+                    </StackPanel>
                 </TabItem>
 
                 <TabItem x:Name="L3Info" Header="L3 Info" Visibility="Hidden">
-                    <Grid>
-                        <StackPanel Orientation="Vertical">
-                            <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Tab="True"/>
-                            <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID"/>
-                            <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code"/>
-                        </StackPanel>
-                    </Grid>
+                    <StackPanel Orientation="Vertical">
+                        <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Tab="True"/>
+                        <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID"/>
+                        <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code"/>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
 

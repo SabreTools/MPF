@@ -27,6 +27,7 @@
 - Revamp disc information window
 - Add PIC layerbreak extraction
 - Overhaul main window and logging panel
+- Overhaul options window
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
