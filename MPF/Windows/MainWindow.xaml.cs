@@ -850,13 +850,6 @@ namespace MPF.Windows
         /// </summary>
         private void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // If we're on a separator, go to the next item and return
-            if ((SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).IsHeader)
-            {
-                SystemTypeComboBox.SelectedIndex++;
-                return;
-            }
-
             LogOutput.VerboseLogLn($"Changed system to: {(SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name}");
             PopulateMediaType();
             GetOutputNames(false);
