@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using MPF.Utilities;
 
 namespace MPF
 {
@@ -22,7 +22,7 @@ namespace MPF
         public static implicit operator T? (Element<T> item) => item.Data;
 
         /// <inheritdoc/>
-        public string Name => new EnumDescriptionConverter().Convert(Data, null, null, CultureInfo.CurrentCulture) as string;
+        public string Name => Converters.GetLongName(Data);
 
         /// <summary>
         /// Internal enum value

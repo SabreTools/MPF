@@ -25,9 +25,9 @@ namespace MPF
             get
             {
                 if (IsHeader)
-                    return "---------- " + (Data as KnownSystemCategory?).LongName() + " ----------";
+                    return "---------- " + Converters.GetLongName(Data as KnownSystemCategory?) + " ----------";
                 else
-                    return (Data as KnownSystem?).LongName();
+                    return Converters.GetLongName(Data as KnownSystem?);
             }
         }
 

@@ -34,7 +34,7 @@ namespace MPF.Windows
         /// <summary>
         /// Current list of supported media types
         /// </summary>
-        public List<MediaType?> MediaTypes { get; private set; } = new List<MediaType?>();
+        public List<Element<MediaType>> MediaTypes { get; private set; } = new List<Element<MediaType>>();
 
         /// <summary>
         /// Current list of supported system profiles
@@ -325,11 +325,13 @@ namespace MPF.Windows
 
             if (currentSystem != null)
             {
-                MediaTypes = Validators.GetValidMediaTypes(currentSystem);
+                var mediaTypeValues = Validators.GetValidMediaTypes(currentSystem);
+                MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
                 MediaTypeComboBox.ItemsSource = MediaTypes;
 
                 MediaTypeComboBox.IsEnabled = MediaTypes.Count > 1;
-                MediaTypeComboBox.SelectedIndex = (MediaTypes.IndexOf(CurrentMediaType) >= 0 ? MediaTypes.IndexOf(CurrentMediaType) : 0);
+                int currentIndex = MediaTypes.FindIndex(m => m == CurrentMediaType);
+                MediaTypeComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
             }
             else
             {
@@ -371,7 +373,7 @@ namespace MPF.Windows
                 outputFilename = OutputFilenameTextBox.Text;
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
-            int mediaTypeIndex = MediaTypes.IndexOf(mediaType);
+            int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
             if (mediaTypeIndex > -1)
                 MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
         }
@@ -711,7 +713,8 @@ namespace MPF.Windows
             // Only change the media type if the selection and not the list has changed
             if (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
             {
-                CurrentMediaType = MediaTypeComboBox.SelectedItem as MediaType?;
+                var selectedMediaType = MediaTypeComboBox.SelectedItem as Element<MediaType>;
+                CurrentMediaType = selectedMediaType.Value;
                 SetSupportedDriveSpeed();
             }
 

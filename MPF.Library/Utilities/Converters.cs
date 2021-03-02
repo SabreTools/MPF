@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
+using System.Reflection;
 using MPF.Data;
 using MPF.Web;
 #if NET_FRAMEWORK
@@ -21,7 +23,7 @@ namespace MPF.Utilities
         /// <returns>InternalDriveType, if possible, null on error</returns>
         public static InternalDriveType? ToInternalDriveType(this DriveType driveType)
         {
-            switch(driveType)
+            switch (driveType)
             {
                 case DriveType.CDRom:
                     return InternalDriveType.Optical;
@@ -217,36 +219,36 @@ namespace MPF.Utilities
         /// <returns>MediaType if possible, null on error</returns>
         public static MediaType? IMAPIToMediaType(this IMAPI_MEDIA_PHYSICAL_TYPE type)
         {
-           switch (type)
-           {
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
-                   return MediaType.NONE;
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
-                   return MediaType.CDROM;
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
-                   return MediaType.DVD;
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
-                   return MediaType.HDDVD;
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
-               case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
-                   return MediaType.BluRay;
-               default:
-                   return null;
-           }
+            switch (type)
+            {
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_UNKNOWN:
+                    return MediaType.NONE;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_CDRW:
+                    return MediaType.CDROM;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDRAM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSR_DUALLAYER:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHRW:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDDASHR_DUALLAYER:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DISK:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_DVDPLUSRW_DUALLAYER:
+                    return MediaType.DVD;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_HDDVDRAM:
+                    return MediaType.HDDVD;
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDROM:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDR:
+                case IMAPI_MEDIA_PHYSICAL_TYPE.IMAPI_MEDIA_TYPE_BDRE:
+                    return MediaType.BluRay;
+                default:
+                    return null;
+            }
         }
 #endif
 
@@ -459,6 +461,41 @@ namespace MPF.Utilities
         #endregion
 
         #region Convert to Long Name
+
+        /// <summary>
+        /// Long name method cache
+        /// </summary>
+        private static ConcurrentDictionary<Type, MethodInfo> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
+
+        /// <summary>
+        /// Get the string representation of a generic enumerable value
+        /// </summary>
+        /// <param name="value">Enum value to convert</param>
+        /// <returns>String representation of that value if possible, empty string on error</returns>
+        public static string GetLongName(Enum value)
+        {
+            try
+            {
+                var sourceType = value.GetType();
+                sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
+
+                if (!LongNameMethods.TryGetValue(sourceType, out MethodInfo method))
+                {
+                    method = typeof(Converters).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                    LongNameMethods.TryAdd(sourceType, method);
+                }
+
+                if (method != null)
+                    return method.Invoke(null, new[] { value }) as string;
+                else
+                    return string.Empty;
+            }
+            catch
+            {
+                // Converter is not implemented for the given type
+                return string.Empty;
+            }
+        }
 
         /// <summary>
         /// Get the string representation of the InternalProgram enum values
@@ -893,7 +930,7 @@ namespace MPF.Utilities
         /// <returns>String representing the value, if possible</returns>
         public static string LongName(this YesNo yesno)
         {
-            switch(yesno)
+            switch (yesno)
             {
                 case YesNo.No:
                     return "No";
@@ -2087,172 +2124,172 @@ namespace MPF.Utilities
         /// <param name="type">String value to convert</param>
         /// <returns>MediaType represented by the string, if possible</returns>
         public static MediaType ToMediaType(string type)
+        {
+            switch (type.ToLowerInvariant())
             {
-                switch (type.ToLowerInvariant())
-                {
-                    #region Punched Media
+                #region Punched Media
 
-                    case "aperture":
-                    case "aperturecard":
-                    case "aperture card":
-                        return MediaType.ApertureCard;
-                    case "jacquardloom":
-                    case "jacquardloomcard":
-                    case "jacquard loom card":
-                        return MediaType.JacquardLoomCard;
-                    case "magneticstripe":
-                    case "magneticstripecard":
-                    case "magnetic stripe card":
-                        return MediaType.MagneticStripeCard;
-                    case "opticalphone":
-                    case "opticalphonecard":
-                    case "optical phonecard":
-                        return MediaType.OpticalPhonecard;
-                    case "punchcard":
-                    case "punchedcard":
-                    case "punched card":
-                        return MediaType.PunchedCard;
-                    case "punchtape":
-                    case "punchedtape":
-                    case "punched tape":
-                        return MediaType.PunchedTape;
+                case "aperture":
+                case "aperturecard":
+                case "aperture card":
+                    return MediaType.ApertureCard;
+                case "jacquardloom":
+                case "jacquardloomcard":
+                case "jacquard loom card":
+                    return MediaType.JacquardLoomCard;
+                case "magneticstripe":
+                case "magneticstripecard":
+                case "magnetic stripe card":
+                    return MediaType.MagneticStripeCard;
+                case "opticalphone":
+                case "opticalphonecard":
+                case "optical phonecard":
+                    return MediaType.OpticalPhonecard;
+                case "punchcard":
+                case "punchedcard":
+                case "punched card":
+                    return MediaType.PunchedCard;
+                case "punchtape":
+                case "punchedtape":
+                case "punched tape":
+                    return MediaType.PunchedTape;
 
-                    #endregion
+                #endregion
 
-                    #region Tape
+                #region Tape
 
-                    case "openreel":
-                    case "openreeltape":
-                    case "open reel tape":
-                        return MediaType.OpenReel;
-                    case "datacart":
-                    case "datacartridge":
-                    case "datatapecartridge":
-                    case "data tape cartridge":
-                        return MediaType.DataCartridge;
-                    case "cassette":
-                    case "cassettetape":
-                    case "cassette tape":
-                        return MediaType.Cassette;
+                case "openreel":
+                case "openreeltape":
+                case "open reel tape":
+                    return MediaType.OpenReel;
+                case "datacart":
+                case "datacartridge":
+                case "datatapecartridge":
+                case "data tape cartridge":
+                    return MediaType.DataCartridge;
+                case "cassette":
+                case "cassettetape":
+                case "cassette tape":
+                    return MediaType.Cassette;
 
-                    #endregion
+                #endregion
 
-                    #region Disc / Disc
+                #region Disc / Disc
 
-                    case "bd":
-                    case "bdrom":
-                    case "bd-rom":
-                    case "bluray":
-                        return MediaType.BluRay;
-                    case "cd":
-                    case "cdrom":
-                    case "cd-rom":
-                        return MediaType.CDROM;
-                    case "dvd":
-                    case "dvd5":
-                    case "dvd-5":
-                    case "dvd9":
-                    case "dvd-9":
-                    case "dvdrom":
-                    case "dvd-rom":
-                        return MediaType.DVD;
-                    case "fd":
-                    case "floppy":
-                    case "floppydisk":
-                    case "floppy disk":
-                    case "floppy diskette":
-                        return MediaType.FloppyDisk;
-                    case "floptical":
-                        return MediaType.Floptical;
-                    case "gd":
-                    case "gdrom":
-                    case "gd-rom":
-                        return MediaType.GDROM;
-                    case "hddvd":
-                    case "hd-dvd":
-                    case "hddvdrom":
-                    case "hd-dvd-rom":
-                        return MediaType.HDDVD;
-                    case "hdd":
-                    case "harddisk":
-                    case "hard disk":
-                        return MediaType.HardDisk;
-                    case "bernoullidisk":
-                    case "iomegabernoullidisk":
-                    case "bernoulli disk":
-                    case "iomega bernoulli disk":
-                        return MediaType.IomegaBernoulliDisk;
-                    case "jaz":
-                    case "iomegajaz":
-                    case "iomega jaz":
-                        return MediaType.IomegaJaz;
-                    case "zip":
-                    case "zipdisk":
-                    case "iomegazip":
-                    case "iomega zip":
-                        return MediaType.IomegaZip;
-                    case "ldrom":
-                    case "lvrom":
-                    case "ld-rom":
-                    case "lv-rom":
-                    case "laserdisc":
-                    case "laservision":
-                    case "ld-rom / lv-rom":
-                        return MediaType.LaserDisc;
-                    case "64dd":
-                    case "n64dd":
-                    case "64dddisk":
-                    case "n64dddisk":
-                    case "64dd disk":
-                    case "n64dd disk":
-                        return MediaType.Nintendo64DD;
-                    case "fds":
-                    case "famicom":
-                    case "nfds":
-                    case "nintendofamicom":
-                    case "famicomdisksystem":
-                    case "famicom disk system":
-                    case "famicom disk system disk":
-                        return MediaType.NintendoFamicomDiskSystem;
-                    case "gc":
-                    case "gamecube":
-                    case "nintendogamecube":
-                    case "nintendo gamecube":
-                    case "gamecube disc":
-                    case "gamecube game disc":
-                        return MediaType.NintendoGameCubeGameDisc;
-                    case "wii":
-                    case "nintendowii":
-                    case "nintendo wii":
-                    case "nintendo wii disc":
-                    case "wii optical disc":
-                        return MediaType.NintendoWiiOpticalDisc;
-                    case "wiiu":
-                    case "nintendowiiu":
-                    case "nintendo wiiu":
-                    case "nintendo wiiu disc":
-                    case "wiiu optical disc":
-                    case "wii u optical disc":
-                        return MediaType.NintendoWiiUOpticalDisc;
-                    case "umd":
-                        return MediaType.UMD;
+                case "bd":
+                case "bdrom":
+                case "bd-rom":
+                case "bluray":
+                    return MediaType.BluRay;
+                case "cd":
+                case "cdrom":
+                case "cd-rom":
+                    return MediaType.CDROM;
+                case "dvd":
+                case "dvd5":
+                case "dvd-5":
+                case "dvd9":
+                case "dvd-9":
+                case "dvdrom":
+                case "dvd-rom":
+                    return MediaType.DVD;
+                case "fd":
+                case "floppy":
+                case "floppydisk":
+                case "floppy disk":
+                case "floppy diskette":
+                    return MediaType.FloppyDisk;
+                case "floptical":
+                    return MediaType.Floptical;
+                case "gd":
+                case "gdrom":
+                case "gd-rom":
+                    return MediaType.GDROM;
+                case "hddvd":
+                case "hd-dvd":
+                case "hddvdrom":
+                case "hd-dvd-rom":
+                    return MediaType.HDDVD;
+                case "hdd":
+                case "harddisk":
+                case "hard disk":
+                    return MediaType.HardDisk;
+                case "bernoullidisk":
+                case "iomegabernoullidisk":
+                case "bernoulli disk":
+                case "iomega bernoulli disk":
+                    return MediaType.IomegaBernoulliDisk;
+                case "jaz":
+                case "iomegajaz":
+                case "iomega jaz":
+                    return MediaType.IomegaJaz;
+                case "zip":
+                case "zipdisk":
+                case "iomegazip":
+                case "iomega zip":
+                    return MediaType.IomegaZip;
+                case "ldrom":
+                case "lvrom":
+                case "ld-rom":
+                case "lv-rom":
+                case "laserdisc":
+                case "laservision":
+                case "ld-rom / lv-rom":
+                    return MediaType.LaserDisc;
+                case "64dd":
+                case "n64dd":
+                case "64dddisk":
+                case "n64dddisk":
+                case "64dd disk":
+                case "n64dd disk":
+                    return MediaType.Nintendo64DD;
+                case "fds":
+                case "famicom":
+                case "nfds":
+                case "nintendofamicom":
+                case "famicomdisksystem":
+                case "famicom disk system":
+                case "famicom disk system disk":
+                    return MediaType.NintendoFamicomDiskSystem;
+                case "gc":
+                case "gamecube":
+                case "nintendogamecube":
+                case "nintendo gamecube":
+                case "gamecube disc":
+                case "gamecube game disc":
+                    return MediaType.NintendoGameCubeGameDisc;
+                case "wii":
+                case "nintendowii":
+                case "nintendo wii":
+                case "nintendo wii disc":
+                case "wii optical disc":
+                    return MediaType.NintendoWiiOpticalDisc;
+                case "wiiu":
+                case "nintendowiiu":
+                case "nintendo wiiu":
+                case "nintendo wiiu disc":
+                case "wiiu optical disc":
+                case "wii u optical disc":
+                    return MediaType.NintendoWiiUOpticalDisc;
+                case "umd":
+                    return MediaType.UMD;
 
-                    #endregion
+                #endregion
 
-                    // Unsorted Formats
-                    case "cartridge":
-                        return MediaType.Cartridge;
-                    case "ced":
-                    case "rcaced":
-                    case "rca ced":
-                    case "videodisc":
-                    case "rca videodisc":
-                        return MediaType.CED;
+                // Unsorted Formats
+                case "cartridge":
+                    return MediaType.Cartridge;
+                case "ced":
+                case "rcaced":
+                case "rca ced":
+                case "videodisc":
+                case "rca videodisc":
+                    return MediaType.CED;
 
-                    default:
-                        return MediaType.NONE;
-                }
+                default:
+                    return MediaType.NONE;
             }
+        }
 
         #endregion
     }
