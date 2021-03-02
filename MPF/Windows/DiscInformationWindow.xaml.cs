@@ -17,7 +17,7 @@ namespace MPF.Windows
         /// <summary>
         /// List of available disc categories
         /// </summary>
-        public List<CategoryComboBoxItem> Categories { get; private set; }
+        public List<CategoryComboBoxItem> Categories { get; private set; } = GenerateComboBoxItems<DiscCategory, CategoryComboBoxItem>().ToList();
 
         /// <summary>
         /// SubmissionInfo object to fill and save
@@ -27,24 +27,36 @@ namespace MPF.Windows
         /// <summary>
         /// List of available regions
         /// </summary>
-        public List<RegionComboBoxItem> Regions { get; private set; }
+        public List<RegionComboBoxItem> Regions { get; private set; } = GenerateComboBoxItems<Region, RegionComboBoxItem>().ToList();
 
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<LanguageComboBoxItem> Languages { get; private set; }
+        public List<LanguageComboBoxItem> Languages { get; private set; } = GenerateComboBoxItems<Language, LanguageComboBoxItem>().ToList();
 
         #endregion
 
         public DiscInformationWindow(SubmissionInfo submissionInfo)
         {
-            this.SubmissionInfo = submissionInfo;
             InitializeComponent();
+            DataContext = this;
 
-            PopulateCategories();
-            PopulateRegions();
-            PopulateLanguages();
+            this.SubmissionInfo = submissionInfo;
             ManipulateFields();
+        }
+
+        /// <summary>
+        /// Generate a set of combo box items for a given set of types
+        /// </summary>
+        /// <typeparam name="T">Base enum value to create combo box items for</typeparam>
+        /// <typeparam name="K">Combo box wrapper type for the base enum value</typeparam>
+        /// <returns>IEnumerable representing the generated combo box items</returns>
+        private static IEnumerable<K> GenerateComboBoxItems<T, K>()
+        {
+            return Enum.GetValues(typeof(T))
+                .OfType<T>()
+                .Select(e => Activator.CreateInstance(typeof(K), e))
+                .OfType<K>();
         }
 
         /// <summary>
@@ -219,54 +231,6 @@ namespace MPF.Windows
 
             Version.Text = SubmissionInfo.VersionAndEditions.Version ?? "";
             Edition.Text = SubmissionInfo.VersionAndEditions.OtherEditions ?? "";
-        }
-
-        /// <summary>
-        /// Get a complete list of categories and fill the combo box
-        /// </summary>
-        private void PopulateCategories()
-        {
-            var categories = Enum.GetValues(typeof(DiscCategory)).OfType<DiscCategory?>().ToList();
-            Categories = new List<CategoryComboBoxItem>();
-            foreach (var category in categories)
-            {
-                Categories.Add(new CategoryComboBoxItem(category));
-            }
-
-            CategoryComboBox.ItemsSource = Categories;
-            CategoryComboBox.SelectedIndex = 0;
-        }
-
-        /// <summary>
-        /// Get a complete list of languages and fill the combo box
-        /// </summary>
-        private void PopulateLanguages()
-        {
-            var languages = Enum.GetValues(typeof(Language)).OfType<Language?>().ToList();
-            Languages = new List<LanguageComboBoxItem>();
-            foreach (var language in languages)
-            {
-                Languages.Add(new LanguageComboBoxItem(language));
-            }
-
-            LanguagesComboBox.ItemsSource = Languages;
-            LanguagesComboBox.SelectedIndex = 0;
-        }
-
-        /// <summary>
-        /// Get a complete list of regions and fill the combo box
-        /// </summary>
-        private void PopulateRegions()
-        {
-            var regions = Enum.GetValues(typeof(Region)).OfType<Region?>().ToList();
-            Regions = new List<RegionComboBoxItem>();
-            foreach (var region in regions)
-            {
-                Regions.Add(new RegionComboBoxItem(region));
-            }
-
-            RegionComboBox.ItemsSource = Regions;
-            RegionComboBox.SelectedIndex = 0;
         }
 
         /// <summary>

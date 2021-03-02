@@ -14,7 +14,7 @@
             <TabControl>
                 <TabItem x:Name="CommonInfo" Header="Common Info">
                     <StackPanel Orientation="Vertical">
-                        <Expander Margin="5,5,5,5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
+                        <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
                                 <controls:UserInput x:Name="GameTitle" Label="Title"/>
                                 <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
@@ -28,7 +28,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                                    <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                    <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                              ItemsSource="{Binding Path=Categories}" SelectedIndex="0">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Path=Name}" />
@@ -44,7 +45,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                                    <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                                    <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                              ItemsSource="{Binding Path=Regions}" SelectedIndex="0">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Path=Name}" />
@@ -60,7 +62,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                                    <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" >
+                                    <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
+                                              ItemsSource="{Binding Path=Languages}" SelectedIndex="0">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
                                                 <CheckBox IsChecked="{Binding IsChecked}" Content="{Binding Path=Name}" />
@@ -75,7 +78,7 @@
                                 <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
                             </StackPanel>
                         </Expander>
-                        <Expander Margin="5,5,5,5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
+                        <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
                                 <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
                                 <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
@@ -124,8 +127,10 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
+                    <Label/>
                     <Button Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
                     <Button Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
+                    <Label/>
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
