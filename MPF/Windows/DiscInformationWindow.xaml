@@ -123,17 +123,10 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid Margin="5,5,5,5" Height="28">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-
+                <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
                     <Button Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
                     <Button Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
-                </Grid>
+                </UniformGrid>
             </GroupBox>
         </StackPanel>
     </Grid>

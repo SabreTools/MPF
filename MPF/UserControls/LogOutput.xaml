@@ -20,17 +20,12 @@
             </Border>
 
             <GroupBox Grid.Row="2" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Grid Margin="5,5,5,5" Height="28">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-
-                    <Button Name="ClearButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Clear" Click="OnClearButton" />
-                    <Button Name="SaveButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Save" Click="OnSaveButton" />
-                </Grid>
+                <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
+                    <Label/>
+                    <Button Name="ClearButton" Height="25" Width="80" Content="Clear" Click="OnClearButton" />
+                    <Button Name="SaveButton" Height="25" Width="80" Content="Save" Click="OnSaveButton" />
+                    <Label/>
+                </UniformGrid>
             </GroupBox>
         </StackPanel>
     </Grid>
