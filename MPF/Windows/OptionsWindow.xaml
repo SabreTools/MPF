@@ -28,21 +28,15 @@
                         </Grid.RowDefinitions>
 
                         <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
-                        <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                            DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                            Text="{Binding Path=AaruPath}" />
+                        <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.AaruPath}" />
                         <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
-                        <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                            DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                            Text="{Binding Path=CreatorPath}" />
+                        <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.CreatorPath}" />
                         <Button x:Name="CreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DD Path" />
-                        <TextBox x:Name="DDPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                Text="{Binding Path=DDPath}" />
+                        <TextBox x:Name="DDPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DDPath}" />
                         <Button x:Name="DDPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Dumping Program" />
@@ -55,9 +49,7 @@
                         </ComboBox>
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
-                        <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                            DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                            Text="{Binding Path=DefaultOutputPath}" />
+                        <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DefaultOutputPath}" />
                         <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
                     </Grid>
                 </TabItem>
@@ -67,45 +59,38 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
                             <UniformGrid Columns="2" Rows="4">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=SkipMediaTypeDetection}"
+                                     IsChecked="{Binding Path=UIOptions.Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=IgnoreFixedDrives}"
+                                     IsChecked="{Binding Path=UIOptions.Options.IgnoreFixedDrives}"
                                      ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=QuietMode}"
+                                     IsChecked="{Binding Path=UIOptions.Options.QuietMode}"
                                      ToolTip="Disable DiscImageCreator sounds" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=ParanoidMode}"
+                                     IsChecked="{Binding Path=UIOptions.Options.ParanoidMode}"
                                      ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Protection Scan"
-                                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                    IsChecked="{Binding Path=ScanForProtection}"
+                                    IsChecked="{Binding Path=UIOptions.Options.ScanForProtection}"
                                     ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=ResetDriveAfterDump}"
+                                     IsChecked="{Binding Path=UIOptions.Options.ResetDriveAfterDump}"
                                      ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
                                      />
 
                                 <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                 <TextBox VerticalAlignment="Center"
-                                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                    Text="{Binding Path=RereadAmountForC2}"
+                                    Text="{Binding Path=UIOptions.Options.RereadAmountForC2}"
                                     ToolTip="Specifies how many rereads are attempted on C2 error"
                                     />
                             </UniformGrid>
@@ -128,24 +113,21 @@
                                 <Label Grid.Row="0" Grid.Column="0" Content="CD-ROM" />
                                 <Slider x:Name="DumpSpeedCDSlider" Grid.Row="0" Grid.Column="1" Minimum="1" Maximum="72" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static local:Constants.SpeedsForCDAsCollection}}"
-                                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                    Value="{Binding Path=PreferredDumpSpeedCD}" />
+                                    Value="{Binding Path=UIOptions.Options.PreferredDumpSpeedCD}" />
                                 <TextBox x:Name="DumpSpeedCDTextBox" Grid.Row="0" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
                                     Text="{Binding ElementName=DumpSpeedCDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="1" Grid.Column="0" Content="DVD-ROM" />
                                 <Slider x:Name="DumpSpeedDVDSlider" Grid.Row="1" Grid.Column="1" Minimum="1" Maximum="24" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static local:Constants.SpeedsForDVDAsCollection}}"
-                                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                    Value="{Binding Path=PreferredDumpSpeedDVD}"  />
+                                    Value="{Binding Path=UIOptions.Options.PreferredDumpSpeedDVD}"  />
                                 <TextBox x:Name="DumpSpeedDVDTextBox" Grid.Row="1" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="2" Grid.Column="0" Content="BD-ROM" />
                                 <Slider x:Name="DumpSpeedBDSlider" Grid.Row="2" Grid.Column="1" Minimum="1" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
                                     Ticks="{Binding Source={x:Static local:Constants.SpeedsForBDAsCollection}}"
-                                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                    Value="{Binding Path=PreferredDumpSpeedBD}"  />
+                                    Value="{Binding Path=UIOptions.Options.PreferredDumpSpeedBD}"  />
                                 <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
@@ -159,14 +141,12 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Disc Information">
                             <UniformGrid Columns="2">
                                 <CheckBox VerticalAlignment="Center" Content="Add Placeholders"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=AddPlaceholders}"
+                                     IsChecked="{Binding Path=UIOptions.Options.AddPlaceholders}"
                                      ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=PromptForDiscInformation}"
+                                     IsChecked="{Binding Path=UIOptions.Options.PromptForDiscInformation}"
                                      ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
                                       />
                             </UniformGrid>
@@ -175,14 +155,12 @@
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Logging">
                             <UniformGrid Columns="2">
                                 <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=VerboseLogging}"
+                                     IsChecked="{Binding Path=UIOptions.Options.VerboseLogging}"
                                      ToolTip="Display all logging statements" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
-                                     DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                     IsChecked="{Binding Path=OpenLogWindowAtStartup}"
+                                     IsChecked="{Binding Path=UIOptions.Options.OpenLogWindowAtStartup}"
                                      ToolTip="Open the log panel when the program launches" Margin="0,4"
                                      />
                             </UniformGrid>
@@ -196,8 +174,7 @@
                             <UniformGrid Columns="5" Rows="1">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
                                 <TextBox x:Name="RedumpUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
-                                    DataContext="{Binding Source={x:Static local:ViewModels.OptionsViewModel}}"
-                                    Text="{Binding Path=Username}" />
+                                    Text="{Binding Path=UIOptions.Options.Username}" />
 
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
                                 <PasswordBox x:Name="RedumpPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*" />

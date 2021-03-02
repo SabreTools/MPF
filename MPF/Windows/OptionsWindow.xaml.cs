@@ -33,6 +33,7 @@ namespace MPF.Windows
         public OptionsWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             PopulateInternalPrograms();
         }
