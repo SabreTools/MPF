@@ -13,10 +13,7 @@ namespace MPF
     {
         private readonly T Data;
 
-        public Element(T data)
-        {
-            Data = data;
-        }
+        public Element(T data) => Data = data;
 
         /// <summary>
         /// Allow elements to be used as their internal enum type
@@ -24,9 +21,7 @@ namespace MPF
         /// <param name="item"></param>
         public static implicit operator T? (Element<T> item) => item.Data;
 
-        /// <summary>
-        /// Display name for the combo box element
-        /// </summary>
+        /// <inheritdoc/>
         public string Name => new EnumDescriptionConverter().Convert(Data, null, null, CultureInfo.CurrentCulture) as string;
 
         /// <summary>
@@ -40,9 +35,8 @@ namespace MPF
         /// <remarks>Only applies to CheckBox type</remarks>
         public bool IsChecked { get; set; }
 
-
         /// <summary>
-        /// Generate all elements assocaited with the data enum type
+        /// Generate all elements associated with the data enum type
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<Element<T>> GenerateElements()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MPF.Data;
 using MPF.Utilities;
 using Xunit;
@@ -24,7 +25,7 @@ namespace MPF.Test.Utilities
         public void CreateListOfSystemsTest()
         {
             int expected = Enum.GetValues(typeof(KnownSystem)).Length - 5; // - 4 -1 for markers categories and KnownSystem.NONE
-            var actual = Validators.CreateListOfSystems();
+            var actual = KnownSystemComboBoxItem.GenerateElements().ToList();
             Assert.Equal(expected, actual.Count);
         }
 

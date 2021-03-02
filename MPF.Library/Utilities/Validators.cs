@@ -710,18 +710,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Create a list of systems
-        /// </summary>
-        /// <returns>KnownSystems, if possible</returns>
-        public static List<KnownSystem?> CreateListOfSystems()
-        {
-            return Enum.GetValues(typeof(KnownSystem))
-                .OfType<KnownSystem?>()
-                .Where(s => !s.IsMarker() && s != KnownSystem.NONE)
-                .ToList();
-        }
-
-        /// <summary>
         /// Create a list of active drives matched to their volume labels
         /// </summary>
         /// <param name="ignoreFixedDrives">Ture to ignore fixed drives from population, false otherwise</param>

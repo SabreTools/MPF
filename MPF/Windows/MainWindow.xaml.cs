@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -40,7 +39,7 @@ namespace MPF.Windows
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<KnownSystemComboBoxItem> Systems { get; private set; }
+        public List<KnownSystemComboBoxItem> Systems { get; private set; } = KnownSystemComboBoxItem.GenerateElements().ToList();
 
         /// <summary>
         /// Current UI options
@@ -61,6 +60,7 @@ namespace MPF.Windows
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             // Load the options
             ViewModels.OptionsViewModel = new OptionsViewModel(UIOptions);
@@ -337,41 +337,6 @@ namespace MPF.Windows
                 MediaTypeComboBox.ItemsSource = null;
                 MediaTypeComboBox.SelectedIndex = -1;
             }
-        }
-
-        /// <summary>
-        /// Get a complete list of supported systems and fill the combo box
-        /// </summary>
-        private void PopulateSystems()
-        {
-            var knownSystems = Validators.CreateListOfSystems();
-
-            LogOutput.VerboseLogLn($"Populating systems, {knownSystems.Count} systems found.");
-
-            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = knownSystems
-                .GroupBy(s => s.Category())
-                .ToDictionary(
-                    k => k.Key,
-                    v => v
-                        .OrderBy(s => s.LongName())
-                        .ToList()
-                );
-
-            Systems = new List<KnownSystemComboBoxItem>()
-            {
-                new KnownSystemComboBoxItem(KnownSystem.NONE),
-            };
-
-            foreach (var group in mapping)
-            {
-                Systems.Add(new KnownSystemComboBoxItem(group.Key));
-                group.Value.ForEach(system => Systems.Add(new KnownSystemComboBoxItem(system)));
-            }
-
-            SystemTypeComboBox.ItemsSource = Systems;
-            SystemTypeComboBox.SelectedIndex = 0;
-
-            StartStopButton.IsEnabled = false;
         }
 
         /// <summary>
@@ -775,10 +740,6 @@ namespace MPF.Windows
 
             alreadyShown = true;
 
-            // Populate the list of systems
-            StatusLabel.Content = "Creating system list, please wait!";
-            PopulateSystems();
-
             // Populate the list of media types for system
             StatusLabel.Content = "Creating media type list, please wait!";
             PopulateMediaType();
@@ -890,7 +851,7 @@ namespace MPF.Windows
         private void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // If we're on a separator, go to the next item and return
-            if ((SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).IsHeader())
+            if ((SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).IsHeader)
             {
                 SystemTypeComboBox.SelectedIndex++;
                 return;

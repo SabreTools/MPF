@@ -12,15 +12,23 @@ namespace MPF
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var sourceType = value.GetType();
-            sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
+            try
+            {
+                var sourceType = value.GetType();
+                sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
 
-            var method = typeof(Converters).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                var method = typeof(Converters).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
 
-            if (method != null)
-                return method.Invoke(null, new[] { value });
-            else
+                if (method != null)
+                    return method.Invoke(null, new[] { value });
+                else
+                    return string.Empty;
+            }
+            catch
+            {
+                // Converter is not implemented for the given type
                 return string.Empty;
+            }
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

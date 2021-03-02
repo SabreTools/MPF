@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using MPF.Data;
 using MPF.Utilities;
 using Xunit;
@@ -94,7 +95,7 @@ namespace MPF.Test.Utilities
         [Fact]
         public void KnownSystemHasValidCategory()
         {
-            var values = Validators.CreateListOfSystems();
+            var values = KnownSystemComboBoxItem.GenerateElements().ToList();
             KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerDiscBasedConsoleEnd, /* KnownSystem.MarkerOtherConsoleEnd, */ KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
 
             values.ForEach(system => {
