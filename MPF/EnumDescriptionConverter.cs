@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using MPF.Data;
 using MPF.Utilities;
 
 namespace MPF
@@ -13,15 +12,15 @@ namespace MPF
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            // Common
-            if (value is MediaType?)
-                return ((MediaType?)value).LongName();
-            else if (value is KnownSystem?)
-                return ((KnownSystem?)value).LongName();
+            var sourceType = value.GetType();
+            sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
 
-            // Default
+            var method = typeof(Converters).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+
+            if (method != null)
+                return method.Invoke(null, new[] { value });
             else
-                return "";
+                return string.Empty;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
