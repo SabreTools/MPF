@@ -7,7 +7,7 @@ namespace MPF
     /// <summary>
     /// Represents a single item in the System combo box
     /// </summary>
-    public class KnownSystemComboBoxItem
+    public class KnownSystemComboBoxItem : IElement
     {
         private object data;
 

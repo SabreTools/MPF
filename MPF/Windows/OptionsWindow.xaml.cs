@@ -26,7 +26,7 @@ namespace MPF.Windows
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<InternalProgramComboBoxItem> InternalPrograms { get; private set; }
+        public List<Element<InternalProgram>> InternalPrograms { get; private set; }
 
         #endregion
 
@@ -65,10 +65,10 @@ namespace MPF.Windows
         {
             // We only support certain programs for dumping
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
-            InternalPrograms = new List<InternalProgramComboBoxItem>();
+            InternalPrograms = new List<Element<InternalProgram>>();
             foreach (var internalProgram in internalPrograms)
             {
-                InternalPrograms.Add(new InternalProgramComboBoxItem(internalProgram));
+                InternalPrograms.Add(new Element<InternalProgram>(internalProgram));
             }
 
             InternalProgramComboBox.ItemsSource = InternalPrograms;
@@ -155,7 +155,7 @@ namespace MPF.Windows
         private void OnAcceptClick(object sender, EventArgs e)
         {
             // Handle non-bindable fields
-            UIOptions.Options.InternalProgram = (InternalProgramComboBox.SelectedItem as InternalProgramComboBoxItem)?.Name ?? InternalProgram.DiscImageCreator.ToString();
+            UIOptions.Options.InternalProgram = (InternalProgramComboBox.SelectedItem as Element<InternalProgram>)?.Name ?? InternalProgram.DiscImageCreator.ToString();
             UIOptions.Options.Password = RedumpPasswordBox.Password;
 
             UIOptions.Save();

@@ -17,7 +17,7 @@ namespace MPF.Windows
         /// <summary>
         /// List of available disc categories
         /// </summary>
-        public List<CategoryComboBoxItem> Categories { get; private set; } = GenerateComboBoxItems<DiscCategory, CategoryComboBoxItem>().ToList();
+        public List<Element<DiscCategory>> Categories { get; private set; } = Element<DiscCategory>.GenerateElements().ToList();
 
         /// <summary>
         /// SubmissionInfo object to fill and save
@@ -27,12 +27,12 @@ namespace MPF.Windows
         /// <summary>
         /// List of available regions
         /// </summary>
-        public List<RegionComboBoxItem> Regions { get; private set; } = GenerateComboBoxItems<Region, RegionComboBoxItem>().ToList();
+        public List<Element<Region>> Regions { get; private set; } = Element<Region>.GenerateElements().ToList();
 
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<LanguageComboBoxItem> Languages { get; private set; } = GenerateComboBoxItems<Language, LanguageComboBoxItem>().ToList();
+        public List<Element<Language>> Languages { get; private set; } = Element<Language>.GenerateElements().ToList();
 
         #endregion
 
@@ -43,20 +43,6 @@ namespace MPF.Windows
 
             this.SubmissionInfo = submissionInfo;
             ManipulateFields();
-        }
-
-        /// <summary>
-        /// Generate a set of combo box items for a given set of types
-        /// </summary>
-        /// <typeparam name="T">Base enum value to create combo box items for</typeparam>
-        /// <typeparam name="K">Combo box wrapper type for the base enum value</typeparam>
-        /// <returns>IEnumerable representing the generated combo box items</returns>
-        private static IEnumerable<K> GenerateComboBoxItems<T, K>()
-        {
-            return Enum.GetValues(typeof(T))
-                .OfType<T>()
-                .Select(e => Activator.CreateInstance(typeof(K), e))
-                .OfType<K>();
         }
 
         /// <summary>
@@ -242,8 +228,8 @@ namespace MPF.Windows
             SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin = ForeignTitle.Text ?? "";
             SubmissionInfo.CommonDiscInfo.DiscNumberLetter = DiscNumberLetter.Text ?? "";
             SubmissionInfo.CommonDiscInfo.DiscTitle = DiscTitle.Text ?? "";
-            SubmissionInfo.CommonDiscInfo.Category = (CategoryComboBox.SelectedItem as CategoryComboBoxItem)?.Value ?? DiscCategory.Games;
-            SubmissionInfo.CommonDiscInfo.Region = (RegionComboBox.SelectedItem as RegionComboBoxItem)?.Value ?? Region.World;
+            SubmissionInfo.CommonDiscInfo.Category = (CategoryComboBox.SelectedItem as Element<DiscCategory>)?.Value ?? DiscCategory.Games;
+            SubmissionInfo.CommonDiscInfo.Region = (RegionComboBox.SelectedItem as Element<Region>)?.Value ?? Region.World;
             var languages = new List<Language?>();
             foreach (var language in Languages)
             {
