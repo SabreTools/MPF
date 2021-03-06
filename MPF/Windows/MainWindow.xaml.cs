@@ -168,7 +168,7 @@ namespace MPF.Windows
                 OutputFilenameTextBox.Text,
                 DriveLetterComboBox.SelectedItem as Drive,
                 SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
-                MediaTypeComboBox.SelectedItem as MediaType?,
+                MediaTypeComboBox.SelectedItem as Element<MediaType>,
                 ParametersTextBox.Text);
 
             // Disable automatic reprocessing of the textboxes until we're done
