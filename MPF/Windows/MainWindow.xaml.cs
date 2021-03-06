@@ -246,7 +246,7 @@ namespace MPF.Windows
         {
             Drive drive = DriveLetterComboBox.SelectedItem as Drive;
             KnownSystem? systemType = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
-            MediaType? mediaType = MediaTypeComboBox.SelectedItem as MediaType?;
+            MediaType? mediaType = MediaTypeComboBox.SelectedItem as Element<MediaType>;
 
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
