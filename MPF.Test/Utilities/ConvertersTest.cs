@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MPF.Data;
 using MPF.Utilities;
@@ -8,6 +9,11 @@ namespace MPF.Test.Utilities
 {
     public class ConvertersTest
     {
+        /// <summary>
+        /// Set of all known systems for testing
+        /// </summary>
+        public static IEnumerable<object[]> KnownSystems = KnownSystemComboBoxItem.GenerateElements().Select(e => new object[] { e });
+
         [Theory]
         [InlineData(DiscImageCreator.Command.Audio, MediaType.CDROM)]
         [InlineData(DiscImageCreator.Command.BluRay, MediaType.BluRay)]
@@ -92,38 +98,41 @@ namespace MPF.Test.Utilities
             Assert.Equal(expected, actual);
         }
 
-        [Fact]
-        public void KnownSystemHasValidCategory()
+        [Theory]
+        [MemberData(nameof(KnownSystems))]
+        public void KnownSystemHasValidCategory(KnownSystemComboBoxItem system)
         {
-            var values = KnownSystemComboBoxItem.GenerateElements().ToList();
             KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerDiscBasedConsoleEnd, /* KnownSystem.MarkerOtherConsoleEnd, */ KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
 
-            values.ForEach(system => {
-                if (system == KnownSystem.NONE)
-                    return;
+            // Non-system items won't map
+            if (system.IsHeader)
+                return;
 
-                // we check that the category is the first category value higher than the system
-                KnownSystemCategory category = ((KnownSystem?)system).Category();
-                KnownSystem marker = KnownSystem.NONE;
+            // NONE will never map
+            if (system == KnownSystem.NONE)
+                return;
 
-                switch (category)
-                {
-                    case KnownSystemCategory.Arcade: marker = KnownSystem.MarkerArcadeEnd; break;
-                    case KnownSystemCategory.DiscBasedConsole: marker = KnownSystem.MarkerDiscBasedConsoleEnd; break;
-                    /* case KnownSystemCategory.OtherConsole: marker = KnownSystem.MarkerOtherConsoleEnd; break; */
-                    case KnownSystemCategory.Computer: marker = KnownSystem.MarkerComputerEnd; break;
-                    case KnownSystemCategory.Other: marker = KnownSystem.MarkerOtherEnd; break;
-                }
+            // we check that the category is the first category value higher than the system
+            KnownSystemCategory category = ((KnownSystem?)system).Category();
+            KnownSystem marker = KnownSystem.NONE;
 
-                Assert.NotEqual(KnownSystem.NONE, marker);
-                Assert.True(marker > system);
+            switch (category)
+            {
+                case KnownSystemCategory.Arcade: marker = KnownSystem.MarkerArcadeEnd; break;
+                case KnownSystemCategory.DiscBasedConsole: marker = KnownSystem.MarkerDiscBasedConsoleEnd; break;
+                /* case KnownSystemCategory.OtherConsole: marker = KnownSystem.MarkerOtherConsoleEnd; break; */
+                case KnownSystemCategory.Computer: marker = KnownSystem.MarkerComputerEnd; break;
+                case KnownSystemCategory.Other: marker = KnownSystem.MarkerOtherEnd; break;
+            }
 
-                Array.ForEach(markers, mmarker =>
-                {
-                    // a marker can be the same of the found one, or one of a category before or a category after but never in the middle between
-                    // the system and the mapped category
-                    Assert.True(mmarker == marker || mmarker < system || mmarker > marker);
-                });
+            Assert.NotEqual(KnownSystem.NONE, marker);
+            Assert.True(marker > system);
+
+            Array.ForEach(markers, mmarker =>
+            {
+                // a marker can be the same of the found one, or one of a category before or a category after but never in the middle between
+                // the system and the mapped category
+                Assert.True(mmarker == marker || mmarker < system || mmarker > marker);
             });
         }
     }

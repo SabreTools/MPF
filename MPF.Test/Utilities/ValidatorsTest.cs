@@ -24,7 +24,7 @@ namespace MPF.Test.Utilities
         [Fact]
         public void CreateListOfSystemsTest()
         {
-            int expected = Enum.GetValues(typeof(KnownSystem)).Length - 5; // - 4 -1 for markers categories and KnownSystem.NONE
+            int expected = Enum.GetValues(typeof(KnownSystem)).Length;
             var actual = KnownSystemComboBoxItem.GenerateElements().ToList();
             Assert.Equal(expected, actual.Count);
         }
