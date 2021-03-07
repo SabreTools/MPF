@@ -424,7 +424,7 @@ namespace MPF.Windows
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
             Env = DetermineEnvironment();
-            GetOutputNames(!rescanDrives);
+            GetOutputNames(true);
             EnsureDiscInformation();
 
             // Add event handlers
