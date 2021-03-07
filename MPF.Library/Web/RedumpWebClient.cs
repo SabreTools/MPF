@@ -422,7 +422,7 @@ namespace MPF.Web
             // Category
             match = categoryRegex.Match(discData);
             if (match.Success)
-                info.CommonDiscInfo.Category = Extensions.ToCategory(match.Groups[1].Value);
+                info.CommonDiscInfo.Category = Converters.ToDiscCategory(match.Groups[1].Value);
             else
                 info.CommonDiscInfo.Category = DiscCategory.Games;
 
@@ -482,7 +482,7 @@ namespace MPF.Web
                 List<Language?> tempLanguages = new List<Language?>();
                 foreach (Match submatch in matches)
                 {
-                    tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
+                    tempLanguages.Add(Converters.ToLanguage(submatch.Groups[1].Value));
                 }
 
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
@@ -516,7 +516,7 @@ namespace MPF.Web
             // Region
             match = regionRegex.Match(discData);
             if (match.Success)
-                info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+                info.CommonDiscInfo.Region = Converters.ToRegion(match.Groups[1].Value);
 
             // Serial
             match = serialRegex.Match(discData);
@@ -844,14 +844,14 @@ namespace MPF.Web
             // Category
             match = categoryRegex.Match(discData);
             if (match.Success)
-                info.CommonDiscInfo.Category = Extensions.ToCategory(match.Groups[1].Value);
+                info.CommonDiscInfo.Category = Converters.ToDiscCategory(match.Groups[1].Value);
             else
                 info.CommonDiscInfo.Category = DiscCategory.Games;
 
             // Region
             match = regionRegex.Match(discData);
             if (match.Success)
-                info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+                info.CommonDiscInfo.Region = Converters.ToRegion(match.Groups[1].Value);
 
             // Languages
             var matches = languagesRegex.Matches(discData);
@@ -859,7 +859,7 @@ namespace MPF.Web
             {
                 List<Language?> tempLanguages = new List<Language?>();
                 foreach (Match submatch in matches)
-                    tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
+                    tempLanguages.Add(Converters.ToLanguage(submatch.Groups[1].Value));
 
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
             }
