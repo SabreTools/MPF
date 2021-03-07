@@ -5,7 +5,7 @@ using MPF.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace MPF.Web
+namespace MPF.Data
 {
     public class SubmissionInfo
     {
@@ -93,19 +93,19 @@ namespace MPF.Web
         public string DiscTitle { get; set; }
 
         [JsonProperty(PropertyName = "d_category", Required = Required.AllowNull)]
-        public DiscCategory? Category { get; set; }
+        public RedumpDiscCategory? Category { get; set; }
 
         [JsonProperty(PropertyName = "d_region", Required = Required.AllowNull)]
-        [JsonConverter(typeof(RegionConverter))]
-        public Region? Region { get; set; }
+        [JsonConverter(typeof(RedumpRegionConverter))]
+        public RedumpRegion? Region { get; set; }
 
         [JsonProperty(PropertyName = "d_languages", Required = Required.AllowNull)]
-        [JsonConverter(typeof(LanguagesConverter))]
-        public Language?[] Languages { get; set; }
+        [JsonConverter(typeof(RedumpLanguageConverter))]
+        public RedumpLanguage?[] Languages { get; set; }
 
         [JsonProperty(PropertyName = "d_languages_selection", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [JsonConverter(typeof(LanguageSelectionConverter))]
-        public LanguageSelection?[] LanguageSelection { get; set; }
+        [JsonConverter(typeof(RedumpLanguageSelectionConverter))]
+        public RedumpLanguageSelection?[] LanguageSelection { get; set; }
 
         [JsonProperty(PropertyName = "d_serial", NullValueHandling = NullValueHandling.Ignore)]
         public string Serial { get; set; }
@@ -288,7 +288,7 @@ namespace MPF.Web
     public class DumpersAndStatusSection
     {
         [JsonProperty(PropertyName = "d_status", NullValueHandling = NullValueHandling.Ignore)]
-        public DumpStatus Status { get; set; }
+        public RedumpDumpStatus Status { get; set; }
 
         [JsonProperty(PropertyName = "d_dumpers", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Dumpers { get; set; }

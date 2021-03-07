@@ -407,6 +407,254 @@ namespace MPF.Data
     }
 
     /// <summary>
+    /// Redump disc category
+    /// </summary>
+    public enum RedumpDiscCategory
+    {
+        Games = 1,
+        Demos = 2,
+        Video = 3,
+        Audio = 4,
+        Multimedia = 5,
+        Applications = 6,
+        Coverdiscs = 7,
+        Educational = 8,
+        BonusDiscs = 9,
+        Preproduction = 10,
+        AddOns = 11,
+    }
+
+    /// <summary>
+    /// Redump dump status
+    /// </summary>
+    public enum RedumpDumpStatus
+    {
+        BadDumpRed = 2,
+        PossibleBadDumpYellow = 3,
+        OriginalMediaBlue = 4,
+        TwoOrMoreDumpsGreen = 5,
+    }
+
+    /// <summary>
+    /// Redump supported langauge
+    /// </summary>
+    public enum RedumpLanguage
+    {
+        Afrikaans,
+        Arabic,
+        Basque,
+        Bulgarian,
+        Catalan,
+        Chinese,
+        Croatian,
+        Czech,
+        Danish,
+        Dutch,
+        English,
+        Finnish,
+        French,
+        Gaelic,
+        German,
+        Greek,
+        Hebrew,
+        Hindi,
+        Hungarian,
+        Italian,
+        Japanese,
+        Korean,
+        Norwegian,
+        Polish,
+        Portuguese,
+        Punjabi,
+        Romanian,
+        Russian,
+        Slovak,
+        Slovenian,
+        Spanish,
+        Swedish,
+        Tamil,
+        Thai,
+        Turkish,
+        Ukrainian,
+    }
+
+    /// <summary>
+    /// Redump PS2 language selection via
+    /// </summary>
+    public enum RedumpLanguageSelection
+    {
+        BiosSettings,
+        LanguageSelector,
+        OptionsMenu,
+    }
+
+    /// <summary>
+    /// Supported Redump region
+    /// </summary>
+    public enum RedumpRegion
+    {
+        Argentina,
+        Asia,
+        AsiaEurope,
+        AsiaUSA,
+        Australia,
+        AustraliaNewZealand,
+        Austria,
+        AustriaSwitzerland,
+        Belgium,
+        BelgiumNetherlands,
+        Brazil,
+        Canada,
+        China,
+        Croatia,
+        Czech,
+        Denmark,
+        Europe,
+        EuropeAsia,
+        EuropeAustralia,
+        EuropeCanada,
+        EuropeGermany,
+        Finland,
+        France,
+        FranceSpain,
+        Germany,
+        GreaterChina,
+        Greece,
+        Hungary,
+        India,
+        Ireland,
+        Israel,
+        Italy,
+        Japan,
+        JapanAsia,
+        JapanEurope,
+        JapanKorea,
+        JapanUSA,
+        Korea,
+        LatinAmerica,
+        Netherlands,
+        Norway,
+        Poland,
+        Portugal,
+        Romania,
+        Russia,
+        Scandinavia,
+        Singapore,
+        Slovakia,
+        SouthAfrica,
+        Spain,
+        SpainPortugal,
+        Sweden,
+        Switzerland,
+        Taiwan,
+        Thailand,
+        Turkey,
+        UnitedArabEmirates,
+        UK,
+        UKAustralia,
+        Ukraine,
+        USA,
+        USAAsia,
+        USABrazil,
+        USACanada,
+        USAEurope,
+        USAGermany,
+        USAJapan,
+        USAKorea,
+        World,
+    }
+
+    /// <summary>
+    /// List of all known Redump systems
+    /// </summary>
+    public enum RedumpSystem
+    {
+        // Special BIOS sets
+        MicrosoftXboxBIOS,
+        NintendoGameCubeBIOS,
+        SonyPlayStationBIOS,
+        SonyPlayStation2BIOS,
+
+        // Regular systems
+        AcornArchimedes,
+        AppleMacintosh,
+        AtariJaguarCDInteractiveMultimediaSystem,
+        AudioCD,
+        BandaiPippin,
+        BandaiPlaydiaQuickInteractiveSystem,
+        BDVideo,
+        CommodoreAmigaCD,
+        CommodoreAmigaCD32,
+        CommodoreAmigaCDTV,
+        DVDVideo,
+        EnhancedCD,
+        FujitsuFMTownsseries,
+        funworldPhotoPlay,
+        HasbroVideoNow,
+        HasbroVideoNowColor,
+        HasbroVideoNowJr,
+        HasbroVideoNowXP,
+        IBMPCcompatible,
+        IncredibleTechnologiesEagle,
+        KonamieAmusement,
+        KonamiFireBeat,
+        KonamiM2,
+        KonamiSystem573,
+        KonamiSystemGV,
+        KonamiTwinkle,
+        MattelFisherPriceiXL,
+        MattelHyperScan,
+        MemorexVisualInformationSystem,
+        MicrosoftXbox,
+        MicrosoftXbox360,
+        MicrosoftXboxOne,
+        MicrosoftXboxSeriesXS,
+        NamcoSegaNintendoTriforce,
+        NamcoSystem12,
+        NamcoSystem246,
+        NavisoftNaviken21,
+        NECPCEngineCDTurboGrafxCD,
+        NECPC88series,
+        NECPC98series,
+        NECPCFXPCFXGA,
+        NintendoGameCube,
+        NintendoWii,
+        NintendoWiiU,
+        PalmOS,
+        Panasonic3DOInteractiveMultiplayer,
+        PanasonicM2,
+        PhilipsCDi,
+        PhotoCD,
+        PlayStationGameSharkUpdates,
+        SegaChihiro,
+        SegaDreamcast,
+        SegaLindbergh,
+        SegaMegaCDSegaCD,
+        SegaNaomi,
+        SegaNaomi2,
+        SegaPrologue21,
+        SegaRingEdge,
+        SegaRingEdge2,
+        SegaSaturn,
+        SegaTitanVideo,
+        SharpX68000,
+        SNKNeoGeoCD,
+        SonyPlayStation,
+        SonyPlayStation2,
+        SonyPlayStation3,
+        SonyPlayStation4,
+        SonyPlayStation5,
+        SonyPlayStationPortable,
+        TABAustriaQuizard,
+        TaoiKTV,
+        TomyKissSite,
+        VideoCD,
+        VMLabsNUON,
+        VTechVFlashVSmilePro,
+        ZAPiTGamesGameWaveFamilyEntertainmentSystem,
+    }
+
+    /// <summary>
     /// Generic yes/no values for Redump
     /// </summary>
     public enum YesNo

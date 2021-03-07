@@ -1,9 +1,11 @@
-﻿namespace MPF.Web
+﻿using MPF.Data;
+
+namespace MPF.Redump
 {
     /// <summary>
     /// Information pertaining to Redump systems
     /// </summary>
-    public static class Extensions
+    public static class Extras
     {
         #region Special lists
 

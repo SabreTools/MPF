@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using MPF.Data;
-using MPF.Web;
 #if NET_FRAMEWORK
 using IMAPI2;
 #endif
@@ -498,42 +497,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Get the string representation of the DiscCategory enum values
-        /// </summary>
-        /// <param name="category">DiscCategory value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this DiscCategory? category)
-        {
-            switch (category)
-            {
-                case DiscCategory.Games:
-                    return "Games";
-                case DiscCategory.Demos:
-                    return "Demos";
-                case DiscCategory.Video:
-                    return "Video";
-                case DiscCategory.Audio:
-                    return "Audio";
-                case DiscCategory.Multimedia:
-                    return "Multimedia";
-                case DiscCategory.Applications:
-                    return "Applications";
-                case DiscCategory.Coverdiscs:
-                    return "Coverdiscs";
-                case DiscCategory.Educational:
-                    return "Educational";
-                case DiscCategory.BonusDiscs:
-                    return "Bonus Discs";
-                case DiscCategory.Preproduction:
-                    return "Preproduction";
-                case DiscCategory.AddOns:
-                    return "Add-Ons";
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get the string representation of the InternalProgram enum values
         /// </summary>
         /// <param name="prog">InternalProgram value to convert</param>
@@ -870,112 +833,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Get the string representation of the Language enum values
-        /// </summary>
-        /// <param name="language">Language value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this Language? language)
-        {
-            switch (language)
-            {
-                case Language.Afrikaans:
-                    return "Afrikaans";
-                case Language.Arabic:
-                    return "Arabic";
-                case Language.Basque:
-                    return "Basque";
-                case Language.Bulgarian:
-                    return "Bulgarian";
-                case Language.Catalan:
-                    return "Catalan";
-                case Language.Chinese:
-                    return "Chinese";
-                case Language.Croatian:
-                    return "Croatian";
-                case Language.Czech:
-                    return "Czech";
-                case Language.Danish:
-                    return "Danish";
-                case Language.Dutch:
-                    return "Dutch";
-                case Language.English:
-                    return "English";
-                case Language.Finnish:
-                    return "Finnish";
-                case Language.French:
-                    return "French";
-                case Language.Gaelic:
-                    return "Gaelic";
-                case Language.German:
-                    return "German";
-                case Language.Greek:
-                    return "Greek";
-                case Language.Hebrew:
-                    return "Hebrew";
-                case Language.Hindi:
-                    return "Hindi";
-                case Language.Hungarian:
-                    return "Hungarian";
-                case Language.Italian:
-                    return "Italian";
-                case Language.Japanese:
-                    return "Japanese";
-                case Language.Korean:
-                    return "Korean";
-                case Language.Norwegian:
-                    return "Norwegian";
-                case Language.Polish:
-                    return "Polish";
-                case Language.Portuguese:
-                    return "Portuguese";
-                case Language.Punjabi:
-                    return "Punjabi";
-                case Language.Romanian:
-                    return "Romanian";
-                case Language.Russian:
-                    return "Russian";
-                case Language.Slovak:
-                    return "Slovak";
-                case Language.Slovenian:
-                    return "Slovenian";
-                case Language.Spanish:
-                    return "Spanish";
-                case Language.Swedish:
-                    return "Swedish";
-                case Language.Tamil:
-                    return "Tamil";
-                case Language.Thai:
-                    return "Thai";
-                case Language.Turkish:
-                    return "Turkish";
-                case Language.Ukrainian:
-                    return "Ukrainian";
-                default:
-                    return "Klingon (CHANGE THIS)"; // TODO: Not Redump compatible
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the LanguageSelection enum values
-        /// </summary>
-        /// <param name="lang">LanguageSelection value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this LanguageSelection? langSelect)
-        {
-            switch (langSelect)
-            {
-                case LanguageSelection.BiosSettings:
-                    return "Bios settings";
-                case LanguageSelection.LanguageSelector:
-                    return "Language selector";
-                case LanguageSelection.OptionsMenu:
-                    return "Options menu";
-                default:
-                    return string.Empty;
-            }
-        }
-
-        /// <summary>
         /// Get the string representation of the MediaType enum values
         /// </summary>
         /// <param name="type">MediaType value to convert</param>
@@ -1062,6 +919,300 @@ namespace MPF.Utilities
                 case MediaType.NONE:
                 default:
                     return "Unknown";
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the DiscCategory enum values
+        /// </summary>
+        /// <param name="category">DiscCategory value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumpDiscCategory? category)
+        {
+            switch (category)
+            {
+                case RedumpDiscCategory.Games:
+                    return "Games";
+                case RedumpDiscCategory.Demos:
+                    return "Demos";
+                case RedumpDiscCategory.Video:
+                    return "Video";
+                case RedumpDiscCategory.Audio:
+                    return "Audio";
+                case RedumpDiscCategory.Multimedia:
+                    return "Multimedia";
+                case RedumpDiscCategory.Applications:
+                    return "Applications";
+                case RedumpDiscCategory.Coverdiscs:
+                    return "Coverdiscs";
+                case RedumpDiscCategory.Educational:
+                    return "Educational";
+                case RedumpDiscCategory.BonusDiscs:
+                    return "Bonus Discs";
+                case RedumpDiscCategory.Preproduction:
+                    return "Preproduction";
+                case RedumpDiscCategory.AddOns:
+                    return "Add-Ons";
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the Language enum values
+        /// </summary>
+        /// <param name="language">Language value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumpLanguage? language)
+        {
+            switch (language)
+            {
+                case RedumpLanguage.Afrikaans:
+                    return "Afrikaans";
+                case RedumpLanguage.Arabic:
+                    return "Arabic";
+                case RedumpLanguage.Basque:
+                    return "Basque";
+                case RedumpLanguage.Bulgarian:
+                    return "Bulgarian";
+                case RedumpLanguage.Catalan:
+                    return "Catalan";
+                case RedumpLanguage.Chinese:
+                    return "Chinese";
+                case RedumpLanguage.Croatian:
+                    return "Croatian";
+                case RedumpLanguage.Czech:
+                    return "Czech";
+                case RedumpLanguage.Danish:
+                    return "Danish";
+                case RedumpLanguage.Dutch:
+                    return "Dutch";
+                case RedumpLanguage.English:
+                    return "English";
+                case RedumpLanguage.Finnish:
+                    return "Finnish";
+                case RedumpLanguage.French:
+                    return "French";
+                case RedumpLanguage.Gaelic:
+                    return "Gaelic";
+                case RedumpLanguage.German:
+                    return "German";
+                case RedumpLanguage.Greek:
+                    return "Greek";
+                case RedumpLanguage.Hebrew:
+                    return "Hebrew";
+                case RedumpLanguage.Hindi:
+                    return "Hindi";
+                case RedumpLanguage.Hungarian:
+                    return "Hungarian";
+                case RedumpLanguage.Italian:
+                    return "Italian";
+                case RedumpLanguage.Japanese:
+                    return "Japanese";
+                case RedumpLanguage.Korean:
+                    return "Korean";
+                case RedumpLanguage.Norwegian:
+                    return "Norwegian";
+                case RedumpLanguage.Polish:
+                    return "Polish";
+                case RedumpLanguage.Portuguese:
+                    return "Portuguese";
+                case RedumpLanguage.Punjabi:
+                    return "Punjabi";
+                case RedumpLanguage.Romanian:
+                    return "Romanian";
+                case RedumpLanguage.Russian:
+                    return "Russian";
+                case RedumpLanguage.Slovak:
+                    return "Slovak";
+                case RedumpLanguage.Slovenian:
+                    return "Slovenian";
+                case RedumpLanguage.Spanish:
+                    return "Spanish";
+                case RedumpLanguage.Swedish:
+                    return "Swedish";
+                case RedumpLanguage.Tamil:
+                    return "Tamil";
+                case RedumpLanguage.Thai:
+                    return "Thai";
+                case RedumpLanguage.Turkish:
+                    return "Turkish";
+                case RedumpLanguage.Ukrainian:
+                    return "Ukrainian";
+                default:
+                    return "Klingon (CHANGE THIS)"; // TODO: Not Redump compatible
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the LanguageSelection enum values
+        /// </summary>
+        /// <param name="lang">LanguageSelection value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumpLanguageSelection? langSelect)
+        {
+            switch (langSelect)
+            {
+                case RedumpLanguageSelection.BiosSettings:
+                    return "Bios settings";
+                case RedumpLanguageSelection.LanguageSelector:
+                    return "Language selector";
+                case RedumpLanguageSelection.OptionsMenu:
+                    return "Options menu";
+                default:
+                    return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Get the string representation of the Region enum values
+        /// </summary>
+        /// <param name="region">Region value to convert</param>
+        /// <returns>String representing the value, if possible</returns>
+        public static string LongName(this RedumpRegion? region)
+        {
+            switch (region)
+            {
+                case RedumpRegion.Argentina:
+                    return "Argentina";
+                case RedumpRegion.Asia:
+                    return "Asia";
+                case RedumpRegion.AsiaEurope:
+                    return "Asia, Europe";
+                case RedumpRegion.AsiaUSA:
+                    return "Asia, USA";
+                case RedumpRegion.Australia:
+                    return "Australia";
+                case RedumpRegion.AustraliaNewZealand:
+                    return "Australia, New Zealand";
+                case RedumpRegion.Austria:
+                    return "Austria";
+                case RedumpRegion.AustriaSwitzerland:
+                    return "Austria, Switzerland";
+                case RedumpRegion.Belgium:
+                    return "Belgium";
+                case RedumpRegion.BelgiumNetherlands:
+                    return "Belgium, Netherlands";
+                case RedumpRegion.Brazil:
+                    return "Brazil";
+                case RedumpRegion.Canada:
+                    return "Canada";
+                case RedumpRegion.China:
+                    return "China";
+                case RedumpRegion.Croatia:
+                    return "Croatia";
+                case RedumpRegion.Czech:
+                    return "Czech";
+                case RedumpRegion.Denmark:
+                    return "Denmark";
+                case RedumpRegion.Europe:
+                    return "Europe";
+                case RedumpRegion.EuropeAsia:
+                    return "Europe, Asia";
+                case RedumpRegion.EuropeAustralia:
+                    return "Europe, Australia";
+                case RedumpRegion.EuropeCanada:
+                    return "Europe, Canada";
+                case RedumpRegion.EuropeGermany:
+                    return "Europe, Germany";
+                case RedumpRegion.Finland:
+                    return "Finland";
+                case RedumpRegion.France:
+                    return "France";
+                case RedumpRegion.FranceSpain:
+                    return "France, Spain";
+                case RedumpRegion.Germany:
+                    return "Germany";
+                case RedumpRegion.GreaterChina:
+                    return "Greater China";
+                case RedumpRegion.Greece:
+                    return "Greece";
+                case RedumpRegion.Hungary:
+                    return "Hungary";
+                case RedumpRegion.India:
+                    return "India";
+                case RedumpRegion.Ireland:
+                    return "Ireland";
+                case RedumpRegion.Israel:
+                    return "Israel";
+                case RedumpRegion.Italy:
+                    return "Italy";
+                case RedumpRegion.Japan:
+                    return "Japan";
+                case RedumpRegion.JapanAsia:
+                    return "Japan, Asia";
+                case RedumpRegion.JapanEurope:
+                    return "Japan, Europe";
+                case RedumpRegion.JapanKorea:
+                    return "Japan, Korea";
+                case RedumpRegion.JapanUSA:
+                    return "Japan, USA";
+                case RedumpRegion.Korea:
+                    return "Korea";
+                case RedumpRegion.LatinAmerica:
+                    return "Latin America";
+                case RedumpRegion.Netherlands:
+                    return "Netherlands";
+                case RedumpRegion.Norway:
+                    return "Norway";
+                case RedumpRegion.Poland:
+                    return "Poland";
+                case RedumpRegion.Portugal:
+                    return "Portugal";
+                case RedumpRegion.Romania:
+                    return "Romania";
+                case RedumpRegion.Russia:
+                    return "Russia";
+                case RedumpRegion.Scandinavia:
+                    return "Scandinavia";
+                case RedumpRegion.Singapore:
+                    return "Singapore";
+                case RedumpRegion.Slovakia:
+                    return "Slovakia";
+                case RedumpRegion.SouthAfrica:
+                    return "South Africa";
+                case RedumpRegion.Spain:
+                    return "Spain";
+                case RedumpRegion.SpainPortugal:
+                    return "Spain, Portugal";
+                case RedumpRegion.Sweden:
+                    return "Sweden";
+                case RedumpRegion.Switzerland:
+                    return "Switzerland";
+                case RedumpRegion.Taiwan:
+                    return "Taiwan";
+                case RedumpRegion.Thailand:
+                    return "Thailand";
+                case RedumpRegion.Turkey:
+                    return "Turkey";
+                case RedumpRegion.UnitedArabEmirates:
+                    return "United Arab Emirates";
+                case RedumpRegion.UK:
+                    return "UK";
+                case RedumpRegion.UKAustralia:
+                    return "UK, Australia";
+                case RedumpRegion.Ukraine:
+                    return "Ukraine";
+                case RedumpRegion.USA:
+                    return "USA";
+                case RedumpRegion.USAAsia:
+                    return "USA, Asia";
+                case RedumpRegion.USABrazil:
+                    return "USA, Brazil";
+                case RedumpRegion.USACanada:
+                    return "USA, Canada";
+                case RedumpRegion.USAEurope:
+                    return "USA, Europe";
+                case RedumpRegion.USAGermany:
+                    return "USA, Germany";
+                case RedumpRegion.USAJapan:
+                    return "USA, Japan";
+                case RedumpRegion.USAKorea:
+                    return "USA, Korea";
+                case RedumpRegion.World:
+                    return "World";
+                default:
+                    return "SPACE! (CHANGE THIS)"; // TODO: Not Redump compatible
             }
         }
 
@@ -1239,158 +1390,6 @@ namespace MPF.Utilities
                     return "ZAPiT Games Game Wave Family Entertainment System";
                 default:
                     return null;
-            }
-        }
-
-        /// <summary>
-        /// Get the string representation of the Region enum values
-        /// </summary>
-        /// <param name="region">Region value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this Region? region)
-        {
-            switch (region)
-            {
-                case Region.Argentina:
-                    return "Argentina";
-                case Region.Asia:
-                    return "Asia";
-                case Region.AsiaEurope:
-                    return "Asia, Europe";
-                case Region.AsiaUSA:
-                    return "Asia, USA";
-                case Region.Australia:
-                    return "Australia";
-                case Region.AustraliaNewZealand:
-                    return "Australia, New Zealand";
-                case Region.Austria:
-                    return "Austria";
-                case Region.AustriaSwitzerland:
-                    return "Austria, Switzerland";
-                case Region.Belgium:
-                    return "Belgium";
-                case Region.BelgiumNetherlands:
-                    return "Belgium, Netherlands";
-                case Region.Brazil:
-                    return "Brazil";
-                case Region.Canada:
-                    return "Canada";
-                case Region.China:
-                    return "China";
-                case Region.Croatia:
-                    return "Croatia";
-                case Region.Czech:
-                    return "Czech";
-                case Region.Denmark:
-                    return "Denmark";
-                case Region.Europe:
-                    return "Europe";
-                case Region.EuropeAsia:
-                    return "Europe, Asia";
-                case Region.EuropeAustralia:
-                    return "Europe, Australia";
-                case Region.EuropeCanada:
-                    return "Europe, Canada";
-                case Region.EuropeGermany:
-                    return "Europe, Germany";
-                case Region.Finland:
-                    return "Finland";
-                case Region.France:
-                    return "France";
-                case Region.FranceSpain:
-                    return "France, Spain";
-                case Region.Germany:
-                    return "Germany";
-                case Region.GreaterChina:
-                    return "Greater China";
-                case Region.Greece:
-                    return "Greece";
-                case Region.Hungary:
-                    return "Hungary";
-                case Region.India:
-                    return "India";
-                case Region.Ireland:
-                    return "Ireland";
-                case Region.Israel:
-                    return "Israel";
-                case Region.Italy:
-                    return "Italy";
-                case Region.Japan:
-                    return "Japan";
-                case Region.JapanAsia:
-                    return "Japan, Asia";
-                case Region.JapanEurope:
-                    return "Japan, Europe";
-                case Region.JapanKorea:
-                    return "Japan, Korea";
-                case Region.JapanUSA:
-                    return "Japan, USA";
-                case Region.Korea:
-                    return "Korea";
-                case Region.LatinAmerica:
-                    return "Latin America";
-                case Region.Netherlands:
-                    return "Netherlands";
-                case Region.Norway:
-                    return "Norway";
-                case Region.Poland:
-                    return "Poland";
-                case Region.Portugal:
-                    return "Portugal";
-                case Region.Romania:
-                    return "Romania";
-                case Region.Russia:
-                    return "Russia";
-                case Region.Scandinavia:
-                    return "Scandinavia";
-                case Region.Singapore:
-                    return "Singapore";
-                case Region.Slovakia:
-                    return "Slovakia";
-                case Region.SouthAfrica:
-                    return "South Africa";
-                case Region.Spain:
-                    return "Spain";
-                case Region.SpainPortugal:
-                    return "Spain, Portugal";
-                case Region.Sweden:
-                    return "Sweden";
-                case Region.Switzerland:
-                    return "Switzerland";
-                case Region.Taiwan:
-                    return "Taiwan";
-                case Region.Thailand:
-                    return "Thailand";
-                case Region.Turkey:
-                    return "Turkey";
-                case Region.UnitedArabEmirates:
-                    return "United Arab Emirates";
-                case Region.UK:
-                    return "UK";
-                case Region.UKAustralia:
-                    return "UK, Australia";
-                case Region.Ukraine:
-                    return "Ukraine";
-                case Region.USA:
-                    return "USA";
-                case Region.USAAsia:
-                    return "USA, Asia";
-                case Region.USABrazil:
-                    return "USA, Brazil";
-                case Region.USACanada:
-                    return "USA, Canada";
-                case Region.USAEurope:
-                    return "USA, Europe";
-                case Region.USAGermany:
-                    return "USA, Germany";
-                case Region.USAJapan:
-                    return "USA, Japan";
-                case Region.USAKorea:
-                    return "USA, Korea";
-                case Region.World:
-                    return "World";
-                default:
-                    return "SPACE! (CHANGE THIS)"; // TODO: Not Redump compatible
             }
         }
 
@@ -1724,92 +1723,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Get the short string representation of the Language enum values
-        /// </summary>
-        /// <param name="language">Language value to convert</param>
-        /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(this Language? language)
-        {
-            switch (language)
-            {
-                case Language.Afrikaans:
-                    return "afr";
-                case Language.Arabic:
-                    return "ara";
-                case Language.Basque:
-                    return "baq";
-                case Language.Bulgarian:
-                    return "bul";
-                case Language.Catalan:
-                    return "cat";
-                case Language.Chinese:
-                    return "chi";
-                case Language.Croatian:
-                    return "hrv";
-                case Language.Czech:
-                    return "cze";
-                case Language.Danish:
-                    return "dan";
-                case Language.Dutch:
-                    return "dut";
-                case Language.English:
-                    return "eng";
-                case Language.Finnish:
-                    return "fin";
-                case Language.French:
-                    return "fre";
-                case Language.Gaelic:
-                    return "gla";
-                case Language.German:
-                    return "ger";
-                case Language.Greek:
-                    return "gre";
-                case Language.Hebrew:
-                    return "heb";
-                case Language.Hindi:
-                    return "hin";
-                case Language.Hungarian:
-                    return "hun";
-                case Language.Italian:
-                    return "ita";
-                case Language.Japanese:
-                    return "jap";
-                case Language.Korean:
-                    return "kor";
-                case Language.Norwegian:
-                    return "nor";
-                case Language.Polish:
-                    return "pol";
-                case Language.Portuguese:
-                    return "por";
-                case Language.Punjabi:
-                    return "pan";
-                case Language.Romanian:
-                    return "ron";
-                case Language.Russian:
-                    return "rus";
-                case Language.Slovak:
-                    return "slk";
-                case Language.Slovenian:
-                    return "slv";
-                case Language.Spanish:
-                    return "spa";
-                case Language.Swedish:
-                    return "swe";
-                case Language.Tamil:
-                    return "tam";
-                case Language.Thai:
-                    return "tha";
-                case Language.Turkish:
-                    return "tur";
-                case Language.Ukrainian:
-                    return "ukr";
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get the short string representation of the MediaType enum values
         /// </summary>
         /// <param name="type">MediaType value to convert</param>
@@ -1896,6 +1809,244 @@ namespace MPF.Utilities
                 case MediaType.NONE:
                 default:
                     return "unknown";
+            }
+        }
+
+        /// <summary>
+        /// Get the short string representation of the Language enum values
+        /// </summary>
+        /// <param name="language">Language value to convert</param>
+        /// <returns>Short string representing the value, if possible</returns>
+        public static string ShortName(this RedumpLanguage? language)
+        {
+            switch (language)
+            {
+                case RedumpLanguage.Afrikaans:
+                    return "afr";
+                case RedumpLanguage.Arabic:
+                    return "ara";
+                case RedumpLanguage.Basque:
+                    return "baq";
+                case RedumpLanguage.Bulgarian:
+                    return "bul";
+                case RedumpLanguage.Catalan:
+                    return "cat";
+                case RedumpLanguage.Chinese:
+                    return "chi";
+                case RedumpLanguage.Croatian:
+                    return "hrv";
+                case RedumpLanguage.Czech:
+                    return "cze";
+                case RedumpLanguage.Danish:
+                    return "dan";
+                case RedumpLanguage.Dutch:
+                    return "dut";
+                case RedumpLanguage.English:
+                    return "eng";
+                case RedumpLanguage.Finnish:
+                    return "fin";
+                case RedumpLanguage.French:
+                    return "fre";
+                case RedumpLanguage.Gaelic:
+                    return "gla";
+                case RedumpLanguage.German:
+                    return "ger";
+                case RedumpLanguage.Greek:
+                    return "gre";
+                case RedumpLanguage.Hebrew:
+                    return "heb";
+                case RedumpLanguage.Hindi:
+                    return "hin";
+                case RedumpLanguage.Hungarian:
+                    return "hun";
+                case RedumpLanguage.Italian:
+                    return "ita";
+                case RedumpLanguage.Japanese:
+                    return "jap";
+                case RedumpLanguage.Korean:
+                    return "kor";
+                case RedumpLanguage.Norwegian:
+                    return "nor";
+                case RedumpLanguage.Polish:
+                    return "pol";
+                case RedumpLanguage.Portuguese:
+                    return "por";
+                case RedumpLanguage.Punjabi:
+                    return "pan";
+                case RedumpLanguage.Romanian:
+                    return "ron";
+                case RedumpLanguage.Russian:
+                    return "rus";
+                case RedumpLanguage.Slovak:
+                    return "slk";
+                case RedumpLanguage.Slovenian:
+                    return "slv";
+                case RedumpLanguage.Spanish:
+                    return "spa";
+                case RedumpLanguage.Swedish:
+                    return "swe";
+                case RedumpLanguage.Tamil:
+                    return "tam";
+                case RedumpLanguage.Thai:
+                    return "tha";
+                case RedumpLanguage.Turkish:
+                    return "tur";
+                case RedumpLanguage.Ukrainian:
+                    return "ukr";
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the short string representation of the Region enum values
+        /// </summary>
+        /// <param name="region">Region value to convert</param>
+        /// <returns>Short string representing the value, if possible</returns>
+        public static string ShortName(this RedumpRegion? region)
+        {
+            switch (region)
+            {
+                case RedumpRegion.Argentina:
+                    return "Ar";
+                case RedumpRegion.Asia:
+                    return "A";
+                case RedumpRegion.AsiaEurope:
+                    return "A,E";
+                case RedumpRegion.AsiaUSA:
+                    return "A,U";
+                case RedumpRegion.Australia:
+                    return "Au";
+                case RedumpRegion.AustraliaNewZealand:
+                    return "Au,Nz";
+                case RedumpRegion.Austria:
+                    return "At";
+                case RedumpRegion.AustriaSwitzerland:
+                    return "At,Ch";
+                case RedumpRegion.Belgium:
+                    return "Be";
+                case RedumpRegion.BelgiumNetherlands:
+                    return "Be,N";
+                case RedumpRegion.Brazil:
+                    return "B";
+                case RedumpRegion.Canada:
+                    return "Ca";
+                case RedumpRegion.China:
+                    return "C";
+                case RedumpRegion.Croatia:
+                    return "Hr";
+                case RedumpRegion.Czech:
+                    return "Cz";
+                case RedumpRegion.Denmark:
+                    return "Dk";
+                case RedumpRegion.Europe:
+                    return "E";
+                case RedumpRegion.EuropeAsia:
+                    return "E,A";
+                case RedumpRegion.EuropeAustralia:
+                    return "E,Au";
+                case RedumpRegion.EuropeCanada:
+                    return "E,Ca";
+                case RedumpRegion.EuropeGermany:
+                    return "E,G";
+                case RedumpRegion.Finland:
+                    return "Fi";
+                case RedumpRegion.France:
+                    return "F";
+                case RedumpRegion.FranceSpain:
+                    return "F,S";
+                case RedumpRegion.Germany:
+                    return "G";
+                case RedumpRegion.GreaterChina:
+                    return "GC";
+                case RedumpRegion.Greece:
+                    return "Gr";
+                case RedumpRegion.Hungary:
+                    return "H";
+                case RedumpRegion.India:
+                    return "In";
+                case RedumpRegion.Ireland:
+                    return "Ie";
+                case RedumpRegion.Israel:
+                    return "Il";
+                case RedumpRegion.Italy:
+                    return "I";
+                case RedumpRegion.Japan:
+                    return "J";
+                case RedumpRegion.JapanAsia:
+                    return "J,A";
+                case RedumpRegion.JapanEurope:
+                    return "J,E";
+                case RedumpRegion.JapanKorea:
+                    return "J,K";
+                case RedumpRegion.JapanUSA:
+                    return "J,U";
+                case RedumpRegion.Korea:
+                    return "K";
+                case RedumpRegion.LatinAmerica:
+                    return "LAm";
+                case RedumpRegion.Netherlands:
+                    return "N";
+                case RedumpRegion.Norway:
+                    return "No";
+                case RedumpRegion.Poland:
+                    return "P";
+                case RedumpRegion.Portugal:
+                    return "Pt";
+                case RedumpRegion.Romania:
+                    return "Ro";
+                case RedumpRegion.Russia:
+                    return "R";
+                case RedumpRegion.Scandinavia:
+                    return "Sca";
+                case RedumpRegion.Singapore:
+                    return "Sg";
+                case RedumpRegion.Slovakia:
+                    return "Sk";
+                case RedumpRegion.SouthAfrica:
+                    return "Za";
+                case RedumpRegion.Spain:
+                    return "S";
+                case RedumpRegion.SpainPortugal:
+                    return "S,Pt";
+                case RedumpRegion.Sweden:
+                    return "Sw";
+                case RedumpRegion.Switzerland:
+                    return "Ch";
+                case RedumpRegion.Taiwan:
+                    return "Tw";
+                case RedumpRegion.Thailand:
+                    return "Th";
+                case RedumpRegion.Turkey:
+                    return "Tr";
+                case RedumpRegion.UnitedArabEmirates:
+                    return "Ae";
+                case RedumpRegion.UK:
+                    return "Uk";
+                case RedumpRegion.UKAustralia:
+                    return "Uk,Au";
+                case RedumpRegion.Ukraine:
+                    return "Ue";
+                case RedumpRegion.USA:
+                    return "U";
+                case RedumpRegion.USAAsia:
+                    return "U,A";
+                case RedumpRegion.USABrazil:
+                    return "U,B";
+                case RedumpRegion.USACanada:
+                    return "U,Ca";
+                case RedumpRegion.USAEurope:
+                    return "U,E";
+                case RedumpRegion.USAGermany:
+                    return "U,G";
+                case RedumpRegion.USAJapan:
+                    return "U,J";
+                case RedumpRegion.USAKorea:
+                    return "U,K";
+                case RedumpRegion.World:
+                    return "W";
+                default:
+                    return null;
             }
         }
 
@@ -2076,158 +2227,6 @@ namespace MPF.Utilities
             }
         }
 
-        /// <summary>
-        /// Get the short string representation of the Region enum values
-        /// </summary>
-        /// <param name="region">Region value to convert</param>
-        /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(this Region? region)
-        {
-            switch (region)
-            {
-                case Region.Argentina:
-                    return "Ar";
-                case Region.Asia:
-                    return "A";
-                case Region.AsiaEurope:
-                    return "A,E";
-                case Region.AsiaUSA:
-                    return "A,U";
-                case Region.Australia:
-                    return "Au";
-                case Region.AustraliaNewZealand:
-                    return "Au,Nz";
-                case Region.Austria:
-                    return "At";
-                case Region.AustriaSwitzerland:
-                    return "At,Ch";
-                case Region.Belgium:
-                    return "Be";
-                case Region.BelgiumNetherlands:
-                    return "Be,N";
-                case Region.Brazil:
-                    return "B";
-                case Region.Canada:
-                    return "Ca";
-                case Region.China:
-                    return "C";
-                case Region.Croatia:
-                    return "Hr";
-                case Region.Czech:
-                    return "Cz";
-                case Region.Denmark:
-                    return "Dk";
-                case Region.Europe:
-                    return "E";
-                case Region.EuropeAsia:
-                    return "E,A";
-                case Region.EuropeAustralia:
-                    return "E,Au";
-                case Region.EuropeCanada:
-                    return "E,Ca";
-                case Region.EuropeGermany:
-                    return "E,G";
-                case Region.Finland:
-                    return "Fi";
-                case Region.France:
-                    return "F";
-                case Region.FranceSpain:
-                    return "F,S";
-                case Region.Germany:
-                    return "G";
-                case Region.GreaterChina:
-                    return "GC";
-                case Region.Greece:
-                    return "Gr";
-                case Region.Hungary:
-                    return "H";
-                case Region.India:
-                    return "In";
-                case Region.Ireland:
-                    return "Ie";
-                case Region.Israel:
-                    return "Il";
-                case Region.Italy:
-                    return "I";
-                case Region.Japan:
-                    return "J";
-                case Region.JapanAsia:
-                    return "J,A";
-                case Region.JapanEurope:
-                    return "J,E";
-                case Region.JapanKorea:
-                    return "J,K";
-                case Region.JapanUSA:
-                    return "J,U";
-                case Region.Korea:
-                    return "K";
-                case Region.LatinAmerica:
-                    return "LAm";
-                case Region.Netherlands:
-                    return "N";
-                case Region.Norway:
-                    return "No";
-                case Region.Poland:
-                    return "P";
-                case Region.Portugal:
-                    return "Pt";
-                case Region.Romania:
-                    return "Ro";
-                case Region.Russia:
-                    return "R";
-                case Region.Scandinavia:
-                    return "Sca";
-                case Region.Singapore:
-                    return "Sg";
-                case Region.Slovakia:
-                    return "Sk";
-                case Region.SouthAfrica:
-                    return "Za";
-                case Region.Spain:
-                    return "S";
-                case Region.SpainPortugal:
-                    return "S,Pt";
-                case Region.Sweden:
-                    return "Sw";
-                case Region.Switzerland:
-                    return "Ch";
-                case Region.Taiwan:
-                    return "Tw";
-                case Region.Thailand:
-                    return "Th";
-                case Region.Turkey:
-                    return "Tr";
-                case Region.UnitedArabEmirates:
-                    return "Ae";
-                case Region.UK:
-                    return "Uk";
-                case Region.UKAustralia:
-                    return "Uk,Au";
-                case Region.Ukraine:
-                    return "Ue";
-                case Region.USA:
-                    return "U";
-                case Region.USAAsia:
-                    return "U,A";
-                case Region.USABrazil:
-                    return "U,B";
-                case Region.USACanada:
-                    return "U,Ca";
-                case Region.USAEurope:
-                    return "U,E";
-                case Region.USAGermany:
-                    return "U,G";
-                case Region.USAJapan:
-                    return "U,J";
-                case Region.USAKorea:
-                    return "U,K";
-                case Region.World:
-                    return "W";
-                default:
-                    return null;
-            }
-        }
-
         #endregion
 
         #region Convert From String
@@ -2237,36 +2236,36 @@ namespace MPF.Utilities
         /// </summary>
         /// <param name="category">String value to convert</param>
         /// <returns>DiscCategory represented by the string, if possible</returns>
-        public static DiscCategory? ToDiscCategory(string category)
+        public static RedumpDiscCategory? ToDiscCategory(string category)
         {
             switch (category.ToLowerInvariant())
             {
                 case "games":
-                    return DiscCategory.Games;
+                    return RedumpDiscCategory.Games;
                 case "demos":
-                    return DiscCategory.Demos;
+                    return RedumpDiscCategory.Demos;
                 case "video":
-                    return DiscCategory.Video;
+                    return RedumpDiscCategory.Video;
                 case "audio":
-                    return DiscCategory.Audio;
+                    return RedumpDiscCategory.Audio;
                 case "multimedia":
-                    return DiscCategory.Multimedia;
+                    return RedumpDiscCategory.Multimedia;
                 case "applications":
-                    return DiscCategory.Applications;
+                    return RedumpDiscCategory.Applications;
                 case "coverdiscs":
-                    return DiscCategory.Coverdiscs;
+                    return RedumpDiscCategory.Coverdiscs;
                 case "educational":
-                    return DiscCategory.Educational;
+                    return RedumpDiscCategory.Educational;
                 case "bonusdiscs":
                 case "bonus discs":
-                    return DiscCategory.BonusDiscs;
+                    return RedumpDiscCategory.BonusDiscs;
                 case "preproduction":
-                    return DiscCategory.Preproduction;
+                    return RedumpDiscCategory.Preproduction;
                 case "addons":
                 case "add-ons":
-                    return DiscCategory.AddOns;
+                    return RedumpDiscCategory.AddOns;
                 default:
-                    return DiscCategory.Games;
+                    return RedumpDiscCategory.Games;
             }
         }
 
@@ -3078,92 +3077,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Get the Language enum value for a given string
-        /// </summary>
-        /// <param name="lang">String value to convert</param>
-        /// <returns>Language represented by the string, if possible</returns>
-        public static Language? ToLanguage(string lang)
-        {
-            switch (lang)
-            {
-                case "afr":
-                    return Language.Afrikaans;
-                case "ara":
-                    return Language.Arabic;
-                case "baq":
-                    return Language.Basque;
-                case "bul":
-                    return Language.Bulgarian;
-                case "cat":
-                    return Language.Catalan;
-                case "chi":
-                    return Language.Chinese;
-                case "hrv":
-                    return Language.Croatian;
-                case "cze":
-                    return Language.Czech;
-                case "dan":
-                    return Language.Danish;
-                case "dut":
-                    return Language.Dutch;
-                case "eng":
-                    return Language.English;
-                case "fin":
-                    return Language.Finnish;
-                case "fre":
-                    return Language.French;
-                case "gla":
-                    return Language.Gaelic;
-                case "ger":
-                    return Language.German;
-                case "gre":
-                    return Language.Greek;
-                case "heb":
-                    return Language.Hebrew;
-                case "hin":
-                    return Language.Hindi;
-                case "hun":
-                    return Language.Hungarian;
-                case "ita":
-                    return Language.Italian;
-                case "jap":
-                    return Language.Japanese;
-                case "kor":
-                    return Language.Korean;
-                case "nor":
-                    return Language.Norwegian;
-                case "pol":
-                    return Language.Polish;
-                case "por":
-                    return Language.Portuguese;
-                case "pan":
-                    return Language.Punjabi;
-                case "ron":
-                    return Language.Romanian;
-                case "rus":
-                    return Language.Russian;
-                case "slk":
-                    return Language.Slovak;
-                case "slv":
-                    return Language.Slovenian;
-                case "spa":
-                    return Language.Spanish;
-                case "swe":
-                    return Language.Swedish;
-                case "tam":
-                    return Language.Tamil;
-                case "tha":
-                    return Language.Thai;
-                case "tur":
-                    return Language.Turkish;
-                case "ukr":
-                    return Language.Ukrainian;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Get the MediaType enum value for a given string
         /// </summary>
         /// <param name="type">String value to convert</param>
@@ -3333,6 +3246,244 @@ namespace MPF.Utilities
 
                 default:
                     return MediaType.NONE;
+            }
+        }
+
+        /// <summary>
+        /// Get the Language enum value for a given string
+        /// </summary>
+        /// <param name="lang">String value to convert</param>
+        /// <returns>Language represented by the string, if possible</returns>
+        public static RedumpLanguage? ToRedumpLanguage(string lang)
+        {
+            switch (lang)
+            {
+                case "afr":
+                    return RedumpLanguage.Afrikaans;
+                case "ara":
+                    return RedumpLanguage.Arabic;
+                case "baq":
+                    return RedumpLanguage.Basque;
+                case "bul":
+                    return RedumpLanguage.Bulgarian;
+                case "cat":
+                    return RedumpLanguage.Catalan;
+                case "chi":
+                    return RedumpLanguage.Chinese;
+                case "hrv":
+                    return RedumpLanguage.Croatian;
+                case "cze":
+                    return RedumpLanguage.Czech;
+                case "dan":
+                    return RedumpLanguage.Danish;
+                case "dut":
+                    return RedumpLanguage.Dutch;
+                case "eng":
+                    return RedumpLanguage.English;
+                case "fin":
+                    return RedumpLanguage.Finnish;
+                case "fre":
+                    return RedumpLanguage.French;
+                case "gla":
+                    return RedumpLanguage.Gaelic;
+                case "ger":
+                    return RedumpLanguage.German;
+                case "gre":
+                    return RedumpLanguage.Greek;
+                case "heb":
+                    return RedumpLanguage.Hebrew;
+                case "hin":
+                    return RedumpLanguage.Hindi;
+                case "hun":
+                    return RedumpLanguage.Hungarian;
+                case "ita":
+                    return RedumpLanguage.Italian;
+                case "jap":
+                    return RedumpLanguage.Japanese;
+                case "kor":
+                    return RedumpLanguage.Korean;
+                case "nor":
+                    return RedumpLanguage.Norwegian;
+                case "pol":
+                    return RedumpLanguage.Polish;
+                case "por":
+                    return RedumpLanguage.Portuguese;
+                case "pan":
+                    return RedumpLanguage.Punjabi;
+                case "ron":
+                    return RedumpLanguage.Romanian;
+                case "rus":
+                    return RedumpLanguage.Russian;
+                case "slk":
+                    return RedumpLanguage.Slovak;
+                case "slv":
+                    return RedumpLanguage.Slovenian;
+                case "spa":
+                    return RedumpLanguage.Spanish;
+                case "swe":
+                    return RedumpLanguage.Swedish;
+                case "tam":
+                    return RedumpLanguage.Tamil;
+                case "tha":
+                    return RedumpLanguage.Thai;
+                case "tur":
+                    return RedumpLanguage.Turkish;
+                case "ukr":
+                    return RedumpLanguage.Ukrainian;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the Region enum value for a given string
+        /// </summary>
+        /// <param name="region">String value to convert</param>
+        /// <returns>Region represented by the string, if possible</returns>
+        public static RedumpRegion? ToRedumpRegion(string region)
+        {
+            switch (region)
+            {
+                case "Ar":
+                    return RedumpRegion.Argentina;
+                case "A":
+                    return RedumpRegion.Asia;
+                case "A,E":
+                    return RedumpRegion.AsiaEurope;
+                case "A,U":
+                    return RedumpRegion.AsiaUSA;
+                case "Au":
+                    return RedumpRegion.Australia;
+                case "Au,Nz":
+                    return RedumpRegion.AustraliaNewZealand;
+                case "At":
+                    return RedumpRegion.Austria;
+                case "At,Ch":
+                    return RedumpRegion.AustriaSwitzerland;
+                case "Be":
+                    return RedumpRegion.Belgium;
+                case "Be,N":
+                    return RedumpRegion.BelgiumNetherlands;
+                case "B":
+                    return RedumpRegion.Brazil;
+                case "Ca":
+                    return RedumpRegion.Canada;
+                case "C":
+                    return RedumpRegion.China;
+                case "Hr":
+                    return RedumpRegion.Croatia;
+                case "Cz":
+                    return RedumpRegion.Czech;
+                case "Dk":
+                    return RedumpRegion.Denmark;
+                case "E":
+                    return RedumpRegion.Europe;
+                case "E,A":
+                    return RedumpRegion.EuropeAsia;
+                case "E,Au":
+                    return RedumpRegion.EuropeAustralia;
+                case "E,Ca":
+                    return RedumpRegion.EuropeCanada;
+                case "E,G":
+                    return RedumpRegion.EuropeGermany;
+                case "Fi":
+                    return RedumpRegion.Finland;
+                case "F":
+                    return RedumpRegion.France;
+                case "F,S":
+                    return RedumpRegion.FranceSpain;
+                case "G":
+                    return RedumpRegion.Germany;
+                case "GC":
+                    return RedumpRegion.GreaterChina;
+                case "Gr":
+                    return RedumpRegion.Greece;
+                case "H":
+                    return RedumpRegion.Hungary;
+                case "In":
+                    return RedumpRegion.India;
+                case "Ie":
+                    return RedumpRegion.Ireland;
+                case "Il":
+                    return RedumpRegion.Israel;
+                case "I":
+                    return RedumpRegion.Italy;
+                case "J":
+                    return RedumpRegion.Japan;
+                case "J,A":
+                    return RedumpRegion.JapanAsia;
+                case "J,E":
+                    return RedumpRegion.JapanEurope;
+                case "J,K":
+                    return RedumpRegion.JapanKorea;
+                case "J,U":
+                    return RedumpRegion.JapanUSA;
+                case "K":
+                    return RedumpRegion.Korea;
+                case "LAm":
+                    return RedumpRegion.LatinAmerica;
+                case "N":
+                    return RedumpRegion.Netherlands;
+                case "No":
+                    return RedumpRegion.Norway;
+                case "P":
+                    return RedumpRegion.Poland;
+                case "Pt":
+                    return RedumpRegion.Portugal;
+                case "Ro":
+                    return RedumpRegion.Romania;
+                case "R":
+                    return RedumpRegion.Russia;
+                case "Sca":
+                    return RedumpRegion.Scandinavia;
+                case "Sg":
+                    return RedumpRegion.Singapore;
+                case "Sk":
+                    return RedumpRegion.Slovakia;
+                case "Za":
+                    return RedumpRegion.SouthAfrica;
+                case "S":
+                    return RedumpRegion.Spain;
+                case "S,Pt":
+                    return RedumpRegion.SpainPortugal;
+                case "Sw":
+                    return RedumpRegion.Sweden;
+                case "Ch":
+                    return RedumpRegion.Switzerland;
+                case "Tw":
+                    return RedumpRegion.Taiwan;
+                case "Th":
+                    return RedumpRegion.Thailand;
+                case "Tr":
+                    return RedumpRegion.Turkey;
+                case "Ae":
+                    return RedumpRegion.UnitedArabEmirates;
+                case "Uk":
+                    return RedumpRegion.UK;
+                case "Uk,Au":
+                    return RedumpRegion.UKAustralia;
+                case "Ue":
+                    return RedumpRegion.Ukraine;
+                case "U":
+                    return RedumpRegion.USA;
+                case "U,A":
+                    return RedumpRegion.USAAsia;
+                case "U,B":
+                    return RedumpRegion.USABrazil;
+                case "U,Ca":
+                    return RedumpRegion.USACanada;
+                case "U,E":
+                    return RedumpRegion.USAEurope;
+                case "U,G":
+                    return RedumpRegion.USAGermany;
+                case "U,J":
+                    return RedumpRegion.USAJapan;
+                case "U,K":
+                    return RedumpRegion.USAKorea;
+                case "W":
+                    return RedumpRegion.World;
+                default:
+                    return null;
             }
         }
 
@@ -3891,158 +4042,6 @@ namespace MPF.Utilities
             }
         }
 
-        /// <summary>
-        /// Get the Region enum value for a given string
-        /// </summary>
-        /// <param name="region">String value to convert</param>
-        /// <returns>Region represented by the string, if possible</returns>
-        public static Region? ToRegion(string region)
-        {
-            switch (region)
-            {
-                case "Ar":
-                    return Region.Argentina;
-                case "A":
-                    return Region.Asia;
-                case "A,E":
-                    return Region.AsiaEurope;
-                case "A,U":
-                    return Region.AsiaUSA;
-                case "Au":
-                    return Region.Australia;
-                case "Au,Nz":
-                    return Region.AustraliaNewZealand;
-                case "At":
-                    return Region.Austria;
-                case "At,Ch":
-                    return Region.AustriaSwitzerland;
-                case "Be":
-                    return Region.Belgium;
-                case "Be,N":
-                    return Region.BelgiumNetherlands;
-                case "B":
-                    return Region.Brazil;
-                case "Ca":
-                    return Region.Canada;
-                case "C":
-                    return Region.China;
-                case "Hr":
-                    return Region.Croatia;
-                case "Cz":
-                    return Region.Czech;
-                case "Dk":
-                    return Region.Denmark;
-                case "E":
-                    return Region.Europe;
-                case "E,A":
-                    return Region.EuropeAsia;
-                case "E,Au":
-                    return Region.EuropeAustralia;
-                case "E,Ca":
-                    return Region.EuropeCanada;
-                case "E,G":
-                    return Region.EuropeGermany;
-                case "Fi":
-                    return Region.Finland;
-                case "F":
-                    return Region.France;
-                case "F,S":
-                    return Region.FranceSpain;
-                case "G":
-                    return Region.Germany;
-                case "GC":
-                    return Region.GreaterChina;
-                case "Gr":
-                    return Region.Greece;
-                case "H":
-                    return Region.Hungary;
-                case "In":
-                    return Region.India;
-                case "Ie":
-                    return Region.Ireland;
-                case "Il":
-                    return Region.Israel;
-                case "I":
-                    return Region.Italy;
-                case "J":
-                    return Region.Japan;
-                case "J,A":
-                    return Region.JapanAsia;
-                case "J,E":
-                    return Region.JapanEurope;
-                case "J,K":
-                    return Region.JapanKorea;
-                case "J,U":
-                    return Region.JapanUSA;
-                case "K":
-                    return Region.Korea;
-                case "LAm":
-                    return Region.LatinAmerica;
-                case "N":
-                    return Region.Netherlands;
-                case "No":
-                    return Region.Norway;
-                case "P":
-                    return Region.Poland;
-                case "Pt":
-                    return Region.Portugal;
-                case "Ro":
-                    return Region.Romania;
-                case "R":
-                    return Region.Russia;
-                case "Sca":
-                    return Region.Scandinavia;
-                case "Sg":
-                    return Region.Singapore;
-                case "Sk":
-                    return Region.Slovakia;
-                case "Za":
-                    return Region.SouthAfrica;
-                case "S":
-                    return Region.Spain;
-                case "S,Pt":
-                    return Region.SpainPortugal;
-                case "Sw":
-                    return Region.Sweden;
-                case "Ch":
-                    return Region.Switzerland;
-                case "Tw":
-                    return Region.Taiwan;
-                case "Th":
-                    return Region.Thailand;
-                case "Tr":
-                    return Region.Turkey;
-                case "Ae":
-                    return Region.UnitedArabEmirates;
-                case "Uk":
-                    return Region.UK;
-                case "Uk,Au":
-                    return Region.UKAustralia;
-                case "Ue":
-                    return Region.Ukraine;
-                case "U":
-                    return Region.USA;
-                case "U,A":
-                    return Region.USAAsia;
-                case "U,B":
-                    return Region.USABrazil;
-                case "U,Ca":
-                    return Region.USACanada;
-                case "U,E":
-                    return Region.USAEurope;
-                case "U,G":
-                    return Region.USAGermany;
-                case "U,J":
-                    return Region.USAJapan;
-                case "U,K":
-                    return Region.USAKorea;
-                case "W":
-                    return Region.World;
-                default:
-                    return null;
-            }
-        }
-
         #endregion
     }
 
@@ -4066,56 +4065,6 @@ namespace MPF.Utilities
     }
 
     /// <summary>
-    /// Serialize Language enum values
-    /// </summary>
-    public class LanguagesConverter : JsonConverter<Language?[]>
-    {
-        public override bool CanRead { get { return false; } }
-
-        public override Language?[] ReadJson(JsonReader reader, Type objectType, Language?[] existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void WriteJson(JsonWriter writer, Language?[] value, JsonSerializer serializer)
-        {
-            JArray array = new JArray();
-            foreach (var val in value)
-            {
-                JToken t = JToken.FromObject(val.ShortName() ?? string.Empty);
-                array.Add(t);
-            }
-
-            array.WriteTo(writer);
-        }
-    }
-
-    /// <summary>
-    /// Serialize Language enum values
-    /// </summary>
-    public class LanguageSelectionConverter : JsonConverter<LanguageSelection?[]>
-    {
-        public override bool CanRead { get { return false; } }
-
-        public override LanguageSelection?[] ReadJson(JsonReader reader, Type objectType, LanguageSelection?[] existingValue, bool hasExistingValue, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void WriteJson(JsonWriter writer, LanguageSelection?[] value, JsonSerializer serializer)
-        {
-            JArray array = new JArray();
-            foreach (var val in value)
-            {
-                JToken t = JToken.FromObject(val.LongName() ?? string.Empty);
-                array.Add(t);
-            }
-
-            array.WriteTo(writer);
-        }
-    }
-
-    /// <summary>
     /// Serialize MediaType enum values
     /// </summary>
     public class MediaTypeConverter : JsonConverter<MediaType?>
@@ -4135,18 +4084,68 @@ namespace MPF.Utilities
     }
 
     /// <summary>
-    /// Serialize Region enum values
+    /// Serialize RedumpLanguage enum values
     /// </summary>
-    public class RegionConverter : JsonConverter<Region?>
+    public class RedumpLanguageConverter : JsonConverter<RedumpLanguage?[]>
     {
         public override bool CanRead { get { return false; } }
 
-        public override Region? ReadJson(JsonReader reader, Type objectType, Region? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override RedumpLanguage?[] ReadJson(JsonReader reader, Type objectType, RedumpLanguage?[] existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }
 
-        public override void WriteJson(JsonWriter writer, Region? value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, RedumpLanguage?[] value, JsonSerializer serializer)
+        {
+            JArray array = new JArray();
+            foreach (var val in value)
+            {
+                JToken t = JToken.FromObject(val.ShortName() ?? string.Empty);
+                array.Add(t);
+            }
+
+            array.WriteTo(writer);
+        }
+    }
+
+    /// <summary>
+    /// Serialize RedumpLanguageSelection enum values
+    /// </summary>
+    public class RedumpLanguageSelectionConverter : JsonConverter<RedumpLanguageSelection?[]>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override RedumpLanguageSelection?[] ReadJson(JsonReader reader, Type objectType, RedumpLanguageSelection?[] existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, RedumpLanguageSelection?[] value, JsonSerializer serializer)
+        {
+            JArray array = new JArray();
+            foreach (var val in value)
+            {
+                JToken t = JToken.FromObject(val.LongName() ?? string.Empty);
+                array.Add(t);
+            }
+
+            array.WriteTo(writer);
+        }
+    }
+
+    /// <summary>
+    /// Serialize RedumpRegion enum values
+    /// </summary>
+    public class RedumpRegionConverter : JsonConverter<RedumpRegion?>
+    {
+        public override bool CanRead { get { return false; } }
+
+        public override RedumpRegion? ReadJson(JsonReader reader, Type objectType, RedumpRegion? existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, RedumpRegion? value, JsonSerializer serializer)
         {
             JToken t = JToken.FromObject(value.ShortName() ?? string.Empty);
             t.WriteTo(writer);

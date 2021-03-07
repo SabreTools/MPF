@@ -8,7 +8,6 @@ using WinForms = System.Windows.Forms;
 using BurnOutSharp;
 using MPF.Data;
 using MPF.Utilities;
-using MPF.Web;
 
 namespace MPF.Windows
 {
@@ -769,7 +768,7 @@ namespace MPF.Windows
             var optionsWindow = new OptionsWindow();
             optionsWindow.UIOptions = UIOptions;
             optionsWindow.Owner = this;
-            optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             optionsWindow.Refresh();
             optionsWindow.Show();
         }

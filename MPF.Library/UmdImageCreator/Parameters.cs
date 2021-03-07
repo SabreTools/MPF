@@ -2,7 +2,6 @@
 using System.IO;
 using MPF.Data;
 using MPF.Utilities;
-using MPF.Web;
 
 namespace MPF.UmdImageCreator
 {
@@ -171,10 +170,10 @@ namespace MPF.UmdImageCreator
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize))
+                    if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out RedumpDiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize))
                     {
                         info.CommonDiscInfo.Title = title ?? "";
-                        info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
+                        info.CommonDiscInfo.Category = umdcat ?? RedumpDiscCategory.Games;
                         info.VersionAndEditions.Version = umdversion ?? "";
                         info.SizeAndChecksums.Size = umdsize;
 
@@ -239,7 +238,7 @@ namespace MPF.UmdImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetUMDAuxInfo(string disc, out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize)
+        private static bool GetUMDAuxInfo(string disc, out string title, out RedumpDiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize)
         {
             title = null; umdcat = null; umdversion = null; umdlayer = null; umdsize = -1;
 

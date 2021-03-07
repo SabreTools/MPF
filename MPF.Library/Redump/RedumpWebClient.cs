@@ -6,10 +6,11 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MPF.Data;
 using MPF.Utilities;
 using Newtonsoft.Json.Linq;
 
-namespace MPF.Web
+namespace MPF.Redump
 {
     // https://stackoverflow.com/questions/1777221/using-cookiecontainer-with-webclient-class
     public class RedumpWebClient : WebClient
@@ -424,7 +425,7 @@ namespace MPF.Web
             if (match.Success)
                 info.CommonDiscInfo.Category = Converters.ToDiscCategory(match.Groups[1].Value);
             else
-                info.CommonDiscInfo.Category = DiscCategory.Games;
+                info.CommonDiscInfo.Category = RedumpDiscCategory.Games;
 
             // Comments
             match = commentsRegex.Match(discData);
@@ -479,10 +480,10 @@ namespace MPF.Web
             matches = languagesRegex.Matches(discData);
             if (matches.Count > 0)
             {
-                List<Language?> tempLanguages = new List<Language?>();
+                List<RedumpLanguage?> tempLanguages = new List<RedumpLanguage?>();
                 foreach (Match submatch in matches)
                 {
-                    tempLanguages.Add(Converters.ToLanguage(submatch.Groups[1].Value));
+                    tempLanguages.Add(Converters.ToRedumpLanguage(submatch.Groups[1].Value));
                 }
 
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
@@ -516,7 +517,7 @@ namespace MPF.Web
             // Region
             match = regionRegex.Match(discData);
             if (match.Success)
-                info.CommonDiscInfo.Region = Converters.ToRegion(match.Groups[1].Value);
+                info.CommonDiscInfo.Region = Converters.ToRedumpRegion(match.Groups[1].Value);
 
             // Serial
             match = serialRegex.Match(discData);
@@ -622,13 +623,13 @@ namespace MPF.Web
         /// <param name="useSubfolders">True to use named subfolders to store downloads, false to store directly in the output directory</param>
         public void DownloadPacks(string outDir, bool useSubfolders)
         {
-            this.DownloadPacks(packCuesUrl, Extensions.HasCues, "CUEs", outDir, useSubfolders ? "cue" : null);
-            this.DownloadPacks(packDatfileUrl, Extensions.HasDat, "DATs", outDir, useSubfolders ? "dat" : null);
-            this.DownloadPacks(packDkeysUrl, Extensions.HasDkeys, "Decrypted KEYS", outDir, useSubfolders ? "dkey" : null);
-            this.DownloadPacks(packGdiUrl, Extensions.HasGdi, "GDIs", outDir, useSubfolders ? "gdi" : null);
-            this.DownloadPacks(packKeysUrl, Extensions.HasKeys, "KEYS", outDir, useSubfolders ? "keys" : null);
-            this.DownloadPacks(packLsdUrl, Extensions.HasKeys, "LSD", outDir, useSubfolders ? "lsd" : null);
-            this.DownloadPacks(packSbiUrl, Extensions.HasSbi, "SBIs", outDir, useSubfolders ? "sbi" : null);
+            this.DownloadPacks(packCuesUrl, Extras.HasCues, "CUEs", outDir, useSubfolders ? "cue" : null);
+            this.DownloadPacks(packDatfileUrl, Extras.HasDat, "DATs", outDir, useSubfolders ? "dat" : null);
+            this.DownloadPacks(packDkeysUrl, Extras.HasDkeys, "Decrypted KEYS", outDir, useSubfolders ? "dkey" : null);
+            this.DownloadPacks(packGdiUrl, Extras.HasGdi, "GDIs", outDir, useSubfolders ? "gdi" : null);
+            this.DownloadPacks(packKeysUrl, Extras.HasKeys, "KEYS", outDir, useSubfolders ? "keys" : null);
+            this.DownloadPacks(packLsdUrl, Extras.HasKeys, "LSD", outDir, useSubfolders ? "lsd" : null);
+            this.DownloadPacks(packSbiUrl, Extras.HasSbi, "SBIs", outDir, useSubfolders ? "sbi" : null);
         }
 
         /// <summary>
@@ -641,26 +642,26 @@ namespace MPF.Web
         {
             RedumpSystem?[] systemAsArray = new RedumpSystem?[] { system };
 
-            if (Extensions.HasCues.Contains(system))
+            if (Extras.HasCues.Contains(system))
                 this.DownloadPacks(packCuesUrl, systemAsArray, "CUEs", outDir, useSubfolders ? "cue" : null);
 
-            if (Extensions.HasDat.Contains(system))
-                this.DownloadPacks(packCuesUrl, Extensions.HasDat, "DATs", outDir, useSubfolders ? "dat" : null);
+            if (Extras.HasDat.Contains(system))
+                this.DownloadPacks(packCuesUrl, Extras.HasDat, "DATs", outDir, useSubfolders ? "dat" : null);
 
-            if (Extensions.HasDkeys.Contains(system))
-                this.DownloadPacks(packCuesUrl, Extensions.HasDkeys, "Decrypted KEYS", outDir, useSubfolders ? "dkey" : null);
+            if (Extras.HasDkeys.Contains(system))
+                this.DownloadPacks(packCuesUrl, Extras.HasDkeys, "Decrypted KEYS", outDir, useSubfolders ? "dkey" : null);
 
-            if (Extensions.HasGdi.Contains(system))
-                this.DownloadPacks(packCuesUrl, Extensions.HasGdi, "GDIs", outDir, useSubfolders ? "gdi" : null);
+            if (Extras.HasGdi.Contains(system))
+                this.DownloadPacks(packCuesUrl, Extras.HasGdi, "GDIs", outDir, useSubfolders ? "gdi" : null);
 
-            if (Extensions.HasKeys.Contains(system))
-                this.DownloadPacks(packCuesUrl, Extensions.HasKeys, "KEYS", outDir, useSubfolders ? "keys" : null);
+            if (Extras.HasKeys.Contains(system))
+                this.DownloadPacks(packCuesUrl, Extras.HasKeys, "KEYS", outDir, useSubfolders ? "keys" : null);
 
-            if (Extensions.HasLsd.Contains(system))
-                this.DownloadPacks(packCuesUrl, Extensions.HasKeys, "LSD", outDir, useSubfolders ? "lsd" : null);
+            if (Extras.HasLsd.Contains(system))
+                this.DownloadPacks(packCuesUrl, Extras.HasKeys, "LSD", outDir, useSubfolders ? "lsd" : null);
 
-            if (Extensions.HasSbi.Contains(system))
-                this.DownloadPacks(packCuesUrl, Extensions.HasSbi, "SBIs", outDir, useSubfolders ? "sbi" : null);
+            if (Extras.HasSbi.Contains(system))
+                this.DownloadPacks(packCuesUrl, Extras.HasSbi, "SBIs", outDir, useSubfolders ? "sbi" : null);
         }
 
         /// <summary>
@@ -846,20 +847,20 @@ namespace MPF.Web
             if (match.Success)
                 info.CommonDiscInfo.Category = Converters.ToDiscCategory(match.Groups[1].Value);
             else
-                info.CommonDiscInfo.Category = DiscCategory.Games;
+                info.CommonDiscInfo.Category = RedumpDiscCategory.Games;
 
             // Region
             match = regionRegex.Match(discData);
             if (match.Success)
-                info.CommonDiscInfo.Region = Converters.ToRegion(match.Groups[1].Value);
+                info.CommonDiscInfo.Region = Converters.ToRedumpRegion(match.Groups[1].Value);
 
             // Languages
             var matches = languagesRegex.Matches(discData);
             if (matches.Count > 0)
             {
-                List<Language?> tempLanguages = new List<Language?>();
+                List<RedumpLanguage?> tempLanguages = new List<RedumpLanguage?>();
                 foreach (Match submatch in matches)
-                    tempLanguages.Add(Converters.ToLanguage(submatch.Groups[1].Value));
+                    tempLanguages.Add(Converters.ToRedumpLanguage(submatch.Groups[1].Value));
 
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
             }
@@ -1501,7 +1502,7 @@ namespace MPF.Web
 
             // If we didn't have credentials
             if (!LoggedIn)
-                systems = systems.Where(s => !Extensions.BannedSystems.Contains(s)).ToArray();
+                systems = systems.Where(s => !Extras.BannedSystems.Contains(s)).ToArray();
 
             Console.WriteLine($"Downloading {title}");
             foreach (var system in systems)
@@ -1530,7 +1531,7 @@ namespace MPF.Web
         {
             // If we didn't have credentials
             if (!LoggedIn)
-                systems = systems.Where(s => !Extensions.BannedSystems.Contains(s)).ToArray();
+                systems = systems.Where(s => !Extras.BannedSystems.Contains(s)).ToArray();
 
             Console.WriteLine($"Downloading {title}");
             foreach (var system in systems)

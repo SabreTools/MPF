@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Data;
 using MPF.Utilities;
-using MPF.Web;
 
 namespace MPF.DD
 {
@@ -421,7 +420,7 @@ namespace MPF.DD
             switch (this.System)
             {
                 case KnownSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
@@ -432,7 +431,7 @@ namespace MPF.DD
                     break;
 
                 case KnownSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
@@ -443,7 +442,7 @@ namespace MPF.DD
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;

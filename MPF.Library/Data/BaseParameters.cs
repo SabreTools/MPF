@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Compress.ThreadReaders;
 using MPF.Hashing;
 using MPF.Utilities;
-using MPF.Web;
 
 namespace MPF.Data
 {
@@ -583,7 +582,7 @@ namespace MPF.Data
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
-        protected static bool GetPlayStationExecutableInfo(char? driveLetter, out string serial, out Region? region, out string date)
+        protected static bool GetPlayStationExecutableInfo(char? driveLetter, out string serial, out RedumpRegion? region, out string date)
         {
             serial = null; region = null; date = null;
 
@@ -763,16 +762,16 @@ namespace MPF.Data
         /// </summary>
         /// <param name="region">String representing the category</param>
         /// <returns>Category, if possible</returns>
-        protected static DiscCategory? GetUMDCategory(string category)
+        protected static RedumpDiscCategory? GetUMDCategory(string category)
         {
             switch (category)
             {
                 case "GAME":
-                    return DiscCategory.Games;
+                    return RedumpDiscCategory.Games;
                 case "VIDEO":
-                    return DiscCategory.Video;
+                    return RedumpDiscCategory.Video;
                 case "AUDIO":
-                    return DiscCategory.Audio;
+                    return RedumpDiscCategory.Audio;
                 default:
                     return null;
             }
@@ -787,7 +786,7 @@ namespace MPF.Data
         /// </summary>
         /// <param name="serial">PlayStation serial code</param>
         /// <returns>Region mapped from name, if possible</returns>
-        protected static Region? GetPlayStationRegion(string serial)
+        protected static RedumpRegion? GetPlayStationRegion(string serial)
         {
             // Standardized "S" serials
             if (serial.StartsWith("S"))
@@ -797,25 +796,25 @@ namespace MPF.Data
                 switch (serial[2])
                 {
                     case 'A':
-                        return Region.Asia;
+                        return RedumpRegion.Asia;
                     case 'C':
-                        return Region.China;
+                        return RedumpRegion.China;
                     case 'E':
-                        return Region.Europe;
+                        return RedumpRegion.Europe;
                     case 'J':
-                        return Region.JapanKorea;
+                        return RedumpRegion.JapanKorea;
                     case 'K':
-                        return Region.Korea;
+                        return RedumpRegion.Korea;
                     case 'P':
-                        return Region.Japan;
+                        return RedumpRegion.Japan;
                     case 'U':
-                        return Region.USA;
+                        return RedumpRegion.USA;
                 }
             }
 
             // Japan-only special serial
             else if (serial.StartsWith("PAPX"))
-                return Region.Japan;
+                return RedumpRegion.Japan;
 
             // Region appears entirely random
             else if (serial.StartsWith("PABX"))
@@ -823,15 +822,15 @@ namespace MPF.Data
 
             // Japan-only special serial
             else if (serial.StartsWith("PCBX"))
-                return Region.Japan;
+                return RedumpRegion.Japan;
 
             // Single disc known, Japan
             else if (serial.StartsWith("PDBX"))
-                return Region.Japan;
+                return RedumpRegion.Japan;
 
             // Single disc known, Europe
             else if (serial.StartsWith("PEBX"))
-                return Region.Europe;
+                return RedumpRegion.Europe;
 
             return null;
         }
@@ -841,24 +840,24 @@ namespace MPF.Data
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        protected static Region? GetXgdRegion(char region)
+        protected static RedumpRegion? GetXgdRegion(char region)
         {
             switch (region)
             {
                 case 'W':
-                    return Region.World;
+                    return RedumpRegion.World;
                 case 'A':
-                    return Region.USA;
+                    return RedumpRegion.USA;
                 case 'J':
-                    return Region.JapanAsia;
+                    return RedumpRegion.JapanAsia;
                 case 'E':
-                    return Region.Europe;
+                    return RedumpRegion.Europe;
                 case 'K':
-                    return Region.USAJapan;
+                    return RedumpRegion.USAJapan;
                 case 'L':
-                    return Region.USAEurope;
+                    return RedumpRegion.USAEurope;
                 case 'H':
-                    return Region.JapanEurope;
+                    return RedumpRegion.JapanEurope;
                 default:
                     return null;
             }

@@ -7,7 +7,6 @@ using BurnOutSharp.External.psxt001z;
 using MPF.CueSheets;
 using MPF.Data;
 using MPF.Utilities;
-using MPF.Web;
 
 namespace MPF.DiscImageCreator
 {
@@ -1982,7 +1981,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
@@ -2002,7 +2001,7 @@ namespace MPF.DiscImageCreator
                         info.Extras.SecuritySectorRanges = ss ?? "";
                     }
 
-                    if (GetXboxDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
+                    if (GetXboxDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out RedumpRegion? region))
                     {
                         info.CommonDiscInfo.Serial = serial ?? "";
                         info.VersionAndEditions.Version = version ?? "";
@@ -2021,7 +2020,7 @@ namespace MPF.DiscImageCreator
                         info.Extras.SecuritySectorRanges = ss360 ?? "";
                     }
 
-                    if (GetXbox360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
+                    if (GetXbox360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out RedumpRegion? region360))
                     {
                         info.CommonDiscInfo.Serial = serial360 ?? "";
                         info.VersionAndEditions.Version = version360 ?? "";
@@ -2156,7 +2155,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Serial: {playstationSerial ?? ""}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
@@ -2213,7 +2212,7 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
@@ -3345,9 +3344,9 @@ namespace MPF.DiscImageCreator
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXboxDMIInfo(string dmi, out string serial, out string version, out Region? region)
+        private static bool GetXboxDMIInfo(string dmi, out string serial, out string version, out RedumpRegion? region)
         {
-            serial = null; version = null; region = Region.World;
+            serial = null; version = null; region = RedumpRegion.World;
 
             if (!File.Exists(dmi))
                 return false;
@@ -3376,9 +3375,9 @@ namespace MPF.DiscImageCreator
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXbox360DMIInfo(string dmi, out string serial, out string version, out Region? region)
+        private static bool GetXbox360DMIInfo(string dmi, out string serial, out string version, out RedumpRegion? region)
         {
-            serial = null; version = null; region = Region.World;
+            serial = null; version = null; region = RedumpRegion.World;
 
             if (!File.Exists(dmi))
                 return false;

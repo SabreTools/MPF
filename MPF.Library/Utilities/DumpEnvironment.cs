@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
 using MPF.Data;
-using MPF.Web;
+using MPF.Redump;
 using Newtonsoft.Json;
 
 namespace MPF.Utilities
@@ -867,7 +867,7 @@ namespace MPF.Utilities
             switch (System)
             {
                 case KnownSystem.AcornArchimedes:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UK;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.UK;
                     break;
 
                 case KnownSystem.AppleMacintosh:
@@ -886,16 +886,16 @@ namespace MPF.Utilities
                 case KnownSystem.AudioCD:
                 case KnownSystem.DVDAudio:
                 case KnownSystem.SuperAudioCD:
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.Audio;
                     break;
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.BDVideo:
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.BonusDiscs;
                     info.CopyProtection.Protection = (AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
@@ -905,25 +905,25 @@ namespace MPF.Utilities
 
                 case KnownSystem.CommodoreAmigaCD32:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Europe;
                     break;
 
                 case KnownSystem.CommodoreAmigaCDTV:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Europe;
                     break;
 
                 case KnownSystem.DVDVideo:
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.BonusDiscs;
                     break;
 
                 case KnownSystem.FujitsuFMTowns:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.FujitsuFMTownsMarty:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.IncredibleTechnologiesEagle:
@@ -960,20 +960,20 @@ namespace MPF.Utilities
 
                 case KnownSystem.NavisoftNaviken21:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.NECPC88:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.NECPC98:
                     info.CommonDiscInfo.EXEDateBuildDate = (this.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.NECPCFX:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.SegaChihiro:
@@ -997,7 +997,7 @@ namespace MPF.Utilities
                     break;
 
                 case KnownSystem.SharpX68000:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.SNKNeoGeoCD:
@@ -1005,7 +1005,7 @@ namespace MPF.Utilities
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
+                    info.CommonDiscInfo.LanguageSelection = new RedumpLanguageSelection?[] { RedumpLanguageSelection.BiosSettings, RedumpLanguageSelection.LanguageSelector, RedumpLanguageSelection.OptionsMenu };
                     break;
 
                 case KnownSystem.SonyPlayStation3:
@@ -1014,7 +1014,7 @@ namespace MPF.Utilities
                     break;
 
                 case KnownSystem.TomyKissSite:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
                     break;
 
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
@@ -1023,7 +1023,7 @@ namespace MPF.Utilities
             }
 
             // Set the category if it's not overriden
-            info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Games;
+            info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.Games;
 
             // Comments is one of the few fields with odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
@@ -1056,8 +1056,8 @@ namespace MPF.Utilities
                 AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
                 AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName(), 1);
-                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName()).ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { }).Select(l => l.ToString()).ToArray(), 1);
+                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new RedumpLanguage?[] { null }).Select(l => l.LongName()).ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new RedumpLanguageSelection?[] { }).Select(l => l.ToString()).ToArray(), 1);
                 AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo.Serial, 1);
 
                 // All ringcode information goes in an indented area
