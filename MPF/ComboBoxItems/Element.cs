@@ -19,7 +19,7 @@ namespace MPF
         /// Allow elements to be used as their internal enum type
         /// </summary>
         /// <param name="item"></param>
-        public static implicit operator T? (Element<T> item) => item.Data;
+        public static implicit operator T? (Element<T> item) => item?.Data;
 
         /// <inheritdoc/>
         public string Name => Converters.GetLongName(Data);
