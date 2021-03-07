@@ -34,6 +34,11 @@ namespace MPF.Windows
         /// </summary>
         public List<Element<Language>> Languages { get; private set; } = Element<Language>.GenerateElements().ToList();
 
+        /// <summary>
+        /// List of available languages
+        /// </summary>
+        public List<Element<LanguageSelection>> LanguageSelections { get; private set; } = Element<LanguageSelection>.GenerateElements().ToList();
+
         #endregion
 
         public DiscInformationWindow(SubmissionInfo submissionInfo)
@@ -51,7 +56,7 @@ namespace MPF.Windows
         private void ManipulateFields()
         {
             // Different media types mean different fields available
-            switch (SubmissionInfo?.CommonDiscInfo.Media)
+            switch (SubmissionInfo?.CommonDiscInfo?.Media)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
@@ -168,7 +173,14 @@ namespace MPF.Windows
                         L1AdditionalMould.Label = "Label-Side Additional Mould";
                     }
                     
-
+                    break;
+            }
+        
+            // Different systems mean different fields available
+            switch (SubmissionInfo?.CommonDiscInfo?.System)
+            {
+                case KnownSystem.SonyPlayStation2:
+                    LanguageSelectionGrid.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -185,10 +197,9 @@ namespace MPF.Windows
             CategoryComboBox.SelectedIndex = Categories.FindIndex(r => r == SubmissionInfo.CommonDiscInfo.Category);
             RegionComboBox.SelectedIndex = Regions.FindIndex(r => r == SubmissionInfo.CommonDiscInfo.Region);
             if (SubmissionInfo.CommonDiscInfo.Languages != null)
-            {
-                foreach (var language in SubmissionInfo.CommonDiscInfo.Languages)
-                    Languages.Find(l => l == language).IsChecked = true;
-            }
+                Languages.ForEach(l => l.IsChecked = SubmissionInfo.CommonDiscInfo.Languages.Contains(l));
+            if (SubmissionInfo.CommonDiscInfo.LanguageSelection != null)
+                LanguageSelections.ForEach(ls => ls.IsChecked = SubmissionInfo.CommonDiscInfo.LanguageSelection.Contains(ls));
             Serial.Text = SubmissionInfo.CommonDiscInfo.Serial ?? "";
 
             L0MasteringRing.Text = SubmissionInfo.CommonDiscInfo.Layer0MasteringRing ?? "";
@@ -230,17 +241,11 @@ namespace MPF.Windows
             SubmissionInfo.CommonDiscInfo.DiscTitle = DiscTitle.Text ?? "";
             SubmissionInfo.CommonDiscInfo.Category = (CategoryComboBox.SelectedItem as Element<DiscCategory>)?.Value ?? DiscCategory.Games;
             SubmissionInfo.CommonDiscInfo.Region = (RegionComboBox.SelectedItem as Element<Region>)?.Value ?? Region.World;
-            var languages = new List<Language?>();
-            foreach (var language in Languages)
-            {
-                if (language.IsChecked)
-                    languages.Add(language.Value);
-            }
-            if (languages.Count == 0)
-                languages.Add(null);
-            SubmissionInfo.CommonDiscInfo.Languages = languages.ToArray();
+            SubmissionInfo.CommonDiscInfo.Languages = Languages.Where(l => l.IsChecked).Select(l => l?.Value).ToArray();
+            if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
+                SubmissionInfo.CommonDiscInfo.Languages = new Language?[] { null };
+            SubmissionInfo.CommonDiscInfo.LanguageSelection = LanguageSelections.Where(ls => ls.IsChecked).Select(ls => ls?.Value).ToArray();
             SubmissionInfo.CommonDiscInfo.Serial = Serial.Text ?? "";
-
             SubmissionInfo.CommonDiscInfo.Layer0MasteringRing = L0MasteringRing.Text ?? "";
             SubmissionInfo.CommonDiscInfo.Layer0MasteringSID = L0MasteringSID.Text ?? "";
             SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode = L0Toolstamp.Text ?? "";
