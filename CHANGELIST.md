@@ -30,6 +30,7 @@
 - Overhaul options window
 - Update attributions and about text
 - Updated to DIC version 20210301
+- Add user-selectable Language Selection via dropdown in disc submission window for PS2
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
