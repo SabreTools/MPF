@@ -598,14 +598,10 @@ namespace MPF.Windows
                     return;
                 }
 
+                // Verify dump output and save it
                 if (result)
                 {
-                    // Verify dump output and save it
-                    result = await Env.VerifyAndSaveDumpOutput(resultProgress,
-                        protectionProgress,
-                        EjectWhenDoneCheckBox.IsChecked,
-                        ShowDiscInformationWindow
-                    );
+                    result = await Env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, ShowDiscInformationWindow);
                 }
                 else
                 {
@@ -832,7 +828,7 @@ namespace MPF.Windows
                 Env.CancelDumping();
                 CopyProtectScanButton.IsEnabled = true;
 
-                if (EjectWhenDoneCheckBox.IsChecked == true)
+                if (Env.Options.EjectAfterDump == true)
                 {
                     LogOutput.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
                     Env.EjectDisc();

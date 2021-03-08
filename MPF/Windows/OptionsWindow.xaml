@@ -76,7 +76,7 @@
                 <TabItem Header="Dumping">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="3">
+                            <UniformGrid Columns="2" Rows="4">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Path=UIOptions.Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
@@ -95,6 +95,11 @@
                                 <CheckBox VerticalAlignment="Center" Content="Protection Scan"
                                     IsChecked="{Binding Path=UIOptions.Options.ScanForProtection}"
                                     ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
+                                    />
+
+                                <CheckBox VerticalAlignment="Center" Content="Eject After Dump"
+                                    IsChecked="{Binding Path=UIOptions.Options.EjectAfterDump}"
+                                    ToolTip="Eject the disc from the drive after dumping has completed" Margin="0,4"
                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"

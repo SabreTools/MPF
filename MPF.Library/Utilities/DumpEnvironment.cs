@@ -421,13 +421,11 @@ namespace MPF.Utilities
         /// </summary>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
-        /// <param name="ejectDisc">True if disc should be ejected after information is gathered, false otherwise</param>
         /// <param name="showUserPrompt">Optional user prompt to deal with submsision information</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null,
-            bool? ejectDisc = null,
             Func<SubmissionInfo, bool?> showUserPrompt = null)
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
@@ -442,8 +440,7 @@ namespace MPF.Utilities
             resultProgress?.Report(Result.Success("Extracting information complete!"));
 
             // Eject the disc automatically if confugured to
-            // TODO: Make this an Option instead
-            if (ejectDisc == true)
+            if (Options.EjectAfterDump == true)
             {
                 resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
                 EjectDisc();

@@ -217,6 +217,15 @@ namespace MPF.Data
         }
 
         /// <summary>
+        /// Eject the disc after dumping
+        /// </summary>
+        public bool EjectAfterDump
+        {
+            get { return GetBooleanSetting(_settings, "EjectAfterDump", true); }
+            set { _settings["EjectAfterDump"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Ignore fixed drives when populating the list
         /// </summary>
         public bool IgnoreFixedDrives
