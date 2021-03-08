@@ -82,7 +82,7 @@ namespace MPF.Windows
         {
             // Handle non-bindable fields
             InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Converters.ToInternalProgram(UIOptions.Options.InternalProgram));
-            RedumpPasswordBox.Password = UIOptions.Options.Password;
+            RedumpPasswordBox.Password = UIOptions.Options.RedumpPassword;
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace MPF.Windows
         {
             // Handle non-bindable fields
             UIOptions.Options.InternalProgram = (InternalProgramComboBox.SelectedItem as Element<InternalProgram>)?.Name ?? InternalProgram.DiscImageCreator.ToString();
-            UIOptions.Options.Password = RedumpPasswordBox.Password;
+            UIOptions.Options.RedumpPassword = RedumpPasswordBox.Password;
 
             UIOptions.Save();
             Hide();

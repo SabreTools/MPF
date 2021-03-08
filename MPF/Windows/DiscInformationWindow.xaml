@@ -97,8 +97,8 @@
                         </Expander>
                         <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="Version" Grid.Row="0" Label="Version"/>
-                                <controls:UserInput x:Name="Edition" Grid.Row="1" Label="Edition"/>
+                                <controls:UserInput x:Name="Version" Label="Version"/>
+                                <controls:UserInput x:Name="Edition" Label="Edition"/>
                             </StackPanel>
                         </Expander>
                     </StackPanel>
@@ -144,10 +144,10 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
-                    <Label/>
-                    <Button Name="AcceptButton" Grid.Row="0" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
-                    <Button Name="CancelButton" Grid.Row="0" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
-                    <Label/>
+                    <Label/> <!-- Empty label for padding -->
+                    <Button Name="AcceptButton" Grid.Column="1" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
+                    <Button Name="CancelButton" Grid.Column="2" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
+                    <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

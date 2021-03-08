@@ -10,24 +10,36 @@ namespace MPF.Data
 
         #region Internal Program
 
+        /// <summary>
+        /// Path to Aaru
+        /// </summary>
         public string AaruPath
         {
             get { return GetStringSetting(_settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
             set { _settings["AaruPath"] = value; }
         }
 
-        public string CreatorPath
+        /// <summary>
+        /// Path to DiscImageCreator
+        /// </summary>
+        public string DiscImageCreatorPath
         {
-            get { return GetStringSetting(_settings, "CreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
-            set { _settings["CreatorPath"] = value; }
+            get { return GetStringSetting(_settings, "DiscImageCreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
+            set { _settings["DiscImageCreatorPath"] = value; }
         }
 
+        /// <summary>
+        /// Path to dd for Windows
+        /// </summary>
         public string DDPath
         {
             get { return GetStringSetting(_settings, "DDPath", "Programs\\DD\\dd.exe"); }
             set { _settings["DDPath"] = value; }
         }
 
+        /// <summary>
+        /// Currently selected dumping program
+        /// </summary>
         public string InternalProgram
         {
             get { return GetStringSetting(_settings, "InternalProgram", Data.InternalProgram.DiscImageCreator.ToString()); }
@@ -38,12 +50,18 @@ namespace MPF.Data
 
         #region UI Defaults
 
+        /// <summary>
+        /// Default output path for dumps
+        /// </summary>
         public string DefaultOutputPath
         {
             get { return GetStringSetting(_settings, "DefaultOutputPath", "ISO"); }
             set { _settings["DefaultOutputPath"] = value; }
         }
 
+        /// <summary>
+        /// Default system if none can be detected
+        /// </summary>
         public string DefaultSystem
         {
             get { return GetStringSetting(_settings, "DefaultSystem", KnownSystem.NONE.ToString()); }
@@ -54,18 +72,27 @@ namespace MPF.Data
 
         #region Dumping Speeds
 
+        /// <summary>
+        /// Default CD dumping speed
+        /// </summary>
         public int PreferredDumpSpeedCD
         {
             get { return GetInt32Setting(_settings, "PreferredDumpSpeedCD", 72); }
             set { _settings["PreferredDumpSpeedCD"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Default DVD dumping speed
+        /// </summary>
         public int PreferredDumpSpeedDVD
         {
             get { return GetInt32Setting(_settings, "PreferredDumpSpeedDVD", 24); }
             set { _settings["PreferredDumpSpeedDVD"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Default BD dumping speed
+        /// </summary>
         public int PreferredDumpSpeedBD
         {
             get { return GetInt32Setting(_settings, "PreferredDumpSpeedBD", 16); }
@@ -74,66 +101,146 @@ namespace MPF.Data
 
         #endregion
 
+        #region Aaru
+
+        /// <summary>
+        /// Enable debug output while dumping by default
+        /// </summary>
+        public bool AaruEnableDebug
+        {
+            get { return GetBooleanSetting(_settings, "AaruEnableDebug", false); }
+            set { _settings["AaruEnableDebug"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Enable verbose output while dumping by default
+        /// </summary>
+        public bool AaruEnableVerbose
+        {
+            get { return GetBooleanSetting(_settings, "AaruEnableVerbose", false); }
+            set { _settings["AaruEnableVerbose"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Default number of sector/subchannel rereads
+        /// </summary>
+        public int AaruRereadCount
+        {
+            get { return GetInt32Setting(_settings, "AaruRereadCount", 5); }
+            set { _settings["AaruRereadCount"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Strip personal data information from Aaru metadata by default
+        /// </summary>
+        public bool AaruStripPersonalData
+        {
+            get { return GetBooleanSetting(_settings, "AaruStripPersonalData", false); }
+            set { _settings["AaruStripPersonalData"] = value.ToString(); }
+        }
+
+        #endregion
+
+        #region DiscImageCreator
+
+        /// <summary>
+        /// Enable overly-secure dumping flags by default
+        /// </summary>
+        /// <remarks>
+        /// Split this into component parts later. Currently does:
+        /// - Scan sector protection and set subchannel read level to 2 for CD
+        /// - Set CMI and scan file protect flags for DVD
+        /// - Set CMI flag for HD-DVD
+        /// </remarks>
+        public bool DICParanoidMode
+        {
+            get { return GetBooleanSetting(_settings, "DICParanoidMode", false); }
+            set { _settings["DICParanoidMode"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Enable the Quiet flag by default
+        /// </summary>
+        public bool DICQuietMode
+        {
+            get { return GetBooleanSetting(_settings, "DICQuietMode", false); }
+            set { _settings["DICQuietMode"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Default number of C2 rereads
+        /// </summary>
+        public int DICRereadCount
+        {
+            get { return GetInt32Setting(_settings, "DICRereadCount", 20); }
+            set { _settings["DICRereadCount"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Reset drive after dumping (useful for older drives)
+        /// </summary>
+        public bool DICResetDriveAfterDump
+        {
+            get { return GetBooleanSetting(_settings, "DICResetDriveAfterDump", false); }
+            set { _settings["DICResetDriveAfterDump"] = value.ToString(); }
+        }
+
+        #endregion
+
         #region Extra Dumping Options
 
-        public bool QuietMode
-        {
-            get { return GetBooleanSetting(_settings, "QuietMode", false); }
-            set { _settings["QuietMode"] = value.ToString(); }
-        }
-
-        public bool ParanoidMode
-        {
-            get { return GetBooleanSetting(_settings, "ParanoidMode", false); }
-            set { _settings["ParanoidMode"] = value.ToString(); }
-        }
-
+        /// <summary>
+        /// Scan the disc for protection after dumping
+        /// </summary>
         public bool ScanForProtection
         {
             get { return GetBooleanSetting(_settings, "ScanForProtection", true); }
             set { _settings["ScanForProtection"] = value.ToString(); }
         }
 
-        public int RereadAmountForC2
-        {
-            get { return GetInt32Setting(_settings, "RereadAmountForC2", 20); }
-            set { _settings["RereadAmountForC2"] = value.ToString(); }
-        }
-
+        /// <summary>
+        /// Add placeholder values in the submission info
+        /// </summary>
         public bool AddPlaceholders
         {
             get { return GetBooleanSetting(_settings, "AddPlaceholders", true); }
             set { _settings["AddPlaceholders"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Show the disc information window after dumping
+        /// </summary>
         public bool PromptForDiscInformation
         {
             get { return GetBooleanSetting(_settings, "PromptForDiscInformation", true); }
             set { _settings["PromptForDiscInformation"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Ignore fixed drives when populating the list
+        /// </summary>
         public bool IgnoreFixedDrives
         {
             get { return GetBooleanSetting(_settings, "IgnoreFixedDrives", true); }
             set { _settings["IgnoreFixedDrives"] = value.ToString(); }
         }
 
-        public bool ResetDriveAfterDump
-        {
-            get { return GetBooleanSetting(_settings, "ResetDriveAfterDump", false); }
-            set { _settings["ResetDriveAfterDump"] = value.ToString(); }
-        }
-
         #endregion
 
         #region Skip Options
 
+        /// <summary>
+        /// Skip detecting media type on disc scan
+        /// </summary>
         public bool SkipMediaTypeDetection
         {
             get { return GetBooleanSetting(_settings, "SkipMediaTypeDetection", false); }
             set { _settings["SkipMediaTypeDetection"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Skip detecting known system on disc scan
+        /// </summary>
         public bool SkipSystemDetection
         {
             get { return GetBooleanSetting(_settings, "SkipSystemDetection", false); }
@@ -160,18 +267,23 @@ namespace MPF.Data
 
         #region Redump Login Information
 
-        public string Username
+        public string RedumpUsername
         {
-            get { return GetStringSetting(_settings, "Username", ""); }
-            set { _settings["Username"] = value; }
+            get { return GetStringSetting(_settings, "RedumpUsername", ""); }
+            set { _settings["RedumpUsername"] = value; }
         }
 
         // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
-        public string Password
+        public string RedumpPassword
         {
-            get { return GetStringSetting(_settings, "Password", ""); }
-            set { _settings["Password"] = value; }
+            get { return GetStringSetting(_settings, "RedumpPassword", ""); }
+            set { _settings["RedumpPassword"] = value; }
         }
+
+        /// <summary>
+        /// Determine if a complete set of Redump credentials might exist
+        /// </summary>
+        public bool HasRedumpLogin { get => !string.IsNullOrWhiteSpace(RedumpUsername) && !string.IsNullOrWhiteSpace(RedumpPassword); }
 
         #endregion
 

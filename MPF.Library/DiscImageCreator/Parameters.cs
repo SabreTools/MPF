@@ -150,38 +150,23 @@ namespace MPF.DiscImageCreator
 
         #endregion
 
-        /// <summary>
-        /// Populate a Parameters object from a param string
-        /// </summary>
-        /// <param name="parameters">String possibly representing a set of parameters</param>
+        /// <inheritdoc/>
         public Parameters(string parameters)
             : base(parameters)
         {
             this.InternalProgram = InternalProgram.DiscImageCreator;
         }
 
-        /// <summary>
-        /// Generate parameters based on a set of known inputs
-        /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
-        /// <param name="type">MediaType value to use</param>
-        /// <param name="driveLetter">Drive letter to use</param>
-        /// <param name="filename">Filename to use</param>
-        /// <param name="driveSpeed">Drive speed to use</param>
-        /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
-        /// <param name="quietMode">Enable quiet mode (no beeps)</param>
-        /// <param name="retryCount">User-defined reread count</param>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, bool quietMode, int retryCount)
-            : base(system, type, driveLetter, filename, driveSpeed, paranoid, quietMode, retryCount)
+        /// <inheritdoc/>
+        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+            : base(system, type, driveLetter, filename, driveSpeed, options)
         {
-            if (quietMode)
+            this.InternalProgram = InternalProgram.DiscImageCreator;
+            if (options.DICQuietMode)
                 this[Flag.DisableBeep] = true;
         }
 
-        /// <summary>
-        /// Blindly generate a parameter string based on the inputs
-        /// </summary>
-        /// <returns>Correctly formatted parameter string, null on error</returns>
+        /// <inheritdoc/>
         public override string GenerateParameters()
         {
             List<string> parameters = new List<string>();
@@ -637,40 +622,22 @@ namespace MPF.DiscImageCreator
             return string.Join(" ", parameters);
         }
 
-        /// <summary>
-        /// Get the input path from the implementation
-        /// </summary>
-        /// <returns>String representing the path, null on error</returns>
+        /// <inheritdoc/>
         public override string InputPath() => DriveLetter;
 
-        /// <summary>
-        /// Get the output path from the implementation
-        /// </summary>
-        /// <returns>String representing the path, null on error</returns>
+        /// <inheritdoc/>
         public override string OutputPath() => Filename;
 
-        /// <summary>
-        /// Get the processing speed from the implementation
-        /// </summary>
-        /// <returns>int? representing the speed, null on error</returns>
+        /// <inheritdoc/>
         public override int? GetSpeed() => DriveSpeed;
 
-        /// <summary>
-        /// Set the processing speed int the implementation
-        /// </summary>
-        /// <param name="speed">int? representing the speed</param>
+        /// <inheritdoc/>
         public override void SetSpeed(int? speed) => DriveSpeed = speed;
 
-        /// <summary>
-        /// Get the MediaType from the current set of parameters
-        /// </summary>
-        /// <returns>MediaType value if successful, null on error</returns>
+        /// <inheritdoc/>
         public override MediaType? GetMediaType() => Converters.ToMediaType(BaseCommand);
 
-        /// <summary>
-        /// Gets if the current command is considered a dumping command or not
-        /// </summary>
-        /// <returns>True if it's a dumping command, false otherwise</returns>
+        /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
             switch (BaseCommand)
@@ -697,9 +664,7 @@ namespace MPF.DiscImageCreator
             }
         }
 
-        /// <summary>
-        /// Reset all special variables to have default values
-        /// </summary>
+        /// <inheritdoc/>
         protected override void ResetValues()
         {
             BaseCommand = Command.NONE;
@@ -725,20 +690,8 @@ namespace MPF.DiscImageCreator
             VideoNowValue = null;
         }
 
-        /// <summary>
-        /// Set default parameters for a given system and media type
-        /// </summary>
-        /// <param name="driveLetter">Drive letter to use</param>
-        /// <param name="filename">Filename to use</param>
-        /// <param name="driveSpeed">Drive speed to use</param>
-        /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
-        /// <param name="retryCount">User-defined reread count</param>
-        protected override void SetDefaultParameters(
-            char driveLetter,
-            string filename,
-            int? driveSpeed,
-            bool paranoid,
-            int retryCount)
+        /// <inheritdoc/>
+        protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
         {
             SetBaseCommand(this.System, this.Type);
 
@@ -752,7 +705,7 @@ namespace MPF.DiscImageCreator
                 return;
 
             // Set the C2 reread count
-            switch (retryCount)
+            switch (options.DICRereadCount)
             {
                 case -1:
                     C2OpcodeValue[0] = null;
@@ -761,7 +714,7 @@ namespace MPF.DiscImageCreator
                     C2OpcodeValue[0] = 20;
                     break;
                 default:
-                    C2OpcodeValue[0] = retryCount;
+                    C2OpcodeValue[0] = options.DICRereadCount;
                     break;
             }
 
@@ -778,7 +731,7 @@ namespace MPF.DiscImageCreator
                             this[Flag.NoFixSubQSecuROM] = true;
                             this[Flag.ScanFileProtect] = true;
 
-                            if (paranoid)
+                            if (options.DICParanoidMode)
                             {
                                 this[Flag.ScanSectorProtect] = true;
                                 this[Flag.SubchannelReadLevel] = true;
@@ -806,7 +759,7 @@ namespace MPF.DiscImageCreator
                     }
                     break;
                 case MediaType.DVD:
-                    if (paranoid)
+                    if (options.DICParanoidMode)
                     {
                         this[Flag.CopyrightManagementInformation] = true;
                         this[Flag.ScanFileProtect] = true;
@@ -816,7 +769,7 @@ namespace MPF.DiscImageCreator
                     this[Flag.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
-                    if (paranoid)
+                    if (options.DICParanoidMode)
                         this[Flag.CopyrightManagementInformation] = true;
                     break;
                 case MediaType.BluRay:
@@ -838,11 +791,7 @@ namespace MPF.DiscImageCreator
             }
         }
 
-        /// <summary>
-        /// Scan a possible parameter string and populate whatever possible
-        /// </summary>
-        /// <param name="parameters">String possibly representing parameters</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         protected override bool ValidateAndSetParameters(string parameters)
         {
             // The string has to be valid by itself first
@@ -1686,12 +1635,7 @@ namespace MPF.DiscImageCreator
             return true;
         }
 
-        /// <summary>
-        /// Validate if all required output files exist
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="progress">Optional result progress callback</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
         {
             /*
@@ -1868,13 +1812,7 @@ namespace MPF.DiscImageCreator
             }
         }
 
-        /// <summary>
-        /// Generate a SubmissionInfo for the output files
-        /// </summary>
-        /// <param name="info">Base submission info to fill in specifics for</param>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="drive">Drive representing the disc to get information from</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
         {
             string outputDirectory = Path.GetDirectoryName(basePath);

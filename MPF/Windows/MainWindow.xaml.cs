@@ -604,7 +604,6 @@ namespace MPF.Windows
                     result = await Env.VerifyAndSaveDumpOutput(resultProgress,
                         protectionProgress,
                         EjectWhenDoneCheckBox.IsChecked,
-                        UIOptions.Options.ResetDriveAfterDump,
                         ShowDiscInformationWindow
                     );
                 }
@@ -839,7 +838,7 @@ namespace MPF.Windows
                     Env.EjectDisc();
                 }
 
-                if (UIOptions.Options.ResetDriveAfterDump)
+                if (UIOptions.Options.DICResetDriveAfterDump)
                 {
                     LogOutput.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
                     Env.ResetDrive();

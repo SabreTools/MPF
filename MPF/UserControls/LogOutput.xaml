@@ -21,10 +21,10 @@
 
             <GroupBox Grid.Row="2" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
-                    <Label/>
+                    <Label/> <!-- Empty label for padding -->
                     <Button Name="ClearButton" Height="25" Width="80" Content="Clear" Click="OnClearButton" />
                     <Button Name="SaveButton" Height="25" Width="80" Content="Save" Click="OnSaveButton" />
-                    <Label/>
+                    <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

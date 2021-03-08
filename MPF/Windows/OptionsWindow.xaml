@@ -17,7 +17,6 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="2.0*" />
                             <ColumnDefinition Width="0.2*" />
-
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
@@ -32,8 +31,8 @@
                         <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
-                        <TextBox x:Name="CreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.CreatorPath}" />
-                        <Button x:Name="CreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
+                        <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DiscImageCreatorPath}" />
+                        <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DD Path" />
                         <TextBox x:Name="DDPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DDPath}" />
@@ -51,16 +50,41 @@
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
                         <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DefaultOutputPath}" />
                         <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
+
+                        <!-- TODO: Enable this code to allow for selecting a default system -->
+                        <!--<Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
+                        <ComboBox x:Name="SystemTypeComboBox" Grid.Row="5" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding Path=Systems}" SelectedIndex="0">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" IsEnabled="{Binding Path=IsSystem}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="{x:Type ComboBoxItem}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsHeader}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>-->
                     </Grid>
                 </TabItem>
 
                 <TabItem Header="Dumping">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="4">
+                            <UniformGrid Columns="2" Rows="3">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Path=UIOptions.Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
+                                     />
+
+                                <CheckBox VerticalAlignment="Center" Content="Skip System Detect"
+                                     IsChecked="{Binding Path=UIOptions.Options.SkipSystemDetection}"
+                                     ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
@@ -68,31 +92,20 @@
                                      ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                      />
 
-                                <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
-                                     IsChecked="{Binding Path=UIOptions.Options.QuietMode}"
-                                     ToolTip="Disable DiscImageCreator sounds" Margin="0,4"
-                                     />
-
-                                <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
-                                     IsChecked="{Binding Path=UIOptions.Options.ParanoidMode}"
-                                     ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
-                                     />
-
                                 <CheckBox VerticalAlignment="Center" Content="Protection Scan"
                                     IsChecked="{Binding Path=UIOptions.Options.ScanForProtection}"
                                     ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                                     />
 
-                                <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
-                                     IsChecked="{Binding Path=UIOptions.Options.ResetDriveAfterDump}"
-                                     ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
-                                     />
+                                <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
+                                     IsChecked="{Binding Path=UIOptions.Options.PromptForDiscInformation}"
+                                     ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
+                                      />
 
-                                <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                <TextBox VerticalAlignment="Center"
-                                    Text="{Binding Path=UIOptions.Options.RereadAmountForC2}"
-                                    ToolTip="Specifies how many rereads are attempted on C2 error"
-                                    />
+                                <CheckBox VerticalAlignment="Center" Content="Add Placeholders"
+                                     IsChecked="{Binding Path=UIOptions.Options.AddPlaceholders}"
+                                     ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
+                                     />
                             </UniformGrid>
                         </GroupBox>
                         
@@ -130,42 +143,75 @@
                                     Value="{Binding Path=UIOptions.Options.PreferredDumpSpeedBD}"  />
                                 <TextBox x:Name="DumpSpeedBDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
                                    Text="{Binding ElementName=DumpSpeedBDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
-
                             </Grid>
                         </GroupBox>
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="Misc. Options">
-                    <StackPanel>
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Disc Information">
-                            <UniformGrid Columns="2">
-                                <CheckBox VerticalAlignment="Center" Content="Add Placeholders"
-                                     IsChecked="{Binding Path=UIOptions.Options.AddPlaceholders}"
-                                     ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
-                                     />
+                <TabItem Header="Aaru">
+                    <UniformGrid Columns="2" Rows="3">
+                        <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
+                            IsChecked="{Binding Path=UIOptions.Options.AaruEnableDebug}"
+                            ToolTip="Enable debug output in logs" Margin="0,4"
+                            />
 
-                                <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
-                                     IsChecked="{Binding Path=UIOptions.Options.PromptForDiscInformation}"
-                                     ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
-                                      />
-                            </UniformGrid>
-                        </GroupBox>
+                        <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
+                            IsChecked="{Binding Path=UIOptions.Options.AaruEnableVerbose}"
+                            ToolTip="Enable verbose output in logs" Margin="0,4"
+                            />
 
-                        <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Logging">
-                            <UniformGrid Columns="2">
-                                <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
-                                     IsChecked="{Binding Path=UIOptions.Options.VerboseLogging}"
-                                     ToolTip="Display all logging statements" Margin="0,4"
-                                     />
+                        <CheckBox VerticalAlignment="Center" Content="Strip Personal Data"
+                            IsChecked="{Binding Path=UIOptions.Options.AaruStripPersonalData}"
+                            ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
+                            />
+                        <Label/> <!-- Empty label for padding -->
 
-                                <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
-                                     IsChecked="{Binding Path=UIOptions.Options.OpenLogWindowAtStartup}"
-                                     ToolTip="Open the log panel when the program launches" Margin="0,4"
-                                     />
-                            </UniformGrid>
-                        </GroupBox>
-                    </StackPanel>
+                        <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <TextBox VerticalAlignment="Center"
+                            Text="{Binding Path=UIOptions.Options.AaruRereadCount}"
+                            ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
+                            />
+                    </UniformGrid>
+                </TabItem>
+
+                <TabItem Header="DiscImageCreator">
+                    <UniformGrid Columns="2" Rows="3">
+                        <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
+                            IsChecked="{Binding Path=UIOptions.Options.DICQuietMode}"
+                            ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
+                            />
+
+                        <CheckBox VerticalAlignment="Center" Content="Paranoid Mode"
+                            IsChecked="{Binding Path=UIOptions.Options.DICParanoidMode}"
+                            ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
+                            />
+
+                        <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
+                            IsChecked="{Binding Path=UIOptions.Options.DICResetDriveAfterDump}"
+                            ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
+                            />
+                        <Label/> <!-- Empty label for padding -->
+
+                        <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <TextBox VerticalAlignment="Center"
+                            Text="{Binding Path=UIOptions.Options.DICRereadCount}"
+                            ToolTip="Specifies how many rereads are attempted on C2 error"
+                            />
+                    </UniformGrid>
+                </TabItem>
+
+                <TabItem Header="Logging">
+                    <UniformGrid Columns="2">
+                        <CheckBox VerticalAlignment="Center" Content="Verbose Logging"
+                            IsChecked="{Binding Path=UIOptions.Options.VerboseLogging}"
+                            ToolTip="Display all logging statements" Margin="0,4"
+                            />
+
+                        <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
+                            IsChecked="{Binding Path=UIOptions.Options.OpenLogWindowAtStartup}"
+                            ToolTip="Open the log panel when the program launches" Margin="0,4"
+                            />
+                    </UniformGrid>
                 </TabItem>
 
                 <TabItem Header="Login Info">
@@ -189,10 +235,10 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
-                    <Label/>
+                    <Label/> <!-- Empty label for padding -->
                     <Button Name="AcceptButton" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
                     <Button Name="CancelButton" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
-                    <Label/>
+                    <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

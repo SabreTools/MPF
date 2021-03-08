@@ -47,9 +47,7 @@ namespace MPF.Data
         {
             // If any parameters are not valid, wipe out everything
             if (!ValidateAndSetParameters(parameters))
-            {
                 ResetValues();
-            }
         }
 
         /// <summary>
@@ -60,71 +58,66 @@ namespace MPF.Data
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
-        /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
-        /// <param name="quietMode">Enable quiet mode (no beeps)</param>
-        /// <param name="retryCount">User-defined reread count</param>
-        public BaseParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, bool paranoid, bool quietMode, int retryCount)
+        /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
+        public BaseParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
         {
             this.System = system;
             this.Type = type;
-            SetDefaultParameters(driveLetter, filename, driveSpeed, paranoid, retryCount);
+            SetDefaultParameters(driveLetter, filename, driveSpeed, options);
         }
 
         /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
         /// <returns>Correctly formatted parameter string, null on error</returns>
-        public abstract string GenerateParameters();
+        public virtual string GenerateParameters() => null;
 
         /// <summary>
         /// Get the input path from the implementation
         /// </summary>
         /// <returns>String representing the path, null on error</returns>
-        public abstract string InputPath();
+        public virtual string InputPath() => null;
 
         /// <summary>
         /// Get the output path from the implementation
         /// </summary>
         /// <returns>String representing the path, null on error</returns>
-        public abstract string OutputPath();
+        public virtual string OutputPath() => null;
 
         /// <summary>
         /// Get the processing speed from the implementation
         /// </summary>
         /// <returns>int? representing the speed, null on error</returns>
-        public abstract int? GetSpeed();
+        public virtual int? GetSpeed() => null;
 
         /// <summary>
         /// Set the processing speed int the implementation
         /// </summary>
         /// <param name="speed">int? representing the speed</param>
-        public abstract void SetSpeed(int? speed);
+        public virtual void SetSpeed(int? speed) { }
 
         /// <summary>
         /// Get the MediaType from the current set of parameters
         /// </summary>
         /// <returns>MediaType value if successful, null on error</returns>
-        public abstract MediaType? GetMediaType();
+        public virtual MediaType? GetMediaType() => null;
 
         /// <summary>
         /// Gets if the current command is considered a dumping command or not
         /// </summary>
         /// <returns>True if it's a dumping command, false otherwise</returns>
-        public abstract bool IsDumpingCommand();
+        public virtual bool IsDumpingCommand() => true;
 
         /// <summary>
         /// Returns if the current Parameter object is valid
         /// </summary>
         /// <returns></returns>
-        public bool IsValid()
-        {
-            return GenerateParameters() != null;
-        }
+        public bool IsValid() => GenerateParameters() != null;
 
         /// <summary>
         /// Reset all special variables to have default values
         /// </summary>
-        protected abstract void ResetValues();
+        protected virtual void ResetValues() { }
 
         /// <summary>
         /// Set default parameters for a given system and media type
@@ -132,28 +125,22 @@ namespace MPF.Data
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
-        /// <param name="paranoid">Enable paranoid mode (safer dumping)</param>
-        /// <param name="retryCount">User-defined reread count</param>
-        protected abstract void SetDefaultParameters(
-            char driveLetter,
-            string filename,
-            int? driveSpeed,
-            bool paranoid,
-            int retryCount);
+        /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
+        protected virtual void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options) { }
 
         /// <summary>
         /// Scan a possible parameter string and populate whatever possible
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
-        /// <returns></returns>
-        protected abstract bool ValidateAndSetParameters(string parameters);
+        /// <returns>True if the parameters were set correctly, false otherwise</returns>
+        protected virtual bool ValidateAndSetParameters(string parameters) => true;
 
         /// <summary>
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="progress">Optional result progress callback</param>
-        /// <returns></returns>
+        /// <returns>True if all required files exist, false otherwise</returns>
         public abstract bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null);
 
         /// <summary>

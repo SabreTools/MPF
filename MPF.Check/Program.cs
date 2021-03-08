@@ -162,8 +162,8 @@ namespace MPF.Check
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
 
-                    Username = username,
-                    Password = password,
+                    RedumpUsername = username,
+                    RedumpPassword = password,
                 };
 
                 Drive drive = null;
