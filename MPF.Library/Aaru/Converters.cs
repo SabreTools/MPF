@@ -14,7 +14,7 @@ namespace MPF.Aaru
         public static string Extension(MediaType? type)
         {
             // Aaru has a single, unified output format by default
-            return ".aif";
+            return ".aaruf";
         }
 
         #endregion
