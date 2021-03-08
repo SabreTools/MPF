@@ -122,6 +122,15 @@ namespace MPF.Data
         }
 
         /// <summary>
+        /// Enable force dumping of media by default
+        /// </summary>
+        public bool AaruForceDumping
+        {
+            get { return GetBooleanSetting(_settings, "AaruForceDumping", false); }
+            set { _settings["AaruForceDumping"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default number of sector/subchannel rereads
         /// </summary>
         public int AaruRereadCount

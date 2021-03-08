@@ -165,11 +165,15 @@
                             ToolTip="Enable verbose output in logs" Margin="0,4"
                             />
 
+                        <CheckBox VerticalAlignment="Center" Content="Force Dumping"
+                            IsChecked="{Binding Path=UIOptions.Options.AaruForceDumping}"
+                            ToolTip="Enable forcing dump even if there are issues" Margin="0,4"
+                            />
+
                         <CheckBox VerticalAlignment="Center" Content="Strip Personal Data"
                             IsChecked="{Binding Path=UIOptions.Options.AaruStripPersonalData}"
                             ToolTip="Enable stripping of personally identifiable information from metadata" Margin="0,4,0,0"
                             />
-                        <Label/> <!-- Empty label for padding -->
 
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center"

@@ -221,6 +221,10 @@ namespace MPF.Aaru
             if (options.AaruEnableVerbose)
                 this[Flag.Verbose] = true;
 
+            // Force dumping
+            if (options.AaruForceDumping)
+                this[Flag.Force] = true;
+
             // Remove personally identifiable information
             if (options.AaruStripPersonalData)
                 this[Flag.Private] = true;
