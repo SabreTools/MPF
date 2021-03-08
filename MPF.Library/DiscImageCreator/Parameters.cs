@@ -1870,14 +1870,14 @@ namespace MPF.DiscImageCreator
                     {
                         if (GetLayerbreak(Path.Combine(outputDirectory, "PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
-                            if (layerbreak1 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak = layerbreak1 ?? default;
+                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                            if (layerbreak2 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak2 = layerbreak2 ?? default;
+                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
 
-                            if (layerbreak3 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak3 = layerbreak3 ?? default;
+                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
                         }
                         else
                         {
