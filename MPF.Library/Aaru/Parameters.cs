@@ -193,8 +193,6 @@ namespace MPF.Aaru
             InputValue = $"\\\\?\\{driveLetter}:";
             OutputValue = filename;
 
-            this[Flag.Force] = true;
-
             if (driveSpeed != null)
             {
                 this[Flag.Speed] = true;
@@ -213,21 +211,11 @@ namespace MPF.Aaru
                 RetryPassesValue = (short)options.AaruRereadCount;
             }
 
-            // Enable debug output
-            if (options.AaruEnableDebug)
-                this[Flag.Debug] = true;
-
-            // Enable verbose output
-            if (options.AaruEnableVerbose)
-                this[Flag.Verbose] = true;
-
-            // Force dumping
-            if (options.AaruForceDumping)
-                this[Flag.Force] = true;
-
-            // Remove personally identifiable information
-            if (options.AaruStripPersonalData)
-                this[Flag.Private] = true;
+            // Set user-defined options
+            this[Flag.Debug] = options.AaruEnableDebug;
+            this[Flag.Verbose] = options.AaruEnableVerbose;
+            this[Flag.Force] = options.AaruForceDumping;
+            this[Flag.Private] = options.AaruStripPersonalData;
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type

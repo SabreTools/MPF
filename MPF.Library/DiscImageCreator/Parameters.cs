@@ -730,13 +730,11 @@ namespace MPF.DiscImageCreator
                         case KnownSystem.IBMPCCompatible:
                             this[Flag.NoFixSubQSecuROM] = true;
                             this[Flag.ScanFileProtect] = true;
-
-                            if (options.DICParanoidMode)
-                            {
-                                this[Flag.ScanSectorProtect] = true;
-                                this[Flag.SubchannelReadLevel] = true;
+                            this[Flag.ScanSectorProtect] = options.DICParanoidMode;
+                            this[Flag.SubchannelReadLevel] = options.DICParanoidMode;
+                            if (this[Flag.SubchannelReadLevel] == true)
                                 SubchannelReadLevelValue = 2;
-                            }
+
                             break;
                         case KnownSystem.AtariJaguarCD:
                             this[Flag.AtariJaguar] = true;
@@ -759,21 +757,14 @@ namespace MPF.DiscImageCreator
                     }
                     break;
                 case MediaType.DVD:
-                    // Scan for file protections
-                    if (options.DICParanoidMode)
-                        this[Flag.ScanFileProtect] = true;
-
-                    // Use the CMI flag
-                    if (options.DICUseCMIFlag)
-                        this[Flag.CopyrightManagementInformation] = true;
+                    this[Flag.CopyrightManagementInformation] = options.DICUseCMIFlag;
+                    this[Flag.ScanFileProtect] = options.DICParanoidMode;
                     break;
                 case MediaType.GDROM:
                     this[Flag.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
-                    // Use the CMI flag
-                    if (options.DICUseCMIFlag)
-                        this[Flag.CopyrightManagementInformation] = true;
+                    this[Flag.CopyrightManagementInformation] = options.DICUseCMIFlag;
                     break;
                 case MediaType.BluRay:
                     // Currently no defaults set
@@ -1879,9 +1870,14 @@ namespace MPF.DiscImageCreator
                     {
                         if (GetLayerbreak(Path.Combine(outputDirectory, "PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
-                            info.SizeAndChecksums.Layerbreak = layerbreak1 ?? default;
-                            info.SizeAndChecksums.Layerbreak2 = layerbreak2 ?? default;
-                            info.SizeAndChecksums.Layerbreak3 = layerbreak3 ?? default;
+                            if (layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak = layerbreak1 ?? default;
+
+                            if (layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak2 = layerbreak2 ?? default;
+
+                            if (layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak3 = layerbreak3 ?? default;
                         }
                         else
                         {
