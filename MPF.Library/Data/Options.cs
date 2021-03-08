@@ -194,6 +194,15 @@ namespace MPF.Data
             set { _settings["DICResetDriveAfterDump"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Use the CMI flag for supported disc types
+        /// </summary>
+        public bool DICUseCMIFlag
+        {
+            get { return GetBooleanSetting(_settings, "DICUseCMIFlag", false); }
+            set { _settings["DICUseCMIFlag"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Extra Dumping Options

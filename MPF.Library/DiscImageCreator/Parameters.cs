@@ -759,17 +759,20 @@ namespace MPF.DiscImageCreator
                     }
                     break;
                 case MediaType.DVD:
+                    // Scan for file protections
                     if (options.DICParanoidMode)
-                    {
-                        this[Flag.CopyrightManagementInformation] = true;
                         this[Flag.ScanFileProtect] = true;
-                    }
+
+                    // Use the CMI flag
+                    if (options.DICUseCMIFlag)
+                        this[Flag.CopyrightManagementInformation] = true;
                     break;
                 case MediaType.GDROM:
                     this[Flag.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
-                    if (options.DICParanoidMode)
+                    // Use the CMI flag
+                    if (options.DICUseCMIFlag)
                         this[Flag.CopyrightManagementInformation] = true;
                     break;
                 case MediaType.BluRay:

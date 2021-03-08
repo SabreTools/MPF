@@ -195,11 +195,15 @@
                             ToolTip="Enable pedantic and super-safe flags" Margin="0,4"
                             />
 
+                        <CheckBox VerticalAlignment="Center" Content="Use CMI Flag"
+                            IsChecked="{Binding Path=UIOptions.Options.DICUseCMIFlag}"
+                            ToolTip="Enable the CMI flag for supported disc types (DVD/HD-DVD only)" Margin="0,4"
+                            />
+
                         <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
                             IsChecked="{Binding Path=UIOptions.Options.DICResetDriveAfterDump}"
                             ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
                             />
-                        <Label/> <!-- Empty label for padding -->
 
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center"
