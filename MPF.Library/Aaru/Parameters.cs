@@ -1496,8 +1496,6 @@ namespace MPF.Aaru
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    bool xgd = (this.System == KnownSystem.MicrosoftXBOX || this.System == KnownSystem.MicrosoftXBOX360);
-
                     // Get the individual hash data, as per internal
                     if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
                     {

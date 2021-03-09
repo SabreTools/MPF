@@ -1849,8 +1849,6 @@ namespace MPF.DiscImageCreator
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    bool xgd = (this.System == KnownSystem.MicrosoftXBOX || this.System == KnownSystem.MicrosoftXBOX360);
-
                     // Get the individual hash data, as per internal
                     if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
                     {
@@ -1863,7 +1861,7 @@ namespace MPF.DiscImageCreator
                     // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
                     {
-                        string layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
+                        string layerbreak = GetLayerbreak(basePath + "_disc.txt", System.IsXGD()) ?? "";
                         info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     }
                     else if (this.Type == MediaType.BluRay)
@@ -1878,11 +1876,6 @@ namespace MPF.DiscImageCreator
 
                             if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
-                        }
-                        else
-                        {
-                            string layerbreak = GetLayerbreak(basePath + "_disc.txt", xgd) ?? "";
-                            info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                         }
                     }
 

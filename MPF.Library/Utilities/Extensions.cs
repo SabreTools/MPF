@@ -91,5 +91,24 @@ namespace MPF.Utilities
                     return false;
             }
         }
+       
+        /// <summary>
+        /// Determine if a system is considered XGD
+        /// </summary>
+        /// <param name="system">KnownSystem value to check</param>
+        /// <returns>True if the system is XGD, false otherwise</returns>
+        public static bool IsXGD(this KnownSystem? system)
+        {
+            switch (system)
+            {
+                case KnownSystem.MicrosoftXBOX:
+                case KnownSystem.MicrosoftXBOX360:
+                case KnownSystem.MicrosoftXBOXOne:
+                case KnownSystem.MicrosoftXboxSeriesXS:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }
 }
