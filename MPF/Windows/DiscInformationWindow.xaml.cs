@@ -47,6 +47,7 @@ namespace MPF.Windows
 
             this.SubmissionInfo = submissionInfo;
             ManipulateFields();
+            Load();
         }
 
         /// <summary>
@@ -67,9 +68,9 @@ namespace MPF.Windows
                     L0AdditionalMould.Label = "Additional Mould";
 
                     L1Info.Header = "Label Side";
-                    L1MasteringRing.Label = "Mastering Ring";
-                    L1MasteringSID.Label = "Mastering SID";
-                    L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                    L1MasteringRing.Visibility = Visibility.Collapsed;
+                    L1MasteringSID.Visibility = Visibility.Collapsed;
+                    L1Toolstamp.Visibility = Visibility.Collapsed;
                     L1MouldSID.Label = "Mould SID";
                     L1AdditionalMould.Label = "Additional Mould";
                     break;
@@ -90,15 +91,15 @@ namespace MPF.Windows
                         L0MasteringRing.Label = "Mastering Ring";
                         L0MasteringSID.Label = "Mastering SID";
                         L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID.Label = "Data-Side Mould SID";
-                        L0AdditionalMould.Label = "Data-Side Additional Mould";
+                        L0MouldSID.Label = "Data Side Mould SID";
+                        L0AdditionalMould.Label = "Data Side Additional Mould";
 
                         L1Info.Header = "Layer 1";
                         L1MasteringRing.Label = "Mastering Ring";
-                        L1MasteringSID.Label = "Layer 1 Mastering SID";
+                        L1MasteringSID.Label = "Mastering SID";
                         L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID.Label = "Label-Side Mould SID";
-                        L1AdditionalMould.Label = "Label-Side Additional Mould";
+                        L1MouldSID.Label = "Label Side Mould SID";
+                        L1AdditionalMould.Label = "Label Side Additional Mould";
 
                         L2Info.Header = "Layer 2";
                         L2MasteringRing.Label = "Mastering Ring";
@@ -120,15 +121,15 @@ namespace MPF.Windows
                         L0MasteringRing.Label = "Mastering Ring";
                         L0MasteringSID.Label = "Mastering SID";
                         L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID.Label = "Data-Side Mould SID";
-                        L0AdditionalMould.Label = "Data-Side Additional Mould";
+                        L0MouldSID.Label = "Data Side Mould SID";
+                        L0AdditionalMould.Label = "Data Side Additional Mould";
 
                         L1Info.Header = "Layer 1";
                         L1MasteringRing.Label = "Mastering Ring";
                         L1MasteringSID.Label = "Mastering SID";
                         L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID.Label = "Label-Side Mould SID";
-                        L1AdditionalMould.Label = "Label-Side Additional Mould";
+                        L1MouldSID.Label = "Label Side Mould SID";
+                        L1AdditionalMould.Label = "Label Side Additional Mould";
 
                         L2Info.Header = "Layer 2 (Outer)";
                         L2MasteringRing.Label = "Mastering Ring";
@@ -143,15 +144,15 @@ namespace MPF.Windows
                         L0MasteringRing.Label = "Mastering Ring";
                         L0MasteringSID.Label = "Mastering SID";
                         L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        L0MouldSID.Label = "Data-Side Mould SID";
-                        L0AdditionalMould.Label = "Data-Side Additional Mould";
+                        L0MouldSID.Label = "Data Side Mould SID";
+                        L0AdditionalMould.Label = "Data Side Additional Mould";
 
                         L1Info.Header = "Layer 1 (Outer)";
                         L1MasteringRing.Label = "Mastering Ring";
                         L1MasteringSID.Label = "Mastering SID";
                         L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        L1MouldSID.Label = "Label-Side Mould SID";
-                        L1AdditionalMould.Label = "Label-Side Additional Mould";
+                        L1MouldSID.Label = "Label Side Mould SID";
+                        L1AdditionalMould.Label = "Label Side Additional Mould";
                     }
 
                     // Single-layer discs
@@ -165,9 +166,9 @@ namespace MPF.Windows
                         L0AdditionalMould.Label = "Additional Mould";
 
                         L1Info.Header = "Label Side";
-                        L1MasteringRing.Label = "Mastering Ring";
-                        L1MasteringSID.Label = "Mastering SID";
-                        L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                        L1MasteringRing.Visibility = Visibility.Collapsed;
+                        L1MasteringSID.Visibility = Visibility.Collapsed;
+                        L1Toolstamp.Visibility = Visibility.Collapsed;
                         L1MouldSID.Label = "Mould SID";
                         L1AdditionalMould.Label = "Additional Mould";
                     }
@@ -187,7 +188,7 @@ namespace MPF.Windows
         /// <summary>
         /// Load the current contents of the base SubmissionInfo to the UI
         /// </summary>
-        public void Load()
+        private void Load()
         {
             GameTitle.Text = SubmissionInfo.CommonDiscInfo.Title ?? "";
             ForeignTitle.Text = SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin ?? "";

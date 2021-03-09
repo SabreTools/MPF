@@ -520,7 +520,6 @@ namespace MPF.Windows
             var discInformationWindow = new DiscInformationWindow(submissionInfo);
             discInformationWindow.Owner = this;
             discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            discInformationWindow.Load();
             return discInformationWindow.ShowDialog();
         }
 
@@ -758,7 +757,6 @@ namespace MPF.Windows
         /// </summary>
         private void OptionsMenuItemClick(object sender, RoutedEventArgs e)
         {
-            // Show the window and wait for the response
             var optionsWindow = new OptionsWindow(UIOptions);
             optionsWindow.Owner = this;
             optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
