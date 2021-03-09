@@ -18,28 +18,30 @@ namespace MPF.Test.Utilities
         [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, Command.NONE)]
         public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, Command expected)
         {
-            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, true, false, -1);
+            var options = new Options { };
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
             Assert.Equal(expected, actual.BaseCommand);
         }
 
         [Theory]
         [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
         [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new Flag[] { Flag.Raw })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new Flag[] { })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new Flag[] { Flag.CopyrightManagementInformation, Flag.ScanFileProtect })]
         /* paranoid mode tests */
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new Flag[] { Flag.C2Opcode, Flag.NoFixSubQSecuROM, Flag.ScanFileProtect, Flag.ScanSectorProtect, Flag.SubchannelReadLevel })]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new Flag[] { Flag.C2Opcode, Flag.NoFixSubQSecuROM, Flag.ScanFileProtect })]
+        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new Flag[] { Flag.C2Opcode, Flag.NoFixSubQSecuROM, Flag.ScanFileProtect, Flag.ScanSectorProtect, Flag.SubchannelReadLevel })]
         [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new Flag[] { Flag.CopyrightManagementInformation, Flag.ScanFileProtect })]
         [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new Flag[] { Flag.CopyrightManagementInformation })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new Flag[] { })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new Flag[] { })]
+        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new Flag[] { Flag.CopyrightManagementInformation, Flag.ScanFileProtect })]
+        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new Flag[] { Flag.CopyrightManagementInformation })]
         /* reread c2 */
         [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new Flag[] { Flag.C2Opcode })]
         [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new Flag[] { Flag.C2Opcode })]
 
         public void ParametersFromOptionsTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, Flag[] expected)
         {
-            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, paranoid, false, rereadC2);
+            var options = new Options { DICParanoidMode = paranoid, DICRereadCount = rereadC2 };
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
             HashSet<Flag> expectedSet = new HashSet<Flag>(expected ?? new Flag[0]);
             HashSet<Flag> actualSet = new HashSet<Flag>(actual.Keys.Cast<Flag>() ?? new Flag[0]);
