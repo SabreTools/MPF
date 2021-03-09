@@ -16,7 +16,7 @@ namespace MPF.Test
         [InlineData("stop D", 'D', false, MediaType.DVD, true)]
         public void ParametersValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
-            var options = new Options() { InternalProgram = "dic" };
+            var options = new Options() { InternalProgram = InternalProgram.DiscImageCreator };
             var drive = isFloppy
                 ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
                 : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString()));
@@ -38,7 +38,7 @@ namespace MPF.Test
         [InlineData("superhero", "blah&foo.bin", "superhero", "blah&foo.bin")]
         public void FixOutputPathsTest(string outputDirectory, string outputFilename, string expectedOutputDirectory, string expectedOutputFilename)
         {
-            var options = new Options() { InternalProgram = "dic" };
+            var options = new Options() { InternalProgram = InternalProgram.DiscImageCreator };
             var env = new DumpEnvironment(options, outputDirectory, outputFilename, null, KnownSystem.IBMPCCompatible, MediaType.CDROM, string.Empty);
 
             env.FixOutputPaths();

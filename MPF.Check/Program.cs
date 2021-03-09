@@ -158,7 +158,7 @@ namespace MPF.Check
                 // TODO: Replace this with Dictionary constructor
                 var options = new Options
                 {
-                    InternalProgram = internalProgram,
+                    InternalProgram = Converters.ToInternalProgram(internalProgram),
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
 

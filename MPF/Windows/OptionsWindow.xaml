@@ -39,7 +39,7 @@
                         <Button x:Name="DDPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Dumping Program" />
-                        <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" >
+                        <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=InternalPrograms}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Name}" />
@@ -250,7 +250,7 @@
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
                     <Label/> <!-- Empty label for padding -->
                     <Button Name="AcceptButton" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
-                    <Button Name="CancelButton" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
+                    <Label/> <!-- Empty label for padding -->
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>

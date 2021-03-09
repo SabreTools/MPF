@@ -459,7 +459,7 @@ namespace MPF.Windows
                 string protections = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", progress);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
-                if (Env.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
+                if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
                 {
                     ((DiscImageCreator.Parameters)Env.Parameters)[DiscImageCreator.Flag.ScanFileProtect] = false;
                     LogOutput.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
@@ -748,8 +748,7 @@ namespace MPF.Windows
         /// <summary>
         /// Handler for DiscInformationWindow OnUpdated event
         /// </summary>
-        /// <remarks>Identical to MediaScanButtonClick</remarks>
-        public void OnOptionsUpdated()
+        private void OnOptionsUpdated(object sender, EventArgs e)
         {
             InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
         }
@@ -760,10 +759,10 @@ namespace MPF.Windows
         private void OptionsMenuItemClick(object sender, RoutedEventArgs e)
         {
             // Show the window and wait for the response
-            var optionsWindow = new OptionsWindow();
-            optionsWindow.UIOptions = UIOptions;
+            var optionsWindow = new OptionsWindow(UIOptions);
             optionsWindow.Owner = this;
             optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Refresh();
             optionsWindow.Show();
         }

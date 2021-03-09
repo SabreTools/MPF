@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MPF.Utilities;
 
 namespace MPF.Data
 {
@@ -40,10 +41,18 @@ namespace MPF.Data
         /// <summary>
         /// Currently selected dumping program
         /// </summary>
-        public string InternalProgram
+        public InternalProgram InternalProgram
         {
-            get { return GetStringSetting(_settings, "InternalProgram", Data.InternalProgram.DiscImageCreator.ToString()); }
-            set { _settings["InternalProgram"] = value; }
+            get
+            {
+                string valueString = GetStringSetting(_settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
+                var valueEnum = Converters.ToInternalProgram(valueString);
+                return valueEnum == InternalProgram.NONE ? InternalProgram.DiscImageCreator : valueEnum;
+            }
+            set
+            {
+                _settings["InternalProgram"] = value.ToString();
+            }
         }
 
         #endregion

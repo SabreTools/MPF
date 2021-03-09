@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using MPF.Data;
 using MPF.Redump;
-using MPF.Utilities;
 using Button = System.Windows.Controls.Button;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -30,11 +30,12 @@ namespace MPF.Windows
 
         #endregion
 
-        public OptionsWindow()
+        public OptionsWindow(UIOptions uiOptions)
         {
             InitializeComponent();
             DataContext = this;
 
+            UIOptions = uiOptions;
             PopulateInternalPrograms();
         }
 
@@ -63,16 +64,9 @@ namespace MPF.Windows
         /// </summary>
         private void PopulateInternalPrograms()
         {
-            // We only support certain programs for dumping
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
-            InternalPrograms = new List<Element<InternalProgram>>();
-            foreach (var internalProgram in internalPrograms)
-            {
-                InternalPrograms.Add(new Element<InternalProgram>(internalProgram));
-            }
-
-            InternalProgramComboBox.ItemsSource = InternalPrograms;
-            InternalProgramComboBox.SelectedIndex = 0;
+            InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
+            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == UIOptions.Options.InternalProgram);
         }
 
         /// <summary>
@@ -80,8 +74,6 @@ namespace MPF.Windows
         /// </summary>
         public void Refresh()
         {
-            // Handle non-bindable fields
-            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Converters.ToInternalProgram(UIOptions.Options.InternalProgram));
             RedumpPasswordBox.Password = UIOptions.Options.RedumpPassword;
         }
 
@@ -155,22 +147,12 @@ namespace MPF.Windows
         private void OnAcceptClick(object sender, EventArgs e)
         {
             // Handle non-bindable fields
-            UIOptions.Options.InternalProgram = (InternalProgramComboBox.SelectedItem as Element<InternalProgram>)?.Name ?? InternalProgram.DiscImageCreator.ToString();
+            var selectedInternalProgram = InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
+            UIOptions.Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
             UIOptions.Options.RedumpPassword = RedumpPasswordBox.Password;
 
             UIOptions.Save();
-            Hide();
-
-            (Owner as MainWindow).OnOptionsUpdated();
-        }
-
-        /// <summary>
-        /// Handler for CancelButton Click event
-        /// </summary>
-        private void OnCancelClick(object sender, EventArgs e)
-        {
-            // just hide the window and don't care
-            Hide();
+            Close();
         }
 
         /// <summary>

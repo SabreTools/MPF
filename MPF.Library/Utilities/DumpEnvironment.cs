@@ -51,11 +51,6 @@ namespace MPF.Utilities
         public MediaType? Type { get; set; }
 
         /// <summary>
-        /// Internal program to run
-        /// </summary>
-        public InternalProgram InternalProgram { get; set; }
-
-        /// <summary>
         /// Options object representing user-defined options
         /// </summary>
         public Options Options { get; set; }
@@ -97,13 +92,9 @@ namespace MPF.Utilities
             this.System = system;
             this.Type = type;
 
-            this.InternalProgram = Converters.ToInternalProgram(options.InternalProgram);
-
             SetParameters(parameters);
             this.Parameters.System = system;
             this.Parameters.Type = type;
-
-            SetInternalToolPath();
         }
 
         #region Public Functionality
@@ -114,77 +105,43 @@ namespace MPF.Utilities
         /// <param name="parameters">String representation of the parameters</param>
         public void SetParameters(string parameters)
         {
-            switch (this.InternalProgram)
+            switch (Options.InternalProgram)
             {
                 // Dumping support
                 case InternalProgram.Aaru:
                     this.Parameters = new Aaru.Parameters(parameters);
-                    break;
-
-                case InternalProgram.DD:
-                    this.Parameters = new DD.Parameters(parameters);
-                    break;
-
-                case InternalProgram.DiscImageCreator:
-                    this.Parameters = new DiscImageCreator.Parameters(parameters);
-                    break;
-
-                // Verification support only
-                case InternalProgram.CleanRip:
-                    this.Parameters = new CleanRip.Parameters(parameters);
-                    break;
-
-                case InternalProgram.DCDumper:
-                    this.Parameters = null; // TODO: Create correct parameter type when supported
-                    break;
-
-                case InternalProgram.UmdImageCreator:
-                    this.Parameters = new UmdImageCreator.Parameters(parameters);
-                    break;
-
-                // This should never happen, but it needs a fallback
-                default:
-                    this.Parameters = new DiscImageCreator.Parameters(parameters);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Set the path on the parameters object based on the intermal program
-        /// </summary>
-        public void SetInternalToolPath()
-        {
-            switch (this.InternalProgram)
-            {
-                // Dumping support
-                case InternalProgram.Aaru:
                     this.Parameters.ExecutablePath = Options.AaruPath;
                     break;
 
                 case InternalProgram.DD:
+                    this.Parameters = new DD.Parameters(parameters);
                     this.Parameters.ExecutablePath = Options.DDPath;
                     break;
 
                 case InternalProgram.DiscImageCreator:
+                    this.Parameters = new DiscImageCreator.Parameters(parameters);
                     this.Parameters.ExecutablePath = Options.DiscImageCreatorPath;
                     break;
 
                 // Verification support only
                 case InternalProgram.CleanRip:
+                    this.Parameters = new CleanRip.Parameters(parameters);
                     this.Parameters.ExecutablePath = null;
                     break;
 
                 case InternalProgram.DCDumper:
+                    this.Parameters = null; // TODO: Create correct parameter type when supported
                     this.Parameters.ExecutablePath = null;
                     break;
 
                 case InternalProgram.UmdImageCreator:
+                    this.Parameters = new UmdImageCreator.Parameters(parameters);
                     this.Parameters.ExecutablePath = null;
                     break;
 
                 // This should never happen, but it needs a fallback
                 default:
-                    this.InternalProgram = InternalProgram.DiscImageCreator;
+                    this.Parameters = new DiscImageCreator.Parameters(parameters);
                     this.Parameters.ExecutablePath = Options.DiscImageCreatorPath;
                     break;
             }
@@ -309,7 +266,7 @@ namespace MPF.Utilities
         /// <returns></returns>
         public string GetExtension(MediaType? mediaType)
         {
-            switch (this.InternalProgram)
+            switch (Options.InternalProgram)
             {
                 case InternalProgram.Aaru:
                     return Aaru.Converters.Extension(mediaType);
@@ -342,7 +299,7 @@ namespace MPF.Utilities
 
                 // Set the proper parameters
                 string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
-                switch (InternalProgram)
+                switch (Options.InternalProgram)
                 {
                     case InternalProgram.Aaru:
                         Parameters = new Aaru.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
@@ -411,10 +368,10 @@ namespace MPF.Utilities
                 return result;
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {this.InternalProgram}... please wait!"));
+            progress?.Report(Result.Success($"Executing {Options.InternalProgram}... please wait!"));
             Directory.CreateDirectory(OutputDirectory);
             await Task.Run(() => Parameters.ExecuteInternalProgram());
-            progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
+            progress?.Report(Result.Success($"{Options.InternalProgram} has finished!"));
 
             // Execute additional tools
             progress?.Report(Result.Success("Running any additional tools... please wait!"));
@@ -455,7 +412,7 @@ namespace MPF.Utilities
             }
 
             // Reset the drive automatically if confugured to
-            if (InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
+            if (Options.InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
                 ResetDrive();
