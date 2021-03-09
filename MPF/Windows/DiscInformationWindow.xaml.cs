@@ -59,19 +59,19 @@ namespace MPF.Windows
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    L0Info.Header = "Data-Side Info";
-                    L0MasteringRing.Label = "Data-Side Mastering Ring";
-                    L0MasteringSID.Label = "Data-Side Mastering SID";
-                    L0Toolstamp.Label = "Data-Side Toolstamp/Mastering Code";
-                    L0MouldSID.Label = "Data-Side Mould SID";
-                    L0AdditionalMould.Label = "Data-Side Additional Mould";
+                    L0Info.Header = "Data Side";
+                    L0MasteringRing.Label = "Mastering Ring";
+                    L0MasteringSID.Label = "Mastering SID";
+                    L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                    L0MouldSID.Label = "Mould SID";
+                    L0AdditionalMould.Label = "Additional Mould";
 
-                    L1Info.Header = "Label-Side Info";
-                    L1MasteringRing.Label = "Label-Side Mastering Ring";
-                    L1MasteringSID.Label = "Label-Side Mastering SID";
-                    L1Toolstamp.Label = "Label-Side Toolstamp/Mastering Code";
-                    L1MouldSID.Label = "Label-Side Mould SID";
-                    L1AdditionalMould.Label = "Label-Side Additional Mould";
+                    L1Info.Header = "Label Side";
+                    L1MasteringRing.Label = "Mastering Ring";
+                    L1MasteringSID.Label = "Mastering SID";
+                    L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                    L1MouldSID.Label = "Mould SID";
+                    L1AdditionalMould.Label = "Additional Mould";
                     break;
 
                 case MediaType.DVD:
@@ -86,29 +86,29 @@ namespace MPF.Windows
                         L2Info.Visibility = Visibility.Visible;
                         L3Info.Visibility = Visibility.Visible;
 
-                        L0Info.Header = "Layer 0 Info";
-                        L0MasteringRing.Label = "Layer 0 Mastering Ring";
-                        L0MasteringSID.Label = "Layer 0 Mastering SID";
-                        L0Toolstamp.Label = "Layer 0 Toolstamp/Mastering Code";
+                        L0Info.Header = "Layer 0 (Inner)";
+                        L0MasteringRing.Label = "Mastering Ring";
+                        L0MasteringSID.Label = "Mastering SID";
+                        L0Toolstamp.Label = "Toolstamp/Mastering Code";
                         L0MouldSID.Label = "Data-Side Mould SID";
                         L0AdditionalMould.Label = "Data-Side Additional Mould";
 
-                        L1Info.Header = "Layer 1 Info";
-                        L1MasteringRing.Label = "Layer 1 Mastering Ring";
+                        L1Info.Header = "Layer 1";
+                        L1MasteringRing.Label = "Mastering Ring";
                         L1MasteringSID.Label = "Layer 1 Mastering SID";
-                        L1Toolstamp.Label = "Layer 1 Toolstamp/Mastering Code";
+                        L1Toolstamp.Label = "Toolstamp/Mastering Code";
                         L1MouldSID.Label = "Label-Side Mould SID";
                         L1AdditionalMould.Label = "Label-Side Additional Mould";
 
-                        L2Info.Header = "Layer 2 Info";
-                        L2MasteringRing.Label = "Layer 2 Mastering Ring";
-                        L2MasteringSID.Label = "Layer 2 Mastering SID";
-                        L2Toolstamp.Label = "Layer 2 Toolstamp/Mastering Code";
+                        L2Info.Header = "Layer 2";
+                        L2MasteringRing.Label = "Mastering Ring";
+                        L2MasteringSID.Label = "Mastering SID";
+                        L2Toolstamp.Label = "Toolstamp/Mastering Code";
 
-                        L3Info.Header = "Layer 3 Info";
-                        L3MasteringRing.Label = "Layer 3 Mastering Ring";
-                        L3MasteringSID.Label = "Layer 3 Mastering SID";
-                        L3Toolstamp.Label = "Layer 3 Toolstamp/Mastering Code";
+                        L3Info.Header = "Layer 3 (Outer)";
+                        L3MasteringRing.Label = "Mastering Ring";
+                        L3MasteringSID.Label = "Mastering SID";
+                        L3Toolstamp.Label = "Toolstamp/Mastering Code";
                     }
 
                     // Triple-layer discs
@@ -116,40 +116,40 @@ namespace MPF.Windows
                     {
                         L2Info.Visibility = Visibility.Visible;
 
-                        L0Info.Header = "Layer 0 Info";
-                        L0MasteringRing.Label = "Layer 0 Mastering Ring";
-                        L0MasteringSID.Label = "Layer 0 Mastering SID";
-                        L0Toolstamp.Label = "Layer 0 Toolstamp/Mastering Code";
+                        L0Info.Header = "Layer 0 (Inner)";
+                        L0MasteringRing.Label = "Mastering Ring";
+                        L0MasteringSID.Label = "Mastering SID";
+                        L0Toolstamp.Label = "Toolstamp/Mastering Code";
                         L0MouldSID.Label = "Data-Side Mould SID";
                         L0AdditionalMould.Label = "Data-Side Additional Mould";
 
-                        L1Info.Header = "Layer 1 Info";
-                        L1MasteringRing.Label = "Layer 1 Mastering Ring";
-                        L1MasteringSID.Label = "Layer 1 Mastering SID";
-                        L1Toolstamp.Label = "Layer 1 Toolstamp/Mastering Code";
+                        L1Info.Header = "Layer 1";
+                        L1MasteringRing.Label = "Mastering Ring";
+                        L1MasteringSID.Label = "Mastering SID";
+                        L1Toolstamp.Label = "Toolstamp/Mastering Code";
                         L1MouldSID.Label = "Label-Side Mould SID";
                         L1AdditionalMould.Label = "Label-Side Additional Mould";
 
-                        L2Info.Header = "Layer 2 Info";
-                        L2MasteringRing.Label = "Layer 2 Mastering Ring";
-                        L2MasteringSID.Label = "Layer 2 Mastering SID";
-                        L2Toolstamp.Label = "Layer 2 Toolstamp/Mastering Code";
+                        L2Info.Header = "Layer 2 (Outer)";
+                        L2MasteringRing.Label = "Mastering Ring";
+                        L2MasteringSID.Label = "Mastering SID";
+                        L2Toolstamp.Label = "Toolstamp/Mastering Code";
                     }
 
                     // Double-layer discs
                     else if (SubmissionInfo?.SizeAndChecksums?.Layerbreak != default(long))
                     {
-                        L0Info.Header = "Layer 0 Info";
-                        L0MasteringRing.Label = "Layer 0 Mastering Ring";
-                        L0MasteringSID.Label = "Layer 0 Mastering SID";
-                        L0Toolstamp.Label = "Layer 0 Toolstamp/Mastering Code";
+                        L0Info.Header = "Layer 0 (Inner)";
+                        L0MasteringRing.Label = "Mastering Ring";
+                        L0MasteringSID.Label = "Mastering SID";
+                        L0Toolstamp.Label = "Toolstamp/Mastering Code";
                         L0MouldSID.Label = "Data-Side Mould SID";
                         L0AdditionalMould.Label = "Data-Side Additional Mould";
 
-                        L1Info.Header = "Layer 1 Info";
-                        L1MasteringRing.Label = "Layer 1 Mastering Ring";
-                        L1MasteringSID.Label = "Layer 1 Mastering SID";
-                        L1Toolstamp.Label = "Layer 1 Toolstamp/Mastering Code";
+                        L1Info.Header = "Layer 1 (Outer)";
+                        L1MasteringRing.Label = "Mastering Ring";
+                        L1MasteringSID.Label = "Mastering SID";
+                        L1Toolstamp.Label = "Toolstamp/Mastering Code";
                         L1MouldSID.Label = "Label-Side Mould SID";
                         L1AdditionalMould.Label = "Label-Side Additional Mould";
                     }
@@ -157,19 +157,19 @@ namespace MPF.Windows
                     // Single-layer discs
                     else
                     {
-                        L0Info.Header = "Data-Side Info";
-                        L0MasteringRing.Label = "Data-Side Mastering Ring";
-                        L0MasteringSID.Label = "Data-Side Mastering SID";
-                        L0Toolstamp.Label = "Data-Side Toolstamp/Mastering Code";
-                        L0MouldSID.Label = "Data-Side Mould SID";
-                        L0AdditionalMould.Label = "Data-Side Additional Mould";
+                        L0Info.Header = "Data Side";
+                        L0MasteringRing.Label = "Mastering Ring";
+                        L0MasteringSID.Label = "Mastering SID";
+                        L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                        L0MouldSID.Label = "Mould SID";
+                        L0AdditionalMould.Label = "Additional Mould";
 
-                        L1Info.Header = "Label-Side Info";
-                        L1MasteringRing.Label = "Label-Side Mastering Ring";
-                        L1MasteringSID.Label = "Label-Side Mastering SID";
-                        L1Toolstamp.Label = "Label-Side Toolstamp/Mastering Code";
-                        L1MouldSID.Label = "Label-Side Mould SID";
-                        L1AdditionalMould.Label = "Label-Side Additional Mould";
+                        L1Info.Header = "Label Side";
+                        L1MasteringRing.Label = "Mastering Ring";
+                        L1MasteringSID.Label = "Mastering SID";
+                        L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                        L1MouldSID.Label = "Mould SID";
+                        L1AdditionalMould.Label = "Additional Mould";
                     }
                     
                     break;
