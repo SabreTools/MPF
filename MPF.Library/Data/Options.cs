@@ -71,10 +71,18 @@ namespace MPF.Data
         /// <summary>
         /// Default system if none can be detected
         /// </summary>
-        public string DefaultSystem
+        public KnownSystem DefaultSystem
         {
-            get { return GetStringSetting(_settings, "DefaultSystem", KnownSystem.NONE.ToString()); }
-            set { _settings["DefaultSystem"] = value; }
+            get
+            {
+                string valueString = GetStringSetting(_settings, "DefaultSystem", KnownSystem.NONE.ToString());
+                var valueEnum = Converters.ToKnownSystem(valueString);
+                return valueEnum ?? KnownSystem.NONE;
+            }
+            set
+            {
+                _settings["DefaultSystem"] = Converters.GetLongName(value);
+            }
         }
 
         #endregion

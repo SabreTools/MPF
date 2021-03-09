@@ -2318,7 +2318,7 @@ namespace MPF.Utilities
         /// <returns>KnownSystem represented by the string, if possible</returns>
         public static KnownSystem? ToKnownSystem(string sys)
         {
-            switch (sys)
+            switch (sys.ToLowerInvariant())
             {
                 #region Consoles
 

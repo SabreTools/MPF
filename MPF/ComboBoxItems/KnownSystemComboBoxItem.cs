@@ -32,6 +32,11 @@ namespace MPF
         }
 
         /// <summary>
+        /// Internal enum value
+        /// </summary>
+        public KnownSystem? Value => Data as KnownSystem?;
+
+        /// <summary>
         /// Determines the foreground color when displaying
         /// </summary>
         public Brush Foreground { get => IsHeader ? Brushes.Gray : Brushes.Black; }

@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="Options" Width="515.132" ResizeMode="NoResize" SizeToContent="Height">
+        Title="Options" Width="515.132" ResizeMode="NoResize" SizeToContent="Height"
+        Closing="OnClosing">
 
     <Grid>
         <StackPanel Orientation="Vertical">
@@ -76,7 +77,7 @@
                 <TabItem Header="Dumping">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="4">
+                            <UniformGrid Columns="2" Rows="5">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Path=UIOptions.Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
@@ -86,6 +87,25 @@
                                      IsChecked="{Binding Path=UIOptions.Options.SkipSystemDetection}"
                                      ToolTip="Disable trying to guess system (may improve performance at startup)" Margin="0,4"
                                      />
+
+                                <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
+                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                    ItemsSource="{Binding Path=Systems}" SelectedIndex="0">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" IsEnabled="{Binding Path=IsSystem}"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                    <ComboBox.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ComboBoxItem}">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=IsHeader}" Value="True">
+                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ComboBox.ItemContainerStyle>
+                                </ComboBox>
 
                                 <CheckBox VerticalAlignment="Center" Content="No Fixed Drives"
                                      IsChecked="{Binding Path=UIOptions.Options.IgnoreFixedDrives}"
@@ -247,10 +267,9 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
+                <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
                     <Label/> <!-- Empty label for padding -->
                     <Button Name="AcceptButton" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
-                    <Label/> <!-- Empty label for padding -->
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>

@@ -28,6 +28,11 @@ namespace MPF.Windows
         /// </summary>
         public List<Element<InternalProgram>> InternalPrograms { get; private set; }
 
+        /// <summary>
+        /// Current list of supported system profiles
+        /// </summary>
+        public List<KnownSystemComboBoxItem> Systems { get; private set; } = KnownSystemComboBoxItem.GenerateElements().ToList();
+
         #endregion
 
         public OptionsWindow(UIOptions uiOptions)
@@ -37,6 +42,7 @@ namespace MPF.Windows
 
             UIOptions = uiOptions;
             PopulateInternalPrograms();
+            Load();
         }
 
         #region Helpers
@@ -60,21 +66,36 @@ namespace MPF.Windows
         }
 
         /// <summary>
+        /// Load any options-related elements
+        /// </summary>
+        private void Load()
+        {
+            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == UIOptions.Options.InternalProgram);
+            DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == UIOptions.Options.DefaultSystem);
+            RedumpPasswordBox.Password = UIOptions.Options.RedumpPassword;
+        }
+
+        /// <summary>
         /// Get a complete list of internal programs and fill the combo box
         /// </summary>
         private void PopulateInternalPrograms()
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
             InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
-            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == UIOptions.Options.InternalProgram);
         }
 
         /// <summary>
-        /// Refresh any options-related elements
+        /// Save any options-related elements
         /// </summary>
-        public void Refresh()
+        private void Save()
         {
-            RedumpPasswordBox.Password = UIOptions.Options.RedumpPassword;
+            var selectedInternalProgram = InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
+            UIOptions.Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
+            var selectedDefaultSystem = DefaultSystemComboBox.SelectedItem as KnownSystemComboBoxItem;
+            UIOptions.Options.DefaultSystem = selectedDefaultSystem?.Value ?? KnownSystem.NONE;
+            UIOptions.Options.RedumpPassword = RedumpPasswordBox.Password;
+
+            UIOptions.Save();
         }
 
         /// <summary>
@@ -146,13 +167,15 @@ namespace MPF.Windows
         /// </summary>
         private void OnAcceptClick(object sender, EventArgs e)
         {
-            // Handle non-bindable fields
-            var selectedInternalProgram = InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
-            UIOptions.Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
-            UIOptions.Options.RedumpPassword = RedumpPasswordBox.Password;
-
-            UIOptions.Save();
             Close();
+        }
+
+        /// <summary>
+        /// Handler for window Closimg event
+        /// </summary>
+        private void OnClosing(object sender, EventArgs e)
+        {
+            Save();
         }
 
         /// <summary>

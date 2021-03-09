@@ -191,10 +191,10 @@ namespace MPF.Windows
             if (!UIOptions.Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
             {
                 LogOutput.VerboseLog($"Trying to detect system for drive {Drives[DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
-                LogOutput.VerboseLogLn(currentSystem == null || currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + currentSystem.LongName() + "."));
+                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? UIOptions.Options.DefaultSystem;
+                LogOutput.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + Converters.GetLongName(currentSystem) + "."));
 
-                if (currentSystem != null && currentSystem != KnownSystem.NONE)
+                if (currentSystem != KnownSystem.NONE)
                 {
                     int sysIndex = Systems.FindIndex(s => s == currentSystem);
                     SystemTypeComboBox.SelectedIndex = sysIndex;
@@ -212,7 +212,7 @@ namespace MPF.Windows
 
             // Take care of null cases
             if (Env.System == null)
-                Env.System = Converters.ToKnownSystem(UIOptions.Options.DefaultSystem);
+                Env.System = UIOptions.Options.DefaultSystem;
             if (Env.Type == null)
                 Env.Type = MediaType.NONE;
 
@@ -763,7 +763,6 @@ namespace MPF.Windows
             optionsWindow.Owner = this;
             optionsWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             optionsWindow.Closed += OnOptionsUpdated;
-            optionsWindow.Refresh();
             optionsWindow.Show();
         }
 
