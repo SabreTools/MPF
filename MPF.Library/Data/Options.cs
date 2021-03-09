@@ -126,7 +126,7 @@ namespace MPF.Data
         /// </summary>
         public bool AaruForceDumping
         {
-            get { return GetBooleanSetting(_settings, "AaruForceDumping", false); }
+            get { return GetBooleanSetting(_settings, "AaruForceDumping", true); }
             set { _settings["AaruForceDumping"] = value.ToString(); }
         }
 
@@ -158,8 +158,7 @@ namespace MPF.Data
         /// <remarks>
         /// Split this into component parts later. Currently does:
         /// - Scan sector protection and set subchannel read level to 2 for CD
-        /// - Set CMI and scan file protect flags for DVD
-        /// - Set CMI flag for HD-DVD
+        /// - Set scan file protect flag for DVD
         /// </remarks>
         public bool DICParanoidMode
         {
@@ -239,7 +238,7 @@ namespace MPF.Data
         /// </summary>
         public bool EjectAfterDump
         {
-            get { return GetBooleanSetting(_settings, "EjectAfterDump", true); }
+            get { return GetBooleanSetting(_settings, "EjectAfterDump", false); }
             set { _settings["EjectAfterDump"] = value.ToString(); }
         }
 

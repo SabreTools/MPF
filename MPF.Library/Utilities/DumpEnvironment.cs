@@ -203,6 +203,10 @@ namespace MPF.Utilities
         /// </summary>
         public async void EjectDisc()
         {
+            // Validate that the path is configured
+            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
+                return;
+
             // Validate that the required program exists
             if (!File.Exists(Options.DiscImageCreatorPath))
                 return;
@@ -370,6 +374,10 @@ namespace MPF.Utilities
         /// </summary>
         public async void ResetDrive()
         {
+            // Validate that the path is configured
+            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
+                return;
+
             // Validate that the required program exists
             if (!File.Exists(Options.DiscImageCreatorPath))
                 return;
