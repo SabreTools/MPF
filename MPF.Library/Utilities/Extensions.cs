@@ -61,6 +61,10 @@ namespace MPF.Utilities
                 case KnownSystem.AtariJaguarCD:
                 case KnownSystem.AudioCD:
                 case KnownSystem.DVDAudio:
+                case KnownSystem.HasbroVideoNow:
+                case KnownSystem.HasbroVideoNowColor:
+                case KnownSystem.HasbroVideoNowJr:
+                case KnownSystem.HasbroVideoNowXP:
                 case KnownSystem.SuperAudioCD:
                     return true;
                 default:

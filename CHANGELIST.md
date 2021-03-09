@@ -34,6 +34,7 @@
 - Separate out Aaru- and DIC-specific settings
 - Add new options based on original "Paranoid Mode" mega-option
 - Internal overhaul of options and dump environment
+- VideoNow discs are audio only
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
