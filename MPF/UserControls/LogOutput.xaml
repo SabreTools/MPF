@@ -9,13 +9,13 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <Grid Height="22" Margin="10 10 10 0">
-                <ProgressBar x:Name="progressBar" />
-                <TextBlock x:Name="progressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
+                <ProgressBar x:Name="ProgressBar" />
+                <TextBlock x:Name="ProgressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
             </Grid>
             
             <Border Height="180" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
-                <ScrollViewer Name="outputViewer" SizeChanged="ScrollViewer_SizeChanged">
-                    <RichTextBox Name="output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" TextChanged="OnTextChanged" />
+                <ScrollViewer Name="OutputViewer" SizeChanged="OutputViewerSizeChanged">
+                    <RichTextBox Name="Output" FontFamily="Consolas" Background="#202020" IsReadOnly="true" TextChanged="OnTextChanged" />
                 </ScrollViewer>
             </Border>
 

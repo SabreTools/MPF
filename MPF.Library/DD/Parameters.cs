@@ -327,10 +327,10 @@ namespace MPF.DD
         }
 
         /// <inheritdoc/>
-        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
         {
             // TODO: Figure out what sort of output files are expected... just `.bin`?
-            return true;
+            return (true, new List<string>());
         }
 
         /// <inheritdoc/>

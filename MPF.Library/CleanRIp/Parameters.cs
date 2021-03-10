@@ -1,5 +1,6 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Data;
 using MPF.Utilities;
@@ -26,35 +27,26 @@ namespace MPF.CleanRip
         }
 
         /// <inheritdoc/>
-        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
         {
-            string missingFiles = string.Empty;
+            List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     if (!File.Exists($"{basePath}-dumpinfo.txt"))
-                        missingFiles += $";{basePath}-dumpinfo.txt";
+                        missingFiles.Add($"{basePath}-dumpinfo.txt");
                     if (!File.Exists($"{basePath}.bca"))
-                        missingFiles += $";{basePath}.bca";
+                        missingFiles.Add($"{basePath}.bca");
 
                     break;
 
                 default:
-                    return false;
+                    return (false, missingFiles);
             }
 
-            // Use the missing files list as an indicator
-            if (string.IsNullOrEmpty(missingFiles))
-            {
-                return true;
-            }
-            else
-            {
-                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
-                return false;
-            }
+            return (!missingFiles.Any(), missingFiles);
         }
 
         /// <inheritdoc/>

@@ -61,6 +61,24 @@ namespace MPF.Utilities
         public BaseParameters Parameters { get; set; }
 
         #endregion
+        
+        #region Event Handlers
+
+        /// <summary>
+        /// Geneeic way of reporting a message
+        /// </summary>
+        /// <param name="message">String value to report</param>
+        public EventHandler<string> ReportStatus;
+
+        /// <summary>
+        /// Event handler for data returned from a process
+        /// </summary>
+        private void OutputToLog(object proc, string args)
+        {
+            ReportStatus.Invoke(this, args);
+        }
+
+        #endregion
 
         /// <summary>
         /// Constructor for a full DumpEnvironment object from user information
@@ -246,8 +264,8 @@ namespace MPF.Utilities
         /// Ensures that all required output files have been created
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
-        /// <returns>True if all required files are found, false otherwise</returns>
-        public bool FoundAllFiles(IProgress<Result> progress = null)
+        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
+        public (bool, List<string>) FoundAllFiles()
         {
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
@@ -256,7 +274,7 @@ namespace MPF.Utilities
             string basePath = Path.Combine(OutputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
-            return Parameters.CheckAllOutputFilesExist(basePath, progress);
+            return Parameters.CheckAllOutputFilesExist(basePath);
         }
 
         /// <summary>
@@ -368,13 +386,14 @@ namespace MPF.Utilities
                 return result;
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {Options.InternalProgram}... please wait!"));
+            progress?.Report(Result.Success($"Executing {Options.InternalProgram}... see log for output!"));
             Directory.CreateDirectory(OutputDirectory);
+            Parameters.ReportStatus += OutputToLog;
             await Task.Run(() => Parameters.ExecuteInternalProgram());
             progress?.Report(Result.Success($"{Options.InternalProgram} has finished!"));
 
             // Execute additional tools
-            progress?.Report(Result.Success("Running any additional tools... please wait!"));
+            progress?.Report(Result.Success("Running any additional tools... see log for output!"));
             result = await Task.Run(() => ExecuteAdditionalTools());
             progress?.Report(result);
 
@@ -396,8 +415,12 @@ namespace MPF.Utilities
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Check to make sure that the output had all the correct files
-            if (!FoundAllFiles(resultProgress))
+            (bool foundFiles, List<string> missingFiles) = FoundAllFiles();
+            if (!foundFiles)
+            {
+                resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
+            }
 
             // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
@@ -542,8 +565,12 @@ namespace MPF.Utilities
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
             // Check that all of the relevant files are there
-            if (!FoundAllFiles(resultProgress))
+            (bool foundFiles, List<string> missingFiles) = FoundAllFiles();
+            if (!foundFiles)
+            {
+                resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
                 return null;
+            }
 
             // Create the SubmissionInfo object with all user-inputted values by default
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);

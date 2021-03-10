@@ -563,7 +563,8 @@ namespace MPF.Windows
                 }
 
                 // If a complete dump already exists
-                if (Env.FoundAllFiles())
+                (bool foundFiles, List<string> _) = Env.FoundAllFiles();
+                if (foundFiles)
                 {
                     MessageBoxResult mbresult = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
@@ -583,6 +584,7 @@ namespace MPF.Windows
                 resultProgress.ProgressChanged += ProgressUpdated;
                 var protectionProgress = new Progress<ProtectionProgress>();
                 protectionProgress.ProgressChanged += ProgressUpdated;
+                Env.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
                 Result result = await Env.Run(resultProgress);
@@ -792,10 +794,34 @@ namespace MPF.Windows
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
+        private void ProgressUpdated(object sender, string value)
+        {
+            try
+            {
+                value = value ?? string.Empty;
+                LogOutput.LogLn(value);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Handler for Result ProgressChanged event
+        /// </summary>
         private void ProgressUpdated(object sender, Result value)
         {
-            StatusLabel.Content = value.Message;
-            LogOutput.VerboseLogLn(value.Message);
+            string message = value?.Message;
+
+            // Update the label with only the first line of output
+            if (message.Contains("\n"))
+                StatusLabel.Content = value.Message.Split('\n')[0] + " (See log output)";
+            else
+                StatusLabel.Content = value.Message;
+
+            // Log based on success or failure
+            if (value)
+                LogOutput.VerboseLogLn(message);
+            else
+                LogOutput.ErrorLogLn(message);
         }
 
         /// <summary>
@@ -836,6 +862,10 @@ namespace MPF.Windows
                     Env.ResetDrive();
                 }
             }
+
+            // Reset the progress bar
+            LogOutput.ProgressBar.Value = 0;
+            LogOutput.ProgressLabel.Text = string.Empty;
         }
 
         /// <summary>

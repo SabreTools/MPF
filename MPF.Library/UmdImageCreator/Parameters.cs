@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MPF.Data;
 using MPF.Utilities;
 
@@ -25,38 +27,28 @@ namespace MPF.UmdImageCreator
         }
 
         /// <inheritdoc/>
-        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
         {
-            string missingFiles = string.Empty;
+            List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.UMD:
                     if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles += $";{basePath}_disc.txt";
+                        missingFiles.Add($"{basePath}_disc.txt");
                     if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles += $";{basePath}_mainError.txt";
+                        missingFiles.Add($"{basePath}_mainError.txt");
                     if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles += $";{basePath}_mainInfo.txt";
+                        missingFiles.Add($"{basePath}_mainInfo.txt");
                     if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles += $";{basePath}_volDesc.txt";
+                        missingFiles.Add($"{basePath}_volDesc.txt");
 
                     break;
 
                 default:
-                    // Non-dumping commands will usually produce no output, so this is irrelevant
-                    return true;
+                    return (false, missingFiles);
             }
 
-            // Use the missing files list as an indicator
-            if (string.IsNullOrEmpty(missingFiles))
-            {
-                return true;
-            }
-            else
-            {
-                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
-                return false;
-            }
+            return (!missingFiles.Any(), missingFiles);
         }
 
         /// <inheritdoc/>

@@ -33,13 +33,6 @@
         public static Result Success(string message) => new Result(true, message);
 
         /// <summary>
-        /// Create a success result with a custom message with format parameters
-        /// </summary>
-        /// <param name="message">String to add as a message</param>
-        /// <param name="args">Formatting parameters for the string</param>
-        public static Result Success(string message, params object[] args) => new Result(true, string.Format(message, args));
-
-        /// <summary>
         /// Create a default failure result with no message
         /// </summary>
         /// <returns></returns>
@@ -50,13 +43,6 @@
         /// </summary>
         /// <param name="message">String to add as a message</param>
         public static Result Failure(string message) => new Result(false, message);
-
-        /// <summary>
-        /// Create a failure result with a custom message with format parameters
-        /// </summary>
-        /// <param name="message">String to add as a message</param>
-        /// <param name="args">Formatting parameters for the string</param>
-        public static Result Failure(string message, params object[] args) => new Result(false, string.Format(message, args));
 
         /// <summary>
         /// Results can be compared to boolean values based on the success value

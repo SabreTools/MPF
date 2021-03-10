@@ -1630,7 +1630,7 @@ namespace MPF.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
         {
             /*
             If there are no external programs, such as error checking, etc., DIC outputs
@@ -1678,47 +1678,47 @@ namespace MPF.DiscImageCreator
             - volDesc       - Volume descriptor information
             */
 
-            string missingFiles = string.Empty;
+            List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
                     if (!File.Exists($"{basePath}.ccd"))
-                        missingFiles += $";{basePath}.ccd";
+                        missingFiles.Add($"{basePath}.ccd");
                     if (!File.Exists($"{basePath}.cue"))
-                        missingFiles += $";{basePath}.cue";
+                        missingFiles.Add($"{basePath}.cue");
                     if (!File.Exists($"{basePath}.dat"))
-                        missingFiles += $";{basePath}.dat";
+                        missingFiles.Add($"{basePath}.dat");
                     if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
-                        missingFiles += $";{basePath}.img";
+                        missingFiles.Add($"{basePath}.img");
                     if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
-                        missingFiles += $";{basePath}.sub";
+                        missingFiles.Add($"{basePath}.sub");
                     if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles += $";{basePath}_disc.txt";
+                        missingFiles.Add($"{basePath}_disc.txt");
                     if (!File.Exists($"{basePath}_drive.txt"))
-                        missingFiles += $";{basePath}_drive.txt";
+                        missingFiles.Add($"{basePath}_drive.txt");
                     if (!File.Exists($"{basePath}_img.cue"))
-                        missingFiles += $";{basePath}_img.cue";
+                        missingFiles.Add($"{basePath}_img.cue");
                     if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles += $";{basePath}_mainError.txt";
+                        missingFiles.Add($"{basePath}_mainError.txt");
                     if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles += $";{basePath}_mainInfo.txt";
+                        missingFiles.Add($"{basePath}_mainInfo.txt");
                     if (!File.Exists($"{basePath}_subError.txt"))
-                        missingFiles += $";{basePath}_subError.txt";
+                        missingFiles.Add($"{basePath}_subError.txt");
                     if (!File.Exists($"{basePath}_subInfo.txt"))
-                        missingFiles += $";{basePath}_subInfo.txt";
+                        missingFiles.Add($"{basePath}_subInfo.txt");
                     if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
-                        missingFiles += $";{basePath}_subReadable.txt";
+                        missingFiles.Add($"{basePath}_subReadable.txt");
                     if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles += $";{basePath}_volDesc.txt";
+                        missingFiles.Add($"{basePath}_volDesc.txt");
 
                     // Audio-only discs don't output these files
                     if (!this.System.IsAudio())
                     {
                         if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
-                            missingFiles += $";{basePath}.img_EdcEcc.txt";
+                            missingFiles.Add($"{basePath}.img_EdcEcc.txt");
                         if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
-                            missingFiles += $";{basePath}.scm";
+                            missingFiles.Add($"{basePath}.scm");
                     }
 
                     // Removed or inconsistent files
@@ -1726,19 +1726,19 @@ namespace MPF.DiscImageCreator
                     {
                         // Doesn't output on Linux
                         if (!File.Exists($"{basePath}.c2"))
-                            missingFiles += $";{basePath}.c2";
+                            missingFiles.Add($"{basePath}.c2");
 
                         // Doesn't output on Linux
                         if (!File.Exists($"{basePath}_c2Error.txt"))
-                            missingFiles += $";{basePath}_c2Error.txt";
+                            missingFiles.Add($"{basePath}_c2Error.txt");
 
                         // Replaced by timestamp-named file
                         if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles += $";{basePath}_cmd.txt";
+                            missingFiles.Add($"{basePath}_cmd.txt");
 
                         // Not guaranteed output
                         if (!File.Exists($"{basePath}_subIntention.txt"))
-                            missingFiles += $";{basePath}_subIntention.txt";
+                            missingFiles.Add($"{basePath}_subIntention.txt");
                     }
 
                     break;
@@ -1749,24 +1749,24 @@ namespace MPF.DiscImageCreator
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     if (!File.Exists($"{basePath}.dat"))
-                        missingFiles += $";{basePath}.dat";
+                        missingFiles.Add($"{basePath}.dat");
                     if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles += $";{basePath}_disc.txt";
+                        missingFiles.Add($"{basePath}_disc.txt");
                     if (!File.Exists($"{basePath}_drive.txt"))
-                        missingFiles += $";{basePath}_drive.txt";
+                        missingFiles.Add($"{basePath}_drive.txt");
                     if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles += $";{basePath}_mainError.txt";
+                        missingFiles.Add($"{basePath}_mainError.txt");
                     if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles += $";{basePath}_mainInfo.txt";
+                        missingFiles.Add($"{basePath}_mainInfo.txt");
                     if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles += $";{basePath}_volDesc.txt";
+                        missingFiles.Add($"{basePath}_volDesc.txt");
 
                     // Removed or inconsistent files
                     if (false)
                     {
                         // Replaced by timestamp-named file
                         if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles += $";{basePath}_cmd.txt";
+                            missingFiles.Add($"{basePath}_cmd.txt");
                     }
 
                     break;
@@ -1775,35 +1775,25 @@ namespace MPF.DiscImageCreator
                 case MediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
                     if (!File.Exists($"{basePath}.dat"))
-                        missingFiles += $";{basePath}.dat";
+                        missingFiles.Add($"{basePath}.dat");
                     if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles += $";{basePath}_disc.txt";
+                        missingFiles.Add($"{basePath}_disc.txt");
 
                     // Removed or inconsistent files
                     if (false)
                     {
                         // Replaced by timestamp-named file
                         if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles += $";{basePath}_cmd.txt";
+                            missingFiles.Add($"{basePath}_cmd.txt");
                     }
 
                     break;
 
                 default:
-                    // Non-dumping commands will usually produce no output, so this is irrelevant
-                    return true;
+                    return (false, missingFiles);
             }
 
-            // Use the missing files list as an indicator
-            if (string.IsNullOrEmpty(missingFiles))
-            {
-                return true;
-            }
-            else
-            {
-                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
-                return false;
-            }
+            return (!missingFiles.Any(), missingFiles);
         }
 
         /// <inheritdoc/>

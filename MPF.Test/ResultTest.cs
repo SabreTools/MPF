@@ -14,11 +14,6 @@ namespace MPF.Test
             string message = "Success!";
             actual = Result.Success(message);
             Assert.Equal(message, actual.Message);
-
-            message = "Success! {0}";
-            string parameter = "Parameter";
-            actual = Result.Success(message, parameter);
-            Assert.Equal(string.Format(message, parameter), actual.Message);
         }
 
         [Fact]
@@ -30,11 +25,6 @@ namespace MPF.Test
             string message = "Failure!";
             actual = Result.Failure(message);
             Assert.Equal(message, actual.Message);
-
-            message = "Failure! {0}";
-            string parameter = "Parameter";
-            actual = Result.Failure(message, parameter);
-            Assert.Equal(string.Format(message, parameter), actual.Message);
         }
     }
 }

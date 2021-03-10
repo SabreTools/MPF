@@ -1411,55 +1411,48 @@ namespace MPF.Aaru
         }
 
         /// <inheritdoc/>
-        public override bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
         {
-            string missingFiles = string.Empty;
+            List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.CDROM:
                     if (!File.Exists($"{basePath}.cicm.xml"))
-                        missingFiles += $";{basePath}.cicm.xml";
+                        missingFiles.Add($"{basePath}.cicm.xml");
                     if (!File.Exists($"{basePath}.ibg"))
-                        missingFiles += $";{basePath}.ibg";
+                        missingFiles.Add($"{basePath}.ibg");
                     if (!File.Exists($"{basePath}.log"))
-                        missingFiles += $";{basePath}.log";
+                        missingFiles.Add($"{basePath}.log");
                     if (!File.Exists($"{basePath}.mhddlog.bin"))
-                        missingFiles += $";{basePath}.mhddlog.bin";
+                        missingFiles.Add($"{basePath}.mhddlog.bin");
                     if (!File.Exists($"{basePath}.resume.xml"))
-                        missingFiles += $";{basePath}.resume.xml";
+                        missingFiles.Add($"{basePath}.resume.xml");
                     if (!File.Exists($"{basePath}.sub.log"))
-                        missingFiles += $";{basePath}.sub.log";
+                        missingFiles.Add($"{basePath}.sub.log");
 
                     break;
 
                 case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
                     if (!File.Exists($"{basePath}.cicm.xml"))
-                        missingFiles += $";{basePath}.cicm.xml";
+                        missingFiles.Add($"{basePath}.cicm.xml");
                     if (!File.Exists($"{basePath}.ibg"))
-                        missingFiles += $";{basePath}.ibg";
+                        missingFiles.Add($"{basePath}.ibg");
                     if (!File.Exists($"{basePath}.log"))
-                        missingFiles += $";{basePath}.log";
+                        missingFiles.Add($"{basePath}.log");
                     if (!File.Exists($"{basePath}.mhddlog.bin"))
-                        missingFiles += $";{basePath}.mhddlog.bin";
+                        missingFiles.Add($"{basePath}.mhddlog.bin");
                     if (!File.Exists($"{basePath}.resume.xml"))
-                        missingFiles += $";{basePath}.resume.xml";
+                        missingFiles.Add($"{basePath}.resume.xml");
 
                     break;
 
                 default:
-                    return false; // TODO: Figure out more formats
+                    return (false, missingFiles); // TODO: Figure out more formats
             }
 
-            // Use the missing files list as an indicator
-            if (string.IsNullOrEmpty(missingFiles))
-            {
-                return true;
-            }
-            else
-            {
-                progress?.Report(Result.Failure($"The following files were missing: {missingFiles.TrimStart(';')}"));
-                return false;
-            }
+            return (!missingFiles.Any(), missingFiles);
         }
 
         /// <inheritdoc/>

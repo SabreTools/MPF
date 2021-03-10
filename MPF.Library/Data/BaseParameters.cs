@@ -14,6 +14,24 @@ namespace MPF.Data
 {
     public abstract class BaseParameters
     {
+        #region Event Handlers
+
+        /// <summary>
+        /// Geneeic way of reporting a message
+        /// </summary>
+        /// <param name="message">String value to report</param>
+        public EventHandler<string> ReportStatus;
+
+        /// <summary>
+        /// Event handler for data returned from a process
+        /// </summary>
+        private void OutputToLog(object proc, DataReceivedEventArgs args)
+        {
+            ReportStatus.Invoke(this, args.Data);
+        }
+
+        #endregion
+
         /// <summary>
         /// Path to the executable
         /// </summary>
@@ -139,9 +157,8 @@ namespace MPF.Data
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="progress">Optional result progress callback</param>
-        /// <returns>True if all required files exist, false otherwise</returns>
-        public abstract bool CheckAllOutputFilesExist(string basePath, IProgress<Result> progress = null);
+        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
+        public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath);
 
         /// <summary>
         /// Generate a SubmissionInfo for the output files
@@ -156,17 +173,33 @@ namespace MPF.Data
         /// </summary>
         public void ExecuteInternalProgram()
         {
+            var tcs = new TaskCompletionSource<bool>();
             process = new Process()
             {
                 StartInfo = new ProcessStartInfo()
                 {
                     FileName = ExecutablePath,
                     Arguments = GenerateParameters() ?? "",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                 },
             };
+            
+            // Add event handlers
+            process.OutputDataReceived += OutputToLog;
+            process.ErrorDataReceived += OutputToLog;
 
+            // Start the process
             process.Start();
+
+            // Begin reading the outputs
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+
             process.WaitForExit();
+            process.Close();
         }
 
         /// <summary>
@@ -213,8 +246,10 @@ namespace MPF.Data
         {
             try
             {
-                if (process != null && !process.HasExited)
+                while (process != null && !process.HasExited)
+                {
                     process.Kill();
+                }
             }
             catch
             { }
