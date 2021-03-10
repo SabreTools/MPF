@@ -226,7 +226,7 @@
                             <UniformGrid Columns="5" Rows="1">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
                                 <TextBox x:Name="RedumpUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
-                                    Text="{Binding Path=UIOptions.Options.Username}" />
+                                    Text="{Binding Path=UIOptions.Options.RedumpUsername}" />
 
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Password" />
                                 <PasswordBox x:Name="RedumpPasswordBox" Height="22" HorizontalAlignment="Stretch" PasswordChar="*" />
