@@ -26,7 +26,7 @@ namespace MPF.Windows
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<Element<InternalProgram>> InternalPrograms { get; private set; }
+        public List<Element<InternalProgram>> InternalPrograms { get; private set; } = PopulateInternalPrograms();
 
         /// <summary>
         /// Current list of supported system profiles
@@ -41,7 +41,6 @@ namespace MPF.Windows
             DataContext = this;
 
             UIOptions = uiOptions;
-            PopulateInternalPrograms();
             Load();
         }
 
@@ -76,12 +75,12 @@ namespace MPF.Windows
         }
 
         /// <summary>
-        /// Get a complete list of internal programs and fill the combo box
+        /// Get a complete list of  supported internal programs
         /// </summary>
-        private void PopulateInternalPrograms()
+        private static List<Element<InternalProgram>> PopulateInternalPrograms()
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.DD };
-            InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
+            return internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
         }
 
         /// <summary>

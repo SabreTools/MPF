@@ -40,37 +40,11 @@
                         <Button x:Name="DDPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Dumping Program" />
-                        <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=InternalPrograms}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}" />
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
+                        <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=InternalPrograms}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
                         <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DefaultOutputPath}" />
                         <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
-
-                        <!-- TODO: Enable this code to allow for selecting a default system -->
-                        <!--<Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-                        <ComboBox x:Name="SystemTypeComboBox" Grid.Row="5" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
-                              ItemsSource="{Binding Path=Systems}" SelectedIndex="0">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" IsEnabled="{Binding Path=IsSystem}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                            <ComboBox.ItemContainerStyle>
-                                <Style TargetType="{x:Type ComboBoxItem}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Path=IsHeader}" Value="True">
-                                            <Setter Property="IsEnabled" Value="False"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ComboBox.ItemContainerStyle>
-                        </ComboBox>-->
                     </Grid>
                 </TabItem>
 
@@ -89,13 +63,7 @@
                                      />
 
                                 <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
-                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
-                                    ItemsSource="{Binding Path=Systems}" SelectedIndex="0">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding Path=Name}" Foreground="{Binding Path=Foreground}" IsEnabled="{Binding Path=IsSystem}"/>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
+                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Path=Systems}" SelectedIndex="0">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
                                             <Style.Triggers>

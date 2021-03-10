@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 using MPF.Data;
 using MPF.Utilities;
 
@@ -31,15 +30,12 @@ namespace MPF
             }
         }
 
+        public override string ToString() => Name;
+
         /// <summary>
         /// Internal enum value
         /// </summary>
         public KnownSystem? Value => Data as KnownSystem?;
-
-        /// <summary>
-        /// Determines the foreground color when displaying
-        /// </summary>
-        public Brush Foreground { get => IsHeader ? Brushes.Gray : Brushes.Black; }
 
         /// <summary>
         /// Determines if the item is a header value

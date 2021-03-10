@@ -24,6 +24,8 @@ namespace MPF
         /// <inheritdoc/>
         public string Name => Converters.GetLongName(Data);
 
+        public override string ToString() => Name;
+
         /// <summary>
         /// Internal enum value
         /// </summary>
