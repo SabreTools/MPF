@@ -268,6 +268,15 @@ namespace MPF.Data
             set { _settings["IgnoreFixedDrives"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Show dumping tools in their own window instead of in the log
+        /// </summary>
+        public bool ToolsInSeparateWindow
+        {
+            get { return GetBooleanSetting(_settings, "ToolsInSeparateWindow", false); }
+            set { _settings["ToolsInSeparateWindow"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Skip Options

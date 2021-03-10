@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -122,6 +121,18 @@ namespace MPF.UserControls
                         float percentProgress = (current / (float)total) * 100;
                         ProgressBar.Value = percentProgress;
                         ProgressLabel.Text = string.Format("Scanning sectors for protection... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            _matchers.Add(new Matcher(
+                "Checking SubQ ctl (Track)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Checking subchannels... ({0:##.##}%)", percentProgress);
                     }
                 }));
         }

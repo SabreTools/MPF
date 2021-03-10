@@ -80,6 +80,11 @@
                                      ToolTip="Ignore hard drives and other fixed drives" Margin="0,4"
                                      />
 
+                                <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
+                                     IsChecked="{Binding Path=UIOptions.Options.ToolsInSeparateWindow}"
+                                     ToolTip="Show program output in separate command window instead of in the log" Margin="0,4"
+                                     />
+
                                 <CheckBox VerticalAlignment="Center" Content="Protection Scan"
                                     IsChecked="{Binding Path=UIOptions.Options.ScanForProtection}"
                                     ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"

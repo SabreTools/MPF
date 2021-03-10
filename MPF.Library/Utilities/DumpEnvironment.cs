@@ -386,10 +386,10 @@ namespace MPF.Utilities
                 return result;
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {Options.InternalProgram}... see log for output!"));
+            progress?.Report(Result.Success($"Executing {Options.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
             Directory.CreateDirectory(OutputDirectory);
             Parameters.ReportStatus += OutputToLog;
-            await Task.Run(() => Parameters.ExecuteInternalProgram());
+            await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             progress?.Report(Result.Success($"{Options.InternalProgram} has finished!"));
 
             // Execute additional tools

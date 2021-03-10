@@ -171,32 +171,39 @@ namespace MPF.Data
         /// <summary>
         /// Run internal program
         /// </summary>
-        public void ExecuteInternalProgram()
+        /// <param name="separateWindow">True to show in separate window, false otherwise</param>
+        public void ExecuteInternalProgram(bool separateWindow)
         {
-            var tcs = new TaskCompletionSource<bool>();
-            process = new Process()
+            // Create the start info
+            var startInfo = new ProcessStartInfo()
             {
-                StartInfo = new ProcessStartInfo()
-                {
-                    FileName = ExecutablePath,
-                    Arguments = GenerateParameters() ?? "",
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                },
+                FileName = ExecutablePath,
+                Arguments = GenerateParameters() ?? "",
+                CreateNoWindow = !separateWindow,
+                UseShellExecute = separateWindow,
+                RedirectStandardOutput = !separateWindow,
+                RedirectStandardError = !separateWindow,
             };
+
+            // Create the new process
+            process = new Process() { StartInfo = startInfo };
             
-            // Add event handlers
-            process.OutputDataReceived += OutputToLog;
-            process.ErrorDataReceived += OutputToLog;
+            // Add event handlers, if necessary
+            if (!separateWindow)
+            {
+                process.OutputDataReceived += OutputToLog;
+                process.ErrorDataReceived += OutputToLog;
+            }
 
             // Start the process
             process.Start();
 
-            // Begin reading the outputs
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
+            // Begin reading the outputs, if necessary
+            if (!separateWindow)
+            {
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+            }
 
             process.WaitForExit();
             process.Close();
