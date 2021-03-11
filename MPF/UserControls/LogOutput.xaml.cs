@@ -27,6 +27,7 @@ namespace MPF.UserControls
             Output.Document = _document;
 
             _matchers = new List<Matcher>();
+            AddAaruMatchers();
             AddDiscImageCreatorMatchers();
         }
 
@@ -60,33 +61,59 @@ namespace MPF.UserControls
         }
 
         /// <summary>
+        /// Add all Matchers for Aaru
+        /// </summary>
+        private void AddAaruMatchers()
+        {
+            // TODO: Determine matchers that can be added
+        }
+
+        /// <summary>
         /// Add all Matchers for DiscImageCreator
         /// </summary>
         private void AddDiscImageCreatorMatchers()
         {
-            _matchers.Add(new Matcher(
-                   "Descrambling data sector of img (LBA)",
-                   @"\s*(\d+)\/\s*(\d+)$",
-                   match => {
-                       if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                       {
-                           float percentProgress = (current / (float)total) * 100;
-                           ProgressBar.Value = percentProgress;
-                           ProgressLabel.Text = string.Format("Descrambling image... ({0:##.##}%)", percentProgress);
-                       }
-                   }));
+            #region Pre-dump Checking
 
             _matchers.Add(new Matcher(
-                @"Creating .scm (LBA)",
+                "Checking SubQ adr (Track)",
                 @"\s*(\d+)\/\s*(\d+)$",
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
                         ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Creating scrambled image... ({0:##.##}%)", percentProgress);
+                        ProgressLabel.Text = string.Format("Checking SubQ adr... ({0:##.##}%)", percentProgress);
                     }
                 }));
+
+            _matchers.Add(new Matcher(
+                "Checking SubQ ctl (Track)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Checking SubQ ctl... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            _matchers.Add(new Matcher(
+                "Checking SubRtoW (Track)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Checking SubRtoW... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            #endregion
+
+            #region Dumping
 
             _matchers.Add(new Matcher(
                 @"Creating iso(LBA)",
@@ -101,6 +128,34 @@ namespace MPF.UserControls
                 }));
 
             _matchers.Add(new Matcher(
+                @"Creating .scm (LBA)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Creating scrambled image... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            #endregion
+
+            #region Post-Dump Processing
+
+            _matchers.Add(new Matcher(
+                   "Descrambling data sector of img (LBA)",
+                   @"\s*(\d+)\/\s*(\d+)$",
+                   match => {
+                       if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                       {
+                           float percentProgress = (current / (float)total) * 100;
+                           ProgressBar.Value = percentProgress;
+                           ProgressLabel.Text = string.Format("Descrambling image... ({0:##.##}%)", percentProgress);
+                       }
+                   }));
+
+            _matchers.Add(new Matcher(
                 "Checking sectors (LBA)",
                 @"\s*(\d+)\/\s*(\d+)$",
                 match => {
@@ -109,6 +164,30 @@ namespace MPF.UserControls
                         float percentProgress = (current / (float)total) * 100;
                         ProgressBar.Value = percentProgress;
                         ProgressLabel.Text = string.Format("Checking for errors... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            _matchers.Add(new Matcher(
+                "Creating bin (Track)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Creating BIN(s)... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            _matchers.Add(new Matcher(
+                "Creating cue and ccd (Track)",
+                @"\s*(\d+)\/\s*(\d+)$",
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Creating CUE and CCD... ({0:##.##}%)", percentProgress);
                     }
                 }));
 
@@ -124,17 +203,7 @@ namespace MPF.UserControls
                     }
                 }));
 
-            _matchers.Add(new Matcher(
-                "Checking SubQ ctl (Track)",
-                @"\s*(\d+)\/\s*(\d+)$",
-                match => {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Checking subchannels... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+            #endregion
         }
 
         #endregion
