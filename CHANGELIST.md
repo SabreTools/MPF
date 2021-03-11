@@ -37,6 +37,7 @@
 - VideoNow discs are audio only
 - Hook up default system in options
 - Make inner and outer layers in UI and outputs more clear
+- Program output to log by default, setting otherwise
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

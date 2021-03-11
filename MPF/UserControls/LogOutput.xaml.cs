@@ -16,6 +16,8 @@ namespace MPF.UserControls
         private Paragraph _paragraph;
         private readonly List<Matcher> _matchers;
 
+        private const string DiscImageCreatorProgressPattern = @"\s*(\d+)\/\s*(\d+)$";
+
         public LogOutput()
         {
             InitializeComponent();
@@ -77,7 +79,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Checking SubQ adr (Track)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -89,7 +91,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Checking SubQ ctl (Track)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -101,7 +103,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Checking SubRtoW (Track)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -111,13 +113,25 @@ namespace MPF.UserControls
                     }
                 }));
 
+            _matchers.Add(new Matcher(
+                "Reading DirectoryRecord",
+                DiscImageCreatorProgressPattern,
+                match => {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Reading directory records... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
             #endregion
 
             #region Dumping
 
             _matchers.Add(new Matcher(
                 @"Creating iso(LBA)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -129,7 +143,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 @"Creating .scm (LBA)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -145,7 +159,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                    "Descrambling data sector of img (LBA)",
-                   @"\s*(\d+)\/\s*(\d+)$",
+                   DiscImageCreatorProgressPattern,
                    match => {
                        if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                        {
@@ -157,7 +171,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Checking sectors (LBA)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -169,7 +183,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Creating bin (Track)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -181,7 +195,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Creating cue and ccd (Track)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
@@ -193,7 +207,7 @@ namespace MPF.UserControls
 
             _matchers.Add(new Matcher(
                 "Scanning sector (LBA)",
-                @"\s*(\d+)\/\s*(\d+)$",
+                DiscImageCreatorProgressPattern,
                 match => {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
