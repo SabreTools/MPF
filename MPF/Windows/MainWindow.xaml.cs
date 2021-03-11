@@ -191,7 +191,7 @@ namespace MPF.Windows
             if (!UIOptions.Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
             {
                 LogOutput.VerboseLog($"Trying to detect system for drive {Drives[DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex]) ?? UIOptions.Options.DefaultSystem;
+                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex], UIOptions.Options.DefaultSystem);
                 LogOutput.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + Converters.GetLongName(currentSystem) + "."));
 
                 if (currentSystem != KnownSystem.NONE)
@@ -864,8 +864,7 @@ namespace MPF.Windows
             }
 
             // Reset the progress bar
-            LogOutput.ProgressBar.Value = 0;
-            LogOutput.ProgressLabel.Text = string.Empty;
+            LogOutput.ResetProgressBar();
         }
 
         /// <summary>

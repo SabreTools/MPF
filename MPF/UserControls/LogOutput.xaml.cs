@@ -12,10 +12,34 @@ namespace MPF.UserControls
 {
     public partial class LogOutput : UserControl
     {
+        /// <summary>
+        /// Document backing the log
+        /// </summary>
         private FlowDocument _document;
+
+        /// <summary>
+        /// Paragraph backing the log
+        /// </summary>
         private Paragraph _paragraph;
+
+        /// <summary>
+        /// List of Matchers for progress tracking
+        /// </summary>
         private readonly List<Matcher> _matchers;
 
+        /// <summary>
+        /// Cached value of the last line written
+        /// </summary>
+        private string lastLineText = null;
+
+        /// <summary>
+        /// Cached value of the last matcher used
+        /// </summary>
+        private Matcher? lastUsedMatcher = null;
+
+        /// <summary>
+        /// Regex pattern to find DiscImageCreator progress messages
+        /// </summary>
         private const string DiscImageCreatorProgressPattern = @"\s*(\d+)\/\s*(\d+)$";
 
         public LogOutput()
@@ -78,9 +102,32 @@ namespace MPF.UserControls
             #region Pre-dump Checking
 
             _matchers.Add(new Matcher(
+                "Checking EXE",
+                DiscImageCreatorProgressPattern,
+                match =>
+                {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Checking executables... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
+            _matchers.Add(new Matcher(
+                "Checking Pregap sync, msf, mode (LBA)",
+                @"\s*-(\d+)$",
+                match =>
+                {
+                    ProgressBar.Value = 0;
+                    ProgressLabel.Text = "Checking Pregap sync, msf, mode";
+                }));
+
+            _matchers.Add(new Matcher(
                 "Checking SubQ adr (Track)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -92,7 +139,8 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 "Checking SubQ ctl (Track)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -104,7 +152,8 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 "Checking SubRtoW (Track)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -116,7 +165,8 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 "Reading DirectoryRecord",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -132,7 +182,8 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 @"Creating iso(LBA)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -144,7 +195,8 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 @"Creating .scm (LBA)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -158,45 +210,36 @@ namespace MPF.UserControls
             #region Post-Dump Processing
 
             _matchers.Add(new Matcher(
-                   "Descrambling data sector of img (LBA)",
-                   DiscImageCreatorProgressPattern,
-                   match => {
-                       if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                       {
-                           float percentProgress = (current / (float)total) * 100;
-                           ProgressBar.Value = percentProgress;
-                           ProgressLabel.Text = string.Format("Descrambling image... ({0:##.##}%)", percentProgress);
-                       }
-                   }));
+               "Checking sectors:",
+               DiscImageCreatorProgressPattern,
+               match =>
+               {
+                   if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                   {
+                       float percentProgress = (current / (float)total) * 100;
+                       ProgressBar.Value = percentProgress;
+                       ProgressLabel.Text = string.Format("Checking for errors... ({0:##.##}%)", percentProgress);
+                   }
+               }));
 
             _matchers.Add(new Matcher(
-                "Checking sectors (LBA)",
-                DiscImageCreatorProgressPattern,
-                match => {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Checking for errors... ({0:##.##}%)", percentProgress);
-                    }
-                }));
-
-            _matchers.Add(new Matcher(
-                "Creating bin (Track)",
-                DiscImageCreatorProgressPattern,
-                match => {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Creating BIN(s)... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+               "Creating bin (Track)",
+               DiscImageCreatorProgressPattern,
+               match =>
+               {
+                   if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                   {
+                       float percentProgress = (current / (float)total) * 100;
+                       ProgressBar.Value = percentProgress;
+                       ProgressLabel.Text = string.Format("Creating BIN(s)... ({0:##.##}%)", percentProgress);
+                   }
+               }));
 
             _matchers.Add(new Matcher(
                 "Creating cue and ccd (Track)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -206,9 +249,23 @@ namespace MPF.UserControls
                 }));
 
             _matchers.Add(new Matcher(
+                   "Descrambling data sector of img:",
+                   DiscImageCreatorProgressPattern,
+                   match =>
+                   {
+                       if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                       {
+                           float percentProgress = (current / (float)total) * 100;
+                           ProgressBar.Value = percentProgress;
+                           ProgressLabel.Text = string.Format("Descrambling image... ({0:##.##}%)", percentProgress);
+                       }
+                   }));
+
+            _matchers.Add(new Matcher(
                 "Scanning sector (LBA)",
                 DiscImageCreatorProgressPattern,
-                match => {
+                match =>
+                {
                     if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
                     {
                         float percentProgress = (current / (float)total) * 100;
@@ -249,6 +306,26 @@ namespace MPF.UserControls
         public void ErrorLogLn(string text) => ErrorLog(text + "\n");
 
         /// <summary>
+        /// Reset the progress bar state
+        /// </summary>
+        public void ResetProgressBar()
+        {
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                ProgressBar.Value = 0;
+                ProgressLabel.Text = string.Empty;
+            }
+            else
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ProgressBar.Value = 0;
+                    ProgressLabel.Text = string.Empty;
+                });
+            }
+        }
+
+        /// <summary>
         /// Write verbose text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
@@ -283,6 +360,33 @@ namespace MPF.UserControls
         }
 
         /// <summary>
+        /// Get the last line written to the log text box
+        /// </summary>
+        /// <param name="text">Text to append</param>
+        private string GetLastLine()
+        {
+            if (Application.Current.Dispatcher.CheckAccess())
+            {
+                if (!_paragraph.Inlines.Any())
+                    return null;
+
+                var last = _paragraph.Inlines.LastInline as Run;
+                return last.Text;
+            }
+            else
+            {
+                return Dispatcher.Invoke(() =>
+                {
+                    if (!_paragraph.Inlines.Any())
+                        return null;
+
+                    var last = _paragraph.Inlines.LastInline as Run;
+                    return last.Text;
+                });
+            }
+        }
+
+        /// <summary>
         /// Write text to the log with formatting
         /// </summary>
         /// <param name="text">Text to write to the log</param>
@@ -305,16 +409,61 @@ namespace MPF.UserControls
             else if (verbose)
                 brush = Brushes.Yellow;
 
-            // Print according to the text
-            if (text.StartsWith("\r"))
-                ReplaceLastLine(text, brush);
-            else if (_matchers.Any(m => m.Matches(ref text)))
-                ReplaceLastLine(text, brush);
-            else
+            // Get last line
+            if (lastLineText == null)
+                lastLineText = GetLastLine();
+
+            // Always append if there's no previous line
+            if (lastLineText == null)
+            {
                 AppendToTextBox(text, brush);
+                lastUsedMatcher = null;
+            }
+            // Return always means overwrite
+            else if (text.StartsWith("\r"))
+            {
+                ReplaceLastLine(text, brush);
+                lastUsedMatcher = null;
+            }
+            else
+            {
+                // If we have a cached matcher, try it first
+                if (lastUsedMatcher?.Matches(ref text) == true)
+                {
+                    ReplaceLastLine(text, brush);
+                }
+                else
+                {
+                    // Get all matching Matchers
+                    var matches = _matchers.Where(m => m.Matches(ref text));
+                    if (matches.Any())
+                    {
+                        // Use the first Matcher
+                        var firstMatcher = matches.First();
+                        if (firstMatcher.Matches(ref lastLineText))
+                            ReplaceLastLine(text, brush);
+                        else if (string.IsNullOrWhiteSpace(lastLineText))
+                            ReplaceLastLine(text, brush);
+                        else
+                            AppendToTextBox(text, brush);
+
+                        // Cache the last used Matcher
+                        lastUsedMatcher = firstMatcher;
+                    }
+                    // Default case for all other text
+                    else
+                    {
+                        AppendToTextBox(text, brush);
+                        lastUsedMatcher = null;
+                    }
+                }
+            }
 
             // Update the bar if needed
             ProcessStringForProgressBar(text);
+
+            // Cache the current text as the last line
+            lastLineText = text;
         }
 
         /// <summary>
@@ -347,19 +496,19 @@ namespace MPF.UserControls
         {
             if (Application.Current.Dispatcher.CheckAccess())
             {
-                var last = _paragraph.Inlines.Last();
-                _paragraph.Inlines.Remove(last);
+                var last = _paragraph.Inlines.LastInline as Run;
+                last.Text = text;
+                last.Foreground = color;
             }
             else
             {
                 Dispatcher.Invoke(() =>
                 {
-                    var last = _paragraph.Inlines.Last();
-                    _paragraph.Inlines.Remove(last);
+                    var last = _paragraph.Inlines.LastInline as Run;
+                    last.Text = text;
+                    last.Foreground = color;
                 });
             }
-
-            AppendToTextBox(text, color);
         }
 
         #endregion

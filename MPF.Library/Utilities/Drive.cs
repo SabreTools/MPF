@@ -79,10 +79,11 @@ namespace MPF.Utilities
                 return null;
 
             // Wrap the following in case of device access errors
+            Stream fs = null;
             try
             {
                 // Open the drive as a device
-                var fs = File.OpenRead($"\\\\?\\{this.Letter}:");
+                fs = File.OpenRead($"\\\\?\\{this.Letter}:");
 
                 // Seek to the start of the sector, if possible
                 long start = num * size;
@@ -96,6 +97,10 @@ namespace MPF.Utilities
             catch
             {
                 return null;
+            }
+            finally
+            {
+                fs.Dispose();
             }
         }
     }

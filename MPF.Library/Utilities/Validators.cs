@@ -852,18 +852,19 @@ namespace MPF.Utilities
         /// Get the current system from drive
         /// </summary>
         /// <param name="drive"></param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static KnownSystem? GetKnownSystem(Drive drive)
+        public static KnownSystem? GetKnownSystem(Drive drive, KnownSystem? defaultValue)
         {
             // If drive or drive letter are provided, we can't do anything
             if (drive?.Letter == null)
-                return null;
+                return defaultValue;
 
             string drivePath = $"{drive.Letter}:\\";
 
             // If we can't read the media in that drive, we can't do anything
             if (!Directory.Exists(drivePath))
-                return null;
+                return defaultValue;
 
             // We're going to assume for floppies, HDDs, and removable drives
             // TODO: Try to be smarter about this
@@ -965,7 +966,7 @@ namespace MPF.Utilities
             }
 
             // Default return
-            return KnownSystem.NONE;
+            return defaultValue;
         }
 
         /// <summary>
