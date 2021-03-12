@@ -73,7 +73,131 @@ namespace MPF.Windows
             CopyProtectScanButton.IsEnabled = false;
         }
 
-        #region Helpers
+        #region Population
+
+        /// <summary>
+        /// Get a complete list of active disc drives and fill the combo box
+        /// </summary>
+        /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
+        private void PopulateDrives()
+        {
+            LogOutput.VerboseLogLn("Scanning for drives..");
+
+            // Always enable the media scan
+            MediaScanButton.IsEnabled = true;
+
+            // Populate the list of drives and add it to the combo box
+            Drives = Validators.CreateListOfDrives(UIOptions.Options.IgnoreFixedDrives);
+            DriveLetterComboBox.ItemsSource = Drives;
+
+            if (DriveLetterComboBox.Items.Count > 0)
+            {
+                LogOutput.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
+
+                // Check for active optical drives first
+                int index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
+
+                // Then we check for floppy drives
+                if (index == -1)
+                    index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Floppy);
+
+                // Then we try all other drive types
+                if (index == -1)
+                    index = Drives.FindIndex(d => d.MarkedActive);
+
+                // Set the selected index
+                DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
+                StatusLabel.Content = "Valid drive found! Choose your Media Type";
+                CopyProtectScanButton.IsEnabled = true;
+
+                // Get the current system type
+                if (index != -1)
+                    DetermineSystemType();
+
+                // Only enable the start/stop if we don't have the default selected
+                StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
+            }
+            else
+            {
+                LogOutput.VerboseLogLn("Found no drives");
+                DriveLetterComboBox.SelectedIndex = -1;
+                StatusLabel.Content = "No valid drive found!";
+                StartStopButton.IsEnabled = false;
+                CopyProtectScanButton.IsEnabled = false;
+            }
+        }
+
+        /// <summary>
+        /// Populate media type according to system type
+        /// </summary>
+        private void PopulateMediaType()
+        {
+            KnownSystem? currentSystem = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
+
+            if (currentSystem != null)
+            {
+                var mediaTypeValues = Validators.GetValidMediaTypes(currentSystem);
+                MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
+                MediaTypeComboBox.ItemsSource = MediaTypes;
+
+                MediaTypeComboBox.IsEnabled = MediaTypes.Count > 1;
+                int currentIndex = MediaTypes.FindIndex(m => m == CurrentMediaType);
+                MediaTypeComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
+            }
+            else
+            {
+                MediaTypeComboBox.IsEnabled = false;
+                MediaTypeComboBox.ItemsSource = null;
+                MediaTypeComboBox.SelectedIndex = -1;
+            }
+        }
+
+        #endregion
+
+        #region UI Element Changes
+
+        /// <summary>
+        /// Performs UI value setup end to end
+        /// </summary>
+        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
+        /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
+        private void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
+        {
+            // Disable the dumping button
+            StartStopButton.IsEnabled = false;
+
+            // Remove event handlers to ensure ordering
+            if (removeEventHandlers)
+                RemoveEventHandlers();
+
+            // Populate the list of drives and determine the system
+            if (rescanDrives)
+            {
+                StatusLabel.Content = "Creating drive list, please wait!";
+                PopulateDrives();
+            }
+            else
+            {
+                DetermineSystemType();
+            }
+
+            // Determine current media type, if possible
+            PopulateMediaType();
+            CacheCurrentDiscType();
+            SetCurrentDiscType();
+
+            // Set the initial environment and UI values
+            SetSupportedDriveSpeed();
+            Env = DetermineEnvironment();
+            GetOutputNames(true);
+            EnsureDiscInformation();
+
+            // Add event handlers
+            AddEventHandlers();
+
+            // Enable the dumping button
+            StartStopButton.IsEnabled = true;
+        }
 
         /// <summary>
         /// Add all textbox and combobox event handlers
@@ -87,6 +211,61 @@ namespace MPF.Windows
             DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
         }
+
+        /// <summary>
+        /// Remove all textbox and combobox event handlers
+        /// </summary>
+        private void RemoveEventHandlers()
+        {
+            SystemTypeComboBox.SelectionChanged -= SystemTypeComboBoxSelectionChanged;
+            MediaTypeComboBox.SelectionChanged -= MediaTypeComboBoxSelectionChanged;
+            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
+            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
+            DriveLetterComboBox.SelectionChanged -= DriveLetterComboBoxSelectionChanged;
+            DriveSpeedComboBox.SelectionChanged -= DriveSpeedComboBoxSelectionChanged;
+        }
+
+        /// <summary>
+        /// Disable all UI elements during dumping
+        /// </summary>
+        private void DisableAllUIElements()
+        {
+            OptionsMenuItem.IsEnabled = false;
+            SystemTypeComboBox.IsEnabled = false;
+            MediaTypeComboBox.IsEnabled = false;
+            OutputFilenameTextBox.IsEnabled = false;
+            OutputDirectoryTextBox.IsEnabled = false;
+            OutputDirectoryBrowseButton.IsEnabled = false;
+            DriveLetterComboBox.IsEnabled = false;
+            DriveSpeedComboBox.IsEnabled = false;
+            EnableParametersCheckBox.IsEnabled = false;
+            StartStopButton.Content = Interface.StopDumping;
+            MediaScanButton.IsEnabled = false;
+            CopyProtectScanButton.IsEnabled = false;
+        }
+
+        /// <summary>
+        /// Enable all UI elements after dumping
+        /// </summary>
+        private void EnableAllUIElements()
+        {
+            OptionsMenuItem.IsEnabled = true;
+            SystemTypeComboBox.IsEnabled = true;
+            MediaTypeComboBox.IsEnabled = true;
+            OutputFilenameTextBox.IsEnabled = true;
+            OutputDirectoryTextBox.IsEnabled = true;
+            OutputDirectoryBrowseButton.IsEnabled = true;
+            DriveLetterComboBox.IsEnabled = true;
+            DriveSpeedComboBox.IsEnabled = true;
+            EnableParametersCheckBox.IsEnabled = true;
+            StartStopButton.Content = Interface.StartDumping;
+            MediaScanButton.IsEnabled = true;
+            CopyProtectScanButton.IsEnabled = true;
+        }
+
+        #endregion
+
+        #region Helpers
 
         /// <summary>
         /// Browse for an output folder
@@ -264,83 +443,6 @@ namespace MPF.Windows
         }
 
         /// <summary>
-        /// Get a complete list of active disc drives and fill the combo box
-        /// </summary>
-        /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
-        private void PopulateDrives()
-        {
-            LogOutput.VerboseLogLn("Scanning for drives..");
-
-            // Always enable the media scan
-            MediaScanButton.IsEnabled = true;
-
-            // Populate the list of drives and add it to the combo box
-            Drives = Validators.CreateListOfDrives(UIOptions.Options.IgnoreFixedDrives);
-            DriveLetterComboBox.ItemsSource = Drives;
-
-            if (DriveLetterComboBox.Items.Count > 0)
-            {
-                LogOutput.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
-
-                // Check for active optical drives first
-                int index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
-
-                // Then we check for floppy drives
-                if (index == -1)
-                    index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Floppy);
-
-                // Then we try all other drive types
-                if (index == -1)
-                    index = Drives.FindIndex(d => d.MarkedActive);
-
-                // Set the selected index
-                DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
-                StatusLabel.Content = "Valid drive found! Choose your Media Type";
-                CopyProtectScanButton.IsEnabled = true;
-
-                // Get the current system type
-                if (index != -1)
-                    DetermineSystemType();
-
-                // Only enable the start/stop if we don't have the default selected
-                StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
-            }
-            else
-            {
-                LogOutput.VerboseLogLn("Found no drives");
-                DriveLetterComboBox.SelectedIndex = -1;
-                StatusLabel.Content = "No valid drive found!";
-                StartStopButton.IsEnabled = false;
-                CopyProtectScanButton.IsEnabled = false;
-            }
-        }
-
-        /// <summary>
-        /// Populate media type according to system type
-        /// </summary>
-        private void PopulateMediaType()
-        {
-            KnownSystem? currentSystem = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
-
-            if (currentSystem != null)
-            {
-                var mediaTypeValues = Validators.GetValidMediaTypes(currentSystem);
-                MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
-                MediaTypeComboBox.ItemsSource = MediaTypes;
-
-                MediaTypeComboBox.IsEnabled = MediaTypes.Count > 1;
-                int currentIndex = MediaTypes.FindIndex(m => m == CurrentMediaType);
-                MediaTypeComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
-            }
-            else
-            {
-                MediaTypeComboBox.IsEnabled = false;
-                MediaTypeComboBox.ItemsSource = null;
-                MediaTypeComboBox.SelectedIndex = -1;
-            }
-        }
-
-        /// <summary>
         /// Process the current custom parameters back into UI values
         /// </summary>
         private void ProcessCustomParameters()
@@ -378,62 +480,6 @@ namespace MPF.Windows
         }
 
         /// <summary>
-        /// Remove all textbox and combobox event handlers
-        /// </summary>
-        private void RemoveEventHandlers()
-        {
-            SystemTypeComboBox.SelectionChanged -= SystemTypeComboBoxSelectionChanged;
-            MediaTypeComboBox.SelectionChanged -= MediaTypeComboBoxSelectionChanged;
-            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
-            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
-            DriveLetterComboBox.SelectionChanged -= DriveLetterComboBoxSelectionChanged;
-            DriveSpeedComboBox.SelectionChanged -= DriveSpeedComboBoxSelectionChanged;
-        }
-
-        /// <summary>
-        /// Performs UI value setup end to end
-        /// </summary>
-        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
-        /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        private void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
-        {
-            // Disable the dumping button
-            StartStopButton.IsEnabled = false;
-
-            // Remove event handlers to ensure ordering
-            if (removeEventHandlers)
-                RemoveEventHandlers();
-
-            // Populate the list of drives and determine the system
-            if (rescanDrives)
-            {
-                StatusLabel.Content = "Creating drive list, please wait!";
-                PopulateDrives();
-            }
-            else
-            {
-                DetermineSystemType();
-            }
-
-            // Determine current media type, if possible
-            PopulateMediaType();
-            CacheCurrentDiscType();
-            SetCurrentDiscType();
-
-            // Set the initial environment and UI values
-            SetSupportedDriveSpeed();
-            Env = DetermineEnvironment();
-            GetOutputNames(true);
-            EnsureDiscInformation();
-
-            // Add event handlers
-            AddEventHandlers();
-
-            // Enable the dumping button
-            StartStopButton.IsEnabled = true;
-        }
-
-        /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
         private async void ScanAndShowProtection()
@@ -468,7 +514,7 @@ namespace MPF.Windows
                 if (!LogPanel.IsExpanded)
                     MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
                 
-                LogOutput.VerboseLog($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
+                LogOutput.LogLn($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = true;
@@ -557,7 +603,7 @@ namespace MPF.Windows
                     MessageBoxResult mbresult = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
-                        LogOutput.VerboseLogLn("Dumping aborted!");
+                        LogOutput.LogLn("Dumping aborted!");
                         return;
                     }
                 }
@@ -569,15 +615,17 @@ namespace MPF.Windows
                     MessageBoxResult mbresult = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
-                        LogOutput.VerboseLogLn("Dumping aborted!");
+                        LogOutput.LogLn("Dumping aborted!");
                         return;
                     }
                 }
 
-                StartStopButton.Content = Interface.StopDumping;
-                CopyProtectScanButton.IsEnabled = false;
+                // Disable all UI elements apart from dumping button
+                DisableAllUIElements();
+
+                // Output to the label and log
                 StatusLabel.Content = "Beginning dumping process";
-                LogOutput.VerboseLogLn("Starting dumping process..");
+                LogOutput.LogLn("Starting dumping process..");
 
                 // Get progress indicators
                 var resultProgress = new Progress<Result>();
@@ -588,14 +636,16 @@ namespace MPF.Windows
 
                 // Run the program with the parameters
                 Result result = await Env.Run(resultProgress);
+                LogOutput.ResetProgressBar();
 
                 // If we didn't execute a dumping command we cannot get submission output
                 if (!Env.Parameters.IsDumpingCommand())
                 {
-                    LogOutput.VerboseLogLn("No dumping command was run, submission information will not be gathered.");
+                    LogOutput.LogLn("No dumping command was run, submission information will not be gathered.");
                     StatusLabel.Content = "Execution complete!";
-                    StartStopButton.Content = Interface.StartDumping;
-                    CopyProtectScanButton.IsEnabled = true;
+
+                    // Reset all UI elements
+                    EnableAllUIElements();
                     return;
                 }
 
@@ -606,19 +656,19 @@ namespace MPF.Windows
                 }
                 else
                 {
-                    LogOutput.VerboseLogLn(result.Message);
+                    LogOutput.ErrorLogLn(result.Message);
                     StatusLabel.Content = "Execution failed!";
                 }
             }
             catch (Exception ex)
             {
-                LogOutput.VerboseLogLn(ex.Message);
+                LogOutput.ErrorLogLn(ex.Message);
                 StatusLabel.Content = "An exception occurred!";
             }
             finally
             {
-                StartStopButton.Content = Interface.StartDumping;
-                CopyProtectScanButton.IsEnabled = true;
+                // Reset all UI elements
+                EnableAllUIElements();
             }
         }
 
