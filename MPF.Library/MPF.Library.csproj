@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <Title>MPF Library</Title>
     <AssemblyName>MPF.Library</AssemblyName>
     <Description>Library code for MPF and MPF.Check</Description>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2020</Copyright>
+    <Copyright>Copyright (c)2019-2021</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <Version>1.18</Version>
     <AssemblyVersion>1.18</AssemblyVersion>

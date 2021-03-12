@@ -40,21 +40,15 @@ after_build:
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/6062407/DiscImageCreator_20210301.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 
-- 7z e aaru-5.2.0.3330-1_windows_x64.zip -oMPF\bin\Debug\net472\Programs\Aaru *
 - 7z e aaru-5.2.0.3330-1_windows_x64.zip -oMPF\bin\Debug\net48\Programs\Aaru *
 - 7z e aaru-5.2.0.3330-1_windows_x64.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Aaru *
 
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net472\Programs\DD *
 - 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net48\Programs\DD *
 - 7z e dd-0.6beta3.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\DD *
 
-- 7z e DiscImageCreator_20210301.zip -oMPF\bin\Debug\net472\Programs\Creator Release_ANSI\*
 - 7z e DiscImageCreator_20210301.zip -oMPF\bin\Debug\net48\Programs\Creator Release_ANSI\*
 - 7z e DiscImageCreator_20210301.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
 
-- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net472 *
-- mkdir MPF\bin\Debug\net472\Programs\Subdump
-- mv MPF\bin\Debug\net472\subdump_fua_0x28.exe MPF\bin\Debug\net472\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net48 *
 - mkdir MPF\bin\Debug\net48\Programs\Subdump
 - mv MPF\bin\Debug\net48\subdump_fua_0x28.exe MPF\bin\Debug\net48\Programs\Subdump\subdump.exe
@@ -63,26 +57,20 @@ after_build:
 - mv MPF\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe MPF\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
 
 - cd MPF\bin\Debug
-- 7z a MPF_net472.zip net472\*
 - 7z a MPF_net48.zip net48\*
 - 7z a MPF_netcoreapp3.1.zip netcoreapp3.1\*
 
 - cd ..\..\..\MPF.Check\bin\Debug
-- 7z a MPF-Check_net472.zip net472\*
 - 7z a MPF-Check_net48.zip net48\*
 - 7z a MPF-Check_netcoreapp3.1.zip netcoreapp3.1\*
 
 # artifact linking
 artifacts:
-- path: MPF\bin\Debug\MPF_net472.zip
-  name: MPF (WPF UI) (.NET Framework 4.7.2)
 - path: MPF\bin\Debug\MPF_net48.zip
   name: MPF (WPF UI) (.NET Framework 4.8)
 - path: MPF\bin\Debug\MPF_netcoreapp3.1.zip
   name: MPF (WPF UI) (.NET Core 3.1)
 
-- path: MPF.Check\bin\Debug\MPF-Check_net472.zip
-  name: MPF Check (.NET Framework 4.7.2)
 - path: MPF.Check\bin\Debug\MPF-Check_net48.zip
   name: MPF Check (.NET Framework 4.8)
 - path: MPF.Check\bin\Debug\MPF-Check_netcoreapp3.1.zip

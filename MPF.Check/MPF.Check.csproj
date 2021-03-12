@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <Prefer32Bit>true</Prefer32Bit>
     <Title>MPF Check</Title>
     <AssemblyName>MPF.Check</AssemblyName>
     <Description>Validator for various dumping programs</Description>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2020</Copyright>
+    <Copyright>Copyright (c)2019-2021</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <Version>1.18</Version>
     <AssemblyVersion>1.18</AssemblyVersion>
