@@ -15,10 +15,35 @@ namespace MPF.DiscImageCreator
     /// </summary>
     public class Parameters : BaseParameters
     {
+        #region Generic Dumping Information
+
+        /// <inheritdoc/>
+        public override string InputPath => DriveLetter;
+
+        /// <inheritdoc/>
+        public override string OutputPath => Filename;
+
+        /// <inheritdoc/>
+        /// <inheritdoc/>
+        public override int? Speed
+        {
+            get { return DriveSpeed; }
+            set { DriveSpeed = (sbyte?)value; }
+        }
+
+        #endregion
+
+        #region Metadata
+
         /// <summary>
         /// Base command to run
         /// </summary>
         public Command BaseCommand { get; set; }
+
+        /// <inheritdoc/>
+        public override InternalProgram InternalProgram => InternalProgram.DiscImageCreator;
+
+        #endregion
 
         /// <summary>
         /// Set of flags to pass to the executable
@@ -151,19 +176,585 @@ namespace MPF.DiscImageCreator
         #endregion
 
         /// <inheritdoc/>
-        public Parameters(string parameters)
-            : base(parameters)
-        {
-            this.InternalProgram = InternalProgram.DiscImageCreator;
-        }
+        public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
         public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
-            this.InternalProgram = InternalProgram.DiscImageCreator;
-            if (options.DICQuietMode)
-                this[Flag.DisableBeep] = true;
+        }
+
+        #region BaseParameters Implementations
+
+        /// <inheritdoc/>
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        {
+            /*
+            If there are no external programs, such as error checking, etc., DIC outputs
+            a slightly different set of files. This reduced set needs to be documented in
+            order for special use cases, such as self-built versions of DIC or removed
+            helper programs, can be detected to the best of our ability. Below is the list
+            of files that are generated in that case:
+
+                .bin
+                .c2
+                .ccd
+                .cue
+                .img/.imgtmp
+                .scm/.scmtmp
+                .sub/.subtmp
+                _cmd.txt (formerly)
+                _img.cue
+
+            This list needs to be translated into the minimum viable set of information
+            such that things like error checking can be passed back as a flag, or some
+            similar method.
+
+            Here are some notes about the various output files and what they represent:
+            - bin           - Final split output disc image (CD/GD only)
+            - c2            - Represents each byte per sector as one bit; 0 means no error, 1 means error
+            - c2Error       - Human-readable version of `c2`; only errors are printed
+            - ccd           - CloneCD control file referencing the `img` file
+            - cmd           - Represents the commandline that was run
+            - cue           - CDRWIN cuesheet referencing the `bin` file(s)
+            - dat           - Logiqx datfile referencing the `bin` file(s)
+            - disc          - Disc metadata and information
+            - drive         - Drive metadata and information
+            - img           - CloneCD output disc image (CD/GD only)
+            - img.cue       - CDRWIN cuesheet referencing the `img` file
+            - img_EdcEcc    - ECC check output as run on the `img` file
+            - iso           - Final output disc image (DVD/BD only)
+            - mainError     - Read, drive, or system errors
+            - mainInfo      - ISOBuster-formatted sector information
+            - scm           - Scrambled disc image
+            - sub           - Binary subchannel data as read from the disc
+            - subError      - Subchannel read errors
+            - subInfo       - Subchannel informational messages
+            - subIntention  - Subchannel intentional error information
+            - subReadable   - Human-readable version of `sub`
+            - volDesc       - Volume descriptor information
+            */
+
+            List<string> missingFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    if (!File.Exists($"{basePath}.ccd"))
+                        missingFiles.Add($"{basePath}.ccd");
+                    if (!File.Exists($"{basePath}.cue"))
+                        missingFiles.Add($"{basePath}.cue");
+                    if (!File.Exists($"{basePath}.dat"))
+                        missingFiles.Add($"{basePath}.dat");
+                    if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
+                        missingFiles.Add($"{basePath}.img");
+                    if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
+                        missingFiles.Add($"{basePath}.sub");
+                    if (!File.Exists($"{basePath}_disc.txt"))
+                        missingFiles.Add($"{basePath}_disc.txt");
+                    if (!File.Exists($"{basePath}_drive.txt"))
+                        missingFiles.Add($"{basePath}_drive.txt");
+                    if (!File.Exists($"{basePath}_img.cue"))
+                        missingFiles.Add($"{basePath}_img.cue");
+                    if (!File.Exists($"{basePath}_mainError.txt"))
+                        missingFiles.Add($"{basePath}_mainError.txt");
+                    if (!File.Exists($"{basePath}_mainInfo.txt"))
+                        missingFiles.Add($"{basePath}_mainInfo.txt");
+                    if (!File.Exists($"{basePath}_subError.txt"))
+                        missingFiles.Add($"{basePath}_subError.txt");
+                    if (!File.Exists($"{basePath}_subInfo.txt"))
+                        missingFiles.Add($"{basePath}_subInfo.txt");
+                    if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
+                        missingFiles.Add($"{basePath}_subReadable.txt");
+                    if (!File.Exists($"{basePath}_volDesc.txt"))
+                        missingFiles.Add($"{basePath}_volDesc.txt");
+
+                    // Audio-only discs don't output these files
+                    if (!this.System.IsAudio())
+                    {
+                        if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
+                            missingFiles.Add($"{basePath}.img_EdcEcc.txt");
+                        if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
+                            missingFiles.Add($"{basePath}.scm");
+                    }
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Doesn't output on Linux
+                        if (!File.Exists($"{basePath}.c2"))
+                            missingFiles.Add($"{basePath}.c2");
+
+                        // Doesn't output on Linux
+                        if (!File.Exists($"{basePath}_c2Error.txt"))
+                            missingFiles.Add($"{basePath}_c2Error.txt");
+
+                        // Replaced by timestamp-named file
+                        if (!File.Exists($"{basePath}_cmd.txt"))
+                            missingFiles.Add($"{basePath}_cmd.txt");
+
+                        // Not guaranteed output
+                        if (!File.Exists($"{basePath}_subIntention.txt"))
+                            missingFiles.Add($"{basePath}_subIntention.txt");
+                    }
+
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    if (!File.Exists($"{basePath}.dat"))
+                        missingFiles.Add($"{basePath}.dat");
+                    if (!File.Exists($"{basePath}_disc.txt"))
+                        missingFiles.Add($"{basePath}_disc.txt");
+                    if (!File.Exists($"{basePath}_drive.txt"))
+                        missingFiles.Add($"{basePath}_drive.txt");
+                    if (!File.Exists($"{basePath}_mainError.txt"))
+                        missingFiles.Add($"{basePath}_mainError.txt");
+                    if (!File.Exists($"{basePath}_mainInfo.txt"))
+                        missingFiles.Add($"{basePath}_mainInfo.txt");
+                    if (!File.Exists($"{basePath}_volDesc.txt"))
+                        missingFiles.Add($"{basePath}_volDesc.txt");
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Replaced by timestamp-named file
+                        if (!File.Exists($"{basePath}_cmd.txt"))
+                            missingFiles.Add($"{basePath}_cmd.txt");
+                    }
+
+                    break;
+
+                case MediaType.FloppyDisk:
+                case MediaType.HardDisk:
+                    // TODO: Determine what outputs come out from a HDD, SD, etc.
+                    if (!File.Exists($"{basePath}.dat"))
+                        missingFiles.Add($"{basePath}.dat");
+                    if (!File.Exists($"{basePath}_disc.txt"))
+                        missingFiles.Add($"{basePath}_disc.txt");
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Replaced by timestamp-named file
+                        if (!File.Exists($"{basePath}_cmd.txt"))
+                            missingFiles.Add($"{basePath}_cmd.txt");
+                    }
+
+                    break;
+
+                default:
+                    return (false, missingFiles);
+            }
+
+            return (!missingFiles.Any(), missingFiles);
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        {
+            string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // Fill in the hash data
+            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
+
+            // Extract info based generically on MediaType
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "Disc has no PVD"; ;
+
+                    // Audio-only discs will fail if there are any C2 errors, so they would never get here
+                    if (this.System.IsAudio())
+                    {
+                        info.CommonDiscInfo.ErrorsCount = "0";
+                    }
+                    else
+                    {
+                        long errorCount = -1;
+                        if (File.Exists(basePath + ".img_EdcEcc.txt"))
+                            errorCount = GetErrorCount(basePath + ".img_EdcEcc.txt");
+                        else if (File.Exists(basePath + ".img_EccEdc.txt"))
+                            errorCount = GetErrorCount(basePath + ".img_EccEdc.txt");
+
+                        info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                    }
+
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile(basePath + ".cue") ?? "";
+                    var cueSheet = new CueSheet(basePath + ".cue"); // TODO: Do something with this
+
+                    string cdWriteOffset = GetWriteOffset(basePath + "_disc.txt") ?? "";
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
+
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    // Get the individual hash data, as per internal
+                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    {
+                        info.SizeAndChecksums.Size = size;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                    }
+
+                    // Deal with the layerbreaks
+                    if (this.Type == MediaType.DVD)
+                    {
+                        string layerbreak = GetLayerbreak(basePath + "_disc.txt", System.IsXGD()) ?? "";
+                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                    }
+                    else if (this.Type == MediaType.BluRay)
+                    {
+                        if (GetLayerbreak(Path.Combine(outputDirectory, "PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        {
+                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
+
+                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+
+                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
+                        }
+                    }
+
+                    // Read the PVD
+                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
+
+                    // Bluray-specific options
+                    if (this.Type == MediaType.BluRay)
+                        info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, "PIC.bin")) ?? "";
+
+                    break;
+            }
+
+            // Extract info based specifically on KnownSystem
+            switch (this.System)
+            {
+                case KnownSystem.AppleMacintosh:
+                case KnownSystem.EnhancedCD:
+                case KnownSystem.IBMPCCompatible:
+                case KnownSystem.RainbowDisc:
+                    if (File.Exists(basePath + "_subIntention.txt"))
+                    {
+                        FileInfo fi = new FileInfo(basePath + "_subIntention.txt");
+                        if (fi.Length > 0)
+                            info.CopyProtection.SecuROMData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.DVDAudio:
+                case KnownSystem.DVDVideo:
+                    info.CopyProtection.Protection = GetDVDProtection(basePath + "_CSSKey.txt", basePath + "_disc.txt") ?? "";
+                    break;
+
+                case KnownSystem.KonamiPython2:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.MicrosoftXBOX:
+                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss ?? "";
+                    }
+
+                    if (GetXboxDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out RedumpRegion? region))
+                    {
+                        info.CommonDiscInfo.Serial = serial ?? "";
+                        info.VersionAndEditions.Version = version ?? "";
+                        info.CommonDiscInfo.Region = region;
+                    }
+
+                    break;
+
+                case KnownSystem.MicrosoftXBOX360:
+                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss360 ?? "";
+                    }
+
+                    if (GetXbox360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out RedumpRegion? region360))
+                    {
+                        info.CommonDiscInfo.Serial = serial360 ?? "";
+                        info.VersionAndEditions.Version = version360 ?? "";
+                        info.CommonDiscInfo.Region = region360;
+                    }
+                    break;
+
+                case KnownSystem.NamcoSegaNintendoTriforce:
+                    if (this.Type == MediaType.CDROM)
+                    {
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
+
+                    break;
+
+                case KnownSystem.SegaCDMegaCD:
+                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    // Take only the last 16 lines for Sega CD
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16));
+
+                    if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Serial: {scdSerial ?? ""}";
+                        info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.SegaChihiro:
+                    if (this.Type == MediaType.CDROM)
+                    {
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
+
+                    break;
+
+                case KnownSystem.SegaDreamcast:
+                    if (this.Type == MediaType.CDROM)
+                    {
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
+
+                    break;
+
+                case KnownSystem.SegaNaomi:
+                    if (this.Type == MediaType.CDROM)
+                    {
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
+
+                    break;
+
+                case KnownSystem.SegaNaomi2:
+                    if (this.Type == MediaType.CDROM)
+                    {
+                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                        // Take only the first 16 lines for GD-ROM
+                        if (!string.IsNullOrEmpty(info.Extras.Header))
+                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
+                        {
+                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.VersionAndEditions.Version = gdVersion ?? "";
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                        }
+                    }
+
+                    break;
+
+                case KnownSystem.SegaSaturn:
+                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+
+                    // Take only the first 16 lines for Saturn
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                    if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Serial: {saturnSerial ?? ""}";
+                        info.VersionAndEditions.Version = saturnVersion ?? "";
+                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
+                    }
+
+                    break;
+
+                case KnownSystem.SonyPlayStation:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Serial: {playstationSerial ?? ""}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                    }
+
+                    bool? psEdcStatus = null;
+                    if (File.Exists(basePath + ".img_EdcEcc.txt"))
+                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EdcEcc.txt");
+                    else if (File.Exists(basePath + ".img_EccEdc.txt"))
+                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EccEdc.txt");
+
+                    if (psEdcStatus == true)
+                        info.EDC.EDC = YesNo.Yes;
+                    else if (psEdcStatus == false)
+                        info.EDC.EDC = YesNo.No;
+                    else
+                        info.EDC.EDC = YesNo.NULL;
+
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
+
+                    bool? psLibCryptStatus = GetLibCryptDetected(basePath + ".sub");
+                    if (psLibCryptStatus == true)
+                    {
+                        // Guard against false positives
+                        if (File.Exists(basePath + "_subIntention.txt"))
+                        {
+                            string libCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                            if (string.IsNullOrEmpty(libCryptData))
+                            {
+                                info.CopyProtection.LibCrypt = YesNo.No;
+                            }
+                            else
+                            {
+                                info.CopyProtection.LibCrypt = YesNo.Yes;
+                                info.CopyProtection.LibCryptData = libCryptData;
+                            }
+                        }
+                        else
+                        {
+                            info.CopyProtection.LibCrypt = YesNo.No;
+                        }
+                    }
+                    else if (psLibCryptStatus == false)
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.No;
+                    }
+                    else
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.NULL;
+                        info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
+                    }
+
+                    break;
+
+                case KnownSystem.SonyPlayStation2:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation4:
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation5:
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
+                    break;
+            }
+
+            // Fill in any artifacts that exist, Base64-encoded
+            //if (File.Exists(basePath + ".c2"))
+            //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
+            if (File.Exists(basePath + "_c2Error.txt"))
+                info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
+            if (File.Exists(basePath + ".ccd"))
+                info.Artifacts["ccd"] = GetBase64(GetFullFile(basePath + ".ccd"));
+            if (File.Exists(basePath + "_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
+                info.Artifacts["cmd"] = GetBase64(GetFullFile(basePath + "_cmd.txt"));
+            if (File.Exists(basePath + ".cue"))
+                info.Artifacts["cue"] = GetBase64(GetFullFile(basePath + ".cue"));
+            if (File.Exists(basePath + ".dat"))
+                info.Artifacts["dat"] = GetBase64(GetFullFile(basePath + ".dat"));
+            if (File.Exists(basePath + "_disc.txt"))
+                info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
+            //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
+            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "DMI.bin")));
+            if (File.Exists(basePath + "_drive.txt"))
+                info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
+            if (File.Exists(basePath + "_img.cue"))
+                info.Artifacts["img_cue"] = GetBase64(GetFullFile(basePath + "_img.cue"));
+            if (File.Exists(basePath + ".img_EdcEcc.txt"))
+                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EdcEcc.txt"));
+            if (File.Exists(basePath + ".img_EccEdc.txt"))
+                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EccEdc.txt"));
+            if (File.Exists(basePath + "_mainError.txt"))
+                info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
+            if (File.Exists(basePath + "_mainInfo.txt"))
+                info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
+            //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
+            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "PFI.bin")));
+            //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
+            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "SS.bin")));
+            if (File.Exists(basePath + ".sub"))
+                info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".sub"));
+            if (File.Exists(basePath + "_subError.txt"))
+                info.Artifacts["subError"] = GetBase64(GetFullFile(basePath + "_subError.txt"));
+            if (File.Exists(basePath + "_subInfo.txt"))
+                info.Artifacts["subInfo"] = GetBase64(GetFullFile(basePath + "_subInfo.txt"));
+            if (File.Exists(basePath + "_subIntention.txt"))
+                info.Artifacts["subIntention"] = GetBase64(GetFullFile(basePath + "_subIntention.txt"));
+            //if (File.Exists(basePath + "_sub.txt"))
+            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
+            //if (File.Exists(basePath + "_subReadable.txt"))
+            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
+            if (File.Exists(basePath + "_volDesc.txt"))
+                info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
         }
 
         /// <inheritdoc/>
@@ -623,16 +1214,7 @@ namespace MPF.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        public override string InputPath() => DriveLetter;
-
-        /// <inheritdoc/>
-        public override string OutputPath() => Filename;
-
-        /// <inheritdoc/>
-        public override int? GetSpeed() => DriveSpeed;
-
-        /// <inheritdoc/>
-        public override void SetSpeed(int? speed) => DriveSpeed = speed;
+        public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
         public override MediaType? GetMediaType() => Converters.ToMediaType(BaseCommand);
@@ -703,6 +1285,10 @@ namespace MPF.DiscImageCreator
             var validTypes = Validators.GetValidMediaTypes(this.System);
             if (!validTypes.Contains(this.Type))
                 return;
+
+            // Set disable beep flag, if needed
+            if (options.DICQuietMode)
+                this[Flag.DisableBeep] = true;
 
             // Set the C2 reread count
             switch (options.DICRereadCount)
@@ -1629,576 +2215,9 @@ namespace MPF.DiscImageCreator
             return true;
         }
 
-        /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
-        {
-            /*
-            If there are no external programs, such as error checking, etc., DIC outputs
-            a slightly different set of files. This reduced set needs to be documented in
-            order for special use cases, such as self-built versions of DIC or removed
-            helper programs, can be detected to the best of our ability. Below is the list
-            of files that are generated in that case:
+        #endregion
 
-                .bin
-                .c2
-                .ccd
-                .cue
-                .img/.imgtmp
-                .scm/.scmtmp
-                .sub/.subtmp
-                _cmd.txt (formerly)
-                _img.cue
-
-            This list needs to be translated into the minimum viable set of information
-            such that things like error checking can be passed back as a flag, or some
-            similar method.
-
-            Here are some notes about the various output files and what they represent:
-            - bin           - Final split output disc image (CD/GD only)
-            - c2            - Represents each byte per sector as one bit; 0 means no error, 1 means error
-            - c2Error       - Human-readable version of `c2`; only errors are printed
-            - ccd           - CloneCD control file referencing the `img` file
-            - cmd           - Represents the commandline that was run
-            - cue           - CDRWIN cuesheet referencing the `bin` file(s)
-            - dat           - Logiqx datfile referencing the `bin` file(s)
-            - disc          - Disc metadata and information
-            - drive         - Drive metadata and information
-            - img           - CloneCD output disc image (CD/GD only)
-            - img.cue       - CDRWIN cuesheet referencing the `img` file
-            - img_EdcEcc    - ECC check output as run on the `img` file
-            - iso           - Final output disc image (DVD/BD only)
-            - mainError     - Read, drive, or system errors
-            - mainInfo      - ISOBuster-formatted sector information
-            - scm           - Scrambled disc image
-            - sub           - Binary subchannel data as read from the disc
-            - subError      - Subchannel read errors
-            - subInfo       - Subchannel informational messages
-            - subIntention  - Subchannel intentional error information
-            - subReadable   - Human-readable version of `sub`
-            - volDesc       - Volume descriptor information
-            */
-
-            List<string> missingFiles = new List<string>();
-            switch (this.Type)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    if (!File.Exists($"{basePath}.ccd"))
-                        missingFiles.Add($"{basePath}.ccd");
-                    if (!File.Exists($"{basePath}.cue"))
-                        missingFiles.Add($"{basePath}.cue");
-                    if (!File.Exists($"{basePath}.dat"))
-                        missingFiles.Add($"{basePath}.dat");
-                    if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
-                        missingFiles.Add($"{basePath}.img");
-                    if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
-                        missingFiles.Add($"{basePath}.sub");
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
-                    if (!File.Exists($"{basePath}_drive.txt"))
-                        missingFiles.Add($"{basePath}_drive.txt");
-                    if (!File.Exists($"{basePath}_img.cue"))
-                        missingFiles.Add($"{basePath}_img.cue");
-                    if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles.Add($"{basePath}_mainError.txt");
-                    if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles.Add($"{basePath}_mainInfo.txt");
-                    if (!File.Exists($"{basePath}_subError.txt"))
-                        missingFiles.Add($"{basePath}_subError.txt");
-                    if (!File.Exists($"{basePath}_subInfo.txt"))
-                        missingFiles.Add($"{basePath}_subInfo.txt");
-                    if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
-                        missingFiles.Add($"{basePath}_subReadable.txt");
-                    if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles.Add($"{basePath}_volDesc.txt");
-
-                    // Audio-only discs don't output these files
-                    if (!this.System.IsAudio())
-                    {
-                        if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
-                            missingFiles.Add($"{basePath}.img_EdcEcc.txt");
-                        if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
-                            missingFiles.Add($"{basePath}.scm");
-                    }
-
-                    // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Doesn't output on Linux
-                        if (!File.Exists($"{basePath}.c2"))
-                            missingFiles.Add($"{basePath}.c2");
-
-                        // Doesn't output on Linux
-                        if (!File.Exists($"{basePath}_c2Error.txt"))
-                            missingFiles.Add($"{basePath}_c2Error.txt");
-
-                        // Replaced by timestamp-named file
-                        if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles.Add($"{basePath}_cmd.txt");
-
-                        // Not guaranteed output
-                        if (!File.Exists($"{basePath}_subIntention.txt"))
-                            missingFiles.Add($"{basePath}_subIntention.txt");
-                    }
-
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}.dat"))
-                        missingFiles.Add($"{basePath}.dat");
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
-                    if (!File.Exists($"{basePath}_drive.txt"))
-                        missingFiles.Add($"{basePath}_drive.txt");
-                    if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles.Add($"{basePath}_mainError.txt");
-                    if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles.Add($"{basePath}_mainInfo.txt");
-                    if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles.Add($"{basePath}_volDesc.txt");
-
-                    // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Replaced by timestamp-named file
-                        if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles.Add($"{basePath}_cmd.txt");
-                    }
-
-                    break;
-
-                case MediaType.FloppyDisk:
-                case MediaType.HardDisk:
-                    // TODO: Determine what outputs come out from a HDD, SD, etc.
-                    if (!File.Exists($"{basePath}.dat"))
-                        missingFiles.Add($"{basePath}.dat");
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
-
-                    // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Replaced by timestamp-named file
-                        if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles.Add($"{basePath}_cmd.txt");
-                    }
-
-                    break;
-
-                default:
-                    return (false, missingFiles);
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
-        {
-            string outputDirectory = Path.GetDirectoryName(basePath);
-
-            // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
-
-            // Extract info based generically on MediaType
-            switch (this.Type)
-            {
-                case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "Disc has no PVD"; ;
-
-                    // Audio-only discs will fail if there are any C2 errors, so they would never get here
-                    if (this.System.IsAudio())
-                    {
-                        info.CommonDiscInfo.ErrorsCount = "0";
-                    }
-                    else
-                    {
-                        long errorCount = -1;
-                        if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                            errorCount = GetErrorCount(basePath + ".img_EdcEcc.txt");
-                        else if (File.Exists(basePath + ".img_EccEdc.txt"))
-                            errorCount = GetErrorCount(basePath + ".img_EccEdc.txt");
-
-                        info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-                    }
-
-                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile(basePath + ".cue") ?? "";
-                    var cueSheet = new CueSheet(basePath + ".cue"); // TODO: Do something with this
-
-                    string cdWriteOffset = GetWriteOffset(basePath + "_disc.txt") ?? "";
-                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
-                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
-
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                    // Get the individual hash data, as per internal
-                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
-                    {
-                        info.SizeAndChecksums.Size = size;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
-                    }
-
-                    // Deal with the layerbreaks
-                    if (this.Type == MediaType.DVD)
-                    {
-                        string layerbreak = GetLayerbreak(basePath + "_disc.txt", System.IsXGD()) ?? "";
-                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
-                    }
-                    else if (this.Type == MediaType.BluRay)
-                    {
-                        if (GetLayerbreak(Path.Combine(outputDirectory, "PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
-                        {
-                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
-
-                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
-
-                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
-                        }
-                    }
-
-                    // Read the PVD
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
-
-                    // Bluray-specific options
-                    if (this.Type == MediaType.BluRay)
-                        info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, "PIC.bin")) ?? "";
-
-                    break;
-            }
-
-            // Extract info based specifically on KnownSystem
-            switch (this.System)
-            {
-                case KnownSystem.AppleMacintosh:
-                case KnownSystem.EnhancedCD:
-                case KnownSystem.IBMPCCompatible:
-                case KnownSystem.RainbowDisc:
-                    if (File.Exists(basePath + "_subIntention.txt"))
-                    {
-                        FileInfo fi = new FileInfo(basePath + "_subIntention.txt");
-                        if (fi.Length > 0)
-                            info.CopyProtection.SecuROMData = GetFullFile(basePath + "_subIntention.txt") ?? "";
-                    }
-
-                    break;
-
-                case KnownSystem.DVDAudio:
-                case KnownSystem.DVDVideo:
-                    info.CopyProtection.Protection = GetDVDProtection(basePath + "_CSSKey.txt", basePath + "_disc.txt") ?? "";
-                    break;
-
-                case KnownSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
-                    }
-
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.MicrosoftXBOX:
-                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
-                    {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = ss ?? "";
-                    }
-
-                    if (GetXboxDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out RedumpRegion? region))
-                    {
-                        info.CommonDiscInfo.Serial = serial ?? "";
-                        info.VersionAndEditions.Version = version ?? "";
-                        info.CommonDiscInfo.Region = region;
-                    }
-
-                    break;
-
-                case KnownSystem.MicrosoftXBOX360:
-                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
-                    {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = ss360 ?? "";
-                    }
-
-                    if (GetXbox360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out RedumpRegion? region360))
-                    {
-                        info.CommonDiscInfo.Serial = serial360 ?? "";
-                        info.VersionAndEditions.Version = version360 ?? "";
-                        info.CommonDiscInfo.Region = region360;
-                    }
-                    break;
-
-                case KnownSystem.NamcoSegaNintendoTriforce:
-                    if (this.Type == MediaType.CDROM)
-                    {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
-
-                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
-                        {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
-                        }
-                    }
-
-                    break;
-
-                case KnownSystem.SegaCDMegaCD:
-                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                    // Take only the last 16 lines for Sega CD
-                    if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Skip(16));
-
-                    if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Serial: {scdSerial ?? ""}";
-                        info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
-                    }
-
-                    break;
-
-                case KnownSystem.SegaChihiro:
-                    if (this.Type == MediaType.CDROM)
-                    {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
-
-                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
-                        {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
-                        }
-                    }
-
-                    break;
-
-                case KnownSystem.SegaDreamcast:
-                    if (this.Type == MediaType.CDROM)
-                    {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
-
-                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
-                        {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
-                        }
-                    }
-
-                    break;
-
-                case KnownSystem.SegaNaomi:
-                    if (this.Type == MediaType.CDROM)
-                    {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
-
-                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
-                        {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
-                        }
-                    }
-
-                    break;
-
-                case KnownSystem.SegaNaomi2:
-                    if (this.Type == MediaType.CDROM)
-                    {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                        // Take only the first 16 lines for GD-ROM
-                        if (!string.IsNullOrEmpty(info.Extras.Header))
-                            info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
-
-                        if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
-                        {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
-                        }
-                    }
-
-                    break;
-
-                case KnownSystem.SegaSaturn:
-                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
-
-                    // Take only the first 16 lines for Saturn
-                    if (!string.IsNullOrEmpty(info.Extras.Header))
-                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
-
-                    if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Serial: {saturnSerial ?? ""}";
-                        info.VersionAndEditions.Version = saturnVersion ?? "";
-                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
-                    }
-
-                    break;
-
-                case KnownSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Serial: {playstationSerial ?? ""}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
-                    }
-
-                    bool? psEdcStatus = null;
-                    if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EdcEcc.txt");
-                    else if (File.Exists(basePath + ".img_EccEdc.txt"))
-                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EccEdc.txt");
-
-                    if (psEdcStatus == true)
-                        info.EDC.EDC = YesNo.Yes;
-                    else if (psEdcStatus == false)
-                        info.EDC.EDC = YesNo.No;
-                    else
-                        info.EDC.EDC = YesNo.NULL;
-
-                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
-
-                    bool? psLibCryptStatus = GetLibCryptDetected(basePath + ".sub");
-                    if (psLibCryptStatus == true)
-                    {
-                        // Guard against false positives
-                        if (File.Exists(basePath + "_subIntention.txt"))
-                        {
-                            string libCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
-                            if (string.IsNullOrEmpty(libCryptData))
-                            {
-                                info.CopyProtection.LibCrypt = YesNo.No;
-                            }
-                            else
-                            {
-                                info.CopyProtection.LibCrypt = YesNo.Yes;
-                                info.CopyProtection.LibCryptData = libCryptData;
-                            }
-                        }
-                        else
-                        {
-                            info.CopyProtection.LibCrypt = YesNo.No;
-                        }
-                    }
-                    else if (psLibCryptStatus == false)
-                    {
-                        info.CopyProtection.LibCrypt = YesNo.No;
-                    }
-                    else
-                    {
-                        info.CopyProtection.LibCrypt = YesNo.NULL;
-                        info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
-                    }
-
-                    break;
-
-                case KnownSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
-                    }
-
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded
-            //if (File.Exists(basePath + ".c2"))
-            //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
-            if (File.Exists(basePath + "_c2Error.txt"))
-                info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
-            if (File.Exists(basePath + ".ccd"))
-                info.Artifacts["ccd"] = GetBase64(GetFullFile(basePath + ".ccd"));
-            if (File.Exists(basePath + "_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
-                info.Artifacts["cmd"] = GetBase64(GetFullFile(basePath + "_cmd.txt"));
-            if (File.Exists(basePath + ".cue"))
-                info.Artifacts["cue"] = GetBase64(GetFullFile(basePath + ".cue"));
-            if (File.Exists(basePath + ".dat"))
-                info.Artifacts["dat"] = GetBase64(GetFullFile(basePath + ".dat"));
-            if (File.Exists(basePath + "_disc.txt"))
-                info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
-            //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
-            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "DMI.bin")));
-            if (File.Exists(basePath + "_drive.txt"))
-                info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
-            if (File.Exists(basePath + "_img.cue"))
-                info.Artifacts["img_cue"] = GetBase64(GetFullFile(basePath + "_img.cue"));
-            if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EdcEcc.txt"));
-            if (File.Exists(basePath + ".img_EccEdc.txt"))
-                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EccEdc.txt"));
-            if (File.Exists(basePath + "_mainError.txt"))
-                info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
-            if (File.Exists(basePath + "_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
-            //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
-            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "PFI.bin")));
-            //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
-            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "SS.bin")));
-            if (File.Exists(basePath + ".sub"))
-                info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".sub"));
-            if (File.Exists(basePath + "_subError.txt"))
-                info.Artifacts["subError"] = GetBase64(GetFullFile(basePath + "_subError.txt"));
-            if (File.Exists(basePath + "_subInfo.txt"))
-                info.Artifacts["subInfo"] = GetBase64(GetFullFile(basePath + "_subInfo.txt"));
-            if (File.Exists(basePath + "_subIntention.txt"))
-                info.Artifacts["subIntention"] = GetBase64(GetFullFile(basePath + "_subIntention.txt"));
-            //if (File.Exists(basePath + "_sub.txt"))
-            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
-            //if (File.Exists(basePath + "_subReadable.txt"))
-            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
-            if (File.Exists(basePath + "_volDesc.txt"))
-                info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
-        }
+        #region Private Extra Methods
 
         /// <summary>
         /// Get the list of commands that use a given flag
@@ -2454,6 +2473,8 @@ namespace MPF.DiscImageCreator
                     return;
             }
         }
+
+        #endregion
 
         #region Information Extraction Methods
 

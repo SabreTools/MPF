@@ -32,10 +32,42 @@ namespace MPF.Data
 
         #endregion
 
+        #region Generic Dumping Information
+
+        /// <summary>
+        /// Input path for operations
+        /// </summary>
+        public virtual string InputPath => null;
+
+        /// <summary>
+        /// Output path for operations
+        /// </summary>
+        /// <returns>String representing the path, null on error</returns>
+        public virtual string OutputPath => null;
+
+        /// <summary>
+        /// Get the processing speed from the implementation
+        /// </summary>
+        public virtual int? Speed { get; set; } = null;
+
+        /// <summary>
+        /// Process to track external program
+        /// </summary>
+        private Process process;
+
+        #endregion
+
+        #region Metadata
+
         /// <summary>
         /// Path to the executable
         /// </summary>
         public string ExecutablePath { get; set; }
+
+        /// <summary>
+        /// Program that this set of parameters represents
+        /// </summary>
+        public virtual InternalProgram InternalProgram { get; }
 
         /// <summary>
         /// Currently represented system
@@ -47,15 +79,7 @@ namespace MPF.Data
         /// </summary>
         public MediaType? Type { get; set; }
 
-        /// <summary>
-        /// Program that this set of parameters represents
-        /// </summary>
-        public InternalProgram InternalProgram { get; set; }
-
-        /// <summary>
-        /// Process to track external program
-        /// </summary>
-        private Process process;
+        #endregion
 
         /// <summary>
         /// Populate a Parameters object from a param string
@@ -84,35 +108,39 @@ namespace MPF.Data
             SetDefaultParameters(driveLetter, filename, driveSpeed, options);
         }
 
+        #region Abstract Methods
+
+        /// <summary>
+        /// Validate if all required output files exist
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
+        public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath);
+
+        /// <summary>
+        /// Generate a SubmissionInfo for the output files
+        /// </summary>
+        /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="drive">Drive representing the disc to get information from</param>
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive);
+
+        #endregion
+
+        #region Virtual Methods
+
         /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
-        /// <returns>Correctly formatted parameter string, null on error</returns>
+        /// <returns>Parameter string for invocation, null on error</returns>
         public virtual string GenerateParameters() => null;
 
         /// <summary>
-        /// Get the input path from the implementation
+        /// Get the default extension for a given media type
         /// </summary>
-        /// <returns>String representing the path, null on error</returns>
-        public virtual string InputPath() => null;
-
-        /// <summary>
-        /// Get the output path from the implementation
-        /// </summary>
-        /// <returns>String representing the path, null on error</returns>
-        public virtual string OutputPath() => null;
-
-        /// <summary>
-        /// Get the processing speed from the implementation
-        /// </summary>
-        /// <returns>int? representing the speed, null on error</returns>
-        public virtual int? GetSpeed() => null;
-
-        /// <summary>
-        /// Set the processing speed int the implementation
-        /// </summary>
-        /// <param name="speed">int? representing the speed</param>
-        public virtual void SetSpeed(int? speed) { }
+        /// <param name="mediaType">MediaType value to check</param>
+        /// <returns>String representing the media type, null on error</returns>
+        public virtual string GetDefaultExtension(MediaType? mediaType) => null;
 
         /// <summary>
         /// Get the MediaType from the current set of parameters
@@ -153,20 +181,9 @@ namespace MPF.Data
         /// <returns>True if the parameters were set correctly, false otherwise</returns>
         protected virtual bool ValidateAndSetParameters(string parameters) => true;
 
-        /// <summary>
-        /// Validate if all required output files exist
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath);
+        #endregion
 
-        /// <summary>
-        /// Generate a SubmissionInfo for the output files
-        /// </summary>
-        /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <param name="drive">Drive representing the disc to get information from</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive);
+        #region Execution
 
         /// <summary>
         /// Run internal program
@@ -210,43 +227,6 @@ namespace MPF.Data
         }
 
         /// <summary>
-        /// Run internal program async with an input set of parameters
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <returns>Standard output from commandline window</returns>
-        public async Task<string> ExecuteInternalProgram(BaseParameters parameters)
-        {
-            Process childProcess;
-            string output = await Task.Run(() =>
-            {
-                childProcess = new Process()
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = parameters.ExecutablePath,
-                        Arguments = parameters.GenerateParameters(),
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                    },
-                };
-                childProcess.Start();
-                childProcess.WaitForExit(1000);
-
-                // Just in case, we want to push a button 5 times to clear any errors
-                for (int i = 0; i < 5; i++)
-                    childProcess.StandardInput.WriteLine("Y");
-
-                string stdout = childProcess.StandardOutput.ReadToEnd();
-                childProcess.Dispose();
-                return stdout;
-            });
-
-            return output;
-        }
-
-        /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
         public void KillInternalProgram()
@@ -261,6 +241,8 @@ namespace MPF.Data
             catch
             { }
         }
+
+        #endregion
 
         #region Parameter Parsing
 

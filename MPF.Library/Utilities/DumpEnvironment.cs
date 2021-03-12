@@ -24,12 +24,12 @@ namespace MPF.Utilities
         /// <summary>
         /// Base output directory to write files to
         /// </summary>
-        public string OutputDirectory { get; set; }
+        public string OutputDirectory { get; private set; }
 
         /// <summary>
-        /// Base output filename for DiscImageCreator
+        /// Base output filename for output
         /// </summary>
-        public string OutputFilename { get; set; }
+        public string OutputFilename { get; private set; }
 
         #endregion
 
@@ -38,27 +38,27 @@ namespace MPF.Utilities
         /// <summary>
         /// Drive object representing the current drive
         /// </summary>
-        public Drive Drive { get; set; }
+        public Drive Drive { get; private set; }
 
         /// <summary>
         /// Currently selected system
         /// </summary>
-        public KnownSystem? System { get; set; }
+        public KnownSystem? System { get; private set; }
 
         /// <summary>
         /// Currently selected media type
         /// </summary>
-        public MediaType? Type { get; set; }
+        public MediaType? Type { get; private set; }
 
         /// <summary>
         /// Options object representing user-defined options
         /// </summary>
-        public Options Options { get; set; }
+        public Options Options { get; private set; }
 
         /// <summary>
         /// Parameters object representing what to send to the internal program
         /// </summary>
-        public BaseParameters Parameters { get; set; }
+        public BaseParameters Parameters { get; private set; }
 
         #endregion
         
@@ -102,17 +102,15 @@ namespace MPF.Utilities
             this.Options = options;
 
             // Output paths
-            this.OutputDirectory = outputDirectory;
-            this.OutputFilename = outputFilename;
+            (this.OutputDirectory, this.OutputFilename) = NormalizeOutputPaths(outputDirectory, outputFilename);
 
             // UI information
             this.Drive = drive;
-            this.System = system;
-            this.Type = type;
-
+            this.System = system ?? options.DefaultSystem;
+            this.Type = type ?? MediaType.NONE;
+            
+            // Dumping program
             SetParameters(parameters);
-            this.Parameters.System = system;
-            this.Parameters.Type = type;
         }
 
         #region Public Functionality
@@ -163,6 +161,10 @@ namespace MPF.Utilities
                     this.Parameters.ExecutablePath = Options.DiscImageCreatorPath;
                     break;
             }
+
+            // Set system and type
+            this.Parameters.System = this.System;
+            this.Parameters.Type = this.Type;
         }
 
         /// <summary>
@@ -203,64 +205,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Fix output paths to strip out any invalid characters
-        /// </summary>
-        public void FixOutputPaths()
-        {
-            try
-            {
-                // Cache if we had a directory separator or not
-                bool endedWithDirectorySeparator = OutputDirectory.EndsWith(Path.DirectorySeparatorChar.ToString())
-                    || OutputDirectory.EndsWith(Path.AltDirectorySeparatorChar.ToString());
-                bool endedWithSpace = OutputDirectory.EndsWith(" ");
-
-                // Combine the path to make things separate easier
-                string combinedPath = Path.Combine(OutputDirectory, OutputFilename);
-
-                // If we have have a blank path, just return
-                if (string.IsNullOrWhiteSpace(combinedPath))
-                    return;
-
-                // Now get the normalized paths
-                OutputDirectory = Path.GetDirectoryName(combinedPath);
-                OutputFilename = Path.GetFileName(combinedPath);
-
-                // Take care of extra path characters
-                OutputDirectory = new StringBuilder(OutputDirectory)
-                    .Replace(':', '_', 0, OutputDirectory.LastIndexOf(':') == -1 ? 0 : OutputDirectory.LastIndexOf(':')).ToString();
-
-                // Sanitize everything else
-                foreach (char c in Path.GetInvalidPathChars())
-                    OutputDirectory = OutputDirectory.Replace(c, '_');
-                foreach (char c in Path.GetInvalidFileNameChars())
-                    OutputFilename = OutputFilename.Replace(c, '_');
-
-                // If we had a space at the end before, add it again
-                if (endedWithSpace)
-                    OutputDirectory += " ";
-
-                // If we had a directory separator at the end before, add it again
-                if (endedWithDirectorySeparator)
-                    OutputDirectory += Path.DirectorySeparatorChar;
-
-                // If we have a root directory, sanitize
-                if (Directory.Exists(OutputDirectory))
-                {
-                    var possibleRootDir = new DirectoryInfo(OutputDirectory);
-                    if (possibleRootDir.Parent == null)
-                    {
-                        OutputDirectory = OutputDirectory.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
-                    }
-                }
-            }
-            catch
-            {
-                // We don't care what the error was
-                return;
-            }
-        }
-
-        /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
@@ -275,30 +219,6 @@ namespace MPF.Utilities
 
             // Finally, let the parameters say if all files exist
             return Parameters.CheckAllOutputFilesExist(basePath);
-        }
-
-        /// <summary>
-        /// Get the extension for a given media type and internal program
-        /// </summary>
-        /// <param name="mediaType"></param>
-        /// <returns></returns>
-        public string GetExtension(MediaType? mediaType)
-        {
-            switch (Options.InternalProgram)
-            {
-                case InternalProgram.Aaru:
-                    return Aaru.Converters.Extension(mediaType);
-
-                case InternalProgram.DD:
-                    return DD.Converters.Extension(mediaType);
-
-                case InternalProgram.DiscImageCreator:
-                    return DiscImageCreator.Converters.Extension(mediaType);
-
-                // This should never happen, but it needs a fallback
-                default:
-                    return DiscImageCreator.Converters.Extension(mediaType);
-            }
         }
 
         /// <summary>
@@ -342,6 +262,62 @@ namespace MPF.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Normalize a split set of paths
+        /// </summary>
+        /// <param name="directory">Directory name to normalize</param>
+        /// <param name="filename">Filename to normalize</param>
+        public static (string, string) NormalizeOutputPaths(string directory, string filename)
+        {
+            try
+            {
+                // Cache if we had a directory separator or not
+                bool endedWithDirectorySeparator = directory.EndsWith(Path.DirectorySeparatorChar.ToString())
+                    || directory.EndsWith(Path.AltDirectorySeparatorChar.ToString());
+                bool endedWithSpace = directory.EndsWith(" ");
+
+                // Combine the path to make things separate easier
+                string combinedPath = Path.Combine(directory, filename);
+
+                // If we have have a blank path, just return
+                if (string.IsNullOrWhiteSpace(combinedPath))
+                    return (directory, filename);
+
+                // Now get the normalized paths
+                directory = Path.GetDirectoryName(combinedPath);
+                filename = Path.GetFileName(combinedPath);
+
+                // Take care of extra path characters
+                directory = new StringBuilder(directory)
+                    .Replace(':', '_', 0, directory.LastIndexOf(':') == -1 ? 0 : directory.LastIndexOf(':')).ToString();
+
+                // Sanitize everything else
+                foreach (char c in Path.GetInvalidPathChars())
+                    directory = directory.Replace(c, '_');
+                foreach (char c in Path.GetInvalidFileNameChars())
+                    filename = filename.Replace(c, '_');
+
+                // If we had a space at the end before, add it again
+                if (endedWithSpace)
+                    directory += " ";
+
+                // If we had a directory separator at the end before, add it again
+                if (endedWithDirectorySeparator)
+                    directory += Path.DirectorySeparatorChar;
+
+                // If we have a root directory, sanitize
+                if (Directory.Exists(directory))
+                {
+                    var possibleRootDir = new DirectoryInfo(directory);
+                    if (possibleRootDir.Parent == null)
+                        directory = directory.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
+                }
+            }
+            catch { }
+
+            return (directory, filename);
         }
 
         /// <summary>
@@ -1266,13 +1242,21 @@ namespace MPF.Utilities
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            FixOutputPaths();
+            (OutputDirectory, OutputFilename) = NormalizeOutputPaths(OutputDirectory, OutputFilename);
+
+            // Validate that the output path isn't on the dumping drive
+            string fullOutputPath = Path.GetFullPath(Path.Combine(OutputDirectory, OutputFilename));
+            if (fullOutputPath[0] == Drive.Letter)
+                return Result.Failure($"Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
             if (!File.Exists(Parameters.ExecutablePath))
                 return Result.Failure($"Error! {Parameters.ExecutablePath} does not exist!");
 
-            // TODO: Ensure output path not the same as input drive OR executable location
+            // Validate that the dumping drive doesn't contain the executable
+            string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath);
+            if (fullExecutablePath[0] == Drive.Letter)
+                return Result.Failure("$Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
             return Validators.GetSupportStatus(System, Type);

@@ -13,10 +13,35 @@ namespace MPF.DD
     /// </summary>
     public class Parameters : BaseParameters
     {
+        #region Generic Dumping Information
+
+        /// <inheritdoc/>
+        public override string InputPath => InputFileValue;
+
+        /// <inheritdoc/>
+        public override string OutputPath => OutputFileValue;
+
+        /// <inheritdoc/>
+        /// <inheritdoc/>
+        public override int? Speed
+        {
+            get { return 1; }
+            set { }
+        }
+
+        #endregion
+
+        #region Metadata
+
         /// <summary>
         /// Base command to run
         /// </summary>
         public Command BaseCommand { get; set; }
+
+        /// <inheritdoc/>
+        public override InternalProgram InternalProgram => InternalProgram.DD;
+
+        #endregion
 
         /// <summary>
         /// Set of flags to pass to the executable
@@ -58,17 +83,77 @@ namespace MPF.DD
         #endregion
 
         /// <inheritdoc/>
-        public Parameters(string parameters)
-            : base(parameters)
-        {
-            this.InternalProgram = InternalProgram.DD;
-        }
+        public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
         public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
-            this.InternalProgram = InternalProgram.DD;
+        }
+
+        #region BaseParameters Implementations
+
+        /// <inheritdoc/>
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        {
+            // TODO: Figure out what sort of output files are expected... just `.bin`?
+            return (true, new List<string>());
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        {
+            // TODO: Fill in submission info specifics for DD
+            string outputDirectory = Path.GetDirectoryName(basePath);
+
+            switch (this.Type)
+            {
+                // Determine type-specific differences
+            }
+
+            switch (this.System)
+            {
+                case KnownSystem.KonamiPython2:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                    }
+
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
+                    break;
+
+                case KnownSystem.SonyPlayStation2:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation4:
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation5:
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
+                    break;
+            }
         }
 
         /// <inheritdoc/>
@@ -162,13 +247,7 @@ namespace MPF.DD
         }
 
         /// <inheritdoc/>
-        public override string InputPath() => InputFileValue;
-
-        /// <inheritdoc/>
-        public override string OutputPath() => OutputFileValue;
-
-        /// <inheritdoc/>
-        public override int? GetSpeed() => 1;
+        public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
@@ -326,68 +405,9 @@ namespace MPF.DD
             return true;
         }
 
-        /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
-        {
-            // TODO: Figure out what sort of output files are expected... just `.bin`?
-            return (true, new List<string>());
-        }
+        #endregion
 
-        /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
-        {
-            // TODO: Fill in submission info specifics for DD
-            string outputDirectory = Path.GetDirectoryName(basePath);
-
-            switch (this.Type)
-            {
-                // Determine type-specific differences
-            }
-
-            switch (this.System)
-            {
-                case KnownSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
-                    }
-
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
-                    }
-
-                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
-                    break;
-
-                case KnownSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
-                    }
-
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    break;
-                
-                case KnownSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    break;
-            }
-        }
+        #region Private Extra Methods
 
         /// <summary>
         /// Get the list of commands that use a given flag
@@ -448,6 +468,10 @@ namespace MPF.DD
 
             return commands;
         }
+
+        #endregion
+
+        #region Process Parameter Helpers
 
         /// <summary>
         /// Process a boolean parameter
@@ -587,5 +611,7 @@ namespace MPF.DD
 
             return string.Empty;
         }
+
+        #endregion
     }
 }

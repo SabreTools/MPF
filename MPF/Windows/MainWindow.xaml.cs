@@ -389,12 +389,6 @@ namespace MPF.Windows
             // Get the current environment information
             Env = DetermineEnvironment();
 
-            // Take care of null cases
-            if (Env.System == null)
-                Env.System = UIOptions.Options.DefaultSystem;
-            if (Env.Type == null)
-                Env.Type = MediaType.NONE;
-
             // Get the status to write out
             Result result = Validators.GetSupportStatus(Env.System, Env.Type);
             StatusLabel.Content = result.Message;
@@ -431,7 +425,7 @@ namespace MPF.Windows
                 OutputDirectoryTextBox.Text = Path.Combine(UIOptions.Options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
 
             // Get the extension for the file for the next two statements
-            string extension = Env.GetExtension(mediaType);
+            string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
@@ -451,19 +445,20 @@ namespace MPF.Windows
             if (Env.Parameters == null)
                 return;
 
-            int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(Env.Parameters.InputPath()[0]);
+            int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(Env.Parameters.InputPath[0]);
             if (driveIndex > -1)
                 DriveLetterComboBox.SelectedIndex = driveIndex;
 
-            int driveSpeed = Env.Parameters.GetSpeed() ?? -1;
+            int driveSpeed = Env.Parameters.Speed ?? -1;
             if (driveSpeed > 0)
                 DriveSpeedComboBox.SelectedValue = driveSpeed;
             else
-                Env.Parameters.SetSpeed((int?)DriveSpeedComboBox.SelectedValue);
+                Env.Parameters.Speed = DriveSpeedComboBox.SelectedValue as int?;
 
-            string trimmedPath = Env.Parameters.OutputPath()?.Trim('"') ?? string.Empty;
+            string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
+            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
                 OutputDirectoryTextBox.Text = outputDirectory;
             else
@@ -591,9 +586,6 @@ namespace MPF.Windows
                     return;
                 // If "No", then we continue with the current known environment
             }
-
-            // Fix the output paths
-            Env.FixOutputPaths();
 
             try
             {

@@ -19,10 +19,34 @@ namespace MPF.Aaru
     /// </summary>
     public class Parameters : BaseParameters
     {
+        #region Generic Dumping Information
+
+        /// <inheritdoc/>
+        public override string InputPath => InputValue;
+
+        /// <inheritdoc/>
+        public override string OutputPath => OutputValue;
+
+        /// <inheritdoc/>
+        public override int? Speed
+        {
+            get { return SpeedValue; }
+            set { SpeedValue = (sbyte?)value; }
+        }
+
+        #endregion
+
+        #region Metadata
+
         /// <summary>
         /// Base command to run
         /// </summary>
         public Command BaseCommand { get; set; }
+
+        /// <inheritdoc/>
+        public override InternalProgram InternalProgram => InternalProgram.Aaru;
+
+        #endregion
 
         /// <summary>
         /// Set of flags to pass to the executable
@@ -125,134 +149,235 @@ namespace MPF.Aaru
         #endregion
 
         /// <inheritdoc/>
-        public Parameters(string parameters)
-            : base(parameters)
-        {
-            this.InternalProgram = InternalProgram.Aaru;
-        }
+        public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
         public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
-            this.InternalProgram = InternalProgram.Aaru;
         }
 
-        /// <inheritdoc/>
-        protected override void ResetValues()
-        {
-            BaseCommand = Command.NONE;
-
-            _flags = new Dictionary<Flag, bool?>();
-
-            BlockSizeValue = null;
-            CommentsValue = null;
-            CreatorValue = null;
-            CountValue = null;
-            DriveManufacturerValue = null;
-            DriveModelValue = null;
-            DriveRevisionValue = null;
-            DriveSerialValue = null;
-            EncodingValue = null;
-            FormatConvertValue = null;
-            FormatDumpValue = null;
-            ImgBurnLogValue = null;
-            InputValue = null;
-            Input1Value = null;
-            Input2Value = null;
-            LengthValue = null;
-            MediaBarcodeValue = null;
-            MediaLastSequenceValue = null;
-            MediaManufacturerValue = null;
-            MediaModelValue = null;
-            MediaPartNumberValue = null;
-            MediaSequenceValue = null;
-            MediaSerialValue = null;
-            MediaTitleValue = null;
-            MHDDLogValue = null;
-            NamespaceValue = null;
-            OptionsValue = null;
-            OutputValue = null;
-            OutputPrefixValue = null;
-            RemoteHostValue = null;
-            ResumeFileValue = null;
-            RetryPassesValue = null;
-            SkipValue = null;
-            SpeedValue = null;
-            StartValue = null;
-            SubchannelValue = null;
-            WidthValue = null;
-            XMLSidecarValue = null;
-        }
+        #region BaseParameters Implementations
 
         /// <inheritdoc/>
-        protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
         {
-            BaseCommand = Command.MediaDump;
-
-            InputValue = $"\\\\?\\{driveLetter}:";
-            OutputValue = filename;
-
-            if (driveSpeed != null)
-            {
-                this[Flag.Speed] = true;
-                SpeedValue = (sbyte?)driveSpeed;
-            }
-
-            // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validators.GetValidMediaTypes(this.System);
-            if (!validTypes.Contains(this.Type))
-                return;
-
-            // Set retry count
-            if (options.AaruRereadCount > 0)
-            {
-                this[Flag.RetryPasses] = true;
-                RetryPassesValue = (short)options.AaruRereadCount;
-            }
-
-            // Set user-defined options
-            this[Flag.Debug] = options.AaruEnableDebug;
-            this[Flag.Verbose] = options.AaruEnableVerbose;
-            this[Flag.Force] = options.AaruForceDumping;
-            this[Flag.Private] = options.AaruStripPersonalData;
-
-            // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
-            // Now sort based on disc type
+            List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    this[Flag.FirstPregap] = true;
-                    this[Flag.FixOffset] = true;
-                    this[Flag.Subchannel] = true;
-                    SubchannelValue = "any";
+                    if (!File.Exists($"{basePath}.cicm.xml"))
+                        missingFiles.Add($"{basePath}.cicm.xml");
+                    if (!File.Exists($"{basePath}.ibg"))
+                        missingFiles.Add($"{basePath}.ibg");
+                    if (!File.Exists($"{basePath}.log"))
+                        missingFiles.Add($"{basePath}.log");
+                    if (!File.Exists($"{basePath}.mhddlog.bin"))
+                        missingFiles.Add($"{basePath}.mhddlog.bin");
+                    if (!File.Exists($"{basePath}.resume.xml"))
+                        missingFiles.Add($"{basePath}.resume.xml");
+                    if (!File.Exists($"{basePath}.sub.log"))
+                        missingFiles.Add($"{basePath}.sub.log");
+
                     break;
+
                 case MediaType.DVD:
-                    // Currently no defaults set
-                    break;
-                case MediaType.GDROM:
-                    // Currently no defaults set
-                    break;
                 case MediaType.HDDVD:
-                    // Currently no defaults set
-                    break;
                 case MediaType.BluRay:
-                    // Currently no defaults set
+                    if (!File.Exists($"{basePath}.cicm.xml"))
+                        missingFiles.Add($"{basePath}.cicm.xml");
+                    if (!File.Exists($"{basePath}.ibg"))
+                        missingFiles.Add($"{basePath}.ibg");
+                    if (!File.Exists($"{basePath}.log"))
+                        missingFiles.Add($"{basePath}.log");
+                    if (!File.Exists($"{basePath}.mhddlog.bin"))
+                        missingFiles.Add($"{basePath}.mhddlog.bin");
+                    if (!File.Exists($"{basePath}.resume.xml"))
+                        missingFiles.Add($"{basePath}.resume.xml");
+
                     break;
 
-                // Special Formats
-                case MediaType.NintendoGameCubeGameDisc:
-                    // Currently no defaults set
-                    break;
-                case MediaType.NintendoWiiOpticalDisc:
-                    // Currently no defaults set
+                default:
+                    return (false, missingFiles); // TODO: Figure out more formats
+            }
+
+            return (!missingFiles.Any(), missingFiles);
+        }
+
+        /// <inheritdoc/>
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        {
+            // TODO: Fill in submission info specifics for Aaru
+            string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // Deserialize the sidecar, if possible
+            var sidecar = GenerateSidecar(basePath + ".cicm.xml");
+
+            // Fill in the hash data
+            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(sidecar, basePath);
+
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    // TODO: Can this do GD-ROM?
+                    info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+
+                    long errorCount = -1;
+                    if (File.Exists(basePath + ".resume.xml"))
+                        errorCount = GetErrorCount(basePath + ".resume.xml");
+
+                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+
+                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? "";
+
+                    string cdWriteOffset = GetWriteOffset(sidecar) ?? "";
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
                     break;
 
-                // Non-optical
-                case MediaType.FloppyDisk:
-                    // Currently no defaults set
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    // Get the individual hash data, as per internal
+                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    {
+                        info.SizeAndChecksums.Size = size;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                    }
+
+                    // Deal with the layerbreak
+                    string layerbreak = null;
+                    if (this.Type == MediaType.DVD)
+                        layerbreak = GetLayerbreak(sidecar) ?? "";
+                    else if (this.Type == MediaType.BluRay)
+                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
+
+                    // If we have a single-layer disc
+                    if (string.IsNullOrWhiteSpace(layerbreak))
+                    {
+                        info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+                    }
+                    // If we have a dual-layer disc
+                    else
+                    {
+                        info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+                        info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
+                    }
+
+                    // TODO: Investigate XGD disc outputs
+                    // TODO: Investigate BD specifics like PIC
+
                     break;
             }
+
+            switch (this.System)
+            {
+                // TODO: Can we get SecuROM data?
+                // TODO: Can we get SS version/ranges?
+                // TODO: Can we get DMI info?
+                // TODO: Can we get Sega Header info?
+                // TODO: Can we get PS1 EDC status?
+                // TODO: Can we get PS1 LibCrypt status?
+
+                case KnownSystem.DVDAudio:
+                case KnownSystem.DVDVideo:
+                    info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? "";
+                    break;
+
+                case KnownSystem.KonamiPython2:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.MicrosoftXBOX:
+                    if (GetXgdAuxInfo(sidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss ?? "";
+                    }
+
+                    if (GetXboxDMIInfo(sidecar, out string serial, out string version, out RedumpRegion? region))
+                    {
+                        info.CommonDiscInfo.Serial = serial ?? "";
+                        info.VersionAndEditions.Version = version ?? "";
+                        info.CommonDiscInfo.Region = region;
+                    }
+
+                    break;
+
+                case KnownSystem.MicrosoftXBOX360:
+                    if (GetXgdAuxInfo(sidecar, out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
+                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
+                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
+                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = ss360 ?? "";
+                    }
+
+                    if (GetXbox360DMIInfo(sidecar, out string serial360, out string version360, out RedumpRegion? region360))
+                    {
+                        info.CommonDiscInfo.Serial = serial360 ?? "";
+                        info.VersionAndEditions.Version = version360 ?? "";
+                        info.CommonDiscInfo.Region = region360;
+                    }
+                    break;
+
+                case KnownSystem.SonyPlayStation:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
+                    }
+
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
+                    break;
+
+                case KnownSystem.SonyPlayStation2:
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
+                    {
+                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
+                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
+                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
+                    }
+
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation4:
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
+                    break;
+
+                case KnownSystem.SonyPlayStation5:
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
+                    break;
+            }
+
+            // Fill in any artifacts that exist, Base64-encoded
+            if (File.Exists(basePath + ".cicm.xml"))
+                info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
+            if (File.Exists(basePath + ".ibg"))
+                info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
+            if (File.Exists(basePath + ".log"))
+                info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
+            if (File.Exists(basePath + ".mhddlog.bin"))
+                info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
+            if (File.Exists(basePath + ".resume.xml"))
+                info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
+            if (File.Exists(basePath + ".sub.log"))
+                info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log"));
         }
 
         /// <inheritdoc/>
@@ -903,16 +1028,7 @@ namespace MPF.Aaru
         }
 
         /// <inheritdoc/>
-        public override string InputPath() => InputValue;
-
-        /// <inheritdoc/>
-        public override string OutputPath() => OutputValue;
-
-        /// <inheritdoc/>
-        public override int? GetSpeed() => SpeedValue;
-
-        /// <inheritdoc/>
-        public override void SetSpeed(int? speed) => SpeedValue = (sbyte?)speed;
+        public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
@@ -924,6 +1040,123 @@ namespace MPF.Aaru
 
                 default:
                     return false;
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void ResetValues()
+        {
+            BaseCommand = Command.NONE;
+
+            _flags = new Dictionary<Flag, bool?>();
+
+            BlockSizeValue = null;
+            CommentsValue = null;
+            CreatorValue = null;
+            CountValue = null;
+            DriveManufacturerValue = null;
+            DriveModelValue = null;
+            DriveRevisionValue = null;
+            DriveSerialValue = null;
+            EncodingValue = null;
+            FormatConvertValue = null;
+            FormatDumpValue = null;
+            ImgBurnLogValue = null;
+            InputValue = null;
+            Input1Value = null;
+            Input2Value = null;
+            LengthValue = null;
+            MediaBarcodeValue = null;
+            MediaLastSequenceValue = null;
+            MediaManufacturerValue = null;
+            MediaModelValue = null;
+            MediaPartNumberValue = null;
+            MediaSequenceValue = null;
+            MediaSerialValue = null;
+            MediaTitleValue = null;
+            MHDDLogValue = null;
+            NamespaceValue = null;
+            OptionsValue = null;
+            OutputValue = null;
+            OutputPrefixValue = null;
+            RemoteHostValue = null;
+            ResumeFileValue = null;
+            RetryPassesValue = null;
+            SkipValue = null;
+            SpeedValue = null;
+            StartValue = null;
+            SubchannelValue = null;
+            WidthValue = null;
+            XMLSidecarValue = null;
+        }
+
+        /// <inheritdoc/>
+        protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
+        {
+            BaseCommand = Command.MediaDump;
+
+            InputValue = $"\\\\?\\{driveLetter}:";
+            OutputValue = filename;
+
+            if (driveSpeed != null)
+            {
+                this[Flag.Speed] = true;
+                SpeedValue = (sbyte?)driveSpeed;
+            }
+
+            // First check to see if the combination of system and MediaType is valid
+            var validTypes = Validators.GetValidMediaTypes(this.System);
+            if (!validTypes.Contains(this.Type))
+                return;
+
+            // Set retry count
+            if (options.AaruRereadCount > 0)
+            {
+                this[Flag.RetryPasses] = true;
+                RetryPassesValue = (short)options.AaruRereadCount;
+            }
+
+            // Set user-defined options
+            this[Flag.Debug] = options.AaruEnableDebug;
+            this[Flag.Verbose] = options.AaruEnableVerbose;
+            this[Flag.Force] = options.AaruForceDumping;
+            this[Flag.Private] = options.AaruStripPersonalData;
+
+            // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
+            // Now sort based on disc type
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    this[Flag.FirstPregap] = true;
+                    this[Flag.FixOffset] = true;
+                    this[Flag.Subchannel] = true;
+                    SubchannelValue = "any";
+                    break;
+                case MediaType.DVD:
+                    // Currently no defaults set
+                    break;
+                case MediaType.GDROM:
+                    // Currently no defaults set
+                    break;
+                case MediaType.HDDVD:
+                    // Currently no defaults set
+                    break;
+                case MediaType.BluRay:
+                    // Currently no defaults set
+                    break;
+
+                // Special Formats
+                case MediaType.NintendoGameCubeGameDisc:
+                    // Currently no defaults set
+                    break;
+                case MediaType.NintendoWiiOpticalDisc:
+                    // Currently no defaults set
+                    break;
+
+                // Non-optical
+                case MediaType.FloppyDisk:
+                    // Currently no defaults set
+                    break;
             }
         }
 
@@ -1410,226 +1643,9 @@ namespace MPF.Aaru
             return true;
         }
 
-        /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
-        {
-            List<string> missingFiles = new List<string>();
-            switch (this.Type)
-            {
-                case MediaType.CDROM:
-                    if (!File.Exists($"{basePath}.cicm.xml"))
-                        missingFiles.Add($"{basePath}.cicm.xml");
-                    if (!File.Exists($"{basePath}.ibg"))
-                        missingFiles.Add($"{basePath}.ibg");
-                    if (!File.Exists($"{basePath}.log"))
-                        missingFiles.Add($"{basePath}.log");
-                    if (!File.Exists($"{basePath}.mhddlog.bin"))
-                        missingFiles.Add($"{basePath}.mhddlog.bin");
-                    if (!File.Exists($"{basePath}.resume.xml"))
-                        missingFiles.Add($"{basePath}.resume.xml");
-                    if (!File.Exists($"{basePath}.sub.log"))
-                        missingFiles.Add($"{basePath}.sub.log");
+        #endregion
 
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                    if (!File.Exists($"{basePath}.cicm.xml"))
-                        missingFiles.Add($"{basePath}.cicm.xml");
-                    if (!File.Exists($"{basePath}.ibg"))
-                        missingFiles.Add($"{basePath}.ibg");
-                    if (!File.Exists($"{basePath}.log"))
-                        missingFiles.Add($"{basePath}.log");
-                    if (!File.Exists($"{basePath}.mhddlog.bin"))
-                        missingFiles.Add($"{basePath}.mhddlog.bin");
-                    if (!File.Exists($"{basePath}.resume.xml"))
-                        missingFiles.Add($"{basePath}.resume.xml");
-
-                    break;
-
-                default:
-                    return (false, missingFiles); // TODO: Figure out more formats
-            }
-
-            return (!missingFiles.Any(), missingFiles);
-        }
-
-        /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
-        {
-            // TODO: Fill in submission info specifics for Aaru
-            string outputDirectory = Path.GetDirectoryName(basePath);
-
-            // Deserialize the sidecar, if possible
-            var sidecar = GenerateSidecar(basePath + ".cicm.xml");
-
-            // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(sidecar, basePath);
-
-            switch (this.Type)
-            {
-                case MediaType.CDROM:
-                    // TODO: Can this do GD-ROM?
-                    info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
-
-                    long errorCount = -1;
-                    if (File.Exists(basePath + ".resume.xml"))
-                        errorCount = GetErrorCount(basePath + ".resume.xml");
-
-                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
-
-                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? "";
-
-                    string cdWriteOffset = GetWriteOffset(sidecar) ?? "";
-                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
-                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
-                    break;
-
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                    // Get the individual hash data, as per internal
-                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
-                    {
-                        info.SizeAndChecksums.Size = size;
-                        info.SizeAndChecksums.CRC32 = crc32;
-                        info.SizeAndChecksums.MD5 = md5;
-                        info.SizeAndChecksums.SHA1 = sha1;
-                    }
-
-                    // Deal with the layerbreak
-                    string layerbreak = null;
-                    if (this.Type == MediaType.DVD)
-                        layerbreak = GetLayerbreak(sidecar) ?? "";
-                    else if (this.Type == MediaType.BluRay)
-                        layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
-
-                    // If we have a single-layer disc
-                    if (string.IsNullOrWhiteSpace(layerbreak))
-                    {
-                        info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
-                    }
-                    // If we have a dual-layer disc
-                    else
-                    {
-                        info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
-                        info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
-                    }
-
-                    // TODO: Investigate XGD disc outputs
-                    // TODO: Investigate BD specifics like PIC
-
-                    break;
-            }
-
-            switch (this.System)
-            {
-                // TODO: Can we get SecuROM data?
-                // TODO: Can we get SS version/ranges?
-                // TODO: Can we get DMI info?
-                // TODO: Can we get Sega Header info?
-                // TODO: Can we get PS1 EDC status?
-                // TODO: Can we get PS1 LibCrypt status?
-
-                case KnownSystem.DVDAudio:
-                case KnownSystem.DVDVideo:
-                    info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? "";
-                    break;
-
-                case KnownSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out RedumpRegion? pythonTwoRegion, out string pythonTwoDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
-                    }
-
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.MicrosoftXBOX:
-                    if (GetXgdAuxInfo(sidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
-                    {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = ss ?? "";
-                    }
-
-                    if (GetXboxDMIInfo(sidecar, out string serial, out string version, out RedumpRegion? region))
-                    {
-                        info.CommonDiscInfo.Serial = serial ?? "";
-                        info.VersionAndEditions.Version = version ?? "";
-                        info.CommonDiscInfo.Region = region;
-                    }
-
-                    break;
-
-                case KnownSystem.MicrosoftXBOX360:
-                    if (GetXgdAuxInfo(sidecar, out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
-                    {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = ss360 ?? "";
-                    }
-
-                    if (GetXbox360DMIInfo(sidecar, out string serial360, out string version360, out RedumpRegion? region360))
-                    {
-                        info.CommonDiscInfo.Serial = serial360 ?? "";
-                        info.VersionAndEditions.Version = version360 ?? "";
-                        info.CommonDiscInfo.Region = region360;
-                    }
-                    break;
-
-                case KnownSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out RedumpRegion? playstationRegion, out string playstationDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
-                    }
-
-                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
-                    break;
-
-                case KnownSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out RedumpRegion? playstationTwoRegion, out string playstationTwoDate))
-                    {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
-                        info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
-                        info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
-                    }
-
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
-                    break;
-
-                case KnownSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    break;
-                
-                case KnownSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    break;
-            }
-
-            // Fill in any artifacts that exist, Base64-encoded
-            if (File.Exists(basePath + ".cicm.xml"))
-                info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
-            if (File.Exists(basePath + ".ibg"))
-                info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
-            if (File.Exists(basePath + ".log"))
-                info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
-            if (File.Exists(basePath + ".mhddlog.bin"))
-                info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
-            if (File.Exists(basePath + ".resume.xml"))
-                info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
-            if (File.Exists(basePath + ".sub.log"))
-                info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log"));
-        }
+        #region Private Extra Methods
 
         /// <summary>
         /// Get the list of commands that use a given flag
@@ -1906,6 +1922,8 @@ namespace MPF.Aaru
 
             return commands;
         }
+
+        #endregion
 
         #region Process Parameter Helpers
 

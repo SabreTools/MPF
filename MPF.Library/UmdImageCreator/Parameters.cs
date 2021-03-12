@@ -12,19 +12,23 @@ namespace MPF.UmdImageCreator
     /// </summary>
     public class Parameters : BaseParameters
     {
+        #region Metadata
+
         /// <inheritdoc/>
-        public Parameters(string parameters)
-            : base(parameters)
-        {
-            this.InternalProgram = InternalProgram.UmdImageCreator;
-        }
+        public override InternalProgram InternalProgram => InternalProgram.UmdImageCreator;
+
+        #endregion
+
+        /// <inheritdoc/>
+        public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
         public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
-            this.InternalProgram = InternalProgram.UmdImageCreator;
         }
+
+        #region BaseParameters Implementations
 
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
@@ -92,6 +96,8 @@ namespace MPF.UmdImageCreator
             if (File.Exists(basePath + "_volDesc.txt"))
                 info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
         }
+
+        #endregion
 
         #region Information Extraction Methods
 

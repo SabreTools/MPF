@@ -38,12 +38,9 @@ namespace MPF.Test
         [InlineData("superhero", "blah&foo.bin", "superhero", "blah&foo.bin")]
         public void FixOutputPathsTest(string outputDirectory, string outputFilename, string expectedOutputDirectory, string expectedOutputFilename)
         {
-            var options = new Options() { InternalProgram = InternalProgram.DiscImageCreator };
-            var env = new DumpEnvironment(options, outputDirectory, outputFilename, null, KnownSystem.IBMPCCompatible, MediaType.CDROM, string.Empty);
-
-            env.FixOutputPaths();
-            Assert.Equal(expectedOutputDirectory, env.OutputDirectory);
-            Assert.Equal(expectedOutputFilename, env.OutputFilename);
+            (string actualOutputDirectory, string actualOutputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename);
+            Assert.Equal(expectedOutputDirectory, actualOutputDirectory);
+            Assert.Equal(expectedOutputFilename, actualOutputFilename);
         }
 
         [Fact]

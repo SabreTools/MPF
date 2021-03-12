@@ -171,7 +171,6 @@ namespace MPF.Check
                     drive = new Drive(null, new DriveInfo(path));
 
                 var env = new DumpEnvironment(options, "", filepath, drive, knownSystem, mediaType, null);
-                env.FixOutputPaths();
 
                 // Finally, attempt to do the output dance
                 var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
