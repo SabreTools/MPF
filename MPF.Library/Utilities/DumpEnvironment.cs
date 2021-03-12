@@ -168,43 +168,6 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Cancel an in-progress dumping process
-        /// </summary>
-        public void CancelDumping()
-        {
-            Parameters.KillInternalProgram();
-        }
-
-        /// <summary>
-        /// Eject the disc using DiscImageCreator
-        /// </summary>
-        public async void EjectDisc()
-        {
-            // Validate that the path is configured
-            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
-                return;
-
-            // Validate that the required program exists
-            if (!File.Exists(Options.DiscImageCreatorPath))
-                return;
-
-            CancelDumping();
-
-            // Validate we're not trying to eject a non-optical
-            if (Drive.InternalDriveType != InternalDriveType.Optical)
-                return;
-
-            var parameters = new DiscImageCreator.Parameters(string.Empty)
-            {
-                BaseCommand = DiscImageCreator.Command.Eject,
-                DriveLetter = Drive.Letter.ToString(),
-                ExecutablePath = Options.DiscImageCreatorPath,
-            };
-
-            await ExecuteInternalProgram(parameters);
-        }
-
-        /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
@@ -318,6 +281,47 @@ namespace MPF.Utilities
             catch { }
 
             return (directory, filename);
+        }
+
+        #endregion
+
+        #region Dumping
+
+        /// <summary>
+        /// Cancel an in-progress dumping process
+        /// </summary>
+        public void CancelDumping()
+        {
+            Parameters.KillInternalProgram();
+        }
+
+        /// <summary>
+        /// Eject the disc using DiscImageCreator
+        /// </summary>
+        public async void EjectDisc()
+        {
+            // Validate that the path is configured
+            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
+                return;
+
+            // Validate that the required program exists
+            if (!File.Exists(Options.DiscImageCreatorPath))
+                return;
+
+            CancelDumping();
+
+            // Validate we're not trying to eject a non-optical
+            if (Drive.InternalDriveType != InternalDriveType.Optical)
+                return;
+
+            var parameters = new DiscImageCreator.Parameters(string.Empty)
+            {
+                BaseCommand = DiscImageCreator.Command.Eject,
+                DriveLetter = Drive.Letter.ToString(),
+                ExecutablePath = Options.DiscImageCreatorPath,
+            };
+
+            await ExecuteInternalProgram(parameters);
         }
 
         /// <summary>
@@ -453,10 +457,6 @@ namespace MPF.Utilities
             return Result.Success();
         }
 
-        #endregion
-
-        #region Internal for Testing Purposes
-
         /// <summary>
         /// Checks if the parameters are valid
         /// </summary>
@@ -472,10 +472,6 @@ namespace MPF.Utilities
 
             return parametersValid && floppyValid && removableDiskValid;
         }
-
-        #endregion
-
-        #region Private Helpers
 
         /// <summary>
         /// Run any additional tools given a DumpEnvironment
@@ -948,7 +944,12 @@ namespace MPF.Utilities
                 AddIfExists(output, Template.DiscNumberField, info.CommonDiscInfo.DiscNumberLetter, 1);
                 AddIfExists(output, Template.DiscTitleField, info.CommonDiscInfo.DiscTitle, 1);
                 AddIfExists(output, Template.SystemField, info.CommonDiscInfo.System.LongName(), 1);
-                AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(info.CommonDiscInfo.Media, info.SizeAndChecksums.Layerbreak), 1);
+                AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(
+                        info.CommonDiscInfo.Media,
+                        info.SizeAndChecksums.Layerbreak,
+                        info.SizeAndChecksums.Layerbreak2,
+                        info.SizeAndChecksums.Layerbreak3),
+                    1);
                 AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
                 AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName(), 1);
@@ -1108,7 +1109,7 @@ namespace MPF.Utilities
 
                 // Make sure there aren't any instances of two blank lines in a row
                 string last = null;
-                for (int i = 0; i < output.Count; )
+                for (int i = 0; i < output.Count;)
                 {
                     if (output[i] == last && string.IsNullOrWhiteSpace(last))
                     {
@@ -1131,80 +1132,14 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Add the properly formatted key and value, if possible
-        /// </summary>
-        /// <param name="output">Output list</param>
-        /// <param name="key">Name of the output key to write</param>
-        /// <param name="value">Name of the output value to write</param>
-        /// <param name="indent">Number of tabs to indent the line</param>
-        private void AddIfExists(List<string> output, string key, string value, int indent)
-        {
-            // If there's no valid value to write
-            if (value == null)
-                return;
-
-            string prefix = "";
-            for (int i = 0; i < indent; i++)
-                prefix += "\t";
-
-            // If the value contains a newline
-            value = value.Replace("\r\n", "\n");
-            if (value.Contains("\n"))
-            {
-                output.Add(prefix + key + ":"); output.Add("");
-                string[] values = value.Split('\n');
-                foreach (string val in values)
-                    output.Add(val);
-
-                output.Add("");
-            }
-
-            // For all regular values
-            else
-            {
-                output.Add(prefix + key + ": " + value);
-            }
-        }
-
-        /// <summary>
-        /// Add the properly formatted key and value, if possible
-        /// </summary>
-        /// <param name="output">Output list</param>
-        /// <param name="key">Name of the output key to write</param>
-        /// <param name="value">Name of the output value to write</param>
-        /// <param name="indent">Number of tabs to indent the line</param>
-        private void AddIfExists(List<string> output, string key, string[] value, int indent)
-        {
-            // If there's no valid value to write
-            if (value == null || value.Length == 0)
-                return;
-
-            AddIfExists(output, key, string.Join(", ", value), indent);
-        }
-
-        /// <summary>
-        /// Add the properly formatted key and value, if possible
-        /// </summary>
-        /// <param name="output">Output list</param>
-        /// <param name="key">Name of the output key to write</param>
-        /// <param name="value">Name of the output value to write</param>
-        /// <param name="indent">Number of tabs to indent the line</param>
-        private void AddIfExists(List<string> output, string key, List<int> value, int indent)
-        {
-            // If there's no valid value to write
-            if (value == null || value.Count() == 0)
-                return;
-
-            AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
-        }
-
-        /// <summary>
         /// Get the adjusted name of the media baed on layers, if applicable
         /// </summary>
         /// <param name="mediaType">MediaType to get the proper name for</param>
-        /// <param name="layerbreak">Layerbreak value, as applicable</param>
+        /// <param name="layerbreak">First layerbreak value, as applicable</param>
+        /// <param name="layerbreak2">Second layerbreak value, as applicable</param>
+        /// <param name="layerbreak3">Third ayerbreak value, as applicable</param>
         /// <returns>String representation of the media, including layer specification</returns>
-        private string GetFixedMediaType(MediaType? mediaType, long layerbreak)
+        private string GetFixedMediaType(MediaType? mediaType, long layerbreak, long layerbreak2, long layerbreak3)
         {
             switch (mediaType)
             {
@@ -1214,6 +1149,7 @@ namespace MPF.Utilities
                     else
                         return $"{mediaType.LongName()}-5";
 
+                // TODO: Figure out what the addtional layerbreaks indicate
                 case MediaType.BluRay:
                     if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
@@ -1324,7 +1260,7 @@ namespace MPF.Utilities
 
         #endregion
 
-        #region Information Extraction Methods
+        #region Information Extraction
 
         /// <summary>
         /// Get the current copy protection scheme, if possible
@@ -1365,6 +1301,78 @@ namespace MPF.Utilities
             {
                 return false;
             }
+        }
+
+        #endregion
+
+        #region Information Formatting
+
+        /// <summary>
+        /// Add the properly formatted key and value, if possible
+        /// </summary>
+        /// <param name="output">Output list</param>
+        /// <param name="key">Name of the output key to write</param>
+        /// <param name="value">Name of the output value to write</param>
+        /// <param name="indent">Number of tabs to indent the line</param>
+        private void AddIfExists(List<string> output, string key, string value, int indent)
+        {
+            // If there's no valid value to write
+            if (value == null)
+                return;
+
+            string prefix = "";
+            for (int i = 0; i < indent; i++)
+                prefix += "\t";
+
+            // If the value contains a newline
+            value = value.Replace("\r\n", "\n");
+            if (value.Contains("\n"))
+            {
+                output.Add(prefix + key + ":"); output.Add("");
+                string[] values = value.Split('\n');
+                foreach (string val in values)
+                    output.Add(val);
+
+                output.Add("");
+            }
+
+            // For all regular values
+            else
+            {
+                output.Add(prefix + key + ": " + value);
+            }
+        }
+
+        /// <summary>
+        /// Add the properly formatted key and value, if possible
+        /// </summary>
+        /// <param name="output">Output list</param>
+        /// <param name="key">Name of the output key to write</param>
+        /// <param name="value">Name of the output value to write</param>
+        /// <param name="indent">Number of tabs to indent the line</param>
+        private void AddIfExists(List<string> output, string key, string[] value, int indent)
+        {
+            // If there's no valid value to write
+            if (value == null || value.Length == 0)
+                return;
+
+            AddIfExists(output, key, string.Join(", ", value), indent);
+        }
+
+        /// <summary>
+        /// Add the properly formatted key and value, if possible
+        /// </summary>
+        /// <param name="output">Output list</param>
+        /// <param name="key">Name of the output key to write</param>
+        /// <param name="value">Name of the output value to write</param>
+        /// <param name="indent">Number of tabs to indent the line</param>
+        private void AddIfExists(List<string> output, string key, List<int> value, int indent)
+        {
+            // If there's no valid value to write
+            if (value == null || value.Count() == 0)
+                return;
+
+            AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
         }
 
         #endregion
