@@ -115,7 +115,7 @@ namespace MPF.Windows
                     DetermineSystemType();
 
                 // Only enable the start/stop if we don't have the default selected
-                StartStopButton.IsEnabled = (SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem) != KnownSystem.NONE;
+                StartStopButton.IsEnabled = ShouldEnableDumpingButton();
             }
             else
             {
@@ -195,8 +195,8 @@ namespace MPF.Windows
             // Add event handlers
             AddEventHandlers();
 
-            // Enable the dumping button
-            StartStopButton.IsEnabled = true;
+            // Enable the dumping button, if necessary
+            StartStopButton.IsEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
@@ -396,7 +396,8 @@ namespace MPF.Windows
             // Set the index for the current disc type
             SetCurrentDiscType();
 
-            StartStopButton.IsEnabled = result && (Drives != null && Drives.Count > 0 ? true : false);
+            // Enable or disable the button
+            StartStopButton.IsEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
             DriveSpeedComboBox.IsEnabled = Env.Type.DoesSupportDriveSpeed();
@@ -512,7 +513,7 @@ namespace MPF.Windows
                 LogOutput.LogLn($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
 
                 StatusLabel.Content = tempContent;
-                StartStopButton.IsEnabled = true;
+                StartStopButton.IsEnabled = ShouldEnableDumpingButton();
                 MediaScanButton.IsEnabled = true;
                 CopyProtectScanButton.IsEnabled = true;
             }
@@ -562,6 +563,17 @@ namespace MPF.Windows
             discInformationWindow.Owner = this;
             discInformationWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             return discInformationWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Determine if the dumping button should be enabled
+        /// </summary>
+        private bool ShouldEnableDumpingButton()
+        {
+            return SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem != KnownSystem.NONE
+                && Drives != null
+                && Drives.Count > 0
+                && !string.IsNullOrEmpty(ParametersTextBox.Text);
         }
 
         /// <summary>
