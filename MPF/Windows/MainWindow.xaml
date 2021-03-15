@@ -55,10 +55,10 @@
                     <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right" />
 
                     <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
-                    <TextBox x:Name="OutputFilenameTextBox" Grid.Row="1" Grid.Column="1" Height="22" />
+                    <TextBox x:Name="OutputFilenameTextBox" Grid.Row="1" Grid.Column="1" Height="22" VerticalContentAlignment="Center" />
 
                     <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
-                    <TextBox x:Name="OutputDirectoryTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" />
+                    <TextBox x:Name="OutputDirectoryTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                     <Button x:Name="OutputDirectoryBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="OutputDirectoryBrowseButtonClick"/>
 
                     <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
@@ -74,7 +74,7 @@
                     <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" />
 
                     <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Parameters</Label>
-                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" />
+                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
                     <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" Click="EnableParametersCheckBoxClick" />
                 </Grid>
             </GroupBox>

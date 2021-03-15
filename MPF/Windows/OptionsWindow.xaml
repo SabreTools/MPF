@@ -28,22 +28,22 @@
                         </Grid.RowDefinitions>
 
                         <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
-                        <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.AaruPath}" />
+                        <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.AaruPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
-                        <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DiscImageCreatorPath}" />
+                        <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DiscImageCreatorPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DD Path" />
-                        <TextBox x:Name="DDPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DDPath}" />
+                        <TextBox x:Name="DDPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DDPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DDPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Dumping Program" />
                         <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=InternalPrograms}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
-                        <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DefaultOutputPath}" />
+                        <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Path=UIOptions.Options.DefaultOutputPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Height="22" Width="22" Content="..." Click="BrowseForPathClick" />
                     </Grid>
                 </TabItem>
@@ -169,7 +169,7 @@
                             />
 
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center"
+                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
                             Text="{Binding Path=UIOptions.Options.AaruRereadCount}"
                             ToolTip="Specifies how many rereads are attempted for sector and subchannel errors"
                             />
@@ -199,7 +199,7 @@
                             />
 
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                        <TextBox VerticalAlignment="Center"
+                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
                             Text="{Binding Path=UIOptions.Options.DICRereadCount}"
                             ToolTip="Specifies how many rereads are attempted on C2 error"
                             />
