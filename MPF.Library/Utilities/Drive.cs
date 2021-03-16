@@ -100,7 +100,7 @@ namespace MPF.Utilities
             }
             finally
             {
-                fs.Dispose();
+                fs?.Dispose();
             }
         }
     }
