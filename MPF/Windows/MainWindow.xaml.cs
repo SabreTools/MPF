@@ -421,10 +421,6 @@ namespace MPF.Windows
             KnownSystem? systemType = SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
             MediaType? mediaType = MediaTypeComboBox.SelectedItem as Element<MediaType>;
 
-            // Set the output directory, if we changed drives or it's not already
-            if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
-                OutputDirectoryTextBox.Text = Path.Combine(UIOptions.Options.DefaultOutputPath, drive?.VolumeLabel ?? string.Empty);
-
             // Get the extension for the file for the next two statements
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
@@ -435,6 +431,10 @@ namespace MPF.Windows
             // If the extension for the file changed, update that automatically
             else if (Path.GetExtension(OutputFilenameTextBox.Text) != extension)
                 OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) + (extension ?? ".bin");
+
+            // Set the output directory, if we changed drives or it's not already
+            if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
+                OutputDirectoryTextBox.Text = Path.Combine(UIOptions.Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) ?? string.Empty);
         }
 
         /// <summary>
