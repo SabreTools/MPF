@@ -459,7 +459,7 @@ namespace MPF.Windows
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
-            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename);
+            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, UIOptions.Options.InternalProgram == InternalProgram.DiscImageCreator);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
                 OutputDirectoryTextBox.Text = outputDirectory;
             else

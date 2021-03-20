@@ -102,7 +102,7 @@ namespace MPF.Utilities
             this.Options = options;
 
             // Output paths
-            (this.OutputDirectory, this.OutputFilename) = NormalizeOutputPaths(outputDirectory, outputFilename);
+            (this.OutputDirectory, this.OutputFilename) = NormalizeOutputPaths(outputDirectory, outputFilename, options.InternalProgram == InternalProgram.DiscImageCreator);
 
             // UI information
             this.Drive = drive;
@@ -232,7 +232,8 @@ namespace MPF.Utilities
         /// </summary>
         /// <param name="directory">Directory name to normalize</param>
         /// <param name="filename">Filename to normalize</param>
-        public static (string, string) NormalizeOutputPaths(string directory, string filename)
+        /// <param name="replacePeriods">True to replace '.' with '_' in filenames, false otherwise</param>
+        public static (string, string) NormalizeOutputPaths(string directory, string filename, bool replacePeriods)
         {
             try
             {
@@ -261,6 +262,8 @@ namespace MPF.Utilities
                     directory = directory.Replace(c, '_');
                 foreach (char c in Path.GetInvalidFileNameChars())
                     filename = filename.Replace(c, '_');
+                if (replacePeriods)
+                    filename = Path.GetFileNameWithoutExtension(filename).Replace('.', '_') + "." + Path.GetExtension(filename).TrimStart('.');
 
                 // If we had a space at the end before, add it again
                 if (endedWithSpace)
@@ -1178,7 +1181,7 @@ namespace MPF.Utilities
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            (OutputDirectory, OutputFilename) = NormalizeOutputPaths(OutputDirectory, OutputFilename);
+            (OutputDirectory, OutputFilename) = NormalizeOutputPaths(OutputDirectory, OutputFilename, Options.InternalProgram == InternalProgram.DiscImageCreator);
 
             // Validate that the output path isn't on the dumping drive
             string fullOutputPath = Path.GetFullPath(Path.Combine(OutputDirectory, OutputFilename));
