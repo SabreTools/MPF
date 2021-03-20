@@ -1270,7 +1270,13 @@ namespace MPF.Utilities
         private async Task<string> GetCopyProtection(IProgress<ProtectionProgress> progress = null)
         {
             if (Options.ScanForProtection)
-                return await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", progress);
+            {
+                (bool success, string output) = await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", progress);
+                if (success)
+                    return output;
+                else
+                    return "An error occurred while scanning!";
+            }
 
             return "(CHECK WITH PROTECTIONID)";
         }

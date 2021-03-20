@@ -498,19 +498,27 @@ namespace MPF.Windows
 
                 var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
-                string protections = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", progress);
+                (bool success, string output) = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", progress);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
-                if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && protections.Contains("SmartE"))
+                if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
                 {
                     ((DiscImageCreator.Parameters)Env.Parameters)[DiscImageCreator.Flag.ScanFileProtect] = false;
                     LogOutput.VerboseLogLn($"SmartE detected, removing {DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 }
 
                 if (!LogPanel.IsExpanded)
-                    MessageBox.Show(protections, "Detected Protection", MessageBoxButton.OK, MessageBoxImage.Information);
+                {
+                    if (success)
+                        MessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
+                    else
+                        MessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 
-                LogOutput.LogLn($"Detected the following protections in {drive.Letter}:\r\n\r\n{protections}");
+                if (success)
+                    LogOutput.LogLn($"Detected the following protections in {drive.Letter}:\r\n\r\n{output}");
+                else
+                    LogOutput.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{output}");
 
                 StatusLabel.Content = tempContent;
                 StartStopButton.IsEnabled = ShouldEnableDumpingButton();

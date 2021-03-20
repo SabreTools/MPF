@@ -1018,8 +1018,8 @@ namespace MPF.Utilities
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
         /// <param name="progress">Optional progress callback</param>
-        /// <returns>Copy protection detected in the envirionment, if any</returns>
-        public static async Task<string> RunProtectionScanOnPath(string path, IProgress<ProtectionProgress> progress = null)
+        /// <returns>TCopy protection detected in the envirionment, if any</returns>
+        public static async Task<(bool, string)> RunProtectionScanOnPath(string path, IProgress<ProtectionProgress> progress = null)
         {
             try
             {
@@ -1036,16 +1036,17 @@ namespace MPF.Utilities
                 });
 
                 if (found == null || found.Count == 0)
-                    return "None found";
+                    return (true, "None found");
 
                 // Join the output protections for writing
-                return string.Join("\n", found
+                string protections = string.Join("\n", found
                     .Where(kvp => kvp.Value != null && kvp.Value.Any())
                     .Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
+                return (true, protections);
             }
             catch (Exception ex)
             {
-                return $"Path could not be scanned! {ex}";
+                return (false, ex.ToString());
             }
         }
     }
