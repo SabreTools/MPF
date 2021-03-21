@@ -1039,9 +1039,10 @@ namespace MPF.Utilities
                     return (true, "None found");
 
                 // Join the output protections for writing
-                string protections = string.Join("\n", found
+                string protections = string.Join(", ", found
                     .Where(kvp => kvp.Value != null && kvp.Value.Any())
-                    .Select(kvp => $"{kvp.Key}: {string.Join(", ", kvp.Value)}"));
+                    .SelectMany(kvp => kvp.Value)
+                    .Distinct());
                 return (true, protections);
             }
             catch (Exception ex)
