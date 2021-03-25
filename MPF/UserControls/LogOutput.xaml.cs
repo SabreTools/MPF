@@ -402,68 +402,76 @@ namespace MPF.UserControls
             if (verbose && !ViewModels.OptionsViewModel.VerboseLogging)
                 return;
 
-            // Get thr brush color from the flags
+            // Get the brush color from the flags
             Brush brush = Brushes.White;
             if (error)
                 brush = Brushes.Red;
             else if (verbose)
                 brush = Brushes.Yellow;
 
-            // Get last line
-            if (lastLineText == null)
-                lastLineText = GetLastLine();
+            try
+            {
+                // Get last line
+                if (lastLineText == null)
+                    lastLineText = GetLastLine();
 
-            // Always append if there's no previous line
-            if (lastLineText == null)
-            {
-                AppendToTextBox(text, brush);
-                lastUsedMatcher = null;
-            }
-            // Return always means overwrite
-            else if (text.StartsWith("\r"))
-            {
-                ReplaceLastLine(text, brush);
-                lastUsedMatcher = null;
-            }
-            else
-            {
-                // If we have a cached matcher, try it first
-                if (lastUsedMatcher?.Matches(ref text) == true)
+                // Always append if there's no previous line
+                if (lastLineText == null)
+                {
+                    AppendToTextBox(text, brush);
+                    lastUsedMatcher = null;
+                }
+                // Return always means overwrite
+                else if (text.StartsWith("\r"))
                 {
                     ReplaceLastLine(text, brush);
+                    lastUsedMatcher = null;
                 }
                 else
                 {
-                    // Get all matching Matchers
-                    var matches = _matchers.Where(m => m.Matches(ref text));
-                    if (matches.Any())
+                    // If we have a cached matcher, try it first
+                    if (lastUsedMatcher?.Matches(ref text) == true)
                     {
-                        // Use the first Matcher
-                        var firstMatcher = matches.First();
-                        if (firstMatcher.Matches(ref lastLineText))
-                            ReplaceLastLine(text, brush);
-                        else if (string.IsNullOrWhiteSpace(lastLineText))
-                            ReplaceLastLine(text, brush);
-                        else
-                            AppendToTextBox(text, brush);
-
-                        // Cache the last used Matcher
-                        lastUsedMatcher = firstMatcher;
+                        ReplaceLastLine(text, brush);
                     }
-                    // Default case for all other text
                     else
                     {
-                        AppendToTextBox(text, brush);
-                        lastUsedMatcher = null;
+                        // Get all matching Matchers
+                        var matches = _matchers.Where(m => m.Matches(ref text));
+                        if (matches.Any())
+                        {
+                            // Use the first Matcher
+                            var firstMatcher = matches.First();
+                            if (firstMatcher.Matches(ref lastLineText))
+                                ReplaceLastLine(text, brush);
+                            else if (string.IsNullOrWhiteSpace(lastLineText))
+                                ReplaceLastLine(text, brush);
+                            else
+                                AppendToTextBox(text, brush);
+
+                            // Cache the last used Matcher
+                            lastUsedMatcher = firstMatcher;
+                        }
+                        // Default case for all other text
+                        else
+                        {
+                            AppendToTextBox(text, brush);
+                            lastUsedMatcher = null;
+                        }
                     }
                 }
+
+                // Update the bar if needed
+                ProcessStringForProgressBar(text);
+
+                // Cache the current text as the last line
+                lastLineText = text;
             }
-
-            // Update the bar if needed
-            ProcessStringForProgressBar(text);
-
-            // Cache the current text as the last line
-            lastLineText = text;
+            catch (Exception ex)
+            {
+                // In the event that something fails horribly, we want to log
+                AppendToTextBox(ex.ToString(), Brushes.Red);
+            }
         }
 
         /// <summary>
