@@ -184,7 +184,7 @@ namespace MPF.UserControls
                     {
                         float percentProgress = (current / (float)total) * 100;
                         ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Scanning sectors for anit-mod string... ({0:##.##}%)", percentProgress);
+                        ProgressLabel.Text = string.Format("Scanning sectors for anti-mod string... ({0:##.##}%)", percentProgress);
                     }
                 }));
 
