@@ -175,6 +175,19 @@ namespace MPF.UserControls
                     }
                 }));
 
+            _matchers.Add(new Matcher(
+                "Scanning sector for anti-mod string (LBA)",
+                DiscImageCreatorProgressPattern,
+                match =>
+                {
+                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
+                    {
+                        float percentProgress = (current / (float)total) * 100;
+                        ProgressBar.Value = percentProgress;
+                        ProgressLabel.Text = string.Format("Scanning sectors for anit-mod string... ({0:##.##}%)", percentProgress);
+                    }
+                }));
+
             #endregion
 
             #region Dumping
