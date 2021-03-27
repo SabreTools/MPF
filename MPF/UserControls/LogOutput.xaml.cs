@@ -67,13 +67,15 @@ namespace MPF.UserControls
             private readonly string prefix;
             private readonly Regex regex;
             private readonly int start;
-            private readonly Action<Match> lambda;
+            private readonly string progressBarText;
+            private readonly Action<Match, string> lambda;
 
-            public Matcher(string prefix, string regex, Action<Match> lambda)
+            public Matcher(string prefix, string regex, string progressBarText, Action<Match, string> lambda)
             {
                 this.prefix = prefix;
                 this.regex = new Regex(regex);
                 this.start = prefix.Length;
+                this.progressBarText = progressBarText;
                 this.lambda = lambda;
             }
 
@@ -82,7 +84,7 @@ namespace MPF.UserControls
             public void Apply(ref string text)
             {
                 Match match = regex?.Match(text, start);
-                lambda?.Invoke(match);
+                lambda?.Invoke(match, progressBarText);
             }
         }
 
@@ -104,89 +106,54 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 "Checking EXE",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Checking executables... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Checking executables...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Checking Pregap sync, msf, mode (LBA)",
                 @"\s*-(\d+)$",
-                match =>
+                "Checking Pregap sync, msf, mode",
+                (match, text) =>
                 {
                     ProgressBar.Value = 0;
-                    ProgressLabel.Text = "Checking Pregap sync, msf, mode";
+                    ProgressLabel.Text = text;
                 }));
 
             _matchers.Add(new Matcher(
                 "Checking SubQ adr (Track)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Checking SubQ adr... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Checking SubQ adr...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Checking SubQ ctl (Track)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Checking SubQ ctl... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Checking SubQ ctl...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Checking SubRtoW (Track)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Checking SubRtoW... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Checking SubRtoW...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Reading DirectoryRecord",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Reading directory records... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Reading directory records...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Scanning sector for anti-mod string (LBA)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Scanning sectors for anti-mod string... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Scanning sectors for anti-mod string...",
+                StandardDiscImageCreatorProgress
+            ));
 
             #endregion
 
@@ -195,97 +162,55 @@ namespace MPF.UserControls
             _matchers.Add(new Matcher(
                 @"Creating iso(LBA)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Creating ISO... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Creating ISO...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 @"Creating .scm (LBA)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Creating scrambled image... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Creating scrambled image...",
+                StandardDiscImageCreatorProgress
+            ));
 
             #endregion
 
             #region Post-Dump Processing
 
             _matchers.Add(new Matcher(
-               "Checking sectors:",
-               DiscImageCreatorProgressPattern,
-               match =>
-               {
-                   if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                   {
-                       float percentProgress = (current / (float)total) * 100;
-                       ProgressBar.Value = percentProgress;
-                       ProgressLabel.Text = string.Format("Checking for errors... ({0:##.##}%)", percentProgress);
-                   }
-               }));
+                "Checking sectors:",
+                DiscImageCreatorProgressPattern,
+                "Checking for errors...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
-               "Creating bin (Track)",
-               DiscImageCreatorProgressPattern,
-               match =>
-               {
-                   if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                   {
-                       float percentProgress = (current / (float)total) * 100;
-                       ProgressBar.Value = percentProgress;
-                       ProgressLabel.Text = string.Format("Creating BIN(s)... ({0:##.##}%)", percentProgress);
-                   }
-               }));
+                "Creating bin (Track)",
+                DiscImageCreatorProgressPattern,
+                "Creating BIN(s)...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Creating cue and ccd (Track)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Creating CUE and CCD... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Creating CUE and CCD...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
-                   "Descrambling data sector of img:",
-                   DiscImageCreatorProgressPattern,
-                   match =>
-                   {
-                       if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                       {
-                           float percentProgress = (current / (float)total) * 100;
-                           ProgressBar.Value = percentProgress;
-                           ProgressLabel.Text = string.Format("Descrambling image... ({0:##.##}%)", percentProgress);
-                       }
-                   }));
+                "Descrambling data sector of img:",
+                 DiscImageCreatorProgressPattern,
+                "Descrambling image...",
+                StandardDiscImageCreatorProgress
+            ));
 
             _matchers.Add(new Matcher(
                 "Scanning sector (LBA)",
                 DiscImageCreatorProgressPattern,
-                match =>
-                {
-                    if (UInt32.TryParse(match.Groups[1].Value, out uint current) && UInt32.TryParse(match.Groups[2].Value, out uint total))
-                    {
-                        float percentProgress = (current / (float)total) * 100;
-                        ProgressBar.Value = percentProgress;
-                        ProgressLabel.Text = string.Format("Scanning sectors for protection... ({0:##.##}%)", percentProgress);
-                    }
-                }));
+                "Scanning sectors for protection...",
+                StandardDiscImageCreatorProgress
+            ));
 
             #endregion
         }
@@ -565,6 +490,16 @@ namespace MPF.UserControls
         private void OutputViewerSizeChanged(object sender, SizeChangedEventArgs e)
         {
             OutputViewer.ScrollToBottom();
+        }
+
+        private void StandardDiscImageCreatorProgress(Match match, string text)
+        {
+            if (uint.TryParse(match.Groups[1].Value, out uint current) && uint.TryParse(match.Groups[2].Value, out uint total))
+            {
+                float percentProgress = (current / (float)total) * 100;
+                ProgressBar.Value = percentProgress;
+                ProgressLabel.Text = string.Format($"{text} ({percentProgress:N2}%)");
+            }
         }
 
         #endregion
