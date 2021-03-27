@@ -969,6 +969,8 @@ namespace MPF.Utilities
             {
                 case RedumpLanguage.Afrikaans:
                     return "Afrikaans";
+                case RedumpLanguage.Albanian:
+                    return "Albanian";
                 case RedumpLanguage.Arabic:
                     return "Arabic";
                 case RedumpLanguage.Basque:
@@ -989,6 +991,8 @@ namespace MPF.Utilities
                     return "Dutch";
                 case RedumpLanguage.English:
                     return "English";
+                case RedumpLanguage.Estonian:
+                    return "Estonian";
                 case RedumpLanguage.Finnish:
                     return "Finnish";
                 case RedumpLanguage.French:
@@ -1005,12 +1009,24 @@ namespace MPF.Utilities
                     return "Hindi";
                 case RedumpLanguage.Hungarian:
                     return "Hungarian";
+                case RedumpLanguage.Indonesian:
+                    return "Indonesian";
+                case RedumpLanguage.Icelandic:
+                    return "Icelandic";
                 case RedumpLanguage.Italian:
                     return "Italian";
                 case RedumpLanguage.Japanese:
                     return "Japanese";
                 case RedumpLanguage.Korean:
                     return "Korean";
+                case RedumpLanguage.Latin:
+                    return "Latin";
+                case RedumpLanguage.Latvian:
+                    return "Latvian";
+                case RedumpLanguage.Lithuanian:
+                    return "Lithuanian";
+                case RedumpLanguage.Macedonian:
+                    return "Macedonian";
                 case RedumpLanguage.Norwegian:
                     return "Norwegian";
                 case RedumpLanguage.Polish:
@@ -1023,6 +1039,8 @@ namespace MPF.Utilities
                     return "Romanian";
                 case RedumpLanguage.Russian:
                     return "Russian";
+                case RedumpLanguage.Serbian:
+                    return "Serbian";
                 case RedumpLanguage.Slovak:
                     return "Slovak";
                 case RedumpLanguage.Slovenian:
@@ -1083,6 +1101,8 @@ namespace MPF.Utilities
                     return "Asia, USA";
                 case RedumpRegion.Australia:
                     return "Australia";
+                case RedumpRegion.AustraliaGermany:
+                    return "Australia, Germany";
                 case RedumpRegion.AustraliaNewZealand:
                     return "Australia, New Zealand";
                 case RedumpRegion.Austria:
@@ -1095,6 +1115,8 @@ namespace MPF.Utilities
                     return "Belgium, Netherlands";
                 case RedumpRegion.Brazil:
                     return "Brazil";
+                case RedumpRegion.Bulgaria:
+                    return "Bulgaria";
                 case RedumpRegion.Canada:
                     return "Canada";
                 case RedumpRegion.China:
@@ -1105,6 +1127,8 @@ namespace MPF.Utilities
                     return "Czech";
                 case RedumpRegion.Denmark:
                     return "Denmark";
+                case RedumpRegion.Estonia:
+                    return "Estonia";
                 case RedumpRegion.Europe:
                     return "Europe";
                 case RedumpRegion.EuropeAsia:
@@ -1115,6 +1139,8 @@ namespace MPF.Utilities
                     return "Europe, Canada";
                 case RedumpRegion.EuropeGermany:
                     return "Europe, Germany";
+                case RedumpRegion.Export:
+                    return "Export";
                 case RedumpRegion.Finland:
                     return "Finland";
                 case RedumpRegion.France:
@@ -1129,6 +1155,8 @@ namespace MPF.Utilities
                     return "Greece";
                 case RedumpRegion.Hungary:
                     return "Hungary";
+                case RedumpRegion.Iceland:
+                    return "Iceland";
                 case RedumpRegion.India:
                     return "India";
                 case RedumpRegion.Ireland:
@@ -1151,8 +1179,12 @@ namespace MPF.Utilities
                     return "Korea";
                 case RedumpRegion.LatinAmerica:
                     return "Latin America";
+                case RedumpRegion.Lithuania:
+                    return "Lithuania";
                 case RedumpRegion.Netherlands:
                     return "Netherlands";
+                case RedumpRegion.NewZealand:
+                    return "New Zealand";
                 case RedumpRegion.Norway:
                     return "Norway";
                 case RedumpRegion.Poland:
@@ -1165,6 +1197,8 @@ namespace MPF.Utilities
                     return "Russia";
                 case RedumpRegion.Scandinavia:
                     return "Scandinavia";
+                case RedumpRegion.Serbia:
+                    return "Serbia";
                 case RedumpRegion.Singapore:
                     return "Singapore";
                 case RedumpRegion.Slovakia:
@@ -1197,6 +1231,8 @@ namespace MPF.Utilities
                     return "USA";
                 case RedumpRegion.USAAsia:
                     return "USA, Asia";
+                case RedumpRegion.USAAustralia:
+                    return "USA, Australia";
                 case RedumpRegion.USABrazil:
                     return "USA, Brazil";
                 case RedumpRegion.USACanada:
@@ -1823,6 +1859,8 @@ namespace MPF.Utilities
             {
                 case RedumpLanguage.Afrikaans:
                     return "afr";
+                case RedumpLanguage.Albanian:
+                    return "sqi";
                 case RedumpLanguage.Arabic:
                     return "ara";
                 case RedumpLanguage.Basque:
@@ -1843,6 +1881,8 @@ namespace MPF.Utilities
                     return "dut";
                 case RedumpLanguage.English:
                     return "eng";
+                case RedumpLanguage.Estonian:
+                    return "est";
                 case RedumpLanguage.Finnish:
                     return "fin";
                 case RedumpLanguage.French:
@@ -1859,12 +1899,24 @@ namespace MPF.Utilities
                     return "hin";
                 case RedumpLanguage.Hungarian:
                     return "hun";
+                case RedumpLanguage.Indonesian:
+                    return "ind";
+                case RedumpLanguage.Icelandic:
+                    return "isl";
                 case RedumpLanguage.Italian:
                     return "ita";
                 case RedumpLanguage.Japanese:
                     return "jap";
                 case RedumpLanguage.Korean:
                     return "kor";
+                case RedumpLanguage.Latin:
+                    return "lat";
+                case RedumpLanguage.Latvian:
+                    return "lav";
+                case RedumpLanguage.Lithuanian:
+                    return "lit";
+                case RedumpLanguage.Macedonian:
+                    return "mkd";
                 case RedumpLanguage.Norwegian:
                     return "nor";
                 case RedumpLanguage.Polish:
@@ -1877,6 +1929,8 @@ namespace MPF.Utilities
                     return "ron";
                 case RedumpLanguage.Russian:
                     return "rus";
+                case RedumpLanguage.Serbian:
+                    return "srp";
                 case RedumpLanguage.Slovak:
                     return "slk";
                 case RedumpLanguage.Slovenian:
@@ -1917,6 +1971,8 @@ namespace MPF.Utilities
                     return "A,U";
                 case RedumpRegion.Australia:
                     return "Au";
+                case RedumpRegion.AustraliaGermany:
+                    return "Au,G";
                 case RedumpRegion.AustraliaNewZealand:
                     return "Au,Nz";
                 case RedumpRegion.Austria:
@@ -1929,6 +1985,8 @@ namespace MPF.Utilities
                     return "Be,N";
                 case RedumpRegion.Brazil:
                     return "B";
+                case RedumpRegion.Bulgaria:
+                    return "Bg";
                 case RedumpRegion.Canada:
                     return "Ca";
                 case RedumpRegion.China:
@@ -1939,6 +1997,8 @@ namespace MPF.Utilities
                     return "Cz";
                 case RedumpRegion.Denmark:
                     return "Dk";
+                case RedumpRegion.Estonia:
+                    return "Ee";
                 case RedumpRegion.Europe:
                     return "E";
                 case RedumpRegion.EuropeAsia:
@@ -1949,6 +2009,8 @@ namespace MPF.Utilities
                     return "E,Ca";
                 case RedumpRegion.EuropeGermany:
                     return "E,G";
+                case RedumpRegion.Export:
+                    return "Ex";
                 case RedumpRegion.Finland:
                     return "Fi";
                 case RedumpRegion.France:
@@ -1963,6 +2025,8 @@ namespace MPF.Utilities
                     return "Gr";
                 case RedumpRegion.Hungary:
                     return "H";
+                case RedumpRegion.Iceland:
+                    return "Is";
                 case RedumpRegion.India:
                     return "In";
                 case RedumpRegion.Ireland:
@@ -1985,8 +2049,12 @@ namespace MPF.Utilities
                     return "K";
                 case RedumpRegion.LatinAmerica:
                     return "LAm";
+                case RedumpRegion.Lithuania:
+                    return "Lt";
                 case RedumpRegion.Netherlands:
                     return "N";
+                case RedumpRegion.NewZealand:
+                    return "Nz";
                 case RedumpRegion.Norway:
                     return "No";
                 case RedumpRegion.Poland:
@@ -1999,6 +2067,8 @@ namespace MPF.Utilities
                     return "R";
                 case RedumpRegion.Scandinavia:
                     return "Sca";
+                case RedumpRegion.Serbia:
+                    return "Rs";
                 case RedumpRegion.Singapore:
                     return "Sg";
                 case RedumpRegion.Slovakia:
@@ -2026,11 +2096,13 @@ namespace MPF.Utilities
                 case RedumpRegion.UKAustralia:
                     return "Uk,Au";
                 case RedumpRegion.Ukraine:
-                    return "Ue";
+                    return "Ua";
                 case RedumpRegion.USA:
                     return "U";
                 case RedumpRegion.USAAsia:
                     return "U,A";
+                case RedumpRegion.USAAustralia:
+                    return "U,Au";
                 case RedumpRegion.USABrazil:
                     return "U,B";
                 case RedumpRegion.USACanada:
@@ -3260,6 +3332,8 @@ namespace MPF.Utilities
             {
                 case "afr":
                     return RedumpLanguage.Afrikaans;
+                case "sqi":
+                    return RedumpLanguage.Albanian;
                 case "ara":
                     return RedumpLanguage.Arabic;
                 case "baq":
@@ -3280,6 +3354,8 @@ namespace MPF.Utilities
                     return RedumpLanguage.Dutch;
                 case "eng":
                     return RedumpLanguage.English;
+                case "est":
+                    return RedumpLanguage.Estonian;
                 case "fin":
                     return RedumpLanguage.Finnish;
                 case "fre":
@@ -3296,12 +3372,24 @@ namespace MPF.Utilities
                     return RedumpLanguage.Hindi;
                 case "hun":
                     return RedumpLanguage.Hungarian;
+                case "ind":
+                    return RedumpLanguage.Indonesian;
+                case "isl":
+                    return RedumpLanguage.Icelandic;
                 case "ita":
                     return RedumpLanguage.Italian;
                 case "jap":
                     return RedumpLanguage.Japanese;
                 case "kor":
                     return RedumpLanguage.Korean;
+                case "lat":
+                    return RedumpLanguage.Latin;
+                case "lav":
+                    return RedumpLanguage.Latvian;
+                case "lit":
+                    return RedumpLanguage.Lithuanian;
+                case "mkd":
+                    return RedumpLanguage.Macedonian;
                 case "nor":
                     return RedumpLanguage.Norwegian;
                 case "pol":
@@ -3314,6 +3402,8 @@ namespace MPF.Utilities
                     return RedumpLanguage.Romanian;
                 case "rus":
                     return RedumpLanguage.Russian;
+                case "srp":
+                    return RedumpLanguage.Serbian;
                 case "slk":
                     return RedumpLanguage.Slovak;
                 case "slv":
@@ -3354,6 +3444,8 @@ namespace MPF.Utilities
                     return RedumpRegion.AsiaUSA;
                 case "Au":
                     return RedumpRegion.Australia;
+                case "Au,G":
+                    return RedumpRegion.AustraliaGermany;
                 case "Au,Nz":
                     return RedumpRegion.AustraliaNewZealand;
                 case "At":
@@ -3366,6 +3458,8 @@ namespace MPF.Utilities
                     return RedumpRegion.BelgiumNetherlands;
                 case "B":
                     return RedumpRegion.Brazil;
+                case "Bg":
+                    return RedumpRegion.Bulgaria;
                 case "Ca":
                     return RedumpRegion.Canada;
                 case "C":
@@ -3376,6 +3470,8 @@ namespace MPF.Utilities
                     return RedumpRegion.Czech;
                 case "Dk":
                     return RedumpRegion.Denmark;
+                case "Ee":
+                    return RedumpRegion.Estonia;
                 case "E":
                     return RedumpRegion.Europe;
                 case "E,A":
@@ -3386,6 +3482,8 @@ namespace MPF.Utilities
                     return RedumpRegion.EuropeCanada;
                 case "E,G":
                     return RedumpRegion.EuropeGermany;
+                case "Ex":
+                    return RedumpRegion.Export;
                 case "Fi":
                     return RedumpRegion.Finland;
                 case "F":
@@ -3400,6 +3498,8 @@ namespace MPF.Utilities
                     return RedumpRegion.Greece;
                 case "H":
                     return RedumpRegion.Hungary;
+                case "Is":
+                    return RedumpRegion.Iceland;
                 case "In":
                     return RedumpRegion.India;
                 case "Ie":
@@ -3422,8 +3522,12 @@ namespace MPF.Utilities
                     return RedumpRegion.Korea;
                 case "LAm":
                     return RedumpRegion.LatinAmerica;
+                case "Lt":
+                    return RedumpRegion.Lithuania;
                 case "N":
                     return RedumpRegion.Netherlands;
+                case "Nz":
+                    return RedumpRegion.NewZealand;
                 case "No":
                     return RedumpRegion.Norway;
                 case "P":
@@ -3436,6 +3540,8 @@ namespace MPF.Utilities
                     return RedumpRegion.Russia;
                 case "Sca":
                     return RedumpRegion.Scandinavia;
+                case "Rs":
+                    return RedumpRegion.Serbia;
                 case "Sg":
                     return RedumpRegion.Singapore;
                 case "Sk":
@@ -3462,12 +3568,14 @@ namespace MPF.Utilities
                     return RedumpRegion.UK;
                 case "Uk,Au":
                     return RedumpRegion.UKAustralia;
-                case "Ue":
+                case "Ua":
                     return RedumpRegion.Ukraine;
                 case "U":
                     return RedumpRegion.USA;
                 case "U,A":
                     return RedumpRegion.USAAsia;
+                case "U,Au":
+                    return RedumpRegion.USAAustralia;
                 case "U,B":
                     return RedumpRegion.USABrazil;
                 case "U,Ca":

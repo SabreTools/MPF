@@ -41,6 +41,7 @@
 - DVDs and BDs can have label-side data
 - Remove .NET Framework 4.7.2 support
 - Make logging window a bit safer
+- Support new Redump languages and regions
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
