@@ -282,19 +282,11 @@ namespace MPF.UserControls
         /// <param name="color">Color to print text in</param>
         private void AppendToTextBox(string text, Brush color)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            Dispatcher.Invoke(() =>
             {
-                Run run = new Run(text) { Foreground = color };
+                var run = new Run(text) { Foreground = color };
                 _paragraph.Inlines.Add(run);
-            }
-            else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    Run run = new Run(text) { Foreground = color };
-                    _paragraph.Inlines.Add(run);
-                });
-            }
+            });
         }
 
         /// <summary>
@@ -303,25 +295,14 @@ namespace MPF.UserControls
         /// <param name="text">Text to append</param>
         private string GetLastLine()
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            return Dispatcher.Invoke(() =>
             {
                 if (!_paragraph.Inlines.Any())
                     return null;
 
                 var last = _paragraph.Inlines.LastInline as Run;
                 return last.Text;
-            }
-            else
-            {
-                return Dispatcher.Invoke(() =>
-                {
-                    if (!_paragraph.Inlines.Any())
-                        return null;
-
-                    var last = _paragraph.Inlines.LastInline as Run;
-                    return last.Text;
-                });
-            }
+            });
         }
 
         /// <summary>
@@ -416,10 +397,10 @@ namespace MPF.UserControls
         /// <param name="text">Text to check and update with</param>
         private void ProcessStringForProgressBar(string text, Matcher? matcher)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            Dispatcher.Invoke(() =>
+            {
                 matcher?.Apply(ref text);
-            else
-                Dispatcher.Invoke(() => { matcher?.Apply(ref text); });
+            });
         }
 
         /// <summary>
@@ -429,21 +410,12 @@ namespace MPF.UserControls
         /// <param name="color">Color to print text in</param>
         private void ReplaceLastLine(string text, Brush color)
         {
-            if (Application.Current.Dispatcher.CheckAccess())
+            Dispatcher.Invoke(() =>
             {
                 var last = _paragraph.Inlines.LastInline as Run;
                 last.Text = text;
                 last.Foreground = color;
-            }
-            else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    var last = _paragraph.Inlines.LastInline as Run;
-                    last.Text = text;
-                    last.Foreground = color;
-                });
-            }
+            });
         }
 
         #endregion
