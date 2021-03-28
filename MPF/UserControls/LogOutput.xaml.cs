@@ -25,7 +25,7 @@ namespace MPF.UserControls
         /// <summary>
         /// List of Matchers for progress tracking
         /// </summary>
-        private readonly List<Matcher> _matchers;
+        private readonly List<Matcher?> _matchers;
 
         /// <summary>
         /// Cached value of the last line written
@@ -52,7 +52,7 @@ namespace MPF.UserControls
             _document.Blocks.Add(_paragraph);
             Output.Document = _document;
 
-            _matchers = new List<Matcher>();
+            _matchers = new List<Matcher?>();
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();
         }
@@ -374,13 +374,11 @@ namespace MPF.UserControls
                     }
                     else
                     {
-                        // Get all matching Matchers
-                        var matches = _matchers.Where(m => m.Matches(ref text));
-                        if (matches.Any())
+                        // Get the first matching Matcher
+                        var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(ref text));
+                        if (firstMatcher.HasValue)
                         {
-                            // Use the first Matcher
-                            var firstMatcher = matches.First();
-                            if (firstMatcher.Matches(ref lastLineText))
+                            if (firstMatcher.Value.Matches(ref lastLineText))
                                 ReplaceLastLine(text, brush);
                             else if (string.IsNullOrWhiteSpace(lastLineText))
                                 ReplaceLastLine(text, brush);
@@ -400,7 +398,7 @@ namespace MPF.UserControls
                 }
 
                 // Update the bar if needed
-                ProcessStringForProgressBar(text);
+                ProcessStringForProgressBar(text, lastUsedMatcher);
 
                 // Cache the current text as the last line
                 lastLineText = text;
@@ -416,21 +414,12 @@ namespace MPF.UserControls
         /// Process text if it should update the progress bar
         /// </summary>
         /// <param name="text">Text to check and update with</param>
-        private void ProcessStringForProgressBar(string text)
+        private void ProcessStringForProgressBar(string text, Matcher? matcher)
         {
             if (Application.Current.Dispatcher.CheckAccess())
-            {
-                var matcher = _matchers.FirstOrDefault(m => m.Matches(ref text));
-                matcher.Apply(ref text);
-            }
+                matcher?.Apply(ref text);
             else
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    var matcher = _matchers.FirstOrDefault(m => m.Matches(ref text));
-                    matcher.Apply(ref text);
-                });
-            }
+                Dispatcher.Invoke(() => { matcher?.Apply(ref text); });
         }
 
         /// <summary>
