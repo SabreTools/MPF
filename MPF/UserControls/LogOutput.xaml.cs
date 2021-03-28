@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -42,6 +43,11 @@ namespace MPF.UserControls
         /// </summary>
         private const string DiscImageCreatorProgressPattern = @"\s*(\d+)\/\s*(\d+)$";
 
+        /// <summary>
+        /// Queue of all strings that need to be logged
+        /// </summary>
+        private Queue<(string, Brush)> stringsToLog;
+
         public LogOutput()
         {
             InitializeComponent();
@@ -55,6 +61,9 @@ namespace MPF.UserControls
             _matchers = new List<Matcher?>();
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();
+
+            stringsToLog = new Queue<(string, Brush)>();
+            Task.Run(() => ProcessLogLines());
         }
 
         #region Matching
@@ -220,25 +229,25 @@ namespace MPF.UserControls
         #region Writing
 
         /// <summary>
-        /// Write text to the log
+        /// Enqueue text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void Log(string text) => LogInternal(text, verbose: false);
 
         /// <summary>
-        /// Write text with a newline to the log
+        /// Enqueue text with a newline to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void LogLn(string text) => Log(text + "\n");
 
         /// <summary>
-        /// Write error text to the log
+        /// Enqueue error text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void ErrorLog(string text) => LogInternal(text, error: true);
 
         /// <summary>
-        /// Write error text with a newline to the log
+        /// Enqueue error text with a newline to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void ErrorLogLn(string text) => ErrorLog(text + "\n");
@@ -264,16 +273,121 @@ namespace MPF.UserControls
         }
 
         /// <summary>
-        /// Write verbose text to the log
+        /// Enqueue verbose text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void VerboseLog(string text) => LogInternal(text, verbose: true);
 
         /// <summary>
-        /// Write verbose text with a newline to the log
+        /// Enqueue verbose text with a newline to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void VerboseLogLn(string text) => VerboseLog(text + "\n");
+
+        /// <summary>
+        /// Enqueue text to the log with formatting
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        /// <param name="verbose">True if the log is verbose output, false otherwise</param>
+        /// <param name="error">True if the log is error output, false otherwise</param>
+        private void LogInternal(string text, bool verbose = false, bool error = false)
+        {
+            // Null text gets ignored
+            if (text == null)
+                return;
+
+            // If we have verbose logs but not enabled, ignore
+            if (verbose && !ViewModels.OptionsViewModel.VerboseLogging)
+                return;
+
+            // Get the brush color from the flags
+            Brush brush = Brushes.White;
+            if (error)
+                brush = Brushes.Red;
+            else if (verbose)
+                brush = Brushes.Yellow;
+
+            // Enqueue the text
+            lock (stringsToLog)
+            {
+                stringsToLog.Enqueue((text, brush));
+            }
+        }
+
+        /// <summary>
+        /// Process the log lines in the queue
+        /// </summary>
+        private void ProcessLogLines()
+        {
+            while (true)
+            {
+                // Nothing in the queue means we get to idle
+                if (stringsToLog.Count == 0)
+                    continue;
+
+                // Get the next item from the queue
+                (string text, Brush brush) = stringsToLog.Dequeue();
+
+                // Null text gets ignored
+                if (text == null)
+                    continue;
+
+                try
+                {
+                    // Get last line
+                    lastLine = lastLine ?? GetLastLine();
+
+                    // Always append if there's no previous line
+                    if (lastLine == null)
+                    {
+                        AppendToTextBox(text, brush);
+                        lastUsedMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(text));
+                    }
+                    // Return always means overwrite
+                    else if (text.StartsWith("\r"))
+                    {
+                        ReplaceLastLine(text, brush);
+                    }
+                    // If we have a cached matcher and we match
+                    else if (lastUsedMatcher?.Matches(text) == true)
+                    {
+                        ReplaceLastLine(text, brush);
+                    }
+                    else
+                    {
+                        // Get the first matching Matcher
+                        var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(text));
+                        if (firstMatcher.HasValue)
+                        {
+                            string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
+                            if (firstMatcher.Value.Matches(lastText))
+                                ReplaceLastLine(text, brush);
+                            else if (string.IsNullOrWhiteSpace(lastText))
+                                ReplaceLastLine(text, brush);
+                            else
+                                AppendToTextBox(text, brush);
+
+                            // Cache the last used Matcher
+                            lastUsedMatcher = firstMatcher;
+                        }
+                        // Default case for all other text
+                        else
+                        {
+                            AppendToTextBox(text, brush);
+                            lastUsedMatcher = null;
+                        }
+                    }
+
+                    // Update the bar if needed
+                    ProcessStringForProgressBar(text, lastUsedMatcher);
+                }
+                catch (Exception ex)
+                {
+                    // In the event that something fails horribly, we want to log
+                    AppendToTextBox(ex.ToString(), Brushes.Red);
+                }
+            }
+        }
 
         /// <summary>
         /// Append text to the log text box
@@ -302,85 +416,6 @@ namespace MPF.UserControls
 
                 return _paragraph.Inlines.LastInline as Run;
             });
-        }
-
-        /// <summary>
-        /// Write text to the log with formatting
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        /// <param name="verbose">True if the log is verbose output, false otherwise</param>
-        /// <param name="error">True if the log is error output, false otherwise</param>
-        private void LogInternal(string text, bool verbose = false, bool error = false)
-        {
-            // Null text gets ignored
-            if (text == null)
-                return;
-
-            // If we have verbose logs but not enabled, ignore
-            if (verbose && !ViewModels.OptionsViewModel.VerboseLogging)
-                return;
-
-            // Get the brush color from the flags
-            Brush brush = Brushes.White;
-            if (error)
-                brush = Brushes.Red;
-            else if (verbose)
-                brush = Brushes.Yellow;
-
-            try
-            {
-                // Get last line
-                lastLine = lastLine ?? GetLastLine();
-
-                // Always append if there's no previous line
-                if (lastLine == null)
-                {
-                    AppendToTextBox(text, brush);
-                    lastUsedMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(text));
-                }
-                // Return always means overwrite
-                else if (text.StartsWith("\r"))
-                {
-                    ReplaceLastLine(text, brush);
-                }
-                // If we have a cached matcher and we match
-                else if (lastUsedMatcher?.Matches(text) == true)
-                {
-                    ReplaceLastLine(text, brush);
-                }
-                else
-                {
-                    // Get the first matching Matcher
-                    var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(text));
-                    if (firstMatcher.HasValue)
-                    {
-                        string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
-                        if (firstMatcher.Value.Matches(lastText))
-                            ReplaceLastLine(text, brush);
-                        else if (string.IsNullOrWhiteSpace(lastText))
-                            ReplaceLastLine(text, brush);
-                        else
-                            AppendToTextBox(text, brush);
-
-                        // Cache the last used Matcher
-                        lastUsedMatcher = firstMatcher;
-                    }
-                    // Default case for all other text
-                    else
-                    {
-                        AppendToTextBox(text, brush);
-                        lastUsedMatcher = null;
-                    }
-                }
-
-                // Update the bar if needed
-                ProcessStringForProgressBar(text, lastUsedMatcher);
-            }
-            catch (Exception ex)
-            {
-                // In the event that something fails horribly, we want to log
-                AppendToTextBox(ex.ToString(), Brushes.Red);
-            }
         }
 
         /// <summary>
