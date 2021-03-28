@@ -30,7 +30,7 @@ namespace MPF.UserControls
         /// <summary>
         /// Cached value of the last line written
         /// </summary>
-        private string lastLineText = null;
+        private Run lastLine = null;
 
         /// <summary>
         /// Cached value of the last matcher used
@@ -79,9 +79,9 @@ namespace MPF.UserControls
                 this.lambda = lambda;
             }
 
-            public bool Matches(ref string text) => text.StartsWith(prefix);
+            public bool Matches(string text) => text.StartsWith(prefix);
 
-            public void Apply(ref string text)
+            public void Apply(string text)
             {
                 Match match = regex?.Match(text, start);
                 lambda?.Invoke(match, progressBarText);
@@ -286,22 +286,21 @@ namespace MPF.UserControls
             {
                 var run = new Run(text) { Foreground = color };
                 _paragraph.Inlines.Add(run);
+                lastLine = run;
             });
         }
 
         /// <summary>
         /// Get the last line written to the log text box
         /// </summary>
-        /// <param name="text">Text to append</param>
-        private string GetLastLine()
+        private Run GetLastLine()
         {
             return Dispatcher.Invoke(() =>
             {
                 if (!_paragraph.Inlines.Any())
                     return null;
 
-                var last = _paragraph.Inlines.LastInline as Run;
-                return last.Text;
+                return _paragraph.Inlines.LastInline as Run;
             });
         }
 
@@ -331,58 +330,51 @@ namespace MPF.UserControls
             try
             {
                 // Get last line
-                if (lastLineText == null)
-                    lastLineText = GetLastLine();
+                lastLine = lastLine ?? GetLastLine();
 
                 // Always append if there's no previous line
-                if (lastLineText == null)
+                if (lastLine == null)
                 {
                     AppendToTextBox(text, brush);
-                    lastUsedMatcher = null;
+                    lastUsedMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(text));
                 }
                 // Return always means overwrite
                 else if (text.StartsWith("\r"))
                 {
                     ReplaceLastLine(text, brush);
-                    lastUsedMatcher = null;
+                }
+                // If we have a cached matcher and we match
+                else if (lastUsedMatcher?.Matches(text) == true)
+                {
+                    ReplaceLastLine(text, brush);
                 }
                 else
                 {
-                    // If we have a cached matcher, try it first
-                    if (lastUsedMatcher?.Matches(ref text) == true)
+                    // Get the first matching Matcher
+                    var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(text));
+                    if (firstMatcher.HasValue)
                     {
-                        ReplaceLastLine(text, brush);
+                        string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
+                        if (firstMatcher.Value.Matches(lastText))
+                            ReplaceLastLine(text, brush);
+                        else if (string.IsNullOrWhiteSpace(lastText))
+                            ReplaceLastLine(text, brush);
+                        else
+                            AppendToTextBox(text, brush);
+
+                        // Cache the last used Matcher
+                        lastUsedMatcher = firstMatcher;
                     }
+                    // Default case for all other text
                     else
                     {
-                        // Get the first matching Matcher
-                        var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(ref text));
-                        if (firstMatcher.HasValue)
-                        {
-                            if (firstMatcher.Value.Matches(ref lastLineText))
-                                ReplaceLastLine(text, brush);
-                            else if (string.IsNullOrWhiteSpace(lastLineText))
-                                ReplaceLastLine(text, brush);
-                            else
-                                AppendToTextBox(text, brush);
-
-                            // Cache the last used Matcher
-                            lastUsedMatcher = firstMatcher;
-                        }
-                        // Default case for all other text
-                        else
-                        {
-                            AppendToTextBox(text, brush);
-                            lastUsedMatcher = null;
-                        }
+                        AppendToTextBox(text, brush);
+                        lastUsedMatcher = null;
                     }
                 }
 
                 // Update the bar if needed
                 ProcessStringForProgressBar(text, lastUsedMatcher);
-
-                // Cache the current text as the last line
-                lastLineText = text;
             }
             catch (Exception ex)
             {
@@ -399,7 +391,7 @@ namespace MPF.UserControls
         {
             Dispatcher.Invoke(() =>
             {
-                matcher?.Apply(ref text);
+                matcher?.Apply(text);
             });
         }
 
@@ -412,9 +404,8 @@ namespace MPF.UserControls
         {
             Dispatcher.Invoke(() =>
             {
-                var last = _paragraph.Inlines.LastInline as Run;
-                last.Text = text;
-                last.Foreground = color;
+                lastLine.Text = text;
+                lastLine.Foreground = color;
             });
         }
 
