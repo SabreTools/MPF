@@ -752,7 +752,7 @@ namespace MPF.Data
         SupportsRemoteStorage = 256,
         SupportsLongNames = 16384,
         VolumeIsCompressed = 32768,
-        ReadOnlyVolume = 524289, // TODO: Invesitgate, as this value seems wrong
+        ReadOnlyVolume = 524288,
         SupportsObjectIDS = 65536,
         SupportsEncryption = 131072,
         SupportsNamedStreams = 262144,
