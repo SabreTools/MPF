@@ -26,7 +26,7 @@ namespace MPF.UserControls
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        private readonly Queue<LogLine> stringsToLog;
+        private readonly Queue<Run> stringsToLog;
 
         /// <summary>
         /// List of Matchers for progress tracking
@@ -57,7 +57,7 @@ namespace MPF.UserControls
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();
 
-            stringsToLog = new Queue<LogLine>();
+            stringsToLog = new Queue<Run>();
             Task.Run(() => ProcessLogLines());
         }
 
@@ -224,21 +224,6 @@ namespace MPF.UserControls
         #region Logging
 
         /// <summary>
-        /// Log line wrapper
-        /// </summary>
-        private struct LogLine
-        {
-            public readonly string Text;
-            public readonly Brush Brush;
-
-            public LogLine(string text, Brush brush)
-            {
-                this.Text = text;
-                this.Brush = brush;
-            }
-        }
-
-        /// <summary>
         /// Enqueue text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
@@ -312,7 +297,7 @@ namespace MPF.UserControls
             // Enqueue the text
             lock (stringsToLog)
             {
-                stringsToLog.Enqueue(new LogLine(text, brush));
+                stringsToLog.Enqueue(new Run { Text = text, Foreground = brush });
             }
         }
 
@@ -329,9 +314,10 @@ namespace MPF.UserControls
 
                 // Get the next item from the queue
                 var nextLogLine = stringsToLog.Dequeue();
+                string nextText = Dispatcher.Invoke(() => nextLogLine.Text);
 
                 // Null text gets ignored
-                if (nextLogLine.Text == null)
+                if (nextText == null)
                     continue;
 
                 try
@@ -343,22 +329,22 @@ namespace MPF.UserControls
                     if (lastLine == null)
                     {
                         AppendToTextBox(nextLogLine);
-                        lastUsedMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(nextLogLine.Text));
+                        lastUsedMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(nextText));
                     }
                     // Return always means overwrite
-                    else if (nextLogLine.Text.StartsWith("\r"))
+                    else if (nextText.StartsWith("\r"))
                     {
                         ReplaceLastLine(nextLogLine);
                     }
                     // If we have a cached matcher and we match
-                    else if (lastUsedMatcher?.Matches(nextLogLine.Text) == true)
+                    else if (lastUsedMatcher?.Matches(nextText) == true)
                     {
                         ReplaceLastLine(nextLogLine);
                     }
                     else
                     {
                         // Get the first matching Matcher
-                        var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(nextLogLine.Text));
+                        var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(nextText));
                         if (firstMatcher.HasValue)
                         {
                             string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
@@ -381,12 +367,12 @@ namespace MPF.UserControls
                     }
 
                     // Update the bar if needed
-                    ProcessStringForProgressBar(nextLogLine.Text, lastUsedMatcher);
+                    ProcessStringForProgressBar(nextText, lastUsedMatcher);
                 }
                 catch (Exception ex)
                 {
                     // In the event that something fails horribly, we want to log
-                    AppendToTextBox(new LogLine(ex.ToString(), Brushes.Red));
+                    AppendToTextBox(new Run { Text = ex.ToString(), Foreground = Brushes.Red });
                 }
             }
         }
@@ -394,12 +380,11 @@ namespace MPF.UserControls
         /// <summary>
         /// Append log line to the log text box
         /// </summary>
-        /// <param name="logLine">LogLine value to append</param>
-        private void AppendToTextBox(LogLine logLine)
+        /// <param name="run">Run value to append</param>
+        private void AppendToTextBox(Run run)
         {
             Dispatcher.Invoke(() =>
             {
-                var run = new Run(logLine.Text) { Foreground = logLine.Brush };
                 _paragraph.Inlines.Add(run);
                 lastLine = run;
             });
@@ -425,23 +410,16 @@ namespace MPF.UserControls
         /// <param name="text">Text to check and update with</param>
         private void ProcessStringForProgressBar(string text, Matcher? matcher)
         {
-            Dispatcher.Invoke(() =>
-            {
-                matcher?.Apply(text);
-            });
+            Dispatcher.Invoke(() => { matcher?.Apply(text); });
         }
 
         /// <summary>
         /// Replace the last line written to the log text box
         /// </summary>
-        /// <param name="logLine">LogLine value to append</param>
-        private void ReplaceLastLine(LogLine logLine)
+        /// <param name="run">Run value to append</param>
+        private void ReplaceLastLine(Run run)
         {
-            Dispatcher.Invoke(() =>
-            {
-                lastLine.Text = logLine.Text;
-                lastLine.Foreground = logLine.Brush;
-            });
+            Dispatcher.Invoke(() => { lastLine = run; });
         }
 
         #endregion
