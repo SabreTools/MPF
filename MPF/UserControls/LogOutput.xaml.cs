@@ -241,6 +241,7 @@ namespace MPF.UserControls
             USER,
             VERBOSE,
             ERROR,
+            SECRET,
         }
 
         /// <summary>
@@ -265,6 +266,8 @@ namespace MPF.UserControls
             {
                 switch (this.LogLevel)
                 {
+                    case LogLevel.SECRET:
+                        return Brushes.Blue;
                     case LogLevel.ERROR:
                         return Brushes.Red;
                     case LogLevel.VERBOSE:
@@ -308,6 +311,18 @@ namespace MPF.UserControls
         /// </summary>
         /// <param name="text">Text to write to the log</param>
         public void ErrorLogLn(string text) => ErrorLog(text + "\n");
+
+        /// <summary>
+        /// Enqueue secret text to the log
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        public void SecretLog(string text) => LogInternal(text, LogLevel.SECRET);
+
+        /// <summary>
+        /// Enqueue secret text with a newline to the log
+        /// </summary>
+        /// <param name="text">Text to write to the log</param>
+        public void SecretLogLn(string text) => SecretLog(text + "\n");
 
         /// <summary>
         /// Enqueue verbose text to the log

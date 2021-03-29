@@ -43,6 +43,7 @@
 - Make logging window a bit safer
 - Support new Redump languages and regions
 - Implement internal log queue
+- It's a secret...
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
