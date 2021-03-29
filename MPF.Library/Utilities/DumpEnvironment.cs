@@ -74,7 +74,7 @@ namespace MPF.Utilities
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        private readonly ConcurrentQueue<string> outputQueue = new ConcurrentQueue<string>();
+        private ProcessingQueue<string> outputQueue;
 
         /// <summary>
         /// Event handler for data returned from a process
@@ -87,20 +87,9 @@ namespace MPF.Utilities
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-        private void ProcessOutputs()
+        private void ProcessOutputs(string nextOutput)
         {
-            while (true)
-            {
-                // Nothing in the queue means we get to idle
-                if (outputQueue.Count == 0)
-                    continue;
-
-                // Get the next item from the queue
-                if (!outputQueue.TryDequeue(out string nextOutput))
-                    continue;
-
-                ReportStatus.Invoke(this, nextOutput);
-            }
+            ReportStatus.Invoke(this, nextOutput);
         }
 
         #endregion
@@ -396,7 +385,7 @@ namespace MPF.Utilities
             // Invoke output processing, if needed
             if (!Options.ToolsInSeparateWindow)
             {
-                Task.Run(() => ProcessOutputs());
+                outputQueue = new ProcessingQueue<string>(ProcessOutputs);
                 Parameters.ReportStatus += OutputToLog;
             }
 
@@ -411,9 +400,12 @@ namespace MPF.Utilities
             result = await Task.Run(() => ExecuteAdditionalTools());
             progress?.Report(result);
 
-            // Remove evet habdler if needed
+            // Remove event handler if needed
             if (!Options.ToolsInSeparateWindow)
+            {
+                outputQueue.Dispose();
                 Parameters.ReportStatus -= OutputToLog;
+            }
 
             return result;
         }

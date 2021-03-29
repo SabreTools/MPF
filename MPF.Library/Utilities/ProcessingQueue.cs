@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace MPF.Utilities
 {
-    internal class ProcessingQueue<T>
+    public class ProcessingQueue<T> : IDisposable
     {
         /// <summary>
         /// Internal queue to hold data to process
@@ -16,11 +16,33 @@ namespace MPF.Utilities
         /// </summary>
         private readonly Action<T> CustomProcessing;
 
+        /// <summary>
+        /// Internal processing task for dequeueing
+        /// </summary>
+        private readonly Task ProcessingTask;
+
         public ProcessingQueue(Action<T> customProcessing)
         {
             this.InternalQueue = new ConcurrentQueue<T>();
             this.CustomProcessing = customProcessing;
-            Task.Run(() => ProcessQueue());
+            this.ProcessingTask = Task.Run(() => ProcessQueue());
+        }
+
+        /// <summary>
+        /// Dispose the current instance
+        /// </summary>
+        public void Dispose()
+        {
+            this.ProcessingTask.Dispose();
+        }
+
+        /// <summary>
+        /// Enqueue a new item for processing
+        /// </summary>
+        /// <param name="item"></param>
+        public void Enqueue(T item)
+        {
+            this.InternalQueue.Enqueue(item);
         }
 
         /// <summary>

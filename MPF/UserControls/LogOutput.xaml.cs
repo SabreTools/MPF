@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using MPF.Utilities;
 
 namespace MPF.UserControls
 {
@@ -27,7 +26,7 @@ namespace MPF.UserControls
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        private readonly ConcurrentQueue<LogLine> logQueue;
+        private readonly ProcessingQueue<LogLine> logQueue;
 
         /// <summary>
         /// List of Matchers for progress tracking
@@ -58,8 +57,7 @@ namespace MPF.UserControls
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();
 
-            logQueue = new ConcurrentQueue<LogLine>();
-            Task.Run(() => ProcessLogLines());
+            logQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
         }
 
         #region Matching
@@ -370,77 +368,67 @@ namespace MPF.UserControls
         /// <summary>
         /// Process the log lines in the queue
         /// </summary>
-        private void ProcessLogLines()
+        /// <param name="nextLogLine">LogLine item to process</param>
+        private void ProcessLogLine(LogLine nextLogLine)
         {
-            while (true)
+            // Null text gets ignored
+            string nextText = Dispatcher.Invoke(() => nextLogLine.Text);
+            if (nextText == null)
+                return;
+
+            try
             {
-                // Nothing in the queue means we get to idle
-                if (logQueue.Count == 0)
-                    continue;
+                // Get last line
+                lastLine = lastLine ?? GetLastLine();
 
-                // Get the next item from the queue
-                if (!logQueue.TryDequeue(out LogLine nextLogLine))
-                    continue;
-
-                // Null text gets ignored
-                string nextText = Dispatcher.Invoke(() => nextLogLine.Text);
-                if (nextText == null)
-                    continue;
-
-                try
+                // Always append if there's no previous line
+                if (lastLine == null)
                 {
-                    // Get last line
-                    lastLine = lastLine ?? GetLastLine();
+                    AppendToTextBox(nextLogLine);
+                    lastUsedMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
+                }
+                // Return always means overwrite
+                else if (nextText.StartsWith("\r"))
+                {
+                    ReplaceLastLine(nextLogLine);
+                }
+                // If we have a cached matcher and we match
+                else if (lastUsedMatcher?.Matches(nextText) == true)
+                {
+                    ReplaceLastLine(nextLogLine);
+                }
+                else
+                {
+                    // Get the first matching Matcher
+                    var firstMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
+                    if (firstMatcher.HasValue)
+                    {
+                        string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
+                        if (firstMatcher.Value.Matches(lastText))
+                            ReplaceLastLine(nextLogLine);
+                        else if (string.IsNullOrWhiteSpace(lastText))
+                            ReplaceLastLine(nextLogLine);
+                        else
+                            AppendToTextBox(nextLogLine);
 
-                    // Always append if there's no previous line
-                    if (lastLine == null)
-                    {
-                        AppendToTextBox(nextLogLine);
-                        lastUsedMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
+                        // Cache the last used Matcher
+                        lastUsedMatcher = firstMatcher;
                     }
-                    // Return always means overwrite
-                    else if (nextText.StartsWith("\r"))
-                    {
-                        ReplaceLastLine(nextLogLine);
-                    }
-                    // If we have a cached matcher and we match
-                    else if (lastUsedMatcher?.Matches(nextText) == true)
-                    {
-                        ReplaceLastLine(nextLogLine);
-                    }
+                    // Default case for all other text
                     else
                     {
-                        // Get the first matching Matcher
-                        var firstMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
-                        if (firstMatcher.HasValue)
-                        {
-                            string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
-                            if (firstMatcher.Value.Matches(lastText))
-                                ReplaceLastLine(nextLogLine);
-                            else if (string.IsNullOrWhiteSpace(lastText))
-                                ReplaceLastLine(nextLogLine);
-                            else
-                                AppendToTextBox(nextLogLine);
-
-                            // Cache the last used Matcher
-                            lastUsedMatcher = firstMatcher;
-                        }
-                        // Default case for all other text
-                        else
-                        {
-                            AppendToTextBox(nextLogLine);
-                            lastUsedMatcher = null;
-                        }
+                        AppendToTextBox(nextLogLine);
+                        lastUsedMatcher = null;
                     }
+                }
 
-                    // Update the bar if needed
-                    ProcessStringForProgressBar(nextText, lastUsedMatcher);
-                }
-                catch (Exception ex)
-                {
-                    // In the event that something fails horribly, we want to log
-                    AppendToTextBox(new LogLine(ex.ToString(), LogLevel.ERROR));
-                }
+                // Update the bar if needed
+                ProcessStringForProgressBar(nextText, lastUsedMatcher);
+            }
+            catch (Exception ex)
+            {
+                // In the event that something fails horribly, we want to log
+                AppendToTextBox(new LogLine(ex.ToString(), LogLevel.ERROR));
             }
         }
 
