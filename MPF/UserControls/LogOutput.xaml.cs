@@ -26,7 +26,7 @@ namespace MPF.UserControls
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        private readonly Queue<Run> stringsToLog;
+        private readonly Queue<Run> logQueue;
 
         /// <summary>
         /// List of Matchers for progress tracking
@@ -57,7 +57,7 @@ namespace MPF.UserControls
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();
 
-            stringsToLog = new Queue<Run>();
+            logQueue = new Queue<Run>();
             Task.Run(() => ProcessLogLines());
         }
 
@@ -295,9 +295,9 @@ namespace MPF.UserControls
                 brush = Brushes.Yellow;
 
             // Enqueue the text
-            lock (stringsToLog)
+            lock (logQueue)
             {
-                stringsToLog.Enqueue(new Run { Text = text, Foreground = brush });
+                logQueue.Enqueue(new Run { Text = text, Foreground = brush });
             }
         }
 
@@ -309,11 +309,11 @@ namespace MPF.UserControls
             while (true)
             {
                 // Nothing in the queue means we get to idle
-                if (stringsToLog.Count == 0)
+                if (logQueue.Count == 0)
                     continue;
 
                 // Get the next item from the queue
-                var nextLogLine = stringsToLog.Dequeue();
+                var nextLogLine = logQueue.Dequeue();
                 string nextText = Dispatcher.Invoke(() => nextLogLine.Text);
 
                 // Null text gets ignored
