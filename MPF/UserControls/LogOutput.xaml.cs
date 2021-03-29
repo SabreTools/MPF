@@ -224,6 +224,9 @@ namespace MPF.UserControls
 
         #region Logging
 
+        /// <summary>
+        /// Log line wrapper
+        /// </summary>
         private struct LogLine
         {
             public readonly string Text;
