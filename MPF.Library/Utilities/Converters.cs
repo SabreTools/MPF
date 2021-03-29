@@ -266,11 +266,11 @@ namespace MPF.Utilities
                 // CD-based media
                 case PhysicalMediaType.CDROM:
                 case PhysicalMediaType.CDROMXA:
-                case PhysicalMediaType.CDI: // TODO: Make this separate at some point (CD-I/CD-I Ready?)
+                case PhysicalMediaType.CDI:
                 case PhysicalMediaType.CDRecordable:
                 case PhysicalMediaType.CDRW:
                 case PhysicalMediaType.CDDA:
-                case PhysicalMediaType.CDPlus: // TODO: Make this separate at some point (Enhanced CD?)
+                case PhysicalMediaType.CDPlus:
                     return MediaType.CDROM;
 
                 // DVD-based media
@@ -278,14 +278,14 @@ namespace MPF.Utilities
                 case PhysicalMediaType.DVDPlusRW:
                 case PhysicalMediaType.DVDRAM:
                 case PhysicalMediaType.DVDROM:
-                case PhysicalMediaType.DVDVideo: // TODO: Make this separate at some point (DVD-Video?)
+                case PhysicalMediaType.DVDVideo:
                 case PhysicalMediaType.DVDRecordable:
                 case PhysicalMediaType.DVDMinusRW:
-                case PhysicalMediaType.DVDAudio: // TODO: Make this separate at some point (DVD-Audio?)
-                case PhysicalMediaType.DVD5: // TODO: Make this separate at some point (DVD-5?)
-                case PhysicalMediaType.DVD9: // TODO: Make this separate at some point (DVD-9?)
-                case PhysicalMediaType.DVD10: // TODO: Make this separate at some point (DVD-10?)
-                case PhysicalMediaType.DVD18: // TODO: Make this separate at some point (DVD-18?)
+                case PhysicalMediaType.DVDAudio:
+                case PhysicalMediaType.DVD5:
+                case PhysicalMediaType.DVD9:
+                case PhysicalMediaType.DVD10:
+                case PhysicalMediaType.DVD18:
                     return MediaType.DVD;
 
                 default:
