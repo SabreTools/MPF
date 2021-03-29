@@ -75,7 +75,6 @@ namespace MPF.Data
         public KnownSystem? System { get; set; }
 
         // Name not defined by Redump
-        // TODO: Have this convert to a new `RedumpMedia?` if possible, for submission
         [JsonProperty(PropertyName = "d_media", Required = Required.AllowNull)]
         [JsonConverter(typeof(MediaTypeConverter))]
         public MediaType? Media { get; set; }

@@ -6,8 +6,10 @@ namespace MPF
 {
     public class UIOptions
     {
-        // TODO: Is there any way that this can be made private?
-        public Options Options { get; set; }
+        /// <summary>
+        /// Internal Options object for settings storage
+        /// </summary>
+        public Options Options { get; private set; }
 
         /// <summary>
         /// Default constructor

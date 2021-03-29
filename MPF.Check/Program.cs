@@ -155,7 +155,6 @@ namespace MPF.Check
                 string filepath = Path.GetFullPath(args[i].Trim('"'));
 
                 // Now populate an environment
-                // TODO: Replace this with Dictionary constructor
                 var options = new Options
                 {
                     InternalProgram = Converters.ToInternalProgram(internalProgram),
