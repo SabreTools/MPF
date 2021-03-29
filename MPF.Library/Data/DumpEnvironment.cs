@@ -968,6 +968,7 @@ namespace MPF.Data
                 AddIfExists(output, Template.SystemField, info.CommonDiscInfo.System.LongName(), 1);
                 AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(
                         info.CommonDiscInfo.Media,
+                        info.SizeAndChecksums.Size,
                         info.SizeAndChecksums.Layerbreak,
                         info.SizeAndChecksums.Layerbreak2,
                         info.SizeAndChecksums.Layerbreak3),
@@ -1157,11 +1158,12 @@ namespace MPF.Data
         /// Get the adjusted name of the media baed on layers, if applicable
         /// </summary>
         /// <param name="mediaType">MediaType to get the proper name for</param>
+        /// <param name="size">Size of the current media</param>
         /// <param name="layerbreak">First layerbreak value, as applicable</param>
         /// <param name="layerbreak2">Second layerbreak value, as applicable</param>
         /// <param name="layerbreak3">Third ayerbreak value, as applicable</param>
         /// <returns>String representation of the media, including layer specification</returns>
-        private string GetFixedMediaType(MediaType? mediaType, long layerbreak, long layerbreak2, long layerbreak3)
+        private string GetFixedMediaType(MediaType? mediaType, long size, long layerbreak, long layerbreak2, long layerbreak3)
         {
             switch (mediaType)
             {
@@ -1171,14 +1173,17 @@ namespace MPF.Data
                     else
                         return $"{mediaType.LongName()}-5";
 
-                // TODO: Figure out what the addtional layerbreaks indicate
                 case MediaType.BluRay:
                     if (layerbreak3 != default)
-                        return $"{mediaType.LongName()}-50";
+                        return $"{mediaType.LongName()}-128";
                     else if (layerbreak2 != default)
-                        return $"{mediaType.LongName()}-50";
+                        return $"{mediaType.LongName()}-100";
+                    else if (layerbreak != default && size > 53_687_063_712)
+                        return $"{mediaType.LongName()}-66";
                     else if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
+                    else if (size > 26_843_531_856)
+                        return $"{mediaType.LongName()}-33";
                     else
                         return $"{mediaType.LongName()}-25";
 
