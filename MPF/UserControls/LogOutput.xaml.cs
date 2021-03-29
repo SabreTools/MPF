@@ -337,8 +337,7 @@ namespace MPF.UserControls
         /// Enqueue text to the log with formatting
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        /// <param name="verbose">True if the log is verbose output, false otherwise</param>
-        /// <param name="error">True if the log is error output, false otherwise</param>
+        /// <param name="logLevel">LogLevel for the log, defaults to USER</param>
         private void LogInternal(string text, LogLevel logLevel = LogLevel.USER)
         {
             // Null text gets ignored
