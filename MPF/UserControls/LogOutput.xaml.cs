@@ -382,7 +382,7 @@ namespace MPF.UserControls
                     if (lastLine == null)
                     {
                         AppendToTextBox(nextLogLine);
-                        lastUsedMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(nextText));
+                        lastUsedMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
                     }
                     // Return always means overwrite
                     else if (nextText.StartsWith("\r"))
@@ -397,7 +397,7 @@ namespace MPF.UserControls
                     else
                     {
                         // Get the first matching Matcher
-                        var firstMatcher = _matchers.FirstOrDefault(m => m.HasValue && m.Value.Matches(nextText));
+                        var firstMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
                         if (firstMatcher.HasValue)
                         {
                             string lastText = Dispatcher.Invoke(() => { return lastLine.Text; });
