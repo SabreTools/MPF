@@ -486,6 +486,7 @@ namespace MPF.UserControls
         private void OnClearButton(object sender, EventArgs e)
         {
             _paragraph.Inlines.Clear();
+            ResetProgressBar();
         }
         
         private void OnSaveButton(object sender, EventArgs e)
