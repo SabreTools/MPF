@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace MPF.Utilities
+namespace MPF.Data
 {
     public class ProcessingQueue<T> : IDisposable
     {

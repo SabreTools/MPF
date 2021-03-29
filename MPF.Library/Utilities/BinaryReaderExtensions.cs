@@ -6,7 +6,7 @@ namespace MPF.Utilities
     /// <summary>
     /// Big endian reading overloads for BinaryReader
     /// </summary>
-    public static class BinaryReaderExtensions
+    internal static class BinaryReaderExtensions
     {
         /// <summary>
         /// Reads the specified number of bytes from the stream, starting from a specified point in the byte array.

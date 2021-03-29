@@ -2211,9 +2211,11 @@ namespace MPF.Aaru
 
             // Required variables
             uint totalTracks = 0;
-            CueSheet cueSheet = new CueSheet();
-            cueSheet.Performer = string.Join(", ", cicmSidecar.Performer ?? new string[0]);
-            cueSheet.Files = new List<CueFile>();
+            CueSheet cueSheet = new CueSheet
+            {
+                Performer = string.Join(", ", cicmSidecar.Performer ?? new string[0]),
+                Files = new List<CueFile>(),
+            };
 
             // Only care about OpticalDisc types
             if (cicmSidecar.OpticalDisc == null || cicmSidecar.OpticalDisc.Length == 0)
@@ -2237,17 +2239,21 @@ namespace MPF.Aaru
                 foreach (TrackType track in opticalDisc.Track)
                 {
                     // Create cue track entry
-                    CueTrack cueTrack = new CueTrack();
-                    cueTrack.Number = (int)(track.Sequence?.TrackNumber ?? 0);
-                    cueTrack.DataType = ConvertToDataType(track.TrackType1, track.BytesPerSector);
-                    cueTrack.Flags = ConvertToTrackFlag(track.Flags);
-                    cueTrack.ISRC = track.ISRC;
+                    CueTrack cueTrack = new CueTrack
+                    {
+                        Number = (int)(track.Sequence?.TrackNumber ?? 0),
+                        DataType = ConvertToDataType(track.TrackType1, track.BytesPerSector),
+                        Flags = ConvertToTrackFlag(track.Flags),
+                        ISRC = track.ISRC,
+                    };
 
                     // Create cue file entry
-                    CueFile cueFile = new CueFile();
-                    cueFile.FileName = GenerateTrackName(basePath, (int)totalTracks, cueTrack.Number, opticalDisc.DiscType);
-                    cueFile.FileType = CueFileType.BINARY;
-                    cueFile.Tracks = new List<CueTrack>();
+                    CueFile cueFile = new CueFile
+                    {
+                        FileName = GenerateTrackName(basePath, (int)totalTracks, cueTrack.Number, opticalDisc.DiscType),
+                        FileType = CueFileType.BINARY,
+                        Tracks = new List<CueTrack>(),
+                    };
 
                     // Add index data
                     if (track.Indexes != null && track.Indexes.Length > 0)

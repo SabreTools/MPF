@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using MPF.Data;
 
-namespace MPF.Utilities
+namespace MPF.Data
 {
     /// <summary>
     /// Represents information for a single drive
@@ -54,7 +53,7 @@ namespace MPF.Utilities
         /// <summary>
         /// DriveInfo object representing the drive, if possible
         /// </summary>
-        private DriveInfo driveInfo = null;
+        private readonly DriveInfo driveInfo;
 
         public Drive(InternalDriveType? driveType, DriveInfo driveInfo)
         {

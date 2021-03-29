@@ -464,7 +464,7 @@ namespace MPF.Utilities
         /// <summary>
         /// Long name method cache
         /// </summary>
-        private static ConcurrentDictionary<Type, MethodInfo> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
 
         /// <summary>
         /// Get the string representation of a generic enumerable value
@@ -1455,7 +1455,7 @@ namespace MPF.Utilities
         /// <summary>
         /// Short name method cache
         /// </summary>
-        private static ConcurrentDictionary<Type, MethodInfo> ShortNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> ShortNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
 
         /// <summary>
         /// Get the short string representation of a generic enumerable value

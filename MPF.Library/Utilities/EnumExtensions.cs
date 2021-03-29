@@ -2,7 +2,7 @@
 
 namespace MPF.Utilities
 {
-    public static class Extensions
+    public static class EnumExtensions
     {
         /// <summary>
         /// Determine the category based on the system

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,11 +8,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using MPF.Data;
 using MPF.Redump;
+using MPF.Utilities;
 using Newtonsoft.Json;
 
-namespace MPF.Utilities
+namespace MPF.Data
 {
     /// <summary>
     /// Represents the state of all settings to be used during dumping
@@ -139,40 +138,33 @@ namespace MPF.Utilities
             {
                 // Dumping support
                 case InternalProgram.Aaru:
-                    this.Parameters = new Aaru.Parameters(parameters);
-                    this.Parameters.ExecutablePath = Options.AaruPath;
+                    this.Parameters = new Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
                     break;
 
                 case InternalProgram.DD:
-                    this.Parameters = new DD.Parameters(parameters);
-                    this.Parameters.ExecutablePath = Options.DDPath;
+                    this.Parameters = new DD.Parameters(parameters) { ExecutablePath = Options.DDPath };
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    this.Parameters = new DiscImageCreator.Parameters(parameters);
-                    this.Parameters.ExecutablePath = Options.DiscImageCreatorPath;
+                    this.Parameters = new DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
 
                 // Verification support only
                 case InternalProgram.CleanRip:
-                    this.Parameters = new CleanRip.Parameters(parameters);
-                    this.Parameters.ExecutablePath = null;
+                    this.Parameters = new CleanRip.Parameters(parameters) { ExecutablePath = null };
                     break;
 
                 case InternalProgram.DCDumper:
                     this.Parameters = null; // TODO: Create correct parameter type when supported
-                    this.Parameters.ExecutablePath = null;
                     break;
 
                 case InternalProgram.UmdImageCreator:
-                    this.Parameters = new UmdImageCreator.Parameters(parameters);
-                    this.Parameters.ExecutablePath = null;
+                    this.Parameters = new UmdImageCreator.Parameters(parameters) { ExecutablePath = null };
                     break;
 
                 // This should never happen, but it needs a fallback
                 default:
-                    this.Parameters = new DiscImageCreator.Parameters(parameters);
-                    this.Parameters.ExecutablePath = Options.DiscImageCreatorPath;
+                    this.Parameters = new DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
             }
 
@@ -778,9 +770,9 @@ namespace MPF.Utilities
                         info.CommonDiscInfo.Layer1ToolstampMasteringCode = (Options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     }
 
-                    info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 == null ? (Options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.CRC32;
-                    info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 == null ? (Options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.MD5;
-                    info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 == null ? (Options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "") : info.SizeAndChecksums.SHA1;
+                    info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 ?? (Options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 ?? (Options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 ?? (Options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
                     info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
@@ -1181,7 +1173,11 @@ namespace MPF.Utilities
 
                 // TODO: Figure out what the addtional layerbreaks indicate
                 case MediaType.BluRay:
-                    if (layerbreak != default)
+                    if (layerbreak3 != default)
+                        return $"{mediaType.LongName()}-50";
+                    else if (layerbreak2 != default)
+                        return $"{mediaType.LongName()}-50";
+                    else if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
                     else
                         return $"{mediaType.LongName()}-25";

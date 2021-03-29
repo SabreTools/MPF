@@ -1,4 +1,4 @@
-﻿namespace MPF.Utilities
+﻿namespace MPF.Data
 {
     /// <summary>
     /// Generic success/failure result object, with optional message
