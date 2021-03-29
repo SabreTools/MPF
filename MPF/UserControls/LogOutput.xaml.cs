@@ -84,8 +84,17 @@ namespace MPF.UserControls
                 this.lambda = lambda;
             }
 
+            /// <summary>
+            /// Check if the text matches the prefix
+            /// </summary>
+            /// <param name="text">Text to check</param>
+            /// <returns>True if the line starts with the prefix, false otherwise</returns>
             public bool Matches(string text) => text.StartsWith(prefix);
 
+            /// <summary>
+            /// Generate a Match and apply the lambda
+            /// </summary>
+            /// <param name="text">Text to match and apply from</param>
             public void Apply(string text)
             {
                 Match match = regex?.Match(text, start);
@@ -225,17 +234,54 @@ namespace MPF.UserControls
         #region Logging
 
         /// <summary>
+        /// Log level for output
+        /// </summary>
+        private enum LogLevel
+        {
+            USER,
+            VERBOSE,
+            ERROR,
+        }
+
+        /// <summary>
         /// Log line wrapper
         /// </summary>
         private struct LogLine
         {
             public readonly string Text;
-            public readonly Brush Foreground;
+            public readonly LogLevel LogLevel;
 
-            public LogLine(string text, Brush foreground)
+            public LogLine(string text, LogLevel logLevel)
             {
                 this.Text = text;
-                this.Foreground = foreground;
+                this.LogLevel = logLevel;
+            }
+
+            /// <summary>
+            /// Get the foreground Brush for the current LogLevel
+            /// </summary>
+            /// <returns>Brush representing the color</returns>
+            public Brush GetForegroundColor()
+            {
+                switch (this.LogLevel)
+                {
+                    case LogLevel.ERROR:
+                        return Brushes.Red;
+                    case LogLevel.VERBOSE:
+                        return Brushes.Yellow;
+                    case LogLevel.USER:
+                    default:
+                        return Brushes.White;
+                }
+            }
+
+            /// <summary>
+            /// Generate a Run object from the current LogLine
+            /// </summary>
+            /// <returns>Run object based on internal values</returns>
+            public Run GenerateRun()
+            {
+                return new Run { Text = this.Text, Foreground = GetForegroundColor() };
             }
         }
 
@@ -243,7 +289,7 @@ namespace MPF.UserControls
         /// Enqueue text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void Log(string text) => LogInternal(text, verbose: false);
+        public void Log(string text) => LogInternal(text);
 
         /// <summary>
         /// Enqueue text with a newline to the log
@@ -255,7 +301,7 @@ namespace MPF.UserControls
         /// Enqueue error text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void ErrorLog(string text) => LogInternal(text, error: true);
+        public void ErrorLog(string text) => LogInternal(text, LogLevel.ERROR);
 
         /// <summary>
         /// Enqueue error text with a newline to the log
@@ -267,7 +313,7 @@ namespace MPF.UserControls
         /// Enqueue verbose text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void VerboseLog(string text) => LogInternal(text, verbose: true);
+        public void VerboseLog(string text) => LogInternal(text, LogLevel.VERBOSE);
 
         /// <summary>
         /// Enqueue verbose text with a newline to the log
@@ -293,25 +339,18 @@ namespace MPF.UserControls
         /// <param name="text">Text to write to the log</param>
         /// <param name="verbose">True if the log is verbose output, false otherwise</param>
         /// <param name="error">True if the log is error output, false otherwise</param>
-        private void LogInternal(string text, bool verbose = false, bool error = false)
+        private void LogInternal(string text, LogLevel logLevel = LogLevel.USER)
         {
             // Null text gets ignored
             if (text == null)
                 return;
 
             // If we have verbose logs but not enabled, ignore
-            if (verbose && !ViewModels.OptionsViewModel.VerboseLogging)
-                return;
-
-            // Get the brush color from the flags
-            Brush brush = Brushes.White;
-            if (error)
-                brush = Brushes.Red;
-            else if (verbose)
-                brush = Brushes.Yellow;
+            if (logLevel == LogLevel.VERBOSE && !ViewModels.OptionsViewModel.VerboseLogging)
+                return;            
 
             // Enqueue the text
-            logQueue.Enqueue(new LogLine(text, brush));
+            logQueue.Enqueue(new LogLine(text, logLevel));
         }
 
         /// <summary>
@@ -386,7 +425,7 @@ namespace MPF.UserControls
                 catch (Exception ex)
                 {
                     // In the event that something fails horribly, we want to log
-                    AppendToTextBox(new LogLine(ex.ToString(), Brushes.Red));
+                    AppendToTextBox(new LogLine(ex.ToString(), LogLevel.ERROR));
                 }
             }
         }
@@ -399,7 +438,7 @@ namespace MPF.UserControls
         {
             Dispatcher.Invoke(() =>
             {
-                var run = new Run { Text = logLine.Text, Foreground = logLine.Foreground };
+                var run = logLine.GenerateRun();
                 _paragraph.Inlines.Add(run);
                 lastLine = run;
             });
@@ -437,7 +476,7 @@ namespace MPF.UserControls
             Dispatcher.Invoke(() =>
             {
                 lastLine.Text = logLine.Text;
-                lastLine.Foreground = logLine.Foreground;
+                lastLine.Foreground = logLine.GetForegroundColor();
             });
         }
 
