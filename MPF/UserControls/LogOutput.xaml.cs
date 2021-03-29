@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace MPF.UserControls
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
-        private readonly Queue<Run> logQueue;
+        private readonly ConcurrentQueue<LogLine> logQueue;
 
         /// <summary>
         /// List of Matchers for progress tracking
@@ -57,7 +58,7 @@ namespace MPF.UserControls
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();
 
-            logQueue = new Queue<Run>();
+            logQueue = new ConcurrentQueue<LogLine>();
             Task.Run(() => ProcessLogLines());
         }
 
@@ -223,6 +224,18 @@ namespace MPF.UserControls
 
         #region Logging
 
+        private struct LogLine
+        {
+            public readonly string Text;
+            public readonly Brush Foreground;
+
+            public LogLine(string text, Brush foreground)
+            {
+                this.Text = text;
+                this.Foreground = foreground;
+            }
+        }
+
         /// <summary>
         /// Enqueue text to the log
         /// </summary>
@@ -295,10 +308,7 @@ namespace MPF.UserControls
                 brush = Brushes.Yellow;
 
             // Enqueue the text
-            lock (logQueue)
-            {
-                logQueue.Enqueue(new Run { Text = text, Foreground = brush });
-            }
+            logQueue.Enqueue(new LogLine(text, brush));
         }
 
         /// <summary>
@@ -313,10 +323,11 @@ namespace MPF.UserControls
                     continue;
 
                 // Get the next item from the queue
-                var nextLogLine = logQueue.Dequeue();
-                string nextText = Dispatcher.Invoke(() => nextLogLine.Text);
+                if (!logQueue.TryDequeue(out LogLine nextLogLine))
+                    continue;
 
                 // Null text gets ignored
+                string nextText = Dispatcher.Invoke(() => nextLogLine.Text);
                 if (nextText == null)
                     continue;
 
@@ -372,7 +383,7 @@ namespace MPF.UserControls
                 catch (Exception ex)
                 {
                     // In the event that something fails horribly, we want to log
-                    AppendToTextBox(new Run { Text = ex.ToString(), Foreground = Brushes.Red });
+                    AppendToTextBox(new LogLine(ex.ToString(), Brushes.Red));
                 }
             }
         }
@@ -380,11 +391,12 @@ namespace MPF.UserControls
         /// <summary>
         /// Append log line to the log text box
         /// </summary>
-        /// <param name="run">Run value to append</param>
-        private void AppendToTextBox(Run run)
+        /// <param name="logLine">LogLine value to append</param>
+        private void AppendToTextBox(LogLine logLine)
         {
             Dispatcher.Invoke(() =>
             {
+                var run = new Run { Text = logLine.Text, Foreground = logLine.Foreground };
                 _paragraph.Inlines.Add(run);
                 lastLine = run;
             });
@@ -416,10 +428,14 @@ namespace MPF.UserControls
         /// <summary>
         /// Replace the last line written to the log text box
         /// </summary>
-        /// <param name="run">Run value to append</param>
-        private void ReplaceLastLine(Run run)
+        /// <param name="logLine">LogLine value to append</param>
+        private void ReplaceLastLine(LogLine logLine)
         {
-            Dispatcher.Invoke(() => { lastLine = run; });
+            Dispatcher.Invoke(() =>
+            {
+                lastLine.Text = logLine.Text;
+                lastLine.Foreground = logLine.Foreground;
+            });
         }
 
         #endregion
