@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BurnOutSharp.ProtectionType;
 using Compress.ThreadReaders;
 using MPF.Hashing;
-using MPF.Utilities;
 
 namespace MPF.Data
 {
@@ -563,18 +563,13 @@ namespace MPF.Data
             if (!Directory.Exists(drivePath))
                 return false;
 
-            string enAntiModString = "     SOFTWARE TERMINATED\nCONSOLE MAY HAVE BEEN MODIFIED\n     CALL 1-888-780-7690";
-            string jpAntiModString = "強制終了しました。\n本体が改造されている\nおそれがあります。";
-
             // Scan through each file to check for the anti-modchip strings
             foreach (string path in Directory.EnumerateFiles(drivePath, "*", SearchOption.AllDirectories))
             {
                 try
                 {
-                    // TODO: This is a memory hog
-                    string fileContents = File.ReadAllText(path);
-                    if (fileContents.Contains(enAntiModString) || fileContents.Contains(jpAntiModString))
-                        return true;
+                    byte[] fileContent = File.ReadAllBytes(path);
+                    return PSXAntiModchip.CheckContents(fileContent) != null;
                 }
                 catch
                 {
