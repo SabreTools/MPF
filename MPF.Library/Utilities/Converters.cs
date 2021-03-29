@@ -1058,7 +1058,7 @@ namespace MPF.Utilities
                 case RedumpLanguage.Ukrainian:
                     return "Ukrainian";
                 default:
-                    return "Klingon (CHANGE THIS)"; // TODO: Not Redump compatible
+                    return "Klingon (CHANGE THIS)";
             }
         }
 
@@ -1248,7 +1248,7 @@ namespace MPF.Utilities
                 case RedumpRegion.World:
                     return "World";
                 default:
-                    return "SPACE! (CHANGE THIS)"; // TODO: Not Redump compatible
+                    return "SPACE! (CHANGE THIS)";
             }
         }
 
