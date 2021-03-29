@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -71,11 +72,35 @@ namespace MPF.Utilities
         public EventHandler<string> ReportStatus;
 
         /// <summary>
+        /// Queue of items that need to be logged
+        /// </summary>
+        private readonly ConcurrentQueue<string> outputQueue = new ConcurrentQueue<string>();
+
+        /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
         private void OutputToLog(object proc, string args)
         {
-            ReportStatus.Invoke(this, args);
+            outputQueue.Enqueue(args);
+        }
+
+        /// <summary>
+        /// Process the outputs in the queue
+        /// </summary>
+        private void ProcessOutputs()
+        {
+            while (true)
+            {
+                // Nothing in the queue means we get to idle
+                if (outputQueue.Count == 0)
+                    continue;
+
+                // Get the next item from the queue
+                if (!outputQueue.TryDequeue(out string nextOutput))
+                    continue;
+
+                ReportStatus.Invoke(this, nextOutput);
+            }
         }
 
         #endregion
@@ -368,10 +393,16 @@ namespace MPF.Utilities
             if (!result)
                 return result;
 
+            // Invoke output processing, if needed
+            if (!Options.ToolsInSeparateWindow)
+            {
+                Task.Run(() => ProcessOutputs());
+                Parameters.ReportStatus += OutputToLog;
+            }
+
             // Execute internal tool
             progress?.Report(Result.Success($"Executing {Options.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
             Directory.CreateDirectory(OutputDirectory);
-            Parameters.ReportStatus += OutputToLog;
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             progress?.Report(Result.Success($"{Options.InternalProgram} has finished!"));
 
@@ -379,6 +410,10 @@ namespace MPF.Utilities
             progress?.Report(Result.Success("Running any additional tools... see log for output!"));
             result = await Task.Run(() => ExecuteAdditionalTools());
             progress?.Report(result);
+
+            // Remove evet habdler if needed
+            if (!Options.ToolsInSeparateWindow)
+                Parameters.ReportStatus -= OutputToLog;
 
             return result;
         }
