@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MPF.Data
@@ -21,11 +22,17 @@ namespace MPF.Data
         /// </summary>
         private readonly Task ProcessingTask;
 
+        /// <summary>
+        /// Cancellation method for the processing task
+        /// </summary>
+        private readonly CancellationTokenSource TokenSource;
+
         public ProcessingQueue(Action<T> customProcessing)
         {
             this.InternalQueue = new ConcurrentQueue<T>();
             this.CustomProcessing = customProcessing;
-            this.ProcessingTask = Task.Run(() => ProcessQueue());
+            this.TokenSource = new CancellationTokenSource();
+            this.ProcessingTask = Task.Run(() => ProcessQueue(), this.TokenSource.Token);
         }
 
         /// <summary>
@@ -33,6 +40,8 @@ namespace MPF.Data
         /// </summary>
         public void Dispose()
         {
+            this.TokenSource.Cancel();
+            while (!this.ProcessingTask.IsCompleted) ;
             this.ProcessingTask.Dispose();
         }
 
@@ -52,12 +61,16 @@ namespace MPF.Data
         {
             while (true)
             {
+                // If cancellation was requested, just do it
+                if (this.TokenSource.IsCancellationRequested)
+                    break;
+
                 // Nothing in the queue means we get to idle
-                if (InternalQueue.Count == 0)
+                if (this.InternalQueue.Count == 0)
                     continue;
 
                 // Get the next item from the queue
-                if (!InternalQueue.TryDequeue(out T nextItem))
+                if (!this.InternalQueue.TryDequeue(out T nextItem))
                     continue;
 
                 // Invoke the lambda, if possible
