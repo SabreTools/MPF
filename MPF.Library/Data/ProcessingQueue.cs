@@ -18,11 +18,6 @@ namespace MPF.Data
         private readonly Action<T> CustomProcessing;
 
         /// <summary>
-        /// Internal processing task for dequeueing
-        /// </summary>
-        private readonly Task ProcessingTask;
-
-        /// <summary>
         /// Cancellation method for the processing task
         /// </summary>
         private readonly CancellationTokenSource TokenSource;
@@ -32,7 +27,7 @@ namespace MPF.Data
             this.InternalQueue = new ConcurrentQueue<T>();
             this.CustomProcessing = customProcessing;
             this.TokenSource = new CancellationTokenSource();
-            this.ProcessingTask = Task.Run(() => ProcessQueue(), this.TokenSource.Token);
+            Task.Run(() => ProcessQueue(), this.TokenSource.Token);
         }
 
         /// <summary>
@@ -41,8 +36,6 @@ namespace MPF.Data
         public void Dispose()
         {
             this.TokenSource.Cancel();
-            while (!this.ProcessingTask.IsCompleted) ;
-            this.ProcessingTask.Dispose();
         }
 
         /// <summary>
@@ -51,7 +44,8 @@ namespace MPF.Data
         /// <param name="item"></param>
         public void Enqueue(T item)
         {
-            this.InternalQueue.Enqueue(item);
+            if (!this.TokenSource.IsCancellationRequested)
+                this.InternalQueue.Enqueue(item);
         }
 
         /// <summary>
