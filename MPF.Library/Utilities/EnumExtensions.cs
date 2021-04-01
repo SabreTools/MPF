@@ -54,6 +54,10 @@ namespace MPF.Utilities
         /// </summary>
         /// <param name="system">KnownSystem value to check</param>
         /// <returns>True if the system is audio-only, false otherwise</returns>
+        /// <remarks>
+        /// Philips CD-i should NOT be in this list. It's being included until there's a
+        /// reasonable distinction between CD-i and CD-i ready on the database side.
+        /// </remarks>
         public static bool IsAudio(this KnownSystem? system)
         {
             switch (system)
@@ -65,6 +69,7 @@ namespace MPF.Utilities
                 case KnownSystem.HasbroVideoNowColor:
                 case KnownSystem.HasbroVideoNowJr:
                 case KnownSystem.HasbroVideoNowXP:
+                case KnownSystem.PhilipsCDi:
                 case KnownSystem.SuperAudioCD:
                     return true;
                 default:
