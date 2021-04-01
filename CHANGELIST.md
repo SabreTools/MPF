@@ -29,7 +29,7 @@
 - Overhaul main window and logging panel
 - Overhaul options window
 - Update attributions and about text
-- Updated to DIC version 20210301
+- ~~Updated to DIC version 20210301~~
 - Add user-selectable Language Selection via dropdown in disc submission window for PS2
 - Separate out Aaru- and DIC-specific settings
 - Add new options based on original "Paranoid Mode" mega-option
@@ -44,6 +44,7 @@
 - Support new Redump languages and regions
 - Implement internal log queue
 - It's a secret...
+- Updated to DIC version 20210401
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
