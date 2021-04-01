@@ -396,6 +396,7 @@ namespace MPF.Data
             if (!Options.ToolsInSeparateWindow)
             {
                 outputQueue.Dispose();
+                outputQueue = null;
                 Parameters.ReportStatus -= OutputToLog;
             }
 
