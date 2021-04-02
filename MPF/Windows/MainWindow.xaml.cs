@@ -676,7 +676,7 @@ namespace MPF.Windows
             }
             catch (Exception ex)
             {
-                LogOutput.ErrorLogLn(ex.Message);
+                LogOutput.ErrorLogLn(ex.ToString());
                 StatusLabel.Content = "An exception occurred!";
             }
             finally
