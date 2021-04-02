@@ -44,6 +44,7 @@ namespace MPF.Data
         /// <param name="item"></param>
         public void Enqueue(T item)
         {
+            // Only accept new data when not cancelled
             if (!this.TokenSource.IsCancellationRequested)
                 this.InternalQueue.Enqueue(item);
         }
@@ -55,13 +56,14 @@ namespace MPF.Data
         {
             while (true)
             {
-                // If cancellation was requested, just do it
-                if (this.TokenSource.IsCancellationRequested)
-                    break;
-
                 // Nothing in the queue means we get to idle
                 if (this.InternalQueue.Count == 0)
+                {
+                    if (this.TokenSource.IsCancellationRequested)
+                        break;
+
                     continue;
+                }
 
                 // Get the next item from the queue
                 if (!this.InternalQueue.TryDequeue(out T nextItem))
