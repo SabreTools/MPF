@@ -112,7 +112,7 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Compress Log Files"
                                      IsChecked="{Binding Path=UIOptions.Options.CompressLogFiles}"
-                                     ToolTip="Compress output log files to reduce space Margin="0,4"
+                                     ToolTip="Compress output log files to reduce space" Margin="0,4"
                                      />
                             </UniformGrid>
                         </GroupBox>
