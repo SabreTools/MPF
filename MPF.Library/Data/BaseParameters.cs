@@ -161,6 +161,13 @@ namespace MPF.Data
         public bool IsValid() => GenerateParameters() != null;
 
         /// <summary>
+        /// Generate a list of all log files generated
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        public List<string> GetLogFilePaths(string basePath) => new List<string>();
+
+        /// <summary>
         /// Reset all special variables to have default values
         /// </summary>
         protected virtual void ResetValues() { }

@@ -478,6 +478,10 @@ namespace MPF.Data
                     resultProgress?.Report(Result.Failure("Writing could not complete!"));
             }
 
+            // Conpress the logs, if required
+            if (Options.CompressLogFiles)
+                CompressLogFiles();
+
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
         }
@@ -1290,6 +1294,51 @@ namespace MPF.Data
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Compress log files to save space
+        /// </summary>
+        /// <returns>True if the process succeeded, false otherwise</returns>
+        private bool CompressLogFiles()
+        {
+            // Prepare the necessary paths
+            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
+            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
+            string archiveName = Path.Combine(OutputDirectory, "!dumpinfo.zip");
+
+            // Get the list of log files from the parameters object
+            var files = Parameters.GetLogFilePaths(combinedBase);
+            if (!files.Any())
+                return true;
+
+            // Add the log files to the archive and delete the uncompressed file after
+            ZipArchive zf = null;
+            try
+            {
+                zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
+                foreach (string file in files)
+                {
+                    string entryName = file.Substring(OutputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    zf.CreateEntryFromFile(file, entryName);
+
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                zf?.Dispose();
+            }
         }
 
         #endregion
