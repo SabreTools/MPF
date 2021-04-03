@@ -1225,7 +1225,6 @@ namespace MPF.DiscImageCreator
             var currentFiles = Directory.GetFiles(Path.GetDirectoryName(basePath));
             string cmdPath = currentFiles.FirstOrDefault(f => Regex.IsMatch(f, @"\d{8}T\d{6}"));
 
-            // TODO: Figure out how to get the filename for the former _cmd file...
             List<string> logFiles = new List<string>();
             switch (this.Type)
             {

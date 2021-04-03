@@ -1034,6 +1034,48 @@ namespace MPF.Aaru
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    if (File.Exists($"{basePath}.cicm.xml"))
+                        logFiles.Add($"{basePath}.cicm.xml");
+                    if (File.Exists($"{basePath}.ibg"))
+                        logFiles.Add($"{basePath}.ibg");
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.mhddlog.bin"))
+                        logFiles.Add($"{basePath}.mhddlog.bin");
+                    if (File.Exists($"{basePath}.resume.xml"))
+                        logFiles.Add($"{basePath}.resume.xml");
+                    if (File.Exists($"{basePath}.sub.log"))
+                        logFiles.Add($"{basePath}.sub.log");
+
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    if (File.Exists($"{basePath}.cicm.xml"))
+                        logFiles.Add($"{basePath}.cicm.xml");
+                    if (File.Exists($"{basePath}.ibg"))
+                        logFiles.Add($"{basePath}.ibg");
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.mhddlog.bin"))
+                        logFiles.Add($"{basePath}.mhddlog.bin");
+                    if (File.Exists($"{basePath}.resume.xml"))
+                        logFiles.Add($"{basePath}.resume.xml");
+
+                    break;
+            }
+
+            return logFiles;
+        }
+
+        /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
             switch (BaseCommand)
