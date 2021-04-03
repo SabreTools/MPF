@@ -205,7 +205,7 @@ namespace MPF.Aaru
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Fill in submission info specifics for Aaru
             string outputDirectory = Path.GetDirectoryName(basePath);
@@ -365,19 +365,22 @@ namespace MPF.Aaru
                     break;
             }
 
-            // Fill in any artifacts that exist, Base64-encoded
-            if (File.Exists(basePath + ".cicm.xml"))
-                info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
-            if (File.Exists(basePath + ".ibg"))
-                info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
-            if (File.Exists(basePath + ".log"))
-                info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
-            if (File.Exists(basePath + ".mhddlog.bin"))
-                info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
-            if (File.Exists(basePath + ".resume.xml"))
-                info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
-            if (File.Exists(basePath + ".sub.log"))
-                info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log"));
+            // Fill in any artifacts that exist, Base64-encoded, if we need to
+            if (includeArtifacts)
+            {
+                if (File.Exists(basePath + ".cicm.xml"))
+                    info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
+                if (File.Exists(basePath + ".ibg"))
+                    info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
+                if (File.Exists(basePath + ".log"))
+                    info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
+                if (File.Exists(basePath + ".mhddlog.bin"))
+                    info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
+                if (File.Exists(basePath + ".resume.xml"))
+                    info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
+                if (File.Exists(basePath + ".sub.log"))
+                    info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log"));
+            }
         }
 
         /// <inheritdoc/>
@@ -1029,6 +1032,48 @@ namespace MPF.Aaru
 
         /// <inheritdoc/>
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
+
+        /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    if (File.Exists($"{basePath}.cicm.xml"))
+                        logFiles.Add($"{basePath}.cicm.xml");
+                    if (File.Exists($"{basePath}.ibg"))
+                        logFiles.Add($"{basePath}.ibg");
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.mhddlog.bin"))
+                        logFiles.Add($"{basePath}.mhddlog.bin");
+                    if (File.Exists($"{basePath}.resume.xml"))
+                        logFiles.Add($"{basePath}.resume.xml");
+                    if (File.Exists($"{basePath}.sub.log"))
+                        logFiles.Add($"{basePath}.sub.log");
+
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    if (File.Exists($"{basePath}.cicm.xml"))
+                        logFiles.Add($"{basePath}.cicm.xml");
+                    if (File.Exists($"{basePath}.ibg"))
+                        logFiles.Add($"{basePath}.ibg");
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.mhddlog.bin"))
+                        logFiles.Add($"{basePath}.mhddlog.bin");
+                    if (File.Exists($"{basePath}.resume.xml"))
+                        logFiles.Add($"{basePath}.resume.xml");
+
+                    break;
+            }
+
+            return logFiles;
+        }
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()

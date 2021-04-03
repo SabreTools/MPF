@@ -478,6 +478,17 @@ namespace MPF.Data
                     resultProgress?.Report(Result.Failure("Writing could not complete!"));
             }
 
+            // Conpress the logs, if required
+            if (Options.CompressLogFiles)
+            {
+                resultProgress?.Report(Result.Success("Compressing log files..."));
+                success = CompressLogFiles();
+                if (success)
+                    resultProgress?.Report(Result.Success("Compression complete!"));
+                else
+                    resultProgress?.Report(Result.Failure("Compression could not complete!"));
+            }
+
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
         }
@@ -597,7 +608,7 @@ namespace MPF.Data
             };
 
             // Get specific tool output handling
-            Parameters.GenerateSubmissionInfo(info, combinedBase, this.Drive);
+            Parameters.GenerateSubmissionInfo(info, combinedBase, this.Drive, Options.OutputSubmissionJSON);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && Options.HasRedumpLogin)
@@ -1290,6 +1301,51 @@ namespace MPF.Data
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Compress log files to save space
+        /// </summary>
+        /// <returns>True if the process succeeded, false otherwise</returns>
+        private bool CompressLogFiles()
+        {
+            // Prepare the necessary paths
+            string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
+            string combinedBase = Path.Combine(OutputDirectory, outputFilename);
+            string archiveName = combinedBase + "_logs.zip";
+
+            // Get the list of log files from the parameters object
+            var files = Parameters.GetLogFilePaths(combinedBase);
+            if (!files.Any())
+                return true;
+
+            // Add the log files to the archive and delete the uncompressed file after
+            ZipArchive zf = null;
+            try
+            {
+                zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
+                foreach (string file in files)
+                {
+                    string entryName = file.Substring(OutputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                    zf.CreateEntryFromFile(file, entryName);
+
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch { }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                zf?.Dispose();
+            }
         }
 
         #endregion

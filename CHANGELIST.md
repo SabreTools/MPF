@@ -45,6 +45,7 @@
 - Implement internal log queue
 - It's a secret...
 - Updated to DIC version 20210401
+- Support log file compression
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

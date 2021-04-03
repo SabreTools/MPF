@@ -123,7 +123,8 @@ namespace MPF.Data
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive);
+        /// <param name="includeArtifacts">True to include output files as encoded artifacts, false otherwise</param>
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive, bool includeArtifacts);
 
         #endregion
 
@@ -141,6 +142,13 @@ namespace MPF.Data
         /// <param name="mediaType">MediaType value to check</param>
         /// <returns>String representing the media type, null on error</returns>
         public virtual string GetDefaultExtension(MediaType? mediaType) => null;
+
+        /// <summary>
+        /// Generate a list of all log files generated
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        public virtual List<string> GetLogFilePaths(string basePath) => new List<string>();
 
         /// <summary>
         /// Get the MediaType from the current set of parameters

@@ -54,7 +54,7 @@ namespace MPF.CleanRip
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             info.TracksAndWriteOffsets.ClrMameProData = GetCleanripDatfile(basePath + ".iso", basePath + "-dumpinfo.txt");
             
@@ -89,11 +89,34 @@ namespace MPF.CleanRip
                     break;
             }
 
-            // Fill in any artifacts that exist, Base64-encoded
-            if (File.Exists(basePath + ".bca"))
-                info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true));
-            if (File.Exists(basePath + "-dumpinfo.txt"))
-                info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt"));
+            // Fill in any artifacts that exist, Base64-encoded, if we need to
+            if (includeArtifacts)
+            {
+                if (File.Exists(basePath + ".bca"))
+                    info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true));
+                if (File.Exists(basePath + "-dumpinfo.txt"))
+                    info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt"));
+            }
+        }
+
+        /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.DVD: // Only added here to help users; not strictly correct
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    if (File.Exists($"{basePath}-dumpinfo.txt"))
+                        logFiles.Add($"{basePath}-dumpinfo.txt");
+                    if (File.Exists($"{basePath}.bca"))
+                        logFiles.Add($"{basePath}.bca");
+
+                    break;
+            }
+
+            return logFiles;
         }
 
         #endregion

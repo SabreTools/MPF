@@ -65,7 +65,7 @@ namespace MPF.Check
             string username = null, password = null;
             string internalProgram = "DiscImageCreator";
             string path = string.Empty;
-            bool scan = false;
+            bool scan = false, compress = false;
 
             // Loop through and process options
             int startIndex = 2;
@@ -111,6 +111,12 @@ namespace MPF.Check
                 else if (args[startIndex].StartsWith("-s") || args[startIndex].StartsWith("--scan"))
                 {
                     scan = true;
+                }
+
+                // Compress log and extraneous files
+                else if (args[startIndex].StartsWith("-z") || args[startIndex].StartsWith("--zip"))
+                {
+                    compress = true;
                 }
 
                 // Default, we fall out
@@ -160,6 +166,7 @@ namespace MPF.Check
                     InternalProgram = Converters.ToInternalProgram(internalProgram),
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
+                    CompressLogFiles = compress,
 
                     RedumpUsername = username,
                     RedumpPassword = password,
@@ -200,6 +207,7 @@ namespace MPF.Check
             Console.WriteLine("-u, --use <program>            Dumping program output type");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
+            Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine();
         }
 

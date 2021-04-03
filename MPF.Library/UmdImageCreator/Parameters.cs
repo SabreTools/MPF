@@ -56,7 +56,7 @@ namespace MPF.UmdImageCreator
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             // Extract info based generically on MediaType
             switch (this.Type)
@@ -86,15 +86,40 @@ namespace MPF.UmdImageCreator
                     break;
             }
 
-            // Fill in any artifacts that exist, Base64-encoded
-            if (File.Exists(basePath + "_disc.txt"))
-                info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
-            if (File.Exists(basePath + "_mainError.txt"))
-                info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
-            if (File.Exists(basePath + "_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
-            if (File.Exists(basePath + "_volDesc.txt"))
-                info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
+            // Fill in any artifacts that exist, Base64-encoded, if we need to
+            if (includeArtifacts)
+            {
+                if (File.Exists(basePath + "_disc.txt"))
+                    info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
+                if (File.Exists(basePath + "_mainError.txt"))
+                    info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
+                if (File.Exists(basePath + "_mainInfo.txt"))
+                    info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
+                if (File.Exists(basePath + "_volDesc.txt"))
+                    info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
+            }
+        }
+
+        /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.UMD:
+                    if (File.Exists($"{basePath}_disc.txt"))
+                        logFiles.Add($"{basePath}_disc.txt");
+                    if (File.Exists($"{basePath}_mainError.txt"))
+                        logFiles.Add($"{basePath}_mainError.txt");
+                    if (File.Exists($"{basePath}_mainInfo.txt"))
+                        logFiles.Add($"{basePath}_mainInfo.txt");
+                    if (File.Exists($"{basePath}_volDesc.txt"))
+                        logFiles.Add($"{basePath}_volDesc.txt");
+
+                    break;
+            }
+
+            return logFiles;
         }
 
         #endregion
