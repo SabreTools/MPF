@@ -109,6 +109,11 @@
                                      IsChecked="{Binding Path=UIOptions.Options.OutputSubmissionJSON}"
                                      ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
                                      />
+
+                                <CheckBox VerticalAlignment="Center" Content="Compress Log Files"
+                                     IsChecked="{Binding Path=UIOptions.Options.CompressLogFiles}"
+                                     ToolTip="Compress output log files to reduce space Margin="0,4"
+                                     />
                             </UniformGrid>
                         </GroupBox>
                         

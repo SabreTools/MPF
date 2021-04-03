@@ -286,6 +286,15 @@ namespace MPF.Data
             set { _settings["OutputSubmissionJSON"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Compress output log files to reduce space
+        /// </summary>
+        public bool CompressLogFiles
+        {
+            get { return GetBooleanSetting(_settings, "CompressLogFiles", true); }
+            set { _settings["CompressLogFiles"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Skip Options
