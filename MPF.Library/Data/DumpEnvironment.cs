@@ -1305,7 +1305,7 @@ namespace MPF.Data
             // Prepare the necessary paths
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
             string combinedBase = Path.Combine(OutputDirectory, outputFilename);
-            string archiveName = Path.Combine(OutputDirectory, "!dumpinfo.zip");
+            string archiveName = combinedBase + "_logs.zip";
 
             // Get the list of log files from the parameters object
             var files = Parameters.GetLogFilePaths(combinedBase);
