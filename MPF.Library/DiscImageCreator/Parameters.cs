@@ -1217,6 +1217,110 @@ namespace MPF.DiscImageCreator
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            var currentFiles = Directory.GetFiles(Path.GetDirectoryName(basePath));
+            string cmdPath = currentFiles.FirstOrDefault(f => Regex.IsMatch(f, @"\d{8}T\d{6}"));
+
+            // TODO: Figure out how to get the filename for the former _cmd file...
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    if (File.Exists($"{basePath}.c2"))
+                        logFiles.Add($"{basePath}.c2");
+                    if (File.Exists($"{basePath}_c2Error.txt"))
+                        logFiles.Add($"{basePath}_c2Error.txt");
+                    if (File.Exists($"{basePath}.ccd"))
+                        logFiles.Add($"{basePath}.ccd");
+                    if (cmdPath != null && File.Exists(cmdPath))
+                        logFiles.Add(cmdPath);
+                    if (File.Exists($"{basePath}_cmd.txt"))
+                        logFiles.Add($"{basePath}_cmd.txt");
+                    if (File.Exists($"{basePath}.dat"))
+                        logFiles.Add($"{basePath}.dat");
+                    if (File.Exists($"{basePath}.sub"))
+                        logFiles.Add($"{basePath}.sub");
+                    if (File.Exists($"{basePath}.subtmp"))
+                        logFiles.Add($"{basePath}.subtmp");
+                    if (File.Exists($"{basePath}_disc.txt"))
+                        logFiles.Add($"{basePath}_disc.txt");
+                    if (File.Exists($"{basePath}_drive.txt"))
+                        logFiles.Add($"{basePath}_drive.txt");
+                    if (File.Exists($"{basePath}_img.cue"))
+                        logFiles.Add($"{basePath}_img.cue");
+                    if (File.Exists($"{basePath}_mainError.txt"))
+                        logFiles.Add($"{basePath}_mainError.txt");
+                    if (File.Exists($"{basePath}_mainInfo.txt"))
+                        logFiles.Add($"{basePath}_mainInfo.txt");
+                    if (File.Exists($"{basePath}_sub.txt"))
+                        logFiles.Add($"{basePath}_sub.txt");
+                    if (File.Exists($"{basePath}_subError.txt"))
+                        logFiles.Add($"{basePath}_subError.txt");
+                    if (File.Exists($"{basePath}_subInfo.txt"))
+                        logFiles.Add($"{basePath}_subInfo.txt");
+                    if (File.Exists($"{basePath}_subIntention.txt"))
+                        logFiles.Add($"{basePath}_subIntention.txt");
+                    if (File.Exists($"{basePath}_subReadable.txt"))
+                        logFiles.Add($"{basePath}_subReadable.txt");
+                    if (File.Exists($"{basePath}_volDesc.txt"))
+                        logFiles.Add($"{basePath}_volDesc.txt");
+
+                    // Audio-only discs don't output these files
+                    if (!this.System.IsAudio())
+                    {
+                        if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                            logFiles.Add($"{basePath}.img_EdcEcc.txt");
+                        if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                            logFiles.Add($"{basePath}.img_EccEdc.txt");
+                    }
+
+                    break;
+
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    if (cmdPath != null && File.Exists(cmdPath))
+                        logFiles.Add(cmdPath);
+                    if (File.Exists($"{basePath}_cmd.txt"))
+                        logFiles.Add($"{basePath}_cmd.txt");
+                    if (File.Exists($"{basePath}.dat"))
+                        logFiles.Add($"{basePath}.dat");
+                    if (File.Exists($"{basePath}_disc.txt"))
+                        logFiles.Add($"{basePath}_disc.txt");
+                    if (File.Exists($"{basePath}_drive.txt"))
+                        logFiles.Add($"{basePath}_drive.txt");
+                    if (File.Exists($"{basePath}_mainError.txt"))
+                        logFiles.Add($"{basePath}_mainError.txt");
+                    if (File.Exists($"{basePath}_mainInfo.txt"))
+                        logFiles.Add($"{basePath}_mainInfo.txt");
+                    if (File.Exists($"{basePath}_volDesc.txt"))
+                        logFiles.Add($"{basePath}_volDesc.txt");
+
+                    break;
+
+                case MediaType.FloppyDisk:
+                case MediaType.HardDisk:
+                    // TODO: Determine what outputs come out from a HDD, SD, etc.
+                    if (cmdPath != null && File.Exists(cmdPath))
+                        logFiles.Add(cmdPath);
+                    if (File.Exists($"{basePath}_cmd.txt"))
+                        logFiles.Add($"{basePath}_cmd.txt");
+                    if (File.Exists($"{basePath}.dat"))
+                        logFiles.Add($"{basePath}.dat");
+                    if (File.Exists($"{basePath}_disc.txt"))
+                        logFiles.Add($"{basePath}_disc.txt");
+
+                    break;
+            }
+
+            return logFiles;
+        }
+
+        /// <inheritdoc/>
         public override MediaType? GetMediaType() => Converters.ToMediaType(BaseCommand);
 
         /// <inheritdoc/>

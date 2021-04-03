@@ -143,6 +143,13 @@ namespace MPF.Data
         public virtual string GetDefaultExtension(MediaType? mediaType) => null;
 
         /// <summary>
+        /// Generate a list of all log files generated
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        public virtual List<string> GetLogFilePaths(string basePath) => new List<string>();
+
+        /// <summary>
         /// Get the MediaType from the current set of parameters
         /// </summary>
         /// <returns>MediaType value if successful, null on error</returns>
@@ -159,13 +166,6 @@ namespace MPF.Data
         /// </summary>
         /// <returns></returns>
         public bool IsValid() => GenerateParameters() != null;
-
-        /// <summary>
-        /// Generate a list of all log files generated
-        /// </summary>
-        /// <param name="basePath">Base filename and path to use for checking</param>
-        /// <returns>List of all log file paths, empty otherwise</returns>
-        public List<string> GetLogFilePaths(string basePath) => new List<string>();
 
         /// <summary>
         /// Reset all special variables to have default values
