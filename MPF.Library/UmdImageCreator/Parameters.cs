@@ -100,6 +100,28 @@ namespace MPF.UmdImageCreator
             }
         }
 
+        /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.UMD:
+                    if (File.Exists($"{basePath}_disc.txt"))
+                        logFiles.Add($"{basePath}_disc.txt");
+                    if (File.Exists($"{basePath}_mainError.txt"))
+                        logFiles.Add($"{basePath}_mainError.txt");
+                    if (File.Exists($"{basePath}_mainInfo.txt"))
+                        logFiles.Add($"{basePath}_mainInfo.txt");
+                    if (File.Exists($"{basePath}_volDesc.txt"))
+                        logFiles.Add($"{basePath}_volDesc.txt");
+
+                    break;
+            }
+
+            return logFiles;
+        }
+
         #endregion
 
         #region Information Extraction Methods

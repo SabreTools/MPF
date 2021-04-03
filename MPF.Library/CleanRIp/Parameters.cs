@@ -99,6 +99,26 @@ namespace MPF.CleanRip
             }
         }
 
+        /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+            switch (this.Type)
+            {
+                case MediaType.DVD: // Only added here to help users; not strictly correct
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    if (File.Exists($"{basePath}-dumpinfo.txt"))
+                        logFiles.Add($"{basePath}-dumpinfo.txt");
+                    if (File.Exists($"{basePath}.bca"))
+                        logFiles.Add($"{basePath}.bca");
+
+                    break;
+            }
+
+            return logFiles;
+        }
+
         #endregion
 
         #region Information Extraction Methods
