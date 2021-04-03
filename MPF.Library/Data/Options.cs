@@ -291,7 +291,7 @@ namespace MPF.Data
         /// </summary>
         public bool CompressLogFiles
         {
-            get { return GetBooleanSetting(_settings, "CompressLogFiles", true); }
+            get { return GetBooleanSetting(_settings, "CompressLogFiles", false); }
             set { _settings["CompressLogFiles"] = value.ToString(); }
         }
 
