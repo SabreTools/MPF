@@ -480,7 +480,14 @@ namespace MPF.Data
 
             // Conpress the logs, if required
             if (Options.CompressLogFiles)
-                CompressLogFiles();
+            {
+                resultProgress?.Report(Result.Success("Compressing log files..."));
+                success = CompressLogFiles();
+                if (success)
+                    resultProgress?.Report(Result.Success("Compression complete!"));
+                else
+                    resultProgress?.Report(Result.Failure("Compression could not complete!"));
+            }
 
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
