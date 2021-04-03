@@ -51,7 +51,7 @@
                 <TabItem Header="Dumping">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="5">
+                            <UniformGrid Columns="2" Rows="6">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Path=UIOptions.Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
@@ -103,6 +103,11 @@
                                 <CheckBox VerticalAlignment="Center" Content="Add Placeholders"
                                      IsChecked="{Binding Path=UIOptions.Options.AddPlaceholders}"
                                      ToolTip="Enable adding placeholder text in the submissioninfo output for required and optional fields" Margin="0,4"
+                                     />
+
+                                <CheckBox VerticalAlignment="Center" Content="Output Submission JSON"
+                                     IsChecked="{Binding Path=UIOptions.Options.OutputSubmissionJSON}"
+                                     ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
                                      />
                             </UniformGrid>
                         </GroupBox>

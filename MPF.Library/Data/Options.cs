@@ -277,6 +277,15 @@ namespace MPF.Data
             set { _settings["ToolsInSeparateWindow"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Output the compressed JSON version of the submission info
+        /// </summary>
+        public bool OutputSubmissionJSON
+        {
+            get { return GetBooleanSetting(_settings, "OutputSubmissionJSON", false); }
+            set { _settings["OutputSubmissionJSON"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Skip Options

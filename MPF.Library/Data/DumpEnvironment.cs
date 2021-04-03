@@ -467,13 +467,16 @@ namespace MPF.Data
             else
                 resultProgress?.Report(Result.Failure("Writing could not complete!"));
 
-            // Write the JSON output
-            resultProgress?.Report(Result.Success("Writing information to !submissionInfo.json.gz..."));
-            success = WriteOutputData(submissionInfo);
-            if (success)
-                resultProgress?.Report(Result.Success("Writing complete!"));
-            else
-                resultProgress?.Report(Result.Failure("Writing could not complete!"));
+            // Write the JSON output, if required
+            if (Options.OutputSubmissionJSON)
+            {
+                resultProgress?.Report(Result.Success("Writing information to !submissionInfo.json.gz..."));
+                success = WriteOutputData(submissionInfo);
+                if (success)
+                    resultProgress?.Report(Result.Success("Writing complete!"));
+                else
+                    resultProgress?.Report(Result.Failure("Writing could not complete!"));
+            }
 
             resultProgress?.Report(Result.Success("Submission information process complete!"));
             return Result.Success();
