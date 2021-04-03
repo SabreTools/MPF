@@ -101,7 +101,7 @@ namespace MPF.DD
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Fill in submission info specifics for DD
             string outputDirectory = Path.GetDirectoryName(basePath);

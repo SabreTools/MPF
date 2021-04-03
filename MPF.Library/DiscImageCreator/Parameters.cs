@@ -354,7 +354,7 @@ namespace MPF.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             string outputDirectory = Path.GetDirectoryName(basePath);
 
@@ -708,53 +708,56 @@ namespace MPF.DiscImageCreator
                     break;
             }
 
-            // Fill in any artifacts that exist, Base64-encoded
-            //if (File.Exists(basePath + ".c2"))
-            //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
-            if (File.Exists(basePath + "_c2Error.txt"))
-                info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
-            if (File.Exists(basePath + ".ccd"))
-                info.Artifacts["ccd"] = GetBase64(GetFullFile(basePath + ".ccd"));
-            if (File.Exists(basePath + "_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
-                info.Artifacts["cmd"] = GetBase64(GetFullFile(basePath + "_cmd.txt"));
-            if (File.Exists(basePath + ".cue"))
-                info.Artifacts["cue"] = GetBase64(GetFullFile(basePath + ".cue"));
-            if (File.Exists(basePath + ".dat"))
-                info.Artifacts["dat"] = GetBase64(GetFullFile(basePath + ".dat"));
-            if (File.Exists(basePath + "_disc.txt"))
-                info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
-            //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
-            //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "DMI.bin")));
-            if (File.Exists(basePath + "_drive.txt"))
-                info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
-            if (File.Exists(basePath + "_img.cue"))
-                info.Artifacts["img_cue"] = GetBase64(GetFullFile(basePath + "_img.cue"));
-            if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EdcEcc.txt"));
-            if (File.Exists(basePath + ".img_EccEdc.txt"))
-                info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EccEdc.txt"));
-            if (File.Exists(basePath + "_mainError.txt"))
-                info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
-            if (File.Exists(basePath + "_mainInfo.txt"))
-                info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
-            //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
-            //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "PFI.bin")));
-            //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
-            //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "SS.bin")));
-            if (File.Exists(basePath + ".sub"))
-                info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".sub"));
-            if (File.Exists(basePath + "_subError.txt"))
-                info.Artifacts["subError"] = GetBase64(GetFullFile(basePath + "_subError.txt"));
-            if (File.Exists(basePath + "_subInfo.txt"))
-                info.Artifacts["subInfo"] = GetBase64(GetFullFile(basePath + "_subInfo.txt"));
-            if (File.Exists(basePath + "_subIntention.txt"))
-                info.Artifacts["subIntention"] = GetBase64(GetFullFile(basePath + "_subIntention.txt"));
-            //if (File.Exists(basePath + "_sub.txt"))
-            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
-            //if (File.Exists(basePath + "_subReadable.txt"))
-            //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
-            if (File.Exists(basePath + "_volDesc.txt"))
-                info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
+            // Fill in any artifacts that exist, Base64-encoded, if we need to
+            if (includeArtifacts)
+            {
+                //if (File.Exists(basePath + ".c2"))
+                //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
+                if (File.Exists(basePath + "_c2Error.txt"))
+                    info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
+                if (File.Exists(basePath + ".ccd"))
+                    info.Artifacts["ccd"] = GetBase64(GetFullFile(basePath + ".ccd"));
+                if (File.Exists(basePath + "_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
+                    info.Artifacts["cmd"] = GetBase64(GetFullFile(basePath + "_cmd.txt"));
+                if (File.Exists(basePath + ".cue"))
+                    info.Artifacts["cue"] = GetBase64(GetFullFile(basePath + ".cue"));
+                if (File.Exists(basePath + ".dat"))
+                    info.Artifacts["dat"] = GetBase64(GetFullFile(basePath + ".dat"));
+                if (File.Exists(basePath + "_disc.txt"))
+                    info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
+                //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
+                //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "DMI.bin")));
+                if (File.Exists(basePath + "_drive.txt"))
+                    info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
+                if (File.Exists(basePath + "_img.cue"))
+                    info.Artifacts["img_cue"] = GetBase64(GetFullFile(basePath + "_img.cue"));
+                if (File.Exists(basePath + ".img_EdcEcc.txt"))
+                    info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EdcEcc.txt"));
+                if (File.Exists(basePath + ".img_EccEdc.txt"))
+                    info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EccEdc.txt"));
+                if (File.Exists(basePath + "_mainError.txt"))
+                    info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
+                if (File.Exists(basePath + "_mainInfo.txt"))
+                    info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
+                //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
+                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "PFI.bin")));
+                //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
+                //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "SS.bin")));
+                if (File.Exists(basePath + ".sub"))
+                    info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".sub"));
+                if (File.Exists(basePath + "_subError.txt"))
+                    info.Artifacts["subError"] = GetBase64(GetFullFile(basePath + "_subError.txt"));
+                if (File.Exists(basePath + "_subInfo.txt"))
+                    info.Artifacts["subInfo"] = GetBase64(GetFullFile(basePath + "_subInfo.txt"));
+                if (File.Exists(basePath + "_subIntention.txt"))
+                    info.Artifacts["subIntention"] = GetBase64(GetFullFile(basePath + "_subIntention.txt"));
+                //if (File.Exists(basePath + "_sub.txt"))
+                //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
+                //if (File.Exists(basePath + "_subReadable.txt"))
+                //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
+                if (File.Exists(basePath + "_volDesc.txt"))
+                    info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
+            }
         }
 
         /// <inheritdoc/>

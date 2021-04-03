@@ -123,7 +123,8 @@ namespace MPF.Data
         /// <param name="submissionInfo">Base submission info to fill in specifics for</param>
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
-        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive);
+        /// <param name="includeArtifacts">True to include output files as encoded artifacts, false otherwise</param>
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, string basePath, Drive drive, bool includeArtifacts);
 
         #endregion
 
