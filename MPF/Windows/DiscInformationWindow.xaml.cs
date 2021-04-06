@@ -301,6 +301,19 @@ namespace MPF.Windows
             Hide();
         }
 
+        /// <summary>
+        /// Handler for RingCodeGuideButton Click event
+        /// </summary>
+        private void OnRingCodeGuideClick(object sender, RoutedEventArgs e)
+        {
+            var ringCodeGuideWindow = new RingCodeGuideWindow()
+            {
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            ringCodeGuideWindow.Show();
+        }
+
         #endregion
     }
 }

@@ -32,6 +32,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\ring-code-guide.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MPF.Library\MPF.Library.csproj">
       <Project>{51ab0928-13f9-44bf-a407-b6957a43a056}</Project>
       <Name>MPF.Library</Name>
