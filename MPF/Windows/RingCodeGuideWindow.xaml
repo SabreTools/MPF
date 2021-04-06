@@ -27,22 +27,22 @@
                        RenderOptions.BitmapScalingMode="HighQuality" />
                 <Label Grid.Row="1">
                     <Label.Content>
-                        <TextBlock><Bold>1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;15</TextBlock>
+                        <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;15</TextBlock>
                     </Label.Content>
                 </Label>
                 <Label Grid.Row="2">
                     <Label.Content>
-                        <TextBlock><Bold>2. Mastering SID:</Bold> IFPI L553</TextBlock>
+                        <TextBlock><Bold Foreground="Green">2. Mastering SID:</Bold> IFPI L553</TextBlock>
                     </Label.Content>
                 </Label>
                 <Label Grid.Row="3">
                     <Label.Content>
-                        <TextBlock><Bold>3. Toolstamp/Mastering Code:</Bold> A2</TextBlock>
+                        <TextBlock><Bold Foreground="Purple">3. Toolstamp/Mastering Code:</Bold> A2</TextBlock>
                     </Label.Content>
                 </Label>
                 <Label Grid.Row="4">
                     <Label.Content>
-                        <TextBlock><Bold>4. Mould SID:</Bold> IFPI 94V1</TextBlock>
+                        <TextBlock><Bold Foreground="Blue">4. Mould SID:</Bold> IFPI 94V1</TextBlock>
                     </Label.Content>
                 </Label>
             </Grid>
