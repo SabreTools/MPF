@@ -46,6 +46,7 @@
 - It's a secret...
 - Updated to DIC version 20210401
 - Support log file compression
+- Add ring code guide button to disc submission window
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
