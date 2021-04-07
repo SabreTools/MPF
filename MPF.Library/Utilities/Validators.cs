@@ -871,6 +871,12 @@ namespace MPF.Utilities
             if (drive.InternalDriveType != InternalDriveType.Optical)
                 return KnownSystem.IBMPCCompatible;
 
+            // Audio CD
+            if (drive.VolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+            {
+                return KnownSystem.AudioCD;
+            }
+
             // DVD-Audio
             if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
                 && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Count() > 0)
