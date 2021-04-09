@@ -62,7 +62,7 @@ These are the tireless individuals who have dedicated countless hours to help te
 
 ## Community Shout-Outs
 
-Thanks to these communities for their use, teating, and feedback. I can't even hope to be able to thank everyone individually.
+Thanks to these communities for their use, testing, and feedback. I can't even hope to be able to thank everyone individually.
 
 - **VGPC Discord** - Fast feedback and a lot of testing
 - **Redump Community** - Near-daily use to assist with metadata gathering
