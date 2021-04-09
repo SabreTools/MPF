@@ -378,6 +378,13 @@ namespace MPF.UserControls
 
             try
             {
+                // If we're not processing log formatting, just append and continue
+                if (!ViewModels.OptionsViewModel.EnableLogFormatting)
+                {
+                    AppendToTextBox(nextLogLine);
+                    return;
+                }
+
                 // Get last line
                 lastLine = lastLine ?? GetLastLine();
 

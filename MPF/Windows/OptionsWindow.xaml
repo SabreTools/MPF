@@ -228,8 +228,13 @@
                             ToolTip="Open the log panel when the program launches" Margin="0,4"
                             />
 
+                        <CheckBox VerticalAlignment="Center" Content="Enable Log Formatting"
+                            IsChecked="{Binding Path=UIOptions.Options.EnableLogFormatting}"
+                            ToolTip="Format log lines written to the log, including overwriting previous lines on match. Disable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
+                            />
+                        
                         <CheckBox VerticalAlignment="Center" Content="Enable Progress Processing"
-                            IsChecked="{Binding Path=UIOptions.Options.EnableProgressProcessing}"
+                            IsChecked="{Binding Path=UIOptions.Options.EnableProgressProcessing}" IsEnabled="{Binding Path=UIOptions.Options.EnableLogFormatting}"
                             ToolTip="Process lines written to the log to update the progress bar. Disable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
                             />
                     </UniformGrid>

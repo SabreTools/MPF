@@ -12,6 +12,11 @@
             get { return _uiOptions.Options.VerboseLogging; }
         }
 
+        public bool EnableLogFormatting
+        {
+            get { return _uiOptions.Options.EnableLogFormatting; }
+        }
+
         public bool EnableProgressProcessing
         {
             get { return _uiOptions.Options.EnableProgressProcessing; }

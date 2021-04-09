@@ -333,6 +333,12 @@ namespace MPF.Data
             set { _settings["OpenLogWindowAtStartup"] = value.ToString(); }
         }
 
+        public bool EnableLogFormatting
+        {
+            get { return GetBooleanSetting(_settings, "EnableFancyLog", true); }
+            set { _settings["EnableFancyLog"] = value.ToString(); }
+        }
+
         public bool EnableProgressProcessing
         {
             get { return GetBooleanSetting(_settings, "EnableProgressProcessing", true); }
