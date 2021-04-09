@@ -82,7 +82,7 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
                                      IsChecked="{Binding Path=UIOptions.Options.ToolsInSeparateWindow}"
-                                     ToolTip="Show program output in separate command window instead of in the log. Disable this if you have a weaker system as there is an increased processing load associated." Margin="0,4"
+                                     ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load associated with outputting to the log." Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Protection Scan"
