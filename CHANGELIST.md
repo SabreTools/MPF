@@ -17,7 +17,7 @@
 - Add hashing for UMDs from UIC outputs
 - Fix information gathering for UIC outputs
 - Fix issue with duplicate security sector data in XGD DiscImageCreator outputs
-- Update to BurnOutSharp 1.5.1
+- ~~Update to BurnOutSharp 1.5.1~~
 - ~~Update to DIC version 20210202~~
 - Add VCD detection
 - Fix UI not updating properly on drive change
@@ -47,6 +47,7 @@
 - Updated to DIC version 20210401
 - Support log file compression
 - Add ring code guide button to disc submission window
+- Update to BurnOutSharp 1.6.0
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru

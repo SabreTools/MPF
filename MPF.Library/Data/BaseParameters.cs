@@ -572,12 +572,15 @@ namespace MPF.Data
                 return false;
 
             // Scan through each file to check for the anti-modchip strings
+            var antiModchip = new PSXAntiModchip();
             foreach (string path in Directory.EnumerateFiles(drivePath, "*", SearchOption.AllDirectories))
             {
                 try
                 {
                     byte[] fileContent = File.ReadAllBytes(path);
-                    return PSXAntiModchip.CheckContents(fileContent) != null;
+                    string protection = antiModchip.CheckContents(path, fileContent, includePosition: false);
+                    if (!string.IsNullOrWhiteSpace(protection))
+                        return true;
                 }
                 catch
                 {
