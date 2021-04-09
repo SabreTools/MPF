@@ -82,7 +82,7 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Separate Window"
                                      IsChecked="{Binding Path=UIOptions.Options.ToolsInSeparateWindow}"
-                                     ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load associated with outputting to the log." Margin="0,4"
+                                     ToolTip="Show program output in separate command window instead of in the log. Enable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Protection Scan"
@@ -226,6 +226,11 @@
                         <CheckBox VerticalAlignment="Center" Content="Auto-Open Log"
                             IsChecked="{Binding Path=UIOptions.Options.OpenLogWindowAtStartup}"
                             ToolTip="Open the log panel when the program launches" Margin="0,4"
+                            />
+
+                        <CheckBox VerticalAlignment="Center" Content="Enable Progress Processing"
+                            IsChecked="{Binding Path=UIOptions.Options.EnableProgressProcessing}"
+                            ToolTip="Process lines written to the log to update the progress bar. Disable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
                             />
                     </UniformGrid>
                 </TabItem>

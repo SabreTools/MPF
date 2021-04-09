@@ -333,6 +333,12 @@ namespace MPF.Data
             set { _settings["OpenLogWindowAtStartup"] = value.ToString(); }
         }
 
+        public bool EnableProgressProcessing
+        {
+            get { return GetBooleanSetting(_settings, "EnableProgressProcessing", true); }
+            set { _settings["EnableProgressProcessing"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Redump Login Information

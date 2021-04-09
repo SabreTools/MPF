@@ -423,7 +423,8 @@ namespace MPF.UserControls
                 }
 
                 // Update the bar if needed
-                ProcessStringForProgressBar(nextText, lastUsedMatcher);
+                if (ViewModels.OptionsViewModel.EnableProgressProcessing)
+                    ProcessStringForProgressBar(nextText, lastUsedMatcher);
             }
             catch (Exception ex)
             {

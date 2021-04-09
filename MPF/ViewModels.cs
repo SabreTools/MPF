@@ -7,12 +7,14 @@
     {
         private readonly UIOptions _uiOptions;
 
-        /// <summary>
-        /// Access to the only setting needed cross-domain
-        /// </summary>
         public bool VerboseLogging
         {
             get { return _uiOptions.Options.VerboseLogging; }
+        }
+
+        public bool EnableProgressProcessing
+        {
+            get { return _uiOptions.Options.EnableProgressProcessing; }
         }
 
         public OptionsViewModel(UIOptions uiOptions)
