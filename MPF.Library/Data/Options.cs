@@ -273,7 +273,7 @@ namespace MPF.Data
         /// </summary>
         public bool ToolsInSeparateWindow
         {
-            get { return GetBooleanSetting(_settings, "ToolsInSeparateWindow", false); }
+            get { return GetBooleanSetting(_settings, "ToolsInSeparateWindow", true); }
             set { _settings["ToolsInSeparateWindow"] = value.ToString(); }
         }
 
@@ -291,7 +291,7 @@ namespace MPF.Data
         /// </summary>
         public bool CompressLogFiles
         {
-            get { return GetBooleanSetting(_settings, "CompressLogFiles", false); }
+            get { return GetBooleanSetting(_settings, "CompressLogFiles", true); }
             set { _settings["CompressLogFiles"] = value.ToString(); }
         }
 
@@ -321,27 +321,45 @@ namespace MPF.Data
 
         #region Logging Options
 
+        /// <summary>
+        /// Enable verbose and debug logs to be written
+        /// </summary>
         public bool VerboseLogging
         {
             get { return GetBooleanSetting(_settings, "VerboseLogging", true); }
             set { _settings["VerboseLogging"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Have the log panel expanded by default on startup
+        /// </summary>
         public bool OpenLogWindowAtStartup
         {
             get { return GetBooleanSetting(_settings, "OpenLogWindowAtStartup", true); }
             set { _settings["OpenLogWindowAtStartup"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Enable fancy formatting of log statements
+        /// Disables EnableProgressProcessing if disabled
+        /// </summary>
+        /// <remarks>
+        /// This is mainly for outputting redirected console outputs. Not many
+        /// other bits of the logs include any specially handled outputs.
+        /// </remarks>
         public bool EnableLogFormatting
         {
-            get { return GetBooleanSetting(_settings, "EnableFancyLog", true); }
-            set { _settings["EnableFancyLog"] = value.ToString(); }
+            get { return GetBooleanSetting(_settings, "EnableLogFormatting", false); }
+            set { _settings["EnableLogFormatting"] = value.ToString(); }
         }
 
+        /// <summary>
+        /// Enable progress bar updating based on log text
+        /// Disabled if EnableLogFormatting is disabled
+        /// </summary>
         public bool EnableProgressProcessing
         {
-            get { return GetBooleanSetting(_settings, "EnableProgressProcessing", true); }
+            get { return GetBooleanSetting(_settings, "EnableProgressProcessing", false); }
             set { _settings["EnableProgressProcessing"] = value.ToString(); }
         }
 
