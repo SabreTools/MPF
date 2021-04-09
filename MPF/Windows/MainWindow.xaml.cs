@@ -638,8 +638,12 @@ namespace MPF.Windows
                 DisableAllUIElements();
 
                 // Output to the label and log
-                StatusLabel.Content = "Beginning dumping process";
-                LogOutput.LogLn("Starting dumping process..");
+                StatusLabel.Content = "Starting dumping process... Please wait!";
+                LogOutput.LogLn("Starting dumping process... Please wait!");
+                if (this.UIOptions.Options.ToolsInSeparateWindow)
+                    LogOutput.LogLn("Look for the separate command window for more details");
+                else
+                    LogOutput.LogLn("Program outputs may be slow to populate in the log window");
 
                 // Get progress indicators
                 var resultProgress = new Progress<Result>();
