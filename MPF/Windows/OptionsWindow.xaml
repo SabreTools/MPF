@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="Options" Width="515.132" ResizeMode="NoResize" SizeToContent="Height"
-        Closing="OnClosing">
+        Title="Options" Width="515.132" ResizeMode="NoResize" SizeToContent="Height">
 
     <Grid>
         <StackPanel Orientation="Vertical">
@@ -260,9 +259,10 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
+                <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
                     <Label/> <!-- Empty label for padding -->
                     <Button Name="AcceptButton" Height="25" Width="80" Content="Accept" Click="OnAcceptClick" />
+                    <Button Name="CancelButton" Height="25" Width="80" Content="Cancel" Click="OnCancelClick" />
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>

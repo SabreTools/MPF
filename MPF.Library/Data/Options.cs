@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using MPF.Utilities;
 
 namespace MPF.Data
 {
-    public class Options : IDictionary<string, string>
+    public class Options : IDictionary<string, string>, ICloneable
     {
         private Dictionary<string, string> _settings;
 
@@ -394,6 +395,14 @@ namespace MPF.Data
         public Options(Dictionary<string, string> settings = null)
         {
             this._settings = settings ?? new Dictionary<string, string>();
+        }
+
+        /// <summary>
+        /// Create a clone of the object
+        /// </summary>
+        public object Clone()
+        {
+            return new Options(new Dictionary<string, string>(_settings));
         }
 
         #region Helpers

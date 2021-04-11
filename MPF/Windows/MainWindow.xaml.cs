@@ -822,7 +822,12 @@ namespace MPF.Windows
         /// </summary>
         private void OnOptionsUpdated(object sender, EventArgs e)
         {
-            InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
+            var optionsWindow = sender as OptionsWindow;
+            if (optionsWindow?.SavedSettings == true)
+            {
+                this.UIOptions = optionsWindow.UIOptions.Clone() as UIOptions;
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
+            }
         }
 
         /// <summary>

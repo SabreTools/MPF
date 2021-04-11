@@ -33,6 +33,11 @@ namespace MPF.Windows
         /// </summary>
         public List<KnownSystemComboBoxItem> Systems { get; private set; } = KnownSystemComboBoxItem.GenerateElements().ToList();
 
+        /// <summary>
+        /// Flag for if settings were saved or not
+        /// </summary>
+        public bool SavedSettings { get; private set; } = false;
+
         #endregion
 
         public OptionsWindow(UIOptions uiOptions)
@@ -40,7 +45,7 @@ namespace MPF.Windows
             InitializeComponent();
             DataContext = this;
 
-            UIOptions = uiOptions;
+            UIOptions = uiOptions.Clone() as UIOptions;
             Load();
         }
 
@@ -95,6 +100,7 @@ namespace MPF.Windows
             UIOptions.Options.RedumpPassword = RedumpPasswordBox.Password;
 
             UIOptions.Save();
+            SavedSettings = true;
         }
 
         /// <summary>
@@ -166,15 +172,16 @@ namespace MPF.Windows
         /// </summary>
         private void OnAcceptClick(object sender, EventArgs e)
         {
+            Save();
             Close();
         }
 
         /// <summary>
-        /// Handler for window Closimg event
+        /// Handler for CancelButtom Click event
         /// </summary>
-        private void OnClosing(object sender, EventArgs e)
+        private void OnCancelClick(object sender, EventArgs e)
         {
-            Save();
+            Close();
         }
 
         /// <summary>

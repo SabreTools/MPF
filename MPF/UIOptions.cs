@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using MPF.Data;
 
 namespace MPF
 {
-    public class UIOptions
+    public class UIOptions : ICloneable
     {
         /// <summary>
         /// Internal Options object for settings storage
@@ -17,6 +18,14 @@ namespace MPF
         public UIOptions()
         {
             Load();
+        }
+
+        /// <summary>
+        /// Create a clone of the object
+        /// </summary>
+        public object Clone()
+        {
+            return new UIOptions { Options = this.Options.Clone() as Options };
         }
 
         /// <summary>
