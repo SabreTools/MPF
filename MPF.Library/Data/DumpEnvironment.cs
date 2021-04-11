@@ -407,12 +407,12 @@ namespace MPF.Data
         /// </summary>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
-        /// <param name="showUserPrompt">Optional user prompt to deal with submsision information</param>
+        /// <param name="processUserInfo">Optional user prompt to deal with submsision information</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null,
-            Func<SubmissionInfo, bool?> showUserPrompt = null)
+            Func<SubmissionInfo, bool?> processUserInfo = null)
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
@@ -444,10 +444,10 @@ namespace MPF.Data
             }
 
             // Get user-modifyable information if confugured to
-            if (Options.PromptForDiscInformation && showUserPrompt != null)
+            if (Options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
-                bool? filledInfo = showUserPrompt(submissionInfo);
+                bool? filledInfo = processUserInfo(submissionInfo);
                 if (filledInfo == true)
                     resultProgress?.Report(Result.Success("Additional disc information added!"));
                 else

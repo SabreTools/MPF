@@ -174,6 +174,14 @@ namespace MPF.Windows
                     }
                     
                     break;
+
+                // All other media we assume to have no rings
+                default:
+                    L0Info.Visibility = Visibility.Collapsed;
+                    L1Info.Visibility = Visibility.Collapsed;
+                    L2Info.Visibility = Visibility.Collapsed;
+                    L3Info.Visibility = Visibility.Collapsed;
+                    break;
             }
         
             // Different systems mean different fields available
@@ -282,7 +290,8 @@ namespace MPF.Windows
         private void OnAcceptClick(object sender, RoutedEventArgs e)
         {
             Save();
-            Hide();
+            this.DialogResult = true;
+            Close();
         }
 
         /// <summary>
@@ -290,15 +299,8 @@ namespace MPF.Windows
         /// </summary>
         private void OnCancelClick(object sender, RoutedEventArgs e)
         {
-            Hide();
-        }
-
-        /// <summary>
-        /// Handler for DiscInformationWindow Closed event
-        /// </summary>
-        private void OnClosed(object sender, EventArgs e)
-        {
-            Hide();
+            this.DialogResult = false;
+            Close();
         }
 
         /// <summary>
