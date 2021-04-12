@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -36,14 +37,14 @@ namespace MPF.Windows
         public List<Element<MediaType>> MediaTypes { get; private set; } = new List<Element<MediaType>>();
 
         /// <summary>
+        /// Current set of options
+        /// </summary>
+        public Options Options { get; private set; }
+
+        /// <summary>
         /// Current list of supported system profiles
         /// </summary>
         public List<KnownSystemComboBoxItem> Systems { get; private set; } = KnownSystemComboBoxItem.GenerateElements().ToList();
-
-        /// <summary>
-        /// Current UI options
-        /// </summary>
-        public UIOptions UIOptions { get; private set; } = new UIOptions();
 
         #endregion
 
@@ -62,10 +63,11 @@ namespace MPF.Windows
             DataContext = this;
 
             // Load the options
-            ViewModels.OptionsViewModel = new OptionsViewModel(UIOptions);
+            LoadFromConfig();
+            ViewModels.OptionsViewModel = new OptionsViewModel(Options);
 
             // Load the log output
-            LogPanel.IsExpanded = UIOptions.Options.OpenLogWindowAtStartup;
+            LogPanel.IsExpanded = Options.OpenLogWindowAtStartup;
 
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
@@ -87,7 +89,7 @@ namespace MPF.Windows
             MediaScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Validators.CreateListOfDrives(UIOptions.Options.IgnoreFixedDrives);
+            Drives = Validators.CreateListOfDrives(Options.IgnoreFixedDrives);
             DriveLetterComboBox.ItemsSource = Drives;
 
             if (DriveLetterComboBox.Items.Count > 0)
@@ -297,7 +299,7 @@ namespace MPF.Windows
                 defaultMediaType = MediaType.CDROM;
 
             // If we're skipping detection, set the default value
-            if (UIOptions.Options.SkipMediaTypeDetection)
+            if (Options.SkipMediaTypeDetection)
             {
                 LogOutput.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
@@ -341,7 +343,7 @@ namespace MPF.Windows
         private DumpEnvironment DetermineEnvironment()
         {
             // Populate the new environment
-            var env = new DumpEnvironment(UIOptions.Options,
+            var env = new DumpEnvironment(Options,
                 OutputDirectoryTextBox.Text,
                 OutputFilenameTextBox.Text,
                 DriveLetterComboBox.SelectedItem as Drive,
@@ -367,10 +369,10 @@ namespace MPF.Windows
         /// </summary>
         private void DetermineSystemType()
         {
-            if (!UIOptions.Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
+            if (!Options.SkipSystemDetection && DriveLetterComboBox.SelectedIndex > -1)
             {
                 LogOutput.VerboseLog($"Trying to detect system for drive {Drives[DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex], UIOptions.Options.DefaultSystem);
+                var currentSystem = Validators.GetKnownSystem(Drives[DriveLetterComboBox.SelectedIndex], Options.DefaultSystem);
                 LogOutput.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + Converters.GetLongName(currentSystem) + "."));
 
                 if (currentSystem != KnownSystem.NONE)
@@ -434,7 +436,25 @@ namespace MPF.Windows
 
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
-                OutputDirectoryTextBox.Text = Path.Combine(UIOptions.Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) ?? string.Empty);
+                OutputDirectoryTextBox.Text = Path.Combine(Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) ?? string.Empty);
+        }
+
+        /// <summary>
+        /// Load the current set of options from the application configuration
+        /// </summary>
+        private void LoadFromConfig()
+        {
+            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            var settings = configFile.AppSettings.Settings;
+            var dict = new Dictionary<string, string>();
+
+            foreach (string key in settings.AllKeys)
+            {
+                dict[key] = settings[key]?.Value ?? string.Empty;
+            }
+
+            Options = new Options(dict);
         }
 
         /// <summary>
@@ -459,7 +479,7 @@ namespace MPF.Windows
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
-            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, UIOptions.Options.InternalProgram == InternalProgram.DiscImageCreator);
+            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, Options.InternalProgram == InternalProgram.DiscImageCreator);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
                 OutputDirectoryTextBox.Text = outputDirectory;
             else
@@ -473,6 +493,23 @@ namespace MPF.Windows
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
             if (mediaTypeIndex > -1)
                 MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
+        }
+
+        /// <summary>
+        /// Save the current set of options to the application configuration
+        /// </summary>
+        private void SaveToConfig()
+        {
+            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+
+            // Loop through all settings in Options and save them, overwriting existing settings
+            foreach (var kvp in Options)
+            {
+                configFile.AppSettings.Settings.Remove(kvp.Key);
+                configFile.AppSettings.Settings.Add(kvp.Key, kvp.Value);
+            }
+
+            configFile.Save(ConfigurationSaveMode.Modified);
         }
 
         /// <summary>
@@ -555,7 +592,27 @@ namespace MPF.Windows
             LogOutput.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
 
             // Set the selected speed
-            int speed = UIOptions.GetPreferredDumpSpeedForMediaType(CurrentMediaType);
+            int speed;
+            switch (CurrentMediaType)
+            {
+                case MediaType.CDROM:
+                case MediaType.GDROM:
+                    speed = Options.PreferredDumpSpeedCD;
+                    break;
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.NintendoGameCubeGameDisc:
+                case MediaType.NintendoWiiOpticalDisc:
+                    speed = Options.PreferredDumpSpeedDVD;
+                    break;
+                case MediaType.BluRay:
+                    speed = Options.PreferredDumpSpeedBD;
+                    break;
+                default:
+                    speed = Options.PreferredDumpSpeedCD;
+                    break;
+            }
+
             LogOutput.VerboseLogLn($"Setting drive speed to: {speed}");
             DriveSpeedComboBox.SelectedValue = speed;
         }
@@ -640,7 +697,7 @@ namespace MPF.Windows
                 // Output to the label and log
                 StatusLabel.Content = "Starting dumping process... Please wait!";
                 LogOutput.LogLn("Starting dumping process... Please wait!");
-                if (this.UIOptions.Options.ToolsInSeparateWindow)
+                if (this.Options.ToolsInSeparateWindow)
                     LogOutput.LogLn("Look for the separate command window for more details");
                 else
                     LogOutput.LogLn("Program outputs may be slow to populate in the log window");
@@ -825,7 +882,8 @@ namespace MPF.Windows
             var optionsWindow = sender as OptionsWindow;
             if (optionsWindow?.SavedSettings == true)
             {
-                this.UIOptions = optionsWindow.UIOptions.Clone() as UIOptions;
+                this.Options = optionsWindow.Options.Clone() as Options;
+                SaveToConfig();
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
             }
         }
@@ -835,7 +893,7 @@ namespace MPF.Windows
         /// </summary>
         private void OptionsMenuItemClick(object sender, RoutedEventArgs e)
         {
-            var optionsWindow = new OptionsWindow(UIOptions)
+            var optionsWindow = new OptionsWindow(Options)
             {
                 Owner = this,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -934,7 +992,7 @@ namespace MPF.Windows
                     Env.EjectDisc();
                 }
 
-                if (UIOptions.Options.DICResetDriveAfterDump)
+                if (Options.DICResetDriveAfterDump)
                 {
                     LogOutput.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
                     Env.ResetDrive();

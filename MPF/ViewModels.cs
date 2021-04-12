@@ -1,30 +1,32 @@
-﻿namespace MPF
+﻿using MPF.Data;
+
+namespace MPF
 {
     /// <summary>
     /// Globally referencable options
     /// </summary>
     public class OptionsViewModel
     {
-        private readonly UIOptions _uiOptions;
+        private readonly Options options;
 
         public bool VerboseLogging
         {
-            get { return _uiOptions.Options.VerboseLogging; }
+            get { return options.VerboseLogging; }
         }
 
         public bool EnableLogFormatting
         {
-            get { return _uiOptions.Options.EnableLogFormatting; }
+            get { return options.EnableLogFormatting; }
         }
 
         public bool EnableProgressProcessing
         {
-            get { return _uiOptions.Options.EnableProgressProcessing; }
+            get { return options.EnableProgressProcessing; }
         }
 
-        public OptionsViewModel(UIOptions uiOptions)
+        public OptionsViewModel(Options options)
         {
-            this._uiOptions = uiOptions;
+            this.options = options;
         }
     }
 

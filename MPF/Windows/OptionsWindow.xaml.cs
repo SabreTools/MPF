@@ -19,9 +19,9 @@ namespace MPF.Windows
         #region Fields
 
         /// <summary>
-        /// Current UI options
+        /// Current set of options
         /// </summary>
-        public UIOptions UIOptions { get; set; }
+        public Options Options { get; set; }
 
         /// <summary>
         /// List of available internal programs
@@ -40,12 +40,12 @@ namespace MPF.Windows
 
         #endregion
 
-        public OptionsWindow(UIOptions uiOptions)
+        public OptionsWindow(Options options)
         {
             InitializeComponent();
             DataContext = this;
 
-            UIOptions = uiOptions.Clone() as UIOptions;
+            Options = options.Clone() as Options;
             Load();
         }
 
@@ -74,9 +74,9 @@ namespace MPF.Windows
         /// </summary>
         private void Load()
         {
-            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == UIOptions.Options.InternalProgram);
-            DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == UIOptions.Options.DefaultSystem);
-            RedumpPasswordBox.Password = UIOptions.Options.RedumpPassword;
+            InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Options.InternalProgram);
+            DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == Options.DefaultSystem);
+            RedumpPasswordBox.Password = Options.RedumpPassword;
         }
 
         /// <summary>
@@ -94,12 +94,11 @@ namespace MPF.Windows
         private void Save()
         {
             var selectedInternalProgram = InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
-            UIOptions.Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
+            Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
             var selectedDefaultSystem = DefaultSystemComboBox.SelectedItem as KnownSystemComboBoxItem;
-            UIOptions.Options.DefaultSystem = selectedDefaultSystem?.Value ?? KnownSystem.NONE;
-            UIOptions.Options.RedumpPassword = RedumpPasswordBox.Password;
+            Options.DefaultSystem = selectedDefaultSystem?.Value ?? KnownSystem.NONE;
+            Options.RedumpPassword = RedumpPasswordBox.Password;
 
-            UIOptions.Save();
             SavedSettings = true;
         }
 
