@@ -208,10 +208,9 @@ namespace MPF.Windows
         {
             SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
             MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
-            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
             DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            AddPathEventHandlers();
         }
 
         /// <summary>
@@ -221,10 +220,27 @@ namespace MPF.Windows
         {
             SystemTypeComboBox.SelectionChanged -= SystemTypeComboBoxSelectionChanged;
             MediaTypeComboBox.SelectionChanged -= MediaTypeComboBoxSelectionChanged;
-            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
-            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
             DriveLetterComboBox.SelectionChanged -= DriveLetterComboBoxSelectionChanged;
             DriveSpeedComboBox.SelectionChanged -= DriveSpeedComboBoxSelectionChanged;
+            RemovePathEventHandlers();
+        }
+
+        /// <summary>
+        /// Add path textbox event handlers
+        /// </summary>
+        private void AddPathEventHandlers()
+        {
+            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
+            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
+        }
+
+        /// <summary>
+        /// Remove path textbox event handlers
+        /// </summary>
+        private void RemovePathEventHandlers()
+        {
+            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
+            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
         }
 
         /// <summary>
@@ -352,14 +368,17 @@ namespace MPF.Windows
                 ParametersTextBox.Text);
 
             // Disable automatic reprocessing of the textboxes until we're done
-            OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
-            OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
+            RemovePathEventHandlers();
 
             OutputDirectoryTextBox.Text = env.OutputDirectory;
-            OutputFilenameTextBox.Text = env.OutputFilename;
+            OutputDirectoryTextBox.SelectionStart = OutputDirectoryTextBox.Text.Length;
+            OutputDirectoryTextBox.SelectionLength = 0;
 
-            OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
-            OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
+            OutputFilenameTextBox.Text = env.OutputFilename;
+            OutputFilenameTextBox.SelectionStart = OutputFilenameTextBox.Text.Length;
+            OutputFilenameTextBox.SelectionLength = 0;
+
+            AddPathEventHandlers();
 
             return env;
         }
@@ -426,6 +445,9 @@ namespace MPF.Windows
             // Get the extension for the file for the next two statements
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
+            // Disable automatic reprocessing of the textboxes until we're done
+            RemovePathEventHandlers();
+
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
                 OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
@@ -437,6 +459,14 @@ namespace MPF.Windows
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
                 OutputDirectoryTextBox.Text = Path.Combine(Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) ?? string.Empty);
+
+            OutputDirectoryTextBox.SelectionStart = OutputDirectoryTextBox.Text.Length;
+            OutputDirectoryTextBox.SelectionLength = 0;
+
+            OutputFilenameTextBox.SelectionStart = OutputFilenameTextBox.Text.Length;
+            OutputFilenameTextBox.SelectionLength = 0;
+
+            AddPathEventHandlers();
         }
 
         /// <summary>
@@ -476,6 +506,9 @@ namespace MPF.Windows
             else
                 Env.Parameters.Speed = DriveSpeedComboBox.SelectedValue as int?;
 
+            // Disable automatic reprocessing of the textboxes until we're done
+            RemovePathEventHandlers();
+
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
@@ -488,6 +521,14 @@ namespace MPF.Windows
                 OutputFilenameTextBox.Text = outputFilename;
             else
                 outputFilename = OutputFilenameTextBox.Text;
+
+            OutputDirectoryTextBox.SelectionStart = OutputDirectoryTextBox.Text.Length;
+            OutputDirectoryTextBox.SelectionLength = 0;
+
+            OutputFilenameTextBox.SelectionStart = OutputFilenameTextBox.Text.Length;
+            OutputFilenameTextBox.SelectionLength = 0;
+
+            AddPathEventHandlers();
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);

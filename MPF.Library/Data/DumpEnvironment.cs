@@ -246,7 +246,6 @@ namespace MPF.Data
                 // Cache if we had a directory separator or not
                 bool endedWithDirectorySeparator = directory.EndsWith(Path.DirectorySeparatorChar.ToString())
                     || directory.EndsWith(Path.AltDirectorySeparatorChar.ToString());
-                bool endedWithSpace = directory.EndsWith(" ");
 
                 // Combine the path to make things separate easier
                 string combinedPath = Path.Combine(directory, filename);
@@ -270,10 +269,6 @@ namespace MPF.Data
                     filename = filename.Replace(c, '_');
                 if (replacePeriods)
                     filename = Path.GetFileNameWithoutExtension(filename).Replace('.', '_') + "." + Path.GetExtension(filename).TrimStart('.');
-
-                // If we had a space at the end before, add it again
-                if (endedWithSpace)
-                    directory += " ";
 
                 // If we had a directory separator at the end before, add it again
                 if (endedWithDirectorySeparator)
