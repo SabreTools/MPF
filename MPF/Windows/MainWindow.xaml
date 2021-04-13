@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="MPF" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height">
+        Title="Media Preservation Frontend" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height">
 
     <Grid>
         <StackPanel Orientation="Vertical">
