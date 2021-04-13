@@ -49,6 +49,7 @@
 - Add ring code guide button to disc submission window
 - Update to BurnOutSharp 1.6.0
 - Fix "rewinding" issue when inputting output paths with spaces
+- Add version to About box
 
 ### 1.18 (2020-11-10)
 - Add more information extraction and generation for Aaru
