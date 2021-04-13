@@ -83,7 +83,8 @@ namespace MPF.Utilities
         public static (bool different, string message, string url) CheckForNewVersion()
         {
             // Get current assembly version
-            string version = GetCurrentVersion();
+            var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
+            string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
 
             // Get the latest tag from GitHub
             using (var client = new RedumpWebClient())
@@ -102,12 +103,12 @@ namespace MPF.Utilities
         }
 
         /// <summary>
-        /// Get the current assembly version formatted as a string
+        /// Get the current informational version formatted as a string
         /// </summary>
-        private static string GetCurrentVersion()
+        public static string GetCurrentVersion()
         {
-            var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
-            return $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
+            var assemblyVersion = Attribute.GetCustomAttribute(Assembly.GetEntryAssembly(), typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
+            return assemblyVersion.InformationalVersion;
         }
 
         #endregion

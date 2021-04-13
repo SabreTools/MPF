@@ -9,11 +9,17 @@
     <Copyright>Copyright (c)2019-2021</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <Version>1.18</Version>
-    <AssemblyVersion>1.18</AssemblyVersion>
-    <FileVersion>1.18</FileVersion>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NrtRevisionFormat>$(Version)-{chash:8}</NrtRevisionFormat>
+    <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
+    <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
@@ -73,6 +79,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.Management" Version="6.0.0-preview.3.21201.4" />
+    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.0" />
   </ItemGroup>
   
   <ItemGroup>

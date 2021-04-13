@@ -820,7 +820,9 @@ namespace MPF.Windows
                 + $"{Environment.NewLine}Supports DiscImageCreator, Aaru, and DD for Windows."
                 + $"{Environment.NewLine}Originally created to help the Redump project."
                 + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Thanks to everyone who has supported this project!";
+                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
 
             LogOutput.SecretLogLn(aboutText);
             MessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);

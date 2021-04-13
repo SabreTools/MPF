@@ -14,10 +14,16 @@
     <Copyright>Copyright (c)2019-2021</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <Version>1.18</Version>
-    <AssemblyVersion>1.18</AssemblyVersion>
-    <FileVersion>1.18</FileVersion>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NrtRevisionFormat>$(Version)-{chash:8}</NrtRevisionFormat>
+    <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
+    <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +31,7 @@
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0-preview.3.21201.4" />
+    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.0" />
   </ItemGroup>
 
   <ItemGroup>
