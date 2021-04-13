@@ -370,14 +370,21 @@ namespace MPF.Windows
             // Disable automatic reprocessing of the textboxes until we're done
             RemovePathEventHandlers();
 
-            OutputDirectoryTextBox.Text = env.OutputDirectory;
-            OutputDirectoryTextBox.SelectionStart = OutputDirectoryTextBox.Text.Length;
-            OutputDirectoryTextBox.SelectionLength = 0;
+            // Save the current cursor positions
+            int outputDirectorySelectionStart = OutputDirectoryTextBox.SelectionStart;
+            int outputFilenameSelectionStart = OutputFilenameTextBox.SelectionStart;
 
+            // Set the new text
+            OutputDirectoryTextBox.Text = env.OutputDirectory;
             OutputFilenameTextBox.Text = env.OutputFilename;
-            OutputFilenameTextBox.SelectionStart = OutputFilenameTextBox.Text.Length;
+
+            // Set the cursor position back to where it was
+            OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
+            OutputDirectoryTextBox.SelectionLength = 0;
+            OutputFilenameTextBox.SelectionStart = outputFilenameSelectionStart;
             OutputFilenameTextBox.SelectionLength = 0;
 
+            // Re-enable automatic reprocessing of textboxes
             AddPathEventHandlers();
 
             return env;
@@ -448,6 +455,10 @@ namespace MPF.Windows
             // Disable automatic reprocessing of the textboxes until we're done
             RemovePathEventHandlers();
 
+            // Save the current cursor positions
+            int outputDirectorySelectionStart = OutputDirectoryTextBox.SelectionStart;
+            int outputFilenameSelectionStart = OutputFilenameTextBox.SelectionStart;
+
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(OutputFilenameTextBox.Text))
                 OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
@@ -460,12 +471,13 @@ namespace MPF.Windows
             if (driveChanged || string.IsNullOrEmpty(OutputDirectoryTextBox.Text))
                 OutputDirectoryTextBox.Text = Path.Combine(Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(OutputFilenameTextBox.Text) ?? string.Empty);
 
-            OutputDirectoryTextBox.SelectionStart = OutputDirectoryTextBox.Text.Length;
+            // Set the cursor position back to where it was
+            OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
             OutputDirectoryTextBox.SelectionLength = 0;
-
-            OutputFilenameTextBox.SelectionStart = OutputFilenameTextBox.Text.Length;
+            OutputFilenameTextBox.SelectionStart = outputFilenameSelectionStart;
             OutputFilenameTextBox.SelectionLength = 0;
 
+            // Re-enable automatic reprocessing of textboxes
             AddPathEventHandlers();
         }
 
@@ -509,6 +521,10 @@ namespace MPF.Windows
             // Disable automatic reprocessing of the textboxes until we're done
             RemovePathEventHandlers();
 
+            // Save the current cursor positions
+            int outputDirectorySelectionStart = OutputDirectoryTextBox.SelectionStart;
+            int outputFilenameSelectionStart = OutputFilenameTextBox.SelectionStart;
+
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
@@ -522,12 +538,13 @@ namespace MPF.Windows
             else
                 outputFilename = OutputFilenameTextBox.Text;
 
-            OutputDirectoryTextBox.SelectionStart = OutputDirectoryTextBox.Text.Length;
+            // Set the cursor position back to where it was
+            OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
             OutputDirectoryTextBox.SelectionLength = 0;
-
-            OutputFilenameTextBox.SelectionStart = OutputFilenameTextBox.Text.Length;
+            OutputFilenameTextBox.SelectionStart = outputFilenameSelectionStart;
             OutputFilenameTextBox.SelectionLength = 0;
 
+            // Re-enable automatic reprocessing of textboxes
             AddPathEventHandlers();
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
