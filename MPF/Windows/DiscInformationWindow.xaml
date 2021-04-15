@@ -74,8 +74,8 @@
 
                                 <controls:UserInput x:Name="Serial" Label="Serial"/>
                                 <controls:UserInput x:Name="Barcode" Label="Barcode"/>
-                                <controls:UserInput x:Name="Comments" Label="Comments" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
-                                <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap"/>
+                                <controls:UserInput x:Name="Comments" Label="Comments" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
+                                <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">

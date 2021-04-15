@@ -14,6 +14,7 @@ namespace MPF.UserControls
         public bool Tab { get; set; } = false;
         public bool Enter { get; set; } = false;
         public TextWrapping TextWrapping { get; set; } = TextWrapping.NoWrap;
+        public VerticalAlignment VerticalContentAlignmentValue { get; set; } = VerticalAlignment.Center;
         public ScrollBarVisibility ScrollBarVisibility { get; set; } = ScrollBarVisibility.Auto;
 
         public UserInput()
