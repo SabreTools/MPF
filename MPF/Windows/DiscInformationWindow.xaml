@@ -127,8 +127,8 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
-                    <Button Name="AcceptButton" Grid.Column="0" Height="25" Width="120" Content="Accept" Click="OnAcceptClick" />
-                    <Button Name="CancelButton" Grid.Column="1" Height="25" Width="120" Content="Cancel" Click="OnCancelClick" />
+                    <Button Name="AcceptButton" Grid.Column="0" Height="25" Width="120" IsDefault="True" Content="Accept" Click="OnAcceptClick" />
+                    <Button Name="CancelButton" Grid.Column="1" Height="25" Width="120" IsCancel="True" Content="Cancel" Click="OnCancelClick" />
                     <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide" Click="OnRingCodeGuideClick" />
                 </UniformGrid>
             </GroupBox>

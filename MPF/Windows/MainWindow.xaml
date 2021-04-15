@@ -81,7 +81,7 @@
 
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Controls">
                 <UniformGrid Columns="3" Margin="5,5,5,5">
-                    <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Start Dumping" Click="StartStopButtonClick" IsEnabled="False" />
+                    <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True" Content="Start Dumping" Click="StartStopButtonClick" IsEnabled="False" />
                     <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="MediaScanButtonClick" />
                     <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for protection" Click="CopyProtectScanButtonClick" />
                 </UniformGrid>
