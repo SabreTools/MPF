@@ -1433,14 +1433,14 @@ namespace MPF.DiscImageCreator
                             break;
                         case KnownSystem.HasbroVideoNow:
                         case KnownSystem.HasbroVideoNowJr:
-                            this[Flag.VideoNow] = true;
-                            this.VideoNowValue = 18032;
+                            //this[Flag.VideoNow] = true;
+                            //this.VideoNowValue = 18032;
                             break;
                         case KnownSystem.HasbroVideoNowColor:
-                            this[Flag.VideoNowColor] = true;
+                            //this[Flag.VideoNowColor] = true;
                             break;
                         case KnownSystem.HasbroVideoNowXP:
-                            this[Flag.VideoNowXP] = true;
+                            //this[Flag.VideoNowXP] = true;
                             break;
                         case KnownSystem.SonyPlayStation:
                             this[Flag.ScanAntiMod] = true;
