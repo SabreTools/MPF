@@ -1432,15 +1432,11 @@ namespace MPF.DiscImageCreator
                             this[Flag.AtariJaguar] = true;
                             break;
                         case KnownSystem.HasbroVideoNow:
-                        case KnownSystem.HasbroVideoNowJr:
-                            //this[Flag.VideoNow] = true;
-                            //this.VideoNowValue = 18032;
-                            break;
                         case KnownSystem.HasbroVideoNowColor:
-                            //this[Flag.VideoNowColor] = true;
-                            break;
+                        case KnownSystem.HasbroVideoNowJr:
                         case KnownSystem.HasbroVideoNowXP:
-                            //this[Flag.VideoNowXP] = true;
+                            this[Flag.AddOffset] = true;
+                            this.AddOffsetValue = 18032;
                             break;
                         case KnownSystem.SonyPlayStation:
                             this[Flag.ScanAntiMod] = true;
@@ -2335,6 +2331,10 @@ namespace MPF.DiscImageCreator
             var commands = new List<Command>();
             switch (flag)
             {
+                case Flag.AddOffset:
+                    commands.Add(Command.CompactDisc);
+                    commands.Add(Command.Swap);
+                    break;
                 case Flag.AMSF:
                     commands.Add(Command.CompactDisc);
                     break;
