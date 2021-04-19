@@ -15,7 +15,7 @@ namespace MPF.DD
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override string InputPath => InputFileValue;
+        public override string InputPath => InputFileValue?.TrimStart('\\', '?');
 
         /// <inheritdoc/>
         public override string OutputPath => OutputFileValue;
@@ -135,6 +135,9 @@ namespace MPF.DD
         {
             List<string> parameters = new List<string>();
 
+            if (BaseCommand == null)
+                BaseCommand = CommandStrings.NONE;
+
             if (!string.IsNullOrEmpty(BaseCommand))
                 parameters.Add(BaseCommand);
 
@@ -144,14 +147,14 @@ namespace MPF.DD
             if (IsFlagSupported(FlagStrings.Progress))
             {
                 if (this[FlagStrings.Progress] == true)
-                    parameters.Add($"{this[FlagStrings.Progress]}");
+                    parameters.Add($"{FlagStrings.Progress}");
             }
 
             // Size
             if (IsFlagSupported(FlagStrings.Size))
             {
                 if (this[FlagStrings.Size] == true)
-                    parameters.Add($"{this[FlagStrings.Size]}");
+                    parameters.Add($"{FlagStrings.Size}");
             }
 
             #endregion
@@ -201,7 +204,7 @@ namespace MPF.DD
             if (IsFlagSupported(FlagStrings.InputFile))
             {
                 if (this[FlagStrings.InputFile] == true && InputFileValue != null)
-                    parameters.Add($"{FlagStrings.InputFile}={InputFileValue}");
+                    parameters.Add($"{FlagStrings.InputFile}=\"{InputFileValue}\"");
                 else
                     return null;
             }
@@ -210,14 +213,14 @@ namespace MPF.DD
             if (IsFlagSupported(FlagStrings.OutputFile))
             {
                 if (this[FlagStrings.OutputFile] == true && OutputFileValue != null)
-                    parameters.Add($"{FlagStrings.OutputFile}={OutputFileValue}");
+                    parameters.Add($"{FlagStrings.OutputFile}=\"{OutputFileValue}\"");
                 else
                     return null;
             }
 
             #endregion
 
-            return string.Empty;
+            return string.Join(" ", parameters);
         }
 
         /// <inheritdoc/>
@@ -225,7 +228,7 @@ namespace MPF.DD
         {
             return new Dictionary<string, List<string>>()
             {
-                [null] = new List<string>()
+                [CommandStrings.NONE] = new List<string>()
                 {
                     FlagStrings.BlockSize,
                     FlagStrings.Count,
@@ -262,7 +265,7 @@ namespace MPF.DD
         /// <inheritdoc/>
         protected override void ResetValues()
         {
-            BaseCommand = null;
+            BaseCommand = CommandStrings.NONE;
 
             flags = new Dictionary<string, bool?>();
 
@@ -277,7 +280,7 @@ namespace MPF.DD
         /// <inheritdoc/>
         protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
         {
-            BaseCommand = null;
+            BaseCommand = CommandStrings.NONE;
 
             this[FlagStrings.InputFile] = true;
             InputFileValue = $"\\\\?\\{driveLetter}:";
@@ -305,6 +308,8 @@ namespace MPF.DD
         /// <inheritdoc/>
         protected override bool ValidateAndSetParameters(string parameters)
         {
+            BaseCommand = CommandStrings.NONE;
+
             // The string has to be valid by itself first
             if (string.IsNullOrWhiteSpace(parameters))
                 return false;
@@ -326,8 +331,7 @@ namespace MPF.DD
             }
 
             // Loop through all auxilary flags, if necessary
-            int i = 0;
-            for (i = start; i < parts.Count; i++)
+            for (int i = start; i < parts.Count; i++)
             {
                 // Flag read-out values
                 long? longValue = null;
@@ -350,30 +354,22 @@ namespace MPF.DD
 
                 // Block Size
                 longValue = ProcessInt64Parameter(parts, FlagStrings.BlockSize, ref i);
-                if (longValue == Int64.MinValue)
-                    return false;
-                else if (longValue != null)
+                if (longValue != null)
                     BlockSizeValue = longValue;
 
                 // Count
                 longValue = ProcessInt64Parameter(parts, FlagStrings.Count, ref i);
-                if (longValue == Int64.MinValue)
-                    return false;
-                else if (longValue != null)
+                if (longValue != null)
                     CountValue = longValue;
 
                 // Seek
                 longValue = ProcessInt64Parameter(parts, FlagStrings.Seek, ref i);
-                if (longValue == Int64.MinValue)
-                    return false;
-                else if (longValue != null)
+                if (longValue != null)
                     SeekValue = longValue;
 
                 // Skip
                 longValue = ProcessInt64Parameter(parts, FlagStrings.Skip, ref i);
-                if (longValue == Int64.MinValue)
-                    return false;
-                else if (longValue != null)
+                if (longValue != null)
                     SkipValue = longValue;
 
                 #endregion
@@ -387,16 +383,12 @@ namespace MPF.DD
 
                 // Input File
                 stringValue = ProcessStringParameter(parts, FlagStrings.InputFile, ref i);
-                if (string.Equals(stringValue, string.Empty))
-                    return false;
-                else if (stringValue != null)
+                if (!string.IsNullOrEmpty(stringValue))
                     InputFileValue = stringValue;
 
                 // Output File
                 stringValue = ProcessStringParameter(parts, FlagStrings.OutputFile, ref i);
-                if (string.Equals(stringValue, string.Empty))
-                    return false;
-                else if (stringValue != null)
+                if (!string.IsNullOrEmpty(stringValue))
                     OutputFileValue = stringValue;
 
                 #endregion
@@ -416,7 +408,7 @@ namespace MPF.DD
         /// <param name="flagString">Flag string to check</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
-        private new long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i)
+        private long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i)
         {
             if (parts == null)
                 return null;

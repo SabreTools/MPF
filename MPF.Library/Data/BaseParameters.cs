@@ -215,6 +215,8 @@ namespace MPF.Data
         {
             if (CommandSupport == null)
                 return false;
+            if (this.BaseCommand == null)
+                return false;
             if (!CommandSupport.ContainsKey(this.BaseCommand))
                 return false;
             return CommandSupport[this.BaseCommand].Contains(flag);

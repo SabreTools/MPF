@@ -5,6 +5,7 @@ namespace MPF.DiscImageCreator
     /// </summary>
     public static class CommandStrings
     {
+        public const string NONE = "";
         public const string Audio = "audio";
         public const string BluRay = "bd";
         public const string Close = "close";

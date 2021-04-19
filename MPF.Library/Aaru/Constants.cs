@@ -5,6 +5,8 @@ namespace MPF.Aaru
     /// </summary>
     public static class CommandStrings
     {
+        public const string NONE = "";
+
         // Database Family
         public const string DatabasePrefixShort = "db";
         public const string DatabasePrefixLong = "database";

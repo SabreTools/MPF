@@ -383,6 +383,9 @@ namespace MPF.Aaru
 
             #endregion
 
+            if (BaseCommand == null)
+                BaseCommand = CommandStrings.NONE;
+
             if (!string.IsNullOrWhiteSpace(BaseCommand))
                 parameters.Add(BaseCommand);
             else
@@ -1625,7 +1628,7 @@ namespace MPF.Aaru
 
                 #region Standalone Commands
 
-                [null] = new List<string>()
+                [CommandStrings.NONE] = new List<string>()
                 {
                     FlagStrings.DebugLong,
                     FlagStrings.DebugShort,
@@ -1722,7 +1725,7 @@ namespace MPF.Aaru
         /// <inheritdoc/>
         protected override void ResetValues()
         {
-            BaseCommand = null;
+            BaseCommand = CommandStrings.NONE;
 
             flags = new Dictionary<string, bool?>();
 
@@ -1769,7 +1772,7 @@ namespace MPF.Aaru
         /// <inheritdoc/>
         protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
         {
-            BaseCommand = CommandStrings.MediaDump;
+            BaseCommand = $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}";
 
             InputValue = $"\\\\?\\{driveLetter}:";
             OutputValue = filename;
@@ -1839,6 +1842,8 @@ namespace MPF.Aaru
         /// <inheritdoc/>
         protected override bool ValidateAndSetParameters(string parameters)
         {
+            BaseCommand = CommandStrings.NONE;
+
             // The string has to be valid by itself first
             if (string.IsNullOrWhiteSpace(parameters))
                 return false;
@@ -1876,8 +1881,12 @@ namespace MPF.Aaru
                     break;
             }
 
+            // If the required starting index doesn't exist, we can't do anything
+            if (!DoesExist(parts, start))
+                return false;
+
             // Determine what the commandline should look like given the first item
-            Command command = Converters.StringToCommand(parts[start], parts.Count > start ? parts[start + 1] : null, out bool useSecond);
+            Command command = Converters.StringToCommand(parts[start], parts.Count > start + 1 ? parts[start + 1] : null, out bool useSecond);
             if (command == Command.NONE)
                 return false;
 

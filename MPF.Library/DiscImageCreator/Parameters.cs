@@ -740,6 +740,9 @@ namespace MPF.DiscImageCreator
         {
             List<string> parameters = new List<string>();
 
+            if (BaseCommand == null)
+                BaseCommand = CommandStrings.NONE;
+
             if (!string.IsNullOrWhiteSpace(BaseCommand))
                 parameters.Add(BaseCommand);
             else
@@ -1545,7 +1548,7 @@ namespace MPF.DiscImageCreator
         /// <inheritdoc/>
         protected override void ResetValues()
         {
-            BaseCommand = null;
+            BaseCommand = CommandStrings.NONE;
 
             DriveLetter = null;
             DriveSpeed = null;
@@ -1666,6 +1669,8 @@ namespace MPF.DiscImageCreator
         /// <inheritdoc/>
         protected override bool ValidateAndSetParameters(string parameters)
         {
+            BaseCommand = CommandStrings.NONE;
+
             // The string has to be valid by itself first
             if (string.IsNullOrWhiteSpace(parameters))
                 return false;
