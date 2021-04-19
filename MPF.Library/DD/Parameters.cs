@@ -339,10 +339,10 @@ namespace MPF.DD
                 #region Boolean flags
 
                 // Progress
-                ProcessBooleanParameter(parts, FlagStrings.Progress, ref i);
+                ProcessFlagParameter(parts, FlagStrings.Progress, ref i);
 
                 // Size
-                ProcessBooleanParameter(parts, FlagStrings.Size, ref i);
+                ProcessFlagParameter(parts, FlagStrings.Size, ref i);
 
                 #endregion
 
@@ -410,36 +410,13 @@ namespace MPF.DD
         #region Process Parameter Helpers
 
         /// <summary>
-        /// Process a boolean parameter
-        /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
-        /// <param name="flagString">Flag string to check</param>
-        /// <param name="i">Reference to the position in the parts</param>
-        /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
-        private bool ProcessBooleanParameter(List<string> parts, string flagString, ref int i)
-        {
-            if (parts == null)
-                return false;
-
-            if (parts[i] == flagString)
-            {
-                if (!IsFlagSupported(flagString))
-                    return false;
-
-                this[flagString] = true;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Process an Int64 parameter
         /// </summary>
         /// <param name="parts">List of parts to be referenced</param>
         /// <param name="flagString">Flag string to check</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
-        private long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i)
+        private new long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i)
         {
             if (parts == null)
                 return null;
@@ -513,36 +490,6 @@ namespace MPF.DD
             }
 
             return Int64.MinValue;
-        }
-
-        /// <summary>
-        /// Process a string parameter
-        /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
-        /// <param name="flagString">Flag string to check</param>
-        /// <param name="i">Reference to the position in the parts</param>
-        /// <returns>String value if possible, string.Empty on missing, null on error</returns>
-        private string ProcessStringParameter(List<string> parts, string flagString, ref int i)
-        {
-            if (parts == null)
-                return null;
-
-            if (parts[i] == flagString)
-            {
-                if (!IsFlagSupported(flagString))
-                    return null;
-
-                string[] commandParts = parts[i].Split('=');
-                if (commandParts.Length != 2)
-                    return null;
-
-                string valuePart = commandParts[1];
-
-                this[flagString] = true;
-                return valuePart.Trim('"');
-            }
-
-            return string.Empty;
         }
 
         #endregion

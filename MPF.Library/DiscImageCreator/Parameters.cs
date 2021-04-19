@@ -1686,27 +1686,30 @@ namespace MPF.DiscImageCreator
             switch (BaseCommand)
             {
                 case CommandStrings.Audio:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 6)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    if (!DoesExist(parts, 4) || !IsValidInt32(parts[4], lowerBound: 0))
+                    if (!IsValidInt32(parts[4], lowerBound: 0))
                         return false;
                     else
                         StartLBAValue = Int32.Parse(parts[4]);
 
-                    if (!DoesExist(parts, 5) || !IsValidInt32(parts[5], lowerBound: 0))
+                    if (!IsValidInt32(parts[5], lowerBound: 0))
                         return false;
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
@@ -1715,17 +1718,20 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.BluRay:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -1734,28 +1740,31 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.Close:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.CompactDisc:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -1764,27 +1773,30 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.Data:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 6)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    if (!DoesExist(parts, 4) || !IsValidInt32(parts[4], lowerBound: 0))
+                    if (!IsValidInt32(parts[4], lowerBound: 0))
                         return false;
                     else
                         StartLBAValue = Int32.Parse(parts[4]);
 
-                    if (!DoesExist(parts, 5) || !IsValidInt32(parts[5], lowerBound: 0))
+                    if (!IsValidInt32(parts[5], lowerBound: 0))
                         return false;
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
@@ -1793,17 +1805,20 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.DigitalVideoDisc:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 24)) // Officially 0-16
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 24)) // Officially 0-16
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -1812,71 +1827,74 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.Disk:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 3)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
-
-                    if (parts.Count > 3)
-                        return false;
 
                     break;
 
                 case CommandStrings.DriveSpeed:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.Eject:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.Floppy:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 3)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
-
-                    if (parts.Count > 3)
-                        return false;
 
                     break;
 
                 case CommandStrings.GDROM:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -1885,55 +1903,58 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.MDS:
-                    if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.Merge:
-                    if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (parts.Count != 3)
+                        return false;
+
+                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]) || !File.Exists(parts[2]))
+                    if (IsFlag(parts[2]) || !File.Exists(parts[2]))
                         return false;
                     else
                         OptiarcFilename = parts[2];
 
-                    if (parts.Count > 3)
-                        return false;
-
                     break;
 
                 case CommandStrings.Reset:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.SACD:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 16))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 16))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -1942,50 +1963,53 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.Start:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.Stop:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
-
-                    if (parts.Count > 2)
-                        return false;
 
                     break;
 
                 case CommandStrings.Sub:
-                    if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
 
-                    if (parts.Count > 2)
-                        return false;
-
                     break;
 
                 case CommandStrings.Swap:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -1994,28 +2018,31 @@ namespace MPF.DiscImageCreator
                     break;
 
                 case CommandStrings.Tape:
-                    if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (parts.Count != 2)
+                        return false;
+
+                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
 
-                    if (parts.Count > 2)
-                        return false;
-
                     break;
 
                 case CommandStrings.XBOX:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -2026,17 +2053,20 @@ namespace MPF.DiscImageCreator
                 case CommandStrings.XBOXSwap:
                 case CommandStrings.XGD2Swap:
                 case CommandStrings.XGD3Swap:
-                    if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
+                    if (parts.Count < 4)
+                        return false;
+
+                    if (!IsValidDriveLetter(parts[1]))
                         return false;
                     else
                         DriveLetter = parts[1];
 
-                    if (!DoesExist(parts, 2) || IsFlag(parts[2]))
+                    if (IsFlag(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
 
-                    if (!DoesExist(parts, 3) || !IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
+                    if (!IsValidInt32(parts[3], lowerBound: 0, upperBound: 72))
                         return false;
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
@@ -2057,448 +2087,197 @@ namespace MPF.DiscImageCreator
             {
                 for (int i = index; i < parts.Count; i++)
                 {
-                    switch (parts[i])
+                    // Flag read-out values
+                    int? intValue = null;
+                    string stringValue = null;
+
+                    // Add Offset
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.AddOffset, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue)
+                        AddOffsetValue = intValue;
+
+                    // AMSF
+                    ProcessFlagParameter(parts, FlagStrings.AMSF, ref i);
+
+                    // Atari Jaguar
+                    ProcessFlagParameter(parts, FlagStrings.AtariJaguar, ref i);
+
+                    // BE Opcode
+                    stringValue = ProcessStringParameter(parts, FlagStrings.BEOpcode, ref i);
+                    if (!string.IsNullOrEmpty(stringValue))
                     {
-                        case FlagStrings.AddOffset:
-                            if (!IsFlagSupported(FlagStrings.AddOffset))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.AddOffset] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.AddOffset] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1]))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.AddOffset] = true;
-                            AddOffsetValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.AMSF:
-                            if (!IsFlagSupported(FlagStrings.AMSF))
-                                return false;
-
-                            this[FlagStrings.AMSF] = true;
-                            break;
-
-                        case FlagStrings.AtariJaguar:
-                            if (!IsFlagSupported(FlagStrings.AtariJaguar))
-                                return false;
-
-                            this[FlagStrings.AtariJaguar] = true;
-                            break;
-
-                        case FlagStrings.BEOpcode:
-                            if (!IsFlagSupported(FlagStrings.BEOpcode))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.BEOpcode] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.BEOpcode] = true;
-                                break;
-                            }
-                            else if (!string.Equals(parts[i + 1], "raw", StringComparison.OrdinalIgnoreCase)
-                                && !string.Equals(parts[i + 1], "pack", StringComparison.OrdinalIgnoreCase))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.BEOpcode] = true;
-                            BEOpcodeValue = parts[i + 1].ToLowerInvariant();
-                            i++;
-                            break;
-
-                        case FlagStrings.C2Opcode:
-                            if (!IsFlagSupported(FlagStrings.C2Opcode))
-                                return false;
-
-                            this[FlagStrings.C2Opcode] = true;
-                            for (int j = 0; j < 4; j++)
-                            {
-                                if (!DoesExist(parts, i + 1))
-                                {
-                                    break;
-                                }
-                                else if (IsFlag(parts[i + 1]))
-                                {
-                                    break;
-                                }
-                                else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                                {
-                                    return false;
-                                }
-                                else
-                                {
-                                    C2OpcodeValue[j] = Int32.Parse(parts[i + 1]);
-                                    i++;
-                                }
-                            }
-
-                            break;
-
-                        case FlagStrings.CopyrightManagementInformation:
-                            if (!IsFlagSupported(FlagStrings.CopyrightManagementInformation))
-                                return false;
-
-                            this[FlagStrings.CopyrightManagementInformation] = true;
-                            break;
-
-                        case FlagStrings.D8Opcode:
-                            if (!IsFlagSupported(FlagStrings.D8Opcode))
-                                return false;
-
-                            this[FlagStrings.D8Opcode] = true;
-                            break;
-
-                        case FlagStrings.DisableBeep:
-                            if (!IsFlagSupported(FlagStrings.DisableBeep))
-                                return false;
-
-                            this[FlagStrings.DisableBeep] = true;
-                            break;
-
-                        case FlagStrings.ExtractMicroSoftCabFile:
-                            if (!IsFlagSupported(FlagStrings.ExtractMicroSoftCabFile))
-                                return false;
-
-                            this[FlagStrings.ExtractMicroSoftCabFile] = true;
-                            break;
-
-                        case FlagStrings.Fix:
-                            if (!IsFlagSupported(FlagStrings.Fix))
-                                return false;
-                            else if (!DoesExist(parts, i + 1))
-                                return false;
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                                return false;
-
-                            this[FlagStrings.Fix] = true;
-                            FixValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.ForceUnitAccess:
-                            if (!IsFlagSupported(FlagStrings.ForceUnitAccess))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.ForceUnitAccess] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.ForceUnitAccess] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.ForceUnitAccess] = true;
-                            ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.MultiSectorRead:
-                            if (!IsFlagSupported(FlagStrings.MultiSectorRead))
-                                return false;
-
-                            this[FlagStrings.MultiSectorRead] = true;
-                            break;
-
-                        case FlagStrings.MultiSession:
-                            if (!IsFlagSupported(FlagStrings.MultiSession))
-                                return false;
-
-                            this[FlagStrings.MultiSession] = true;
-                            break;
-
-                        case FlagStrings.NoFixSubP:
-                            if (!IsFlagSupported(FlagStrings.NoFixSubP))
-                                return false;
-
-                            this[FlagStrings.NoFixSubP] = true;
-                            break;
-
-                        case FlagStrings.NoFixSubQ:
-                            if (!IsFlagSupported(FlagStrings.NoFixSubQ))
-                                return false;
-
-                            this[FlagStrings.NoFixSubQ] = true;
-                            break;
-
-                        case FlagStrings.NoFixSubQLibCrypt:
-                            if (!IsFlagSupported(FlagStrings.NoFixSubQLibCrypt))
-                                return false;
-
-                            this[FlagStrings.NoFixSubQLibCrypt] = true;
-                            break;
-
-                        case FlagStrings.NoFixSubQSecuROM:
-                            if (!IsFlagSupported(FlagStrings.NoFixSubQSecuROM))
-                                return false;
-
-                            this[FlagStrings.NoFixSubQSecuROM] = true;
-                            break;
-
-                        case FlagStrings.NoFixSubRtoW:
-                            if (!IsFlagSupported(FlagStrings.NoFixSubRtoW))
-                                return false;
-
-                            this[FlagStrings.NoFixSubRtoW] = true;
-                            break;
-
-                        case FlagStrings.NoSkipSS:
-                            if (!IsFlagSupported(FlagStrings.NoSkipSS))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.NoSkipSS] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.NoSkipSS] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.NoSkipSS] = true;
-                            NoSkipSecuritySectorValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.PadSector:
-                            if (!IsFlagSupported(FlagStrings.PadSector))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.PadSector] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.PadSector] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0, upperBound: 1))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.PadSector] = true;
-                            PadSectorValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.Raw:
-                            if (!IsFlagSupported(FlagStrings.Raw))
-                                return false;
-
-                            this[FlagStrings.Raw] = true;
-                            break;
-
-                        case FlagStrings.Resume:
-                            if (!IsFlagSupported(FlagStrings.Resume))
-                                return false;
-
-                            this[FlagStrings.Resume] = true;
-                            break;
-
-                        case FlagStrings.Reverse:
-                            if (!IsFlagSupported(FlagStrings.Reverse))
-                                return false;
-
-                            // DVD specifically requires StartLBA and EndLBA
-                            if (BaseCommand == CommandStrings.DigitalVideoDisc)
-                            {
-                                if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
-                                    return false;
-                                else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
-                                    return false;
-
-                                ReverseStartLBAValue = Int32.Parse(parts[i + 1]);
-                                ReverseEndLBAValue = Int32.Parse(parts[i + 2]);
-                                i += 2;
-                            }
-
-                            this[FlagStrings.Reverse] = true;
-                            break;
-
-                        case FlagStrings.ScanAntiMod:
-                            if (!IsFlagSupported(FlagStrings.ScanAntiMod))
-                                return false;
-
-                            this[FlagStrings.ScanAntiMod] = true;
-                            break;
-
-                        case FlagStrings.ScanFileProtect:
-                            if (!IsFlagSupported(FlagStrings.ScanFileProtect))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.ScanFileProtect] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.ScanFileProtect] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.ScanFileProtect] = true;
-                            ScanFileProtectValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.ScanSectorProtect:
-                            if (!IsFlagSupported(FlagStrings.ScanSectorProtect))
-                                return false;
-
-                            this[FlagStrings.ScanSectorProtect] = true;
-                            break;
-
-                        case FlagStrings.SeventyFour:
-                            if (!IsFlagSupported(FlagStrings.SeventyFour))
-                                return false;
-
-                            this[FlagStrings.SeventyFour] = true;
-                            break;
-
-                        case FlagStrings.SkipSector:
-                            if (!IsFlagSupported(FlagStrings.SkipSector))
-                                return false;
-
-                            this[FlagStrings.SkipSector] = true;
-                            for (int j = 0; j < 2; j++)
-                            {
-                                if (!DoesExist(parts, i + 1))
-                                {
-                                    break;
-                                }
-                                else if (IsFlag(parts[i + 1]))
-                                {
-                                    break;
-                                }
-                                else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                                {
-                                    return false;
-                                }
-                                else
-                                {
-                                    SkipSectorValue[j] = Int32.Parse(parts[i + 1]);
-                                    i++;
-                                }
-                            }
-
-                            break;
-
-                        case FlagStrings.SubchannelReadLevel:
-                            if (!IsFlagSupported(FlagStrings.SubchannelReadLevel))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.SubchannelReadLevel] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.SubchannelReadLevel] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0, upperBound: 2))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.SubchannelReadLevel] = true;
-                            SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.UseAnchorVolumeDescriptorPointer:
-                            if (!IsFlagSupported(FlagStrings.UseAnchorVolumeDescriptorPointer))
-                                return false;
-
-                            this[FlagStrings.UseAnchorVolumeDescriptorPointer] = true;
-                            break;
-
-                        case FlagStrings.VideoNow:
-                            if (!IsFlagSupported(FlagStrings.VideoNow))
-                            {
-                                return false;
-                            }
-                            else if (!DoesExist(parts, i + 1))
-                            {
-                                this[FlagStrings.VideoNow] = true;
-                                break;
-                            }
-                            else if (IsFlag(parts[i + 1]))
-                            {
-                                this[FlagStrings.VideoNow] = true;
-                                break;
-                            }
-                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
-                            {
-                                return false;
-                            }
-
-                            this[FlagStrings.VideoNow] = true;
-                            VideoNowValue = Int32.Parse(parts[i + 1]);
-                            i++;
-                            break;
-
-                        case FlagStrings.VideoNowColor:
-                            if (!IsFlagSupported(FlagStrings.VideoNowColor))
-                                return false;
-
-                            this[FlagStrings.VideoNowColor] = true;
-                            break;
-
-                        case FlagStrings.VideoNowXP:
-                            if (!IsFlagSupported(FlagStrings.VideoNowXP))
-                                return false;
-
-                            this[FlagStrings.VideoNowXP] = true;
-                            break;
-
-                        default:
-                            return false;
+                        if (string.Equals(stringValue, "raw") || string.Equals(stringValue, "pack"))
+                            BEOpcodeValue = stringValue;
+                        else
+                            i--;
                     }
+
+                    // C2 Opcode
+                    if (parts[i] == FlagStrings.C2Opcode && IsFlagSupported(FlagStrings.C2Opcode))
+                    {
+                        this[FlagStrings.C2Opcode] = true;
+                        for (int j = 0; j < 4; j++)
+                        {
+                            if (!DoesExist(parts, i + 1))
+                            {
+                                break;
+                            }
+                            else if (IsFlag(parts[i + 1]))
+                            {
+                                break;
+                            }
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                            {
+                                return false;
+                            }
+                            else
+                            {
+                                C2OpcodeValue[j] = Int32.Parse(parts[i + 1]);
+                                i++;
+                            }
+                        }
+                    }
+
+                    // Copyright Management Information
+                    ProcessFlagParameter(parts, FlagStrings.CopyrightManagementInformation, ref i);
+
+                    // D8 Opcode
+                    ProcessFlagParameter(parts, FlagStrings.D8Opcode, ref i);
+
+                    // Disable Beep
+                    ProcessFlagParameter(parts, FlagStrings.DisableBeep, ref i);
+
+                    // Extract MS-CAB
+                    ProcessFlagParameter(parts, FlagStrings.ExtractMicroSoftCabFile, ref i);
+
+                    // Fix
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.Fix, ref i);
+                    if (intValue != null && intValue != Int32.MinValue)
+                        FixValue = intValue;
+
+                    // Force Unit Access
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.ForceUnitAccess, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                        ForceUnitAccessValue = intValue;
+
+                    // Multi-Sector Read
+                    ProcessFlagParameter(parts, FlagStrings.MultiSectorRead, ref i);
+
+                    // Multi-Session
+                    ProcessFlagParameter(parts, FlagStrings.MultiSession, ref i);
+
+                    // NoFixSubP
+                    ProcessFlagParameter(parts, FlagStrings.NoFixSubP, ref i);
+
+                    // NoFixSubQ
+                    ProcessFlagParameter(parts, FlagStrings.NoFixSubQ, ref i);
+
+                    // NoFixSubQLibCrypt
+                    ProcessFlagParameter(parts, FlagStrings.NoFixSubQLibCrypt, ref i);
+
+                    // NoFixSubQSecuROM
+                    ProcessFlagParameter(parts, FlagStrings.NoFixSubQSecuROM, ref i);
+
+                    // NoFixSubRtoW
+                    ProcessFlagParameter(parts, FlagStrings.NoFixSubRtoW, ref i);
+
+                    // NoSkipSS
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.NoSkipSS, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                        NoSkipSecuritySectorValue = intValue;
+
+                    // PadSector
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.PadSector, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                        PadSectorValue = intValue;
+
+                    // Raw
+                    ProcessFlagParameter(parts, FlagStrings.Raw, ref i);
+
+                    // Resume
+                    ProcessFlagParameter(parts, FlagStrings.Resume, ref i);
+
+                    // Reverse
+                    if (parts[i] == FlagStrings.Reverse && IsFlagSupported(FlagStrings.Reverse))
+                    {
+                        // DVD specifically requires StartLBA and EndLBA
+                        if (BaseCommand == CommandStrings.DigitalVideoDisc)
+                        {
+                            if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
+                                return false;
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0) || !IsValidInt32(parts[i + 2], lowerBound: 0))
+                                return false;
+
+                            ReverseStartLBAValue = Int32.Parse(parts[i + 1]);
+                            ReverseEndLBAValue = Int32.Parse(parts[i + 2]);
+                            i += 2;
+                        }
+
+                        this[FlagStrings.Reverse] = true;
+                    }
+
+                    // ScanAntiMod
+                    ProcessFlagParameter(parts, FlagStrings.ScanAntiMod, ref i);
+
+                    // ScanFileProtect
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.ScanFileProtect, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                        ScanFileProtectValue = intValue;
+
+                    // ScanSectorProtect
+                    ProcessFlagParameter(parts, FlagStrings.ScanSectorProtect, ref i);
+
+                    // SeventyFour
+                    ProcessFlagParameter(parts, FlagStrings.SeventyFour, ref i);
+
+                    // SkipSector
+                    if (parts[i] == FlagStrings.SkipSector && IsFlagSupported(FlagStrings.SkipSector))
+                    {
+                        bool stillValid = true;
+                        for (int j = 0; j < 2; j++)
+                        {
+                            if (!DoesExist(parts, i + 1))
+                            {
+                                break;
+                            }
+                            else if (IsFlag(parts[i + 1]))
+                            {
+                                break;
+                            }
+                            else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
+                            {
+                                stillValid = false;
+                                break;
+                            }
+                            else
+                            {
+                                SkipSectorValue[j] = Int32.Parse(parts[i + 1]);
+                                i++;
+                            }
+                        }
+
+                        if (stillValid)
+                            this[FlagStrings.SkipSector] = true;
+                    }
+
+                    // SubchannelReadLevel
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.SubchannelReadLevel, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0 && intValue <= 2)
+                        SubchannelReadLevelValue = intValue;
+
+                    // SeventyFour
+                    ProcessFlagParameter(parts, FlagStrings.UseAnchorVolumeDescriptorPointer, ref i);
+
+                    // VideoNow
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.VideoNow, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                        VideoNowValue = intValue;
+
+                    // VideoNowColor
+                    ProcessFlagParameter(parts, FlagStrings.VideoNowColor, ref i);
+
+                    // VideoNowXP
+                    ProcessFlagParameter(parts, FlagStrings.VideoNowXP, ref i);
                 }
             }
 
