@@ -18,9 +18,6 @@ namespace MPF.DiscImageCreator
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
-
-        /// <inheritdoc/>
         public override string InputPath => DriveLetter;
 
         /// <inheritdoc/>
@@ -1195,6 +1192,221 @@ namespace MPF.DiscImageCreator
         }
 
         /// <inheritdoc/>
+        public override Dictionary<string, List<string>> GetCommandSupport()
+        {
+            return new Dictionary<string, List<string>>()
+            {
+                [CommandStrings.Audio] = new List<string>()
+                {
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.SubchannelReadLevel,
+                },
+
+                [CommandStrings.BluRay] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                },
+
+                [CommandStrings.Close] = new List<string>()
+                {
+                },
+
+                [CommandStrings.CompactDisc] = new List<string>()
+                {
+                    FlagStrings.AddOffset,
+                    FlagStrings.AMSF,
+                    FlagStrings.AtariJaguar,
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ExtractMicroSoftCabFile,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSectorRead,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubQLibCrypt,
+                    FlagStrings.NoFixSubQSecuROM,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SeventyFour,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VideoNow,
+                    FlagStrings.VideoNowColor,
+                    FlagStrings.VideoNowXP,
+                },
+
+                [CommandStrings.Data] = new List<string>()
+                {
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.SubchannelReadLevel,
+                },
+
+                [CommandStrings.DigitalVideoDisc] = new List<string>()
+                {
+                    FlagStrings.CopyrightManagementInformation,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.Fix,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.PadSector,
+                    FlagStrings.Raw,
+                    FlagStrings.Resume,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                },
+
+                [CommandStrings.Disk] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DriveSpeed] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Eject] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Floppy] = new List<string>()
+                {
+                },
+
+                [CommandStrings.GDROM] = new List<string>()
+                {
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.SubchannelReadLevel,
+                },
+
+                [CommandStrings.MDS] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Merge] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Reset] = new List<string>()
+                {
+                },
+
+                [CommandStrings.SACD] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                },
+
+                [CommandStrings.Start] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Stop] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Sub] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Swap] = new List<string>()
+                {
+                    FlagStrings.AddOffset,
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubQLibCrypt,
+                    FlagStrings.NoFixSubQSecuROM,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SeventyFour,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VideoNow,
+                    FlagStrings.VideoNowColor,
+                    FlagStrings.VideoNowXP,
+                },
+
+                [CommandStrings.Tape] = new List<string>()
+                {
+                },
+
+                [CommandStrings.XBOX] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                },
+
+                [CommandStrings.XBOXSwap] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                },
+
+                [CommandStrings.XGD2Swap] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                },
+
+                [CommandStrings.XGD3Swap] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                },
+            };
+        }
+
+        /// <inheritdoc/>
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
@@ -2296,224 +2508,6 @@ namespace MPF.DiscImageCreator
         #endregion
 
         #region Private Extra Methods
-
-        /// <summary>
-        /// Get all commands mapped to the supported flags
-        /// </summary>
-        /// <returns>List of DiscImageCreator.Commands, if possible</returns>
-        private static Dictionary<string, List<string>> GetCommandSupport()
-        {
-            return new Dictionary<string, List<string>>()
-            {
-                [CommandStrings.Audio] = new List<string>()
-                {
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSession,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.Reverse,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SkipSector,
-                    FlagStrings.SubchannelReadLevel,
-                },
-
-                [CommandStrings.BluRay] = new List<string>()
-                {
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                    FlagStrings.UseAnchorVolumeDescriptorPointer,
-                },
-
-                [CommandStrings.Close] = new List<string>()
-                {
-                },
-
-                [CommandStrings.CompactDisc] = new List<string>()
-                {
-                    FlagStrings.AddOffset,
-                    FlagStrings.AMSF,
-                    FlagStrings.AtariJaguar,
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ExtractMicroSoftCabFile,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSectorRead,
-                    FlagStrings.MultiSession,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubQLibCrypt,
-                    FlagStrings.NoFixSubQSecuROM,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SeventyFour,
-                    FlagStrings.SubchannelReadLevel,
-                    FlagStrings.VideoNow,
-                    FlagStrings.VideoNowColor,
-                    FlagStrings.VideoNowXP,
-                },
-
-                [CommandStrings.Data] = new List<string>()
-                {
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSession,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.Reverse,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SkipSector,
-                    FlagStrings.SubchannelReadLevel,
-                },
-
-                [CommandStrings.DigitalVideoDisc] = new List<string>()
-                {
-                    FlagStrings.CopyrightManagementInformation,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.Fix,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.PadSector,
-                    FlagStrings.Raw,
-                    FlagStrings.Resume,
-                    FlagStrings.Reverse,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.UseAnchorVolumeDescriptorPointer,
-                },
-
-                [CommandStrings.Disk] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DriveSpeed] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Eject] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Floppy] = new List<string>()
-                {
-                },
-
-                [CommandStrings.GDROM] = new List<string>()
-                {
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.SubchannelReadLevel,
-                },
-
-                [CommandStrings.MDS] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Merge] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Reset] = new List<string>()
-                {
-                },
-
-                [CommandStrings.SACD] = new List<string>()
-                {
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                },
-
-                [CommandStrings.Start] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Stop] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Sub] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Swap] = new List<string>()
-                {
-                    FlagStrings.AddOffset,
-                    FlagStrings.BEOpcode,
-                    FlagStrings.C2Opcode,
-                    FlagStrings.D8Opcode,
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSession,
-                    FlagStrings.NoFixSubP,
-                    FlagStrings.NoFixSubQ,
-                    FlagStrings.NoFixSubQLibCrypt,
-                    FlagStrings.NoFixSubQSecuROM,
-                    FlagStrings.NoFixSubRtoW,
-                    FlagStrings.ScanAntiMod,
-                    FlagStrings.ScanFileProtect,
-                    FlagStrings.ScanSectorProtect,
-                    FlagStrings.SeventyFour,
-                    FlagStrings.SubchannelReadLevel,
-                    FlagStrings.VideoNow,
-                    FlagStrings.VideoNowColor,
-                    FlagStrings.VideoNowXP,
-                },
-
-                [CommandStrings.Tape] = new List<string>()
-                {
-                },
-
-                [CommandStrings.XBOX] = new List<string>()
-                {
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                    FlagStrings.UseAnchorVolumeDescriptorPointer,
-                },
-
-                [CommandStrings.XBOXSwap] = new List<string>()
-                {
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                },
-
-                [CommandStrings.XGD2Swap] = new List<string>()
-                {
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                },
-
-                [CommandStrings.XGD3Swap] = new List<string>()
-                {
-                    FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
-                },
-            };
-        }
 
         /// <summary>
         /// Set the DIC command to be used for a given system and media type

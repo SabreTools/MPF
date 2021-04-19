@@ -75,7 +75,7 @@ namespace MPF.Data
         /// <summary>
         /// Command to flag support mappings
         /// </summary>
-        public virtual Dictionary<string, List<string>> CommandSupport => null;
+        public Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
 
         /// <summary>
         /// Input path for operations
@@ -167,6 +167,12 @@ namespace MPF.Data
         #endregion
 
         #region Virtual Methods
+
+        /// <summary>
+        /// Get all commands mapped to the supported flags
+        /// </summary>
+        /// <returns>Mappings from command to supported flags</returns>
+        public virtual Dictionary<string, List<string>> GetCommandSupport() => null;
 
         /// <summary>
         /// Blindly generate a parameter string based on the inputs

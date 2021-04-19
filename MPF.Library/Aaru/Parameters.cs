@@ -22,9 +22,6 @@ namespace MPF.Aaru
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
-
-        /// <inheritdoc/>
         public override string InputPath => InputValue;
 
         /// <inheritdoc/>
@@ -1010,6 +1007,661 @@ namespace MPF.Aaru
         }
 
         /// <inheritdoc/>
+        public override Dictionary<string, List<string>> GetCommandSupport()
+        {
+            return new Dictionary<string, List<string>>()
+            {
+                #region Database Family
+
+                [CommandStrings.DatabasePrefixShort + " " + CommandStrings.DatabaseStats] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseStats] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DatabasePrefixShort + " " + CommandStrings.DatabaseUpdate] = new List<string>()
+                {
+                    FlagStrings.ClearLong,
+                    FlagStrings.ClearAllLong,
+                },
+
+                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseUpdate] = new List<string>()
+                {
+                    FlagStrings.ClearLong,
+                    FlagStrings.ClearAllLong,
+                },
+
+                #endregion
+
+                #region Device Family
+
+                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceInfo] = new List<string>()
+                {
+                    FlagStrings.OutputPrefixLong,
+                },
+
+                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo] = new List<string>()
+                {
+                    FlagStrings.OutputPrefixLong,
+                },
+
+                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceList] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceReport] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport] = new List<string>()
+                {
+                },
+
+                #endregion
+
+                #region Filesystem Family
+
+                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemExtract] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.ExtendedAttributesLong,
+                    FlagStrings.ExtendedAttributesShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemExtract] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.ExtendedAttributesLong,
+                    FlagStrings.ExtendedAttributesShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.ExtendedAttributesLong,
+                    FlagStrings.ExtendedAttributesShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemListShort] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemListShort] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListShort] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemListLong] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemListLong] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.NamespaceLong,
+                    FlagStrings.NamespaceShort,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemOptions] = new List<string>()
+                {
+                },
+
+                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemOptions] = new List<string>()
+                {
+                },
+
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemOptions] = new List<string>()
+                {
+                },
+
+                #endregion
+
+                #region Image Family
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageAnalyze] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.FilesystemsLong,
+                    FlagStrings.FilesystemsShort,
+                    FlagStrings.PartitionsLong,
+                    FlagStrings.PartitionsShort,
+                    FlagStrings.VerifyDiscLong,
+                    FlagStrings.VerifyDiscShort,
+                    FlagStrings.VerifySectorsLong,
+                    FlagStrings.VerifySectorsShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.FilesystemsLong,
+                    FlagStrings.FilesystemsShort,
+                    FlagStrings.PartitionsLong,
+                    FlagStrings.PartitionsShort,
+                    FlagStrings.VerifyDiscLong,
+                    FlagStrings.VerifyDiscShort,
+                    FlagStrings.VerifySectorsLong,
+                    FlagStrings.VerifySectorsShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageChecksumShort] = new List<string>()
+                {
+                    FlagStrings.Adler32Long,
+                    FlagStrings.Adler32Short,
+                    FlagStrings.CRC16Long,
+                    FlagStrings.CRC32Long,
+                    FlagStrings.CRC32Short,
+                    FlagStrings.CRC64Long,
+                    FlagStrings.Fletcher16Long,
+                    FlagStrings.Fletcher32Long,
+                    FlagStrings.MD5Long,
+                    FlagStrings.MD5Short,
+                    FlagStrings.SeparatedTracksLong,
+                    FlagStrings.SeparatedTracksShort,
+                    FlagStrings.SHA1Long,
+                    FlagStrings.SHA1Short,
+                    FlagStrings.SHA256Long,
+                    FlagStrings.SHA384Long,
+                    FlagStrings.SHA512Long,
+                    FlagStrings.SpamSumLong,
+                    FlagStrings.SpamSumShort,
+                    FlagStrings.WholeDiscLong,
+                    FlagStrings.WholeDiscShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumShort] = new List<string>()
+                {
+                    FlagStrings.Adler32Long,
+                    FlagStrings.Adler32Short,
+                    FlagStrings.CRC16Long,
+                    FlagStrings.CRC32Long,
+                    FlagStrings.CRC32Short,
+                    FlagStrings.CRC64Long,
+                    FlagStrings.Fletcher16Long,
+                    FlagStrings.Fletcher32Long,
+                    FlagStrings.MD5Long,
+                    FlagStrings.MD5Short,
+                    FlagStrings.SeparatedTracksLong,
+                    FlagStrings.SeparatedTracksShort,
+                    FlagStrings.SHA1Long,
+                    FlagStrings.SHA1Short,
+                    FlagStrings.SHA256Long,
+                    FlagStrings.SHA384Long,
+                    FlagStrings.SHA512Long,
+                    FlagStrings.SpamSumLong,
+                    FlagStrings.SpamSumShort,
+                    FlagStrings.WholeDiscLong,
+                    FlagStrings.WholeDiscShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageChecksumLong] = new List<string>()
+                {
+                    FlagStrings.Adler32Long,
+                    FlagStrings.Adler32Short,
+                    FlagStrings.CRC16Long,
+                    FlagStrings.CRC32Long,
+                    FlagStrings.CRC32Short,
+                    FlagStrings.CRC64Long,
+                    FlagStrings.Fletcher16Long,
+                    FlagStrings.Fletcher32Long,
+                    FlagStrings.MD5Long,
+                    FlagStrings.MD5Short,
+                    FlagStrings.SeparatedTracksLong,
+                    FlagStrings.SeparatedTracksShort,
+                    FlagStrings.SHA1Long,
+                    FlagStrings.SHA1Short,
+                    FlagStrings.SHA256Long,
+                    FlagStrings.SHA384Long,
+                    FlagStrings.SHA512Long,
+                    FlagStrings.SpamSumLong,
+                    FlagStrings.SpamSumShort,
+                    FlagStrings.WholeDiscLong,
+                    FlagStrings.WholeDiscShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong] = new List<string>()
+                {
+                    FlagStrings.Adler32Long,
+                    FlagStrings.Adler32Short,
+                    FlagStrings.CRC16Long,
+                    FlagStrings.CRC32Long,
+                    FlagStrings.CRC32Short,
+                    FlagStrings.CRC64Long,
+                    FlagStrings.Fletcher16Long,
+                    FlagStrings.Fletcher32Long,
+                    FlagStrings.MD5Long,
+                    FlagStrings.MD5Short,
+                    FlagStrings.SeparatedTracksLong,
+                    FlagStrings.SeparatedTracksShort,
+                    FlagStrings.SHA1Long,
+                    FlagStrings.SHA1Short,
+                    FlagStrings.SHA256Long,
+                    FlagStrings.SHA384Long,
+                    FlagStrings.SHA512Long,
+                    FlagStrings.SpamSumLong,
+                    FlagStrings.SpamSumShort,
+                    FlagStrings.WholeDiscLong,
+                    FlagStrings.WholeDiscShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCompareShort] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareShort] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCompareLong] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageConvert] = new List<string>()
+                {
+                    FlagStrings.CommentsLong,
+                    FlagStrings.CountLong,
+                    FlagStrings.CountShort,
+                    FlagStrings.CreatorLong,
+                    FlagStrings.DriveManufacturerLong,
+                    FlagStrings.DriveModelLong,
+                    FlagStrings.DriveRevisionLong,
+                    FlagStrings.DriveSerialLong,
+                    FlagStrings.ForceLong,
+                    FlagStrings.ForceShort,
+                    FlagStrings.FormatConvertLong,
+                    FlagStrings.FormatConvertShort,
+                    FlagStrings.MediaBarcodeLong,
+                    FlagStrings.MediaLastSequenceLong,
+                    FlagStrings.MediaManufacturerLong,
+                    FlagStrings.MediaModelLong,
+                    FlagStrings.MediaPartNumberLong,
+                    FlagStrings.MediaSequenceLong,
+                    FlagStrings.MediaSerialLong,
+                    FlagStrings.MediaTitleLong,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                    FlagStrings.ResumeFileLong,
+                    FlagStrings.ResumeFileShort,
+                    FlagStrings.XMLSidecarLong,
+                    FlagStrings.XMLSidecarShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert] = new List<string>()
+                {
+                    FlagStrings.CommentsLong,
+                    FlagStrings.CountLong,
+                    FlagStrings.CountShort,
+                    FlagStrings.CreatorLong,
+                    FlagStrings.DriveManufacturerLong,
+                    FlagStrings.DriveModelLong,
+                    FlagStrings.DriveRevisionLong,
+                    FlagStrings.DriveSerialLong,
+                    FlagStrings.ForceLong,
+                    FlagStrings.ForceShort,
+                    FlagStrings.FormatConvertLong,
+                    FlagStrings.FormatConvertShort,
+                    FlagStrings.MediaBarcodeLong,
+                    FlagStrings.MediaLastSequenceLong,
+                    FlagStrings.MediaManufacturerLong,
+                    FlagStrings.MediaModelLong,
+                    FlagStrings.MediaPartNumberLong,
+                    FlagStrings.MediaSequenceLong,
+                    FlagStrings.MediaSerialLong,
+                    FlagStrings.MediaTitleLong,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                    FlagStrings.ResumeFileLong,
+                    FlagStrings.ResumeFileShort,
+                    FlagStrings.XMLSidecarLong,
+                    FlagStrings.XMLSidecarShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
+                {
+                    FlagStrings.BlockSizeLong,
+                    FlagStrings.BlockSizeShort,
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.TapeLong,
+                    FlagStrings.TapeShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
+                {
+                    FlagStrings.BlockSizeLong,
+                    FlagStrings.BlockSizeShort,
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.TapeLong,
+                    FlagStrings.TapeShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageDecode] = new List<string>()
+                {
+                    FlagStrings.DiskTagsLong,
+                    FlagStrings.DiskTagsShort,
+                    FlagStrings.LengthLong,
+                    FlagStrings.LengthShort,
+                    FlagStrings.SectorTagsLong,
+                    FlagStrings.SectorTagsShort,
+                    FlagStrings.StartLong,
+                    FlagStrings.StartShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode] = new List<string>()
+                {
+                    FlagStrings.DiskTagsLong,
+                    FlagStrings.DiskTagsShort,
+                    FlagStrings.LengthLong,
+                    FlagStrings.LengthShort,
+                    FlagStrings.SectorTagsLong,
+                    FlagStrings.SectorTagsShort,
+                    FlagStrings.StartLong,
+                    FlagStrings.StartShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageEntropy] = new List<string>()
+                {
+                    FlagStrings.DuplicatedSectorsLong,
+                    FlagStrings.DuplicatedSectorsShort,
+                    FlagStrings.SeparatedTracksLong,
+                    FlagStrings.SeparatedTracksShort,
+                    FlagStrings.WholeDiscLong,
+                    FlagStrings.WholeDiscShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy] = new List<string>()
+                {
+                    FlagStrings.DuplicatedSectorsLong,
+                    FlagStrings.DuplicatedSectorsShort,
+                    FlagStrings.SeparatedTracksLong,
+                    FlagStrings.SeparatedTracksShort,
+                    FlagStrings.WholeDiscLong,
+                    FlagStrings.WholeDiscShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageInfo] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageOptions] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageOptions] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImagePrint] = new List<string>()
+                {
+                    FlagStrings.LengthLong,
+                    FlagStrings.LengthShort,
+                    FlagStrings.LongSectorsLong,
+                    FlagStrings.LongSectorsShort,
+                    FlagStrings.StartLong,
+                    FlagStrings.StartShort,
+                    FlagStrings.WidthLong,
+                    FlagStrings.WidthShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint] = new List<string>()
+                {
+                    FlagStrings.LengthLong,
+                    FlagStrings.LengthShort,
+                    FlagStrings.LongSectorsLong,
+                    FlagStrings.LongSectorsShort,
+                    FlagStrings.StartLong,
+                    FlagStrings.StartShort,
+                    FlagStrings.WidthLong,
+                    FlagStrings.WidthShort,
+                },
+
+                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageVerify] = new List<string>()
+                {
+                    FlagStrings.VerifyDiscLong,
+                    FlagStrings.VerifyDiscShort,
+                    FlagStrings.VerifySectorsLong,
+                    FlagStrings.VerifySectorsShort,
+                },
+
+                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify] = new List<string>()
+                {
+                    FlagStrings.VerifyDiscLong,
+                    FlagStrings.VerifyDiscShort,
+                    FlagStrings.VerifySectorsLong,
+                    FlagStrings.VerifySectorsShort,
+                },
+
+                #endregion
+
+                #region Media Family
+
+                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaDump] = new List<string>()
+                {
+                    FlagStrings.EjectLong,
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.FirstPregapLong,
+                    FlagStrings.FixOffsetLong,
+                    FlagStrings.FixSubchannelLong,
+                    FlagStrings.FixSubchannelCrcLong,
+                    FlagStrings.FixSubchannelPositionLong,
+                    FlagStrings.ForceLong,
+                    FlagStrings.ForceShort,
+                    FlagStrings.FormatConvertLong,
+                    FlagStrings.FormatConvertShort,
+                    FlagStrings.GenerateSubchannelsLong,
+                    FlagStrings.MetadataLong,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                    FlagStrings.PersistentLong,
+                    FlagStrings.PrivateLong,
+                    FlagStrings.ResumeLong,
+                    FlagStrings.ResumeShort,
+                    FlagStrings.RetryPassesLong,
+                    FlagStrings.RetryPassesShort,
+                    FlagStrings.RetrySubchannelLong,
+                    FlagStrings.SkipLong,
+                    FlagStrings.SkipShort,
+                    FlagStrings.SkipCdiReadyHoleLong,
+                    FlagStrings.SpeedLong,
+                    FlagStrings.StopOnErrorLong,
+                    FlagStrings.StopOnErrorShort,
+                    FlagStrings.SubchannelLong,
+                    FlagStrings.TrimLong,
+                    FlagStrings.XMLSidecarLong,
+                    FlagStrings.XMLSidecarShort,
+                },
+
+                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump] = new List<string>()
+                {
+                    FlagStrings.EjectLong,
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.FirstPregapLong,
+                    FlagStrings.FixOffsetLong,
+                    FlagStrings.FixSubchannelLong,
+                    FlagStrings.FixSubchannelCrcLong,
+                    FlagStrings.FixSubchannelPositionLong,
+                    FlagStrings.ForceLong,
+                    FlagStrings.ForceShort,
+                    FlagStrings.FormatConvertLong,
+                    FlagStrings.FormatConvertShort,
+                    FlagStrings.GenerateSubchannelsLong,
+                    FlagStrings.MetadataLong,
+                    FlagStrings.OptionsLong,
+                    FlagStrings.OptionsShort,
+                    FlagStrings.PersistentLong,
+                    FlagStrings.PrivateLong,
+                    FlagStrings.ResumeLong,
+                    FlagStrings.ResumeShort,
+                    FlagStrings.RetryPassesLong,
+                    FlagStrings.RetryPassesShort,
+                    FlagStrings.RetrySubchannelLong,
+                    FlagStrings.SkipLong,
+                    FlagStrings.SkipShort,
+                    FlagStrings.SkipCdiReadyHoleLong,
+                    FlagStrings.SpeedLong,
+                    FlagStrings.StopOnErrorLong,
+                    FlagStrings.StopOnErrorShort,
+                    FlagStrings.SubchannelLong,
+                    FlagStrings.TrimLong,
+                    FlagStrings.XMLSidecarLong,
+                    FlagStrings.XMLSidecarShort,
+                },
+
+                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaInfo] = new List<string>()
+                {
+                    FlagStrings.OutputPrefixLong,
+                    FlagStrings.OutputPrefixShort,
+                },
+
+                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo] = new List<string>()
+                {
+                    FlagStrings.OutputPrefixLong,
+                    FlagStrings.OutputPrefixShort,
+                },
+
+                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaScan] = new List<string>()
+                {
+                    FlagStrings.ImgBurnLogLong,
+                    FlagStrings.ImgBurnLogShort,
+                    FlagStrings.MHDDLogLong,
+                    FlagStrings.MHDDLogShort,
+                },
+
+                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan] = new List<string>()
+                {
+                    FlagStrings.ImgBurnLogLong,
+                    FlagStrings.ImgBurnLogShort,
+                    FlagStrings.MHDDLogLong,
+                    FlagStrings.MHDDLogShort,
+                },
+
+                #endregion
+
+                #region Standalone Commands
+
+                [null] = new List<string>()
+                {
+                    FlagStrings.DebugLong,
+                    FlagStrings.DebugShort,
+                    FlagStrings.HelpLong,
+                    FlagStrings.HelpShort,
+                    FlagStrings.HelpShortAlt,
+                    FlagStrings.VerboseLong,
+                    FlagStrings.VerboseShort,
+                    FlagStrings.VersionLong,
+                },
+
+                [CommandStrings.Configure] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Formats] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ListEncodings] = new List<string>()
+                {
+                },
+
+                [CommandStrings.ListNamespaces] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Remote] = new List<string>()
+                {
+                },
+
+                #endregion
+            };
+        }
+
+        /// <inheritdoc/>
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
@@ -1670,667 +2322,6 @@ namespace MPF.Aaru
 
         #endregion
 
-        #region Private Extra Methods
-
-        /// <summary>
-        /// Get all commands mapped to the supported flags
-        /// </summary>
-        /// <returns>List of DiscImageCreator.Commands, if possible</returns>
-        private static Dictionary<string, List<string>> GetCommandSupport()
-        {
-            return new Dictionary<string, List<string>>()
-            {
-                #region Database Family
-
-                [CommandStrings.DatabasePrefixShort + " " + CommandStrings.DatabaseStats] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseStats] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DatabasePrefixShort + " " + CommandStrings.DatabaseUpdate] = new List<string>()
-                {
-                    FlagStrings.ClearLong,
-                    FlagStrings.ClearAllLong,
-                },
-
-                [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseUpdate] = new List<string>()
-                {
-                    FlagStrings.ClearLong,
-                    FlagStrings.ClearAllLong,
-                },
-
-                #endregion
-
-                #region Device Family
-
-                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceInfo] = new List<string>()
-                {
-                    FlagStrings.OutputPrefixLong,
-                },
-
-                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo] = new List<string>()
-                {
-                    FlagStrings.OutputPrefixLong,
-                },
-
-                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceList] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceReport] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport] = new List<string>()
-                {
-                },
-
-                #endregion
-
-                #region Filesystem Family
-
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemExtract] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.ExtendedAttributesLong,
-                    FlagStrings.ExtendedAttributesShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemExtract] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.ExtendedAttributesLong,
-                    FlagStrings.ExtendedAttributesShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.ExtendedAttributesLong,
-                    FlagStrings.ExtendedAttributesShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemListShort] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemListShort] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListShort] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemListLong] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemListLong] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemOptions] = new List<string>()
-                {
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemOptions] = new List<string>()
-                {
-                },
-
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemOptions] = new List<string>()
-                {
-                },
-
-                #endregion
-
-                #region Image Family
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageAnalyze] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FilesystemsLong,
-                    FlagStrings.FilesystemsShort,
-                    FlagStrings.PartitionsLong,
-                    FlagStrings.PartitionsShort,
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FilesystemsLong,
-                    FlagStrings.FilesystemsShort,
-                    FlagStrings.PartitionsLong,
-                    FlagStrings.PartitionsShort,
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageChecksumShort] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumShort] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageChecksumLong] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCompareShort] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareShort] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCompareLong] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageConvert] = new List<string>()
-                {
-                    FlagStrings.CommentsLong,
-                    FlagStrings.CountLong,
-                    FlagStrings.CountShort,
-                    FlagStrings.CreatorLong,
-                    FlagStrings.DriveManufacturerLong,
-                    FlagStrings.DriveModelLong,
-                    FlagStrings.DriveRevisionLong,
-                    FlagStrings.DriveSerialLong,
-                    FlagStrings.ForceLong,
-                    FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
-                    FlagStrings.FormatConvertShort,
-                    FlagStrings.MediaBarcodeLong,
-                    FlagStrings.MediaLastSequenceLong,
-                    FlagStrings.MediaManufacturerLong,
-                    FlagStrings.MediaModelLong,
-                    FlagStrings.MediaPartNumberLong,
-                    FlagStrings.MediaSequenceLong,
-                    FlagStrings.MediaSerialLong,
-                    FlagStrings.MediaTitleLong,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                    FlagStrings.ResumeFileLong,
-                    FlagStrings.ResumeFileShort,
-                    FlagStrings.XMLSidecarLong,
-                    FlagStrings.XMLSidecarShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert] = new List<string>()
-                {
-                    FlagStrings.CommentsLong,
-                    FlagStrings.CountLong,
-                    FlagStrings.CountShort,
-                    FlagStrings.CreatorLong,
-                    FlagStrings.DriveManufacturerLong,
-                    FlagStrings.DriveModelLong,
-                    FlagStrings.DriveRevisionLong,
-                    FlagStrings.DriveSerialLong,
-                    FlagStrings.ForceLong,
-                    FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
-                    FlagStrings.FormatConvertShort,
-                    FlagStrings.MediaBarcodeLong,
-                    FlagStrings.MediaLastSequenceLong,
-                    FlagStrings.MediaManufacturerLong,
-                    FlagStrings.MediaModelLong,
-                    FlagStrings.MediaPartNumberLong,
-                    FlagStrings.MediaSequenceLong,
-                    FlagStrings.MediaSerialLong,
-                    FlagStrings.MediaTitleLong,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                    FlagStrings.ResumeFileLong,
-                    FlagStrings.ResumeFileShort,
-                    FlagStrings.XMLSidecarLong,
-                    FlagStrings.XMLSidecarShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
-                {
-                    FlagStrings.BlockSizeLong,
-                    FlagStrings.BlockSizeShort,
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.TapeLong,
-                    FlagStrings.TapeShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
-                {
-                    FlagStrings.BlockSizeLong,
-                    FlagStrings.BlockSizeShort,
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.TapeLong,
-                    FlagStrings.TapeShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageDecode] = new List<string>()
-                {
-                    FlagStrings.DiskTagsLong,
-                    FlagStrings.DiskTagsShort,
-                    FlagStrings.LengthLong,
-                    FlagStrings.LengthShort,
-                    FlagStrings.SectorTagsLong,
-                    FlagStrings.SectorTagsShort,
-                    FlagStrings.StartLong,
-                    FlagStrings.StartShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode] = new List<string>()
-                {
-                    FlagStrings.DiskTagsLong,
-                    FlagStrings.DiskTagsShort,
-                    FlagStrings.LengthLong,
-                    FlagStrings.LengthShort,
-                    FlagStrings.SectorTagsLong,
-                    FlagStrings.SectorTagsShort,
-                    FlagStrings.StartLong,
-                    FlagStrings.StartShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageEntropy] = new List<string>()
-                {
-                    FlagStrings.DuplicatedSectorsLong,
-                    FlagStrings.DuplicatedSectorsShort,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy] = new List<string>()
-                {
-                    FlagStrings.DuplicatedSectorsLong,
-                    FlagStrings.DuplicatedSectorsShort,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageInfo] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageOptions] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageOptions] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImagePrint] = new List<string>()
-                {
-                    FlagStrings.LengthLong,
-                    FlagStrings.LengthShort,
-                    FlagStrings.LongSectorsLong,
-                    FlagStrings.LongSectorsShort,
-                    FlagStrings.StartLong,
-                    FlagStrings.StartShort,
-                    FlagStrings.WidthLong,
-                    FlagStrings.WidthShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint] = new List<string>()
-                {
-                    FlagStrings.LengthLong,
-                    FlagStrings.LengthShort,
-                    FlagStrings.LongSectorsLong,
-                    FlagStrings.LongSectorsShort,
-                    FlagStrings.StartLong,
-                    FlagStrings.StartShort,
-                    FlagStrings.WidthLong,
-                    FlagStrings.WidthShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageVerify] = new List<string>()
-                {
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify] = new List<string>()
-                {
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
-
-                #endregion
-
-                #region Media Family
-
-                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaDump] = new List<string>()
-                {
-                    FlagStrings.EjectLong,
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FirstPregapLong,
-                    FlagStrings.FixOffsetLong,
-                    FlagStrings.FixSubchannelLong,
-                    FlagStrings.FixSubchannelCrcLong,
-                    FlagStrings.FixSubchannelPositionLong,
-                    FlagStrings.ForceLong,
-                    FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
-                    FlagStrings.FormatConvertShort,
-                    FlagStrings.GenerateSubchannelsLong,
-                    FlagStrings.MetadataLong,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                    FlagStrings.PersistentLong,
-                    FlagStrings.PrivateLong,
-                    FlagStrings.ResumeLong,
-                    FlagStrings.ResumeShort,
-                    FlagStrings.RetryPassesLong,
-                    FlagStrings.RetryPassesShort,
-                    FlagStrings.RetrySubchannelLong,
-                    FlagStrings.SkipLong,
-                    FlagStrings.SkipShort,
-                    FlagStrings.SkipCdiReadyHoleLong,
-                    FlagStrings.SpeedLong,
-                    FlagStrings.StopOnErrorLong,
-                    FlagStrings.StopOnErrorShort,
-                    FlagStrings.SubchannelLong,
-                    FlagStrings.TrimLong,
-                    FlagStrings.XMLSidecarLong,
-                    FlagStrings.XMLSidecarShort,
-                },
-
-                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump] = new List<string>()
-                {
-                    FlagStrings.EjectLong,
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FirstPregapLong,
-                    FlagStrings.FixOffsetLong,
-                    FlagStrings.FixSubchannelLong,
-                    FlagStrings.FixSubchannelCrcLong,
-                    FlagStrings.FixSubchannelPositionLong,
-                    FlagStrings.ForceLong,
-                    FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
-                    FlagStrings.FormatConvertShort,
-                    FlagStrings.GenerateSubchannelsLong,
-                    FlagStrings.MetadataLong,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                    FlagStrings.PersistentLong,
-                    FlagStrings.PrivateLong,
-                    FlagStrings.ResumeLong,
-                    FlagStrings.ResumeShort,
-                    FlagStrings.RetryPassesLong,
-                    FlagStrings.RetryPassesShort,
-                    FlagStrings.RetrySubchannelLong,
-                    FlagStrings.SkipLong,
-                    FlagStrings.SkipShort,
-                    FlagStrings.SkipCdiReadyHoleLong,
-                    FlagStrings.SpeedLong,
-                    FlagStrings.StopOnErrorLong,
-                    FlagStrings.StopOnErrorShort,
-                    FlagStrings.SubchannelLong,
-                    FlagStrings.TrimLong,
-                    FlagStrings.XMLSidecarLong,
-                    FlagStrings.XMLSidecarShort,
-                },
-
-                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaInfo] = new List<string>()
-                {
-                    FlagStrings.OutputPrefixLong,
-                    FlagStrings.OutputPrefixShort,
-                },
-
-                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo] = new List<string>()
-                {
-                    FlagStrings.OutputPrefixLong,
-                    FlagStrings.OutputPrefixShort,
-                },
-
-                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaScan] = new List<string>()
-                {
-                    FlagStrings.ImgBurnLogLong,
-                    FlagStrings.ImgBurnLogShort,
-                    FlagStrings.MHDDLogLong,
-                    FlagStrings.MHDDLogShort,
-                },
-
-                [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan] = new List<string>()
-                {
-                    FlagStrings.ImgBurnLogLong,
-                    FlagStrings.ImgBurnLogShort,
-                    FlagStrings.MHDDLogLong,
-                    FlagStrings.MHDDLogShort,
-                },
-
-                #endregion
-
-                #region Standalone Commands
-
-                [null] = new List<string>()
-                {
-                    FlagStrings.DebugLong,
-                    FlagStrings.DebugShort,
-                    FlagStrings.HelpLong,
-                    FlagStrings.HelpShort,
-                    FlagStrings.HelpShortAlt,
-                    FlagStrings.VerboseLong,
-                    FlagStrings.VerboseShort,
-                    FlagStrings.VersionLong,
-                },
-
-                [CommandStrings.Configure] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Formats] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ListEncodings] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ListNamespaces] = new List<string>()
-                {
-                },
-
-                [CommandStrings.Remote] = new List<string>()
-                {
-                },
-
-                #endregion
-            };
-        }
-
-        #endregion
 
         #region Process Parameter Helpers
 

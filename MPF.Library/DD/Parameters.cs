@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Data;
-using MPF.Utilities;
 
 namespace MPF.DD
 {
@@ -14,9 +13,6 @@ namespace MPF.DD
     public class Parameters : BaseParameters
     {
         #region Generic Dumping Information
-
-        /// <inheritdoc/>
-        public override Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
 
         /// <inheritdoc/>
         public override string InputPath => InputFileValue;
@@ -225,6 +221,30 @@ namespace MPF.DD
         }
 
         /// <inheritdoc/>
+        public override Dictionary<string, List<string>> GetCommandSupport()
+        {
+            return new Dictionary<string, List<string>>()
+            {
+                [null] = new List<string>()
+                {
+                    FlagStrings.BlockSize,
+                    FlagStrings.Count,
+                    FlagStrings.Filter,
+                    FlagStrings.InputFile,
+                    FlagStrings.OutputFile,
+                    FlagStrings.Progress,
+                    FlagStrings.Seek,
+                    FlagStrings.Size,
+                    FlagStrings.Skip,
+                },
+
+                [CommandStrings.List] = new List<string>()
+                {
+                },
+            };
+        }
+
+        /// <inheritdoc/>
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
@@ -383,37 +403,6 @@ namespace MPF.DD
             }
 
             return true;
-        }
-
-        #endregion
-
-        #region Private Extra Methods
-
-        /// <summary>
-        /// Get all commands mapped to the supported flags
-        /// </summary>
-        /// <returns>List of DiscImageCreator.Commands, if possible</returns>
-        private static Dictionary<string, List<string>> GetCommandSupport()
-        {
-            return new Dictionary<string, List<string>>()
-            {
-                [null] = new List<string>()
-                {
-                    FlagStrings.BlockSize,
-                    FlagStrings.Count,
-                    FlagStrings.Filter,
-                    FlagStrings.InputFile,
-                    FlagStrings.OutputFile,
-                    FlagStrings.Progress,
-                    FlagStrings.Seek,
-                    FlagStrings.Size,
-                    FlagStrings.Skip,
-                },
-
-                [CommandStrings.List] = new List<string>()
-                {
-                },
-            };
         }
 
         #endregion
