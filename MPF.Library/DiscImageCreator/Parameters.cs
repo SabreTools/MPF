@@ -18,6 +18,9 @@ namespace MPF.DiscImageCreator
         #region Generic Dumping Information
 
         /// <inheritdoc/>
+        public override Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
+
+        /// <inheritdoc/>
         public override string InputPath => DriveLetter;
 
         /// <inheritdoc/>
@@ -35,35 +38,10 @@ namespace MPF.DiscImageCreator
 
         #region Metadata
 
-        /// <summary>
-        /// Base command to run
-        /// </summary>
-        public Command BaseCommand { get; set; }
-
         /// <inheritdoc/>
         public override InternalProgram InternalProgram => InternalProgram.DiscImageCreator;
 
         #endregion
-
-        /// <summary>
-        /// Set of flags to pass to the executable
-        /// </summary>
-        protected Dictionary<Flag, bool?> _flags = new Dictionary<Flag, bool?>();
-        public bool? this[Flag key]
-        {
-            get
-            {
-                if (_flags.ContainsKey(key))
-                    return _flags[key];
-
-                return null;
-            }
-            set
-            {
-                _flags[key] = value;
-            }
-        }
-        protected internal IEnumerable<Flag> Keys => _flags.Keys;
 
         #region Common Input Values
 
@@ -765,32 +743,32 @@ namespace MPF.DiscImageCreator
         {
             List<string> parameters = new List<string>();
 
-            if (BaseCommand != Command.NONE)
-                parameters.Add(Converters.LongName(BaseCommand));
+            if (!string.IsNullOrWhiteSpace(BaseCommand))
+                parameters.Add(BaseCommand);
             else
                 return null;
 
             // Drive Letter
-            if (BaseCommand == Command.Audio
-                || BaseCommand == Command.BluRay
-                || BaseCommand == Command.Close
-                || BaseCommand == Command.CompactDisc
-                || BaseCommand == Command.Data
-                || BaseCommand == Command.DigitalVideoDisc
-                || BaseCommand == Command.Disk
-                || BaseCommand == Command.DriveSpeed
-                || BaseCommand == Command.Eject
-                || BaseCommand == Command.Floppy
-                || BaseCommand == Command.GDROM
-                || BaseCommand == Command.Reset
-                || BaseCommand == Command.SACD
-                || BaseCommand == Command.Start
-                || BaseCommand == Command.Stop
-                || BaseCommand == Command.Swap
-                || BaseCommand == Command.XBOX
-                || BaseCommand == Command.XBOXSwap
-                || BaseCommand == Command.XGD2Swap
-                || BaseCommand == Command.XGD3Swap)
+            if (BaseCommand == CommandStrings.Audio
+                || BaseCommand == CommandStrings.BluRay
+                || BaseCommand == CommandStrings.Close
+                || BaseCommand == CommandStrings.CompactDisc
+                || BaseCommand == CommandStrings.Data
+                || BaseCommand == CommandStrings.DigitalVideoDisc
+                || BaseCommand == CommandStrings.Disk
+                || BaseCommand == CommandStrings.DriveSpeed
+                || BaseCommand == CommandStrings.Eject
+                || BaseCommand == CommandStrings.Floppy
+                || BaseCommand == CommandStrings.GDROM
+                || BaseCommand == CommandStrings.Reset
+                || BaseCommand == CommandStrings.SACD
+                || BaseCommand == CommandStrings.Start
+                || BaseCommand == CommandStrings.Stop
+                || BaseCommand == CommandStrings.Swap
+                || BaseCommand == CommandStrings.XBOX
+                || BaseCommand == CommandStrings.XBOXSwap
+                || BaseCommand == CommandStrings.XGD2Swap
+                || BaseCommand == CommandStrings.XGD3Swap)
             {
                 if (DriveLetter != null)
                     parameters.Add(DriveLetter);
@@ -799,24 +777,24 @@ namespace MPF.DiscImageCreator
             }
 
             // Filename
-            if (BaseCommand == Command.Audio
-                || BaseCommand == Command.BluRay
-                || BaseCommand == Command.CompactDisc
-                || BaseCommand == Command.Data
-                || BaseCommand == Command.DigitalVideoDisc
-                || BaseCommand == Command.Disk
-                || BaseCommand == Command.Floppy
-                || BaseCommand == Command.GDROM
-                || BaseCommand == Command.MDS
-                || BaseCommand == Command.Merge
-                || BaseCommand == Command.SACD
-                || BaseCommand == Command.Swap
-                || BaseCommand == Command.Sub
-                || BaseCommand == Command.Tape
-                || BaseCommand == Command.XBOX
-                || BaseCommand == Command.XBOXSwap
-                || BaseCommand == Command.XGD2Swap
-                || BaseCommand == Command.XGD3Swap)
+            if (BaseCommand == CommandStrings.Audio
+                || BaseCommand == CommandStrings.BluRay
+                || BaseCommand == CommandStrings.CompactDisc
+                || BaseCommand == CommandStrings.Data
+                || BaseCommand == CommandStrings.DigitalVideoDisc
+                || BaseCommand == CommandStrings.Disk
+                || BaseCommand == CommandStrings.Floppy
+                || BaseCommand == CommandStrings.GDROM
+                || BaseCommand == CommandStrings.MDS
+                || BaseCommand == CommandStrings.Merge
+                || BaseCommand == CommandStrings.SACD
+                || BaseCommand == CommandStrings.Swap
+                || BaseCommand == CommandStrings.Sub
+                || BaseCommand == CommandStrings.Tape
+                || BaseCommand == CommandStrings.XBOX
+                || BaseCommand == CommandStrings.XBOXSwap
+                || BaseCommand == CommandStrings.XGD2Swap
+                || BaseCommand == CommandStrings.XGD3Swap)
             {
                 if (Filename != null)
                     parameters.Add("\"" + Filename.Trim('"') + "\"");
@@ -825,7 +803,7 @@ namespace MPF.DiscImageCreator
             }
 
             // Optiarc Filename
-            if (BaseCommand == Command.Merge)
+            if (BaseCommand == CommandStrings.Merge)
             {
                 if (OptiarcFilename != null)
                     parameters.Add("\"" + OptiarcFilename.Trim('"') + "\"");
@@ -834,18 +812,18 @@ namespace MPF.DiscImageCreator
             }
 
             // Drive Speed
-            if (BaseCommand == Command.Audio
-                || BaseCommand == Command.BluRay
-                || BaseCommand == Command.CompactDisc
-                || BaseCommand == Command.Data
-                || BaseCommand == Command.DigitalVideoDisc
-                || BaseCommand == Command.GDROM
-                || BaseCommand == Command.SACD
-                || BaseCommand == Command.Swap
-                || BaseCommand == Command.XBOX
-                || BaseCommand == Command.XBOXSwap
-                || BaseCommand == Command.XGD2Swap
-                || BaseCommand == Command.XGD3Swap)
+            if (BaseCommand == CommandStrings.Audio
+                || BaseCommand == CommandStrings.BluRay
+                || BaseCommand == CommandStrings.CompactDisc
+                || BaseCommand == CommandStrings.Data
+                || BaseCommand == CommandStrings.DigitalVideoDisc
+                || BaseCommand == CommandStrings.GDROM
+                || BaseCommand == CommandStrings.SACD
+                || BaseCommand == CommandStrings.Swap
+                || BaseCommand == CommandStrings.XBOX
+                || BaseCommand == CommandStrings.XBOXSwap
+                || BaseCommand == CommandStrings.XGD2Swap
+                || BaseCommand == CommandStrings.XGD3Swap)
             {
                 if (DriveSpeed != null)
                     parameters.Add(DriveSpeed.ToString());
@@ -854,8 +832,8 @@ namespace MPF.DiscImageCreator
             }
 
             // LBA Markers
-            if (BaseCommand == Command.Audio
-                || BaseCommand == Command.Data)
+            if (BaseCommand == CommandStrings.Audio
+                || BaseCommand == CommandStrings.Data)
             {
                 if (StartLBAValue != null && StartLBAValue > 0
                     && EndLBAValue != null && EndLBAValue > 0)
@@ -868,36 +846,36 @@ namespace MPF.DiscImageCreator
             }
 
             // Add Offset
-            if (GetSupportedCommands(Flag.AddOffset).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.AddOffset))
             {
-                if (this[Flag.AddOffset] == true)
+                if (this[FlagStrings.AddOffset] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.AddOffset));
+                    parameters.Add(FlagStrings.AddOffset);
                     if (AddOffsetValue != null)
                         parameters.Add(AddOffsetValue.ToString());
                 }
             }
 
             // AMSF Dumping
-            if (GetSupportedCommands(Flag.AMSF).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.AMSF))
             {
-                if (this[Flag.AMSF] == true)
-                    parameters.Add(Converters.LongName(Flag.AMSF));
+                if (this[FlagStrings.AMSF] == true)
+                    parameters.Add(FlagStrings.AMSF);
             }
 
             // Atari Jaguar CD
-            if (GetSupportedCommands(Flag.AtariJaguar).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.AtariJaguar))
             {
-                if (this[Flag.AtariJaguar] == true)
-                    parameters.Add(Converters.LongName(Flag.AtariJaguar));
+                if (this[FlagStrings.AtariJaguar] == true)
+                    parameters.Add(FlagStrings.AtariJaguar);
             }
 
             // BE Opcode
-            if (GetSupportedCommands(Flag.BEOpcode).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.BEOpcode))
             {
-                if (this[Flag.BEOpcode] == true && this[Flag.D8Opcode] != true)
+                if (this[FlagStrings.BEOpcode] == true && this[FlagStrings.D8Opcode] != true)
                 {
-                    parameters.Add(Converters.LongName(Flag.BEOpcode));
+                    parameters.Add(FlagStrings.BEOpcode);
                     if (BEOpcodeValue != null
                         && (BEOpcodeValue == "raw" || BEOpcodeValue == "pack"))
                         parameters.Add(BEOpcodeValue);
@@ -905,11 +883,11 @@ namespace MPF.DiscImageCreator
             }
 
             // C2 Opcode
-            if (GetSupportedCommands(Flag.C2Opcode).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.C2Opcode))
             {
-                if (this[Flag.C2Opcode] == true)
+                if (this[FlagStrings.C2Opcode] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.C2Opcode));
+                    parameters.Add(FlagStrings.C2Opcode);
                     if (C2OpcodeValue[0] != null)
                     {
                         if (C2OpcodeValue[0] > 0)
@@ -948,39 +926,39 @@ namespace MPF.DiscImageCreator
             }
 
             // Copyright Management Information
-            if (GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.CopyrightManagementInformation))
             {
-                if (this[Flag.CopyrightManagementInformation] == true)
-                    parameters.Add(Converters.LongName(Flag.CopyrightManagementInformation));
+                if (this[FlagStrings.CopyrightManagementInformation] == true)
+                    parameters.Add(FlagStrings.CopyrightManagementInformation);
             }
 
             // D8 Opcode
-            if (GetSupportedCommands(Flag.D8Opcode).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.D8Opcode))
             {
-                if (this[Flag.D8Opcode] == true)
-                    parameters.Add(Converters.LongName(Flag.D8Opcode));
+                if (this[FlagStrings.D8Opcode] == true)
+                    parameters.Add(FlagStrings.D8Opcode);
             }
 
             // Disable Beep
-            if (GetSupportedCommands(Flag.DisableBeep).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.DisableBeep))
             {
-                if (this[Flag.DisableBeep] == true)
-                    parameters.Add(Converters.LongName(Flag.DisableBeep));
+                if (this[FlagStrings.DisableBeep] == true)
+                    parameters.Add(FlagStrings.DisableBeep);
             }
 
             // Extract MicroSoftCabFile
-            if (GetSupportedCommands(Flag.ExtractMicroSoftCabFile).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.ExtractMicroSoftCabFile))
             {
-                if (this[Flag.ExtractMicroSoftCabFile] == true)
-                    parameters.Add(Converters.LongName(Flag.ExtractMicroSoftCabFile));
+                if (this[FlagStrings.ExtractMicroSoftCabFile] == true)
+                    parameters.Add(FlagStrings.ExtractMicroSoftCabFile);
             }
 
             // Fix
-            if (GetSupportedCommands(Flag.Fix).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.Fix))
             {
-                if (this[Flag.Fix] == true)
+                if (this[FlagStrings.Fix] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.Fix));
+                    parameters.Add(FlagStrings.Fix);
                     if (FixValue != null)
                         parameters.Add(FixValue.ToString());
                     else
@@ -989,109 +967,109 @@ namespace MPF.DiscImageCreator
             }
 
             // Force Unit Access
-            if (GetSupportedCommands(Flag.ForceUnitAccess).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.ForceUnitAccess))
             {
-                if (this[Flag.ForceUnitAccess] == true)
+                if (this[FlagStrings.ForceUnitAccess] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.ForceUnitAccess));
+                    parameters.Add(FlagStrings.ForceUnitAccess);
                     if (ForceUnitAccessValue != null)
                         parameters.Add(ForceUnitAccessValue.ToString());
                 }
             }
 
             // Multi-Sector Read
-            if (GetSupportedCommands(Flag.MultiSectorRead).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.MultiSectorRead))
             {
-                if (this[Flag.MultiSectorRead] == true)
-                    parameters.Add(Converters.LongName(Flag.MultiSectorRead));
+                if (this[FlagStrings.MultiSectorRead] == true)
+                    parameters.Add(FlagStrings.MultiSectorRead);
             }
 
             // Multi-Session
-            if (GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.MultiSession))
             {
-                if (this[Flag.MultiSession] == true)
-                    parameters.Add(Converters.LongName(Flag.MultiSession));
+                if (this[FlagStrings.MultiSession] == true)
+                    parameters.Add(FlagStrings.MultiSession);
             }
 
             // Not fix SubP
-            if (GetSupportedCommands(Flag.NoFixSubP).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.NoFixSubP))
             {
-                if (this[Flag.NoFixSubP] == true)
-                    parameters.Add(Converters.LongName(Flag.NoFixSubP));
+                if (this[FlagStrings.NoFixSubP] == true)
+                    parameters.Add(FlagStrings.NoFixSubP);
             }
 
             // Not fix SubQ
-            if (GetSupportedCommands(Flag.NoFixSubQ).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.NoFixSubQ))
             {
-                if (this[Flag.NoFixSubQ] == true)
-                    parameters.Add(Converters.LongName(Flag.NoFixSubQ));
+                if (this[FlagStrings.NoFixSubQ] == true)
+                    parameters.Add(FlagStrings.NoFixSubQ);
             }
 
             // Not fix SubQ (PlayStation LibCrypt)
-            if (GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.NoFixSubQLibCrypt))
             {
-                if (this[Flag.NoFixSubQLibCrypt] == true)
-                    parameters.Add(Converters.LongName(Flag.NoFixSubQLibCrypt));
+                if (this[FlagStrings.NoFixSubQLibCrypt] == true)
+                    parameters.Add(FlagStrings.NoFixSubQLibCrypt);
             }
 
             // Not fix SubQ (SecuROM)
-            if (GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.NoFixSubQSecuROM))
             {
-                if (this[Flag.NoFixSubQSecuROM] == true)
-                    parameters.Add(Converters.LongName(Flag.NoFixSubQSecuROM));
+                if (this[FlagStrings.NoFixSubQSecuROM] == true)
+                    parameters.Add(FlagStrings.NoFixSubQSecuROM);
             }
 
             // Not fix SubRtoW
-            if (GetSupportedCommands(Flag.NoFixSubRtoW).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.NoFixSubRtoW))
             {
-                if (this[Flag.NoFixSubRtoW] == true)
-                    parameters.Add(Converters.LongName(Flag.NoFixSubRtoW));
+                if (this[FlagStrings.NoFixSubRtoW] == true)
+                    parameters.Add(FlagStrings.NoFixSubRtoW);
             }
 
             // Not skip security sectors
-            if (GetSupportedCommands(Flag.NoSkipSS).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.NoSkipSS))
             {
-                if (this[Flag.NoSkipSS] == true)
+                if (this[FlagStrings.NoSkipSS] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.NoSkipSS));
+                    parameters.Add(FlagStrings.NoSkipSS);
                     if (NoSkipSecuritySectorValue != null)
                         parameters.Add(NoSkipSecuritySectorValue.ToString());
                 }
             }
 
             // Pad sectors
-            if (GetSupportedCommands(Flag.PadSector).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.PadSector))
             {
-                if (this[Flag.PadSector] == true)
+                if (this[FlagStrings.PadSector] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.PadSector));
+                    parameters.Add(FlagStrings.PadSector);
                     if (PadSectorValue != null)
                         parameters.Add(PadSectorValue.ToString());
                 }
             }
 
             // Raw read (2064 byte/sector)
-            if (GetSupportedCommands(Flag.Raw).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.Raw))
             {
-                if (this[Flag.Raw] == true)
-                    parameters.Add(Converters.LongName(Flag.Raw));
+                if (this[FlagStrings.Raw] == true)
+                    parameters.Add(FlagStrings.Raw);
             }
 
             // Resume
-            if (GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.Resume))
             {
-                if (this[Flag.Resume] == true)
-                    parameters.Add(Converters.LongName(Flag.Resume));
+                if (this[FlagStrings.Resume] == true)
+                    parameters.Add(FlagStrings.Resume);
             }
 
             // Reverse read
-            if (GetSupportedCommands(Flag.Reverse).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.Reverse))
             {
-                if (this[Flag.Reverse] == true)
+                if (this[FlagStrings.Reverse] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.Reverse));
+                    parameters.Add(FlagStrings.Reverse);
 
-                    if (BaseCommand == Command.DigitalVideoDisc)
+                    if (BaseCommand == CommandStrings.DigitalVideoDisc)
                     {
                         if (ReverseStartLBAValue == null || ReverseEndLBAValue == null)
                             return null;
@@ -1103,18 +1081,18 @@ namespace MPF.DiscImageCreator
             }
 
             // Scan PlayStation anti-mod strings
-            if (GetSupportedCommands(Flag.ScanAntiMod).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.ScanAntiMod))
             {
-                if (this[Flag.ScanAntiMod] == true)
-                    parameters.Add(Converters.LongName(Flag.ScanAntiMod));
+                if (this[FlagStrings.ScanAntiMod] == true)
+                    parameters.Add(FlagStrings.ScanAntiMod);
             }
 
             // Scan file to detect protect
-            if (GetSupportedCommands(Flag.ScanFileProtect).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.ScanFileProtect))
             {
-                if (this[Flag.ScanFileProtect] == true)
+                if (this[FlagStrings.ScanFileProtect] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.ScanFileProtect));
+                    parameters.Add(FlagStrings.ScanFileProtect);
                     if (ScanFileProtectValue != null)
                     {
                         if (ScanFileProtectValue > 0)
@@ -1126,25 +1104,25 @@ namespace MPF.DiscImageCreator
             }
 
             // Scan file to detect protect
-            if (GetSupportedCommands(Flag.ScanSectorProtect).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.ScanSectorProtect))
             {
-                if (this[Flag.ScanSectorProtect] == true)
-                    parameters.Add(Converters.LongName(Flag.ScanSectorProtect));
+                if (this[FlagStrings.ScanSectorProtect] == true)
+                    parameters.Add(FlagStrings.ScanSectorProtect);
             }
 
             // Scan 74:00:00 (Saturn)
-            if (GetSupportedCommands(Flag.SeventyFour).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.SeventyFour))
             {
-                if (this[Flag.SeventyFour] == true)
-                    parameters.Add(Converters.LongName(Flag.SeventyFour));
+                if (this[FlagStrings.SeventyFour] == true)
+                    parameters.Add(FlagStrings.SeventyFour);
             }
 
             // Skip sectors
-            if (GetSupportedCommands(Flag.SkipSector).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.SkipSector))
             {
-                if (this[Flag.SkipSector] == true)
+                if (this[FlagStrings.SkipSector] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.SkipSector));
+                    parameters.Add(FlagStrings.SkipSector);
                     if (SkipSectorValue[0] != null)
                     {
                         if (SkipSectorValue[0] > 0)
@@ -1161,11 +1139,11 @@ namespace MPF.DiscImageCreator
             }
 
             // Set Subchannel read level
-            if (GetSupportedCommands(Flag.SubchannelReadLevel).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.SubchannelReadLevel))
             {
-                if (this[Flag.SubchannelReadLevel] == true)
+                if (this[FlagStrings.SubchannelReadLevel] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.SubchannelReadLevel));
+                    parameters.Add(FlagStrings.SubchannelReadLevel);
                     if (SubchannelReadLevelValue != null)
                     {
                         if (SubchannelReadLevelValue >= 0 && SubchannelReadLevelValue <= 2)
@@ -1177,18 +1155,18 @@ namespace MPF.DiscImageCreator
             }
 
             // Use Anchor Volume Descriptor Pointer
-            if (GetSupportedCommands(Flag.UseAnchorVolumeDescriptorPointer).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.UseAnchorVolumeDescriptorPointer))
             {
-                if (this[Flag.UseAnchorVolumeDescriptorPointer] == true)
-                    parameters.Add(Converters.LongName(Flag.UseAnchorVolumeDescriptorPointer));
+                if (this[FlagStrings.UseAnchorVolumeDescriptorPointer] == true)
+                    parameters.Add(FlagStrings.UseAnchorVolumeDescriptorPointer);
             }
 
             // VideoNow
-            if (GetSupportedCommands(Flag.VideoNow).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.VideoNow))
             {
-                if (this[Flag.VideoNow] == true)
+                if (this[FlagStrings.VideoNow] == true)
                 {
-                    parameters.Add(Converters.LongName(Flag.VideoNow));
+                    parameters.Add(FlagStrings.VideoNow);
                     if (VideoNowValue != null)
                     {
                         if (VideoNowValue >= 0)
@@ -1200,17 +1178,17 @@ namespace MPF.DiscImageCreator
             }
 
             // VideoNow Color
-            if (GetSupportedCommands(Flag.VideoNowColor).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.VideoNowColor))
             {
-                if (this[Flag.VideoNowColor] == true)
-                    parameters.Add(Converters.LongName(Flag.VideoNowColor));
+                if (this[FlagStrings.VideoNowColor] == true)
+                    parameters.Add(FlagStrings.VideoNowColor);
             }
 
             // VideoNowXP
-            if (GetSupportedCommands(Flag.VideoNowXP).Contains(BaseCommand))
+            if (IsFlagSupported(FlagStrings.VideoNowXP))
             {
-                if (this[Flag.VideoNowXP] == true)
-                    parameters.Add(Converters.LongName(Flag.VideoNowXP));
+                if (this[FlagStrings.VideoNowXP] == true)
+                    parameters.Add(FlagStrings.VideoNowXP);
             }
 
             return string.Join(" ", parameters);
@@ -1330,21 +1308,21 @@ namespace MPF.DiscImageCreator
         {
             switch (BaseCommand)
             {
-                case Command.Audio:
-                case Command.BluRay:
-                case Command.CompactDisc:
-                case Command.Data:
-                case Command.DigitalVideoDisc:
-                case Command.Disk:
-                case Command.Floppy:
-                case Command.GDROM:
-                case Command.SACD:
-                case Command.Swap:
-                case Command.Tape:
-                case Command.XBOX:
-                case Command.XBOXSwap:
-                case Command.XGD2Swap:
-                case Command.XGD3Swap:
+                case CommandStrings.Audio:
+                case CommandStrings.BluRay:
+                case CommandStrings.CompactDisc:
+                case CommandStrings.Data:
+                case CommandStrings.DigitalVideoDisc:
+                case CommandStrings.Disk:
+                case CommandStrings.Floppy:
+                case CommandStrings.GDROM:
+                case CommandStrings.SACD:
+                case CommandStrings.Swap:
+                case CommandStrings.Tape:
+                case CommandStrings.XBOX:
+                case CommandStrings.XBOXSwap:
+                case CommandStrings.XGD2Swap:
+                case CommandStrings.XGD3Swap:
                     return true;
 
                 default:
@@ -1355,7 +1333,7 @@ namespace MPF.DiscImageCreator
         /// <inheritdoc/>
         protected override void ResetValues()
         {
-            BaseCommand = Command.NONE;
+            BaseCommand = null;
 
             DriveLetter = null;
             DriveSpeed = null;
@@ -1365,7 +1343,7 @@ namespace MPF.DiscImageCreator
             StartLBAValue = null;
             EndLBAValue = null;
 
-            _flags = new Dictionary<Flag, bool?>();
+            flags = new Dictionary<string, bool?>();
 
             AddOffsetValue = null;
             BEOpcodeValue = null;
@@ -1394,7 +1372,7 @@ namespace MPF.DiscImageCreator
 
             // Set disable beep flag, if needed
             if (options.DICQuietMode)
-                this[Flag.DisableBeep] = true;
+                this[FlagStrings.DisableBeep] = true;
 
             // Set the C2 reread count
             switch (options.DICRereadCount)
@@ -1414,45 +1392,45 @@ namespace MPF.DiscImageCreator
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    this[Flag.C2Opcode] = true;
+                    this[FlagStrings.C2Opcode] = true;
 
                     switch (this.System)
                     {
                         case KnownSystem.AppleMacintosh:
                         case KnownSystem.IBMPCCompatible:
-                            this[Flag.NoFixSubQSecuROM] = true;
-                            this[Flag.ScanFileProtect] = true;
-                            this[Flag.ScanSectorProtect] = options.DICParanoidMode;
-                            this[Flag.SubchannelReadLevel] = options.DICParanoidMode;
-                            if (this[Flag.SubchannelReadLevel] == true)
+                            this[FlagStrings.NoFixSubQSecuROM] = true;
+                            this[FlagStrings.ScanFileProtect] = true;
+                            this[FlagStrings.ScanSectorProtect] = options.DICParanoidMode;
+                            this[FlagStrings.SubchannelReadLevel] = options.DICParanoidMode;
+                            if (this[FlagStrings.SubchannelReadLevel] == true)
                                 SubchannelReadLevelValue = 2;
 
                             break;
                         case KnownSystem.AtariJaguarCD:
-                            this[Flag.AtariJaguar] = true;
+                            this[FlagStrings.AtariJaguar] = true;
                             break;
                         case KnownSystem.HasbroVideoNow:
                         case KnownSystem.HasbroVideoNowColor:
                         case KnownSystem.HasbroVideoNowJr:
                         case KnownSystem.HasbroVideoNowXP:
-                            this[Flag.AddOffset] = true;
+                            this[FlagStrings.AddOffset] = true;
                             this.AddOffsetValue = 18032;
                             break;
                         case KnownSystem.SonyPlayStation:
-                            this[Flag.ScanAntiMod] = true;
-                            this[Flag.NoFixSubQLibCrypt] = true;
+                            this[FlagStrings.ScanAntiMod] = true;
+                            this[FlagStrings.NoFixSubQLibCrypt] = true;
                             break;
                     }
                     break;
                 case MediaType.DVD:
-                    this[Flag.CopyrightManagementInformation] = options.DICUseCMIFlag;
-                    this[Flag.ScanFileProtect] = options.DICParanoidMode;
+                    this[FlagStrings.CopyrightManagementInformation] = options.DICUseCMIFlag;
+                    this[FlagStrings.ScanFileProtect] = options.DICParanoidMode;
                     break;
                 case MediaType.GDROM:
-                    this[Flag.C2Opcode] = true;
+                    this[FlagStrings.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
-                    this[Flag.CopyrightManagementInformation] = options.DICUseCMIFlag;
+                    this[FlagStrings.CopyrightManagementInformation] = options.DICUseCMIFlag;
                     break;
                 case MediaType.BluRay:
                     // Currently no defaults set
@@ -1460,10 +1438,10 @@ namespace MPF.DiscImageCreator
 
                 // Special Formats
                 case MediaType.NintendoGameCubeGameDisc:
-                    this[Flag.Raw] = true;
+                    this[FlagStrings.Raw] = true;
                     break;
                 case MediaType.NintendoWiiOpticalDisc:
-                    this[Flag.Raw] = true;
+                    this[FlagStrings.Raw] = true;
                     break;
 
                 // Non-optical
@@ -1489,15 +1467,13 @@ namespace MPF.DiscImageCreator
                 .ToList();
 
             // Determine what the commandline should look like given the first item
-            BaseCommand = Converters.StringToCommand(parts[0]);
-            if (BaseCommand == Command.NONE)
-                return false;
+            BaseCommand = parts[0];
 
             // Loop through ordered command-specific flags
             int index = -1;
             switch (BaseCommand)
             {
-                case Command.Audio:
+                case CommandStrings.Audio:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1526,7 +1502,7 @@ namespace MPF.DiscImageCreator
                     index = 6;
                     break;
 
-                case Command.BluRay:
+                case CommandStrings.BluRay:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1545,7 +1521,7 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.Close:
+                case CommandStrings.Close:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1556,7 +1532,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.CompactDisc:
+                case CommandStrings.CompactDisc:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1575,7 +1551,7 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.Data:
+                case CommandStrings.Data:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1604,7 +1580,7 @@ namespace MPF.DiscImageCreator
                     index = 6;
                     break;
 
-                case Command.DigitalVideoDisc:
+                case CommandStrings.DigitalVideoDisc:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1623,7 +1599,7 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.Disk:
+                case CommandStrings.Disk:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1639,7 +1615,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.DriveSpeed:
+                case CommandStrings.DriveSpeed:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1650,7 +1626,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Eject:
+                case CommandStrings.Eject:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1661,7 +1637,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Floppy:
+                case CommandStrings.Floppy:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1677,7 +1653,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.GDROM:
+                case CommandStrings.GDROM:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1696,7 +1672,7 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.MDS:
+                case CommandStrings.MDS:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -1707,7 +1683,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Merge:
+                case CommandStrings.Merge:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -1723,7 +1699,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Reset:
+                case CommandStrings.Reset:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1734,7 +1710,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.SACD:
+                case CommandStrings.SACD:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1753,7 +1729,7 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.Start:
+                case CommandStrings.Start:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1764,7 +1740,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Stop:
+                case CommandStrings.Stop:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1775,7 +1751,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Sub:
+                case CommandStrings.Sub:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -1786,7 +1762,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.Swap:
+                case CommandStrings.Swap:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1805,7 +1781,7 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.Tape:
+                case CommandStrings.Tape:
                     if (!DoesExist(parts, 1) || IsFlag(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
@@ -1816,7 +1792,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case Command.XBOX:
+                case CommandStrings.XBOX:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1835,9 +1811,9 @@ namespace MPF.DiscImageCreator
                     index = 4;
                     break;
 
-                case Command.XBOXSwap:
-                case Command.XGD2Swap:
-                case Command.XGD3Swap:
+                case CommandStrings.XBOXSwap:
+                case CommandStrings.XGD2Swap:
+                case CommandStrings.XGD3Swap:
                     if (!DoesExist(parts, 1) || !IsValidDriveLetter(parts[1]))
                         return false;
                     else
@@ -1872,18 +1848,18 @@ namespace MPF.DiscImageCreator
                     switch (parts[i])
                     {
                         case FlagStrings.AddOffset:
-                            if (!GetSupportedCommands(Flag.AddOffset).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.AddOffset))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.AddOffset] = true;
+                                this[FlagStrings.AddOffset] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.AddOffset] = true;
+                                this[FlagStrings.AddOffset] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1]))
@@ -1891,38 +1867,38 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.AddOffset] = true;
+                            this[FlagStrings.AddOffset] = true;
                             AddOffsetValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.AMSF:
-                            if (!GetSupportedCommands(Flag.AMSF).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.AMSF))
                                 return false;
 
-                            this[Flag.AMSF] = true;
+                            this[FlagStrings.AMSF] = true;
                             break;
 
                         case FlagStrings.AtariJaguar:
-                            if (!GetSupportedCommands(Flag.AtariJaguar).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.AtariJaguar))
                                 return false;
 
-                            this[Flag.AtariJaguar] = true;
+                            this[FlagStrings.AtariJaguar] = true;
                             break;
 
                         case FlagStrings.BEOpcode:
-                            if (!GetSupportedCommands(Flag.BEOpcode).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.BEOpcode))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.BEOpcode] = true;
+                                this[FlagStrings.BEOpcode] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.BEOpcode] = true;
+                                this[FlagStrings.BEOpcode] = true;
                                 break;
                             }
                             else if (!string.Equals(parts[i + 1], "raw", StringComparison.OrdinalIgnoreCase)
@@ -1931,16 +1907,16 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.BEOpcode] = true;
+                            this[FlagStrings.BEOpcode] = true;
                             BEOpcodeValue = parts[i + 1].ToLowerInvariant();
                             i++;
                             break;
 
                         case FlagStrings.C2Opcode:
-                            if (!GetSupportedCommands(Flag.C2Opcode).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.C2Opcode))
                                 return false;
 
-                            this[Flag.C2Opcode] = true;
+                            this[FlagStrings.C2Opcode] = true;
                             for (int j = 0; j < 4; j++)
                             {
                                 if (!DoesExist(parts, i + 1))
@@ -1965,59 +1941,59 @@ namespace MPF.DiscImageCreator
                             break;
 
                         case FlagStrings.CopyrightManagementInformation:
-                            if (!GetSupportedCommands(Flag.CopyrightManagementInformation).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.CopyrightManagementInformation))
                                 return false;
 
-                            this[Flag.CopyrightManagementInformation] = true;
+                            this[FlagStrings.CopyrightManagementInformation] = true;
                             break;
 
                         case FlagStrings.D8Opcode:
-                            if (!GetSupportedCommands(Flag.D8Opcode).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.D8Opcode))
                                 return false;
 
-                            this[Flag.D8Opcode] = true;
+                            this[FlagStrings.D8Opcode] = true;
                             break;
 
                         case FlagStrings.DisableBeep:
-                            if (!GetSupportedCommands(Flag.DisableBeep).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.DisableBeep))
                                 return false;
 
-                            this[Flag.DisableBeep] = true;
+                            this[FlagStrings.DisableBeep] = true;
                             break;
 
                         case FlagStrings.ExtractMicroSoftCabFile:
-                            if (!GetSupportedCommands(Flag.ExtractMicroSoftCabFile).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.ExtractMicroSoftCabFile))
                                 return false;
 
-                            this[Flag.ExtractMicroSoftCabFile] = true;
+                            this[FlagStrings.ExtractMicroSoftCabFile] = true;
                             break;
 
                         case FlagStrings.Fix:
-                            if (!GetSupportedCommands(Flag.Fix).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.Fix))
                                 return false;
                             else if (!DoesExist(parts, i + 1))
                                 return false;
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
                                 return false;
 
-                            this[Flag.Fix] = true;
+                            this[FlagStrings.Fix] = true;
                             FixValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.ForceUnitAccess:
-                            if (!GetSupportedCommands(Flag.ForceUnitAccess).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.ForceUnitAccess))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.ForceUnitAccess] = true;
+                                this[FlagStrings.ForceUnitAccess] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.ForceUnitAccess] = true;
+                                this[FlagStrings.ForceUnitAccess] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
@@ -2025,73 +2001,73 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.ForceUnitAccess] = true;
+                            this[FlagStrings.ForceUnitAccess] = true;
                             ForceUnitAccessValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.MultiSectorRead:
-                            if (!GetSupportedCommands(Flag.MultiSectorRead).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.MultiSectorRead))
                                 return false;
 
-                            this[Flag.MultiSectorRead] = true;
+                            this[FlagStrings.MultiSectorRead] = true;
                             break;
 
                         case FlagStrings.MultiSession:
-                            if (!GetSupportedCommands(Flag.MultiSession).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.MultiSession))
                                 return false;
 
-                            this[Flag.MultiSession] = true;
+                            this[FlagStrings.MultiSession] = true;
                             break;
 
                         case FlagStrings.NoFixSubP:
-                            if (!GetSupportedCommands(Flag.NoFixSubP).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.NoFixSubP))
                                 return false;
 
-                            this[Flag.NoFixSubP] = true;
+                            this[FlagStrings.NoFixSubP] = true;
                             break;
 
                         case FlagStrings.NoFixSubQ:
-                            if (!GetSupportedCommands(Flag.NoFixSubQ).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.NoFixSubQ))
                                 return false;
 
-                            this[Flag.NoFixSubQ] = true;
+                            this[FlagStrings.NoFixSubQ] = true;
                             break;
 
                         case FlagStrings.NoFixSubQLibCrypt:
-                            if (!GetSupportedCommands(Flag.NoFixSubQLibCrypt).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.NoFixSubQLibCrypt))
                                 return false;
 
-                            this[Flag.NoFixSubQLibCrypt] = true;
+                            this[FlagStrings.NoFixSubQLibCrypt] = true;
                             break;
 
                         case FlagStrings.NoFixSubQSecuROM:
-                            if (!GetSupportedCommands(Flag.NoFixSubQSecuROM).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.NoFixSubQSecuROM))
                                 return false;
 
-                            this[Flag.NoFixSubQSecuROM] = true;
+                            this[FlagStrings.NoFixSubQSecuROM] = true;
                             break;
 
                         case FlagStrings.NoFixSubRtoW:
-                            if (!GetSupportedCommands(Flag.NoFixSubRtoW).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.NoFixSubRtoW))
                                 return false;
 
-                            this[Flag.NoFixSubRtoW] = true;
+                            this[FlagStrings.NoFixSubRtoW] = true;
                             break;
 
                         case FlagStrings.NoSkipSS:
-                            if (!GetSupportedCommands(Flag.NoSkipSS).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.NoSkipSS))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.NoSkipSS] = true;
+                                this[FlagStrings.NoSkipSS] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.NoSkipSS] = true;
+                                this[FlagStrings.NoSkipSS] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
@@ -2099,24 +2075,24 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.NoSkipSS] = true;
+                            this[FlagStrings.NoSkipSS] = true;
                             NoSkipSecuritySectorValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.PadSector:
-                            if (!GetSupportedCommands(Flag.PadSector).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.PadSector))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.PadSector] = true;
+                                this[FlagStrings.PadSector] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.PadSector] = true;
+                                this[FlagStrings.PadSector] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0, upperBound: 1))
@@ -2124,31 +2100,31 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.PadSector] = true;
+                            this[FlagStrings.PadSector] = true;
                             PadSectorValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.Raw:
-                            if (!GetSupportedCommands(Flag.Raw).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.Raw))
                                 return false;
 
-                            this[Flag.Raw] = true;
+                            this[FlagStrings.Raw] = true;
                             break;
 
                         case FlagStrings.Resume:
-                            if (!GetSupportedCommands(Flag.Resume).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.Resume))
                                 return false;
 
-                            this[Flag.Resume] = true;
+                            this[FlagStrings.Resume] = true;
                             break;
 
                         case FlagStrings.Reverse:
-                            if (!GetSupportedCommands(Flag.Reverse).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.Reverse))
                                 return false;
 
                             // DVD specifically requires StartLBA and EndLBA
-                            if (BaseCommand == Command.DigitalVideoDisc)
+                            if (BaseCommand == CommandStrings.DigitalVideoDisc)
                             {
                                 if (!DoesExist(parts, i + 1) || !DoesExist(parts, i + 2))
                                     return false;
@@ -2160,29 +2136,29 @@ namespace MPF.DiscImageCreator
                                 i += 2;
                             }
 
-                            this[Flag.Reverse] = true;
+                            this[FlagStrings.Reverse] = true;
                             break;
 
                         case FlagStrings.ScanAntiMod:
-                            if (!GetSupportedCommands(Flag.ScanAntiMod).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.ScanAntiMod))
                                 return false;
 
-                            this[Flag.ScanAntiMod] = true;
+                            this[FlagStrings.ScanAntiMod] = true;
                             break;
 
                         case FlagStrings.ScanFileProtect:
-                            if (!GetSupportedCommands(Flag.ScanFileProtect).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.ScanFileProtect))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.ScanFileProtect] = true;
+                                this[FlagStrings.ScanFileProtect] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.ScanFileProtect] = true;
+                                this[FlagStrings.ScanFileProtect] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
@@ -2190,30 +2166,30 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.ScanFileProtect] = true;
+                            this[FlagStrings.ScanFileProtect] = true;
                             ScanFileProtectValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.ScanSectorProtect:
-                            if (!GetSupportedCommands(Flag.ScanSectorProtect).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.ScanSectorProtect))
                                 return false;
 
-                            this[Flag.ScanSectorProtect] = true;
+                            this[FlagStrings.ScanSectorProtect] = true;
                             break;
 
                         case FlagStrings.SeventyFour:
-                            if (!GetSupportedCommands(Flag.SeventyFour).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.SeventyFour))
                                 return false;
 
-                            this[Flag.SeventyFour] = true;
+                            this[FlagStrings.SeventyFour] = true;
                             break;
 
                         case FlagStrings.SkipSector:
-                            if (!GetSupportedCommands(Flag.SkipSector).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.SkipSector))
                                 return false;
 
-                            this[Flag.SkipSector] = true;
+                            this[FlagStrings.SkipSector] = true;
                             for (int j = 0; j < 2; j++)
                             {
                                 if (!DoesExist(parts, i + 1))
@@ -2238,18 +2214,18 @@ namespace MPF.DiscImageCreator
                             break;
 
                         case FlagStrings.SubchannelReadLevel:
-                            if (!GetSupportedCommands(Flag.SubchannelReadLevel).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.SubchannelReadLevel))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.SubchannelReadLevel] = true;
+                                this[FlagStrings.SubchannelReadLevel] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.SubchannelReadLevel] = true;
+                                this[FlagStrings.SubchannelReadLevel] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0, upperBound: 2))
@@ -2257,31 +2233,31 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.SubchannelReadLevel] = true;
+                            this[FlagStrings.SubchannelReadLevel] = true;
                             SubchannelReadLevelValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.UseAnchorVolumeDescriptorPointer:
-                            if (!GetSupportedCommands(Flag.UseAnchorVolumeDescriptorPointer).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.UseAnchorVolumeDescriptorPointer))
                                 return false;
 
-                            this[Flag.UseAnchorVolumeDescriptorPointer] = true;
+                            this[FlagStrings.UseAnchorVolumeDescriptorPointer] = true;
                             break;
 
                         case FlagStrings.VideoNow:
-                            if (!GetSupportedCommands(Flag.VideoNow).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.VideoNow))
                             {
                                 return false;
                             }
                             else if (!DoesExist(parts, i + 1))
                             {
-                                this[Flag.VideoNow] = true;
+                                this[FlagStrings.VideoNow] = true;
                                 break;
                             }
                             else if (IsFlag(parts[i + 1]))
                             {
-                                this[Flag.VideoNow] = true;
+                                this[FlagStrings.VideoNow] = true;
                                 break;
                             }
                             else if (!IsValidInt32(parts[i + 1], lowerBound: 0))
@@ -2289,23 +2265,23 @@ namespace MPF.DiscImageCreator
                                 return false;
                             }
 
-                            this[Flag.VideoNow] = true;
+                            this[FlagStrings.VideoNow] = true;
                             VideoNowValue = Int32.Parse(parts[i + 1]);
                             i++;
                             break;
 
                         case FlagStrings.VideoNowColor:
-                            if (!GetSupportedCommands(Flag.VideoNowColor).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.VideoNowColor))
                                 return false;
 
-                            this[Flag.VideoNowColor] = true;
+                            this[FlagStrings.VideoNowColor] = true;
                             break;
 
                         case FlagStrings.VideoNowXP:
-                            if (!GetSupportedCommands(Flag.VideoNowXP).Contains(BaseCommand))
+                            if (!IsFlagSupported(FlagStrings.VideoNowXP))
                                 return false;
 
-                            this[Flag.VideoNowXP] = true;
+                            this[FlagStrings.VideoNowXP] = true;
                             break;
 
                         default:
@@ -2322,200 +2298,221 @@ namespace MPF.DiscImageCreator
         #region Private Extra Methods
 
         /// <summary>
-        /// Get the list of commands that use a given flag
+        /// Get all commands mapped to the supported flags
         /// </summary>
-        /// <param name="flag">Flag value to get commands for</param>
         /// <returns>List of DiscImageCreator.Commands, if possible</returns>
-        private static List<Command> GetSupportedCommands(Flag flag)
+        private static Dictionary<string, List<string>> GetCommandSupport()
         {
-            var commands = new List<Command>();
-            switch (flag)
+            return new Dictionary<string, List<string>>()
             {
-                case Flag.AddOffset:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.AMSF:
-                    commands.Add(Command.CompactDisc);
-                    break;
-                case Flag.AtariJaguar:
-                    commands.Add(Command.CompactDisc);
-                    break;
-                case Flag.BEOpcode:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.C2Opcode:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.CopyrightManagementInformation:
-                    commands.Add(Command.DigitalVideoDisc);
-                    break;
-                case Flag.D8Opcode:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.DisableBeep:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.BluRay);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.DigitalVideoDisc);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.SACD);
-                    commands.Add(Command.Swap);
-                    commands.Add(Command.XBOX);
-                    commands.Add(Command.XBOXSwap);
-                    commands.Add(Command.XGD2Swap);
-                    commands.Add(Command.XGD3Swap);
-                    break;
-                case Flag.ExtractMicroSoftCabFile:
-                    commands.Add(Command.CompactDisc);
-                    break;
-                case Flag.Fix:
-                    commands.Add(Command.DigitalVideoDisc);
-                    break;
-                case Flag.ForceUnitAccess:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.BluRay);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.DigitalVideoDisc);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.SACD);
-                    commands.Add(Command.Swap);
-                    commands.Add(Command.XBOX);
-                    commands.Add(Command.XBOXSwap);
-                    commands.Add(Command.XGD2Swap);
-                    commands.Add(Command.XGD3Swap);
-                    break;
-                case Flag.MultiSectorRead:
-                    commands.Add(Command.CompactDisc);
-                    break;
-                case Flag.MultiSession:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.NoFixSubP:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.NoFixSubQ:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.NoFixSubQLibCrypt:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.NoFixSubQSecuROM:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.NoFixSubRtoW:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.NoSkipSS:
-                    commands.Add(Command.BluRay);
-                    commands.Add(Command.XBOX);
-                    commands.Add(Command.XBOXSwap);
-                    commands.Add(Command.XGD2Swap);
-                    commands.Add(Command.XGD3Swap);
-                    break;
-                case Flag.PadSector:
-                    commands.Add(Command.DigitalVideoDisc);
-                    break;
-                case Flag.Raw:
-                    commands.Add(Command.DigitalVideoDisc);
-                    break;
-                case Flag.Resume:
-                    commands.Add(Command.DigitalVideoDisc);
-                    break;
-                case Flag.Reverse:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.DigitalVideoDisc);
-                    break;
-                case Flag.ScanAntiMod:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.ScanFileProtect:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.DigitalVideoDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.ScanSectorProtect:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.SeventyFour:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.SkipSector:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.Data);
-                    break;
-                case Flag.SubchannelReadLevel:
-                    commands.Add(Command.Audio);
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Data);
-                    commands.Add(Command.GDROM);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.UseAnchorVolumeDescriptorPointer:
-                    commands.Add(Command.BluRay);
-                    commands.Add(Command.DigitalVideoDisc);
-                    commands.Add(Command.XBOX);
-                    break;
-                case Flag.VideoNow:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.VideoNowColor:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
-                case Flag.VideoNowXP:
-                    commands.Add(Command.CompactDisc);
-                    commands.Add(Command.Swap);
-                    break;
+                [CommandStrings.Audio] = new List<string>()
+                {
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.SubchannelReadLevel,
+                },
 
-                case Flag.NONE:
-                default:
-                    return commands;
-            }
+                [CommandStrings.BluRay] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                },
 
-            return commands;
+                [CommandStrings.Close] = new List<string>()
+                {
+                },
+
+                [CommandStrings.CompactDisc] = new List<string>()
+                {
+                    FlagStrings.AddOffset,
+                    FlagStrings.AMSF,
+                    FlagStrings.AtariJaguar,
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ExtractMicroSoftCabFile,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSectorRead,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubQLibCrypt,
+                    FlagStrings.NoFixSubQSecuROM,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SeventyFour,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VideoNow,
+                    FlagStrings.VideoNowColor,
+                    FlagStrings.VideoNowXP,
+                },
+
+                [CommandStrings.Data] = new List<string>()
+                {
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SkipSector,
+                    FlagStrings.SubchannelReadLevel,
+                },
+
+                [CommandStrings.DigitalVideoDisc] = new List<string>()
+                {
+                    FlagStrings.CopyrightManagementInformation,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.Fix,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.PadSector,
+                    FlagStrings.Raw,
+                    FlagStrings.Resume,
+                    FlagStrings.Reverse,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                },
+
+                [CommandStrings.Disk] = new List<string>()
+                {
+                },
+
+                [CommandStrings.DriveSpeed] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Eject] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Floppy] = new List<string>()
+                {
+                },
+
+                [CommandStrings.GDROM] = new List<string>()
+                {
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.SubchannelReadLevel,
+                },
+
+                [CommandStrings.MDS] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Merge] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Reset] = new List<string>()
+                {
+                },
+
+                [CommandStrings.SACD] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                },
+
+                [CommandStrings.Start] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Stop] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Sub] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Swap] = new List<string>()
+                {
+                    FlagStrings.AddOffset,
+                    FlagStrings.BEOpcode,
+                    FlagStrings.C2Opcode,
+                    FlagStrings.D8Opcode,
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.MultiSession,
+                    FlagStrings.NoFixSubP,
+                    FlagStrings.NoFixSubQ,
+                    FlagStrings.NoFixSubQLibCrypt,
+                    FlagStrings.NoFixSubQSecuROM,
+                    FlagStrings.NoFixSubRtoW,
+                    FlagStrings.ScanAntiMod,
+                    FlagStrings.ScanFileProtect,
+                    FlagStrings.ScanSectorProtect,
+                    FlagStrings.SeventyFour,
+                    FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VideoNow,
+                    FlagStrings.VideoNowColor,
+                    FlagStrings.VideoNowXP,
+                },
+
+                [CommandStrings.Tape] = new List<string>()
+                {
+                },
+
+                [CommandStrings.XBOX] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                    FlagStrings.UseAnchorVolumeDescriptorPointer,
+                },
+
+                [CommandStrings.XBOXSwap] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                },
+
+                [CommandStrings.XGD2Swap] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                },
+
+                [CommandStrings.XGD3Swap] = new List<string>()
+                {
+                    FlagStrings.DisableBeep,
+                    FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
+                },
+            };
         }
 
         /// <summary>
@@ -2528,7 +2525,7 @@ namespace MPF.DiscImageCreator
             // If we have an invalid combination, we should BaseCommand = null
             if (!Validators.GetValidMediaTypes(system).Contains(type))
             {
-                BaseCommand = Command.NONE;
+                BaseCommand = null;
                 return;
             }
 
@@ -2536,46 +2533,46 @@ namespace MPF.DiscImageCreator
             {
                 case MediaType.CDROM:
                     if (system == KnownSystem.SuperAudioCD)
-                        BaseCommand = Command.SACD;
+                        BaseCommand = CommandStrings.SACD;
                     else
-                        BaseCommand = Command.CompactDisc;
+                        BaseCommand = CommandStrings.CompactDisc;
                     return;
                 case MediaType.DVD:
                     if (system == KnownSystem.MicrosoftXBOX
                         || system == KnownSystem.MicrosoftXBOX360)
                     {
-                        BaseCommand = Command.XBOX;
+                        BaseCommand = CommandStrings.XBOX;
                         return;
                     }
-                    BaseCommand = Command.DigitalVideoDisc;
+                    BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
                 case MediaType.GDROM:
-                    BaseCommand = Command.GDROM;
+                    BaseCommand = CommandStrings.GDROM;
                     return;
                 case MediaType.HDDVD:
-                    BaseCommand = Command.DigitalVideoDisc;
+                    BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
                 case MediaType.BluRay:
-                    BaseCommand = Command.BluRay;
+                    BaseCommand = CommandStrings.BluRay;
                     return;
                 case MediaType.NintendoGameCubeGameDisc:
-                    BaseCommand = Command.DigitalVideoDisc;
+                    BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
                 case MediaType.NintendoWiiOpticalDisc:
-                    BaseCommand = Command.DigitalVideoDisc;
+                    BaseCommand = CommandStrings.DigitalVideoDisc;
                     return;
                 case MediaType.FloppyDisk:
-                    BaseCommand = Command.Floppy;
+                    BaseCommand = CommandStrings.Floppy;
                     return;
                 case MediaType.HardDisk:
-                    BaseCommand = Command.Disk;
+                    BaseCommand = CommandStrings.Disk;
                     return;
                 case MediaType.DataCartridge:
-                    BaseCommand = Command.Tape;
+                    BaseCommand = CommandStrings.Tape;
                     return;
 
                 default:
-                    BaseCommand = Command.NONE;
+                    BaseCommand = null;
                     return;
             }
         }

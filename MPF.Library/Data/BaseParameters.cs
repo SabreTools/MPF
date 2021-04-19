@@ -35,6 +35,49 @@ namespace MPF.Data
         #region Generic Dumping Information
 
         /// <summary>
+        /// Base command to run
+        /// </summary>
+        public string BaseCommand { get; set; }
+
+        /// <summary>
+        /// Set of flags to pass to the executable
+        /// </summary>
+        protected Dictionary<string, bool?> flags = new Dictionary<string, bool?>();
+        protected internal IEnumerable<string> Keys => flags.Keys;
+
+        /// <summary>
+        /// Safe access to currently set flags
+        /// </summary>
+        public bool? this[string key]
+        {
+            get
+            {
+                if (flags.ContainsKey(key))
+                    return flags[key];
+
+                return null;
+            }
+            set
+            {
+                flags[key] = value;
+            }
+        }
+
+        /// <summary>
+        /// Process to track external program
+        /// </summary>
+        private Process process;
+
+        #endregion
+
+        #region Virtual Dumping Information
+
+        /// <summary>
+        /// Command to flag support mappings
+        /// </summary>
+        public virtual Dictionary<string, List<string>> CommandSupport => null;
+
+        /// <summary>
         /// Input path for operations
         /// </summary>
         public virtual string InputPath => null;
@@ -49,11 +92,6 @@ namespace MPF.Data
         /// Get the processing speed from the implementation
         /// </summary>
         public virtual int? Speed { get; set; } = null;
-
-        /// <summary>
-        /// Process to track external program
-        /// </summary>
-        private Process process;
 
         #endregion
 
@@ -161,6 +199,20 @@ namespace MPF.Data
         /// </summary>
         /// <returns>True if it's a dumping command, false otherwise</returns>
         public virtual bool IsDumpingCommand() => true;
+
+        /// <summary>
+        /// Gets if the flag is supported by the current command
+        /// </summary>
+        /// <param name="flag">Flag value to check</param>
+        /// <returns>True if the flag value is supported, false otherwise</returns>
+        public virtual bool IsFlagSupported(string flag)
+        {
+            if (CommandSupport == null)
+                return false;
+            if (!CommandSupport.ContainsKey(this.BaseCommand))
+                return false;
+            return CommandSupport[this.BaseCommand].Contains(flag);
+        }
 
         /// <summary>
         /// Returns if the current Parameter object is valid
