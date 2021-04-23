@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)
 - Add handling for BEh drive _mainInfo.txt changes
 - Fix multiline regex fields during info pulling
