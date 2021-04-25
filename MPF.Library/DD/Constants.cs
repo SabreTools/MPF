@@ -5,6 +5,7 @@ namespace MPF.DD
     /// </summary>
     public static class CommandStrings
     {
+        public const string NONE = "";
         public const string List = "--list";
     }
 

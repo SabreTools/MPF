@@ -320,7 +320,7 @@ namespace MPF.Data
 
             var parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                BaseCommand = DiscImageCreator.Command.Eject,
+                BaseCommand = DiscImageCreator.CommandStrings.Eject,
                 DriveLetter = Drive.Letter.ToString(),
                 ExecutablePath = Options.DiscImageCreatorPath,
             };
@@ -350,7 +350,7 @@ namespace MPF.Data
 
             DiscImageCreator.Parameters parameters = new DiscImageCreator.Parameters(string.Empty)
             {
-                BaseCommand = DiscImageCreator.Command.Reset,
+                BaseCommand = DiscImageCreator.CommandStrings.Reset,
                 DriveLetter = Drive.Letter.ToString(),
                 ExecutablePath = Options.DiscImageCreatorPath,
             };

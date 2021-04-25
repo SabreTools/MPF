@@ -35,6 +35,49 @@ namespace MPF.Data
         #region Generic Dumping Information
 
         /// <summary>
+        /// Base command to run
+        /// </summary>
+        public string BaseCommand { get; set; }
+
+        /// <summary>
+        /// Set of flags to pass to the executable
+        /// </summary>
+        protected Dictionary<string, bool?> flags = new Dictionary<string, bool?>();
+        protected internal IEnumerable<string> Keys => flags.Keys;
+
+        /// <summary>
+        /// Safe access to currently set flags
+        /// </summary>
+        public bool? this[string key]
+        {
+            get
+            {
+                if (flags.ContainsKey(key))
+                    return flags[key];
+
+                return null;
+            }
+            set
+            {
+                flags[key] = value;
+            }
+        }
+
+        /// <summary>
+        /// Process to track external program
+        /// </summary>
+        private Process process;
+
+        #endregion
+
+        #region Virtual Dumping Information
+
+        /// <summary>
+        /// Command to flag support mappings
+        /// </summary>
+        public Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
+
+        /// <summary>
         /// Input path for operations
         /// </summary>
         public virtual string InputPath => null;
@@ -49,11 +92,6 @@ namespace MPF.Data
         /// Get the processing speed from the implementation
         /// </summary>
         public virtual int? Speed { get; set; } = null;
-
-        /// <summary>
-        /// Process to track external program
-        /// </summary>
-        private Process process;
 
         #endregion
 
@@ -131,6 +169,12 @@ namespace MPF.Data
         #region Virtual Methods
 
         /// <summary>
+        /// Get all commands mapped to the supported flags
+        /// </summary>
+        /// <returns>Mappings from command to supported flags</returns>
+        public virtual Dictionary<string, List<string>> GetCommandSupport() => null;
+
+        /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
         /// <returns>Parameter string for invocation, null on error</returns>
@@ -161,6 +205,22 @@ namespace MPF.Data
         /// </summary>
         /// <returns>True if it's a dumping command, false otherwise</returns>
         public virtual bool IsDumpingCommand() => true;
+
+        /// <summary>
+        /// Gets if the flag is supported by the current command
+        /// </summary>
+        /// <param name="flag">Flag value to check</param>
+        /// <returns>True if the flag value is supported, false otherwise</returns>
+        public virtual bool IsFlagSupported(string flag)
+        {
+            if (CommandSupport == null)
+                return false;
+            if (this.BaseCommand == null)
+                return false;
+            if (!CommandSupport.ContainsKey(this.BaseCommand))
+                return false;
+            return CommandSupport[this.BaseCommand].Contains(flag);
+        }
 
         /// <summary>
         /// Returns if the current Parameter object is valid
@@ -311,7 +371,10 @@ namespace MPF.Data
         /// <returns>True if it's a flag, false otherwise</returns>
         protected static bool IsFlag(string parameter)
         {
-            if (parameter.Trim('\"').StartsWith("/"))
+            parameter = parameter.Trim('\"');
+            if (parameter.StartsWith("/"))
+                return true;
+            else if (parameter.StartsWith("-"))
                 return true;
 
             return false;
@@ -349,7 +412,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid byte, false otherwise</returns>
         protected static bool IsValidInt8(string parameter, sbyte lowerBound = -1, sbyte upperBound = -1)
         {
-            if (!sbyte.TryParse(parameter, out sbyte temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!sbyte.TryParse(value, out sbyte temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -368,7 +432,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid Int16, false otherwise</returns>
         protected static bool IsValidInt16(string parameter, short lowerBound = -1, short upperBound = -1)
         {
-            if (!short.TryParse(parameter, out short temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!short.TryParse(value, out short temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -387,7 +452,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid Int32, false otherwise</returns>
         protected static bool IsValidInt32(string parameter, int lowerBound = -1, int upperBound = -1)
         {
-            if (!int.TryParse(parameter, out int temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!int.TryParse(value, out int temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -406,7 +472,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid Int64, false otherwise</returns>
         protected static bool IsValidInt64(string parameter, long lowerBound = -1, long upperBound = -1)
         {
-            if (!long.TryParse(parameter, out long temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!long.TryParse(value, out long temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -414,6 +481,571 @@ namespace MPF.Data
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Process a flag parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+        protected bool ProcessFlagParameter(List<string> parts, string flagString, ref int i)
+        {
+            return ProcessFlagParameter(parts, null, flagString, ref i);
+        }
+
+        /// <summary>
+        /// Process a flag parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+        protected bool ProcessFlagParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i)
+        {
+            if (parts == null)
+                return false;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return false;
+
+                this[longFlagString] = true;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Process a boolean parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+        protected bool ProcessBooleanParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        {
+            return ProcessBooleanParameter(parts, null, flagString, ref i, missingAllowed);
+        }
+
+        /// <summary>
+        /// Process a boolean parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+        protected bool ProcessBooleanParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return false;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return false;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                    {
+                        this[longFlagString] = true;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (IsFlag(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                    {
+                        this[longFlagString] = true;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (!IsValidBool(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                    {
+                        this[longFlagString] = true;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                this[longFlagString] = bool.Parse(parts[i + 1]);
+                i++;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Process a sbyte parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
+        protected sbyte? ProcessInt8Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        {
+            return ProcessInt8Parameter(parts, null, flagString, ref i, missingAllowed);
+        }
+
+        /// <summary>
+        /// Process an sbyte parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
+        protected sbyte? ProcessInt8Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return null;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return null;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (IsFlag(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (!IsValidInt8(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+
+                this[longFlagString] = true;
+                i++;
+
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (sbyte)(sbyte.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (sbyte)(sbyte.Parse(value) * factor);
+            }
+
+            return SByte.MinValue;
+        }
+
+        /// <summary>
+        /// Process an Int16 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
+        protected short? ProcessInt16Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        {
+            return ProcessInt16Parameter(parts, null, flagString, ref i, missingAllowed);
+        }
+
+        /// <summary>
+        /// Process an Int16 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
+        protected short? ProcessInt16Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return null;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return null;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (IsFlag(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (!IsValidInt16(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+
+                this[longFlagString] = true;
+                i++;
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (short)(short.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (short)(short.Parse(value) * factor);
+            }
+
+            return Int16.MinValue;
+        }
+
+        /// <summary>
+        /// Process an Int32 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
+        protected int? ProcessInt32Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        {
+            return ProcessInt32Parameter(parts, null, flagString, ref i, missingAllowed);
+        }
+
+        /// <summary>
+        /// Process an Int32 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
+        protected int? ProcessInt32Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return null;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return null;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (IsFlag(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (!IsValidInt32(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+
+                this[longFlagString] = true;
+                i++;
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (int)(int.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (int)(int.Parse(value) * factor);
+            }
+
+            return Int32.MinValue;
+        }
+
+        /// <summary>
+        /// Process an Int64 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
+        protected long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        {
+            return ProcessInt64Parameter(parts, null, flagString, ref i, missingAllowed);
+        }
+
+        /// <summary>
+        /// Process an Int64 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
+        protected long? ProcessInt64Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return null;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return null;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (IsFlag(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (!IsValidInt64(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+
+                this[longFlagString] = true;
+                i++;
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return long.Parse(value) * factor;
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return long.Parse(value) * factor;
+            }
+
+            return Int64.MinValue;
+        }
+
+        /// <summary>
+        /// Process an Int64 parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>String value if possible, string.Empty on missing, null on error</returns>
+        protected string ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+        {
+            return ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
+        }
+
+        /// <summary>
+        /// Process a string parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>String value if possible, string.Empty on missing, null on error</returns>
+        protected string ProcessStringParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return null;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return null;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (IsFlag(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (string.IsNullOrWhiteSpace(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+
+                this[longFlagString] = true;
+                i++;
+                return parts[i].Trim('"');
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                this[longFlagString] = true;
+                return valuePart.Trim('"');
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Get yhe trimmed value and multiplication factor from a value
+        /// </summary>
+        /// <param name="value">String value to treat as suffixed number</param>
+        /// <returns>Trimmed value and multiplication factor</returns>
+        private static (string trimmed, long factor) ExtractFactorFromValue(string value)
+        {
+            value = value.Trim('"');
+            long factor = 1;
+
+            // Characters
+            if (value.EndsWith("c", StringComparison.Ordinal))
+            {
+                factor = 1;
+                value = value.TrimEnd('c');
+            }
+
+            // Words
+            else if (value.EndsWith("w", StringComparison.Ordinal))
+            {
+                factor = 2;
+                value = value.TrimEnd('w');
+            }
+
+            // Double Words
+            else if (value.EndsWith("d", StringComparison.Ordinal))
+            {
+                factor = 4;
+                value = value.TrimEnd('d');
+            }
+
+            // Quad Words
+            else if (value.EndsWith("q", StringComparison.Ordinal))
+            {
+                factor = 8;
+                value = value.TrimEnd('q');
+            }
+
+            // Kilobytes
+            else if (value.EndsWith("k", StringComparison.Ordinal))
+            {
+                factor = 1024;
+                value = value.TrimEnd('k');
+            }
+
+            // Megabytes
+            else if (value.EndsWith("M", StringComparison.Ordinal))
+            {
+                factor = 1024 * 1024;
+                value = value.TrimEnd('M');
+            }
+
+            // Gigabytes
+            else if (value.EndsWith("G", StringComparison.Ordinal))
+            {
+                factor = 1024 * 1024 * 1024;
+                value = value.TrimEnd('G');
+            }
+
+            return (value, factor);
         }
 
         #endregion
