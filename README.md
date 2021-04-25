@@ -47,7 +47,7 @@ Here are the talented people who have contributed to the project so far:
 - **ReignStumble** - Former Project Lead / UI Design
 - **Jakz** - Primary Feature Contributor
 - **NHellFire** - Feature Contributor
-- **Shadów** - UI Support
+- **ShadÃ³w** - UI Support
 
 ## Notable Testers
 
@@ -57,7 +57,7 @@ These are the tireless individuals who have dedicated countless hours to help te
 - **Kludge**
 - **ajshell1**
 - **Whovian**
-— **Gameboi64**
+- **Gameboi64**
 - **silasqwerty**
 
 ## Community Shout-Outs
