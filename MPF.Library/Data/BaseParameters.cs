@@ -412,7 +412,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid byte, false otherwise</returns>
         protected static bool IsValidInt8(string parameter, sbyte lowerBound = -1, sbyte upperBound = -1)
         {
-            if (!sbyte.TryParse(parameter, out sbyte temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!sbyte.TryParse(value, out sbyte temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -431,7 +432,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid Int16, false otherwise</returns>
         protected static bool IsValidInt16(string parameter, short lowerBound = -1, short upperBound = -1)
         {
-            if (!short.TryParse(parameter, out short temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!short.TryParse(value, out short temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -450,7 +452,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid Int32, false otherwise</returns>
         protected static bool IsValidInt32(string parameter, int lowerBound = -1, int upperBound = -1)
         {
-            if (!int.TryParse(parameter, out int temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!int.TryParse(value, out int temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -469,7 +472,8 @@ namespace MPF.Data
         /// <returns>True if it's a valid Int64, false otherwise</returns>
         protected static bool IsValidInt64(string parameter, long lowerBound = -1, long upperBound = -1)
         {
-            if (!long.TryParse(parameter, out long temp))
+            (string value, long _) = ExtractFactorFromValue(parameter);
+            if (!long.TryParse(value, out long temp))
                 return false;
             else if (lowerBound != -1 && temp < lowerBound)
                 return false;
@@ -649,7 +653,23 @@ namespace MPF.Data
 
                 this[longFlagString] = true;
                 i++;
-                return sbyte.Parse(parts[i]);
+
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (sbyte)(sbyte.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (sbyte)(sbyte.Parse(value) * factor);
             }
 
             return SByte.MinValue;
@@ -712,7 +732,22 @@ namespace MPF.Data
 
                 this[longFlagString] = true;
                 i++;
-                return short.Parse(parts[i]);
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (short)(short.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (short)(short.Parse(value) * factor);
             }
 
             return Int16.MinValue;
@@ -775,7 +810,22 @@ namespace MPF.Data
 
                 this[longFlagString] = true;
                 i++;
-                return int.Parse(parts[i]);
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (int)(int.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (int)(int.Parse(value) * factor);
             }
 
             return Int32.MinValue;
@@ -838,7 +888,22 @@ namespace MPF.Data
 
                 this[longFlagString] = true;
                 i++;
-                return long.Parse(parts[i]);
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return long.Parse(value) * factor;
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return long.Parse(value) * factor;
             }
 
             return Int64.MinValue;
@@ -919,6 +984,68 @@ namespace MPF.Data
             }
 
             return string.Empty;
+        }
+
+        /// <summary>
+        /// Get yhe trimmed value and multiplication factor from a value
+        /// </summary>
+        /// <param name="value">String value to treat as suffixed number</param>
+        /// <returns>Trimmed value and multiplication factor</returns>
+        private static (string trimmed, long factor) ExtractFactorFromValue(string value)
+        {
+            value = value.Trim('"');
+            long factor = 1;
+
+            // Characters
+            if (value.EndsWith("c", StringComparison.Ordinal))
+            {
+                factor = 1;
+                value = value.TrimEnd('c');
+            }
+
+            // Words
+            else if (value.EndsWith("w", StringComparison.Ordinal))
+            {
+                factor = 2;
+                value = value.TrimEnd('w');
+            }
+
+            // Double Words
+            else if (value.EndsWith("d", StringComparison.Ordinal))
+            {
+                factor = 4;
+                value = value.TrimEnd('d');
+            }
+
+            // Quad Words
+            else if (value.EndsWith("q", StringComparison.Ordinal))
+            {
+                factor = 8;
+                value = value.TrimEnd('q');
+            }
+
+            // Kilobytes
+            else if (value.EndsWith("k", StringComparison.Ordinal))
+            {
+                factor = 1024;
+                value = value.TrimEnd('k');
+            }
+
+            // Megabytes
+            else if (value.EndsWith("M", StringComparison.Ordinal))
+            {
+                factor = 1024 * 1024;
+                value = value.TrimEnd('M');
+            }
+
+            // Gigabytes
+            else if (value.EndsWith("G", StringComparison.Ordinal))
+            {
+                factor = 1024 * 1024 * 1024;
+                value = value.TrimEnd('G');
+            }
+
+            return (value, factor);
         }
 
         #endregion

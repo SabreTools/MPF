@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MPF.Data;
-using MPF.Utilities;
 
 namespace MPF.UmdImageCreator
 {

@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Data;
-using MPF.Utilities;
 
 namespace MPF.CleanRip
 {

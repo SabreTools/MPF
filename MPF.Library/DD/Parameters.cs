@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -395,93 +394,6 @@ namespace MPF.DD
             }
 
             return true;
-        }
-
-        #endregion
-
-        #region Process Parameter Helpers
-
-        /// <summary>
-        /// Process an Int64 parameter
-        /// </summary>
-        /// <param name="parts">List of parts to be referenced</param>
-        /// <param name="flagString">Flag string to check</param>
-        /// <param name="i">Reference to the position in the parts</param>
-        /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
-        private long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i)
-        {
-            if (parts == null)
-                return null;
-
-            if (parts[i].StartsWith(flagString))
-            {
-                if (!IsFlagSupported(flagString))
-                    return null;
-
-                string[] commandParts = parts[i].Split('=');
-                if (commandParts.Length != 2)
-                    return null;
-
-                string valuePart = commandParts[1];
-                long factor = 1;
-
-                // Characters
-                if (valuePart.EndsWith("c", StringComparison.Ordinal))
-                {
-                    factor = 1;
-                    valuePart.TrimEnd('c');
-                }
-
-                // Words
-                else if (valuePart.EndsWith("w", StringComparison.Ordinal))
-                {
-                    factor = 2;
-                    valuePart.TrimEnd('w');
-                }
-
-                // Double Words
-                else if (valuePart.EndsWith("d", StringComparison.Ordinal))
-                {
-                    factor = 4;
-                    valuePart.TrimEnd('d');
-                }
-
-                // Quad Words
-                else if (valuePart.EndsWith("q", StringComparison.Ordinal))
-                {
-                    factor = 8;
-                    valuePart.TrimEnd('q');
-                }
-
-                // Kilobytes
-                else if (valuePart.EndsWith("k", StringComparison.Ordinal))
-                {
-                    factor = 1024;
-                    valuePart.TrimEnd('k');
-                }
-
-                // Megabytes
-                else if (valuePart.EndsWith("M", StringComparison.Ordinal))
-                {
-                    factor = 1024 * 1024;
-                    valuePart.TrimEnd('M');
-                }
-
-                // Gigabytes
-                else if (valuePart.EndsWith("G", StringComparison.Ordinal))
-                {
-                    factor = 1024 * 1024 * 1024;
-                    valuePart.TrimEnd('G');
-                }
-
-                if (!IsValidInt64(valuePart))
-                    return null;
-
-                this[flagString] = true;
-                return long.Parse(valuePart) * factor;
-            }
-
-            return Int64.MinValue;
         }
 
         #endregion
