@@ -55,6 +55,13 @@ namespace MPF.Windows
         /// </summary>
         private void ManipulateFields()
         {
+            // Sony-printed discs have layers in the opposite order
+            var system = SubmissionInfo?.CommonDiscInfo?.System;
+            bool reverseOrder = (system == KnownSystem.SonyPlayStation2
+                || system == KnownSystem.SonyPlayStation3
+                || system == KnownSystem.SonyPlayStation4
+                || system == KnownSystem.SonyPlayStation5);
+
             // Different media types mean different fields available
             switch (SubmissionInfo?.CommonDiscInfo?.Media)
             {
@@ -87,7 +94,7 @@ namespace MPF.Windows
                         L2Info.Visibility = Visibility.Visible;
                         L3Info.Visibility = Visibility.Visible;
 
-                        L0Info.Header = "Layer 0 (Inner)";
+                        L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
                         L0MasteringRing.Label = "Mastering Ring";
                         L0MasteringSID.Label = "Mastering SID";
                         L0Toolstamp.Label = "Toolstamp/Mastering Code";
@@ -106,7 +113,7 @@ namespace MPF.Windows
                         L2MasteringSID.Label = "Mastering SID";
                         L2Toolstamp.Label = "Toolstamp/Mastering Code";
 
-                        L3Info.Header = "Layer 3 (Outer)";
+                        L3Info.Header = reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)";
                         L3MasteringRing.Label = "Mastering Ring";
                         L3MasteringSID.Label = "Mastering SID";
                         L3Toolstamp.Label = "Toolstamp/Mastering Code";
@@ -117,7 +124,7 @@ namespace MPF.Windows
                     {
                         L2Info.Visibility = Visibility.Visible;
 
-                        L0Info.Header = "Layer 0 (Inner)";
+                        L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
                         L0MasteringRing.Label = "Mastering Ring";
                         L0MasteringSID.Label = "Mastering SID";
                         L0Toolstamp.Label = "Toolstamp/Mastering Code";
@@ -131,7 +138,7 @@ namespace MPF.Windows
                         L1MouldSID.Label = "Label Side Mould SID";
                         L1AdditionalMould.Label = "Label Side Additional Mould";
 
-                        L2Info.Header = "Layer 2 (Outer)";
+                        L2Info.Header = reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)";
                         L2MasteringRing.Label = "Mastering Ring";
                         L2MasteringSID.Label = "Mastering SID";
                         L2Toolstamp.Label = "Toolstamp/Mastering Code";
@@ -140,14 +147,14 @@ namespace MPF.Windows
                     // Double-layer discs
                     else if (SubmissionInfo?.SizeAndChecksums?.Layerbreak != default(long))
                     {
-                        L0Info.Header = "Layer 0 (Inner)";
+                        L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
                         L0MasteringRing.Label = "Mastering Ring";
                         L0MasteringSID.Label = "Mastering SID";
                         L0Toolstamp.Label = "Toolstamp/Mastering Code";
                         L0MouldSID.Label = "Data Side Mould SID";
                         L0AdditionalMould.Label = "Data Side Additional Mould";
 
-                        L1Info.Header = "Layer 1 (Outer)";
+                        L1Info.Header = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
                         L1MasteringRing.Label = "Mastering Ring";
                         L1MasteringSID.Label = "Mastering SID";
                         L1Toolstamp.Label = "Toolstamp/Mastering Code";
@@ -185,7 +192,7 @@ namespace MPF.Windows
             }
         
             // Different systems mean different fields available
-            switch (SubmissionInfo?.CommonDiscInfo?.System)
+            switch (system)
             {
                 case KnownSystem.SonyPlayStation2:
                     LanguageSelectionGrid.Visibility = Visibility.Visible;

@@ -968,6 +968,13 @@ namespace MPF.Data
 
             try
             {
+                // Sony-printed discs have layers in the opposite order
+                var system = info.CommonDiscInfo.System;
+                bool reverseOrder = (system == KnownSystem.SonyPlayStation2
+                    || system == KnownSystem.SonyPlayStation3
+                    || system == KnownSystem.SonyPlayStation4
+                    || system == KnownSystem.SonyPlayStation5);
+
                 // Common Disc Info section
                 List<string> output = new List<string> { "Common Disc Info:" };
                 AddIfExists(output, Template.TitleField, info.CommonDiscInfo.Title, 1);
@@ -995,9 +1002,9 @@ namespace MPF.Data
                 // If we have a triple-layer disc
                 if (info.SizeAndChecksums.Layerbreak3 != default)
                 {
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
                     AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
                     AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
 
@@ -1011,16 +1018,16 @@ namespace MPF.Data
                     AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 2);
                     AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 2);
 
-                    AddIfExists(output, "Layer 3 (Outer) " + Template.MasteringRingField, info.CommonDiscInfo.Layer3MasteringRing, 2);
-                    AddIfExists(output, "Layer 3 (Outer) " + Template.MasteringSIDField, info.CommonDiscInfo.Layer3MasteringSID, 2);
-                    AddIfExists(output, "Layer 3 (Outer) " + Template.ToolstampField, info.CommonDiscInfo.Layer3ToolstampMasteringCode, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer3MasteringRing, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer3MasteringSID, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo.Layer3ToolstampMasteringCode, 2);
                 }
                 // If we have a triple-layer disc
                 else if (info.SizeAndChecksums.Layerbreak2 != default)
                 {
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
                     AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
                     AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
 
@@ -1030,22 +1037,22 @@ namespace MPF.Data
                     AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
                     AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 2);
 
-                    AddIfExists(output, "Layer 2 (Outer) " + Template.MasteringRingField, info.CommonDiscInfo.Layer2MasteringRing, 2);
-                    AddIfExists(output, "Layer 2 (Outer) " + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 2);
-                    AddIfExists(output, "Layer 2 (Outer) " + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer2MasteringRing, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 2);
                 }
                 // If we have a dual-layer disc
                 else if (info.SizeAndChecksums.Layerbreak != default)
                 {
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
-                    AddIfExists(output, "Layer 0 (Inner) " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 2);
                     AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
                     AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
 
-                    AddIfExists(output, "Layer 1 (Outer) " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 2);
-                    AddIfExists(output, "Layer 1 (Outer) " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 2);
-                    AddIfExists(output, "Layer 1 (Outer) " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 2);
+                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 2);
                     AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
                     AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 2);
                 }
