@@ -953,23 +953,22 @@ namespace MPF.Aaru
             #endregion
 
             // Handle filenames based on command, if necessary
-            Command command = Converters.StringToCommand(BaseCommand);
-            switch (command)
+            switch (BaseCommand)
             {
                 // Input value only
-                case Command.DeviceInfo:
-                case Command.DeviceReport:
-                case Command.FilesystemList:
-                case Command.ImageAnalyze:
-                case Command.ImageChecksum:
-                case Command.ImageCreateSidecar:
-                case Command.ImageDecode:
-                case Command.ImageEntropy:
-                case Command.ImageInfo:
-                case Command.ImagePrint:
-                case Command.ImageVerify:
-                case Command.MediaInfo:
-                case Command.MediaScan:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport:
+                case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify:
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo:
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan:
                     if (string.IsNullOrWhiteSpace(InputValue))
                         return null;
 
@@ -977,7 +976,7 @@ namespace MPF.Aaru
                     break;
 
                 // Two input values
-                case Command.ImageCompare:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong:
                     if (string.IsNullOrWhiteSpace(Input1Value) || string.IsNullOrWhiteSpace(Input2Value))
                         return null;
 
@@ -986,9 +985,9 @@ namespace MPF.Aaru
                     break;
 
                 // Input and Output value
-                case Command.FilesystemExtract:
-                case Command.ImageConvert:
-                case Command.MediaDump:
+                case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert:
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump:
                     if (string.IsNullOrWhiteSpace(InputValue) || string.IsNullOrWhiteSpace(OutputValue))
                         return null;
 
@@ -997,8 +996,8 @@ namespace MPF.Aaru
                     break;
 
                 // Remote host value only
-                case Command.DeviceList:
-                case Command.Remote:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList:
+                case CommandStrings.Remote:
                     if (string.IsNullOrWhiteSpace(RemoteHostValue))
                         return null;
 
@@ -1016,18 +1015,8 @@ namespace MPF.Aaru
             {
                 #region Database Family
 
-                [CommandStrings.DatabasePrefixShort + " " + CommandStrings.DatabaseStats] = new List<string>()
-                {
-                },
-
                 [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseStats] = new List<string>()
                 {
-                },
-
-                [CommandStrings.DatabasePrefixShort + " " + CommandStrings.DatabaseUpdate] = new List<string>()
-                {
-                    FlagStrings.ClearLong,
-                    FlagStrings.ClearAllLong,
                 },
 
                 [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseUpdate] = new List<string>()
@@ -1040,25 +1029,12 @@ namespace MPF.Aaru
 
                 #region Device Family
 
-                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceInfo] = new List<string>()
-                {
-                    FlagStrings.OutputPrefixLong,
-                },
-
                 [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo] = new List<string>()
                 {
                     FlagStrings.OutputPrefixLong,
                 },
 
-                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceList] = new List<string>()
-                {
-                },
-
                 [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList] = new List<string>()
-                {
-                },
-
-                [CommandStrings.DevicePrefixShort + " " + CommandStrings.DeviceReport] = new List<string>()
                 {
                 },
 
@@ -1070,96 +1046,12 @@ namespace MPF.Aaru
 
                 #region Filesystem Family
 
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemExtract] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.ExtendedAttributesLong,
-                    FlagStrings.ExtendedAttributesShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemExtract] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.ExtendedAttributesLong,
-                    FlagStrings.ExtendedAttributesShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
                 [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract] = new List<string>()
                 {
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
                     FlagStrings.ExtendedAttributesLong,
                     FlagStrings.ExtendedAttributesShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemListShort] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemListShort] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListShort] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemListLong] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
-                    FlagStrings.NamespaceLong,
-                    FlagStrings.NamespaceShort,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemListLong] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
                     FlagStrings.NamespaceLong,
                     FlagStrings.NamespaceShort,
                     FlagStrings.OptionsLong,
@@ -1178,14 +1070,6 @@ namespace MPF.Aaru
                     FlagStrings.OptionsShort,
                 },
 
-                [CommandStrings.FilesystemPrefixShort + " " + CommandStrings.FilesystemOptions] = new List<string>()
-                {
-                },
-
-                [CommandStrings.FilesystemPrefixShortAlt + " " + CommandStrings.FilesystemOptions] = new List<string>()
-                {
-                },
-
                 [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemOptions] = new List<string>()
                 {
                 },
@@ -1193,20 +1077,6 @@ namespace MPF.Aaru
                 #endregion
 
                 #region Image Family
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageAnalyze] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FilesystemsLong,
-                    FlagStrings.FilesystemsShort,
-                    FlagStrings.PartitionsLong,
-                    FlagStrings.PartitionsShort,
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze] = new List<string>()
                 {
@@ -1220,81 +1090,6 @@ namespace MPF.Aaru
                     FlagStrings.VerifyDiscShort,
                     FlagStrings.VerifySectorsLong,
                     FlagStrings.VerifySectorsShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageChecksumShort] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumShort] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageChecksumLong] = new List<string>()
-                {
-                    FlagStrings.Adler32Long,
-                    FlagStrings.Adler32Short,
-                    FlagStrings.CRC16Long,
-                    FlagStrings.CRC32Long,
-                    FlagStrings.CRC32Short,
-                    FlagStrings.CRC64Long,
-                    FlagStrings.Fletcher16Long,
-                    FlagStrings.Fletcher32Long,
-                    FlagStrings.MD5Long,
-                    FlagStrings.MD5Short,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.SHA1Long,
-                    FlagStrings.SHA1Short,
-                    FlagStrings.SHA256Long,
-                    FlagStrings.SHA384Long,
-                    FlagStrings.SHA512Long,
-                    FlagStrings.SpamSumLong,
-                    FlagStrings.SpamSumShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
                 },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong] = new List<string>()
@@ -1322,50 +1117,8 @@ namespace MPF.Aaru
                     FlagStrings.WholeDiscShort,
                 },
 
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCompareShort] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareShort] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCompareLong] = new List<string>()
-                {
-                },
-
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong] = new List<string>()
                 {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageConvert] = new List<string>()
-                {
-                    FlagStrings.CommentsLong,
-                    FlagStrings.CountLong,
-                    FlagStrings.CountShort,
-                    FlagStrings.CreatorLong,
-                    FlagStrings.DriveManufacturerLong,
-                    FlagStrings.DriveModelLong,
-                    FlagStrings.DriveRevisionLong,
-                    FlagStrings.DriveSerialLong,
-                    FlagStrings.ForceLong,
-                    FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
-                    FlagStrings.FormatConvertShort,
-                    FlagStrings.MediaBarcodeLong,
-                    FlagStrings.MediaLastSequenceLong,
-                    FlagStrings.MediaManufacturerLong,
-                    FlagStrings.MediaModelLong,
-                    FlagStrings.MediaPartNumberLong,
-                    FlagStrings.MediaSequenceLong,
-                    FlagStrings.MediaSerialLong,
-                    FlagStrings.MediaTitleLong,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                    FlagStrings.ResumeFileLong,
-                    FlagStrings.ResumeFileShort,
-                    FlagStrings.XMLSidecarLong,
-                    FlagStrings.XMLSidecarShort,
                 },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert] = new List<string>()
@@ -1398,16 +1151,6 @@ namespace MPF.Aaru
                     FlagStrings.XMLSidecarShort,
                 },
 
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
-                {
-                    FlagStrings.BlockSizeLong,
-                    FlagStrings.BlockSizeShort,
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.TapeLong,
-                    FlagStrings.TapeShort,
-                },
-
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar] = new List<string>()
                 {
                     FlagStrings.BlockSizeLong,
@@ -1416,18 +1159,6 @@ namespace MPF.Aaru
                     FlagStrings.EncodingShort,
                     FlagStrings.TapeLong,
                     FlagStrings.TapeShort,
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageDecode] = new List<string>()
-                {
-                    FlagStrings.DiskTagsLong,
-                    FlagStrings.DiskTagsShort,
-                    FlagStrings.LengthLong,
-                    FlagStrings.LengthShort,
-                    FlagStrings.SectorTagsLong,
-                    FlagStrings.SectorTagsShort,
-                    FlagStrings.StartLong,
-                    FlagStrings.StartShort,
                 },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode] = new List<string>()
@@ -1442,16 +1173,6 @@ namespace MPF.Aaru
                     FlagStrings.StartShort,
                 },
 
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageEntropy] = new List<string>()
-                {
-                    FlagStrings.DuplicatedSectorsLong,
-                    FlagStrings.DuplicatedSectorsShort,
-                    FlagStrings.SeparatedTracksLong,
-                    FlagStrings.SeparatedTracksShort,
-                    FlagStrings.WholeDiscLong,
-                    FlagStrings.WholeDiscShort,
-                },
-
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy] = new List<string>()
                 {
                     FlagStrings.DuplicatedSectorsLong,
@@ -1462,32 +1183,12 @@ namespace MPF.Aaru
                     FlagStrings.WholeDiscShort,
                 },
 
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageInfo] = new List<string>()
-                {
-                },
-
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo] = new List<string>()
-                {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageOptions] = new List<string>()
                 {
                 },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageOptions] = new List<string>()
                 {
-                },
-
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImagePrint] = new List<string>()
-                {
-                    FlagStrings.LengthLong,
-                    FlagStrings.LengthShort,
-                    FlagStrings.LongSectorsLong,
-                    FlagStrings.LongSectorsShort,
-                    FlagStrings.StartLong,
-                    FlagStrings.StartShort,
-                    FlagStrings.WidthLong,
-                    FlagStrings.WidthShort,
                 },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint] = new List<string>()
@@ -1502,14 +1203,6 @@ namespace MPF.Aaru
                     FlagStrings.WidthShort,
                 },
 
-                [CommandStrings.ImagePrefixShort + " " + CommandStrings.ImageVerify] = new List<string>()
-                {
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
-
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify] = new List<string>()
                 {
                     FlagStrings.VerifyDiscLong,
@@ -1521,43 +1214,6 @@ namespace MPF.Aaru
                 #endregion
 
                 #region Media Family
-
-                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaDump] = new List<string>()
-                {
-                    FlagStrings.EjectLong,
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FirstPregapLong,
-                    FlagStrings.FixOffsetLong,
-                    FlagStrings.FixSubchannelLong,
-                    FlagStrings.FixSubchannelCrcLong,
-                    FlagStrings.FixSubchannelPositionLong,
-                    FlagStrings.ForceLong,
-                    FlagStrings.ForceShort,
-                    FlagStrings.FormatConvertLong,
-                    FlagStrings.FormatConvertShort,
-                    FlagStrings.GenerateSubchannelsLong,
-                    FlagStrings.MetadataLong,
-                    FlagStrings.OptionsLong,
-                    FlagStrings.OptionsShort,
-                    FlagStrings.PersistentLong,
-                    FlagStrings.PrivateLong,
-                    FlagStrings.ResumeLong,
-                    FlagStrings.ResumeShort,
-                    FlagStrings.RetryPassesLong,
-                    FlagStrings.RetryPassesShort,
-                    FlagStrings.RetrySubchannelLong,
-                    FlagStrings.SkipLong,
-                    FlagStrings.SkipShort,
-                    FlagStrings.SkipCdiReadyHoleLong,
-                    FlagStrings.SpeedLong,
-                    FlagStrings.StopOnErrorLong,
-                    FlagStrings.StopOnErrorShort,
-                    FlagStrings.SubchannelLong,
-                    FlagStrings.TrimLong,
-                    FlagStrings.XMLSidecarLong,
-                    FlagStrings.XMLSidecarShort,
-                },
 
                 [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump] = new List<string>()
                 {
@@ -1596,24 +1252,10 @@ namespace MPF.Aaru
                     FlagStrings.XMLSidecarShort,
                 },
 
-                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaInfo] = new List<string>()
-                {
-                    FlagStrings.OutputPrefixLong,
-                    FlagStrings.OutputPrefixShort,
-                },
-
                 [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo] = new List<string>()
                 {
                     FlagStrings.OutputPrefixLong,
                     FlagStrings.OutputPrefixShort,
-                },
-
-                [CommandStrings.MediaPrefixShort + " " + CommandStrings.MediaScan] = new List<string>()
-                {
-                    FlagStrings.ImgBurnLogLong,
-                    FlagStrings.ImgBurnLogShort,
-                    FlagStrings.MHDDLogLong,
-                    FlagStrings.MHDDLogShort,
                 },
 
                 [CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan] = new List<string>()
@@ -1886,13 +1528,12 @@ namespace MPF.Aaru
                 return false;
 
             // Determine what the commandline should look like given the first item
-            Command command = Converters.StringToCommand(parts[start], parts.Count > start + 1 ? parts[start + 1] : null, out bool useSecond);
-            if (command == Command.NONE)
+            BaseCommand = NormalizeCommand(parts, ref start);
+            if (string.IsNullOrWhiteSpace(BaseCommand))
                 return false;
 
-            // Set the start according to what the full command was
-            BaseCommand = parts[start] + (useSecond ? $" {parts[start + 1]}" : string.Empty);
-            start += useSecond ? 2 : 1;
+            // Set the start position
+            start++;
 
             // Loop through all auxilary flags, if necessary
             int i = 0;
@@ -2256,22 +1897,22 @@ namespace MPF.Aaru
             }
 
             // Handle filenames based on command, if necessary
-            switch (command)
+            switch (BaseCommand)
             {
                 // Input value only
-                case Command.DeviceInfo:
-                case Command.DeviceReport:
-                case Command.FilesystemList:
-                case Command.ImageAnalyze:
-                case Command.ImageChecksum:
-                case Command.ImageCreateSidecar:
-                case Command.ImageDecode:
-                case Command.ImageEntropy:
-                case Command.ImageInfo:
-                case Command.ImagePrint:
-                case Command.ImageVerify:
-                case Command.MediaInfo:
-                case Command.MediaScan:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport:
+                case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageEntropy:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageInfo:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImagePrint:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageVerify:
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaInfo:
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaScan:
                     if (!DoesExist(parts, i))
                         return false;
 
@@ -2280,7 +1921,7 @@ namespace MPF.Aaru
                     break;
 
                 // Two input values
-                case Command.ImageCompare:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCompareLong:
                     if (!DoesExist(parts, i))
                         return false;
 
@@ -2295,9 +1936,9 @@ namespace MPF.Aaru
                     break;
 
                 // Input and Output value
-                case Command.FilesystemExtract:
-                case Command.ImageConvert:
-                case Command.MediaDump:
+                case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemExtract:
+                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageConvert:
+                case CommandStrings.MediaPrefixLong + " " + CommandStrings.MediaDump:
                     if (!DoesExist(parts, i))
                         return false;
 
@@ -2312,8 +1953,8 @@ namespace MPF.Aaru
                     break;
 
                 // Remote host value only
-                case Command.DeviceList:
-                case Command.Remote:
+                case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceList:
+                case CommandStrings.Remote:
                     if (!DoesExist(parts, i))
                         return false;
 
@@ -2327,6 +1968,236 @@ namespace MPF.Aaru
                 return false;
 
             return true;
+        }
+
+        #endregion
+
+        #region Private Extra Methods
+
+        /// <summary>
+        /// Normalize a command string to use long form values for easier lookup
+        /// </summary>
+        /// <param name="baseCommand">Command string to normalize</param>
+        /// <returns>Normalized command</returns>
+        private string NormalizeCommand(List<string> parts, ref int start)
+        {
+            // Invalid start means invalid command
+            if (start < 0 || start >= parts.Count)
+                return null;
+
+            string partOne = parts[start];
+            string partTwo = string.Empty;
+            if (start + 1 < parts.Count)
+                partTwo = parts[start + 1];
+
+            string normalized = NormalizeCommand($"{partOne} {partTwo}".Trim());
+
+            // Null normalization means invalid command
+            if (normalized == null)
+                return null;
+
+            // Determine if start should be incremented
+            if (normalized.Split(' ').Length > 1)
+                start++;
+
+            return normalized;
+        }
+
+        /// <summary>
+        /// Normalize a command string to use long form values for easier lookup
+        /// </summary>
+        /// <param name="baseCommand">Command string to normalize</param>
+        /// <returns>Normalized command</returns>
+        private string NormalizeCommand(string baseCommand)
+        {
+            // If the base command is inavlid, just return nulls
+            if (string.IsNullOrWhiteSpace(baseCommand))
+                return null;
+
+            // Split the command otherwise
+            string[] splitCommand = baseCommand.Split(' ');
+            string family, command;
+
+
+            // For commands with a family
+            if (splitCommand.Length > 1)
+            {
+                // Handle the family first
+                switch (splitCommand[0])
+                {
+                    case CommandStrings.DatabasePrefixShort:
+                    case CommandStrings.DatabasePrefixLong:
+                        family = CommandStrings.DatabasePrefixLong;
+                        switch (splitCommand[1])
+                        {
+                            case CommandStrings.DatabaseStats:
+                                command = CommandStrings.DatabaseStats;
+                                break;
+                            case CommandStrings.DatabaseUpdate:
+                                command = CommandStrings.DatabaseUpdate;
+                                break;
+                            default:
+                                command = null;
+                                break;
+                        }
+
+                        break;
+
+                    case CommandStrings.DevicePrefixShort:
+                    case CommandStrings.DevicePrefixLong:
+                        family = CommandStrings.DevicePrefixLong;
+                        switch (splitCommand[1])
+                        {
+                            case CommandStrings.DeviceInfo:
+                                command = CommandStrings.DeviceInfo;
+                                break;
+                            case CommandStrings.DeviceList:
+                                command = CommandStrings.DeviceList;
+                                break;
+                            case CommandStrings.DeviceReport:
+                                command = CommandStrings.DeviceReport;
+                                break;
+                            default:
+                                command = null;
+                                break;
+                        }
+
+                        break;
+
+                    case CommandStrings.FilesystemPrefixShort:
+                    case CommandStrings.FilesystemPrefixShortAlt:
+                    case CommandStrings.FilesystemPrefixLong:
+                        family = CommandStrings.FilesystemPrefixLong;
+                        switch (splitCommand[1])
+                        {
+                            case CommandStrings.FilesystemExtract:
+                                command = CommandStrings.FilesystemExtract;
+                                break;
+                            case CommandStrings.FilesystemListShort:
+                            case CommandStrings.FilesystemListLong:
+                                command = CommandStrings.FilesystemListLong;
+                                break;
+                            case CommandStrings.FilesystemOptions:
+                                command = CommandStrings.FilesystemOptions;
+                                break;
+                            default:
+                                command = null;
+                                break;
+                        }
+
+                        break;
+
+                    case CommandStrings.ImagePrefixShort:
+                    case CommandStrings.ImagePrefixLong:
+                        family = CommandStrings.DevicePrefixLong;
+                        switch (splitCommand[1])
+                        {
+                            case CommandStrings.ImageAnalyze:
+                                command = CommandStrings.ImageAnalyze;
+                                break;
+                            case CommandStrings.ImageChecksumShort:
+                            case CommandStrings.ImageChecksumLong:
+                                command = CommandStrings.ImageChecksumLong;
+                                break;
+                            case CommandStrings.ImageCompareShort:
+                            case CommandStrings.ImageCompareLong:
+                                command = CommandStrings.ImageChecksumLong;
+                                break;
+                            case CommandStrings.ImageConvert:
+                                command = CommandStrings.ImageConvert;
+                                break;
+                            case CommandStrings.ImageCreateSidecar:
+                                command = CommandStrings.ImageCreateSidecar;
+                                break;
+                            case CommandStrings.ImageDecode:
+                                command = CommandStrings.ImageDecode;
+                                break;
+                            case CommandStrings.ImageEntropy:
+                                command = CommandStrings.ImageEntropy;
+                                break;
+                            case CommandStrings.ImageInfo:
+                                command = CommandStrings.ImageInfo;
+                                break;
+                            case CommandStrings.ImageOptions:
+                                command = CommandStrings.ImageOptions;
+                                break;
+                            case CommandStrings.ImagePrint:
+                                command = CommandStrings.ImagePrint;
+                                break;
+                            case CommandStrings.ImageVerify:
+                                command = CommandStrings.ImageVerify;
+                                break;
+                            default:
+                                command = null;
+                                break;
+                        }
+
+                        break;
+
+                    case CommandStrings.MediaPrefixShort:
+                    case CommandStrings.MediaPrefixLong:
+                        family = CommandStrings.DevicePrefixLong;
+                        switch (splitCommand[1])
+                        {
+                            case CommandStrings.MediaDump:
+                                command = CommandStrings.MediaDump;
+                                break;
+                            case CommandStrings.MediaInfo:
+                                command = CommandStrings.MediaInfo;
+                                break;
+                            case CommandStrings.MediaScan:
+                                command = CommandStrings.MediaScan;
+                                break;
+                            default:
+                                command = null;
+                                break;
+                        }
+
+                        break;
+
+                    default:
+                        family = null;
+                        command = null;
+                        break;
+                }
+            }
+
+            // For standalone commands
+            else
+            {
+                family = null;
+                switch (splitCommand[0])
+                {
+                    case CommandStrings.Configure:
+                        command = CommandStrings.Configure;
+                        break;
+                    case CommandStrings.Formats:
+                        command = CommandStrings.Formats;
+                        break;
+                    case CommandStrings.ListEncodings:
+                        command = CommandStrings.ListEncodings;
+                        break;
+                    case CommandStrings.ListNamespaces:
+                        command = CommandStrings.ListNamespaces;
+                        break;
+                    case CommandStrings.Remote:
+                        command = CommandStrings.Remote;
+                        break;
+                    default:
+                        command = null;
+                        break;
+                }
+            }
+
+            // If the command itself is invalid, then return null
+            if (string.IsNullOrWhiteSpace(command))
+                return null;
+
+            // Combine the result
+            if (!string.IsNullOrWhiteSpace(family))
+                return $"{family} {command}";
+            else
+                return command;
         }
 
         #endregion
