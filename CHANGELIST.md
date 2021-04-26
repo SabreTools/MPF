@@ -1,6 +1,7 @@
 ### WIP (xxx-xx-xx)
 - Enum, no more
 - Sony works backward
+- Add experimental dark mode
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)

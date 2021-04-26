@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using WinForms = System.Windows.Forms;
 using BurnOutSharp;
 using MPF.Data;
 using MPF.Utilities;
+using WPFCustomMessageBox;
 
 namespace MPF.Windows
 {
@@ -72,7 +74,7 @@ namespace MPF.Windows
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
             MediaScanButton.IsEnabled = false;
-            CopyProtectScanButton.IsEnabled = false;
+            CopyProtectScanButton.IsEnabled = false;                
         }
 
         #region Population
@@ -167,6 +169,12 @@ namespace MPF.Windows
         {
             // Disable the dumping button
             StartStopButton.IsEnabled = false;
+
+            // Set the UI color scheme according to the options
+            if (Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                DisableDarkMode();
 
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
@@ -279,6 +287,130 @@ namespace MPF.Windows
             StartStopButton.Content = Interface.StartDumping;
             MediaScanButton.IsEnabled = true;
             CopyProtectScanButton.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Recolor all UI elements back to normal values
+        /// </summary>
+        private void DisableDarkMode()
+        {
+            // TODO: Do the opposite of `EnableDarkMode`
+
+            // Handle application-wide resources
+            Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = null;
+            Application.Current.Resources[SystemColors.ControlBrushKey] = null;
+            Application.Current.Resources[SystemColors.ControlTextBrushKey] = null;
+            Application.Current.Resources[SystemColors.GrayTextBrushKey] = null;
+            Application.Current.Resources[SystemColors.WindowBrushKey] = null;
+            Application.Current.Resources[SystemColors.WindowTextBrushKey] = null;
+
+            // Handle Button-specific resources
+            Application.Current.Resources["Button.Disabled.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF4, 0xF4, 0xF4));
+            Application.Current.Resources["Button.MouseOver.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0xE6, 0xFD));
+            Application.Current.Resources["Button.Pressed.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xC4, 0xE5, 0xF6));
+            Application.Current.Resources["Button.Static.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD));
+
+            // Handle ComboBox-specific resources
+            Application.Current.Resources["ComboBox.Disabled.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
+            Application.Current.Resources["ComboBox.Disabled.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+            Application.Current.Resources["ComboBox.Disabled.Editable.Button.Background"] = Brushes.Transparent;
+            Application.Current.Resources["ComboBox.MouseOver.Background"] = new LinearGradientBrush(
+                Color.FromArgb(0xFF, 0xEC, 0xF4, 0xFC),
+                Color.FromArgb(0xFF, 0xDC, 0xEC, 0xFC),
+                new Point(0, 0),
+                new Point(0, 1));
+            Application.Current.Resources["ComboBox.MouseOver.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+            Application.Current.Resources["ComboBox.MouseOver.Editable.Button.Background"] = new LinearGradientBrush(
+                Color.FromArgb(0xFF, 0xEB, 0xF4, 0xFC),
+                Color.FromArgb(0xFF, 0xDC, 0xEC, 0xFC),
+                new Point(0, 0),
+                new Point(0, 1));
+            Application.Current.Resources["ComboBox.Pressed.Background"] = new LinearGradientBrush(
+                Color.FromArgb(0xFF, 0xDA, 0xEC, 0xFC),
+                Color.FromArgb(0xFF, 0xC4, 0xE0, 0xFC),
+                new Point(0, 0),
+                new Point(0, 1));
+            Application.Current.Resources["ComboBox.Pressed.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+            Application.Current.Resources["ComboBox.Pressed.Editable.Button.Background"] = new LinearGradientBrush(
+                Color.FromArgb(0xFF, 0xDA, 0xEB, 0xFC),
+                Color.FromArgb(0xFF, 0xC4, 0xE0, 0xFC),
+                new Point(0, 0),
+                new Point(0, 1));
+            Application.Current.Resources["ComboBox.Static.Background"] = new LinearGradientBrush(
+                Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0),
+                Color.FromArgb(0xFF, 0xE5, 0xE5, 0xE5),
+                new Point(0, 0),
+                new Point(0, 1));
+            Application.Current.Resources["ComboBox.Static.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+            Application.Current.Resources["ComboBox.Static.Editable.Button.Background"] = Brushes.Transparent;
+            Application.Current.Resources["TextBox.Static.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+
+            // Handle CustomMessageBox-specific resources
+            Application.Current.Resources["CustomMessageBox.Static.Background"] = null;
+
+            // Handle MenuItem-specific resources
+            Application.Current.Resources["MenuItem.SubMenu.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
+            Application.Current.Resources["MenuItem.SubMenu.Border"] = Brushes.DarkGray;
+
+            // Handle TabItem-specific resources
+            Application.Current.Resources["TabItem.Selected.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
+            Application.Current.Resources["TabItem.Static.Background"] = new LinearGradientBrush(
+                Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0),
+                Color.FromArgb(0xFF, 0xE5, 0xE5, 0xE5),
+                new Point(0, 0),
+                new Point(0, 1));
+            Application.Current.Resources["TabItem.Static.Border"] = Brushes.DarkGray;
+        }
+
+        /// <summary>
+        /// Recolor all UI elements for dark mode
+        /// </summary>
+        private void EnableDarkMode()
+        {
+            // Setup needed brushes
+            var darkModeBrush = new SolidColorBrush();
+            darkModeBrush.Color = Color.FromArgb(0xff, 0x20, 0x20, 0x20);
+
+            // Handle application-wide resources
+            Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = Brushes.Black;
+            Application.Current.Resources[SystemColors.ControlBrushKey] = darkModeBrush;
+            Application.Current.Resources[SystemColors.ControlTextBrushKey] = Brushes.White;
+            Application.Current.Resources[SystemColors.GrayTextBrushKey] = Brushes.DarkGray;
+            Application.Current.Resources[SystemColors.WindowBrushKey] = darkModeBrush;
+            Application.Current.Resources[SystemColors.WindowTextBrushKey] = Brushes.White;
+
+            // Handle Button-specific resources
+            Application.Current.Resources["Button.Disabled.Background"] = darkModeBrush;
+            Application.Current.Resources["Button.MouseOver.Background"] = darkModeBrush;
+            Application.Current.Resources["Button.Pressed.Background"] = darkModeBrush;
+            Application.Current.Resources["Button.Static.Background"] = darkModeBrush;
+
+            // Handle ComboBox-specific resources
+            Application.Current.Resources["ComboBox.Disabled.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Disabled.Editable.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Disabled.Editable.Button.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.MouseOver.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.MouseOver.Editable.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.MouseOver.Editable.Button.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Pressed.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Pressed.Editable.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Pressed.Editable.Button.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Static.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Static.Editable.Background"] = darkModeBrush;
+            Application.Current.Resources["ComboBox.Static.Editable.Button.Background"] = darkModeBrush;
+            Application.Current.Resources["TextBox.Static.Background"] = darkModeBrush;
+
+            // Handle CustomMessageBox-specific resources
+            Application.Current.Resources["CustomMessageBox.Static.Background"] = darkModeBrush;
+
+            // Handle MenuItem-specific resources
+            Application.Current.Resources["MenuItem.SubMenu.Background"] = darkModeBrush;
+            Application.Current.Resources["MenuItem.SubMenu.Border"] = Brushes.DarkGray;
+
+            // Handle TabItem-specific resources
+            Application.Current.Resources["TabItem.Selected.Background"] = darkModeBrush;
+            Application.Current.Resources["TabItem.Static.Background"] = darkModeBrush;
+            Application.Current.Resources["TabItem.Static.Border"] = Brushes.DarkGray;
         }
 
         #endregion
@@ -605,9 +737,9 @@ namespace MPF.Windows
                 if (!LogPanel.IsExpanded)
                 {
                     if (success)
-                        MessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
+                        CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
                     else
-                        MessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        CustomMessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 
                 if (success)
@@ -712,7 +844,7 @@ namespace MPF.Windows
             // If still in custom parameter mode, check that users meant to continue or not
             if (EnableParametersCheckBox.IsChecked == true)
             {
-                MessageBoxResult result = MessageBox.Show("It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", "Custom Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                MessageBoxResult result = CustomMessageBox.Show("It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", "Custom Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     EnableParametersCheckBox.IsChecked = false;
@@ -729,7 +861,7 @@ namespace MPF.Windows
                 // Validate that the user explicitly wants an inactive drive to be considered for dumping
                 if (!Env.Drive.MarkedActive)
                 {
-                    MessageBoxResult mbresult = MessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    MessageBoxResult mbresult = CustomMessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
                         LogOutput.LogLn("Dumping aborted!");
@@ -741,7 +873,7 @@ namespace MPF.Windows
                 (bool foundFiles, List<string> _) = Env.FoundAllFiles();
                 if (foundFiles)
                 {
-                    MessageBoxResult mbresult = MessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
                         LogOutput.LogLn("Dumping aborted!");
@@ -825,7 +957,7 @@ namespace MPF.Windows
                 + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
 
             LogOutput.SecretLogLn(aboutText);
-            MessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -847,7 +979,7 @@ namespace MPF.Windows
             if (different)
                 Clipboard.SetText(url);
 
-            MessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+            CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>

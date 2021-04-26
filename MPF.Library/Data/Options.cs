@@ -61,6 +61,15 @@ namespace MPF.Data
         #region UI Defaults
 
         /// <summary>
+        /// Enable dark mode for UI elements
+        /// </summary>
+        public bool EnableDarkMode
+        {
+            get { return GetBooleanSetting(_settings, "EnableDarkMode", false); }
+            set { _settings["EnableDarkMode"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default output path for dumps
         /// </summary>
         public string DefaultOutputPath

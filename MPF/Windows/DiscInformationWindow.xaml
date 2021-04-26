@@ -27,7 +27,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                                    <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=Categories}" SelectedIndex="0" />
+                                    <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Categories}"
+                                              SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}" />
                                 </Grid>
 
                                 <Grid>
@@ -37,7 +38,8 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                                    <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=Regions}" SelectedIndex="0" />
+                                    <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Regions}"
+                                              SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}" />
                                 </Grid>
 
                                 <Grid>
@@ -47,10 +49,11 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                                    <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=Languages}" SelectedIndex="0">
+                                    <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding Languages}"
+                                              SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding Path=Name}" IsChecked="{Binding IsChecked}" />
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
@@ -63,10 +66,11 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
-                                    <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding Path=LanguageSelections}" SelectedIndex="0">
+                                    <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding LanguageSelections}"
+                                              SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                         <ComboBox.ItemTemplate>
                                             <DataTemplate>
-                                                <CheckBox Content="{Binding Path=Name}" IsChecked="{Binding IsChecked}" />
+                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
                                             </DataTemplate>
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
@@ -127,9 +131,12 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
-                    <Button Name="AcceptButton" Grid.Column="0" Height="25" Width="120" IsDefault="True" Content="Accept" Click="OnAcceptClick" />
-                    <Button Name="CancelButton" Grid.Column="1" Height="25" Width="120" IsCancel="True" Content="Cancel" Click="OnCancelClick" />
-                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide" Click="OnRingCodeGuideClick" />
+                    <Button Name="AcceptButton" Grid.Column="0" Height="25" Width="120" IsDefault="True" Content="Accept"
+                            Click="OnAcceptClick" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="CancelButton" Grid.Column="1" Height="25" Width="120" IsCancel="True" Content="Cancel"
+                            Click="OnCancelClick" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide"
+                            Click="OnRingCodeGuideClick" Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

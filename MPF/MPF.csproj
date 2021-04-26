@@ -31,7 +31,10 @@
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0-preview.3.21201.4" />
-    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.0" />
+    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +50,10 @@
       <Project>{51ab0928-13f9-44bf-a407-b6957a43a056}</Project>
       <Name>MPF.Library</Name>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
   </ItemGroup>
 
 </Project>

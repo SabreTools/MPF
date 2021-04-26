@@ -42,7 +42,7 @@
                 </Label>
                 <Label Grid.Row="4">
                     <Label.Content>
-                        <TextBlock><Bold Foreground="Blue">4. Mould SID:</Bold> IFPI 94V1</TextBlock>
+                        <TextBlock><Bold Foreground="LightBlue">4. Mould SID:</Bold> IFPI 94V1</TextBlock>
                     </Label.Content>
                 </Label>
             </Grid>

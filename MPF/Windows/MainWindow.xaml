@@ -10,17 +10,40 @@
 
     <Grid>
         <StackPanel Orientation="Vertical">
-            <StackPanel VerticalAlignment="Top" Grid.ColumnSpan="4">
-                <Menu Width="Auto" Height="20" >
-                    <MenuItem Header="_File">
-                        <MenuItem x:Name="AppExit" Header="E_xit" HorizontalAlignment="Left" Width="185" Click="AppExitClick" />
+            <StackPanel VerticalAlignment="Top" Grid.ColumnSpan="4" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
+                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
+                    <MenuItem x:Name="FileMenuItem" Header="_File"
+                              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                              Template="{DynamicResource CustomMenuItemTemplate}">
+                        <MenuItem x:Name="AppExitMenuItem" Header="E_xit" HorizontalAlignment="Left" Width="185" Click="AppExitClick"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}" />
                     </MenuItem>
-                    <MenuItem Header="_Tools">
-                        <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185" Click="OptionsMenuItemClick" />
+                    <MenuItem x:Name="ToolsMenuItem" Header="_Tools"
+                              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                              Template="{DynamicResource CustomMenuItemTemplate}">
+                        <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185" Click="OptionsMenuItemClick"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}" />
                     </MenuItem>
-                    <MenuItem Header="_Help">
-                        <MenuItem x:Name="About" Header="_About" HorizontalAlignment="Left" Width="185" Click="AboutClick" />
-                        <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185" Click="CheckForUpdatesClick" />
+                    <MenuItem x:Name="HelpMenuItem" Header="_Help"
+                              Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                              Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                              Template="{DynamicResource CustomMenuItemTemplate}">
+                        <MenuItem x:Name="AboutMenuItem" Header="_About" HorizontalAlignment="Left" Width="185" Click="AboutClick"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}" />
+                        <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185" Click="CheckForUpdatesClick"
+                                  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                  Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                  Template="{DynamicResource CustomMenuItemTemplate}" />
                     </MenuItem>
                 </Menu>
             </StackPanel>
@@ -40,40 +63,41 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left" ItemsSource="{Binding Path=Systems}" SelectedIndex="0">
+                    <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
+                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left" ItemsSource="{Binding Systems}" SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ComboBoxItem}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=IsHeader}" Value="True">
+                                    <DataTrigger Binding="{Binding IsHeader}" Value="True">
                                         <Setter Property="IsEnabled" Value="False"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
-                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right" />
+                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">Output Filename</Label>
+                    <Label x:Name="OutputFilenameLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Filename"/>
                     <TextBox x:Name="OutputFilenameTextBox" Grid.Row="1" Grid.Column="1" Height="22" VerticalContentAlignment="Center" />
 
-                    <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center">Output Directory</Label>
+                    <Label x:Name="OutputDirectoryLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Output Directory"/>
                     <TextBox x:Name="OutputDirectoryTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <Button x:Name="OutputDirectoryBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse" Click="OutputDirectoryBrowseButtonClick"/>
+                    <Button x:Name="OutputDirectoryBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                            Click="OutputDirectoryBrowseButtonClick" Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center">Drive Letter</Label>
-                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left">
+                    <Label x:Name="DriveLetterLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
+                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Path=Letter}" />
+                                <TextBlock Text="{Binding Letter}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">Drive Speed</Label>
-                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" />
+                    <Label x:Name="DriveSpeedLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
+                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Center">Parameters</Label>
+                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
                     <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
                     <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" Click="EnableParametersCheckBoxClick" />
                 </Grid>
@@ -81,9 +105,12 @@
 
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Controls">
                 <UniformGrid Columns="3" Margin="5,5,5,5">
-                    <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True" Content="Start Dumping" Click="StartStopButtonClick" IsEnabled="False" />
-                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks" Click="MediaScanButtonClick" />
-                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for protection" Click="CopyProtectScanButtonClick" />
+                    <Button x:Name="StartStopButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" IsDefault="True" Content="Start Dumping"
+                            Click="StartStopButtonClick" IsEnabled="False" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button x:Name="MediaScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for disks"
+                            Click="MediaScanButtonClick" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button x:Name="CopyProtectScanButton" Height="22" Width="125" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Scan for protection"
+                            Click="CopyProtectScanButtonClick" Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>
 

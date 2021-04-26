@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Forms;
 using MPF.Data;
 using MPF.Redump;
+using WPFCustomMessageBox;
 using Button = System.Windows.Controls.Button;
 using TextBox = System.Windows.Controls.TextBox;
 
@@ -155,7 +156,7 @@ namespace MPF.Windows
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show(
+                        CustomMessageBox.Show(
                             "Specified path doesn't exists!",
                             "Error",
                             MessageBoxButton.OK,
@@ -192,11 +193,11 @@ namespace MPF.Windows
             {
                 bool? loggedIn = wc.Login(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
                 if (loggedIn == true)
-                    System.Windows.MessageBox.Show("Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show("Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 else if (loggedIn == false)
-                    System.Windows.MessageBox.Show("Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show("Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
-                    System.Windows.MessageBox.Show("Error validating credentials!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show("Error validating credentials!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
