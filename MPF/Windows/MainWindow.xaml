@@ -6,47 +6,85 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="Media Preservation Frontend" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height">
+        Title="Media Preservation Frontend" Width="600" WindowStyle="None"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
+        BorderBrush="DarkGray" BorderThickness="2">
 
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="2" CaptionHeight="10"/>
+    </WindowChrome.WindowChrome>
+    
     <Grid>
         <StackPanel Orientation="Vertical">
-            <StackPanel VerticalAlignment="Top" Grid.ColumnSpan="4" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-                <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="1.1*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1.2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                    <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
-                    <MenuItem x:Name="FileMenuItem" Header="_File"
+                        <MenuItem x:Name="FileMenuItem" Header="_File"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                        <MenuItem x:Name="AppExitMenuItem" Header="E_xit" HorizontalAlignment="Left" Width="185" Click="AppExitClick"
+                            <MenuItem x:Name="AppExitMenuItem" Header="E_xit" HorizontalAlignment="Left" Width="185" Click="AppExitClick"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                    </MenuItem>
-                    <MenuItem x:Name="ToolsMenuItem" Header="_Tools"
+                        </MenuItem>
+                        <MenuItem x:Name="ToolsMenuItem" Header="_Tools"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                        <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185" Click="OptionsMenuItemClick"
+                            <MenuItem x:Name="OptionsMenuItem" Header="_Options" HorizontalAlignment="Left" Width="185" Click="OptionsMenuItemClick"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                    </MenuItem>
-                    <MenuItem x:Name="HelpMenuItem" Header="_Help"
+                        </MenuItem>
+                        <MenuItem x:Name="HelpMenuItem" Header="_Help"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                               Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                               Template="{DynamicResource CustomMenuItemTemplate}">
-                        <MenuItem x:Name="AboutMenuItem" Header="_About" HorizontalAlignment="Left" Width="185" Click="AboutClick"
+                            <MenuItem x:Name="AboutMenuItem" Header="_About" HorizontalAlignment="Left" Width="185" Click="AboutClick"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                        <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185" Click="CheckForUpdatesClick"
+                            <MenuItem x:Name="CheckForUpdatesMenuItem" Header="_Check for Updates" HorizontalAlignment="Left" Width="185" Click="CheckForUpdatesClick"
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
-                    </MenuItem>
-                </Menu>
-            </StackPanel>
+                        </MenuItem>
+                    </Menu>
+                </StackPanel>
+                <Label Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+                    <Label.Content>
+                        <TextBlock TextAlignment="Center"><Bold>Media Preservation Frontend</Bold></TextBlock>
+                    </Label.Content>
+                </Label>
+                <Grid Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="MinimizeButton" Grid.Column="2" Background="{DynamicResource RoundedButton.Minimize.Background}" Style="{DynamicResource RoundedButtonStyle}" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="3" Background="{DynamicResource RoundedButton.Close.Background}" Style="{DynamicResource RoundedButtonStyle}" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                </Grid>
+            </Grid>
 
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Settings">
                 <Grid Margin="5,5,5,5">

@@ -292,6 +292,23 @@ namespace MPF.Windows
         #region Event Handlers
 
         /// <summary>
+        /// Handler for CloseButton Click event
+        /// </summary>
+        private void CloseButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+            Close();
+        }
+
+        /// <summary>
+        /// Handler for MinimizeButton Click event
+        /// </summary>
+        private void MinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
         /// Handler for AcceptButton Click event
         /// </summary>
         private void OnAcceptClick(object sender, RoutedEventArgs e)

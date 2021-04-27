@@ -11,7 +11,7 @@ namespace WPFCustomMessageBox
     {
         private bool _removeTitleBarIcon = true;
 
-        internal string Caption
+        public string Caption
         {
             get
             {
@@ -23,7 +23,7 @@ namespace WPFCustomMessageBox
             }
         }
 
-        internal string Message
+        public string Message
         {
             get
             {
@@ -35,7 +35,7 @@ namespace WPFCustomMessageBox
             }
         }
 
-        internal string OkButtonText
+        public string OkButtonText
         {
             get
             {
@@ -47,7 +47,7 @@ namespace WPFCustomMessageBox
             }
         }
 
-        internal string CancelButtonText
+        public string CancelButtonText
         {
             get
             {
@@ -59,7 +59,7 @@ namespace WPFCustomMessageBox
             }
         }
 
-        internal string YesButtonText
+        public string YesButtonText
         {
             get
             {
@@ -71,7 +71,7 @@ namespace WPFCustomMessageBox
             }
         }
 
-        internal string NoButtonText
+        public string NoButtonText
         {
             get
             {
@@ -208,6 +208,6 @@ namespace WPFCustomMessageBox
         {
             Result = MessageBoxResult.No;
             Close();
-        }        
+        }
     }
 }

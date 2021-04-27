@@ -74,7 +74,13 @@ namespace MPF.Windows
             // Disable buttons until we load fully
             StartStopButton.IsEnabled = false;
             MediaScanButton.IsEnabled = false;
-            CopyProtectScanButton.IsEnabled = false;                
+            CopyProtectScanButton.IsEnabled = false;
+
+            // Set the UI color scheme according to the options
+            if (Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                DisableDarkMode();
         }
 
         #region Population
@@ -983,6 +989,14 @@ namespace MPF.Windows
         }
 
         /// <summary>
+        /// Handler for CloseButton Click event
+        /// </summary>
+        private void CloseButtonClick(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        /// <summary>
         /// Handler for CopyProtectScanButton Click event
         /// </summary>
         private void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
@@ -1046,6 +1060,14 @@ namespace MPF.Windows
         }
 
         /// <summary>
+        /// Handler for MinimizeButton Click event
+        /// </summary>
+        private void MinimizeButtonClick(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
         /// Handler for MainWindow OnContentRendered event
         /// </summary>
         /// <param name="e"></param>
@@ -1085,11 +1107,7 @@ namespace MPF.Windows
         /// </summary>
         private void OptionsMenuItemClick(object sender, RoutedEventArgs e)
         {
-            var optionsWindow = new OptionsWindow(Options)
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
+            var optionsWindow = new OptionsWindow(Options) { Owner = this };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }

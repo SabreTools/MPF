@@ -6,12 +6,53 @@
         xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
         mc:Ignorable="d"
-        Title="Disc Information" Width="515" ResizeMode="NoResize" SizeToContent="Height">
+        Title="Disc Information" Width="515" WindowStyle="None"
+        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
+        BorderBrush="DarkGray" BorderThickness="2">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="2" CaptionHeight="10"/>
+    </WindowChrome.WindowChrome>
 
     <Grid>
         <StackPanel Orientation="Vertical" Width="500">
-            <TabControl>
-                <TabItem x:Name="CommonInfo" Header="Common Info">
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="1.1*"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1.2*"/>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
+                <Label Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+                    <Label.Content>
+                        <TextBlock TextAlignment="Center"><Bold>Disc Information</Bold></TextBlock>
+                    </Label.Content>
+                </Label>
+                <Grid Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="MinimizeButton" Grid.Column="2" Background="{DynamicResource RoundedButton.Minimize.Background}" Style="{DynamicResource RoundedButtonStyle}" Click="MinimizeButtonClick">
+                        <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                    <Button x:Name="CloseButton" Grid.Column="3" Background="{DynamicResource RoundedButton.Close.Background}" Style="{DynamicResource RoundedButtonStyle}" Click="CloseButtonClick">
+                        <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
+                    </Button>
+                </Grid>
+            </Grid>
+
+            <TabControl Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                        Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                        Style="{DynamicResource CustomTabControlStyle}">
+                <TabItem x:Name="CommonInfo" Header="Common Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
                         <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
@@ -90,8 +131,8 @@
                         </Expander>
                     </StackPanel>
                 </TabItem>
-                
-                <TabItem x:Name="L0Info" Header="Data/L0 Info">
+
+                <TabItem x:Name="L0Info" Header="Data/L0 Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
                         <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Tab="True"/>
                         <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID"/>
@@ -100,8 +141,8 @@
                         <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"/>
                     </StackPanel>
                 </TabItem>
-                
-                <TabItem x:Name="L1Info" Header="Label/L1 Info">
+
+                <TabItem x:Name="L1Info" Header="Label/L1 Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
                         <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Tab="True"/>
                         <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID"/>
@@ -111,7 +152,7 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem x:Name="L2Info" Header="L2 Info" Visibility="Collapsed">
+                <TabItem x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
                         <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Tab="True"/>
                         <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID"/>
@@ -119,7 +160,7 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem x:Name="L3Info" Header="L3 Info" Visibility="Collapsed">
+                <TabItem x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
                         <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Tab="True"/>
                         <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID"/>

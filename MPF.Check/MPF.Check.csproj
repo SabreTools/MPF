@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <PlatformTarget>x86</PlatformTarget>
     <OutputType>Exe</OutputType>
-    <Prefer32Bit>true</Prefer32Bit>
     <Title>MPF Check</Title>
     <AssemblyName>MPF.Check</AssemblyName>
     <Description>Validator for various dumping programs</Description>

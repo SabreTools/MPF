@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <PlatformTarget>x86</PlatformTarget>
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
-    <Prefer32Bit>true</Prefer32Bit>
+    <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
     <Title>MPF</Title>
     <AssemblyName>MPF</AssemblyName>
     <Description>Frontend for various dumping programs</Description>
@@ -42,6 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Images\Icon.ico" />
     <Resource Include="Images\ring-code-guide.png" />
   </ItemGroup>
 

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <PlatformTarget>x86</PlatformTarget>
     <Title>MPF Library</Title>
     <AssemblyName>MPF.Library</AssemblyName>
     <Description>Library code for MPF and MPF.Check</Description>
