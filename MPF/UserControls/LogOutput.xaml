@@ -9,7 +9,7 @@
     <Grid>
         <StackPanel Orientation="Vertical">
             <Grid Height="22" Margin="10 10 10 0">
-                <ProgressBar x:Name="ProgressBar" />
+                <ProgressBar x:Name="ProgressBar" Style="{DynamicResource CustomProgressBarStyle}" />
                 <TextBlock x:Name="ProgressLabel" Grid.Row="0" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0 2 0 0" />
             </Grid>
             

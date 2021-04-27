@@ -358,6 +358,9 @@ namespace MPF.Windows
             Application.Current.Resources["MenuItem.SubMenu.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
             Application.Current.Resources["MenuItem.SubMenu.Border"] = Brushes.DarkGray;
 
+            // Handle ProgressBar-specific resources
+            Application.Current.Resources["ProgressBar.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xE6, 0xE6, 0xE6));
+
             // Handle TabItem-specific resources
             Application.Current.Resources["TabItem.Selected.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
             Application.Current.Resources["TabItem.Static.Background"] = new LinearGradientBrush(
@@ -412,6 +415,9 @@ namespace MPF.Windows
             // Handle MenuItem-specific resources
             Application.Current.Resources["MenuItem.SubMenu.Background"] = darkModeBrush;
             Application.Current.Resources["MenuItem.SubMenu.Border"] = Brushes.DarkGray;
+
+            // Handle ProgressBar-specific resources
+            Application.Current.Resources["ProgressBar.Background"] = darkModeBrush;
 
             // Handle TabItem-specific resources
             Application.Current.Resources["TabItem.Selected.Background"] = darkModeBrush;
