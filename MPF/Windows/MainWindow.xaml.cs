@@ -361,6 +361,9 @@ namespace MPF.Windows
             // Handle ProgressBar-specific resources
             Application.Current.Resources["ProgressBar.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xE6, 0xE6, 0xE6));
 
+            // Handle ScrollViewer-specific resources
+            Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = Brushes.LightGray;
+
             // Handle TabItem-specific resources
             Application.Current.Resources["TabItem.Selected.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
             Application.Current.Resources["TabItem.Static.Background"] = new LinearGradientBrush(
@@ -418,6 +421,9 @@ namespace MPF.Windows
 
             // Handle ProgressBar-specific resources
             Application.Current.Resources["ProgressBar.Background"] = darkModeBrush;
+
+            // Handle ScrollViewer-specific resources
+            Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = darkModeBrush;
 
             // Handle TabItem-specific resources
             Application.Current.Resources["TabItem.Selected.Background"] = darkModeBrush;
