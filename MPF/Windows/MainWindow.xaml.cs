@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using WinForms = System.Windows.Forms;
 using BurnOutSharp;
@@ -1234,6 +1235,15 @@ namespace MPF.Windows
             PopulateMediaType();
             GetOutputNames(false);
             EnsureDiscInformation();
+        }
+
+        /// <summary>
+        /// Handler for Title MouseDown event
+        /// </summary>
+        private void TitleMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
 
         #endregion

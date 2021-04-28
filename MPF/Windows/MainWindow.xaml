@@ -11,23 +11,23 @@
         BorderBrush="DarkGray" BorderThickness="2">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome ResizeBorderThickness="2" CaptionHeight="10"/>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
     </WindowChrome.WindowChrome>
     
     <Grid>
         <StackPanel Orientation="Vertical">
-            <Grid Margin="0,10,0,0">
+            <Grid Margin="0,2,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
-                    <ColumnDefinition Width="1.1*"/>
+                    <ColumnDefinition Width="115"/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="1.2*"/>
+                    <ColumnDefinition Width="50"/>
                 </Grid.ColumnDefinitions>
 
                 <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
-                <StackPanel Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+                <StackPanel Panel.ZIndex="1" Grid.Column="1" VerticalAlignment="Center" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
                     <Menu x:Name="TopMenuBar" Width="Auto" Height="20"
                       Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                       Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}">
@@ -64,7 +64,7 @@
                         </MenuItem>
                     </Menu>
                 </StackPanel>
-                <Label Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center">
+                <Label Panel.ZIndex="0" Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown">
                     <Label.Content>
                         <TextBlock TextAlignment="Center"><Bold>Media Preservation Frontend</Bold></TextBlock>
                     </Label.Content>
@@ -73,14 +73,12 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="MinimizeButton" Grid.Column="2" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
+                    <Button x:Name="MinimizeButton" Grid.Column="0" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="MinimizeButtonClick">
                         <Path Data="M 0,0 L 10,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
-                    <Button x:Name="CloseButton" Grid.Column="3" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
+                    <Button x:Name="CloseButton" Grid.Column="1" BorderThickness="0" Background="Transparent" Style="{DynamicResource CustomButtonStyle}" Click="CloseButtonClick">
                         <Path Data="M 0,0 L 12,12 M 0,12 L 12,0" Stroke="{Binding Path=Foreground,RelativeSource={RelativeSource AncestorType={x:Type Button}}}" StrokeThickness="1"/>
                     </Button>
                 </Grid>

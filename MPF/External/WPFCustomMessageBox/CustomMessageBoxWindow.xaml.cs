@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows;
+using System.Windows.Input;
 
 namespace WPFCustomMessageBox
 {
@@ -208,6 +209,15 @@ namespace WPFCustomMessageBox
         {
             Result = MessageBoxResult.No;
             Close();
+        }
+
+        /// <summary>
+        /// Handler for Title MouseDown event
+        /// </summary>
+        private void TitleMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
     }
 }

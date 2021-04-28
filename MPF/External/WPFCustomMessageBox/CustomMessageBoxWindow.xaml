@@ -11,7 +11,7 @@
         BorderBrush="DarkGray" BorderThickness="2">
 
     <WindowChrome.WindowChrome>
-        <WindowChrome ResizeBorderThickness="2" CaptionHeight="10"/>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
     </WindowChrome.WindowChrome>
 
     <Grid>
@@ -24,15 +24,15 @@
         <Grid Grid.Row="0" Margin="0,10,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="25"/>
-                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="115"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="1.2*"/>
+                <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
 
             <Image Grid.Column="0" Source="/Images/Icon.ico" Height="20" Width="20" Margin="1" />
-            <Label Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" Content="{Binding Path=Title,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
+            <Label Grid.Column="1" Grid.ColumnSpan="4" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" MouseDown="TitleMouseDown" Content="{Binding Path=Title,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"/>
         </Grid>
 
         <!-- Make the window width fit the title by embedding the title invisibly  -->

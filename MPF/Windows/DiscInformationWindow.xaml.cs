@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using MPF.Data;
 
 namespace MPF.Windows
@@ -338,6 +339,15 @@ namespace MPF.Windows
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
             ringCodeGuideWindow.Show();
+        }
+
+        /// <summary>
+        /// Handler for Title MouseDown event
+        /// </summary>
+        private void TitleMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
 
         #endregion

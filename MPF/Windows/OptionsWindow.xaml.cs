@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Input;
 using MPF.Data;
 using MPF.Redump;
 using WPFCustomMessageBox;
@@ -215,6 +216,15 @@ namespace MPF.Windows
                 else
                     CustomMessageBox.Show("Error validating credentials!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        /// <summary>
+        /// Handler for Title MouseDown event
+        /// </summary>
+        private void TitleMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
 
         #endregion

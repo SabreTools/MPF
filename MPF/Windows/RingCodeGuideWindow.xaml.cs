@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 
 namespace MPF.Windows
 {
@@ -28,6 +29,15 @@ namespace MPF.Windows
         private void MinimizeButtonClick(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        /// <summary>
+        /// Handler for Title MouseDown event
+        /// </summary>
+        private void TitleMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+                this.DragMove();
         }
 
         #endregion
