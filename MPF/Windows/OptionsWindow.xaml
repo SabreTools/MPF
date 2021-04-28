@@ -31,6 +31,20 @@
                     <Label.Content>
                         <TextBlock TextAlignment="Center"><Bold>Options</Bold></TextBlock>
                     </Label.Content>
+                    <Label.ContextMenu>
+                        <ContextMenu Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                     Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                     Style="{DynamicResource CustomContextMenuStyle}">
+                            <MenuItem Header="Minimize" Click="MinimizeButtonClick" Width="185"
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}"/>
+                            <MenuItem Header="Close" Click="CloseButtonClick" Width="185"
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}"/>
+                        </ContextMenu>
+                    </Label.ContextMenu>
                 </Label>
                 <Grid Grid.Column="5">
                     <Grid.ColumnDefinitions>
