@@ -329,6 +329,46 @@ namespace MPF.Data
 
         #endregion
 
+        #region Protection Scanning Options
+
+        /// <summary>
+        /// Scan archive contents during protection scanning
+        /// </summary>
+        public bool ScanArchivesForProtection
+        {
+            get { return GetBooleanSetting(_settings, "ScanArchivesForProtection", true); }
+            set { _settings["ScanArchivesForProtection"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Scan for executable packers during protection scanning
+        /// </summary>
+        public bool ScanPackersForProtection
+        {
+            get { return GetBooleanSetting(_settings, "ScanPackersForProtection", false); }
+            set { _settings["ScanPackersForProtection"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Force scanning all files for protection
+        /// </summary>
+        public bool ForceScanningForProtection
+        {
+            get { return GetBooleanSetting(_settings, "ForceScanningForProtection", false); }
+            set { _settings["ForceScanningForProtection"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Include debug information with scan results
+        /// </summary>
+        public bool IncludeDebugProtectionInformation
+        {
+            get { return GetBooleanSetting(_settings, "IncludeDebugProtectionInformation", false); }
+            set { _settings["IncludeDebugProtectionInformation"] = value.ToString(); }
+        }
+
+        #endregion
+
         #region Logging Options
 
         /// <summary>

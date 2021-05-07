@@ -1023,9 +1023,10 @@ namespace MPF.Utilities
         /// Run protection scan on a given dump environment
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
+        /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>TCopy protection detected in the envirionment, if any</returns>
-        public static async Task<(bool, string)> RunProtectionScanOnPath(string path, IProgress<ProtectionProgress> progress = null)
+        public static async Task<(bool, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
         {
             try
             {
@@ -1033,10 +1034,10 @@ namespace MPF.Utilities
                 {
                     var scanner = new Scanner(progress)
                     {
-                        IncludePosition = false, // Debug flag to include protection position in file
-                        ScanAllFiles = false, // Forces all files to be scanned as executables
-                        ScanArchives = true, // Allows archives to have internals extracted and scanned
-                        ScanPackers = false, // Allows executable packers to be detected
+                        IncludePosition = options.IncludeDebugProtectionInformation,
+                        ScanAllFiles = options.ForceScanningForProtection,
+                        ScanArchives = options.ScanArchivesForProtection,
+                        ScanPackers = options.ScanPackersForProtection,
                     };
                     return scanner.GetProtections(path);
                 });

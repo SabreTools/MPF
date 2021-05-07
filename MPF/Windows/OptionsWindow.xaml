@@ -223,6 +223,32 @@
                     </StackPanel>
                 </TabItem>
 
+                <TabItem Header="Protection Scanning" Style="{DynamicResource CustomTabItemStyle}">
+                    <StackPanel>
+                        <UniformGrid Columns="2" Rows="2">
+                            <CheckBox VerticalAlignment="Center" Content="Scan Archive Contents"
+                                     IsChecked="{Binding Options.ScanArchivesForProtection}"
+                                     ToolTip="Enable scanning archive contents during protection scanning (may drastically increase scanning time but is more accurate)" Margin="0,4"
+                                     />
+
+                            <CheckBox VerticalAlignment="Center" Content="Include Executable Packers"
+                                     IsChecked="{Binding Options.ScanPackersForProtection}"
+                                     ToolTip="Include executable packers in outputted protections" Margin="0,4"
+                                     />
+
+                            <CheckBox VerticalAlignment="Center" Content="Force Scanning All Files"
+                                     IsChecked="{Binding Options.ForceScanningForProtection}"
+                                     ToolTip="Force scanning all files even if they're not executables" Margin="0,4"
+                                     />
+
+                            <CheckBox VerticalAlignment="Center" Content="Include Debug Information"
+                                     IsChecked="{Binding Options.IncludeDebugProtectionInformation}"
+                                     ToolTip="Include debug information during protection scans" Margin="0,4"
+                                     />
+                        </UniformGrid>
+                    </StackPanel>
+                </TabItem>
+
                 <TabItem Header="Aaru" Style="{DynamicResource CustomTabItemStyle}">
                     <UniformGrid Columns="2" Rows="3">
                         <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"

@@ -1363,7 +1363,7 @@ namespace MPF.Data
         {
             if (Options.ScanForProtection)
             {
-                (bool success, string output) = await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", progress);
+                (bool success, string output) = await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", this.Options, progress);
                 if (success)
                     return output;
                 else
