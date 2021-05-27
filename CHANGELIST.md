@@ -3,6 +3,7 @@
 - Sony works backward
 - Add experimental dark mode
 - Allow users to customize protection scanning
+- Fix negative offsets for `/a` flag
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)

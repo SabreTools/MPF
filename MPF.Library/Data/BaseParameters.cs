@@ -369,12 +369,18 @@ namespace MPF.Data
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a flag, false otherwise</returns>
+        /// <remarks>TODO: Can we just check if it's in the list of supported flags?</remarks>
         protected static bool IsFlag(string parameter)
         {
+            // Remove quotes to avoid any issues
             parameter = parameter.Trim('\"');
+
+            // Forward slashes are nothing but flags
             if (parameter.StartsWith("/"))
                 return true;
-            else if (parameter.StartsWith("-"))
+
+            // Dashes *might* be parameters, unless it's purely numeric
+            else if (parameter.StartsWith("-") && !Int64.TryParse(parameter, out long _))
                 return true;
 
             return false;
