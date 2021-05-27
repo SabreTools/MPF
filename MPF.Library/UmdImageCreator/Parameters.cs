@@ -36,14 +36,17 @@ namespace MPF.UmdImageCreator
             switch (this.Type)
             {
                 case MediaType.UMD:
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
-                    if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles.Add($"{basePath}_mainError.txt");
-                    if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles.Add($"{basePath}_mainInfo.txt");
-                    if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles.Add($"{basePath}_volDesc.txt");
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}_disc.txt"))
+                            missingFiles.Add($"{basePath}_disc.txt");
+                        if (!File.Exists($"{basePath}_mainError.txt"))
+                            missingFiles.Add($"{basePath}_mainError.txt");
+                        if (!File.Exists($"{basePath}_mainInfo.txt"))
+                            missingFiles.Add($"{basePath}_mainInfo.txt");
+                        if (!File.Exists($"{basePath}_volDesc.txt"))
+                            missingFiles.Add($"{basePath}_volDesc.txt");
+                    }
 
                     break;
 

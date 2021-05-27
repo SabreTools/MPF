@@ -5,6 +5,7 @@
 - Allow users to customize protection scanning
 - Fix negative offsets for `/a` flag
 - Always check for all DIC log files, just in case
+- Check for the zipped logs for dealing with overwrites
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)

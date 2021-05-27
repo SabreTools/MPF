@@ -38,10 +38,13 @@ namespace MPF.CleanRip
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}-dumpinfo.txt"))
-                        missingFiles.Add($"{basePath}-dumpinfo.txt");
-                    if (!File.Exists($"{basePath}.bca"))
-                        missingFiles.Add($"{basePath}.bca");
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}-dumpinfo.txt"))
+                            missingFiles.Add($"{basePath}-dumpinfo.txt");
+                        if (!File.Exists($"{basePath}.bca"))
+                            missingFiles.Add($"{basePath}.bca");
+                    }
 
                     break;
 

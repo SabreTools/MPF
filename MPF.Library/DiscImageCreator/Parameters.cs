@@ -215,42 +215,51 @@ namespace MPF.DiscImageCreator
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    if (!File.Exists($"{basePath}.ccd"))
-                        missingFiles.Add($"{basePath}.ccd");
                     if (!File.Exists($"{basePath}.cue"))
                         missingFiles.Add($"{basePath}.cue");
-                    if (!File.Exists($"{basePath}.dat"))
-                        missingFiles.Add($"{basePath}.dat");
                     if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
                         missingFiles.Add($"{basePath}.img");
-                    if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
-                        missingFiles.Add($"{basePath}.sub");
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
-                    if (!File.Exists($"{basePath}_drive.txt"))
-                        missingFiles.Add($"{basePath}_drive.txt");
-                    if (!File.Exists($"{basePath}_img.cue"))
-                        missingFiles.Add($"{basePath}_img.cue");
-                    if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles.Add($"{basePath}_mainError.txt");
-                    if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles.Add($"{basePath}_mainInfo.txt");
-                    if (!File.Exists($"{basePath}_subError.txt"))
-                        missingFiles.Add($"{basePath}_subError.txt");
-                    if (!File.Exists($"{basePath}_subInfo.txt"))
-                        missingFiles.Add($"{basePath}_subInfo.txt");
-                    if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
-                        missingFiles.Add($"{basePath}_subReadable.txt");
-                    if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles.Add($"{basePath}_volDesc.txt");
 
                     // Audio-only discs don't output these files
                     if (!this.System.IsAudio())
                     {
-                        if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
-                            missingFiles.Add($"{basePath}.img_EdcEcc.txt");
                         if (!File.Exists($"{basePath}.scm") && !File.Exists($"{basePath}.scmtmp"))
                             missingFiles.Add($"{basePath}.scm");
+                    }
+
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}.ccd"))
+                            missingFiles.Add($"{basePath}.ccd");
+                        if (!File.Exists($"{basePath}.dat"))
+                            missingFiles.Add($"{basePath}.dat");
+                        if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
+                            missingFiles.Add($"{basePath}.sub");
+                        if (!File.Exists($"{basePath}_disc.txt"))
+                            missingFiles.Add($"{basePath}_disc.txt");
+                        if (!File.Exists($"{basePath}_drive.txt"))
+                            missingFiles.Add($"{basePath}_drive.txt");
+                        if (!File.Exists($"{basePath}_img.cue"))
+                            missingFiles.Add($"{basePath}_img.cue");
+                        if (!File.Exists($"{basePath}_mainError.txt"))
+                            missingFiles.Add($"{basePath}_mainError.txt");
+                        if (!File.Exists($"{basePath}_mainInfo.txt"))
+                            missingFiles.Add($"{basePath}_mainInfo.txt");
+                        if (!File.Exists($"{basePath}_subError.txt"))
+                            missingFiles.Add($"{basePath}_subError.txt");
+                        if (!File.Exists($"{basePath}_subInfo.txt"))
+                            missingFiles.Add($"{basePath}_subInfo.txt");
+                        if (!File.Exists($"{basePath}_subReadable.txt") && !File.Exists($"{basePath}_sub.txt"))
+                            missingFiles.Add($"{basePath}_subReadable.txt");
+                        if (!File.Exists($"{basePath}_volDesc.txt"))
+                            missingFiles.Add($"{basePath}_volDesc.txt");
+
+                        // Audio-only discs don't output these files
+                        if (!this.System.IsAudio())
+                        {
+                            if (!File.Exists($"{basePath}.img_EdcEcc.txt") && !File.Exists($"{basePath}.img_EccEdc.txt"))
+                                missingFiles.Add($"{basePath}.img_EdcEcc.txt");
+                        }
                     }
 
                     // Removed or inconsistent files
@@ -280,18 +289,21 @@ namespace MPF.DiscImageCreator
                 case MediaType.BluRay:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}.dat"))
-                        missingFiles.Add($"{basePath}.dat");
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
-                    if (!File.Exists($"{basePath}_drive.txt"))
-                        missingFiles.Add($"{basePath}_drive.txt");
-                    if (!File.Exists($"{basePath}_mainError.txt"))
-                        missingFiles.Add($"{basePath}_mainError.txt");
-                    if (!File.Exists($"{basePath}_mainInfo.txt"))
-                        missingFiles.Add($"{basePath}_mainInfo.txt");
-                    if (!File.Exists($"{basePath}_volDesc.txt"))
-                        missingFiles.Add($"{basePath}_volDesc.txt");
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}.dat"))
+                            missingFiles.Add($"{basePath}.dat");
+                        if (!File.Exists($"{basePath}_disc.txt"))
+                            missingFiles.Add($"{basePath}_disc.txt");
+                        if (!File.Exists($"{basePath}_drive.txt"))
+                            missingFiles.Add($"{basePath}_drive.txt");
+                        if (!File.Exists($"{basePath}_mainError.txt"))
+                            missingFiles.Add($"{basePath}_mainError.txt");
+                        if (!File.Exists($"{basePath}_mainInfo.txt"))
+                            missingFiles.Add($"{basePath}_mainInfo.txt");
+                        if (!File.Exists($"{basePath}_volDesc.txt"))
+                            missingFiles.Add($"{basePath}_volDesc.txt");
+                    }                    
 
                     // Removed or inconsistent files
                     if (false)
@@ -306,10 +318,13 @@ namespace MPF.DiscImageCreator
                 case MediaType.FloppyDisk:
                 case MediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
-                    if (!File.Exists($"{basePath}.dat"))
-                        missingFiles.Add($"{basePath}.dat");
-                    if (!File.Exists($"{basePath}_disc.txt"))
-                        missingFiles.Add($"{basePath}_disc.txt");
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}.dat"))
+                            missingFiles.Add($"{basePath}.dat");
+                        if (!File.Exists($"{basePath}_disc.txt"))
+                            missingFiles.Add($"{basePath}_disc.txt");
+                    }
 
                     // Removed or inconsistent files
                     if (false)

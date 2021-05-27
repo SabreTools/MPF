@@ -141,34 +141,40 @@ namespace MPF.Aaru
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    if (!File.Exists($"{basePath}.cicm.xml"))
-                        missingFiles.Add($"{basePath}.cicm.xml");
-                    if (!File.Exists($"{basePath}.ibg"))
-                        missingFiles.Add($"{basePath}.ibg");
-                    if (!File.Exists($"{basePath}.log"))
-                        missingFiles.Add($"{basePath}.log");
-                    if (!File.Exists($"{basePath}.mhddlog.bin"))
-                        missingFiles.Add($"{basePath}.mhddlog.bin");
-                    if (!File.Exists($"{basePath}.resume.xml"))
-                        missingFiles.Add($"{basePath}.resume.xml");
-                    if (!File.Exists($"{basePath}.sub.log"))
-                        missingFiles.Add($"{basePath}.sub.log");
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}.cicm.xml"))
+                            missingFiles.Add($"{basePath}.cicm.xml");
+                        if (!File.Exists($"{basePath}.ibg"))
+                            missingFiles.Add($"{basePath}.ibg");
+                        if (!File.Exists($"{basePath}.log"))
+                            missingFiles.Add($"{basePath}.log");
+                        if (!File.Exists($"{basePath}.mhddlog.bin"))
+                            missingFiles.Add($"{basePath}.mhddlog.bin");
+                        if (!File.Exists($"{basePath}.resume.xml"))
+                            missingFiles.Add($"{basePath}.resume.xml");
+                        if (!File.Exists($"{basePath}.sub.log"))
+                            missingFiles.Add($"{basePath}.sub.log");
+                    }
 
                     break;
 
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    if (!File.Exists($"{basePath}.cicm.xml"))
-                        missingFiles.Add($"{basePath}.cicm.xml");
-                    if (!File.Exists($"{basePath}.ibg"))
-                        missingFiles.Add($"{basePath}.ibg");
-                    if (!File.Exists($"{basePath}.log"))
-                        missingFiles.Add($"{basePath}.log");
-                    if (!File.Exists($"{basePath}.mhddlog.bin"))
-                        missingFiles.Add($"{basePath}.mhddlog.bin");
-                    if (!File.Exists($"{basePath}.resume.xml"))
-                        missingFiles.Add($"{basePath}.resume.xml");
+                    if (!File.Exists($"{basePath}_logs.zip"))
+                    {
+                        if (!File.Exists($"{basePath}.cicm.xml"))
+                            missingFiles.Add($"{basePath}.cicm.xml");
+                        if (!File.Exists($"{basePath}.ibg"))
+                            missingFiles.Add($"{basePath}.ibg");
+                        if (!File.Exists($"{basePath}.log"))
+                            missingFiles.Add($"{basePath}.log");
+                        if (!File.Exists($"{basePath}.mhddlog.bin"))
+                            missingFiles.Add($"{basePath}.mhddlog.bin");
+                        if (!File.Exists($"{basePath}.resume.xml"))
+                            missingFiles.Add($"{basePath}.resume.xml");
+                    }
 
                     break;
 
