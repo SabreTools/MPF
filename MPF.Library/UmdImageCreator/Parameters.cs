@@ -30,13 +30,13 @@ namespace MPF.UmdImageCreator
         #region BaseParameters Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.UMD:
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}_disc.txt"))
                             missingFiles.Add($"{basePath}_disc.txt");

@@ -67,7 +67,7 @@ namespace MPF.DD
         #region BaseParameters Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             // TODO: Figure out what sort of output files are expected... just `.bin`?
             return (true, new List<string>());

@@ -135,13 +135,13 @@ namespace MPF.Aaru
         #region BaseParameters Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             List<string> missingFiles = new List<string>();
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.cicm.xml"))
                             missingFiles.Add($"{basePath}.cicm.xml");
@@ -162,7 +162,7 @@ namespace MPF.Aaru
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.cicm.xml"))
                             missingFiles.Add($"{basePath}.cicm.xml");

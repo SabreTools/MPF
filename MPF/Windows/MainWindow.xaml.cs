@@ -889,7 +889,7 @@ namespace MPF.Windows
                 }
 
                 // If a complete dump already exists
-                (bool foundFiles, List<string> _) = Env.FoundAllFiles();
+                (bool foundFiles, List<string> _) = Env.FoundAllFiles(true);
                 if (foundFiles)
                 {
                     MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);

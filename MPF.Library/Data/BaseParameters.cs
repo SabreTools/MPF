@@ -152,8 +152,9 @@ namespace MPF.Data
         /// Validate if all required output files exist
         /// </summary>
         /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath);
+        public abstract (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck);
 
         /// <summary>
         /// Generate a SubmissionInfo for the output files

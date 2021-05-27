@@ -30,7 +30,7 @@ namespace MPF.CleanRip
         #region BaseParameters Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             List<string> missingFiles = new List<string>();
             switch (this.Type)
@@ -38,7 +38,7 @@ namespace MPF.CleanRip
                 case MediaType.DVD: // Only added here to help users; not strictly correct
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}-dumpinfo.txt"))
                             missingFiles.Add($"{basePath}-dumpinfo.txt");

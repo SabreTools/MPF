@@ -162,7 +162,7 @@ namespace MPF.DiscImageCreator
         #region BaseParameters Implementations
 
         /// <inheritdoc/>
-        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath)
+        public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
             /*
             If there are no external programs, such as error checking, etc., DIC outputs
@@ -227,7 +227,7 @@ namespace MPF.DiscImageCreator
                             missingFiles.Add($"{basePath}.scm");
                     }
 
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.ccd"))
                             missingFiles.Add($"{basePath}.ccd");
@@ -289,7 +289,7 @@ namespace MPF.DiscImageCreator
                 case MediaType.BluRay:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.dat"))
                             missingFiles.Add($"{basePath}.dat");
@@ -318,7 +318,7 @@ namespace MPF.DiscImageCreator
                 case MediaType.FloppyDisk:
                 case MediaType.HardDisk:
                     // TODO: Determine what outputs come out from a HDD, SD, etc.
-                    if (!File.Exists($"{basePath}_logs.zip"))
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
                         if (!File.Exists($"{basePath}.dat"))
                             missingFiles.Add($"{basePath}.dat");

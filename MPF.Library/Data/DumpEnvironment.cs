@@ -176,9 +176,9 @@ namespace MPF.Data
         /// <summary>
         /// Ensures that all required output files have been created
         /// </summary>
-        /// <param name="progress">Optional result progress callback</param>
+        /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
-        public (bool, List<string>) FoundAllFiles()
+        public (bool, List<string>) FoundAllFiles(bool preCheck)
         {
             // First, sanitized the output filename to strip off any potential extension
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
@@ -187,7 +187,7 @@ namespace MPF.Data
             string basePath = Path.Combine(OutputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
-            return Parameters.CheckAllOutputFilesExist(basePath);
+            return Parameters.CheckAllOutputFilesExist(basePath, preCheck);
         }
 
         /// <summary>
@@ -412,7 +412,7 @@ namespace MPF.Data
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = FoundAllFiles();
+            (bool foundFiles, List<string> missingFiles) = FoundAllFiles(false);
             if (!foundFiles)
             {
                 resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
@@ -568,7 +568,7 @@ namespace MPF.Data
             string outputFilename = Path.GetFileNameWithoutExtension(OutputFilename);
 
             // Check that all of the relevant files are there
-            (bool foundFiles, List<string> missingFiles) = FoundAllFiles();
+            (bool foundFiles, List<string> missingFiles) = FoundAllFiles(false);
             if (!foundFiles)
             {
                 resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
