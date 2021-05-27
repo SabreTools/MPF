@@ -1445,6 +1445,10 @@ namespace MPF.DiscImageCreator
                         logFiles.Add($"{basePath}_drive.txt");
                     if (File.Exists($"{basePath}_img.cue"))
                         logFiles.Add($"{basePath}_img.cue");
+                    if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                        logFiles.Add($"{basePath}.img_EdcEcc.txt");
+                    if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                        logFiles.Add($"{basePath}.img_EccEdc.txt");
                     if (File.Exists($"{basePath}_mainError.txt"))
                         logFiles.Add($"{basePath}_mainError.txt");
                     if (File.Exists($"{basePath}_mainInfo.txt"))
@@ -1461,15 +1465,6 @@ namespace MPF.DiscImageCreator
                         logFiles.Add($"{basePath}_subReadable.txt");
                     if (File.Exists($"{basePath}_volDesc.txt"))
                         logFiles.Add($"{basePath}_volDesc.txt");
-
-                    // Audio-only discs don't output these files
-                    if (!this.System.IsAudio())
-                    {
-                        if (File.Exists($"{basePath}.img_EdcEcc.txt"))
-                            logFiles.Add($"{basePath}.img_EdcEcc.txt");
-                        if (File.Exists($"{basePath}.img_EccEdc.txt"))
-                            logFiles.Add($"{basePath}.img_EccEdc.txt");
-                    }
 
                     break;
 
