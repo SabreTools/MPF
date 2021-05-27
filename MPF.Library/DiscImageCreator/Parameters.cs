@@ -1639,7 +1639,7 @@ namespace MPF.DiscImageCreator
                         case KnownSystem.HasbroVideoNowJr:
                         case KnownSystem.HasbroVideoNowXP:
                             this[FlagStrings.AddOffset] = true;
-                            this.AddOffsetValue = 18032;
+                            this.AddOffsetValue = 0; // Value needed for first run and placeholder after
                             break;
                         case KnownSystem.SonyPlayStation:
                             this[FlagStrings.ScanAntiMod] = true;
