@@ -311,6 +311,10 @@ namespace MPF.DiscImageCreator
                         // Replaced by timestamp-named file
                         if (!File.Exists($"{basePath}_cmd.txt"))
                             missingFiles.Add($"{basePath}_cmd.txt");
+
+                        // Not guaranteed output
+                        if (File.Exists($"{basePath}_CSSKey.txt"))
+                            missingFiles.Add($"{basePath}_CSSKey.txt");
                     }
 
                     break;
@@ -1448,6 +1452,8 @@ namespace MPF.DiscImageCreator
                         logFiles.Add(cmdPath);
                     if (File.Exists($"{basePath}_cmd.txt"))
                         logFiles.Add($"{basePath}_cmd.txt");
+                    if (File.Exists($"{basePath}_CSSKey.txt"))
+                        logFiles.Add($"{basePath}_CSSKey.txt");
                     if (File.Exists($"{basePath}.dat"))
                         logFiles.Add($"{basePath}.dat");
                     if (File.Exists($"{basePath}.sub"))
