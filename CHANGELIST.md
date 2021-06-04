@@ -8,6 +8,7 @@
 - Check for the zipped logs for dealing with overwrites
 - Be smarter about checking for zipped logs
 - Change offset value for HVN discs
+- Update to DIC 20210601
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)
