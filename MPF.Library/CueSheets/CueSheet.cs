@@ -56,7 +56,8 @@ namespace MPF.CueSheets
         /// Create a cuesheet from a file, if possible
         /// </summary>
         /// <param name="filename"></param>
-        public CueSheet(string filename)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public CueSheet(string filename, bool throwOnError = false)
         {
             // Check that the file exists
             if (!File.Exists(filename))
@@ -97,7 +98,12 @@ namespace MPF.CueSheets
                     // Read MCN
                     case "CATALOG":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"CATALOG line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Catalog = splitLine[1];
                         break;
@@ -105,7 +111,12 @@ namespace MPF.CueSheets
                     // Read external CD-Text file path
                     case "CDTEXTFILE":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"CDTEXTFILE line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.CdTextFile = splitLine[1];
                         break;
@@ -113,7 +124,12 @@ namespace MPF.CueSheets
                     // Read CD-Text enhanced performer
                     case "PERFORMER":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"PERFORMER line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Performer = splitLine[1];
                         break;
@@ -121,7 +137,12 @@ namespace MPF.CueSheets
                     // Read CD-Text enhanced songwriter
                     case "SONGWRITER":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"SONGWRITER line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Songwriter = splitLine[1];
                         break;
@@ -129,7 +150,12 @@ namespace MPF.CueSheets
                     // Read CD-Text enhanced title
                     case "TITLE":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"TITLE line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Title = splitLine[1];
                         break;
@@ -137,14 +163,24 @@ namespace MPF.CueSheets
                     // Read file information
                     case "FILE":
                         if (splitLine.Length < 3)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"FILE line malformed: {line}");
+
+                            continue;
+                        }
 
                         if (this.Files == null)
                             this.Files = new List<CueFile>();
 
                         var file = new CueFile(splitLine[1], splitLine[2], cueLines, ref i);
                         if (file == default)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"FILE line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Files.Add(file);
                         break;
@@ -168,11 +204,24 @@ namespace MPF.CueSheets
         /// Write the cuesheet out to a stream
         /// </summary>
         /// <param name="stream">Stream to write to</param>
-        public void Write(Stream stream)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public void Write(Stream stream, bool throwOnError = false)
         {
             // If we don't have any files, it's invalid
-            if (this.Files == null || this.Files.Count == 0)
-                return; // TODO: Make this throw an exception
+            if (this.Files == null)
+            {
+                if (throwOnError)
+                    throw new ArgumentNullException(nameof(this.Files));
+
+                return;
+            }
+            else if (this.Files.Count == 0)
+            {
+                if (throwOnError)
+                    throw new ArgumentException("No files provided to write");
+
+                return;
+            }
 
             using (var sw = new StreamWriter(stream, Encoding.ASCII, 1024, true))
             {

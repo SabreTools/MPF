@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 
 /// <remarks>
@@ -39,41 +40,87 @@ namespace MPF.CueSheets
         /// Create a PREGAP from a mm:ss:ff length
         /// </summary>
         /// <param name="length">String to get length information from</param>
-        public PreGap(string length)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public PreGap(string length, bool throwOnError = false)
         {
             // Ignore empty lines
             if (string.IsNullOrWhiteSpace(length))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new ArgumentException("Length was null or whitespace");
+
+                return;
+            }
 
             // Ignore lines that don't contain the correct information
             if (length.Length != 8 || length.Count(c => c == ':') != 2)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Length was not in a recognized format: {length}");
+
+                return;
+            }
 
             // Split the line
             string[] splitLength = length.Split(':');
             if (splitLength.Length != 3)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Length was not in a recognized format: {length}");
+
+                return;
+            }
 
             // Parse the lengths
             int[] lengthSegments = new int[3];
 
             // Minutes
             if (!int.TryParse(splitLength[0], out lengthSegments[0]))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Minutes segment was not a number: {splitLength[0]}");
+
+                return;
+            }
             else if (lengthSegments[0] < 0)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Minutes segment must be 0 or greater: {lengthSegments[0]}");
+
+                return;
+            }
 
             // Seconds
             if (!int.TryParse(splitLength[1], out lengthSegments[1]))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Seconds segment was not a number: {splitLength[1]}");
+
+                return;
+            }
             else if (lengthSegments[1] < 0 || lengthSegments[1] > 60)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Seconds segment must be between 0 and 60: {lengthSegments[1]}");
+
+                return;
+            }
 
             // Frames
             if (!int.TryParse(splitLength[2], out lengthSegments[2]))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Frames segment was not a number: {splitLength[2]}");
+
+                return;
+            }
             else if (lengthSegments[2] < 0 || lengthSegments[2] > 75)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Frames segment must be between 0 and 75: {lengthSegments[2]}");
+
+                return;
+            }
 
             // Set the values
             this.Minutes = lengthSegments[0];

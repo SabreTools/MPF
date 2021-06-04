@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 
 /// <remarks>
@@ -45,47 +46,103 @@ namespace MPF.CueSheets
         /// </summary>
         /// <param name="index">Index to set</param>
         /// <param name="startTime">Start time to set</param>
-        public CueIndex(string index, string startTime)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public CueIndex(string index, string startTime, bool throwOnError = false)
         {
             // Set the current fields
             if (!int.TryParse(index, out int parsedIndex))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new ArgumentException($"Index was not a number: {index}");
+
+                return;
+            }
             else if (parsedIndex < 0 || parsedIndex > 99)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Index must be between 0 and 99: {parsedIndex}");
+
+                return;
+            }
 
             // Ignore empty lines
             if (string.IsNullOrWhiteSpace(startTime))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new ArgumentException("Start time was null or whitespace");
+
+                return;
+            }
 
             // Ignore lines that don't contain the correct information
             if (startTime.Length != 8 || startTime.Count(c => c == ':') != 2)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Start time was not in a recognized format: {startTime}");
+
+                return;
+            }
 
             // Split the line
             string[] splitTime = startTime.Split(':');
             if (splitTime.Length != 3)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Start time was not in a recognized format: {startTime}");
+
+                return;
+            }
 
             // Parse the lengths
             int[] lengthSegments = new int[3];
 
             // Minutes
             if (!int.TryParse(splitTime[0], out lengthSegments[0]))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Minutes segment was not a number: {splitTime[0]}");
+
+                return;
+            }
             else if (lengthSegments[0] < 0)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Minutes segment must be 0 or greater: {lengthSegments[0]}");
+
+                return;
+            }
 
             // Seconds
             if (!int.TryParse(splitTime[1], out lengthSegments[1]))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Seconds segment was not a number: {splitTime[1]}");
+
+                return;
+            }
             else if (lengthSegments[1] < 0 || lengthSegments[1] > 60)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Seconds segment must be between 0 and 60: {lengthSegments[1]}");
+
+                return;
+            }
 
             // Frames
             if (!int.TryParse(splitTime[2], out lengthSegments[2]))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new FormatException($"Frames segment was not a number: {splitTime[2]}");
+
+                return;
+            }
             else if (lengthSegments[2] < 0 || lengthSegments[2] > 75)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Frames segment must be between 0 and 75: {lengthSegments[2]}");
+
+                return;
+            }
 
             // Set the values
             this.Index = parsedIndex;

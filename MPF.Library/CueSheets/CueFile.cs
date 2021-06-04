@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 /// <remarks>
@@ -71,10 +72,23 @@ namespace MPF.CueSheets
         /// <param name="fileType">File type to set</param>
         /// <param name="cueLines">Lines array to pull from</param>
         /// <param name="i">Reference to index in array</param>
-        public CueFile(string fileName, string fileType, string[] cueLines, ref int i)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public CueFile(string fileName, string fileType, string[] cueLines, ref int i, bool throwOnError = false)
         {
-            if (cueLines == null || i < 0 || i > cueLines.Length)
-                return; // TODO: Make this throw an exception
+            if (cueLines == null)
+            {
+                if (throwOnError)
+                    throw new ArgumentNullException(nameof(cueLines));
+
+                return;
+            }
+            else if (i < 0 || i > cueLines.Length)
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException();
+
+                return;
+            }
 
             // Set the current fields
             this.FileName = fileName.Trim('"');
@@ -102,14 +116,24 @@ namespace MPF.CueSheets
                     // Read track information
                     case "TRACK":
                         if (splitLine.Length < 3)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"TRACK line malformed: {line}");
+
+                            continue;
+                        }
 
                         if (this.Tracks == null)
                             this.Tracks = new List<CueTrack>();
 
                         var track = new CueTrack(splitLine[1], splitLine[2], cueLines, ref i);
                         if (track == default)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"TRACK line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Tracks.Add(track);
                         break;
@@ -126,11 +150,24 @@ namespace MPF.CueSheets
         /// Write the FILE out to a stream
         /// </summary>
         /// <param name="sw">StreamWriter to write to</param>
-        public void Write(StreamWriter sw)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public void Write(StreamWriter sw, bool throwOnError = false)
         {
             // If we don't have any tracks, it's invalid
-            if (this.Tracks == null || this.Tracks.Count == 0)
-                return; // TODO: Make this throw an exception
+            if (this.Tracks == null)
+            {
+                if (throwOnError)
+                    throw new ArgumentNullException(nameof(this.Tracks));
+
+                return;
+            }
+            else if (this.Tracks.Count == 0)
+            {
+                if (throwOnError)
+                    throw new ArgumentException("No tracks provided to write");
+
+                return;
+            }
 
             sw.WriteLine($"FILE \"{this.FileName}\" {FromFileType(this.FileType)}");
 

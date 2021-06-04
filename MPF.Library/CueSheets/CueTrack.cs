@@ -156,16 +156,39 @@ namespace MPF.CueSheets
         /// <param name="dataType">Data type to set</param>
         /// <param name="cueLines">Lines array to pull from</param>
         /// <param name="i">Reference to index in array</param>
-        public CueTrack(string number, string dataType, string[] cueLines, ref int i)
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public CueTrack(string number, string dataType, string[] cueLines, ref int i, bool throwOnError = false)
         {
-            if (cueLines == null || i < 0 || i > cueLines.Length)
-                return; // TODO: Make this throw an exception
+            if (cueLines == null)
+            {
+                if (throwOnError)
+                    throw new ArgumentNullException(nameof(cueLines));
+
+                return;
+            }
+            else if (i < 0 || i > cueLines.Length)
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException();
+
+                return;
+            }
 
             // Set the current fields
             if (!int.TryParse(number, out int parsedNumber))
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new ArgumentException($"Number was not a number: {number}");
+
+                return;
+            }
             else if (parsedNumber < 1 || parsedNumber > 99)
-                return; // TODO: Make this throw an exception
+            {
+                if (throwOnError)
+                    throw new IndexOutOfRangeException($"Index must be between 1 and 99: {parsedNumber}");
+
+                return;
+            }
 
             this.Number = parsedNumber;
             this.DataType = GetDataType(dataType);
@@ -192,7 +215,12 @@ namespace MPF.CueSheets
                     // Read flag information
                     case "FLAGS":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"FLAGS line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Flags = GetFlags(splitLine);
                         break;
@@ -200,7 +228,12 @@ namespace MPF.CueSheets
                     // Read International Standard Recording Code
                     case "ISRC":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"ISRC line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.ISRC = splitLine[1];
                         break;
@@ -208,7 +241,12 @@ namespace MPF.CueSheets
                     // Read CD-Text enhanced performer
                     case "PERFORMER":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"PERFORMER line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Performer = splitLine[1];
                         break;
@@ -216,7 +254,12 @@ namespace MPF.CueSheets
                     // Read CD-Text enhanced songwriter
                     case "SONGWRITER":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"SONGWRITER line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Songwriter = splitLine[1];
                         break;
@@ -224,7 +267,12 @@ namespace MPF.CueSheets
                     // Read CD-Text enhanced title
                     case "TITLE":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"TITLE line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Title = splitLine[1];
                         break;
@@ -232,11 +280,21 @@ namespace MPF.CueSheets
                     // Read pregap information
                     case "PREGAP":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"PREGAP line malformed: {line}");
+
+                            continue;
+                        }
 
                         var pregap = new PreGap(splitLine[1]);
                         if (pregap == default)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"PREGAP line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.PreGap = pregap;
                         break;
@@ -244,14 +302,24 @@ namespace MPF.CueSheets
                     // Read index information
                     case "INDEX":
                         if (splitLine.Length < 3)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"INDEX line malformed: {line}");
+
+                            continue;
+                        }
 
                         if (this.Indices == null)
                             this.Indices = new List<CueIndex>();
 
                         var index = new CueIndex(splitLine[1], splitLine[2]);
                         if (index == default)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"INDEX line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.Indices.Add(index);
                         break;
@@ -259,11 +327,21 @@ namespace MPF.CueSheets
                     // Read postgap information
                     case "POSTGAP":
                         if (splitLine.Length < 2)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"POSTGAP line malformed: {line}");
+
+                            continue;
+                        }
 
                         var postgap = new PostGap(splitLine[1]);
                         if (postgap == default)
-                            continue; // TODO: Make this throw an exception
+                        {
+                            if (throwOnError)
+                                throw new FormatException($"POSTGAP line malformed: {line}");
+
+                            continue;
+                        }
 
                         this.PostGap = postgap;
                         break;
@@ -279,12 +357,25 @@ namespace MPF.CueSheets
         /// <summary>
         /// Write the TRACK out to a stream
         /// </summary>
-        /// <param name="sw">StreamWriter to write to</param>
-        public void Write(StreamWriter sw)
+        /// <param name="sw">StreamWriter to write to</param
+        /// <param name="throwOnError">True if errors throw an exception, false otherwise</param>
+        public void Write(StreamWriter sw, bool throwOnError = false)
         {
             // If we don't have any indices, it's invalid
-            if (this.Indices == null || this.Indices.Count == 0)
-                return; // TODO: Make this throw an exception
+            if (this.Indices == null)
+            {
+                if (throwOnError)
+                    throw new ArgumentNullException(nameof(this.Indices));
+
+                return;
+            }
+            else if (this.Indices.Count == 0)
+            {
+                if (throwOnError)
+                    throw new ArgumentException("No indices provided to write");
+
+                return;
+            }
 
             sw.WriteLine($"  TRACK {this.Number:D2} {FromDataType(this.DataType)}");
 
@@ -402,7 +493,6 @@ namespace MPF.CueSheets
 
             foreach (string flagString in flagStrings)
             {
-                // TODO: Make default throw an exception
                 switch (flagString.ToLowerInvariant())
                 {
                     case "flags":
