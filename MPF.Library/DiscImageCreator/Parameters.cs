@@ -1715,7 +1715,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1747,7 +1747,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1780,7 +1780,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1802,7 +1802,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1834,7 +1834,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1856,7 +1856,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1894,7 +1894,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1910,7 +1910,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -1927,7 +1927,7 @@ namespace MPF.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
@@ -1938,12 +1938,12 @@ namespace MPF.DiscImageCreator
                     if (parts.Count != 3)
                         return false;
 
-                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
 
-                    if (IsFlag(parts[2]) || !File.Exists(parts[2]))
+                    if (IsFlagSupported(parts[2]) || !File.Exists(parts[2]))
                         return false;
                     else
                         OptiarcFilename = parts[2];
@@ -1970,7 +1970,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -2009,7 +2009,7 @@ namespace MPF.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
@@ -2025,7 +2025,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -2042,7 +2042,7 @@ namespace MPF.DiscImageCreator
                     if (parts.Count != 2)
                         return false;
 
-                    if (IsFlag(parts[1]) || !File.Exists(parts[1]))
+                    if (IsFlagSupported(parts[1]) || !File.Exists(parts[1]))
                         return false;
                     else
                         Filename = parts[1];
@@ -2058,7 +2058,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -2082,7 +2082,7 @@ namespace MPF.DiscImageCreator
                     else
                         DriveLetter = parts[1];
 
-                    if (IsFlag(parts[2]))
+                    if (IsFlagSupported(parts[2]))
                         return false;
                     else
                         Filename = parts[2];
@@ -2143,7 +2143,7 @@ namespace MPF.DiscImageCreator
                             {
                                 break;
                             }
-                            else if (IsFlag(parts[i + 1]))
+                            else if (IsFlagSupported(parts[i + 1]))
                             {
                                 break;
                             }
@@ -2261,7 +2261,7 @@ namespace MPF.DiscImageCreator
                             {
                                 break;
                             }
-                            else if (IsFlag(parts[i + 1]))
+                            else if (IsFlagSupported(parts[i + 1]))
                             {
                                 break;
                             }

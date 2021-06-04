@@ -366,30 +366,6 @@ namespace MPF.Data
         }
 
         /// <summary>
-        /// Returns whether a string is a flag (starts with '/')
-        /// </summary>
-        /// <param name="parameter">String value to check</param>
-        /// <returns>True if it's a flag, false otherwise</returns>
-        /// <remarks>
-        /// TODO: Can we just check if it's in the list of supported flags?
-        /// </remarks>
-        protected static bool IsFlag(string parameter)
-        {
-            // Remove quotes to avoid any issues
-            parameter = parameter.Trim('\"');
-
-            // Forward slashes are nothing but flags
-            if (parameter.StartsWith("/"))
-                return true;
-
-            // Dashes *might* be parameters, unless it's purely numeric
-            else if (parameter.StartsWith("-") && !Int64.TryParse(parameter, out long _))
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
         /// Returns whether a string is a valid drive letter
         /// </summary>
         /// <param name="parameter">String value to check</param>
@@ -573,7 +549,7 @@ namespace MPF.Data
                         return false;
                     }
                 }
-                else if (IsFlag(parts[i + 1]))
+                else if (IsFlagSupported(parts[i + 1]))
                 {
                     if (missingAllowed)
                     {
@@ -645,7 +621,7 @@ namespace MPF.Data
 
                     return null;
                 }
-                else if (IsFlag(parts[i + 1]))
+                else if (IsFlagSupported(parts[i + 1]))
                 {
                     if (missingAllowed)
                         this[longFlagString] = true;
@@ -724,7 +700,7 @@ namespace MPF.Data
 
                     return null;
                 }
-                else if (IsFlag(parts[i + 1]))
+                else if (IsFlagSupported(parts[i + 1]))
                 {
                     if (missingAllowed)
                         this[longFlagString] = true;
@@ -802,7 +778,7 @@ namespace MPF.Data
 
                     return null;
                 }
-                else if (IsFlag(parts[i + 1]))
+                else if (IsFlagSupported(parts[i + 1]))
                 {
                     if (missingAllowed)
                         this[longFlagString] = true;
@@ -880,7 +856,7 @@ namespace MPF.Data
 
                     return null;
                 }
-                else if (IsFlag(parts[i + 1]))
+                else if (IsFlagSupported(parts[i + 1]))
                 {
                     if (missingAllowed)
                         this[longFlagString] = true;
@@ -958,7 +934,7 @@ namespace MPF.Data
 
                     return null;
                 }
-                else if (IsFlag(parts[i + 1]))
+                else if (IsFlagSupported(parts[i + 1]))
                 {
                     if (missingAllowed)
                         this[longFlagString] = true;
