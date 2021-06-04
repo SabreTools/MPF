@@ -370,7 +370,9 @@ namespace MPF.Data
         /// </summary>
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a flag, false otherwise</returns>
-        /// <remarks>TODO: Can we just check if it's in the list of supported flags?</remarks>
+        /// <remarks>
+        /// TODO: Can we just check if it's in the list of supported flags?
+        /// </remarks>
         protected static bool IsFlag(string parameter)
         {
             // Remove quotes to avoid any issues

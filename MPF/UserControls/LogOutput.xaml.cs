@@ -53,6 +53,7 @@ namespace MPF.UserControls
             document.Blocks.Add(_paragraph);
             Output.Document = document;
 
+            // TODO: Can we dynamically add matchers *only* during dumping?
             _matchers = new List<Matcher?>();
             AddAaruMatchers();
             AddDiscImageCreatorMatchers();

@@ -301,8 +301,6 @@ namespace MPF.Windows
         /// </summary>
         private void DisableDarkMode()
         {
-            // TODO: Do the opposite of `EnableDarkMode`
-
             // Handle application-wide resources
             Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = null;
             Application.Current.Resources[SystemColors.ControlBrushKey] = null;
