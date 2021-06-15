@@ -403,6 +403,7 @@ namespace MPF.UserControls
                 else if (nextText.StartsWith("\r"))
                 {
                     ReplaceLastLine(nextLogLine);
+                    lastUsedMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText.TrimStart('\r')) == true);
                 }
                 // If we have a cached matcher and we match
                 else if (lastUsedMatcher?.Matches(nextText) == true)
