@@ -382,7 +382,11 @@ namespace MPF.UserControls
                 // If we're not processing log formatting, just append and continue
                 if (!ViewModels.OptionsViewModel.EnableLogFormatting)
                 {
-                    AppendToTextBox(nextLogLine);
+                    if (nextText.StartsWith("\r"))
+                        ReplaceLastLine(nextLogLine);
+                    else
+                        AppendToTextBox(nextLogLine);
+                    
                     return;
                 }
 
