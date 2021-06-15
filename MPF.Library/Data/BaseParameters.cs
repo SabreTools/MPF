@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BurnOutSharp.ProtectionType;
 using Compress.ThreadReaders;
 using MPF.Hashing;
+using MPF.Utilities;
 
 namespace MPF.Data
 {
@@ -21,14 +22,6 @@ namespace MPF.Data
         /// </summary>
         /// <param name="message">String value to report</param>
         public EventHandler<string> ReportStatus;
-
-        /// <summary>
-        /// Event handler for data returned from a process
-        /// </summary>
-        private void OutputToLog(object proc, DataReceivedEventArgs args)
-        {
-            ReportStatus.Invoke(this, args.Data);
-        }
 
         #endregion
 
@@ -273,22 +266,15 @@ namespace MPF.Data
 
             // Create the new process
             process = new Process() { StartInfo = startInfo };
-            
-            // Add event handlers, if necessary
-            if (!separateWindow)
-            {
-                process.OutputDataReceived += OutputToLog;
-                process.ErrorDataReceived += OutputToLog;
-            }
 
             // Start the process
             process.Start();
 
-            // Begin reading the outputs, if necessary
+            // Start processing tasks, if necessary
             if (!separateWindow)
             {
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
+                Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
+                Logging.OutputToLog(process.StandardError, this, ReportStatus);
             }
 
             process.WaitForExit();
@@ -1308,7 +1294,7 @@ namespace MPF.Data
             var systemCnf = new IniFile(systemCnfPath);
             if (systemCnf.ContainsKey("VER"))
                 return systemCnf["VER"];
-            
+
             // If "VER" can't be found, we can't do much
             return null;
         }

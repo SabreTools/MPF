@@ -12,6 +12,8 @@
 - Fix Aaru command normalization
 - Handle carriage returns better
 - Add logging helper class
+- Set matcher on carriage return for log formatting
+- Replace dumping program output processing
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)
