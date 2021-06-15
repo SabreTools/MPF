@@ -2095,7 +2095,7 @@ namespace MPF.Aaru
 
                     case CommandStrings.ImagePrefixShort:
                     case CommandStrings.ImagePrefixLong:
-                        family = CommandStrings.DevicePrefixLong;
+                        family = CommandStrings.ImagePrefixLong;
                         switch (splitCommand[1])
                         {
                             case CommandStrings.ImageAnalyze:
@@ -2142,7 +2142,7 @@ namespace MPF.Aaru
 
                     case CommandStrings.MediaPrefixShort:
                     case CommandStrings.MediaPrefixLong:
-                        family = CommandStrings.DevicePrefixLong;
+                        family = CommandStrings.MediaPrefixLong;
                         switch (splitCommand[1])
                         {
                             case CommandStrings.MediaDump:
