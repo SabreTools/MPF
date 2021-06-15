@@ -77,18 +77,24 @@ namespace MPF.Utilities
                     continue;
                 }
 
-                // For all except the last, just keep appending to the builder
-                if (i < split.Length - 1)
+                // For the first item, append to anything existing and then write out
+                if (i == 0)
+                {
+                    sb.Append(split[i]);
+                    handler?.Invoke(baseClass, sb.ToString());
+                    sb.Clear();
+                }
+
+                // For the last item, just append so it's dealt with the next time
+                else if (i == split.Length - 1)
                 {
                     sb.Append(split[i]);
                 }
 
-                // For the last item, write out and then put the remainder in the builder
+                // For everything else, directly write out
                 else
                 {
-                    handler?.Invoke(baseClass, sb.ToString());
-                    sb.Clear();
-                    sb.Append(split[i]);
+                    handler?.Invoke(baseClass, split[i]);
                 }
             }
         }
