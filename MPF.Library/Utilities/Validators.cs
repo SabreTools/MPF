@@ -889,7 +889,7 @@ namespace MPF.Utilities
                 && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Count() > 0)
             {
                 // TODO: Maybe add video track hashes to compare for Xbox and X360?
-                if (string.Equals(drive.VolumeLabel, "SEP13011042072", StringComparison.OrdinalIgnoreCase))
+                if (drive.VolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
                     return KnownSystem.MicrosoftXBOX;
 
                 return KnownSystem.DVDVideo;
