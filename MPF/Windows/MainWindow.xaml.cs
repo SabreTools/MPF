@@ -974,7 +974,7 @@ namespace MPF.Windows
                 + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
 
             LogOutput.SecretLogLn(aboutText);
-            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBox.Show(this, aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>

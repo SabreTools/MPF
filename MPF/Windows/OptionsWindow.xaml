@@ -118,7 +118,7 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="6">
+                            <UniformGrid Columns="2" Rows="7">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
