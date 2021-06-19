@@ -336,10 +336,15 @@ namespace MPF.Redump
                 var loginPage = DownloadString(loginUrl);
                 string token = this.tokenRegex.Match(loginPage).Groups[1].Value;
 
+                // Encode the values
+                token = WebUtility.UrlEncode(token);
+                username = WebUtility.UrlEncode(username);
+                password = WebUtility.UrlEncode(password);
+
                 // Construct the login request
                 Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                 Encoding = Encoding.UTF8;
-                var response = UploadString(loginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0");
+                var response = UploadString(loginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0&login=Login");
 
                 if (response.Contains("Incorrect username and/or password."))
                 {
