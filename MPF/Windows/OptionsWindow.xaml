@@ -177,6 +177,11 @@
                                      ToolTip="Enable outputting a compressed JSON version of the submission info" Margin="0,4"
                                      />
 
+                                <CheckBox VerticalAlignment="Center" Content="Include Artifacts"
+                                     IsChecked="{Binding Options.IncludeArtifacts}"  IsEnabled="{Binding Options.OutputSubmissionJSON}"
+                                     ToolTip="Include log files in serialized JSON data" Margin="0,4"
+                                     />
+
                                 <CheckBox VerticalAlignment="Center" Content="Compress Log Files"
                                      IsChecked="{Binding Options.CompressLogFiles}"
                                      ToolTip="Compress output log files to reduce space" Margin="0,4"

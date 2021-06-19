@@ -297,6 +297,15 @@ namespace MPF.Data
         }
 
         /// <summary>
+        /// Include log files in serialized JSON data
+        /// </summary>
+        public bool IncludeArtifacts
+        {
+            get { return GetBooleanSetting(_settings, "IncludeArtifacts", false); }
+            set { _settings["IncludeArtifacts"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Compress output log files to reduce space
         /// </summary>
         public bool CompressLogFiles
