@@ -16,6 +16,8 @@
 - Replace dumping program output processing
 - Fix volume name detection for XBOX discs
 - Add new setting for including artifacts in serialzied JSON
+- Fix logging in to Redump for verifications
+- Gracefully handle timeouts during login
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)
