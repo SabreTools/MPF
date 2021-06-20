@@ -299,6 +299,7 @@ namespace MPF.Redump
             if (request is HttpWebRequest webRequest)
             {
                 webRequest.CookieContainer = m_container;
+                webRequest.Timeout = 5 * 1000;
             }
 
             return request;
@@ -346,10 +347,15 @@ namespace MPF.Redump
                 Encoding = Encoding.UTF8;
                 var response = UploadString(loginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0&login=Login");
 
-                if (response.Contains("Incorrect username and/or password."))
+                if (response.Contains("Incorrect username and/or password"))
                 {
                     Console.WriteLine("Invalid credentials entered, continuing without logging in...");
                     return false;
+                }
+                else if (response.Contains("503 Service Unavailable"))
+                {
+                    Console.WriteLine("Redump is not currently responding, continuing without logging in...");
+                    return null;
                 }
 
                 // The user was able to be logged in

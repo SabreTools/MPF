@@ -210,11 +210,11 @@ namespace MPF.Windows
             {
                 bool? loggedIn = wc.Login(RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
                 if (loggedIn == true)
-                    CustomMessageBox.Show("Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show(this, "Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 else if (loggedIn == false)
-                    CustomMessageBox.Show("Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(this, "Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
                 else
-                    CustomMessageBox.Show("Error validating credentials!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(this, "Error validating credentials!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
