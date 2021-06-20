@@ -996,7 +996,8 @@ namespace MPF.Windows
             if (different)
                 Clipboard.SetText(url);
 
-            CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+            LogOutput.SecretLogLn(message);
+            CustomMessageBox.Show(this, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
