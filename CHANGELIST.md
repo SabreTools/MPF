@@ -18,6 +18,8 @@
 - Add new setting for including artifacts in serialzied JSON
 - Fix logging in to Redump for verifications
 - Gracefully handle timeouts during login
+- Update to DIC 20210701
+- Support `/mr` value parameter
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)

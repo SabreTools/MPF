@@ -108,6 +108,11 @@ namespace MPF.DiscImageCreator
         public int? ForceUnitAccessValue { get; set; }
 
         /// <summary>
+        /// Set the multi-sector read flag value (default 50)
+        /// </summary>
+        public int? MultiSectorReadValue { get; set; }
+
+        /// <summary>
         /// Set the no skip security sector flag value (default 100)
         /// </summary>
         public int? NoSkipSecuritySectorValue { get; set; }
@@ -1000,7 +1005,11 @@ namespace MPF.DiscImageCreator
             if (IsFlagSupported(FlagStrings.MultiSectorRead))
             {
                 if (this[FlagStrings.MultiSectorRead] == true)
+                {
                     parameters.Add(FlagStrings.MultiSectorRead);
+                    if (MultiSectorReadValue != null)
+                        parameters.Add(MultiSectorReadValue.ToString());
+                }
             }
 
             // Multi-Session
@@ -2182,7 +2191,9 @@ namespace MPF.DiscImageCreator
                         ForceUnitAccessValue = intValue;
 
                     // Multi-Sector Read
-                    ProcessFlagParameter(parts, FlagStrings.MultiSectorRead, ref i);
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.MultiSectorRead, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
+                        MultiSectorReadValue = intValue;
 
                     // Multi-Session
                     ProcessFlagParameter(parts, FlagStrings.MultiSession, ref i);
