@@ -272,6 +272,7 @@ namespace MPF.Utilities
                 case KnownSystem.IBMPCCompatible:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
+                    types.Add(MediaType.BluRay);
                     types.Add(MediaType.FloppyDisk);
                     types.Add(MediaType.HardDisk);
                     types.Add(MediaType.DataCartridge);
