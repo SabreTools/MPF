@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="PresentationFramework.Aero2" />
+    <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
 
 </Project>
