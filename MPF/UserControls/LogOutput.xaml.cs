@@ -48,7 +48,10 @@ namespace MPF.UserControls
             InitializeComponent();
             DataContext = this;
 
-            var document = new FlowDocument();
+            var document = new FlowDocument()
+            {
+                Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32))
+            };
             _paragraph = new Paragraph();
             document.Blocks.Add(_paragraph);
             Output.Document = document;
@@ -360,7 +363,7 @@ namespace MPF.UserControls
 
             // If we have verbose logs but not enabled, ignore
             if (logLevel == LogLevel.VERBOSE && !ViewModels.OptionsViewModel.VerboseLogging)
-                return;            
+                return;
 
             // Enqueue the text
             logQueue.Enqueue(new LogLine(text, logLevel));
@@ -386,7 +389,7 @@ namespace MPF.UserControls
                         ReplaceLastLine(nextLogLine);
                     else
                         AppendToTextBox(nextLogLine);
-                    
+
                     return;
                 }
 
@@ -505,7 +508,7 @@ namespace MPF.UserControls
             _paragraph.Inlines.Clear();
             ResetProgressBar();
         }
-        
+
         private void OnSaveButton(object sender, EventArgs e)
         {
             using (StreamWriter tw = new StreamWriter(File.OpenWrite("console.log")))
