@@ -50,7 +50,7 @@ namespace MPF.UserControls
 
             var document = new FlowDocument()
             {
-                Background = new SolidColorBrush(Color.FromArgb(255, 32, 32, 32))
+                Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x20, 0x20, 0x20))
             };
             _paragraph = new Paragraph();
             document.Blocks.Add(_paragraph);
