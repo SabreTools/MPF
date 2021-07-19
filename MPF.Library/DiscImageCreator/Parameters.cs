@@ -1443,7 +1443,8 @@ namespace MPF.DiscImageCreator
         /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
-            var currentFiles = Directory.GetFiles(Path.GetDirectoryName(basePath));
+            string parentDirectory = Path.GetDirectoryName(basePath);
+            var currentFiles = Directory.GetFiles(parentDirectory);
             string cmdPath = currentFiles.FirstOrDefault(f => Regex.IsMatch(f, @"\d{8}T\d{6}"));
 
             List<string> logFiles = new List<string>();
@@ -1519,6 +1520,13 @@ namespace MPF.DiscImageCreator
                         logFiles.Add($"{basePath}_mainInfo.txt");
                     if (File.Exists($"{basePath}_volDesc.txt"))
                         logFiles.Add($"{basePath}_volDesc.txt");
+
+                    if (File.Exists(Path.Combine(parentDirectory, "DMI.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, "DMI.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, "PFI.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, "PFI.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, "SS.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, "SS.bin"));
 
                     break;
 
