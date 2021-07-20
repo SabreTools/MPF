@@ -20,6 +20,11 @@
 - Gracefully handle timeouts during login
 - Update to DIC 20210701
 - Support `/mr` value parameter
+- Support new mainInfo header
+- Add BD to IBM-PC supported discs
+- Fix launching MPF on Windows 7
+- Fix log window background turning white
+- Add DMI/PFI/SS to log zipfile
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)
