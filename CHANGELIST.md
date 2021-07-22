@@ -25,6 +25,7 @@
 - Fix launching MPF on Windows 7
 - Fix log window background turning white
 - Add DMI/PFI/SS to log zipfile
+- Update to BurnOutSharp 1.7.0
 
 ### 2.0 (2021-04-23)
 - Rename DICUI to Media Preservation Frontend (MPF)

@@ -74,12 +74,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.6.1" GeneratePathProperty="true">
+    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.7.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-    <PackageReference Include="System.Management" Version="6.0.0-preview.4.21253.7" />
+    <PackageReference Include="System.Management" Version="6.0.0-preview.6.21352.12" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
