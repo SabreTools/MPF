@@ -1049,9 +1049,9 @@ namespace MPF.Utilities
                 // Join the output protections for writing
                 string protections = string.Join(", ", found
                     .Where(kvp => kvp.Value != null && kvp.Value.Any())
-                    .OrderBy(kvp => kvp.Value)
                     .SelectMany(kvp => kvp.Value)
-                    .Distinct());
+                    .Distinct()
+                    .OrderBy(p => p));
                 return (true, protections);
             }
             catch (Exception ex)
