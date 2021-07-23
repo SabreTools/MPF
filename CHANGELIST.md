@@ -1,4 +1,4 @@
-### WIP (xxx-xx-xx)
+### 2.1 (2021-07-22)
 - Enum, no more
 - Sony works backward
 - Add experimental dark mode
