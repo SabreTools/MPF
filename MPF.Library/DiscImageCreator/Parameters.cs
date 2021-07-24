@@ -3056,7 +3056,9 @@ namespace MPF.DiscImageCreator
                 {
                     // If we're in a new mainInfo, the location of the header changed
                     string line = sr.ReadLine();
-                    if (line.StartsWith("========== OpCode") || line.StartsWith("========== TOC (Binary)"))
+                    if (line.StartsWith("========== OpCode")
+                        || line.StartsWith("========== TOC (Binary)")
+                        || line.StartsWith("========== FULL TOC (Binary)"))
                     {
                         // Seek to unscrambled data
                         while (!(line = sr.ReadLine()).StartsWith("========== Check Volume Descriptor ==========")) ;
