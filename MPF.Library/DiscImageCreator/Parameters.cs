@@ -3061,7 +3061,7 @@ namespace MPF.DiscImageCreator
                         || line.StartsWith("========== FULL TOC (Binary)"))
                     {
                         // Seek to unscrambled data
-                        while (!(line = sr.ReadLine()).StartsWith("========== Check Volume Descriptor ==========")) ;
+                        while (!(line = sr.ReadLine()).Contains("Check MCN and/or ISRC")) ;
 
                         // Read the next line so the search goes properly
                         line = sr.ReadLine();
