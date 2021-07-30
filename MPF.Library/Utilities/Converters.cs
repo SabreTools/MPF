@@ -153,6 +153,8 @@ namespace MPF.Utilities
                     return KnownSystem.PhotoCD;
                 case RedumpSystem.PlayStationGameSharkUpdates:
                     return KnownSystem.PlayStationGameSharkUpdates;
+                case RedumpSystem.PocketPC:
+                    return KnownSystem.PocketPC;
                 case RedumpSystem.SegaChihiro:
                     return KnownSystem.SegaChihiro;
                 case RedumpSystem.SegaDreamcast:
@@ -400,6 +402,8 @@ namespace MPF.Utilities
                     return RedumpSystem.PhotoCD;
                 case KnownSystem.PlayStationGameSharkUpdates:
                     return RedumpSystem.PlayStationGameSharkUpdates;
+                case KnownSystem.PocketPC:
+                    return RedumpSystem.PocketPC;
                 case KnownSystem.SegaChihiro:
                     return RedumpSystem.SegaChihiro;
                 case KnownSystem.SegaDreamcast:
@@ -785,6 +789,8 @@ namespace MPF.Utilities
                     return "Photo CD";
                 case KnownSystem.PlayStationGameSharkUpdates:
                     return "PlayStation GameShark Updates";
+                case KnownSystem.PocketPC:
+                    return "Pocket PC";
                 case KnownSystem.RainbowDisc:
                     return "Rainbow Disc";
                 case KnownSystem.SegaPrologue21:
@@ -1372,6 +1378,8 @@ namespace MPF.Utilities
                     return "Photo CD";
                 case RedumpSystem.PlayStationGameSharkUpdates:
                     return "PlayStation GameShark Updates";
+                case RedumpSystem.PocketPC:
+                    return "Pocket PC";
                 case RedumpSystem.SegaChihiro:
                     return "Sega Chihiro";
                 case RedumpSystem.SegaDreamcast:
@@ -1737,6 +1745,8 @@ namespace MPF.Utilities
                     return "photo cd";
                 case KnownSystem.PlayStationGameSharkUpdates:
                     return "gameshark";
+                case KnownSystem.PocketPC:
+                    return "pocketpc";
                 case KnownSystem.RainbowDisc:
                     return "rainbow";
                 case KnownSystem.SegaPrologue21:
@@ -2242,6 +2252,8 @@ namespace MPF.Utilities
                     return "photo-cd";
                 case RedumpSystem.PlayStationGameSharkUpdates:
                     return "psxgs";
+                case RedumpSystem.PocketPC:
+                    return "pocketpc"; // TODO: Update when Redump adds support
                 case RedumpSystem.SegaChihiro:
                     return "chihiro";
                 case RedumpSystem.SegaDreamcast:
@@ -3111,6 +3123,10 @@ namespace MPF.Utilities
                 case "playstation gameshark":
                 case "playstation gameshark updates":
                     return KnownSystem.PlayStationGameSharkUpdates;
+                case "pocketpc":
+                case "pocket pc":
+                case "ppc":
+                    return KnownSystem.PocketPC;
                 case "rainbow":
                 case "rainbowdisc":
                 case "rainbow disc":
@@ -3972,6 +3988,10 @@ namespace MPF.Utilities
                 case "playstation gameshark":
                 case "playstation gameshark updates":
                     return RedumpSystem.PlayStationGameSharkUpdates;
+                case "pocketpc":
+                case "pocket pc":
+                case "ppc":
+                    return RedumpSystem.PocketPC;
                 case "chihiro":
                 case "segachihiro":
                 case "sega chihiro":

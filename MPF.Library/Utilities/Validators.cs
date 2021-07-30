@@ -669,6 +669,11 @@ namespace MPF.Utilities
                     types.Add(MediaType.CDROM);
                     break;
 
+                // UNKNOWN
+                case KnownSystem.PocketPC:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://en.wikipedia.org/wiki/Doors_and_Windows_(EP)
                 case KnownSystem.RainbowDisc:
                     types.Add(MediaType.CDROM);

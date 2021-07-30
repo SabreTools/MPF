@@ -1,5 +1,6 @@
 ### WIP (xxxx-xx-xx)
 - Fix Saturn header finding
+- Add Pocket PC support
 
 ### 2.1 (2021-07-22)
 - Enum, no more

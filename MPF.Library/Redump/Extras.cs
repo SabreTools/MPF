@@ -43,6 +43,7 @@ namespace MPF.Redump
         /// </summary>
         public static readonly RedumpSystem?[] HasCues = new RedumpSystem?[]
         {
+            RedumpSystem.AcornArchimedes,
             RedumpSystem.AppleMacintosh,
             RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem,
             RedumpSystem.AudioCD,
@@ -81,6 +82,7 @@ namespace MPF.Redump
             RedumpSystem.PhilipsCDi,
             RedumpSystem.PhotoCD,
             RedumpSystem.PlayStationGameSharkUpdates,
+            //RedumpSystem.PocketPC,
             RedumpSystem.SegaChihiro,
             RedumpSystem.SegaDreamcast,
             RedumpSystem.SegaMegaCDSegaCD,
@@ -108,6 +110,7 @@ namespace MPF.Redump
             RedumpSystem.SonyPlayStationBIOS,
             RedumpSystem.SonyPlayStation2BIOS,
 
+            RedumpSystem.AcornArchimedes,
             RedumpSystem.AppleMacintosh,
             RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem,
             RedumpSystem.AudioCD,
@@ -153,6 +156,7 @@ namespace MPF.Redump
             RedumpSystem.PhilipsCDi,
             RedumpSystem.PhotoCD,
             RedumpSystem.PlayStationGameSharkUpdates,
+            //RedumpSystem.PocketPC,
             RedumpSystem.SegaChihiro,
             RedumpSystem.SegaDreamcast,
             RedumpSystem.SegaLindbergh,
