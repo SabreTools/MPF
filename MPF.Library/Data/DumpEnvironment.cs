@@ -796,6 +796,8 @@ namespace MPF.Data
                 case KnownSystem.AppleMacintosh:
                 case KnownSystem.EnhancedCD:
                 case KnownSystem.IBMPCCompatible:
+                case KnownSystem.PalmOS:
+                case KnownSystem.PocketPC:
                 case KnownSystem.RainbowDisc:
                     if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
                         info.CommonDiscInfo.Comments += $"[T:ISBN] {(Options.AddPlaceholders ? Template.OptionalValue : "")}";

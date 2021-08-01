@@ -1746,7 +1746,7 @@ namespace MPF.Utilities
                 case KnownSystem.PlayStationGameSharkUpdates:
                     return "gameshark";
                 case KnownSystem.PocketPC:
-                    return "pocketpc";
+                    return "ppc";
                 case KnownSystem.RainbowDisc:
                     return "rainbow";
                 case KnownSystem.SegaPrologue21:
@@ -2253,7 +2253,7 @@ namespace MPF.Utilities
                 case RedumpSystem.PlayStationGameSharkUpdates:
                     return "psxgs";
                 case RedumpSystem.PocketPC:
-                    return "pocketpc"; // TODO: Update when Redump adds support
+                    return "ppc";
                 case RedumpSystem.SegaChihiro:
                     return "chihiro";
                 case RedumpSystem.SegaDreamcast:
