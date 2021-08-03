@@ -898,6 +898,20 @@ namespace MPF.Windows
                     }
                 }
 
+                // Validate that at least some space exists
+                // TODO: Tie this to the size of the disc, type of disc, etc.
+                string fullPath = Path.GetFullPath(Env.OutputDirectory);
+                var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath));
+                if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30))
+                {
+                    MessageBoxResult mbresult = CustomMessageBox.Show("There is less than 1gb of space left on the target drive. Are you sure you want to continue?", "Low Space", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                    {
+                        LogOutput.LogLn("Dumping aborted!");
+                        return;
+                    }
+                }
+
                 // Disable all UI elements apart from dumping button
                 DisableAllUIElements();
 
