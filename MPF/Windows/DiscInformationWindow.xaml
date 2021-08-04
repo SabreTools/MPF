@@ -1,10 +1,10 @@
-﻿<Window x:Class="MPF.Windows.DiscInformationWindow"
+﻿<windows:WindowBase x:Class="MPF.Windows.DiscInformationWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MPF"
         xmlns:controls="clr-namespace:MPF.UserControls"
+        xmlns:windows="clr-namespace:MPF.Windows"
         mc:Ignorable="d"
         Title="Disc Information" Width="515" WindowStyle="None"
         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
@@ -70,10 +70,10 @@
                     <StackPanel Orientation="Vertical">
                         <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="GameTitle" Label="Title"/>
-                                <controls:UserInput x:Name="ForeignTitle" Label="Foreign Title (Non-Latin)"/>
-                                <controls:UserInput x:Name="DiscNumberLetter" Label="Disc Number / Letter"/>
-                                <controls:UserInput x:Name="DiscTitle" Label="Disc Title"/>
+                                <controls:UserInput Label="Title" Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Foreign Title (Non-Latin)"  Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Disc Number / Letter" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Disc Title" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -83,7 +83,7 @@
 
                                     <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
                                     <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Categories}"
-                                              SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}" />
+                                              Style="{DynamicResource CustomComboBoxStyle}" />
                                 </Grid>
 
                                 <Grid>
@@ -94,7 +94,7 @@
 
                                     <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
                                     <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Regions}"
-                                              SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}" />
+                                              Style="{DynamicResource CustomComboBoxStyle}" />
                                 </Grid>
 
                                 <Grid>
@@ -131,16 +131,16 @@
                                     </ComboBox>
                                 </Grid>
 
-                                <controls:UserInput x:Name="Serial" Label="Serial"/>
-                                <controls:UserInput x:Name="Barcode" Label="Barcode"/>
-                                <controls:UserInput x:Name="Comments" Label="Comments" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                                <controls:UserInput x:Name="Contents" Label="Contents" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                <controls:UserInput Label="Serial" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Comments" Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
+                                <controls:UserInput Label="Contents" Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             </StackPanel>
                         </Expander>
                         <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput x:Name="Version" Label="Version"/>
-                                <controls:UserInput x:Name="Edition" Label="Edition"/>
+                                <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
                             </StackPanel>
                         </Expander>
                     </StackPanel>
@@ -148,37 +148,37 @@
 
                 <TabItem x:Name="L0Info" Header="Data/L0 Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Tab="True"/>
-                        <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID"/>
-                        <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code"/>
-                        <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID"/>
-                        <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"/>
+                        <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}" Tab="True"/>
+                        <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringSID, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MouldSID, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould, Mode=TwoWay}"/>
                     </StackPanel>
                 </TabItem>
 
                 <TabItem x:Name="L1Info" Header="Label/L1 Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Tab="True"/>
-                        <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID"/>
-                        <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code"/>
-                        <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID"/>
-                        <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould"/>
+                        <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}" Tab="True"/>
+                        <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringSID, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MouldSID, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould, Mode=TwoWay}"/>
                     </StackPanel>
                 </TabItem>
 
                 <TabItem x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Tab="True"/>
-                        <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID"/>
-                        <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code"/>
+                        <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}" Tab="True"/>
+                        <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringSID, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode, Mode=TwoWay}"/>
                     </StackPanel>
                 </TabItem>
 
                 <TabItem x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Tab="True"/>
-                        <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID"/>
-                        <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code"/>
+                        <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}" Tab="True"/>
+                        <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringSID, Mode=TwoWay}"/>
+                        <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode, Mode=TwoWay}"/>
                     </StackPanel>
                 </TabItem>
             </TabControl>
@@ -186,14 +186,14 @@
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
-                    <Button Name="AcceptButton" Grid.Column="0" Height="25" Width="120" IsDefault="True" Content="Accept"
-                            Click="OnAcceptClick" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="CancelButton" Grid.Column="1" Height="25" Width="120" IsCancel="True" Content="Cancel"
-                            Click="OnCancelClick" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
+                            Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
+                            Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide"
-                            Click="OnRingCodeGuideClick" Style="{DynamicResource CustomButtonStyle}" />
+                            Style="{DynamicResource CustomButtonStyle}" />
                 </UniformGrid>
             </GroupBox>
         </StackPanel>
     </Grid>
-</Window>
+</windows:WindowBase>

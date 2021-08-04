@@ -952,6 +952,12 @@ namespace MPF.Utilities
                 return KnownSystem.SonyPlayStation;
             }
 
+            // Sony PlayStation 3
+            if (drive.VolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
+            {
+                return KnownSystem.SonyPlayStation3;
+            }
+
             // Sony PlayStation 4
             if (drive.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {

@@ -14,16 +14,16 @@
             </Grid>
             
             <Border Height="180" Background="White" BorderBrush="Gainsboro" BorderThickness="1" Margin="10">
-                <ScrollViewer Name="OutputViewer" SizeChanged="OutputViewerSizeChanged" Template="{DynamicResource CustomScrollViewerControlStyle}">
-                    <RichTextBox Name="Output" FontFamily="Consolas" Background="#FF202020" IsReadOnly="true" TextChanged="OnTextChanged" />
+                <ScrollViewer Name="OutputViewer" Template="{DynamicResource CustomScrollViewerControlStyle}">
+                    <RichTextBox Name="Output" FontFamily="Consolas" Background="#FF202020" IsReadOnly="true" />
                 </ScrollViewer>
             </Border>
 
             <GroupBox Grid.Row="2" Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
                     <Label/> <!-- Empty label for padding -->
-                    <Button Name="ClearButton" Height="25" Width="80" Content="Clear" Click="OnClearButton" Style="{DynamicResource CustomButtonStyle}" />
-                    <Button Name="SaveButton" Height="25" Width="80" Content="Save" Click="OnSaveButton" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="ClearButton" Height="25" Width="80" Content="Clear" Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="SaveButton" Height="25" Width="80" Content="Save" Style="{DynamicResource CustomButtonStyle}" />
                     <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>

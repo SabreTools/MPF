@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using MPF.Data;
+using System.Linq;
 using MPF.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace MPF.Data
 {
-    public class SubmissionInfo
+    public class SubmissionInfo : ICloneable
     {
         /// <summary>
         /// Version of the current schema
@@ -62,12 +62,33 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "artifacts", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Dictionary<string, string> Artifacts { get; set; } = new Dictionary<string, string>();
+    
+        public object Clone()
+        {
+            return new SubmissionInfo
+            {
+                SchemaVersion = this.SchemaVersion,
+                MatchedIDs = this.MatchedIDs,
+                Added = this.Added,
+                LastModified = this.LastModified,
+                CommonDiscInfo = this.CommonDiscInfo?.Clone() as CommonDiscInfoSection,
+                VersionAndEditions = this.VersionAndEditions?.Clone() as VersionAndEditionsSection,
+                EDC = this.EDC?.Clone() as EDCSection,
+                ParentCloneRelationship = this.ParentCloneRelationship?.Clone() as ParentCloneRelationshipSection,
+                Extras = this.Extras?.Clone() as ExtrasSection,
+                CopyProtection = this.CopyProtection?.Clone() as CopyProtectionSection,
+                DumpersAndStatus = this.DumpersAndStatus?.Clone() as DumpersAndStatusSection,
+                TracksAndWriteOffsets = this.TracksAndWriteOffsets?.Clone() as TracksAndWriteOffsetsSection,
+                SizeAndChecksums = this.SizeAndChecksums?.Clone() as SizeAndChecksumsSection,
+                Artifacts = this.Artifacts.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+            };
+        }
     }
 
     /// <summary>
     /// Common disc info section of New Disc Form
     /// </summary>
-    public class CommonDiscInfoSection
+    public class CommonDiscInfoSection : ICloneable
     {
         // Name not defined by Redump
         [JsonProperty(PropertyName = "d_system", Required = Required.AllowNull)]
@@ -110,10 +131,10 @@ namespace MPF.Data
         public string Serial { get; set; }
 
         [JsonProperty(PropertyName = "d_ring", NullValueHandling = NullValueHandling.Ignore)]
-        public string Ring { get; }
+        public string Ring { get; private set; }
 
         [JsonProperty(PropertyName = "d_ring_0_id", NullValueHandling = NullValueHandling.Ignore)]
-        public string RingId { get; }
+        public string RingId { get; private set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma1", Required = Required.AllowNull)]
         public string Layer0MasteringRing { get; set; }
@@ -167,10 +188,10 @@ namespace MPF.Data
         public string RingOffsetsHidden { get { return "1"; } }
 
         [JsonProperty(PropertyName = "d_ring_0_0_id", NullValueHandling = NullValueHandling.Ignore)]
-        public string RingZeroId { get; }
+        public string RingZeroId { get; private set; }
 
         [JsonProperty(PropertyName = "d_ring_0_0_density", NullValueHandling = NullValueHandling.Ignore)]
-        public string RingZeroDensity { get; }
+        public string RingZeroDensity { get; private set; }
 
         [JsonProperty(PropertyName = "d_ring_0_0_value", NullValueHandling = NullValueHandling.Ignore)]
         public string RingWriteOffset { get; set; }
@@ -192,12 +213,56 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_contents", NullValueHandling = NullValueHandling.Ignore)]
         public string Contents { get; set; }
+
+        public object Clone()
+        {
+            return new CommonDiscInfoSection
+            {
+                System = this.System,
+                Media = this.Media,
+                Title = this.Title,
+                ForeignTitleNonLatin = this.ForeignTitleNonLatin,
+                DiscNumberLetter = this.DiscNumberLetter,
+                DiscTitle = this.DiscTitle,
+                Category = this.Category,
+                Region = this.Region,
+                Languages = this.Languages?.Clone() as RedumpLanguage?[],
+                LanguageSelection = this.LanguageSelection?.Clone() as RedumpLanguageSelection?[],
+                Serial = this.Serial,
+                Ring = this.Ring,
+                RingId = this.RingId,
+                Layer0MasteringRing = this.Layer0MasteringRing,
+                Layer0MasteringSID = this.Layer0MasteringSID,
+                Layer0ToolstampMasteringCode = this.Layer0ToolstampMasteringCode,
+                Layer0MouldSID = this.Layer0MouldSID,
+                Layer0AdditionalMould = this.Layer0AdditionalMould,
+                Layer1MasteringRing = this.Layer1MasteringRing,
+                Layer1MasteringSID = this.Layer1MasteringSID,
+                Layer1ToolstampMasteringCode = this.Layer1ToolstampMasteringCode,
+                Layer1MouldSID = this.Layer1MouldSID,
+                Layer1AdditionalMould = this.Layer1AdditionalMould,
+                Layer2MasteringRing = this.Layer2MasteringRing,
+                Layer2MasteringSID = this.Layer2MasteringSID,
+                Layer2ToolstampMasteringCode = this.Layer2ToolstampMasteringCode,
+                Layer3MasteringRing = this.Layer3MasteringRing,
+                Layer3MasteringSID = this.Layer3MasteringSID,
+                Layer3ToolstampMasteringCode = this.Layer3ToolstampMasteringCode,
+                RingZeroId = this.RingZeroId,
+                RingZeroDensity = this.RingZeroDensity,
+                RingWriteOffset = this.RingWriteOffset,
+                Barcode = this.Barcode,
+                EXEDateBuildDate = this.EXEDateBuildDate,
+                ErrorsCount = this.ErrorsCount,
+                Comments = this.Comments,
+                Contents = this.Contents,
+            };
+        }
     }
 
     /// <summary>
     /// Version and editions section of New Disc form
     /// </summary>
-    public class VersionAndEditionsSection
+    public class VersionAndEditionsSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_version", NullValueHandling = NullValueHandling.Ignore)]
         public string Version { get; set; }
@@ -210,33 +275,61 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_editions_text", NullValueHandling = NullValueHandling.Ignore)]
         public string OtherEditions { get; set; }
+
+        public object Clone()
+        {
+            return new VersionAndEditionsSection
+            {
+                Version = this.Version,
+                VersionDatfile = this.VersionDatfile,
+                CommonEditions = this.CommonEditions,
+                OtherEditions = this.OtherEditions,
+            };
+        }
     }
 
     /// <summary>
     /// EDC section of New Disc form (PSX only)
     /// </summary>
-    public class EDCSection
+    public class EDCSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_edc", NullValueHandling = NullValueHandling.Ignore)]
         public YesNo EDC { get; set; }
+
+        public object Clone()
+        {
+            return new EDCSection
+            {
+                EDC = this.EDC,
+            };
+        }
     }
 
     /// <summary>
     /// Parent/Clone relationship section of New Disc form
     /// </summary>
-    public class ParentCloneRelationshipSection
+    public class ParentCloneRelationshipSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_parent_id", NullValueHandling = NullValueHandling.Ignore)]
         public string ParentID { get; set; }
 
         [JsonProperty(PropertyName = "d_is_regional_parent", NullValueHandling = NullValueHandling.Ignore)]
         public bool RegionalParent { get; set; }
+
+        public object Clone()
+        {
+            return new ParentCloneRelationshipSection
+            {
+                ParentID = this.ParentID,
+                RegionalParent = this.RegionalParent,
+            };
+        }
     }
 
     /// <summary>
     /// Extras section of New Disc form
     /// </summary>
-    public class ExtrasSection
+    public class ExtrasSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_pvd", NullValueHandling = NullValueHandling.Ignore)]
         public string PVD { get; set; }
@@ -258,12 +351,26 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_ssranges", NullValueHandling = NullValueHandling.Ignore)]
         public string SecuritySectorRanges { get; set; }
+
+        public object Clone()
+        {
+            return new ExtrasSection
+            {
+                PVD = this.PVD,
+                DiscKey = this.DiscKey,
+                DiscID = this.DiscID,
+                PIC = this.PIC,
+                Header = this.Header,
+                BCA = this.BCA,
+                SecuritySectorRanges = this.SecuritySectorRanges,
+            };
+        }
     }
 
     /// <summary>
     /// Copy protection section of New Disc form
     /// </summary>
-    public class CopyProtectionSection
+    public class CopyProtectionSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_protection_a", NullValueHandling = NullValueHandling.Ignore)]
         public YesNo AntiModchip { get; set; }
@@ -279,12 +386,24 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_securom", NullValueHandling = NullValueHandling.Ignore)]
         public string SecuROMData { get; set; }
+
+        public object Clone()
+        {
+            return new CopyProtectionSection
+            {
+                AntiModchip = this.AntiModchip,
+                LibCrypt = this.LibCrypt,
+                LibCryptData = this.LibCryptData,
+                Protection = this.Protection,
+                SecuROMData = this.SecuROMData,
+            };
+        }
     }
 
     /// <summary>
     /// Dumpers and status section of New Disc form (Moderator only)
     /// </summary>
-    public class DumpersAndStatusSection
+    public class DumpersAndStatusSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_status", NullValueHandling = NullValueHandling.Ignore)]
         public RedumpDumpStatus Status { get; set; }
@@ -294,12 +413,22 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_dumpers_text", NullValueHandling = NullValueHandling.Ignore)]
         public string OtherDumpers { get; set; }
+
+        public object Clone()
+        {
+            return new DumpersAndStatusSection
+            {
+                Status = this.Status,
+                Dumpers = this.Dumpers?.Clone() as string[],
+                OtherDumpers = this.OtherDumpers,
+            };
+        }
     }
 
     /// <summary>
     /// Tracks and write offsets section of New Disc form (CD/GD-based)
     /// </summary>
-    public class TracksAndWriteOffsetsSection
+    public class TracksAndWriteOffsetsSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_tracks", NullValueHandling = NullValueHandling.Ignore)]
         public string ClrMameProData { get; set; }
@@ -312,12 +441,23 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_offset_text", NullValueHandling = NullValueHandling.Ignore)]
         public string OtherWriteOffsets { get; set; }
+
+        public object Clone()
+        {
+            return new TracksAndWriteOffsetsSection
+            {
+                ClrMameProData = this.ClrMameProData,
+                Cuesheet = this.Cuesheet,
+                CommonWriteOffsets = this.CommonWriteOffsets?.Clone() as int[],
+                OtherWriteOffsets = this.OtherWriteOffsets,
+            };
+        }
     }
 
     /// <summary>
     /// Size &amp; checksums section of New Disc form (DVD/BD/UMD-based)
     /// </summary>
-    public class SizeAndChecksumsSection
+    public class SizeAndChecksumsSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_layerbreak", NullValueHandling = NullValueHandling.Ignore)]
         public long Layerbreak { get; set; }
@@ -339,5 +479,19 @@ namespace MPF.Data
 
         [JsonProperty(PropertyName = "d_sha1", NullValueHandling = NullValueHandling.Ignore)]
         public string SHA1 { get; set; }
+
+        public object Clone()
+        {
+            return new SizeAndChecksumsSection
+            {
+                Layerbreak = this.Layerbreak,
+                Layerbreak2 = this.Layerbreak2,
+                Layerbreak3 = this.Layerbreak3,
+                Size = this.Size,
+                CRC32 = this.CRC32,
+                MD5 = this.MD5,
+                SHA1 = this.SHA1,
+            };
+        }
     }
 }

@@ -8,19 +8,98 @@ namespace MPF.UserControls
     /// </summary>
     public partial class UserInput : UserControl
     {
-        public string Label { get; set; }
-        public string Text { get; set; }
-        public string TextHeight { get; set; } = "22";
-        public bool Tab { get; set; } = false;
-        public bool Enter { get; set; } = false;
-        public TextWrapping TextWrapping { get; set; } = TextWrapping.NoWrap;
-        public VerticalAlignment VerticalContentAlignmentValue { get; set; } = VerticalAlignment.Center;
-        public ScrollBarVisibility ScrollBarVisibility { get; set; } = ScrollBarVisibility.Auto;
+        #region Dependency Properties
+
+        public static readonly DependencyProperty LabelProperty =
+            DependencyProperty.Register("Label", typeof(string), typeof(UserInput));
+
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register("Text", typeof(string), typeof(UserInput));
+
+        public static readonly DependencyProperty TextHeightProperty =
+            DependencyProperty.Register("TextHeight", typeof(string), typeof(UserInput));
+
+        public static readonly DependencyProperty TabProperty =
+            DependencyProperty.Register("Tab", typeof(bool), typeof(UserInput));
+
+        public static readonly DependencyProperty EnterProperty =
+            DependencyProperty.Register("Enter", typeof(bool), typeof(UserInput));
+
+        public static readonly DependencyProperty TextWrappingProperty =
+            DependencyProperty.Register("TextWrapping", typeof(TextWrapping), typeof(UserInput));
+
+        public static readonly DependencyProperty VerticalContentAlignmentValueProperty =
+            DependencyProperty.Register("VerticalContentAlignmentValue", typeof(VerticalAlignment), typeof(UserInput));
+
+        public static readonly DependencyProperty ScrollBarVisibilityProperty =
+            DependencyProperty.Register("ScrollBarVisibility", typeof(ScrollBarVisibility), typeof(UserInput));
+        
+        #endregion
+
+        #region Properties
+
+        public string Label
+        {
+            get => (string)GetValue(LabelProperty);
+            set => SetValue(LabelProperty, value);
+        }
+
+        public string Text
+        {
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
+        }
+
+        public string TextHeight
+        {
+            get => (string)GetValue(TextHeightProperty);
+            set => SetValue(TextHeightProperty, value);
+        }
+
+        public bool Tab
+        {
+            get => (bool)GetValue(TabProperty);
+            set => SetValue(TabProperty, value);
+        }
+
+        public bool Enter
+        {
+            get => (bool)GetValue(EnterProperty);
+            set => SetValue(EnterProperty, value);
+        }
+
+        public TextWrapping TextWrapping
+        {
+            get => (TextWrapping)GetValue(TextWrappingProperty);
+            set => SetValue(TextWrappingProperty, value);
+        }
+
+        public VerticalAlignment VerticalContentAlignmentValue
+        {
+            get => (VerticalAlignment)GetValue(VerticalContentAlignmentValueProperty);
+            set => SetValue(VerticalContentAlignmentValueProperty, value);
+        }
+
+        public ScrollBarVisibility ScrollBarVisibility
+        {
+            get => (ScrollBarVisibility)GetValue(ScrollBarVisibilityProperty);
+            set => SetValue(ScrollBarVisibilityProperty, value);
+        }
+
+        #endregion
+
 
         public UserInput()
         {
+            // Set default values
+            TextHeight = "22";
+            Tab = false;
+            Enter = false;
+            TextWrapping = TextWrapping.NoWrap;
+            VerticalContentAlignmentValue = VerticalAlignment.Center;
+            ScrollBarVisibility = ScrollBarVisibility.Auto;
+
             InitializeComponent();
-            DataContext = this;
         }
     }
 }

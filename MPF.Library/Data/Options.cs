@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using MPF.Utilities;
 
 namespace MPF.Data
@@ -258,6 +257,15 @@ namespace MPF.Data
         {
             get { return GetBooleanSetting(_settings, "PromptForDiscInformation", true); }
             set { _settings["PromptForDiscInformation"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Show disc eject reminder before the disc information window is shown
+        /// </summary>
+        public bool ShowDiscEjectReminder
+        {
+            get { return GetBooleanSetting(_settings, "ShowDiscEjectReminder", true); }
+            set { _settings["ShowDiscEjectReminder"] = value.ToString(); }
         }
 
         /// <summary>
