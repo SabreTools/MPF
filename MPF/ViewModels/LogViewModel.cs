@@ -385,7 +385,7 @@ namespace MPF.GUI.ViewModels
                 return;
 
             // If we have verbose logs but not enabled, ignore
-            if (logLevel == LogLevel.VERBOSE && !MPF.ViewModels.OptionsViewModel.VerboseLogging)
+            if (logLevel == LogLevel.VERBOSE && !App.Options.VerboseLogging)
                 return;
 
             // Enqueue the text
@@ -406,7 +406,7 @@ namespace MPF.GUI.ViewModels
             try
             {
                 // If we're not processing log formatting, just append and continue
-                if (!MPF.ViewModels.OptionsViewModel.EnableLogFormatting)
+                if (!App.Options.EnableLogFormatting)
                 {
                     if (nextText.StartsWith("\r"))
                         ReplaceLastLine(nextLogLine);
@@ -462,7 +462,7 @@ namespace MPF.GUI.ViewModels
                 }
 
                 // Update the bar if needed
-                if (MPF.ViewModels.OptionsViewModel.EnableProgressProcessing)
+                if (App.Options.EnableProgressProcessing)
                     ProcessStringForProgressBar(nextText, lastUsedMatcher);
             }
             catch (Exception ex)

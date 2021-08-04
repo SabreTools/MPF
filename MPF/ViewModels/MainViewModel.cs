@@ -56,14 +56,19 @@ namespace MPF.GUI.ViewModels
         #endregion
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public MainViewModel()
+        {
+            LoadFromConfig();
+            App.Options = Options;
+        }
+
+        /// <summary>
         /// Initialize the main window after loading
         /// </summary>
-        public async void Init()
+        public void Init()
         {
-            // Load the options
-            LoadFromConfig();
-            MPF.ViewModels.OptionsViewModel = new MPF.OptionsViewModel(Options);
-
             // Load the log output
             App.Instance.LogPanel.IsExpanded = Options.OpenLogWindowAtStartup;
 
@@ -72,11 +77,11 @@ namespace MPF.GUI.ViewModels
             App.Instance.MediaScanButton.IsEnabled = false;
             App.Instance.CopyProtectScanButton.IsEnabled = false;
 
-            // Initialize drives and UI values
-            InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
-
             // Add the click handlers to the UI
             AddClickHandlers();
+
+            // Finish initializing the rest of the values
+            InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
         }
 
         #region Configuration

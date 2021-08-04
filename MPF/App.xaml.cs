@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using MPF.GUI.ViewModels;
+using MPF.Data;
 using MPF.Windows;
 
 namespace MPF
@@ -23,6 +24,11 @@ namespace MPF
         /// Read-only access to the current log window
         /// </summary>
         public static LogViewModel Logger => Instance.LogOutput.LogViewModel;
+
+        /// <summary>
+        /// Access to the current options
+        /// </summary>
+        public static Options Options { get; set; }
 
         /// <summary>
         /// Constructor
