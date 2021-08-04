@@ -34,11 +34,6 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         public DumpEnvironment Env { get; set; }
 
-        /// <summary>
-        /// Current set of options
-        /// </summary>
-        public Options Options { get; set; }
-
         #endregion
 
         #region Lists
@@ -56,21 +51,12 @@ namespace MPF.GUI.ViewModels
         #endregion
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public MainViewModel()
-        {
-            LoadFromConfig();
-            App.Options = Options;
-        }
-
-        /// <summary>
         /// Initialize the main window after loading
         /// </summary>
         public void Init()
         {
             // Load the log output
-            App.Instance.LogPanel.IsExpanded = Options.OpenLogWindowAtStartup;
+            App.Instance.LogPanel.IsExpanded = App.Options.OpenLogWindowAtStartup;
 
             // Disable buttons until we load fully
             App.Instance.StartStopButton.IsEnabled = false;
@@ -83,45 +69,6 @@ namespace MPF.GUI.ViewModels
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
         }
-
-        #region Configuration
-
-        /// <summary>
-        /// Load the current set of options from the application configuration
-        /// </summary>
-        private void LoadFromConfig()
-        {
-            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-
-            var settings = configFile.AppSettings.Settings;
-            var dict = new Dictionary<string, string>();
-
-            foreach (string key in settings.AllKeys)
-            {
-                dict[key] = settings[key]?.Value ?? string.Empty;
-            }
-
-            Options = new Options(dict);
-        }
-
-        /// <summary>
-        /// Save the current set of options to the application configuration
-        /// </summary>
-        public void SaveToConfig()
-        {
-            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-
-            // Loop through all settings in Options and save them, overwriting existing settings
-            foreach (var kvp in Options)
-            {
-                configFile.AppSettings.Settings.Remove(kvp.Key);
-                configFile.AppSettings.Settings.Add(kvp.Key, kvp.Value);
-            }
-
-            configFile.Save(ConfigurationSaveMode.Modified);
-        }
-
-        #endregion
 
         #region Population
 
@@ -137,7 +84,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.MediaScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Validators.CreateListOfDrives(Options.IgnoreFixedDrives);
+            Drives = Validators.CreateListOfDrives(App.Options.IgnoreFixedDrives);
             App.Instance.DriveLetterComboBox.ItemsSource = Drives;
 
             if (App.Instance.DriveLetterComboBox.Items.Count > 0)
@@ -293,7 +240,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         public void ShowOptionsWindow()
         {
-            var optionsWindow = new OptionsWindow(Options) { Owner = App.Instance };
+            var optionsWindow = new OptionsWindow() { Owner = App.Instance };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }
@@ -336,7 +283,7 @@ namespace MPF.GUI.ViewModels
                     Env.EjectDisc();
                 }
 
-                if (Options.DICResetDriveAfterDump)
+                if (App.Options.DICResetDriveAfterDump)
                 {
                     App.Logger.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
                     Env.ResetDrive();
@@ -355,8 +302,7 @@ namespace MPF.GUI.ViewModels
         {
             if (optionsWindow?.OptionsViewModel.SavedSettings == true)
             {
-                Options = optionsWindow.OptionsViewModel.Options.Clone() as Options;
-                SaveToConfig();
+                App.Options = optionsWindow.OptionsViewModel.Options.Clone() as Options;
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
             }
         }
@@ -376,7 +322,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.StartStopButton.IsEnabled = false;
 
             // Set the UI color scheme according to the options
-            if (Options.EnableDarkMode)
+            if (App.Options.EnableDarkMode)
                 EnableDarkMode();
             else
                 DisableDarkMode();
@@ -684,7 +630,7 @@ namespace MPF.GUI.ViewModels
                 defaultMediaType = MediaType.CDROM;
 
             // If we're skipping detection, set the default value
-            if (Options.SkipMediaTypeDetection)
+            if (App.Options.SkipMediaTypeDetection)
             {
                 App.Logger.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
@@ -731,7 +677,7 @@ namespace MPF.GUI.ViewModels
         private DumpEnvironment DetermineEnvironment()
         {
             // Populate the new environment
-            var env = new DumpEnvironment(Options,
+            var env = new DumpEnvironment(App.Options,
                 App.Instance.OutputDirectoryTextBox.Text,
                 App.Instance.OutputFilenameTextBox.Text,
                 App.Instance.DriveLetterComboBox.SelectedItem as Drive,
@@ -770,10 +716,10 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         private void DetermineSystemType()
         {
-            if (!Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
+            if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Validators.GetKnownSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], Options.DefaultSystem);
+                var currentSystem = Validators.GetKnownSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
                 App.Logger.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + Converters.GetLongName(currentSystem) + "."));
 
                 if (currentSystem != KnownSystem.NONE)
@@ -850,7 +796,7 @@ namespace MPF.GUI.ViewModels
 
             // Set the output directory, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(App.Instance.OutputDirectoryTextBox.Text))
-                App.Instance.OutputDirectoryTextBox.Text = Path.Combine(Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(App.Instance.OutputFilenameTextBox.Text) ?? string.Empty);
+                App.Instance.OutputDirectoryTextBox.Text = Path.Combine(App.Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(App.Instance.OutputFilenameTextBox.Text) ?? string.Empty);
 
             // Set the cursor position back to where it was
             App.Instance.OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
@@ -894,7 +840,7 @@ namespace MPF.GUI.ViewModels
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
-            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, Options.InternalProgram == InternalProgram.DiscImageCreator);
+            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, App.Options.InternalProgram == InternalProgram.DiscImageCreator);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
                 App.Instance.OutputDirectoryTextBox.Text = outputDirectory;
             else
@@ -942,7 +888,7 @@ namespace MPF.GUI.ViewModels
 
                 var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
-                (bool success, string output) = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", Options, progress);
+                (bool success, string output) = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", App.Options, progress);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
                 if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
@@ -1007,19 +953,19 @@ namespace MPF.GUI.ViewModels
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    speed = Options.PreferredDumpSpeedCD;
+                    speed = App.Options.PreferredDumpSpeedCD;
                     break;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    speed = Options.PreferredDumpSpeedDVD;
+                    speed = App.Options.PreferredDumpSpeedDVD;
                     break;
                 case MediaType.BluRay:
-                    speed = Options.PreferredDumpSpeedBD;
+                    speed = App.Options.PreferredDumpSpeedBD;
                     break;
                 default:
-                    speed = Options.PreferredDumpSpeedCD;
+                    speed = App.Options.PreferredDumpSpeedCD;
                     break;
             }
 
@@ -1124,7 +1070,7 @@ namespace MPF.GUI.ViewModels
                 // Output to the label and log
                 App.Instance.StatusLabel.Content = "Starting dumping process... Please wait!";
                 App.Logger.LogLn("Starting dumping process... Please wait!");
-                if (Options.ToolsInSeparateWindow)
+                if (App.Options.ToolsInSeparateWindow)
                     App.Logger.LogLn("Look for the separate command window for more details");
                 else
                     App.Logger.LogLn("Program outputs may be slow to populate in the log window");

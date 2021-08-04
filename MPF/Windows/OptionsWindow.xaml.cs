@@ -1,4 +1,4 @@
-﻿using MPF.Data;
+﻿using MPF.GUI.ViewModels;
 
 namespace MPF.Windows
 {
@@ -10,15 +10,15 @@ namespace MPF.Windows
         /// <summary>
         /// Read-only access to the current options view model
         /// </summary>
-        public GUI.ViewModels.OptionsViewModel OptionsViewModel => DataContext as GUI.ViewModels.OptionsViewModel;
+        public OptionsViewModel OptionsViewModel => DataContext as OptionsViewModel;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsWindow(Options options)
+        public OptionsWindow()
         {
             InitializeComponent();
-            DataContext = new GUI.ViewModels.OptionsViewModel(this, options);
+            DataContext = new OptionsViewModel(this);
         }
     }
 }

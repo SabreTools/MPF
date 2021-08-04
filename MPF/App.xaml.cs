@@ -28,11 +28,28 @@ namespace MPF
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public static Options Options { get; set; }
+        public static Options Options
+        {
+            get => _options;
+            set
+            {
+                _options = value;
+                OptionsLoader.SaveToConfig(_options);
+            }
+        }
+
+        /// <summary>
+        /// Internal reference to Options
+        /// </summary>
+        private static Options _options;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public App() => _appInstance = this;
+        public App()
+        {
+            _appInstance = this;
+            _options = OptionsLoader.LoadFromConfig();
+        }
     }
 }

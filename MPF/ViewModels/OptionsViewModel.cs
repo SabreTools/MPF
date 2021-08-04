@@ -8,8 +8,6 @@ using MPF.Data;
 using MPF.Redump;
 using MPF.Windows;
 using WPFCustomMessageBox;
-using Button = System.Windows.Controls.Button;
-using TextBox = System.Windows.Controls.TextBox;
 
 namespace MPF.GUI.ViewModels
 {
@@ -51,10 +49,10 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsViewModel(OptionsWindow parent, Options options)
+        public OptionsViewModel(OptionsWindow parent)
         {
             Parent = parent;
-            Options = options.Clone() as Options;
+            Options = App.Options.Clone() as Options;
 
             // Add handlers
             Parent.AaruPathButton.Click += BrowseForPathClick;
