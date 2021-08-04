@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -50,6 +49,20 @@ namespace MPF.GUI.ViewModels
 
         #endregion
 
+        #region Private Event Flags
+
+        /// <summary>
+        /// Indicates if SelectionChanged events can be executed
+        /// </summary>
+        private bool _canExecuteSelectionChanged = false;
+
+        /// <summary>
+        /// Indicates if TextChanged events can be executed
+        /// </summary>
+        private bool _canExecuteTextChanged = false;
+
+        #endregion
+
         /// <summary>
         /// Initialize the main window after loading
         /// </summary>
@@ -64,7 +77,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.CopyProtectScanButton.IsEnabled = false;
 
             // Add the click handlers to the UI
-            AddClickHandlers();
+            AddEventHandlers();
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
@@ -332,7 +345,7 @@ namespace MPF.GUI.ViewModels
 
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
-                RemoveEventHandlers();
+                DisableEventHandlers();
 
             // Populate the list of drives and determine the system
             if (rescanDrives)
@@ -356,72 +369,74 @@ namespace MPF.GUI.ViewModels
             GetOutputNames(true);
             EnsureDiscInformation();
 
-            // Add event handlers
-            AddEventHandlers();
+            // Enable event handlers
+            EnableEventHandlers();
 
             // Enable the dumping button, if necessary
             App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
-        /// Add all clickable item event handlers
+        /// Add all event handlers
         /// </summary>
-        private void AddClickHandlers()
+        private void AddEventHandlers()
         {
-            // Menu Bar
+            // Menu Bar Click
             App.Instance.AboutMenuItem.Click += AboutClick;
             App.Instance.AppExitMenuItem.Click += AppExitClick;
             App.Instance.CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
             App.Instance.OptionsMenuItem.Click += OptionsMenuItemClick;
 
-            // User Area
+            // User Area Click
             App.Instance.CopyProtectScanButton.Click += CopyProtectScanButtonClick;
             App.Instance.EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
             App.Instance.MediaScanButton.Click += MediaScanButtonClick;
             App.Instance.OutputDirectoryBrowseButton.Click += OutputDirectoryBrowseButtonClick;
             App.Instance.StartStopButton.Click += StartStopButtonClick;
-        }
 
-        /// <summary>
-        /// Add all textbox and combobox event handlers
-        /// </summary>
-        private void AddEventHandlers()
-        {
+            // User Area SelectionChanged
             App.Instance.SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
             App.Instance.MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
             App.Instance.DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             App.Instance.DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            AddPathEventHandlers();
-        }
 
-        /// <summary>
-        /// Remove all textbox and combobox event handlers
-        /// </summary>
-        private void RemoveEventHandlers()
-        {
-            App.Instance.SystemTypeComboBox.SelectionChanged -= SystemTypeComboBoxSelectionChanged;
-            App.Instance.MediaTypeComboBox.SelectionChanged -= MediaTypeComboBoxSelectionChanged;
-            App.Instance.DriveLetterComboBox.SelectionChanged -= DriveLetterComboBoxSelectionChanged;
-            App.Instance.DriveSpeedComboBox.SelectionChanged -= DriveSpeedComboBoxSelectionChanged;
-            RemovePathEventHandlers();
-        }
-
-        /// <summary>
-        /// Add path textbox event handlers
-        /// </summary>
-        private void AddPathEventHandlers()
-        {
+            // User Area TextChanged
             App.Instance.OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
             App.Instance.OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
         }
 
         /// <summary>
-        /// Remove path textbox event handlers
+        /// Enable all textbox and combobox event handlers
         /// </summary>
-        private void RemovePathEventHandlers()
+        private void EnableEventHandlers()
         {
-            App.Instance.OutputFilenameTextBox.TextChanged -= OutputFilenameTextBoxTextChanged;
-            App.Instance.OutputDirectoryTextBox.TextChanged -= OutputDirectoryTextBoxTextChanged;
+            _canExecuteSelectionChanged = true;
+            EnablePathEventHandlers();
+        }
+
+        /// <summary>
+        /// Disable all textbox and combobox event handlers
+        /// </summary>
+        private void DisableEventHandlers()
+        {
+            _canExecuteSelectionChanged = false;
+            DisablePathEventHandlers();
+        }
+
+        /// <summary>
+        /// Enable path textbox event handlers
+        /// </summary>
+        private void EnablePathEventHandlers()
+        {
+            _canExecuteTextChanged = true;
+        }
+
+        /// <summary>
+        /// Disable path textbox event handlers
+        /// </summary>
+        private void DisablePathEventHandlers()
+        {
+            _canExecuteTextChanged = false;
         }
 
         /// <summary>
@@ -686,7 +701,7 @@ namespace MPF.GUI.ViewModels
                 App.Instance.ParametersTextBox.Text);
 
             // Disable automatic reprocessing of the textboxes until we're done
-            RemovePathEventHandlers();
+            DisablePathEventHandlers();
 
             // Save the current cursor positions
             int outputDirectorySelectionStart = App.Instance.OutputDirectoryTextBox.SelectionStart;
@@ -703,7 +718,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.OutputFilenameTextBox.SelectionLength = 0;
 
             // Re-enable automatic reprocessing of textboxes
-            AddPathEventHandlers();
+            EnablePathEventHandlers();
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
@@ -780,7 +795,7 @@ namespace MPF.GUI.ViewModels
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
             // Disable automatic reprocessing of the textboxes until we're done
-            RemovePathEventHandlers();
+            DisablePathEventHandlers();
 
             // Save the current cursor positions
             int outputDirectorySelectionStart = App.Instance.OutputDirectoryTextBox.SelectionStart;
@@ -805,7 +820,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.OutputFilenameTextBox.SelectionLength = 0;
 
             // Re-enable automatic reprocessing of textboxes
-            AddPathEventHandlers();
+            EnablePathEventHandlers();
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
@@ -831,7 +846,7 @@ namespace MPF.GUI.ViewModels
                 Env.Parameters.Speed = App.Instance.DriveSpeedComboBox.SelectedValue as int?;
 
             // Disable automatic reprocessing of the textboxes until we're done
-            RemovePathEventHandlers();
+            DisablePathEventHandlers();
 
             // Save the current cursor positions
             int outputDirectorySelectionStart = App.Instance.OutputDirectoryTextBox.SelectionStart;
@@ -857,7 +872,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.OutputFilenameTextBox.SelectionLength = 0;
 
             // Re-enable automatic reprocessing of textboxes
-            AddPathEventHandlers();
+            EnablePathEventHandlers();
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
@@ -1222,14 +1237,20 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Handler for DriveLetterComboBox SelectionChanged event
         /// </summary>
-        private void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e) =>
-            InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+        private void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+        }
 
         /// <summary>
         /// Handler for DriveSpeedComboBox SelectionChanged event
         /// </summary>
-        private void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e) =>
-            EnsureDiscInformation();
+        private void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                EnsureDiscInformation();
+        }
 
         /// <summary>
         /// Handler for EnableParametersCheckBox Click event
@@ -1246,8 +1267,11 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
         /// </summary>
-        private void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e) =>
-            ChangeMediaType(e);
+        private void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                ChangeMediaType(e);
+        }
 
         /// <summary>
         /// Handler for OutputDirectoryBrowseButton Click event
@@ -1258,14 +1282,20 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Handler for OutputFilenameTextBox TextInput event
         /// </summary>
-        private void OutputDirectoryTextBoxTextChanged(object sender, TextChangedEventArgs e) =>
-            EnsureDiscInformation();
+        private void OutputDirectoryTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_canExecuteTextChanged)
+              EnsureDiscInformation();
+        }
 
         /// <summary>
         /// Handler for OutputFilenameTextBox TextInput event
         /// </summary>
-        private void OutputFilenameTextBoxTextChanged(object sender, TextChangedEventArgs e) =>
-            EnsureDiscInformation();
+        private void OutputFilenameTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_canExecuteTextChanged)
+                EnsureDiscInformation();
+        }
 
         /// <summary>
         /// Handler for StartStopButton Click event
@@ -1276,8 +1306,11 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Handler for SystemTypeComboBox SelectionChanged event
         /// </summary>
-        public void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e) =>
-            ChangeSystem();
+        public void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                ChangeSystem();
+        }
 
         #endregion
 
