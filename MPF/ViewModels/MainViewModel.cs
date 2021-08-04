@@ -1009,6 +1009,9 @@ namespace MPF.GUI.ViewModels
         /// <returns>Dialog open result</returns>
         private (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
+            if (App.Options.ShowDiscEjectReminder)
+                CustomMessageBox.Show(App.Instance, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
+
             var discInformationWindow = new DiscInformationWindow(submissionInfo)
             {
                 Owner = App.Instance,

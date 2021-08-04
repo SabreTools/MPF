@@ -118,7 +118,7 @@
                 <TabItem Header="Dumping" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
-                            <UniformGrid Columns="2" Rows="7">
+                            <UniformGrid Columns="2" Rows="8">
                                 <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
@@ -165,6 +165,11 @@
                                 <CheckBox VerticalAlignment="Center" Content="Show Disc Info"
                                      IsChecked="{Binding Options.PromptForDiscInformation}"
                                      ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
+                                      />
+
+                                <CheckBox VerticalAlignment="Center" Content="Show Eject Reminder"
+                                     IsChecked="{Binding Options.ShowDiscEjectReminder}"
+                                     ToolTip="Enable showing the disc eject reminder after information is gathered" Margin="0,4"
                                       />
 
                                 <CheckBox VerticalAlignment="Center" Content="Add Placeholders"

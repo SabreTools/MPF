@@ -260,6 +260,15 @@ namespace MPF.Data
         }
 
         /// <summary>
+        /// Show disc eject reminder before the disc information window is shown
+        /// </summary>
+        public bool ShowDiscEjectReminder
+        {
+            get { return GetBooleanSetting(_settings, "ShowDiscEjectReminder", true); }
+            set { _settings["ShowDiscEjectReminder"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Eject the disc after dumping
         /// </summary>
         public bool EjectAfterDump

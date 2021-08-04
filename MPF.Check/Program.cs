@@ -166,6 +166,7 @@ namespace MPF.Check
                     InternalProgram = Converters.ToInternalProgram(internalProgram),
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
+                    ShowDiscEjectReminder = false,
                     CompressLogFiles = compress,
 
                     RedumpUsername = username,
