@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -59,7 +58,7 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Initialize the main window after loading
         /// </summary>
-        public async Task Init()
+        public async void Init()
         {
             // Load the options
             LoadFromConfig();
@@ -72,10 +71,6 @@ namespace MPF.GUI.ViewModels
             App.Instance.StartStopButton.IsEnabled = false;
             App.Instance.MediaScanButton.IsEnabled = false;
             App.Instance.CopyProtectScanButton.IsEnabled = false;
-
-            // Populate the list of media types for system
-            App.Instance.StatusLabel.Content = "Creating media type list, please wait!";
-            PopulateMediaType();
 
             // Initialize drives and UI values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
@@ -175,6 +170,9 @@ namespace MPF.GUI.ViewModels
                 App.Instance.StartStopButton.IsEnabled = false;
                 App.Instance.CopyProtectScanButton.IsEnabled = false;
             }
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
@@ -200,6 +198,9 @@ namespace MPF.GUI.ViewModels
                 App.Instance.MediaTypeComboBox.ItemsSource = null;
                 App.Instance.MediaTypeComboBox.SelectedIndex = -1;
             }
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         #endregion
@@ -364,7 +365,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
         /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        public void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
+        public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
         {
             // Disable the dumping button
             App.Instance.StartStopButton.IsEnabled = false;
@@ -375,6 +376,9 @@ namespace MPF.GUI.ViewModels
             else
                 DisableDarkMode();
 
+            // Force the UI to reload after applying the theme
+            App.Instance.UpdateLayout();
+
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
                 RemoveEventHandlers();
@@ -383,15 +387,15 @@ namespace MPF.GUI.ViewModels
             if (rescanDrives)
             {
                 App.Instance.StatusLabel.Content = "Creating drive list, please wait!";
-                PopulateDrives();
+                await App.Instance.Dispatcher.InvokeAsync(() => PopulateDrives());
             }
             else
             {
-                DetermineSystemType();
+                await App.Instance.Dispatcher.InvokeAsync(() => DetermineSystemType());
             }
 
             // Determine current media type, if possible
-            PopulateMediaType();
+            await App.Instance.Dispatcher.InvokeAsync(() => PopulateMediaType());
             CacheCurrentDiscType();
             SetCurrentDiscType();
 
@@ -710,6 +714,9 @@ namespace MPF.GUI.ViewModels
                 App.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
@@ -747,6 +754,9 @@ namespace MPF.GUI.ViewModels
             // Re-enable automatic reprocessing of textboxes
             AddPathEventHandlers();
 
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
+
             return env;
         }
 
@@ -767,6 +777,9 @@ namespace MPF.GUI.ViewModels
                     App.Instance.SystemTypeComboBox.SelectedIndex = sysIndex;
                 }
             }
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
@@ -797,6 +810,9 @@ namespace MPF.GUI.ViewModels
                 if (generated != null)
                     App.Instance.ParametersTextBox.Text = generated;
             }
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
@@ -839,6 +855,9 @@ namespace MPF.GUI.ViewModels
 
             // Re-enable automatic reprocessing of textboxes
             AddPathEventHandlers();
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
@@ -962,6 +981,9 @@ namespace MPF.GUI.ViewModels
                 App.Instance.MediaTypeComboBox.SelectedIndex = index;
             else
                 App.Instance.StatusLabel.Content = $"Disc of type '{Converters.LongName(CurrentMediaType)}' found, but the current system does not support it!";
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
@@ -998,6 +1020,9 @@ namespace MPF.GUI.ViewModels
 
             App.Logger.VerboseLogLn($"Setting drive speed to: {speed}");
             App.Instance.DriveSpeedComboBox.SelectedValue = speed;
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
         }
 
         /// <summary>
