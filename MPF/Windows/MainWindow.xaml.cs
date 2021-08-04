@@ -5,21 +5,15 @@ namespace MPF.Windows
 {
     public partial class MainWindow : WindowBase
     {
-        #region Fields
-
         /// <summary>
         /// Read-only access to the current main view model
         /// </summary>
         public MainViewModel MainViewModel => DataContext as MainViewModel;
 
-        #endregion
-
         /// <summary>
         /// Constructor
         /// </summary>
         public MainWindow() => InitializeComponent();
-
-        #region Event Handlers
 
         /// <summary>
         /// Handler for MainWindow OnContentRendered event
@@ -29,7 +23,5 @@ namespace MPF.Windows
             base.OnContentRendered(e);
             MainViewModel.Init();
         }
-
-        #endregion
     }
 }
