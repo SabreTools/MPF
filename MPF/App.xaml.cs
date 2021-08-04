@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using MPF.GUI.ViewModels;
 using MPF.Windows;
 
 namespace MPF
@@ -17,6 +18,11 @@ namespace MPF
         /// Read-only access to the current main window
         /// </summary>
         public static MainWindow Instance => _appInstance.MainWindow as MainWindow;
+
+        /// <summary>
+        /// Read-only access to the current log window
+        /// </summary>
+        public static LogViewModel Logger => Instance.LogOutput.LogViewModel;
 
         /// <summary>
         /// Constructor
