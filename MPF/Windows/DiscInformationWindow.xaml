@@ -185,13 +185,13 @@
 
             <!-- Accept / Cancel -->
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <UniformGrid Columns="4" Margin="5,5,5,5" Height="28">
-                    <Label/> <!-- Empty label for padding -->
-                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="OK"
+                <UniformGrid Columns="3" Margin="5,5,5,5" Height="28">
+                    <Button Name="AcceptButton" Height="25" Width="80" IsDefault="True" Content="Accept"
+                            Style="{DynamicResource CustomButtonStyle}" />
+                    <Button Name="CancelButton" Height="25" Width="80" IsCancel="True" Content="Cancel"
                             Style="{DynamicResource CustomButtonStyle}" />
                     <Button Name="RingCodeGuideButton" Grid.Column="2" Height="25" Width="120" Content="Ring Code Guide"
                             Style="{DynamicResource CustomButtonStyle}" />
-                    <Label/> <!-- Empty label for padding -->
                 </UniformGrid>
             </GroupBox>
         </StackPanel>

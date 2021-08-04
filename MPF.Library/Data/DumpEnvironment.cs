@@ -407,7 +407,7 @@ namespace MPF.Data
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null,
-            Func<SubmissionInfo, bool?> processUserInfo = null)
+            Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo = null)
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
@@ -442,7 +442,10 @@ namespace MPF.Data
             if (Options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
-                bool? filledInfo = processUserInfo(submissionInfo);
+
+                bool? filledInfo;
+                (filledInfo, submissionInfo) = processUserInfo(submissionInfo);
+
                 if (filledInfo == true)
                     resultProgress?.Report(Result.Success("Additional disc information added!"));
                 else

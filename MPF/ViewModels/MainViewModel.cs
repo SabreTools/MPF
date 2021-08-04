@@ -992,14 +992,20 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        private bool? ShowDiscInformationWindow(SubmissionInfo submissionInfo)
+        private (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
             var discInformationWindow = new DiscInformationWindow(submissionInfo)
             {
                 Owner = App.Instance,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
-            return discInformationWindow.ShowDialog();
+            bool? result = discInformationWindow.ShowDialog();
+
+            // Copy back the submission info changes, if necessary
+            if (result == true)
+                submissionInfo = discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
+
+            return (result, submissionInfo);
         }
 
         /// <summary>

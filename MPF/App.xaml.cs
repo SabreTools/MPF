@@ -13,7 +13,6 @@ namespace MPF
     /// - Use commands instead of event handlers, where at all possible
     /// - Reduce the amount of manual UI adjustments needed, instead binding to the view models
     /// - Reduce the amount of places where event handlers are removed and added by using CanExecute instead
-    /// - Make SubmissionInfo cloneable such that saving or omitting changes can be added back to the DiscInformationWindow
     /// </remarks>
     public partial class App : Application
     {

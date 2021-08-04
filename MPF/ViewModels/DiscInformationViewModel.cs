@@ -52,10 +52,11 @@ namespace MPF.GUI.ViewModels
         public DiscInformationViewModel(DiscInformationWindow parent, SubmissionInfo submissionInfo)
         {
             Parent = parent;
-            SubmissionInfo = submissionInfo ?? new SubmissionInfo();
+            SubmissionInfo = submissionInfo.Clone() as SubmissionInfo ?? new SubmissionInfo();
 
             // Add handlers
             Parent.AcceptButton.Click += OnAcceptClick;
+            Parent.CancelButton.Click += OnCancelClick;
             Parent.RingCodeGuideButton.Click += OnRingCodeGuideClick;
 
             // Update UI with new values
@@ -252,6 +253,15 @@ namespace MPF.GUI.ViewModels
         {
             Save();
             Parent.DialogResult = true;
+            Parent.Close();
+        }
+
+        /// <summary>
+        /// Handler for CancelButton Click event
+        /// </summary>
+        private void OnCancelClick(object sender, RoutedEventArgs e)
+        {
+            Parent.DialogResult = false;
             Parent.Close();
         }
 
