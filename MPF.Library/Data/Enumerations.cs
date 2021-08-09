@@ -613,6 +613,7 @@ namespace MPF.Data
         HasbroVideoNowColor,
         HasbroVideoNowJr,
         HasbroVideoNowXP,
+        HDDVDVideo,
         IBMPCcompatible,
         IncredibleTechnologiesEagle,
         KonamieAmusement,

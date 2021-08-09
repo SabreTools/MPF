@@ -89,6 +89,8 @@ namespace MPF.Utilities
                     return KnownSystem.HasbroVideoNowJr;
                 case RedumpSystem.HasbroVideoNowXP:
                     return KnownSystem.HasbroVideoNowXP;
+                case RedumpSystem.HDDVDVideo:
+                    return KnownSystem.HDDVDVideo;
                 case RedumpSystem.IBMPCcompatible:
                     return KnownSystem.IBMPCCompatible;
                 case RedumpSystem.IncredibleTechnologiesEagle:
@@ -338,6 +340,8 @@ namespace MPF.Utilities
                     return RedumpSystem.HasbroVideoNowJr;
                 case KnownSystem.HasbroVideoNowXP:
                     return RedumpSystem.HasbroVideoNowXP;
+                case KnownSystem.HDDVDVideo:
+                    return RedumpSystem.HDDVDVideo;
                 case KnownSystem.IBMPCCompatible:
                     return RedumpSystem.IBMPCcompatible;
                 case KnownSystem.IncredibleTechnologiesEagle:
@@ -1314,6 +1318,8 @@ namespace MPF.Utilities
                     return "Hasbro VideoNow Jr.";
                 case RedumpSystem.HasbroVideoNowXP:
                     return "Hasbro VideoNow XP";
+                case RedumpSystem.HDDVDVideo:
+                    return "HD DVD-Video";
                 case RedumpSystem.IBMPCcompatible:
                     return "IBM PC compatible";
                 case RedumpSystem.IncredibleTechnologiesEagle:
@@ -2188,6 +2194,8 @@ namespace MPF.Utilities
                     return "hvnjr";
                 case RedumpSystem.HasbroVideoNowXP:
                     return "hvnxp";
+                case RedumpSystem.HDDVDVideo:
+                    return "hddvd-video";
                 case RedumpSystem.IBMPCcompatible:
                     return "pc";
                 case RedumpSystem.IncredibleTechnologiesEagle:
