@@ -195,7 +195,7 @@ namespace MPF.Check
                 Console.WriteLine(error);
 
             Console.WriteLine("Usage:");
-            Console.WriteLine("MPF.Check.exe <mediatype> <system> [options] </path/to/output.bin> ...");
+            Console.WriteLine("MPF.Check.exe <mediatype> <system> [options] </path/to/output.cue/iso> ...");
             Console.WriteLine();
             Console.WriteLine("Standalone Options:");
             Console.WriteLine("-h, -?                  Show this help text");
