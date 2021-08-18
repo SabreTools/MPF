@@ -46,6 +46,7 @@
       <Project>{51ab0928-13f9-44bf-a407-b6957a43a056}</Project>
       <Name>MPF.Library</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
 </Project>

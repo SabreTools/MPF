@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using WinForms = System.Windows.Forms;
 using BurnOutSharp;
+using MPF.Converters;
 using MPF.Data;
 using MPF.Utilities;
 using MPF.Windows;
@@ -735,7 +736,7 @@ namespace MPF.GUI.ViewModels
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Validators.GetKnownSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
-                App.Logger.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + Converters.GetLongName(currentSystem) + "."));
+                App.Logger.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + EnumConverter.GetLongName(currentSystem) + "."));
 
                 if (currentSystem != KnownSystem.NONE)
                 {
@@ -946,7 +947,7 @@ namespace MPF.GUI.ViewModels
             if (index != -1)
                 App.Instance.MediaTypeComboBox.SelectedIndex = index;
             else
-                App.Instance.StatusLabel.Content = $"Disc of type '{Converters.LongName(CurrentMediaType)}' found, but the current system does not support it!";
+                App.Instance.StatusLabel.Content = $"Disc of type '{EnumConverter.LongName(CurrentMediaType)}' found, but the current system does not support it!";
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();

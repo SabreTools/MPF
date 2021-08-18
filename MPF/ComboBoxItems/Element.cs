@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MPF.Converters;
 using MPF.Utilities;
 
 namespace MPF
@@ -22,7 +23,7 @@ namespace MPF
         public static implicit operator T? (Element<T> item) => item?.Data;
 
         /// <inheritdoc/>
-        public string Name => Converters.GetLongName(Data);
+        public string Name => EnumConverter.GetLongName(Data);
 
         public override string ToString() => Name;
 

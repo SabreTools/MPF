@@ -5,6 +5,7 @@ using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 using BurnOutSharp;
+using MPF.Converters;
 using MPF.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
@@ -736,7 +737,7 @@ namespace MPF.Utilities
             // Get all supported drive types
             var drives = DriveInfo.GetDrives()
                 .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                .Select(d => new Drive(Converters.ToInternalDriveType(d.DriveType), d))
+                .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
                 .ToList();
 
             // Get the floppy drives and set the flag from removable

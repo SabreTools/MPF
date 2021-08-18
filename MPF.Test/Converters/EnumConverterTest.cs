@@ -77,28 +77,6 @@ namespace MPF.Test.Utilities
         }
 
         [Theory]
-        [InlineData(MediaType.CDROM, "CD-ROM")]
-        [InlineData(MediaType.LaserDisc, "LD-ROM / LV-ROM")]
-        [InlineData(MediaType.NONE, "Unknown")]
-        public void MediaTypeToStringTest(MediaType? mediaType, string expected)
-        {
-            string actual = Converters.LongName(mediaType);
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
-        [InlineData(KnownSystem.MicrosoftXBOX, "Microsoft XBOX")]
-        [InlineData(KnownSystem.NECPC88, "NEC PC-88")]
-        [InlineData(KnownSystem.KonamiPython, "Konami Python")]
-        [InlineData(KnownSystem.HDDVDVideo, "HD-DVD-Video")]
-        [InlineData(KnownSystem.NONE, "Unknown")]
-        public void KnownSystemToStringTest(KnownSystem? knownSystem, string expected)
-        {
-            string actual = Converters.LongName(knownSystem);
-            Assert.Equal(expected, actual);
-        }
-
-        [Theory]
         [MemberData(nameof(KnownSystems))]
         public void KnownSystemHasValidCategory(KnownSystemComboBoxItem system)
         {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows;
 using MPF.Data;
 using MPF.Windows;
+using RedumpLib.Data;
 
 namespace MPF.GUI.ViewModels
 {
@@ -27,22 +28,22 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// List of available disc categories
         /// </summary>
-        public List<Element<RedumpDiscCategory>> Categories { get; private set; } = Element<RedumpDiscCategory>.GenerateElements().ToList();
+        public List<Element<DiscCategory>> Categories { get; private set; } = Element<DiscCategory>.GenerateElements().ToList();
 
         /// <summary>
         /// List of available regions
         /// </summary>
-        public List<Element<RedumpRegion>> Regions { get; private set; } = Element<RedumpRegion>.GenerateElements().ToList();
+        public List<Element<Region>> Regions { get; private set; } = Element<Region>.GenerateElements().ToList();
 
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<Element<RedumpLanguage>> Languages { get; private set; } = Element<RedumpLanguage>.GenerateElements().ToList();
+        public List<Element<Language>> Languages { get; private set; } = Element<Language>.GenerateElements().ToList();
 
         /// <summary>
         /// List of available languages
         /// </summary>
-        public List<Element<RedumpLanguageSelection>> LanguageSelections { get; private set; } = Element<RedumpLanguageSelection>.GenerateElements().ToList();
+        public List<Element<LanguageSelection>> LanguageSelections { get; private set; } = Element<LanguageSelection>.GenerateElements().ToList();
 
         #endregion
 
@@ -234,11 +235,11 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         public void Save()
         {
-            SubmissionInfo.CommonDiscInfo.Category = (Parent.CategoryComboBox.SelectedItem as Element<RedumpDiscCategory>)?.Value ?? RedumpDiscCategory.Games;
-            SubmissionInfo.CommonDiscInfo.Region = (Parent.RegionComboBox.SelectedItem as Element<RedumpRegion>)?.Value ?? RedumpRegion.World;
+            SubmissionInfo.CommonDiscInfo.Category = (Parent.CategoryComboBox.SelectedItem as Element<DiscCategory>)?.Value ?? DiscCategory.Games;
+            SubmissionInfo.CommonDiscInfo.Region = (Parent.RegionComboBox.SelectedItem as Element<Region>)?.Value ?? Region.World;
             SubmissionInfo.CommonDiscInfo.Languages = Languages.Where(l => l.IsChecked).Select(l => l?.Value).ToArray();
             if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
-                SubmissionInfo.CommonDiscInfo.Languages = new RedumpLanguage?[] { null };
+                SubmissionInfo.CommonDiscInfo.Languages = new Language?[] { null };
             SubmissionInfo.CommonDiscInfo.LanguageSelection = LanguageSelections.Where(ls => ls.IsChecked).Select(ls => ls?.Value).ToArray();
         }
 

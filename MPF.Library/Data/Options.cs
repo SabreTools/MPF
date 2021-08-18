@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using MPF.Converters;
 using MPF.Utilities;
 
 namespace MPF.Data
@@ -46,7 +47,7 @@ namespace MPF.Data
             get
             {
                 string valueString = GetStringSetting(_settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
-                var valueEnum = Converters.ToInternalProgram(valueString);
+                var valueEnum = EnumConverter.ToInternalProgram(valueString);
                 return valueEnum == InternalProgram.NONE ? InternalProgram.DiscImageCreator : valueEnum;
             }
             set
@@ -85,12 +86,12 @@ namespace MPF.Data
             get
             {
                 string valueString = GetStringSetting(_settings, "DefaultSystem", KnownSystem.NONE.ToString());
-                var valueEnum = Converters.ToKnownSystem(valueString);
+                var valueEnum = EnumConverter.ToKnownSystem(valueString);
                 return valueEnum ?? KnownSystem.NONE;
             }
             set
             {
-                _settings["DefaultSystem"] = Converters.GetLongName(value);
+                _settings["DefaultSystem"] = EnumConverter.GetLongName(value);
             }
         }
 

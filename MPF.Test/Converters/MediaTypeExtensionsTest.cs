@@ -1,11 +1,22 @@
-﻿using MPF.Data;
+﻿using MPF.Converters;
+using MPF.Data;
 using MPF.Utilities;
 using Xunit;
 
-namespace MPF.Test.Utilities
+namespace MPF.Test.Converters
 {
     public class MediaTypeExtensionsTest
     {
+        [Theory]
+        [InlineData(MediaType.CDROM, "CD-ROM")]
+        [InlineData(MediaType.LaserDisc, "LD-ROM / LV-ROM")]
+        [InlineData(MediaType.NONE, "Unknown")]
+        public void MediaTypeToStringTest(MediaType? mediaType, string expected)
+        {
+            string actual = EnumConverter.LongName(mediaType);
+            Assert.Equal(expected, actual);
+        }
+
         [Theory]
         [InlineData(MediaType.CDROM, "CD-ROM")]
         [InlineData(MediaType.LaserDisc, "LD-ROM / LV-ROM")]

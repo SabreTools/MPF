@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
 using BurnOutSharp;
+using MPF.Converters;
 using MPF.Data;
-using MPF.Redump;
 using MPF.Utilities;
+using RedumpLib.Web;
 
 namespace MPF.Check
 {
@@ -46,7 +47,7 @@ namespace MPF.Check
             }
 
             // Check the MediaType
-            var mediaType = Converters.ToMediaType(args[0].Trim('"'));
+            var mediaType = EnumConverter.ToMediaType(args[0].Trim('"'));
             if (mediaType == MediaType.NONE)
             {
                 DisplayHelp($"{args[0]} is not a recognized media type");
@@ -54,7 +55,7 @@ namespace MPF.Check
             }
 
             // Check the KnownSystem
-            var knownSystem = Converters.ToKnownSystem(args[1].Trim('"'));
+            var knownSystem = EnumConverter.ToKnownSystem(args[1].Trim('"'));
             if (knownSystem == KnownSystem.NONE)
             {
                 DisplayHelp($"{args[1]} is not a recognized system");
@@ -163,7 +164,7 @@ namespace MPF.Check
                 // Now populate an environment
                 var options = new Options
                 {
-                    InternalProgram = Converters.ToInternalProgram(internalProgram),
+                    InternalProgram = EnumConverter.ToInternalProgram(internalProgram),
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
                     ShowDiscEjectReminder = false,

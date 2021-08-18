@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Data;
+using RedumpLib.Data;
 
 namespace MPF.CleanRip
 {
@@ -82,7 +83,7 @@ namespace MPF.CleanRip
                     if (File.Exists(basePath + ".bca"))
                         info.Extras.BCA = GetBCA(basePath + ".bca");
 
-                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out RedumpRegion? gcRegion, out string gcVersion))
+                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion))
                     {
                         info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
                         info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
@@ -203,7 +204,7 @@ namespace MPF.CleanRip
         /// <param name="region">Output region, if possible</param>
         /// <param name="version">Output internal version of the game</param>
         /// <returns></returns>
-        private static bool GetGameCubeWiiInformation(string dumpinfo, out RedumpRegion? region, out string version)
+        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version)
         {
             region = null; version = null;
 
@@ -238,49 +239,49 @@ namespace MPF.CleanRip
                             switch (serial[3])
                             {
                                 case 'A':
-                                    region = RedumpRegion.World;
+                                    region = Region.World;
                                     break;
                                 case 'D':
-                                    region = RedumpRegion.Germany;
+                                    region = Region.Germany;
                                     break;
                                 case 'E':
-                                    region = RedumpRegion.USA;
+                                    region = Region.USA;
                                     break;
                                 case 'F':
-                                    region = RedumpRegion.France;
+                                    region = Region.France;
                                     break;
                                 case 'I':
-                                    region = RedumpRegion.Italy;
+                                    region = Region.Italy;
                                     break;
                                 case 'J':
-                                    region = RedumpRegion.Japan;
+                                    region = Region.Japan;
                                     break;
                                 case 'K':
-                                    region = RedumpRegion.Korea;
+                                    region = Region.Korea;
                                     break;
                                 case 'L':
-                                    region = RedumpRegion.Europe; // Japanese import to Europe
+                                    region = Region.Europe; // Japanese import to Europe
                                     break;
                                 case 'M':
-                                    region = RedumpRegion.Europe; // American import to Europe
+                                    region = Region.Europe; // American import to Europe
                                     break;
                                 case 'N':
-                                    region = RedumpRegion.USA; // Japanese import to USA
+                                    region = Region.USA; // Japanese import to USA
                                     break;
                                 case 'P':
-                                    region = RedumpRegion.Europe;
+                                    region = Region.Europe;
                                     break;
                                 case 'R':
-                                    region = RedumpRegion.Russia;
+                                    region = Region.Russia;
                                     break;
                                 case 'S':
-                                    region = RedumpRegion.Spain;
+                                    region = Region.Spain;
                                     break;
                                 case 'Q':
-                                    region = RedumpRegion.Korea; // Korea with Japanese language
+                                    region = Region.Korea; // Korea with Japanese language
                                     break;
                                 case 'T':
-                                    region = RedumpRegion.Korea; // Korea with English language
+                                    region = Region.Korea; // Korea with English language
                                     break;
                                 case 'X':
                                     region = null; // Not a real region code

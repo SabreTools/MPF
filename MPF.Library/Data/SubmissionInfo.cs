@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MPF.Converters;
 using MPF.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using RedumpLib.Converters;
+using RedumpLib.Data;
 
 namespace MPF.Data
 {
@@ -113,19 +116,19 @@ namespace MPF.Data
         public string DiscTitle { get; set; }
 
         [JsonProperty(PropertyName = "d_category", Required = Required.AllowNull)]
-        public RedumpDiscCategory? Category { get; set; }
+        public DiscCategory? Category { get; set; }
 
         [JsonProperty(PropertyName = "d_region", Required = Required.AllowNull)]
-        [JsonConverter(typeof(RedumpRegionConverter))]
-        public RedumpRegion? Region { get; set; }
+        [JsonConverter(typeof(RegionConverter))]
+        public Region? Region { get; set; }
 
         [JsonProperty(PropertyName = "d_languages", Required = Required.AllowNull)]
-        [JsonConverter(typeof(RedumpLanguageConverter))]
-        public RedumpLanguage?[] Languages { get; set; }
+        [JsonConverter(typeof(LanguageConverter))]
+        public Language?[] Languages { get; set; }
 
         [JsonProperty(PropertyName = "d_languages_selection", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Ignore)]
-        [JsonConverter(typeof(RedumpLanguageSelectionConverter))]
-        public RedumpLanguageSelection?[] LanguageSelection { get; set; }
+        [JsonConverter(typeof(LanguageSelectionConverter))]
+        public LanguageSelection?[] LanguageSelection { get; set; }
 
         [JsonProperty(PropertyName = "d_serial", NullValueHandling = NullValueHandling.Ignore)]
         public string Serial { get; set; }
@@ -226,8 +229,8 @@ namespace MPF.Data
                 DiscTitle = this.DiscTitle,
                 Category = this.Category,
                 Region = this.Region,
-                Languages = this.Languages?.Clone() as RedumpLanguage?[],
-                LanguageSelection = this.LanguageSelection?.Clone() as RedumpLanguageSelection?[],
+                Languages = this.Languages?.Clone() as Language?[],
+                LanguageSelection = this.LanguageSelection?.Clone() as LanguageSelection?[],
                 Serial = this.Serial,
                 Ring = this.Ring,
                 RingId = this.RingId,
@@ -406,7 +409,7 @@ namespace MPF.Data
     public class DumpersAndStatusSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_status", NullValueHandling = NullValueHandling.Ignore)]
-        public RedumpDumpStatus Status { get; set; }
+        public DumpStatus Status { get; set; }
 
         [JsonProperty(PropertyName = "d_dumpers", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Dumpers { get; set; }

@@ -4,13 +4,17 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using MPF.Redump;
+using MPF.Converters;
 using MPF.Utilities;
 using Newtonsoft.Json;
+using RedumpLib.Attributes;
+using RedumpLib.Data;
+using RedumpLib.Web;
 
 namespace MPF.Data
 {
@@ -633,7 +637,7 @@ namespace MPF.Data
                             if (GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
                             {
                                 // Get all matching IDs for the track
-                                List<int> newIds = wc.ListSearchResults(sha1);
+                                List<int> newIds = ListSearchResults(wc, sha1);
 
                                 // If we got null back, there was an error
                                 if (newIds == null)
@@ -665,7 +669,7 @@ namespace MPF.Data
                         if (info.MatchedIDs.Count == 1)
                         {
                             resultProgress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
-                            wc.FillFromId(info, info.MatchedIDs[0]);
+                            FillFromId(wc, info, info.MatchedIDs[0]);
                             resultProgress?.Report(Result.Success("Information filling complete!"));
                         }
                     }
@@ -793,7 +797,7 @@ namespace MPF.Data
             switch (System)
             {
                 case KnownSystem.AcornArchimedes:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.UK;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UK;
                     break;
 
                 case KnownSystem.AppleMacintosh:
@@ -814,16 +818,16 @@ namespace MPF.Data
                 case KnownSystem.AudioCD:
                 case KnownSystem.DVDAudio:
                 case KnownSystem.SuperAudioCD:
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.Audio;
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
                     break;
 
                 case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.BDVideo:
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.BonusDiscs;
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
                     info.CopyProtection.Protection = (Options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
@@ -833,25 +837,25 @@ namespace MPF.Data
 
                 case KnownSystem.CommodoreAmigaCD32:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Europe;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
                 case KnownSystem.CommodoreAmigaCDTV:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Europe;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
                 case KnownSystem.DVDVideo:
-                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.BonusDiscs;
+                    info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
                     break;
 
                 case KnownSystem.FujitsuFMTowns:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.FujitsuFMTownsMarty:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.IncredibleTechnologiesEagle:
@@ -888,20 +892,20 @@ namespace MPF.Data
 
                 case KnownSystem.NavisoftNaviken21:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.NECPC88:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.NECPC98:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.NECPCFX:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.SegaChihiro:
@@ -925,7 +929,7 @@ namespace MPF.Data
                     break;
 
                 case KnownSystem.SharpX68000:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.SNKNeoGeoCD:
@@ -933,7 +937,7 @@ namespace MPF.Data
                     break;
 
                 case KnownSystem.SonyPlayStation2:
-                    info.CommonDiscInfo.LanguageSelection = new RedumpLanguageSelection?[] { RedumpLanguageSelection.BiosSettings, RedumpLanguageSelection.LanguageSelector, RedumpLanguageSelection.OptionsMenu };
+                    info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
                     break;
 
                 case KnownSystem.SonyPlayStation3:
@@ -942,7 +946,7 @@ namespace MPF.Data
                     break;
 
                 case KnownSystem.TomyKissSite:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? RedumpRegion.Japan;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
@@ -951,7 +955,7 @@ namespace MPF.Data
             }
 
             // Set the category if it's not overriden
-            info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? RedumpDiscCategory.Games;
+            info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Games;
 
             // Comments is one of the few fields with odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
@@ -996,9 +1000,9 @@ namespace MPF.Data
                     1);
                 AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
                 AddIfExists(output, Template.MatchingIDsField, info.MatchedIDs, 1);
-                AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName(), 1);
-                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new RedumpLanguage?[] { null }).Select(l => l.LongName()).ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new RedumpLanguageSelection?[] { }).Select(l => l.ToString()).ToArray(), 1);
+                AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName() ?? "SPACE! (CHANGE THIS)", 1);
+                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName() ?? "Klingon (CHANGE THIS)").ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { }).Select(l => l.LongName()).ToArray(), 1);
                 AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo.Serial, 1);
 
                 // All ringcode information goes in an indented area
@@ -1476,6 +1480,199 @@ namespace MPF.Data
                 return;
 
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
+        }
+
+        #endregion
+
+        #region Web Calls
+
+        /// <summary>
+        /// Fill out an existing SubmissionInfo object based on a disc page
+        /// </summary>
+        /// <param name="wc">RedumpWebClient for making the connection</param>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <param name="id">Redump disc ID to retrieve</param>
+        private void FillFromId(RedumpWebClient wc, SubmissionInfo info, int id)
+        {
+            string discData = wc.DownloadSingleSiteID(id);
+            if (string.IsNullOrEmpty(discData))
+                return;
+
+            // Title, Disc Number/Letter, Disc Title
+            var match = Constants.TitleRegex.Match(discData);
+            if (match.Success)
+            {
+                string title = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+                // If we have parenthesis, title is everything before the first one
+                int firstParenLocation = title.IndexOf(" (");
+                if (firstParenLocation >= 0)
+                {
+                    info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
+                    var subMatches = Constants.DiscNumberLetterRegex.Match(title);
+                    for (int i = 1; i < subMatches.Groups.Count; i++)
+                    {
+                        string subMatch = subMatches.Groups[i].Value;
+
+                        // Disc number or letter
+                        if (subMatch.StartsWith("Disc"))
+                            info.CommonDiscInfo.DiscNumberLetter = subMatch.Remove(0, "Disc ".Length);
+
+                        // Disc title
+                        else
+                            info.CommonDiscInfo.DiscTitle = subMatch;
+                    }
+                }
+                // Otherwise, leave the title as-is
+                else
+                {
+                    info.CommonDiscInfo.Title = title;
+                }
+            }
+
+            // Foreign Title
+            match = Constants.ForeignTitleRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
+            else
+                info.CommonDiscInfo.ForeignTitleNonLatin = null;
+
+            // Category
+            match = Constants.CategoryRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Category = Extensions.ToDiscCategory(match.Groups[1].Value);
+            else
+                info.CommonDiscInfo.Category = DiscCategory.Games;
+
+            // Region
+            match = Constants.RegionRegex.Match(discData);
+            if (match.Success)
+                info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+
+            // Languages
+            var matches = Constants.LanguagesRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                List<Language?> tempLanguages = new List<Language?>();
+                foreach (Match submatch in matches)
+                    tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
+
+                info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
+            }
+
+            // Error count
+            match = Constants.ErrorCountRegex.Match(discData);
+            if (match.Success)
+            {
+                // If the error count is empty, fill from the page
+                if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
+                    info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
+            }
+
+            // Version
+            match = Constants.VersionRegex.Match(discData);
+            if (match.Success)
+                info.VersionAndEditions.Version = WebUtility.HtmlDecode(match.Groups[1].Value);
+
+            // Dumpers
+            matches = Constants.DumpersRegex.Matches(discData);
+            if (matches.Count > 0)
+            {
+                // Start with any currently listed dumpers
+                List<string> tempDumpers = new List<string>();
+                if (info.DumpersAndStatus.Dumpers.Length > 0)
+                {
+                    foreach (string dumper in info.DumpersAndStatus.Dumpers)
+                        tempDumpers.Add(dumper);
+                }
+
+                foreach (Match submatch in matches)
+                    tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
+
+                info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
+            }
+
+            // Comments
+            match = Constants.CommentsRegex.Match(discData);
+            if (match.Success)
+            {
+                info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
+                    + WebUtility.HtmlDecode(match.Groups[1].Value)
+                    .Replace("<br />", "\n")
+                    .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
+            }
+
+            // Contents
+            match = Constants.ContentsRegex.Match(discData);
+            if (match.Success)
+            {
+                info.CommonDiscInfo.Contents = WebUtility.HtmlDecode(match.Groups[1].Value)
+                       .Replace("<br />", "\n")
+                       .Replace("</div>", "");
+                info.CommonDiscInfo.Contents = Regex.Replace(info.CommonDiscInfo.Contents, @"<div .*?>", "");
+            }
+
+            // Added
+            match = Constants.AddedRegex.Match(discData);
+            if (match.Success)
+            {
+                if (DateTime.TryParse(match.Groups[1].Value, out DateTime added))
+                    info.Added = added;
+                else
+                    info.Added = null;
+            }
+
+            // Last Modified
+            match = Constants.LastModifiedRegex.Match(discData);
+            if (match.Success)
+            {
+                if (DateTime.TryParse(match.Groups[1].Value, out DateTime lastModified))
+                    info.LastModified = lastModified;
+                else
+                    info.LastModified = null;
+            }
+        }
+
+        /// <summary>
+        /// List the disc IDs associated with a given quicksearch query
+        /// </summary>
+        /// <param name="wc">RedumpWebClient for making the connection</param>
+        /// <param name="query">Query string to attempt to search for</param>
+        /// <returns>All disc IDs for the given query, null on error</returns>
+        private List<int> ListSearchResults(RedumpWebClient wc, string query)
+        {
+            List<int> ids = new List<int>();
+
+            // Strip quotes
+            query = query.Trim('"', '\'');
+
+            // Special characters become dashes
+            query = query.Replace(' ', '-');
+            query = query.Replace('/', '-');
+            query = query.Replace('\\', '/');
+
+            // Lowercase is defined per language
+            query = query.ToLowerInvariant();
+
+            // Keep getting quicksearch pages until there are none left
+            try
+            {
+                int pageNumber = 1;
+                while (true)
+                {
+                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+                    ids.AddRange(pageIds);
+                    if (pageIds.Count <= 1)
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An exception occurred while trying to log in: {ex}");
+                return null;
+            }
+
+            return ids;
         }
 
         #endregion

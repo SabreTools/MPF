@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MPF.Converters;
 using MPF.Data;
 using MPF.Utilities;
 
@@ -24,9 +25,9 @@ namespace MPF
             get
             {
                 if (IsHeader)
-                    return "---------- " + Converters.GetLongName(Data as KnownSystemCategory?) + " ----------";
+                    return "---------- " + EnumConverter.GetLongName(Data as KnownSystemCategory?) + " ----------";
                 else
-                    return Converters.GetLongName(Data as KnownSystem?);
+                    return EnumConverter.GetLongName(Data as KnownSystem?);
             }
         }
 

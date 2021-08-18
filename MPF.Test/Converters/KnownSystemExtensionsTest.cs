@@ -1,12 +1,25 @@
 ﻿using System;
+using MPF.Converters;
 using MPF.Data;
 using MPF.Utilities;
 using Xunit;
 
-namespace MPF.Test.Utilities
+namespace MPF.Test.Converters
 {
     public class KnownSystemExtensionsTest
     {
+        [Theory]
+        [InlineData(KnownSystem.MicrosoftXBOX, "Microsoft XBOX")]
+        [InlineData(KnownSystem.NECPC88, "NEC PC-88")]
+        [InlineData(KnownSystem.KonamiPython, "Konami Python")]
+        [InlineData(KnownSystem.HDDVDVideo, "HD-DVD-Video")]
+        [InlineData(KnownSystem.NONE, "Unknown")]
+        public void KnownSystemToStringTest(KnownSystem? knownSystem, string expected)
+        {
+            string actual = EnumConverter.LongName(knownSystem);
+            Assert.Equal(expected, actual);
+        }
+
         [Fact]
         public void IsMarkerTest()
         {
