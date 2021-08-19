@@ -14,7 +14,7 @@ namespace MPF.Test.Converters
         [InlineData(MediaType.NONE, "Unknown")]
         public void MediaTypeToStringTest(MediaType? mediaType, string expected)
         {
-            string actual = EnumConverter.LongName(mediaType);
+            string actual = mediaType.LongName();
             Assert.Equal(expected, actual);
         }
 

@@ -17,40 +17,6 @@ namespace MPF.Converters
         #region Cross-enumeration conversions
 
         /// <summary>
-        /// Convert master list of all media types to currently known Redump disc types
-        /// </summary>
-        /// <param name="mediaType">MediaType value to check</param>
-        /// <returns>DiscType if possible, null on error</returns>
-        public static DiscType? ToDiscType(this MediaType? mediaType)
-        {
-            switch (mediaType)
-            {
-                case MediaType.BluRay:
-                    return DiscType.BD50;
-                case MediaType.CDROM:
-                    return DiscType.CD;
-                case MediaType.DVD:
-                    return DiscType.DVD9;
-                case MediaType.GDROM:
-                    return DiscType.GDROM;
-                case MediaType.HDDVD:
-                    return DiscType.HDDVDSL;
-                // case MediaType.MILCD: // TODO: Support this?
-                //     return DiscType.MILCD;
-                case MediaType.NintendoGameCubeGameDisc:
-                    return DiscType.NintendoGameCubeGameDisc;
-                case MediaType.NintendoWiiOpticalDisc:
-                    return DiscType.NintendoWiiOpticalDiscDL;
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return DiscType.NintendoWiiUOpticalDiscSL;
-                case MediaType.UMD:
-                    return DiscType.UMDDL;
-                default:
-                    return null;
-            }
-        }
-
-        /// <summary>
         /// Convert drive type to internal version, if possible
         /// </summary>
         /// <param name="driveType">DriveType value to check</param>
@@ -110,44 +76,6 @@ namespace MPF.Converters
             }
         }
 #endif
-
-        /// <summary>
-        /// Convert currently known Redump disc types to master list of all media types
-        /// </summary>
-        /// <param name="discType">DiscType value to check</param>
-        /// <returns>MediaType if possible, null on error</returns>
-        public static MediaType? ToMediaType(this DiscType? discType)
-        {
-            switch (discType)
-            {
-                case DiscType.BD25:
-                case DiscType.BD50:
-                    return MediaType.BluRay;
-                case DiscType.CD:
-                    return MediaType.CDROM;
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                    return MediaType.DVD;
-                case DiscType.GDROM:
-                    return MediaType.GDROM;
-                case DiscType.HDDVDSL:
-                    return MediaType.HDDVD;
-                // case DiscType.MILCD: // TODO: Support this?
-                //     return MediaType.MILCD;
-                case DiscType.NintendoGameCubeGameDisc:
-                    return MediaType.NintendoGameCubeGameDisc;
-                case DiscType.NintendoWiiOpticalDiscSL:
-                case DiscType.NintendoWiiOpticalDiscDL:
-                    return MediaType.NintendoWiiOpticalDisc;
-                case DiscType.NintendoWiiUOpticalDiscSL:
-                    return MediaType.NintendoWiiUOpticalDisc;
-                case DiscType.UMDSL:
-                case DiscType.UMDDL:
-                    return MediaType.UMD;
-                default:
-                    return null;
-            }
-        }
 
         /// <summary>
         /// Convert physical media type to a MediaType
@@ -214,7 +142,12 @@ namespace MPF.Converters
 
                 if (!LongNameMethods.TryGetValue(sourceType, out MethodInfo method))
                 {
-                    method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                    
+                    method = typeof(RedumpLib.Data.Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                    if (method == null)
+                        method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+
+
                     LongNameMethods.TryAdd(sourceType, method);
                 }
 
@@ -269,96 +202,6 @@ namespace MPF.Converters
             }
         }
 
-        /// <summary>
-        /// Get the string representation of the MediaType enum values
-        /// </summary>
-        /// <param name="type">MediaType value to convert</param>
-        /// <returns>String representing the value, if possible</returns>
-        public static string LongName(this MediaType? type)
-        {
-            switch (type)
-            {
-                #region Punched Media
-
-                case MediaType.ApertureCard:
-                    return "Aperture card";
-                case MediaType.JacquardLoomCard:
-                    return "Jacquard Loom card";
-                case MediaType.MagneticStripeCard:
-                    return "Magnetic stripe card";
-                case MediaType.OpticalPhonecard:
-                    return "Optical phonecard";
-                case MediaType.PunchedCard:
-                    return "Punched card";
-                case MediaType.PunchedTape:
-                    return "Punched tape";
-
-                #endregion
-
-                #region Tape
-
-                case MediaType.OpenReel:
-                    return "Open Reel Tape";
-                case MediaType.DataCartridge:
-                    return "Data Tape Cartridge";
-                case MediaType.Cassette:
-                    return "Cassette Tape";
-
-                #endregion
-
-                #region Disc / Disc
-
-                case MediaType.BluRay:
-                    return "BD-ROM";
-                case MediaType.CDROM:
-                    return "CD-ROM";
-                case MediaType.DVD:
-                    return "DVD-ROM";
-                case MediaType.FloppyDisk:
-                    return "Floppy Disk";
-                case MediaType.Floptical:
-                    return "Floptical";
-                case MediaType.GDROM:
-                    return "GD-ROM";
-                case MediaType.HDDVD:
-                    return "HD-DVD-ROM";
-                case MediaType.HardDisk:
-                    return "Hard Disk";
-                case MediaType.IomegaBernoulliDisk:
-                    return "Iomega Bernoulli Disk";
-                case MediaType.IomegaJaz:
-                    return "Iomega Jaz";
-                case MediaType.IomegaZip:
-                    return "Iomega Zip";
-                case MediaType.LaserDisc:
-                    return "LD-ROM / LV-ROM";
-                case MediaType.Nintendo64DD:
-                    return "64DD Disk";
-                case MediaType.NintendoFamicomDiskSystem:
-                    return "Famicom Disk System Disk";
-                case MediaType.NintendoGameCubeGameDisc:
-                    return "GameCube Game Disc";
-                case MediaType.NintendoWiiOpticalDisc:
-                    return "Wii Optical Disc";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return "Wii U Optical Disc";
-                case MediaType.UMD:
-                    return "UMD";
-
-                #endregion
-
-                // Unsorted Formats
-                case MediaType.Cartridge:
-                    return "Cartridge";
-                case MediaType.CED:
-                    return "CED";
-
-                case MediaType.NONE:
-                default:
-                    return "Unknown";
-            }
-        }
-
         #endregion
 
         #region Convert to Short Name
@@ -395,96 +238,6 @@ namespace MPF.Converters
             {
                 // Converter is not implemented for the given type
                 return string.Empty;
-            }
-        }
-
-        /// <summary>
-        /// Get the short string representation of the MediaType enum values
-        /// </summary>
-        /// <param name="type">MediaType value to convert</param>
-        /// <returns>Short string representing the value, if possible</returns>
-        public static string ShortName(this MediaType? type)
-        {
-            switch (type)
-            {
-                #region Punched Media
-
-                case MediaType.ApertureCard:
-                    return "aperture";
-                case MediaType.JacquardLoomCard:
-                    return "jacquard loom card";
-                case MediaType.MagneticStripeCard:
-                    return "magnetic stripe";
-                case MediaType.OpticalPhonecard:
-                    return "optical phonecard";
-                case MediaType.PunchedCard:
-                    return "punchcard";
-                case MediaType.PunchedTape:
-                    return "punchtape";
-
-                #endregion
-
-                #region Tape
-
-                case MediaType.OpenReel:
-                    return "open reel";
-                case MediaType.DataCartridge:
-                    return "data cartridge";
-                case MediaType.Cassette:
-                    return "cassette";
-
-                #endregion
-
-                #region Disc / Disc
-
-                case MediaType.BluRay:
-                    return "bdrom";
-                case MediaType.CDROM:
-                    return "cdrom";
-                case MediaType.DVD:
-                    return "dvd";
-                case MediaType.FloppyDisk:
-                    return "fd";
-                case MediaType.Floptical:
-                    return "floptical";
-                case MediaType.GDROM:
-                    return "gdrom";
-                case MediaType.HDDVD:
-                    return "hddvd";
-                case MediaType.HardDisk:
-                    return "hdd";
-                case MediaType.IomegaBernoulliDisk:
-                    return "bernoulli";
-                case MediaType.IomegaJaz:
-                    return "jaz";
-                case MediaType.IomegaZip:
-                    return "zip";
-                case MediaType.LaserDisc:
-                    return "ldrom";
-                case MediaType.Nintendo64DD:
-                    return "64dd";
-                case MediaType.NintendoFamicomDiskSystem:
-                    return "fds";
-                case MediaType.NintendoGameCubeGameDisc:
-                    return "gc";
-                case MediaType.NintendoWiiOpticalDisc:
-                    return "wii";
-                case MediaType.NintendoWiiUOpticalDisc:
-                    return "wiiu";
-                case MediaType.UMD:
-                    return "umd";
-
-                #endregion
-
-                // Unsorted Formats
-                case MediaType.Cartridge:
-                    return "cart";
-                case MediaType.CED:
-                    return "ced";
-
-                case MediaType.NONE:
-                default:
-                    return "unknown";
             }
         }
 

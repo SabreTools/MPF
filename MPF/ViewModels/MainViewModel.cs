@@ -948,7 +948,7 @@ namespace MPF.GUI.ViewModels
             if (index != -1)
                 App.Instance.MediaTypeComboBox.SelectedIndex = index;
             else
-                App.Instance.StatusLabel.Content = $"Disc of type '{EnumConverter.LongName(CurrentMediaType)}' found, but the current system does not support it!";
+                App.Instance.StatusLabel.Content = $"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!";
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();

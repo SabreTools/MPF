@@ -104,7 +104,7 @@ namespace MPF.Test.Converters
                 case SystemCategory.Other: marker = RedumpSystem.MarkerOtherEnd; break;
             }
 
-            Assert.NotEqual(null, marker);
+            Assert.NotNull(marker);
             Assert.True(marker > system);
 
             Array.ForEach(markers, mmarker =>
