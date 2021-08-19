@@ -151,7 +151,7 @@ namespace MPF.GUI.ViewModels
 
             if (currentSystem != null)
             {
-                var mediaTypeValues = Validators.GetValidMediaTypes(currentSystem);
+                var mediaTypeValues = currentSystem.MediaTypes();
                 MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
                 App.Instance.MediaTypeComboBox.ItemsSource = MediaTypes;
 
@@ -642,7 +642,7 @@ namespace MPF.GUI.ViewModels
 
             // Get reasonable default values based on the current system
             RedumpSystem? currentSystem = Systems[App.Instance.SystemTypeComboBox.SelectedIndex];
-            MediaType? defaultMediaType = Validators.GetValidMediaTypes(currentSystem).FirstOrDefault() ?? MediaType.CDROM;
+            MediaType? defaultMediaType = currentSystem.MediaTypes().FirstOrDefault() ?? MediaType.CDROM;
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
 

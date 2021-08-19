@@ -1433,7 +1433,7 @@ namespace MPF.Aaru
             }
 
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validators.GetValidMediaTypes(this.System);
+            var validTypes = this.System.MediaTypes();
             if (!validTypes.Contains(this.Type))
                 return;
 

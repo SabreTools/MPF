@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using MPF.Data;
+using RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.Data

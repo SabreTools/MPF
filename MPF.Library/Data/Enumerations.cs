@@ -50,64 +50,6 @@ namespace MPF.Data
     }
 
     /// <summary>
-    /// Known media types
-    /// </summary>
-    public enum MediaType
-    {
-        NONE = 0,
-
-        #region Punched Media
-
-        ApertureCard,
-        JacquardLoomCard,
-        MagneticStripeCard,
-        OpticalPhonecard,
-        PunchedCard,
-        PunchedTape,
-
-        #endregion
-
-        #region Tape
-
-        Cassette,
-        DataCartridge,
-        OpenReel,
-
-        #endregion
-
-        #region Disc / Disc
-
-        BluRay,
-        CDROM,
-        DVD,
-        FloppyDisk,
-        Floptical,
-        GDROM,
-        HDDVD,
-        HardDisk,
-        IomegaBernoulliDisk,
-        IomegaJaz,
-        IomegaZip,
-        LaserDisc, // LD-ROM and LV-ROM variants
-        Nintendo64DD,
-        NintendoFamicomDiskSystem,
-        NintendoGameCubeGameDisc,
-        NintendoWiiOpticalDisc,
-        NintendoWiiUOpticalDisc,
-        UMD,
-
-        #endregion
-
-        // Unsorted Formats
-        Cartridge,
-        CED,
-        CompactFlash,
-        MMC,
-        SDCard,
-        FlashDrive,
-    }
-
-    /// <summary>
     /// Physical media types
     /// </summary>
     /// <see cref="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/cimwin32a/win32-physicalmedia"/>

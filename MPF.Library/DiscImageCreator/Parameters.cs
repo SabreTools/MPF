@@ -1615,7 +1615,7 @@ namespace MPF.DiscImageCreator
             Filename = filename;
 
             // First check to see if the combination of system and MediaType is valid
-            var validTypes = Validators.GetValidMediaTypes(this.System);
+            var validTypes = this.System.MediaTypes();
             if (!validTypes.Contains(this.Type))
                 return;
 
@@ -2337,7 +2337,7 @@ namespace MPF.DiscImageCreator
         private void SetBaseCommand(RedumpSystem? system, MediaType? type)
         {
             // If we have an invalid combination, we should BaseCommand = null
-            if (!Validators.GetValidMediaTypes(system).Contains(type))
+            if (!system.MediaTypes().Contains(type))
             {
                 BaseCommand = null;
                 return;

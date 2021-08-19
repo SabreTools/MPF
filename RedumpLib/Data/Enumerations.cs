@@ -272,6 +272,67 @@ namespace RedumpLib.Data
     }
 
     /// <summary>
+    /// All possible media types
+    /// </summary>
+    public enum MediaType
+    {
+        NONE = 0,
+
+        #region Punched Media
+
+        ApertureCard,
+        JacquardLoomCard,
+        MagneticStripeCard,
+        OpticalPhonecard,
+        PunchedCard,
+        PunchedTape,
+
+        #endregion
+
+        #region Tape
+
+        Cassette,
+        DataCartridge,
+        OpenReel,
+
+        #endregion
+
+        #region Disc / Disc
+
+        BluRay,
+        CDROM,
+        DVD,
+        FloppyDisk,
+        Floptical,
+        GDROM,
+        HDDVD,
+        HardDisk,
+        IomegaBernoulliDisk,
+        IomegaJaz,
+        IomegaZip,
+        LaserDisc, // LD-ROM and LV-ROM variants
+        Nintendo64DD,
+        NintendoFamicomDiskSystem,
+        NintendoGameCubeGameDisc,
+        NintendoWiiOpticalDisc,
+        NintendoWiiUOpticalDisc,
+        UMD,
+
+        #endregion
+
+        #region Unsorted Formats
+
+        Cartridge,
+        CED,
+        CompactFlash,
+        MMC,
+        SDCard,
+        FlashDrive,
+
+        #endregion
+    }
+
+    /// <summary>
     /// List of all known systems
     /// </summary>
     /// TODO: Remove marker items

@@ -18,7 +18,7 @@ namespace MPF.Test.Utilities
         [InlineData(RedumpSystem.SonyPlayStationPortable, MediaType.UMD)]
         public void GetValidMediaTypesTest(RedumpSystem? knownSystem, MediaType? expected)
         {
-            var actual = Validators.GetValidMediaTypes(knownSystem);
+            var actual = knownSystem.MediaTypes();
             Assert.Contains(expected, actual);
         }
 

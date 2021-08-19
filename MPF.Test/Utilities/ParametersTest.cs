@@ -47,7 +47,7 @@ namespace MPF.Test.Utilities
             HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
             HashSet<string> actualSet = new HashSet<string>(actual.Keys.Cast<string>() ?? new string[0]);
             Assert.Equal(expectedSet, actualSet);
-            if (rereadC2 == -1 || !Validators.GetValidMediaTypes(knownSystem).Contains(mediaType))
+            if (rereadC2 == -1 || !knownSystem.MediaTypes().Contains(mediaType))
                 Assert.Null(actual.C2OpcodeValue[0]);
             else
                 Assert.Equal(rereadC2, actual.C2OpcodeValue[0]);

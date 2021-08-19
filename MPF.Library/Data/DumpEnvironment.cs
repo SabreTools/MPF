@@ -569,7 +569,7 @@ namespace MPF.Data
             IProgress<ProtectionProgress> protectionProgress = null)
         {
             // Ensure the current disc combination should exist
-            if (!Validators.GetValidMediaTypes(System).Contains(Type))
+            if (!System.MediaTypes().Contains(Type))
                 return null;
 
             // Sanitize the output filename to strip off any potential extension
