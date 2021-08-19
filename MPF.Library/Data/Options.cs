@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MPF.Converters;
 using MPF.Utilities;
+using RedumpLib.Data;
 
 namespace MPF.Data
 {
@@ -81,13 +82,13 @@ namespace MPF.Data
         /// <summary>
         /// Default system if none can be detected
         /// </summary>
-        public KnownSystem DefaultSystem
+        public RedumpSystem? DefaultSystem
         {
             get
             {
-                string valueString = GetStringSetting(_settings, "DefaultSystem", KnownSystem.NONE.ToString());
-                var valueEnum = EnumConverter.ToKnownSystem(valueString);
-                return valueEnum ?? KnownSystem.NONE;
+                string valueString = GetStringSetting(_settings, "DefaultSystem", null);
+                var valueEnum = Extensions.ToRedumpSystem(valueString);
+                return valueEnum;
             }
             set
             {

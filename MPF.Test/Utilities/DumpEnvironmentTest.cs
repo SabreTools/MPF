@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using MPF.Data;
 using MPF.Utilities;
+using RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test
@@ -21,7 +22,7 @@ namespace MPF.Test
                 ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
                 : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString()));
 
-            var env = new DumpEnvironment(options, string.Empty, string.Empty, drive, KnownSystem.IBMPCCompatible, mediaType, parameters);
+            var env = new DumpEnvironment(options, string.Empty, string.Empty, drive, RedumpSystem.IBMPCcompatible, mediaType, parameters);
 
             bool actual = env.ParametersValid();
             Assert.Equal(expected, actual);

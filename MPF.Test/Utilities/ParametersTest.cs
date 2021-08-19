@@ -3,6 +3,7 @@ using System.Linq;
 using MPF.Data;
 using MPF.DiscImageCreator;
 using MPF.Utilities;
+using RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.Utilities
@@ -10,13 +11,13 @@ namespace MPF.Test.Utilities
     public class ParametersTest
     {
         [Theory]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.CDROM, CommandStrings.CompactDisc)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD, CommandStrings.XBOX)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.LaserDisc, null)]
-        [InlineData(KnownSystem.SegaNu, MediaType.BluRay, CommandStrings.BluRay)]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.FloppyDisk, CommandStrings.Floppy)]
-        [InlineData(KnownSystem.RawThrillsVarious, MediaType.GDROM, null)]
-        public void ParametersFromSystemAndTypeTest(KnownSystem? knownSystem, MediaType? mediaType, string expected)
+        [InlineData(RedumpSystem.MicrosoftXbox, MediaType.CDROM, CommandStrings.CompactDisc)]
+        [InlineData(RedumpSystem.MicrosoftXbox, MediaType.DVD, CommandStrings.XBOX)]
+        [InlineData(RedumpSystem.MicrosoftXbox, MediaType.LaserDisc, null)]
+        [InlineData(RedumpSystem.SegaNu, MediaType.BluRay, CommandStrings.BluRay)]
+        [InlineData(RedumpSystem.AppleMacintosh, MediaType.FloppyDisk, CommandStrings.Floppy)]
+        [InlineData(RedumpSystem.RawThrillsVarious, MediaType.GDROM, null)]
+        public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string expected)
         {
             var options = new Options { };
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
@@ -24,21 +25,21 @@ namespace MPF.Test.Utilities
         }
 
         [Theory]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new string[] { FlagStrings.Raw })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 20, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
+        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new string[] { FlagStrings.Raw })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, 20, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
         /* paranoid mode tests */
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.CDROM, true, 1000, 2, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
-        [InlineData(KnownSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, true, 500, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new string[] { FlagStrings.CopyrightManagementInformation })]
-        [InlineData(KnownSystem.IBMPCCompatible, MediaType.DVD, false, 500, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
-        [InlineData(KnownSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new string[] { FlagStrings.CopyrightManagementInformation })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, true, 1000, 2, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
+        [InlineData(RedumpSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, 500, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new string[] { FlagStrings.CopyrightManagementInformation })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, 500, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new string[] { FlagStrings.CopyrightManagementInformation })]
         /* reread c2 */
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new string[] { FlagStrings.C2Opcode })]
-        [InlineData(KnownSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new string[] { FlagStrings.C2Opcode })]
+        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new string[] { FlagStrings.C2Opcode })]
+        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new string[] { FlagStrings.C2Opcode })]
 
-        public void ParametersFromOptionsTest(KnownSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, string[] expected)
+        public void ParametersFromOptionsTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, string[] expected)
         {
             var options = new Options { DICParanoidMode = paranoid, DICRereadCount = rereadC2 };
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);

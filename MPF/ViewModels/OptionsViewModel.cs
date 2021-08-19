@@ -42,7 +42,7 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<KnownSystemComboBoxItem> Systems { get; private set; } = KnownSystemComboBoxItem.GenerateElements().ToList();
+        public List<RedumpSystemComboBoxItem> Systems { get; private set; } = RedumpSystemComboBoxItem.GenerateElements().ToList();
 
         #endregion
 
@@ -87,8 +87,8 @@ namespace MPF.GUI.ViewModels
         {
             var selectedInternalProgram = Parent.InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
             Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
-            var selectedDefaultSystem = Parent.DefaultSystemComboBox.SelectedItem as KnownSystemComboBoxItem;
-            Options.DefaultSystem = selectedDefaultSystem?.Value ?? KnownSystem.NONE;
+            var selectedDefaultSystem = Parent.DefaultSystemComboBox.SelectedItem as RedumpSystemComboBoxItem;
+            Options.DefaultSystem = selectedDefaultSystem?.Value ?? null;
             Options.RedumpPassword = Parent.RedumpPasswordBox.Password;
 
             SavedSettings = true;

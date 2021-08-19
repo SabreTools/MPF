@@ -1,9 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using BurnOutSharp;
 using MPF.Converters;
 using MPF.Data;
 using MPF.Utilities;
+using RedumpLib.Data;
 using RedumpLib.Web;
 
 namespace MPF.Check
@@ -34,7 +36,7 @@ namespace MPF.Check
             }
             else if (args[0] == "-ls" || args[0] == "--listsystems")
             {
-                ListKnownSystems();
+                ListSystems();
                 Console.ReadLine();
                 return;
             }
@@ -54,9 +56,9 @@ namespace MPF.Check
                 return;
             }
 
-            // Check the KnownSystem
-            var knownSystem = EnumConverter.ToKnownSystem(args[1].Trim('"'));
-            if (knownSystem == KnownSystem.NONE)
+            // Check the RedumpSystem
+            var knownSystem = Extensions.ToRedumpSystem(args[1].Trim('"'));
+            if (knownSystem == null)
             {
                 DisplayHelp($"{args[1]} is not a recognized system");
                 return;
@@ -244,17 +246,19 @@ namespace MPF.Check
         }
 
         /// <summary>
-        /// List all known systems with their short usable names
+        /// List all systems with their short usable names
         /// </summary>
-        private static void ListKnownSystems()
+        private static void ListSystems()
         {
             Console.WriteLine("Supported Known Systems:");
-            foreach (var val in Enum.GetValues(typeof(KnownSystem)))
-            {
-                if (((KnownSystem)val) == KnownSystem.NONE)
-                    continue;
+            var knownSystems = Enum.GetValues(typeof(RedumpSystem))
+                .OfType<RedumpSystem?>()
+                .Where(s => s != null && !s.IsMarker() && s.GetCategory() != SystemCategory.NONE)
+                .OrderBy(s => s.LongName() ?? string.Empty);
 
-                Console.WriteLine($"{((KnownSystem?)val).ShortName()} - {((KnownSystem?)val).LongName()}");
+            foreach (var val in knownSystems)
+            {
+                Console.WriteLine($"{val.ShortName()} - {val.LongName()}");
             }
         }
 

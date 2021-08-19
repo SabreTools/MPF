@@ -1,4 +1,5 @@
 using MPF.Data;
+using RedumpLib.Data;
 
 namespace MPF.DiscImageCreator
 {
@@ -10,33 +11,33 @@ namespace MPF.DiscImageCreator
         /// Get the most common known system for a given MediaType
         /// </summary>
         /// <param name="baseCommand">Command value to check</param>
-        /// <returns>KnownSystem if possible, null on error</returns>
-        public static KnownSystem? ToKnownSystem(string baseCommand)
+        /// <returns>RedumpSystem if possible, null on error</returns>
+        public static RedumpSystem? ToRedumpSystem(string baseCommand)
         {
             switch (baseCommand)
             {
                 case CommandStrings.Audio:
-                    return KnownSystem.AudioCD;
+                    return RedumpSystem.AudioCD;
                 case CommandStrings.CompactDisc:
                 case CommandStrings.Data:
                 case CommandStrings.DigitalVideoDisc:
                 case CommandStrings.Disk:
                 case CommandStrings.Floppy:
                 case CommandStrings.Tape:
-                    return KnownSystem.IBMPCCompatible;
+                    return RedumpSystem.IBMPCcompatible;
                 case CommandStrings.GDROM:
                 case CommandStrings.Swap:
-                    return KnownSystem.SegaDreamcast;
+                    return RedumpSystem.SegaDreamcast;
                 case CommandStrings.BluRay:
-                    return KnownSystem.SonyPlayStation3;
+                    return RedumpSystem.SonyPlayStation3;
                 case CommandStrings.SACD:
-                    return KnownSystem.SuperAudioCD;
+                    return RedumpSystem.SuperAudioCD;
                 case CommandStrings.XBOX:
                 case CommandStrings.XBOXSwap:
-                    return KnownSystem.MicrosoftXBOX;
+                    return RedumpSystem.MicrosoftXbox;
                 case CommandStrings.XGD2Swap:
                 case CommandStrings.XGD3Swap:
-                    return KnownSystem.MicrosoftXBOX360;
+                    return RedumpSystem.MicrosoftXbox360;
                 default:
                     return null;
             }

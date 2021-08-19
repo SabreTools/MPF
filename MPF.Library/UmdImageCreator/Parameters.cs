@@ -23,7 +23,7 @@ namespace MPF.UmdImageCreator
         public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
         }

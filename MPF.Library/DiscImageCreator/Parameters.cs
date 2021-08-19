@@ -160,7 +160,7 @@ namespace MPF.DiscImageCreator
         public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
         }
@@ -436,13 +436,13 @@ namespace MPF.DiscImageCreator
                     break;
             }
 
-            // Extract info based specifically on KnownSystem
+            // Extract info based specifically on RedumpSystem
             switch (this.System)
             {
-                case KnownSystem.AppleMacintosh:
-                case KnownSystem.EnhancedCD:
-                case KnownSystem.IBMPCCompatible:
-                case KnownSystem.RainbowDisc:
+                case RedumpSystem.AppleMacintosh:
+                case RedumpSystem.EnhancedCD:
+                case RedumpSystem.IBMPCcompatible:
+                case RedumpSystem.RainbowDisc:
                     if (File.Exists(basePath + "_subIntention.txt"))
                     {
                         FileInfo fi = new FileInfo(basePath + "_subIntention.txt");
@@ -452,12 +452,12 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.DVDAudio:
-                case KnownSystem.DVDVideo:
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.DVDVideo:
                     info.CopyProtection.Protection = GetDVDProtection(basePath + "_CSSKey.txt", basePath + "_disc.txt") ?? "";
                     break;
 
-                case KnownSystem.KonamiPython2:
+                case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
@@ -468,7 +468,7 @@ namespace MPF.DiscImageCreator
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.MicrosoftXBOX:
+                case RedumpSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
                     {
                         info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
@@ -487,7 +487,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.MicrosoftXBOX360:
+                case RedumpSystem.MicrosoftXbox360:
                     if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
                     {
                         info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
@@ -505,7 +505,7 @@ namespace MPF.DiscImageCreator
                     }
                     break;
 
-                case KnownSystem.NamcoSegaNintendoTriforce:
+                case RedumpSystem.NamcoSegaNintendoTriforce:
                     if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
@@ -524,7 +524,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SegaCDMegaCD:
+                case RedumpSystem.SegaMegaCDSegaCD:
                     info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 
                     // Take only the last 16 lines for Sega CD
@@ -539,7 +539,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SegaChihiro:
+                case RedumpSystem.SegaChihiro:
                     if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
@@ -558,7 +558,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SegaDreamcast:
+                case RedumpSystem.SegaDreamcast:
                     if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
@@ -577,7 +577,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SegaNaomi:
+                case RedumpSystem.SegaNaomi:
                     if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
@@ -596,7 +596,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SegaNaomi2:
+                case RedumpSystem.SegaNaomi2:
                     if (this.Type == MediaType.CDROM)
                     {
                         info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
@@ -615,7 +615,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SegaSaturn:
+                case RedumpSystem.SegaSaturn:
                     info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
 
                     // Take only the first 16 lines for Saturn
@@ -631,7 +631,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SonyPlayStation:
+                case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Serial: {playstationSerial ?? ""}\n";
@@ -688,7 +688,7 @@ namespace MPF.DiscImageCreator
 
                     break;
 
-                case KnownSystem.SonyPlayStation2:
+                case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
@@ -699,11 +699,11 @@ namespace MPF.DiscImageCreator
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation4:
+                case RedumpSystem.SonyPlayStation4:
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation5:
+                case RedumpSystem.SonyPlayStation5:
                     info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
                     break;
             }
@@ -1645,8 +1645,8 @@ namespace MPF.DiscImageCreator
 
                     switch (this.System)
                     {
-                        case KnownSystem.AppleMacintosh:
-                        case KnownSystem.IBMPCCompatible:
+                        case RedumpSystem.AppleMacintosh:
+                        case RedumpSystem.IBMPCcompatible:
                             this[FlagStrings.NoFixSubQSecuROM] = true;
                             this[FlagStrings.ScanFileProtect] = true;
                             this[FlagStrings.ScanSectorProtect] = options.DICParanoidMode;
@@ -1655,17 +1655,17 @@ namespace MPF.DiscImageCreator
                                 SubchannelReadLevelValue = 2;
 
                             break;
-                        case KnownSystem.AtariJaguarCD:
+                        case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
                             this[FlagStrings.AtariJaguar] = true;
                             break;
-                        case KnownSystem.HasbroVideoNow:
-                        case KnownSystem.HasbroVideoNowColor:
-                        case KnownSystem.HasbroVideoNowJr:
-                        case KnownSystem.HasbroVideoNowXP:
+                        case RedumpSystem.HasbroVideoNow:
+                        case RedumpSystem.HasbroVideoNowColor:
+                        case RedumpSystem.HasbroVideoNowJr:
+                        case RedumpSystem.HasbroVideoNowXP:
                             this[FlagStrings.AddOffset] = true;
                             this.AddOffsetValue = 0; // Value needed for first run and placeholder after
                             break;
-                        case KnownSystem.SonyPlayStation:
+                        case RedumpSystem.SonyPlayStation:
                             this[FlagStrings.ScanAntiMod] = true;
                             this[FlagStrings.NoFixSubQLibCrypt] = true;
                             break;
@@ -2332,9 +2332,9 @@ namespace MPF.DiscImageCreator
         /// <summary>
         /// Set the DIC command to be used for a given system and media type
         /// </summary>
-        /// <param name="system">KnownSystem value to check</param>
+        /// <param name="system">RedumpSystem value to check</param>
         /// <param name="type">MediaType value to check</param>
-        private void SetBaseCommand(KnownSystem? system, MediaType? type)
+        private void SetBaseCommand(RedumpSystem? system, MediaType? type)
         {
             // If we have an invalid combination, we should BaseCommand = null
             if (!Validators.GetValidMediaTypes(system).Contains(type))
@@ -2346,14 +2346,14 @@ namespace MPF.DiscImageCreator
             switch (type)
             {
                 case MediaType.CDROM:
-                    if (system == KnownSystem.SuperAudioCD)
+                    if (system == RedumpSystem.SuperAudioCD)
                         BaseCommand = CommandStrings.SACD;
                     else
                         BaseCommand = CommandStrings.CompactDisc;
                     return;
                 case MediaType.DVD:
-                    if (system == KnownSystem.MicrosoftXBOX
-                        || system == KnownSystem.MicrosoftXBOX360)
+                    if (system == RedumpSystem.MicrosoftXbox
+                        || system == RedumpSystem.MicrosoftXbox360)
                     {
                         BaseCommand = CommandStrings.XBOX;
                         return;

@@ -1,3 +1,5 @@
+using RedumpLib.Data;
+
 namespace RedumpLib.Attributes
 {
     /// <summary>
@@ -5,6 +7,11 @@ namespace RedumpLib.Attributes
     /// </summary>
     public class SystemAttribute : HumanReadableAttribute
     {
+        /// <summary>
+        /// Category for the system
+        /// </summary>
+        public SystemCategory Category { get; set; }
+
         /// <summary>
         /// System is restricted to dumpers
         /// </summary>

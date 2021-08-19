@@ -4,20 +4,21 @@ using System.Linq;
 using MPF.Converters;
 using MPF.Data;
 using MPF.Utilities;
+using RedumpLib.Data;
 
 namespace MPF
 {
     /// <summary>
     /// Represents a single item in the System combo box
     /// </summary>
-    public class KnownSystemComboBoxItem : IElement
+    public class RedumpSystemComboBoxItem : IElement
     {
         private readonly object Data;
 
-        public KnownSystemComboBoxItem(KnownSystem? system) => Data = system;
-        public KnownSystemComboBoxItem(KnownSystemCategory? category) => Data = category;
+        public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
+        public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;
 
-        public static implicit operator KnownSystem?(KnownSystemComboBoxItem item) => item.Data as KnownSystem?;
+        public static implicit operator RedumpSystem?(RedumpSystemComboBoxItem item) => item.Data as RedumpSystem?;
 
         /// <inheritdoc/>
         public string Name
@@ -25,9 +26,9 @@ namespace MPF
             get
             {
                 if (IsHeader)
-                    return "---------- " + EnumConverter.GetLongName(Data as KnownSystemCategory?) + " ----------";
+                    return "---------- " + (Data as SystemCategory?).LongName() + " ----------";
                 else
-                    return EnumConverter.GetLongName(Data as KnownSystem?);
+                    return (Data as RedumpSystem?).LongName() ?? "No system selected";
             }
         }
 
@@ -36,31 +37,31 @@ namespace MPF
         /// <summary>
         /// Internal enum value
         /// </summary>
-        public KnownSystem? Value => Data as KnownSystem?;
+        public RedumpSystem? Value => Data as RedumpSystem?;
 
         /// <summary>
         /// Determines if the item is a header value
         /// </summary>
-        public bool IsHeader => Data is KnownSystemCategory?;
+        public bool IsHeader => Data is SystemCategory?;
 
         /// <summary>
         /// Determines if the item is a standard system value
         /// </summary>
-        public bool IsSystem => Data is KnownSystem?;
+        public bool IsSystem => Data is RedumpSystem?;
 
         /// <summary>
         /// Generate all elements for the known system combo box
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<KnownSystemComboBoxItem> GenerateElements()
+        public static IEnumerable<RedumpSystemComboBoxItem> GenerateElements()
         {
-            var knownSystems = Enum.GetValues(typeof(KnownSystem))
-                .OfType<KnownSystem?>()
-                .Where(s => !s.IsMarker() && s != KnownSystem.NONE)
+            var knownSystems = Enum.GetValues(typeof(RedumpSystem))
+                .OfType<RedumpSystem?>()
+                .Where(s => !s.IsMarker() && s.GetCategory() != SystemCategory.NONE)
                 .ToList();
 
-            Dictionary<KnownSystemCategory, List<KnownSystem?>> mapping = knownSystems
-                .GroupBy(s => s.Category())
+            Dictionary<SystemCategory, List<RedumpSystem?>> mapping = knownSystems
+                .GroupBy(s => s.GetCategory())
                 .ToDictionary(
                     k => k.Key,
                     v => v
@@ -68,15 +69,15 @@ namespace MPF
                         .ToList()
                 );
 
-            var systemsValues = new List<KnownSystemComboBoxItem>
+            var systemsValues = new List<RedumpSystemComboBoxItem>
             {
-                new KnownSystemComboBoxItem(KnownSystem.NONE),
+                new RedumpSystemComboBoxItem((RedumpSystem?)null),
             };
 
             foreach (var group in mapping)
             {
-                systemsValues.Add(new KnownSystemComboBoxItem(group.Key));
-                group.Value.ForEach(system => systemsValues.Add(new KnownSystemComboBoxItem(system)));
+                systemsValues.Add(new RedumpSystemComboBoxItem(group.Key));
+                group.Value.ForEach(system => systemsValues.Add(new RedumpSystemComboBoxItem(system)));
             }
 
             return systemsValues;

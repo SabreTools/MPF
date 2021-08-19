@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using MPF.Data;
 using MPF.Utilities;
+using RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Utilities
+namespace MPF.Test.Converters
 {
-    public class ConvertersTest
+    public class EnumConverterTest
     {
         /// <summary>
         /// Set of all known systems for testing
         /// </summary>
-        public static IEnumerable<object[]> KnownSystems = KnownSystemComboBoxItem.GenerateElements().Select(e => new object[] { e });
+        public static IEnumerable<object[]> RedumpSystems = RedumpSystemComboBoxItem.GenerateElements().Select(e => new object[] { e });
 
         [Theory]
         [InlineData(DiscImageCreator.CommandStrings.Audio, MediaType.CDROM)]
@@ -39,26 +40,26 @@ namespace MPF.Test.Utilities
         }
 
         [Theory]
-        [InlineData(DiscImageCreator.CommandStrings.Audio, KnownSystem.AudioCD)]
-        [InlineData(DiscImageCreator.CommandStrings.BluRay, KnownSystem.SonyPlayStation3)]
+        [InlineData(DiscImageCreator.CommandStrings.Audio, RedumpSystem.AudioCD)]
+        [InlineData(DiscImageCreator.CommandStrings.BluRay, RedumpSystem.SonyPlayStation3)]
         [InlineData(DiscImageCreator.CommandStrings.Close, null)]
-        [InlineData(DiscImageCreator.CommandStrings.CompactDisc, KnownSystem.IBMPCCompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.Data, KnownSystem.IBMPCCompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.DigitalVideoDisc, KnownSystem.IBMPCCompatible)]
+        [InlineData(DiscImageCreator.CommandStrings.CompactDisc, RedumpSystem.IBMPCcompatible)]
+        [InlineData(DiscImageCreator.CommandStrings.Data, RedumpSystem.IBMPCcompatible)]
+        [InlineData(DiscImageCreator.CommandStrings.DigitalVideoDisc, RedumpSystem.IBMPCcompatible)]
         [InlineData(DiscImageCreator.CommandStrings.Eject, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Floppy, KnownSystem.IBMPCCompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.GDROM, KnownSystem.SegaDreamcast)]
+        [InlineData(DiscImageCreator.CommandStrings.Floppy, RedumpSystem.IBMPCcompatible)]
+        [InlineData(DiscImageCreator.CommandStrings.GDROM, RedumpSystem.SegaDreamcast)]
         [InlineData(DiscImageCreator.CommandStrings.MDS, null)]
         [InlineData(DiscImageCreator.CommandStrings.Reset, null)]
-        [InlineData(DiscImageCreator.CommandStrings.SACD, KnownSystem.SuperAudioCD)]
+        [InlineData(DiscImageCreator.CommandStrings.SACD, RedumpSystem.SuperAudioCD)]
         [InlineData(DiscImageCreator.CommandStrings.Start, null)]
         [InlineData(DiscImageCreator.CommandStrings.Stop, null)]
         [InlineData(DiscImageCreator.CommandStrings.Sub, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Swap, KnownSystem.SegaDreamcast)]
-        [InlineData(DiscImageCreator.CommandStrings.XBOX, KnownSystem.MicrosoftXBOX)]
-        public void BaseCommandToKnownSystemTest(string command, KnownSystem? expected)
+        [InlineData(DiscImageCreator.CommandStrings.Swap, RedumpSystem.SegaDreamcast)]
+        [InlineData(DiscImageCreator.CommandStrings.XBOX, RedumpSystem.MicrosoftXbox)]
+        public void BaseCommandToRedumpSystemTest(string command, RedumpSystem? expected)
         {
-            KnownSystem? actual = DiscImageCreator.Converters.ToKnownSystem(command);
+            RedumpSystem? actual = DiscImageCreator.Converters.ToRedumpSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -77,33 +78,33 @@ namespace MPF.Test.Utilities
         }
 
         [Theory]
-        [MemberData(nameof(KnownSystems))]
-        public void KnownSystemHasValidCategory(KnownSystemComboBoxItem system)
+        [MemberData(nameof(RedumpSystems))]
+        public void RedumpSystemHasValidCategory(RedumpSystemComboBoxItem system)
         {
-            KnownSystem[] markers = { KnownSystem.MarkerArcadeEnd, KnownSystem.MarkerDiscBasedConsoleEnd, /* KnownSystem.MarkerOtherConsoleEnd, */ KnownSystem.MarkerComputerEnd, KnownSystem.MarkerOtherEnd };
+            RedumpSystem[] markers = { RedumpSystem.MarkerArcadeEnd, RedumpSystem.MarkerDiscBasedConsoleEnd, /* RedumpSystem.MarkerOtherConsoleEnd, */ RedumpSystem.MarkerComputerEnd, RedumpSystem.MarkerOtherEnd };
 
             // Non-system items won't map
             if (system.IsHeader)
                 return;
 
-            // NONE will never map
-            if (system == KnownSystem.NONE)
+            // Null will never map
+            if (system?.Value == null)
                 return;
 
             // we check that the category is the first category value higher than the system
-            KnownSystemCategory category = ((KnownSystem?)system).Category();
-            KnownSystem marker = KnownSystem.NONE;
+            SystemCategory category = ((RedumpSystem?)system).GetCategory();
+            RedumpSystem? marker = null;
 
             switch (category)
             {
-                case KnownSystemCategory.Arcade: marker = KnownSystem.MarkerArcadeEnd; break;
-                case KnownSystemCategory.DiscBasedConsole: marker = KnownSystem.MarkerDiscBasedConsoleEnd; break;
-                /* case KnownSystemCategory.OtherConsole: marker = KnownSystem.MarkerOtherConsoleEnd; break; */
-                case KnownSystemCategory.Computer: marker = KnownSystem.MarkerComputerEnd; break;
-                case KnownSystemCategory.Other: marker = KnownSystem.MarkerOtherEnd; break;
+                case SystemCategory.Arcade: marker = RedumpSystem.MarkerArcadeEnd; break;
+                case SystemCategory.DiscBasedConsole: marker = RedumpSystem.MarkerDiscBasedConsoleEnd; break;
+                /* case SystemCategory.OtherConsole: marker = RedumpSystem.MarkerOtherConsoleEnd; break; */
+                case SystemCategory.Computer: marker = RedumpSystem.MarkerComputerEnd; break;
+                case SystemCategory.Other: marker = RedumpSystem.MarkerOtherEnd; break;
             }
 
-            Assert.NotEqual(KnownSystem.NONE, marker);
+            Assert.NotEqual(null, marker);
             Assert.True(marker > system);
 
             Array.ForEach(markers, mmarker =>

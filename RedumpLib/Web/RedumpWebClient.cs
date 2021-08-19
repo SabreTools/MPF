@@ -611,8 +611,8 @@ namespace RedumpLib.Web
             Console.WriteLine($"Downloading {title}");
             foreach (var system in systems)
             {
-                // If the system is null, we can't do anything
-                if (system == null)
+                // If the system is invalid, we can't do anything
+                if (system == null || !system.IsAvailable())
                     continue;
 
                 // If we didn't have credentials
@@ -649,6 +649,10 @@ namespace RedumpLib.Web
             Console.WriteLine($"Downloading {title}");
             foreach (var system in systems)
             {
+                // If the system is invalid, we can't do anything
+                if (system == null || !system.IsAvailable())
+                    continue;
+
                 // If we didn't have credentials
                 if (!LoggedIn && system.IsBanned())
                     continue;

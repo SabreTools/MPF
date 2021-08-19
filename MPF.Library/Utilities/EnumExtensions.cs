@@ -1,32 +1,10 @@
 ﻿using MPF.Data;
+using RedumpLib.Data;
 
 namespace MPF.Utilities
 {
     public static class EnumExtensions
     {
-        /// <summary>
-        /// Determine the category based on the system
-        /// </summary>
-        /// <param name="system">KnownSystem value to check</param>
-        /// <returns>KnownSystemCategory related to the system</returns>
-        public static KnownSystemCategory Category(this KnownSystem? system)
-        {
-            if (system < KnownSystem.MarkerDiscBasedConsoleEnd)
-                return KnownSystemCategory.DiscBasedConsole;
-            /*
-            else if (system < KnownSystem.MarkerOtherConsoleEnd)
-                return KnownSystemCategory.OtherConsole;
-            */
-            else if (system < KnownSystem.MarkerComputerEnd)
-                return KnownSystemCategory.Computer;
-            else if (system < KnownSystem.MarkerArcadeEnd)
-                return KnownSystemCategory.Arcade;
-            else if (system < KnownSystem.MarkerOtherEnd)
-                return KnownSystemCategory.Other;
-            else
-                return KnownSystemCategory.Custom;
-        }
-
         /// <summary>
         /// Determine if the media supports drive speeds
         /// </summary>
@@ -52,25 +30,25 @@ namespace MPF.Utilities
         /// <summary>
         /// Determine if a system is considered audio-only
         /// </summary>
-        /// <param name="system">KnownSystem value to check</param>
+        /// <param name="system">RedumpSystem value to check</param>
         /// <returns>True if the system is audio-only, false otherwise</returns>
         /// <remarks>
         /// Philips CD-i should NOT be in this list. It's being included until there's a
         /// reasonable distinction between CD-i and CD-i ready on the database side.
         /// </remarks>
-        public static bool IsAudio(this KnownSystem? system)
+        public static bool IsAudio(this RedumpSystem? system)
         {
             switch (system)
             {
-                case KnownSystem.AtariJaguarCD:
-                case KnownSystem.AudioCD:
-                case KnownSystem.DVDAudio:
-                case KnownSystem.HasbroVideoNow:
-                case KnownSystem.HasbroVideoNowColor:
-                case KnownSystem.HasbroVideoNowJr:
-                case KnownSystem.HasbroVideoNowXP:
-                case KnownSystem.PhilipsCDi:
-                case KnownSystem.SuperAudioCD:
+                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
+                case RedumpSystem.AudioCD:
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.HasbroVideoNow:
+                case RedumpSystem.HasbroVideoNowColor:
+                case RedumpSystem.HasbroVideoNowJr:
+                case RedumpSystem.HasbroVideoNowXP:
+                case RedumpSystem.PhilipsCDi:
+                case RedumpSystem.SuperAudioCD:
                     return true;
                 default:
                     return false;
@@ -80,17 +58,17 @@ namespace MPF.Utilities
         /// <summary>
         /// Determine if a system is a marker value
         /// </summary>
-        /// <param name="system">KnownSystem value to check</param>
+        /// <param name="system">RedumpSystem value to check</param>
         /// <returns>True if the system is a marker value, false otherwise</returns>
-        public static bool IsMarker(this KnownSystem? system)
+        public static bool IsMarker(this RedumpSystem? system)
         {
             switch (system)
             {
-                case KnownSystem.MarkerArcadeEnd:
-                case KnownSystem.MarkerComputerEnd:
-                case KnownSystem.MarkerDiscBasedConsoleEnd:
-                // case KnownSystem.MarkerOtherConsoleEnd:
-                case KnownSystem.MarkerOtherEnd:
+                case RedumpSystem.MarkerArcadeEnd:
+                case RedumpSystem.MarkerComputerEnd:
+                case RedumpSystem.MarkerDiscBasedConsoleEnd:
+                // case RedumpSystem.MarkerOtherConsoleEnd:
+                case RedumpSystem.MarkerOtherEnd:
                     return true;
                 default:
                     return false;
@@ -100,16 +78,16 @@ namespace MPF.Utilities
         /// <summary>
         /// Determine if a system is considered XGD
         /// </summary>
-        /// <param name="system">KnownSystem value to check</param>
+        /// <param name="system">RedumpSystem value to check</param>
         /// <returns>True if the system is XGD, false otherwise</returns>
-        public static bool IsXGD(this KnownSystem? system)
+        public static bool IsXGD(this RedumpSystem? system)
         {
             switch (system)
             {
-                case KnownSystem.MicrosoftXBOX:
-                case KnownSystem.MicrosoftXBOX360:
-                case KnownSystem.MicrosoftXBOXOne:
-                case KnownSystem.MicrosoftXboxSeriesXS:
+                case RedumpSystem.MicrosoftXbox:
+                case RedumpSystem.MicrosoftXbox360:
+                case RedumpSystem.MicrosoftXboxOne:
+                case RedumpSystem.MicrosoftXboxSeriesXS:
                     return true;
                 default:
                     return false;

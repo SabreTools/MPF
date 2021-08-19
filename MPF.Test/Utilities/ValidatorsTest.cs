@@ -2,6 +2,7 @@
 using System.Linq;
 using MPF.Data;
 using MPF.Utilities;
+using RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.Utilities
@@ -9,24 +10,16 @@ namespace MPF.Test.Utilities
     public class ValidatorsTest
     {
         [Theory]
-        [InlineData(KnownSystem.BandaiApplePippin, MediaType.CDROM)]
-        [InlineData(KnownSystem.MicrosoftXBOX, MediaType.DVD)]
-        [InlineData(KnownSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc)]
-        [InlineData(KnownSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc)]
-        [InlineData(KnownSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc)]
-        [InlineData(KnownSystem.SonyPlayStationPortable, MediaType.UMD)]
-        public void GetValidMediaTypesTest(KnownSystem? knownSystem, MediaType? expected)
+        [InlineData(RedumpSystem.BandaiPippin, MediaType.CDROM)]
+        [InlineData(RedumpSystem.MicrosoftXbox, MediaType.DVD)]
+        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc)]
+        [InlineData(RedumpSystem.NintendoWii, MediaType.NintendoWiiOpticalDisc)]
+        [InlineData(RedumpSystem.NintendoWiiU, MediaType.NintendoWiiUOpticalDisc)]
+        [InlineData(RedumpSystem.SonyPlayStationPortable, MediaType.UMD)]
+        public void GetValidMediaTypesTest(RedumpSystem? knownSystem, MediaType? expected)
         {
             var actual = Validators.GetValidMediaTypes(knownSystem);
             Assert.Contains(expected, actual);
-        }
-
-        [Fact]
-        public void CreateListOfSystemsTest()
-        {
-            int expected = Enum.GetValues(typeof(KnownSystem)).Length;
-            var actual = KnownSystemComboBoxItem.GenerateElements().ToList();
-            Assert.Equal(expected, actual.Count);
         }
 
         [Fact]

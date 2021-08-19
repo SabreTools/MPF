@@ -7,7 +7,7 @@ namespace RedumpLib.Data
     /// </summary>
     public static class Extensions
     {
-        #region Category
+        #region Disc Category
 
         /// <summary>
         /// Get the Redump longnames for each known category
@@ -51,6 +51,77 @@ namespace RedumpLib.Data
                     return DiscCategory.AddOns;
                 default:
                     return DiscCategory.Games;
+            }
+        }
+
+        #endregion
+
+        #region Disc Type
+
+        /// <summary>
+        /// Get the Redump longnames for each known disc type
+        /// </summary>
+        /// <param name="discType"></param>
+        /// <returns></returns>
+        public static string LongName(this DiscType? discType) => AttributeHelper<DiscType?>.GetAttribute(discType)?.LongName;
+
+        /// <summary>
+        /// Get the DiscType enum value for a given string
+        /// </summary>
+        /// <param name="discType">String value to convert</param>
+        /// <returns>DiscType represented by the string, if possible</returns>
+        public static DiscType? ToDiscType(string discType)
+        {
+            switch (discType.ToLowerInvariant())
+            {
+                case "bd25":
+                case "bd-25":
+                    return DiscType.BD25;
+                case "bd50":
+                case "bd-50":
+                    return DiscType.BD50;
+                case "cd":
+                case "cdrom":
+                case "cd-rom":
+                    return DiscType.CD;
+                case "dvd5":
+                case "dvd-5":
+                    return DiscType.DVD5;
+                case "dvd9":
+                case "dvd-9":
+                    return DiscType.DVD9;
+                case "gd":
+                case "gdrom":
+                case "gd-rom":
+                    return DiscType.GDROM;
+                case "hddvd":
+                case "hddvdsl":
+                case "hd-dvd sl":
+                    return DiscType.HDDVDSL;
+                case "milcd":
+                case "mil-cd":
+                    return DiscType.MILCD;
+                case "nintendogamecubegamedisc":
+                case "nintendo game cube game disc":
+                    return DiscType.NintendoGameCubeGameDisc;
+                case "nintendowiiopticaldiscsl":
+                case "nintendo wii optical disc sl":
+                    return DiscType.NintendoWiiOpticalDiscSL;
+                case "nintendowiiopticaldiscdl":
+                case "nintendo wii optical disc dl":
+                    return DiscType.NintendoWiiOpticalDiscDL;
+                case "nintendowiiuopticaldiscsl":
+                case "nintendo wii u optical disc sl":
+                    return DiscType.NintendoWiiUOpticalDiscSL;
+                case "umd":
+                case "umdsl":
+                case "umd sl":
+                    return DiscType.UMDSL;
+                case "umddl":
+                case "umd dl":
+                    return DiscType.UMDDL;
+                default:
+                    return null;
             }
         }
 
@@ -394,6 +465,16 @@ namespace RedumpLib.Data
         public static string ShortName(this RedumpSystem? system) => AttributeHelper<RedumpSystem?>.GetAttribute(system)?.ShortName;
 
         /// <summary>
+        /// Determine the category of a system
+        /// </summary>
+        public static SystemCategory GetCategory(this RedumpSystem? system) => ((SystemAttribute)AttributeHelper<RedumpSystem?>.GetAttribute(system))?.Category ?? SystemCategory.NONE;
+
+        /// <summary>
+        /// Determine if a system is available in Redump yet
+        /// </summary>
+        public static bool IsAvailable(this RedumpSystem? system) => ((SystemAttribute)AttributeHelper<RedumpSystem?>.GetAttribute(system))?.Available ?? false;
+
+        /// <summary>
         /// Determine if a system is restricted to dumpers
         /// </summary>
         public static bool IsBanned(this RedumpSystem? system) => ((SystemAttribute)AttributeHelper<RedumpSystem?>.GetAttribute(system))?.IsBanned ?? false;
@@ -442,7 +523,8 @@ namespace RedumpLib.Data
         {
             switch (sys)
             {
-                // Special BIOS Sets
+                #region BIOS Sets
+
                 case "xboxbios":
                 case "xbox bios":
                 case "microsoftxboxbios":
@@ -486,20 +568,10 @@ namespace RedumpLib.Data
                 case "sony playstation 2 bios":
                     return RedumpSystem.SonyPlayStation2BIOS;
 
-                // Regular systems
-                case "acorn":
-                case "archimedes":
-                case "acornarchimedes":
-                case "acorn archimedes":
-                    return RedumpSystem.AcornArchimedes;
-                case "apple":
-                case "mac":
-                case "applemac":
-                case "macintosh":
-                case "applemacintosh":
-                case "apple mac":
-                case "apple macintosh":
-                    return RedumpSystem.AppleMacintosh;
+                #endregion
+
+                #region Consoles
+
                 case "jaguar":
                 case "jagcd":
                 case "jaguarcd":
@@ -509,10 +581,6 @@ namespace RedumpLib.Data
                 case "atarijaguarcd":
                 case "atari jaguar cd":
                     return RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem;
-                case "audio":
-                case "audiocd":
-                case "audio cd":
-                    return RedumpSystem.AudioCD;
                 case "playdia":
                 case "playdiaqis":
                 case "playdiaquickinteractivesystem":
@@ -529,20 +597,6 @@ namespace RedumpLib.Data
                 case "bandai apple pippin":
                 case "bandai / apple pippin":
                     return RedumpSystem.BandaiPippin;
-                case "bdvideo":
-                case "bd-video":
-                case "blurayvideo":
-                case "bluray video":
-                    return RedumpSystem.BDVideo;
-                case "amiga":
-                case "amigacd":
-                case "amiga cd":
-                case "commodoreamiga":
-                case "commodoreamigacd":
-                case "commodoreamiga cd":
-                case "commodore amiga":
-                case "commodore amiga cd":
-                    return RedumpSystem.CommodoreAmigaCD;
                 case "cd32":
                 case "amigacd32":
                 case "amiga cd32":
@@ -555,27 +609,21 @@ namespace RedumpLib.Data
                 case "commodoreamigacdtv":
                 case "commodore amiga cdtv":
                     return RedumpSystem.CommodoreAmigaCDTV;
-                case "dvdvideo":
-                case "dvd-video":
-                    return RedumpSystem.DVDVideo;
-                case "enhancedcd":
-                case "enhanced cd":
-                case "enhancedcdrom":
-                case "enhanced cdrom":
-                case "enhanced cd-rom":
-                    return RedumpSystem.EnhancedCD;
-                case "fmtowns":
-                case "fmt":
-                case "fm towns":
-                case "fujitsufmtowns":
-                case "fujitsu fm towns":
-                case "fujitsu fm towns series":
-                    return RedumpSystem.FujitsuFMTownsseries;
-                case "fpp":
-                case "funworldphotoplay":
-                case "funworld photoplay":
-                case "funworld photo play":
-                    return RedumpSystem.funworldPhotoPlay;
+                case "evosc":
+                case "evo sc":
+                case "evosmartconsole":
+                case "evo smart console":
+                case "envizionsevosc":
+                case "envizion evo sc":
+                case "envizionevosmartconsole":
+                case "envizion evo smart console":
+                    return RedumpSystem.EnvizionsEVOSmartConsole;
+                case "fmtm":
+                case "fmtownsmarty":
+                case "fm towns marty":
+                case "fujitsufmtownsmarty":
+                case "fujitsu fm towns marty":
+                    return RedumpSystem.FujitsuFMTownsMarty;
                 case "videonow":
                 case "hasbrovideonow":
                 case "hasbro videonow":
@@ -589,60 +637,12 @@ namespace RedumpLib.Data
                 case "videonow jr":
                 case "hasbrovideonowjr":
                 case "hasbro videonow jr":
-                    return RedumpSystem.HasbroVideoNowColor;
+                    return RedumpSystem.HasbroVideoNowJr;
                 case "videonowxp":
                 case "videonow xp":
                 case "hasbrovideonowxp":
                 case "hasbro videonow xp":
-                    return RedumpSystem.HasbroVideoNowColor;
-                case "hddvd-video":
-                case "hd dvd video":
-                case "hd-dvd video":
-                case "hd dvd-video":
-                case "hd-dvd-video":
-                    return RedumpSystem.HDDVDVideo;
-                case "ibm":
-                case "ibmpc":
-                case "pc":
-                case "ibm pc":
-                case "ibm pc compatible":
-                    return RedumpSystem.IBMPCcompatible;
-                case "iteagle":
-                case "eagle":
-                case "incredible technologies eagle":
-                    return RedumpSystem.IncredibleTechnologiesEagle;
-                case "eamusement":
-                case "e-amusement":
-                case "konamieamusement":
-                case "konami eamusement":
-                case "konamie-amusement":
-                case "konami e-amusement":
-                    return RedumpSystem.KonamieAmusement;
-                case "firebeat":
-                case "konamifirebeat":
-                case "konami firebeat":
-                    return RedumpSystem.KonamiFireBeat;
-                case "konamim2":
-                case "konami m2":
-                    return RedumpSystem.KonamiM2;
-                case "system573":
-                case "system 573":
-                case "konamisystem573":
-                case "konami system 573":
-                    return RedumpSystem.KonamiSystem573;
-                case "gvsystem":
-                case "systemgv":
-                case "gv system":
-                case "system gv":
-                case "konamigvsystem":
-                case "konamisystemgv":
-                case "konami gv system":
-                case "konami system gv":
-                    return RedumpSystem.KonamiSystemGV;
-                case "twinkle":
-                case "konamitwinkle":
-                case "konami twinkle":
-                    return RedumpSystem.KonamiTwinkle;
+                    return RedumpSystem.HasbroVideoNowXP;
                 case "ixl":
                 case "mattelixl":
                 case "mattel ixl":
@@ -660,17 +660,6 @@ namespace RedumpLib.Data
                 case "mattelhyperscan":
                 case "mattel hyperscan":
                     return RedumpSystem.MattelHyperScan;
-                case "vis":
-                case "tandyvis":
-                case "tandy vis":
-                case "tandyvisualinformationsystem":
-                case "tandy visual information system":
-                case "memorexvis":
-                case "memorex vis":
-                case "memorexvisualinformationsystem":
-                case "memorex visual information sytem":
-                case "tandy / memorex visual information system":
-                    return RedumpSystem.MemorexVisualInformationSystem;
                 case "xbox":
                 case "microsoftxbox":
                 case "microsoft xbox":
@@ -690,38 +679,24 @@ namespace RedumpLib.Data
                 case "microsoft xbone":
                 case "microsoft xbox one":
                     return RedumpSystem.MicrosoftXboxOne;
-                case "triforce":
-                case "namcotriforce":
-                case "namco triforce":
-                case "segatriforce":
-                case "sega triforce":
-                case "nintendotriforce":
-                case "nintendo triforce":
-                case "namco / sega / nintendo triforce":
-                    return RedumpSystem.NamcoSegaNintendoTriforce;
-                case "system12":
-                case "system 12":
-                case "namcosystem12":
-                case "namco system 12":
-                    return RedumpSystem.NamcoSystem12;
-                case "system246":
-                case "system 246":
-                case "namcosystem246":
-                case "namco system 246":
-                case "capcomsystem246":
-                case "capcom system 246":
-                case "taitosystem246":
-                case "taito system 246":
-                case "namco / capcom / taito system 246":
-                    return RedumpSystem.NamcoSystem246;
-                case "naviken":
-                case "naviken21":
-                case "naviken 2.1":
-                case "navisoftnaviken":
-                case "navisoft naviken":
-                case "navisoftnaviken21":
-                case "navisoft naviken 2.1":
-                    return RedumpSystem.NavisoftNaviken21;
+                case "xbs":
+                case "xbseries":
+                case "xbseriess":
+                case "xbseriesx":
+                case "xbseriessx":
+                case "xboxseries":
+                case "xboxseriess":
+                case "xboxseriesx":
+                case "xboxseriesxs":
+                case "microsoftxboxseries":
+                case "microsoftxboxseriess":
+                case "microsoftxboxseriesx":
+                case "microsoftxboxseriesxs":
+                case "microsoft xbox series":
+                case "microsoft xbox series s":
+                case "microsoft xbox series x":
+                case "microsoft xbox series x and s":
+                    return RedumpSystem.MicrosoftXboxSeriesXS;
                 case "pcecd":
                 case "pce-cd":
                 case "tgcd":
@@ -732,18 +707,6 @@ namespace RedumpLib.Data
                 case "nec turbografx cd":
                 case "nec pc-engine / turbografx cd":
                     return RedumpSystem.NECPCEngineCDTurboGrafxCD;
-                case "pc88":
-                case "pc-88":
-                case "necpc88":
-                case "nec pc88":
-                case "nec pc-88":
-                    return RedumpSystem.NECPC88series;
-                case "pc98":
-                case "pc-98":
-                case "necpc98":
-                case "nec pc98":
-                case "nec pc-98":
-                    return RedumpSystem.NECPC98series;
                 case "pcfx":
                 case "pc-fx":
                 case "pcfxga":
@@ -760,6 +723,34 @@ namespace RedumpLib.Data
                 case "nintendogamecube":
                 case "nintendo gamecube":
                     return RedumpSystem.NintendoGameCube;
+                case "snescd":
+                case "snes cd":
+                case "snes-cd":
+                case "supernescd":
+                case "super nes cd":
+                case "super nes-cd":
+                case "supernintendocd":
+                case "super nintendo cd":
+                case "super nintendo-cd":
+                case "nintendosnescd":
+                case "nintendo snes cd":
+                case "nintendosnes-cd":
+                case "nintendosupernescd":
+                case "nintendo super nes cd":
+                case "nintendo super nes-cd":
+                case "nintendosupernintendocd":
+                case "nintendo super nintendo cd":
+                case "nintendo super nintendo-cd":
+                case "sonysnescd":
+                case "sony snes cd":
+                case "sonysnes-cd":
+                case "sonysupernescd":
+                case "sony super nes cd":
+                case "sony super nes-cd":
+                case "sonysupernintendocd":
+                case "sony super nintendo cd":
+                case "sony super nintendo-cd":
+                    return RedumpSystem.NintendoSonySuperNESCDROMSystem;
                 case "wii":
                 case "nintendowii":
                 case "nintendo wii":
@@ -769,71 +760,22 @@ namespace RedumpLib.Data
                 case "nintendowiiu":
                 case "nintendo wii u":
                     return RedumpSystem.NintendoWiiU;
-                case "palm":
-                case "palmos":
-                    return RedumpSystem.PalmOS;
                 case "3do":
                 case "3do interactive multiplayer":
                 case "panasonic3do":
                 case "panasonic 3do":
                 case "panasonic 3do interactive multiplayer":
                     return RedumpSystem.Panasonic3DOInteractiveMultiplayer;
-                case "panasonicm2":
-                case "panasonic m2":
-                    return RedumpSystem.PanasonicM2;
                 case "cdi":
                 case "cd-i":
                 case "philipscdi":
                 case "philips cdi":
                 case "philips cd-i":
                     return RedumpSystem.PhilipsCDi;
-                case "cdi-video":
-                case "cdi video":
-                case "cd-i-video":
-                case "cd-i video":
-                case "cdidigitalvideo":
-                case "cdi digital video":
-                case "cd-i digital video":
-                case "philipscdivideo":
-                case "philips cdi-video":
-                case "philips cdi video":
-                case "philips cd-ivideo":
-                case "philips cd-i-video":
-                case "philips cd-i video":
-                case "philipscdidigitalvideo":
-                case "philips cdi digital video":
-                case "philips cd-idigitalvideo":
-                case "philips cd-i digital video":
-                    return RedumpSystem.PhilipsCDiDigitalVideo;
-                case "photo":
-                case "photocd":
-                case "photo cd":
-                    return RedumpSystem.PhotoCD;
-                case "gameshark":
-                case "psgameshark":
-                case "ps gameshark":
-                case "playstationgameshark":
-                case "playstation gameshark":
-                case "playstation gameshark updates":
-                    return RedumpSystem.PlayStationGameSharkUpdates;
-                case "ppc":
-                case "pocketpc":
-                case "pocket pc":
-                    return RedumpSystem.PocketPC;
-                case "chihiro":
-                case "segachihiro":
-                case "sega chihiro":
-                    return RedumpSystem.SegaChihiro;
-                case "dc":
-                case "sdc":
-                case "dreamcast":
-                case "segadreamcast":
-                case "sega dreamcast":
-                    return RedumpSystem.SegaDreamcast;
-                case "lindbergh":
-                case "segalindbergh":
-                case "sega lindbergh":
-                    return RedumpSystem.SegaLindbergh;
+                case "laseractive":
+                case "pioneerlaseractive":
+                case "pioneer laseractive":
+                    return RedumpSystem.PioneerLaserActive;
                 case "scd":
                 case "mcd":
                 case "smcd":
@@ -844,51 +786,16 @@ namespace RedumpLib.Data
                 case "mega cd":
                 case "sega cd / mega cd":
                     return RedumpSystem.SegaMegaCDSegaCD;
-                case "naomi":
-                case "seganaomi":
-                case "sega naomi":
-                    return RedumpSystem.SegaNaomi;
-                case "naomi2":
-                case "naomi 2":
-                case "seganaomi2":
-                case "sega naomi 2":
-                    return RedumpSystem.SegaNaomi2;
-                case "sp21":
-                case "prologue21":
-                case "prologue 21":
-                case "segaprologue21":
-                case "sega prologue21":
-                case "sega prologue 21":
-                case "segaprologue21multimediakaraokesystem":
-                case "sega prologue21 multimedia karaoke system":
-                case "sega prologue 21 multimedia karaoke system":
-                    return RedumpSystem.SegaPrologue21MultimediaKaraokeSystem;
-                case "ringedge":
-                case "segaringedge":
-                case "sega ringedge":
-                    return RedumpSystem.SegaRingEdge;
-                case "ringedge2":
-                case "ringedge 2":
-                case "segaringedge2":
-                case "sega ringedge 2":
-                    return RedumpSystem.SegaRingEdge2;
+                case "dc":
+                case "sdc":
+                case "dreamcast":
+                case "segadreamcast":
+                case "sega dreamcast":
+                    return RedumpSystem.SegaDreamcast;
                 case "saturn":
                 case "segasaturn":
                 case "sega saturn":
                     return RedumpSystem.SegaSaturn;
-                case "stv":
-                case "titanvideo":
-                case "titan video":
-                case "segatitanvideo":
-                case "sega titan video":
-                    return RedumpSystem.SegaTitanVideo;
-                case "x68k":
-                case "x68000":
-                case "sharpx68k":
-                case "sharp x68k":
-                case "sharpx68000":
-                case "sharp x68000":
-                    return RedumpSystem.SharpX68000;
                 case "ngcd":
                 case "neogeocd":
                 case "neogeo cd":
@@ -931,6 +838,14 @@ namespace RedumpLib.Data
                 case "sonyplaystation4":
                 case "sony playstation 4":
                     return RedumpSystem.SonyPlayStation4;
+                case "ps5":
+                case "playstation5":
+                case "playstation 5":
+                case "sonyps5":
+                case "sony ps5":
+                case "sonyplaystation5":
+                case "sony playstation 5":
+                    return RedumpSystem.SonyPlayStation5;
                 case "psp":
                 case "playstationportable":
                 case "playstation portable":
@@ -939,24 +854,17 @@ namespace RedumpLib.Data
                 case "sonyplaystationportable":
                 case "sony playstation portable":
                     return RedumpSystem.SonyPlayStationPortable;
-                case "quizard":
-                case "tabaustriaquizard":
-                case "tab-austria quizard":
-                    return RedumpSystem.TABAustriaQuizard;
-                case "iktv":
-                case "taoiktv":
-                case "tao iktv":
-                    return RedumpSystem.TaoiKTV;
-                case "kisssite":
-                case "kiss-site":
-                case "tomykisssite":
-                case "tomy kisssite":
-                case "tomy kiss-site":
-                    return RedumpSystem.TomyKissSite;
-                case "vcd":
-                case "videocd":
-                case "video cd":
-                    return RedumpSystem.VideoCD;
+                case "vis":
+                case "tandyvis":
+                case "tandy vis":
+                case "tandyvisualinformationsystem":
+                case "tandy visual information system":
+                case "memorexvis":
+                case "memorex vis":
+                case "memorexvisualinformationsystem":
+                case "memorex visual information sytem":
+                case "tandy / memorex visual information system":
+                    return RedumpSystem.MemorexVisualInformationSystem;
                 case "nuon":
                 case "vmlabsnuon":
                 case "vm labs nuon":
@@ -988,8 +896,481 @@ namespace RedumpLib.Data
                 case "zapit games game wave family entertainment system":
                     return RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem;
 
+                #endregion
+
+                #region Computers
+
+                case "acorn":
+                case "archimedes":
+                case "acornarchimedes":
+                case "acorn archimedes":
+                    return RedumpSystem.AcornArchimedes;
+                case "apple":
+                case "mac":
+                case "applemac":
+                case "macintosh":
+                case "applemacintosh":
+                case "apple mac":
+                case "apple macintosh":
+                    return RedumpSystem.AppleMacintosh;
+                case "amiga":
+                case "commodoreamiga":
+                case "commodore amiga":
+                    return RedumpSystem.CommodoreAmigaCD;
+                case "fmtowns":
+                case "fmt":
+                case "fm towns":
+                case "fujitsufmtowns":
+                case "fujitsu fm towns":
+                case "fujitsu fm towns series":
+                    return RedumpSystem.FujitsuFMTownsseries;
+                case "ibm":
+                case "ibmpc":
+                case "pc":
+                case "ibm pc":
+                case "ibm pc compatible":
+                    return RedumpSystem.IBMPCcompatible;
+                case "pc88":
+                case "pc-88":
+                case "necpc88":
+                case "nec pc88":
+                case "nec pc-88":
+                    return RedumpSystem.NECPC88series;
+                case "pc98":
+                case "pc-98":
+                case "necpc98":
+                case "nec pc98":
+                case "nec pc-98":
+                    return RedumpSystem.NECPC98series;
+                case "x68k":
+                case "x68000":
+                case "sharpx68k":
+                case "sharp x68k":
+                case "sharpx68000":
+                case "sharp x68000":
+                    return RedumpSystem.SharpX68000;
+
+                #endregion
+
+                #region Arcade
+
+                case "cubo":
+                case "cubocd32":
+                case "cubo cd32":
+                case "amigacubocd32":
+                case "amiga cubo cd32":
+                    return RedumpSystem.AmigaCUBOCD32;
+                case "alg3do":
+                case "alg 3do":
+                case "americanlasergames3do":
+                case "american laser games 3do":
+                    return RedumpSystem.AmericanLaserGames3DO;
+                case "atari3do":
+                case "atari 3do":
+                    return RedumpSystem.Atari3DO;
+                case "atronic":
+                    return RedumpSystem.Atronic;
+                case "auscom":
+                case "auscomsystem1":
+                case "auscom system 1":
+                    return RedumpSystem.AUSCOMSystem1;
+                case "gamemagic":
+                case "game magic":
+                case "ballygamemagic":
+                case "bally game magic":
+                    return RedumpSystem.BallyGameMagic;
+                case "cps3":
+                case "cpsiii":
+                case "cps 3":
+                case "cp system 3":
+                case "cp system iii":
+                case "capcomcps3":
+                case "capcomcpsiii":
+                case "capcom cps 3":
+                case "capcom cps iii":
+                case "capcom cp system 3":
+                case "capcom cp system iii":
+                    return RedumpSystem.CapcomCPSystemIII;
+                case "fpp":
+                case "funworldphotoplay":
+                case "funworld photoplay":
+                case "funworld photo play":
+                    return RedumpSystem.funworldPhotoPlay;
+                case "globalvr":
+                case "global vr":
+                case "global vr pc-based systems":
+                    return RedumpSystem.GlobalVRVarious;
+                case "vortek":
+                case "globalvrvortek":
+                case "global vr vortek":
+                    return RedumpSystem.GlobalVRVortek;
+                case "vortekv3":
+                case "vortek v3":
+                case "globalvrvortekv3":
+                case "global vr vortek v3":
+                    return RedumpSystem.GlobalVRVortekV3;
+                case "ice":
+                case "icepc":
+                case "ice pc":
+                case "ice pc-based hardware":
+                    return RedumpSystem.ICEPCHardware;
+                case "iteagle":
+                case "eagle":
+                case "incredible technologies eagle":
+                    return RedumpSystem.IncredibleTechnologiesEagle;
+                case "itpc":
+                case "incredible technologies pc-based systems":
+                    return RedumpSystem.IncredibleTechnologiesVarious;
+                case "eamusement":
+                case "e-amusement":
+                case "konamieamusement":
+                case "konami eamusement":
+                case "konamie-amusement":
+                case "konami e-amusement":
+                    return RedumpSystem.KonamieAmusement;
+                case "firebeat":
+                case "konamifirebeat":
+                case "konami firebeat":
+                    return RedumpSystem.KonamiFireBeat;
+                case "gvsystem":
+                case "gv system":
+                case "konamigvsystem":
+                case "konami gv system":
+                case "systemgv":
+                case "system gv":
+                case "konamisystemgv":
+                case "konami system gv":
+                    return RedumpSystem.KonamiSystemGV;
+                case "konamim2":
+                case "konami m2":
+                    return RedumpSystem.KonamiM2;
+                case "python":
+                case "konamipython":
+                case "konami python":
+                    return RedumpSystem.KonamiPython;
+                case "python2":
+                case "python 2":
+                case "konamipython2":
+                case "konami python 2":
+                    return RedumpSystem.KonamiPython2;
+                case "system573":
+                case "system 573":
+                case "konamisystem573":
+                case "konami system 573":
+                    return RedumpSystem.KonamiSystem573;
+                case "twinkle":
+                case "konamitwinkle":
+                case "konami twinkle":
+                    return RedumpSystem.KonamiTwinkle;
+                case "konamipc":
+                case "konami pc":
+                case "konami pc-based systems":
+                    return RedumpSystem.KonamiVarious;
+                case "boardwalk":
+                case "meritindustriesboardwalk":
+                case "merit industries boardwalk":
+                    return RedumpSystem.MeritIndustriesBoardwalk;
+                case "megatouchforce":
+                case "megatouch force":
+                case "meritindustriesmegatouchforce":
+                case "merit industries megatouch force":
+                    return RedumpSystem.MeritIndustriesMegaTouchForce;
+                case "megatouchion":
+                case "megatouch ion":
+                case "meritindustriesmegatouchion":
+                case "merit industries megatouch ion":
+                    return RedumpSystem.MeritIndustriesMegaTouchION;
+                case "megatouchmaxx":
+                case "megatouch maxx":
+                case "meritindustriesmegatouchmaxx":
+                case "merit industries megatouch maxx":
+                    return RedumpSystem.MeritIndustriesMegaTouchMaxx;
+                case "megatouchxl":
+                case "megatouch xl":
+                case "meritindustriesmegatouchxl":
+                case "merit industries megatouch xl":
+                    return RedumpSystem.MeritIndustriesMegaTouchXL;
+                case "system256":
+                case "system 256":
+                case "supersystem256":
+                case "super system 256":
+                case "namcosystem256":
+                case "namco system 256":
+                case "namcosupersystem256":
+                case "namco super system 256":
+                case "capcomsystem256":
+                case "capcom system 256":
+                case "capcomsupersystem256":
+                case "capcom super system 256":
+                case "namco / capcom system 256/super system 256":
+                    return RedumpSystem.NamcoCapcomSystem256;
+                case "system246":
+                case "system 246":
+                case "namcosystem246":
+                case "namco system 246":
+                case "capcomsystem246":
+                case "capcom system 246":
+                case "taitosystem246":
+                case "taito system 246":
+                case "namco / capcom / taito system 246":
+                    return RedumpSystem.NamcoSystem246;
+                case "triforce":
+                case "namcotriforce":
+                case "namco triforce":
+                case "segatriforce":
+                case "sega triforce":
+                case "nintendotriforce":
+                case "nintendo triforce":
+                case "namco / sega / nintendo triforce":
+                    return RedumpSystem.NamcoSegaNintendoTriforce;
+                case "system12":
+                case "system 12":
+                case "namcosystem12":
+                case "namco system 12":
+                    return RedumpSystem.NamcoSystem12;
+                case "system357":
+                case "system 357":
+                case "namcosystem357":
+                case "namco system 357":
+                    return RedumpSystem.NamcoSystem357;
+                case "newjatrecdi":
+                case "new jatre cdi":
+                case "new jatre cd-i":
+                    return RedumpSystem.NewJatreCDi;
+                case "hrs":
+                case "highratesytem":
+                case "high rate system":
+                case "nichibutsuhrs":
+                case "nichibutsu hrs":
+                case "nichibutsu high rate system":
+                    return RedumpSystem.NichibutsuHighRateSystem;
+                case "supercd":
+                case "super cd":
+                case "nichibutsuscd":
+                case "nichibutsu scd":
+                case "nichibutsusupercd":
+                case "nichibutsu supercd":
+                case "nichibutsu super cd":
+                    return RedumpSystem.NichibutsuSuperCD;
+                case "xrs":
+                case "xratesystem":
+                case "x-rate system":
+                case "nichibutsuxrs":
+                case "nichibutsu xrs":
+                case "nichibutsu x-rate system":
+                    return RedumpSystem.NichibutsuXRateSystem;
+                case "panasonicm2":
+                case "panasonic m2":
+                    return RedumpSystem.PanasonicM2;
+                case "photoplay":
+                case "photoplaypc":
+                case "photoplay pc":
+                case "photoplay pc-based systems":
+                    return RedumpSystem.PhotoPlayVarious;
+                case "rawthrills":
+                case "raw thrills":
+                case "raw thrills pc-based systems":
+                    return RedumpSystem.RawThrillsVarious;
+                case "chihiro":
+                case "segachihiro":
+                case "sega chihiro":
+                    return RedumpSystem.SegaChihiro;
+                case "europar":
+                case "europa-r":
+                case "segaeuropar":
+                case "sega europar":
+                case "sega europa-r":
+                    return RedumpSystem.SegaEuropaR;
+                case "lindbergh":
+                case "segalindbergh":
+                case "sega lindbergh":
+                    return RedumpSystem.SegaLindbergh;
+                case "naomi":
+                case "seganaomi":
+                case "sega naomi":
+                    return RedumpSystem.SegaNaomi;
+                case "naomi2":
+                case "naomi 2":
+                case "seganaomi2":
+                case "sega naomi 2":
+                    return RedumpSystem.SegaNaomi2;
+                case "nu":
+                case "seganu":
+                case "sega nu":
+                    return RedumpSystem.SegaNu;
+                case "ringedge":
+                case "segaringedge":
+                case "sega ringedge":
+                    return RedumpSystem.SegaRingEdge;
+                case "ringedge2":
+                case "ringedge 2":
+                case "segaringedge2":
+                case "sega ringedge 2":
+                    return RedumpSystem.SegaRingEdge2;
+                case "ringwide":
+                case "segaringwide":
+                case "sega ringwide":
+                    return RedumpSystem.SegaRingWide;
+                case "stv":
+                case "titanvideo":
+                case "titan video":
+                case "segatitanvideo":
+                case "sega titan video":
+                    return RedumpSystem.SegaTitanVideo;
+                case "system32":
+                case "system 32":
+                case "segasystem32":
+                case "sega system 32":
+                    return RedumpSystem.SegaSystem32;
+                case "cats":
+                case "seibucats":
+                case "seibu cats":
+                case "seibu cats system":
+                    return RedumpSystem.SeibuCATSSystem;
+                case "quizard":
+                case "tabaustriaquizard":
+                case "tab-austria quizard":
+                    return RedumpSystem.TABAustriaQuizard;
+                case "tsumo":
+                case "tsunamitsumo":
+                case "tsunami tsumo":
+                case "tsunami tsumo multi-game motion system":
+                    return RedumpSystem.TsunamiTsuMoMultiGameMotionSystem;
+
+                #endregion
+
+                #region Others
+
+                case "audio":
+                case "audiocd":
+                case "audio cd":
+                    return RedumpSystem.AudioCD;
+                case "bdvideo":
+                case "bd-video":
+                case "blurayvideo":
+                case "bluray video":
+                    return RedumpSystem.BDVideo;
+                case "dvda":
+                case "dvdaudio":
+                case "dvd-audio":
+                    return RedumpSystem.DVDAudio;
+                case "dvd":
+                case "dvdv":
+                case "dvdvideo":
+                case "dvd-video":
+                    return RedumpSystem.DVDVideo;
+                case "enhancedcd":
+                case "enhanced cd":
+                case "enhancedcdrom":
+                case "enhanced cdrom":
+                case "enhanced cd-rom":
+                    return RedumpSystem.EnhancedCD;
+                case "hddvd":
+                case "hddvdv":
+                case "hddvdvideo":
+                case "hddvd-video":
+                case "hd-dvd-video":
+                    return RedumpSystem.HDDVDVideo;
+                case "naviken":
+                case "naviken21":
+                case "naviken 2.1":
+                case "navisoftnaviken":
+                case "navisoft naviken":
+                case "navisoftnaviken21":
+                case "navisoft naviken 2.1":
+                    return RedumpSystem.NavisoftNaviken21;
+                case "palm":
+                case "palmos":
+                    return RedumpSystem.PalmOS;
+                case "photo":
+                case "photocd":
+                case "photo cd":
+                    return RedumpSystem.PhotoCD;
+                case "gameshark":
+                case "psgameshark":
+                case "ps gameshark":
+                case "playstationgameshark":
+                case "playstation gameshark":
+                case "playstation gameshark updates":
+                    return RedumpSystem.PlayStationGameSharkUpdates;
+                case "pocketpc":
+                case "pocket pc":
+                case "ppc":
+                    return RedumpSystem.PocketPC;
+                case "rainbow":
+                case "rainbowdisc":
+                case "rainbow disc":
+                    return RedumpSystem.RainbowDisc;
+                case "pl21":
+                case "prologue21":
+                case "prologue 21":
+                case "segaprologue21":
+                case "sega prologue21":
+                case "sega prologue 21":
+                    return RedumpSystem.SegaPrologue21MultimediaKaraokeSystem;
+                case "sacd":
+                case "superaudiocd":
+                case "super audio cd":
+                    return RedumpSystem.SuperAudioCD;
+                case "iktv":
+                case "taoiktv":
+                case "tao iktv":
+                    return RedumpSystem.TaoiKTV;
+                case "kisssite":
+                case "kiss-site":
+                case "tomykisssite":
+                case "tomy kisssite":
+                case "tomy kiss-site":
+                    return RedumpSystem.TomyKissSite;
+                case "vcd":
+                case "videocd":
+                case "video cd":
+                    return RedumpSystem.VideoCD;
+
+                #endregion
+
                 default:
                     return null;
+            }
+        }
+
+        #endregion
+    
+        #region System Category
+
+        /// <summary>
+        /// Get the string representation of the system category
+        /// </summary>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        public static string LongName(this SystemCategory? category) => AttributeHelper<SystemCategory?>.GetAttribute(category)?.LongName;
+
+        #endregion
+
+        #region Yes/No
+
+        /// <summary>
+        /// Get the string representation of the YesNo value
+        /// </summary>
+        /// <param name="yesno"></param>
+        /// <returns></returns>
+        public static string LongName(this YesNo yesno) => AttributeHelper<YesNo>.GetAttribute(yesno)?.LongName ?? "Yes/No";
+
+        /// <summary>
+        /// Get the YesNo enum value for a given string
+        /// </summary>
+        /// <param name="yesno">String value to convert</param>
+        /// <returns>YesNo represented by the string, if possible</returns>
+        public static YesNo? ToYesNo(string yesno)
+        {
+            switch (yesno.ToLowerInvariant())
+            {
+                case "no":
+                    return YesNo.No;
+                case "yes":
+                    return YesNo.Yes;
+                default:
+                    return YesNo.NULL;
             }
         }
 

@@ -60,7 +60,7 @@ namespace MPF.DD
         public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
         }
@@ -87,7 +87,7 @@ namespace MPF.DD
 
             switch (this.System)
             {
-                case KnownSystem.KonamiPython2:
+                case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
@@ -98,7 +98,7 @@ namespace MPF.DD
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation:
+                case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
@@ -109,7 +109,7 @@ namespace MPF.DD
                     info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
                     break;
 
-                case KnownSystem.SonyPlayStation2:
+                case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
@@ -120,11 +120,11 @@ namespace MPF.DD
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation4:
+                case RedumpSystem.SonyPlayStation4:
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation5:
+                case RedumpSystem.SonyPlayStation5:
                     info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
                     break;
             }

@@ -11,6 +11,7 @@ using MPF.Converters;
 using MPF.Data;
 using MPF.Utilities;
 using MPF.Windows;
+using RedumpLib.Data;
 using WPFCustomMessageBox;
 
 namespace MPF.GUI.ViewModels
@@ -46,7 +47,7 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<KnownSystemComboBoxItem> Systems { get; set; } = KnownSystemComboBoxItem.GenerateElements().ToList();
+        public List<RedumpSystemComboBoxItem> Systems { get; set; } = RedumpSystemComboBoxItem.GenerateElements().ToList();
 
         #endregion
 
@@ -146,7 +147,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         public void PopulateMediaType()
         {
-            KnownSystem? currentSystem = App.Instance.SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
+            RedumpSystem? currentSystem = App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
 
             if (currentSystem != null)
             {
@@ -195,7 +196,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         public void ChangeSystem()
         {
-            App.Logger.VerboseLogLn($"Changed system to: {(App.Instance.SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem).Name}");
+            App.Logger.VerboseLogLn($"Changed system to: {(App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem).Name}");
             PopulateMediaType();
             GetOutputNames(false);
             EnsureDiscInformation();
@@ -640,7 +641,7 @@ namespace MPF.GUI.ViewModels
                 return;
 
             // Get reasonable default values based on the current system
-            KnownSystem? currentSystem = Systems[App.Instance.SystemTypeComboBox.SelectedIndex];
+            RedumpSystem? currentSystem = Systems[App.Instance.SystemTypeComboBox.SelectedIndex];
             MediaType? defaultMediaType = Validators.GetValidMediaTypes(currentSystem).FirstOrDefault() ?? MediaType.CDROM;
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
@@ -697,7 +698,7 @@ namespace MPF.GUI.ViewModels
                 App.Instance.OutputDirectoryTextBox.Text,
                 App.Instance.OutputFilenameTextBox.Text,
                 App.Instance.DriveLetterComboBox.SelectedItem as Drive,
-                App.Instance.SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem,
+                App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem,
                 App.Instance.MediaTypeComboBox.SelectedItem as Element<MediaType>,
                 App.Instance.ParametersTextBox.Text);
 
@@ -735,10 +736,10 @@ namespace MPF.GUI.ViewModels
             if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Validators.GetKnownSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
-                App.Logger.VerboseLogLn(currentSystem == KnownSystem.NONE ? "unable to detect." : ("detected " + EnumConverter.GetLongName(currentSystem) + "."));
+                var currentSystem = Validators.GetRedumpSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
+                App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ("detected " + EnumConverter.GetLongName(currentSystem) + "."));
 
-                if (currentSystem != KnownSystem.NONE)
+                if (currentSystem != null)
                 {
                     int sysIndex = Systems.FindIndex(s => s == currentSystem);
                     App.Instance.SystemTypeComboBox.SelectedIndex = sysIndex;
@@ -789,7 +790,7 @@ namespace MPF.GUI.ViewModels
         public void GetOutputNames(bool driveChanged)
         {
             Drive drive = App.Instance.DriveLetterComboBox.SelectedItem as Drive;
-            KnownSystem? systemType = App.Instance.SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem;
+            RedumpSystem? systemType = App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
             MediaType? mediaType = App.Instance.MediaTypeComboBox.SelectedItem as Element<MediaType>;
 
             // Get the extension for the file for the next two statements
@@ -997,7 +998,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         private bool ShouldEnableDumpingButton()
         {
-            return App.Instance.SystemTypeComboBox.SelectedItem as KnownSystemComboBoxItem != KnownSystem.NONE
+            return App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem != null
                 && Drives != null
                 && Drives.Count > 0
                 && !string.IsNullOrEmpty(App.Instance.ParametersTextBox.Text);

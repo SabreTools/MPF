@@ -74,16 +74,15 @@ namespace MPF.GUI.ViewModels
         {
             // Sony-printed discs have layers in the opposite order
             var system = SubmissionInfo?.CommonDiscInfo?.System;
-            bool reverseOrder = system == KnownSystem.SonyPlayStation2
-                || system == KnownSystem.SonyPlayStation3
-                || system == KnownSystem.SonyPlayStation4
-                || system == KnownSystem.SonyPlayStation5;
+            bool reverseOrder = system == RedumpSystem.SonyPlayStation2
+                || system == RedumpSystem.SonyPlayStation3
+                || system == RedumpSystem.SonyPlayStation4;
 
             // Different media types mean different fields available
             switch (SubmissionInfo?.CommonDiscInfo?.Media)
             {
-                case MediaType.CDROM:
-                case MediaType.GDROM:
+                case DiscType.CD:
+                case DiscType.GDROM:
                     Parent.L0Info.Header = "Data Side";
                     Parent.L0MasteringRing.Label = "Mastering Ring";
                     Parent.L0MasteringSID.Label = "Mastering SID";
@@ -99,12 +98,15 @@ namespace MPF.GUI.ViewModels
                     Parent.L1AdditionalMould.Label = "Additional Mould";
                     break;
 
-                case MediaType.DVD:
-                case MediaType.HDDVD:
-                case MediaType.BluRay:
-                case MediaType.NintendoGameCubeGameDisc:
-                case MediaType.NintendoWiiOpticalDisc:
-                case MediaType.NintendoWiiUOpticalDisc:
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.HDDVDSL:
+                case DiscType.BD25:
+                case DiscType.BD50:
+                case DiscType.NintendoGameCubeGameDisc:
+                case DiscType.NintendoWiiOpticalDiscSL:
+                case DiscType.NintendoWiiOpticalDiscDL:
+                case DiscType.NintendoWiiUOpticalDiscSL:
                     // Quad-layer discs
                     if (SubmissionInfo?.SizeAndChecksums?.Layerbreak3 != default(long))
                     {
@@ -211,7 +213,7 @@ namespace MPF.GUI.ViewModels
             // Different systems mean different fields available
             switch (system)
             {
-                case KnownSystem.SonyPlayStation2:
+                case RedumpSystem.SonyPlayStation2:
                     Parent.LanguageSelectionGrid.Visibility = Visibility.Visible;
                     break;
             }

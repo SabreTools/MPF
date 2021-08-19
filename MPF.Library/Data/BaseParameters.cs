@@ -104,7 +104,7 @@ namespace MPF.Data
         /// <summary>
         /// Currently represented system
         /// </summary>
-        public KnownSystem? System { get; set; }
+        public RedumpSystem? System { get; set; }
 
         /// <summary>
         /// Currently represented media type
@@ -127,13 +127,13 @@ namespace MPF.Data
         /// <summary>
         /// Generate parameters based on a set of known inputs
         /// </summary>
-        /// <param name="system">KnownSystem value to use</param>
+        /// <param name="system">RedumpSystem value to use</param>
         /// <param name="type">MediaType value to use</param>
         /// <param name="driveLetter">Drive letter to use</param>
         /// <param name="filename">Filename to use</param>
         /// <param name="driveSpeed">Drive speed to use</param>
         /// <param name="options">Options object containing all settings that may be used for setting parameters</param>
-        public BaseParameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+        public BaseParameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
         {
             this.System = system;
             this.Type = type;

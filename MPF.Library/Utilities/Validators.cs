@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BurnOutSharp;
 using MPF.Converters;
 using MPF.Data;
+using RedumpLib.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
 #endif
@@ -16,11 +17,11 @@ namespace MPF.Utilities
     public static class Validators
     {
         /// <summary>
-        /// Get a list of valid MediaTypes for a given KnownSystem
+        /// Get a list of valid MediaTypes for a given RedumpSystem
         /// </summary>
-        /// <param name="sys">KnownSystem value to check</param>
+        /// <param name="sys">RedumpSystem value to check</param>
         /// <returns>MediaTypes, if possible</returns>
-        public static List<MediaType?> GetValidMediaTypes(KnownSystem? sys)
+        public static List<MediaType?> GetValidMediaTypes(RedumpSystem? sys)
         {
             var types = new List<MediaType?>();
 
@@ -29,214 +30,214 @@ namespace MPF.Utilities
                 #region Consoles
 
                 // https://en.wikipedia.org/wiki/Atari_Jaguar_CD
-                case KnownSystem.AtariJaguarCD:
+                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Playdia
-                case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
+                case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Apple_Bandai_Pippin
-                case KnownSystem.BandaiApplePippin:
+                case RedumpSystem.BandaiPippin:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Amiga_CD32
-                case KnownSystem.CommodoreAmigaCD32:
+                case RedumpSystem.CommodoreAmigaCD32:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Commodore_CDTV
-                case KnownSystem.CommodoreAmigaCDTV:
+                case RedumpSystem.CommodoreAmigaCDTV:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/EVO_Smart_Console
-                case KnownSystem.EnvizionsEVOSmartConsole:
+                case RedumpSystem.EnvizionsEVOSmartConsole:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/FM_Towns_Marty
-                case KnownSystem.FujitsuFMTownsMarty:
+                case RedumpSystem.FujitsuFMTownsMarty:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.FloppyDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/VideoNow
-                case KnownSystem.HasbroVideoNow:
+                case RedumpSystem.HasbroVideoNow:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/VideoNow
-                case KnownSystem.HasbroVideoNowColor:
+                case RedumpSystem.HasbroVideoNowColor:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/VideoNow
-                case KnownSystem.HasbroVideoNowJr:
+                case RedumpSystem.HasbroVideoNowJr:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/VideoNow
-                case KnownSystem.HasbroVideoNowXP:
+                case RedumpSystem.HasbroVideoNowXP:
                     types.Add(MediaType.CDROM);
                     break;
 
-                case KnownSystem.MattelFisherPriceiXL:
+                case RedumpSystem.MattelFisherPriceiXL:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/HyperScan
-                case KnownSystem.MattelHyperscan:
+                case RedumpSystem.MattelHyperScan:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Xbox_(console)
-                case KnownSystem.MicrosoftXBOX:
+                case RedumpSystem.MicrosoftXbox:
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Xbox_360
-                case KnownSystem.MicrosoftXBOX360:
+                case RedumpSystem.MicrosoftXbox360:
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Xbox_One
-                case KnownSystem.MicrosoftXBOXOne:
+                case RedumpSystem.MicrosoftXboxOne:
                     types.Add(MediaType.BluRay);
                     break;
 
                 // https://en.wikipedia.org/wiki/Xbox_Series_X_and_Series_S
-                case KnownSystem.MicrosoftXboxSeriesXS:
+                case RedumpSystem.MicrosoftXboxSeriesXS:
                     types.Add(MediaType.BluRay);
                     break;
 
                 // https://en.wikipedia.org/wiki/TurboGrafx-16
-                case KnownSystem.NECPCEngineTurboGrafxCD:
+                case RedumpSystem.NECPCEngineCDTurboGrafxCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/PC-FX
-                case KnownSystem.NECPCFX:
+                case RedumpSystem.NECPCFXPCFXGA:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/GameCube
-                case KnownSystem.NintendoGameCube:
+                case RedumpSystem.NintendoGameCube:
                     types.Add(MediaType.DVD); // Only added here to help users; not strictly correct
                     types.Add(MediaType.NintendoGameCubeGameDisc);
                     break;
 
                 // https://en.wikipedia.org/wiki/Super_NES_CD-ROM
-                case KnownSystem.NintendoSonySuperNESCDROMSystem:
+                case RedumpSystem.NintendoSonySuperNESCDROMSystem:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Wii
-                case KnownSystem.NintendoWii:
+                case RedumpSystem.NintendoWii:
                     types.Add(MediaType.DVD); // Only added here to help users; not strictly correct
                     types.Add(MediaType.NintendoWiiOpticalDisc);
                     break;
 
                 // https://en.wikipedia.org/wiki/Wii_U
-                case KnownSystem.NintendoWiiU:
+                case RedumpSystem.NintendoWiiU:
                     types.Add(MediaType.NintendoWiiUOpticalDisc);
                     break;
 
                 // https://en.wikipedia.org/wiki/3DO_Interactive_Multiplayer
-                case KnownSystem.Panasonic3DOInteractiveMultiplayer:
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Philips_CD-i
-                case KnownSystem.PhilipsCDi:
+                case RedumpSystem.PhilipsCDi:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/LaserActive
-                case KnownSystem.PioneerLaserActive:
+                case RedumpSystem.PioneerLaserActive:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.LaserDisc);
                     break;
 
                 // https://en.wikipedia.org/wiki/Sega_CD
-                case KnownSystem.SegaCDMegaCD:
+                case RedumpSystem.SegaMegaCDSegaCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Dreamcast
-                case KnownSystem.SegaDreamcast:
+                case RedumpSystem.SegaDreamcast:
                     types.Add(MediaType.CDROM); // Low density partition, MIL-CD
                     types.Add(MediaType.GDROM); // High density partition
                     break;
 
                 // https://en.wikipedia.org/wiki/Sega_Saturn
-                case KnownSystem.SegaSaturn:
+                case RedumpSystem.SegaSaturn:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Neo_Geo_CD
-                case KnownSystem.SNKNeoGeoCD:
+                case RedumpSystem.SNKNeoGeoCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/PlayStation_(console)
-                case KnownSystem.SonyPlayStation:
+                case RedumpSystem.SonyPlayStation:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/PlayStation_2
-                case KnownSystem.SonyPlayStation2:
+                case RedumpSystem.SonyPlayStation2:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/PlayStation_3
-                case KnownSystem.SonyPlayStation3:
+                case RedumpSystem.SonyPlayStation3:
                     types.Add(MediaType.BluRay);
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/PlayStation_4
-                case KnownSystem.SonyPlayStation4:
+                case RedumpSystem.SonyPlayStation4:
                     types.Add(MediaType.BluRay);
                     break;
 
                 // https://en.wikipedia.org/wiki/PlayStation_5
-                case KnownSystem.SonyPlayStation5:
+                case RedumpSystem.SonyPlayStation5:
                     types.Add(MediaType.BluRay);
                     break;
 
                 // https://en.wikipedia.org/wiki/PlayStation_Portable
-                case KnownSystem.SonyPlayStationPortable:
+                case RedumpSystem.SonyPlayStationPortable:
                     types.Add(MediaType.UMD);
                     types.Add(MediaType.CDROM); // Development discs only
                     types.Add(MediaType.DVD); // Development discs only
                     break;
 
                 // https://en.wikipedia.org/wiki/Tandy_Video_Information_System
-                case KnownSystem.TandyMemorexVisualInformationSystem:
+                case RedumpSystem.MemorexVisualInformationSystem:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Nuon_(DVD_technology)
-                case KnownSystem.VMLabsNuon:
+                case RedumpSystem.VMLabsNUON:
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/V.Flash
-                case KnownSystem.VTechVFlashVSmilePro:
+                case RedumpSystem.VTechVFlashVSmilePro:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Game_Wave_Family_Entertainment_System
-                case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
                     types.Add(MediaType.DVD);
                     break;
 
@@ -245,13 +246,13 @@ namespace MPF.Utilities
                 #region Computers
 
                 // https://en.wikipedia.org/wiki/Acorn_Archimedes
-                case KnownSystem.AcornArchimedes:
+                case RedumpSystem.AcornArchimedes:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.FloppyDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/Macintosh
-                case KnownSystem.AppleMacintosh:
+                case RedumpSystem.AppleMacintosh:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.FloppyDisk);
@@ -259,18 +260,18 @@ namespace MPF.Utilities
                     break;
 
                 // https://en.wikipedia.org/wiki/Amiga
-                case KnownSystem.CommodoreAmiga:
+                case RedumpSystem.CommodoreAmigaCD:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.FloppyDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/FM_Towns
-                case KnownSystem.FujitsuFMTowns:
+                case RedumpSystem.FujitsuFMTownsseries:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/IBM_PC_compatible
-                case KnownSystem.IBMPCCompatible:
+                case RedumpSystem.IBMPCcompatible:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.BluRay);
@@ -280,20 +281,20 @@ namespace MPF.Utilities
                     break;
 
                 // https://en.wikipedia.org/wiki/PC-8800_series
-                case KnownSystem.NECPC88:
+                case RedumpSystem.NECPC88series:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.FloppyDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/PC-9800_series
-                case KnownSystem.NECPC98:
+                case RedumpSystem.NECPC98series:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.FloppyDisk);
                     break;
 
                 // https://en.wikipedia.org/wiki/X68000
-                case KnownSystem.SharpX68000:
+                case RedumpSystem.SharpX68000:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.FloppyDisk);
                     break;
@@ -303,110 +304,110 @@ namespace MPF.Utilities
                 #region Arcade
 
                 // https://www.bigbookofamigahardware.com/bboah/product.aspx?id=36
-                case KnownSystem.AmigaCUBOCD32:
+                case RedumpSystem.AmigaCUBOCD32:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Orbatak
-                case KnownSystem.AmericanLaserGames3DO:
+                case RedumpSystem.AmericanLaserGames3DO:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=779
-                case KnownSystem.Atari3DO:
+                case RedumpSystem.Atari3DO:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://newlifegames.net/nlg/index.php?topic=22003.0
                 // http://newlifegames.net/nlg/index.php?topic=5486.msg119440
-                case KnownSystem.Atronic:
+                case RedumpSystem.Atronic:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://www.arcade-museum.com/members/member_detail.php?member_id=406530
-                case KnownSystem.AUSCOMSystem1:
+                case RedumpSystem.AUSCOMSystem1:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://newlifegames.net/nlg/index.php?topic=285.0
-                case KnownSystem.BallyGameMagic:
+                case RedumpSystem.BallyGameMagic:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/CP_System_III
-                case KnownSystem.CapcomCPSystemIII:
+                case RedumpSystem.CapcomCPSystemIII:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.funworldPhotoPlay:
+                case RedumpSystem.funworldPhotoPlay:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.GlobalVRVarious:
+                case RedumpSystem.GlobalVRVarious:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://service.globalvr.com/troubleshooting/vortek.html
-                case KnownSystem.GlobalVRVortek:
+                case RedumpSystem.GlobalVRVortek:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://service.globalvr.com/downloads/v3/040-1001-01c-V3-System-Manual.pdf
-                case KnownSystem.GlobalVRVortekV3:
+                case RedumpSystem.GlobalVRVortekV3:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://www.icegame.com/games
-                case KnownSystem.ICEPCHardware:
+                case RedumpSystem.ICEPCHardware:
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://github.com/mamedev/mame/blob/master/src/mame/drivers/iteagle.cpp
-                case KnownSystem.IncredibleTechnologiesEagle:
+                case RedumpSystem.IncredibleTechnologiesEagle:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.IncredibleTechnologiesVarious:
+                case RedumpSystem.IncredibleTechnologiesVarious:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/E-Amusement
-                case KnownSystem.KonamieAmusement:
+                case RedumpSystem.KonamieAmusement:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=828
-                case KnownSystem.KonamiFirebeat:
+                case RedumpSystem.KonamiFireBeat:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=577
-                case KnownSystem.KonamiGVSystem:
+                case RedumpSystem.KonamiSystemGV:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=575
-                case KnownSystem.KonamiM2:
+                case RedumpSystem.KonamiM2:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=586
                 // http://system16.com/hardware.php?id=977
-                case KnownSystem.KonamiPython:
+                case RedumpSystem.KonamiPython:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=976
                 // http://system16.com/hardware.php?id=831
-                case KnownSystem.KonamiPython2:
+                case RedumpSystem.KonamiPython2:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
@@ -414,23 +415,23 @@ namespace MPF.Utilities
                 // http://system16.com/hardware.php?id=582
                 // http://system16.com/hardware.php?id=822
                 // http://system16.com/hardware.php?id=823
-                case KnownSystem.KonamiSystem573:
+                case RedumpSystem.KonamiSystem573:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=827
-                case KnownSystem.KonamiTwinkle:
+                case RedumpSystem.KonamiTwinkle:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.KonamiVarious:
+                case RedumpSystem.KonamiVarious:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://www.meritgames.com/Support_Center/manuals/PM0591-01.pdf
-                case KnownSystem.MeritIndustriesBoardwalk:
+                case RedumpSystem.MeritIndustriesBoardwalk:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
@@ -438,12 +439,12 @@ namespace MPF.Utilities
                 // http://www.meritgames.com/Support_Center/Force%20Elite/PM0380-09.pdf
                 // http://www.meritgames.com/Support_Center/Force%20Upright/PM0382-07%20FORCE%20Upright%20manual.pdf
                 // http://www.meritgames.com/Support_Center/Force%20Upright/PM0383-07%20FORCE%20Upright%20manual.pdf
-                case KnownSystem.MeritIndustriesMegaTouchForce:
+                case RedumpSystem.MeritIndustriesMegaTouchForce:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://www.meritgames.com/Service%20Center/Ion%20Troubleshooting.pdf
-                case KnownSystem.MeritIndustriesMegaTouchION:
+                case RedumpSystem.MeritIndustriesMegaTouchION:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
@@ -451,92 +452,92 @@ namespace MPF.Utilities
                 // http://www.meritgames.com/Support_Center/EZ%20Maxx/Manuals/MAXX%20Elite%20with%20coin.pdf
                 // http://www.meritgames.com/Support_Center/EZ%20Maxx/Manuals/MAXX%20Elite.pdf
                 // http://www.meritgames.com/Support_Center/manuals/90003010%20Maxx%20TSM_Rev%20C.pdf
-                case KnownSystem.MeritIndustriesMegaTouchMaxx:
+                case RedumpSystem.MeritIndustriesMegaTouchMaxx:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://www.meritgames.com/Support_Center/manuals/pm0076_OA_Megatouch%20XL%20Trouble%20Shooting%20Manual.pdf
                 // http://www.meritgames.com/Support_Center/MEGA%20XL/manuals/Megatouch_XL_pm0109-0D.pdf
                 // http://www.meritgames.com/Support_Center/MEGA%20XL/manuals/Megatouch_XL_Super_5000_manual.pdf
-                case KnownSystem.MeritIndustriesMegaTouchXL:
+                case RedumpSystem.MeritIndustriesMegaTouchXL:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=546
                 // http://system16.com/hardware.php?id=872
-                case KnownSystem.NamcoCapcomSystem256:
+                case RedumpSystem.NamcoCapcomSystem256:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=543
-                case KnownSystem.NamcoCapcomTaitoSystem246:
+                case RedumpSystem.NamcoSystem246:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=545
-                case KnownSystem.NamcoSegaNintendoTriforce:
+                case RedumpSystem.NamcoSegaNintendoTriforce:
                     types.Add(MediaType.CDROM); // Low density partition
                     types.Add(MediaType.GDROM); // High density partition
                     break;
 
                 // http://system16.com/hardware.php?id=535
-                case KnownSystem.NamcoSystem12:
+                case RedumpSystem.NamcoSystem12:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=900
-                case KnownSystem.NamcoSystem357:
+                case RedumpSystem.NamcoSystem357:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     types.Add(MediaType.BluRay);
                     break;
 
                 // https://www.arcade-history.com/?n=the-yakyuuken-part-1&page=detail&id=33049
-                case KnownSystem.NewJatreCDi:
+                case RedumpSystem.NewJatreCDi:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://blog.system11.org/?p=2499
-                case KnownSystem.NichibutsuHighRateSystem:
+                case RedumpSystem.NichibutsuHighRateSystem:
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://blog.system11.org/?p=2514
-                case KnownSystem.NichibutsuSuperCD:
+                case RedumpSystem.NichibutsuSuperCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://collectedit.com/collectors/shou-time-213/arcade-pcbs-281/x-rate-dvd-series-17-newlywed-life-japan-by-nichibutsu-32245
-                case KnownSystem.NichibutsuXRateSystem:
+                case RedumpSystem.NichibutsuXRateSystem:
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/Panasonic_M2
-                case KnownSystem.PanasonicM2:
+                case RedumpSystem.PanasonicM2:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://github.com/mamedev/mame/blob/master/src/mame/drivers/photoply.cpp
-                case KnownSystem.PhotoPlayVarious:
+                case RedumpSystem.PhotoPlayVarious:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.RawThrillsVarious:
+                case RedumpSystem.RawThrillsVarious:
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=729
-                case KnownSystem.SegaChihiro:
+                case RedumpSystem.SegaChihiro:
                     types.Add(MediaType.CDROM); // Low density partition
                     types.Add(MediaType.GDROM); // High density partition
                     break;
 
                 // http://system16.com/hardware.php?id=907
-                case KnownSystem.SegaEuropaR:
+                case RedumpSystem.SegaEuropaR:
                     types.Add(MediaType.DVD);
                     break;
 
@@ -544,7 +545,7 @@ namespace MPF.Utilities
                 // http://system16.com/hardware.php?id=731
                 // http://system16.com/hardware.php?id=984
                 // http://system16.com/hardware.php?id=986
-                case KnownSystem.SegaLindbergh:
+                case RedumpSystem.SegaLindbergh:
                     types.Add(MediaType.DVD);
                     break;
 
@@ -552,7 +553,7 @@ namespace MPF.Utilities
                 // http://system16.com/hardware.php?id=723
                 // http://system16.com/hardware.php?id=906
                 // http://system16.com/hardware.php?id=722
-                case KnownSystem.SegaNaomi:
+                case RedumpSystem.SegaNaomi:
                     types.Add(MediaType.CDROM); // Low density partition
                     types.Add(MediaType.GDROM); // High density partition
                     break;
@@ -560,59 +561,59 @@ namespace MPF.Utilities
                 // http://system16.com/hardware.php?id=725
                 // http://system16.com/hardware.php?id=726
                 // http://system16.com/hardware.php?id=727
-                case KnownSystem.SegaNaomi2:
+                case RedumpSystem.SegaNaomi2:
                     types.Add(MediaType.CDROM); // Low density partition
                     types.Add(MediaType.GDROM); // High density partition
                     break;
 
                 // http://system16.com/hardware.php?id=975
                 // https://en.wikipedia.org/wiki/List_of_Sega_arcade_system_boards#Sega_Nu
-                case KnownSystem.SegaNu:
+                case RedumpSystem.SegaNu:
                     types.Add(MediaType.BluRay);
                     break;
 
                 // http://system16.com/hardware.php?id=910
                 // https://en.wikipedia.org/wiki/List_of_Sega_arcade_system_boards#Sega_Ring_series
-                case KnownSystem.SegaRingEdge:
+                case RedumpSystem.SegaRingEdge:
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=982
                 // https://en.wikipedia.org/wiki/List_of_Sega_arcade_system_boards#Sega_Ring_series
-                case KnownSystem.SegaRingEdge2:
+                case RedumpSystem.SegaRingEdge2:
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=911
                 // https://en.wikipedia.org/wiki/List_of_Sega_arcade_system_boards#Sega_Ring_series
-                case KnownSystem.SegaRingWide:
+                case RedumpSystem.SegaRingWide:
                     types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=711
-                case KnownSystem.SegaTitanVideo:
+                case RedumpSystem.SegaTitanVideo:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://system16.com/hardware.php?id=709
                 // http://system16.com/hardware.php?id=710
-                case KnownSystem.SegaSystem32:
+                case RedumpSystem.SegaSystem32:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://github.com/mamedev/mame/blob/master/src/mame/drivers/seibucats.cpp
-                case KnownSystem.SeibuCATSSystem:
+                case RedumpSystem.SeibuCATSSystem:
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://www.tab.at/en/support/support/downloads
-                case KnownSystem.TABAustriaQuizard:
+                case RedumpSystem.TABAustriaQuizard:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://primetimeamusements.com/product/tsumo-multi-game-motion-system/
                 // https://www.highwaygames.com/arcade-machines/tsumo-tsunami-motion-8117/
-                case KnownSystem.TsunamiTsuMoMultiGameMotionSystem:
+                case RedumpSystem.TsunamiTsuMoMultiGameMotionSystem:
                     types.Add(MediaType.CDROM);
                     break;
 
@@ -621,93 +622,92 @@ namespace MPF.Utilities
                 #region Others
 
                 // https://en.wikipedia.org/wiki/Audio_CD
-                case KnownSystem.AudioCD:
+                case RedumpSystem.AudioCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Blu-ray#Player_profiles
-                case KnownSystem.BDVideo:
+                case RedumpSystem.BDVideo:
                     types.Add(MediaType.BluRay);
                     break;
 
                 // https://en.wikipedia.org/wiki/DVD-Audio
-                case KnownSystem.DVDAudio:
+                case RedumpSystem.DVDAudio:
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/DVD-Video
-                case KnownSystem.DVDVideo:
+                case RedumpSystem.DVDVideo:
                     types.Add(MediaType.DVD);
                     break;
 
                 // https://en.wikipedia.org/wiki/Blue_Book_(CD_standard)
-                case KnownSystem.EnhancedCD:
+                case RedumpSystem.EnhancedCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/HD_DVD
-                case KnownSystem.HDDVDVideo:
+                case RedumpSystem.HDDVDVideo:
                     types.Add(MediaType.HDDVD);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.NavisoftNaviken21:
+                case RedumpSystem.NavisoftNaviken21:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.PalmOS:
+                case RedumpSystem.PalmOS:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Photo_CD
-                case KnownSystem.PhotoCD:
+                case RedumpSystem.PhotoCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.PlayStationGameSharkUpdates:
+                case RedumpSystem.PlayStationGameSharkUpdates:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // UNKNOWN
-                case KnownSystem.PocketPC:
+                case RedumpSystem.PocketPC:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Doors_and_Windows_(EP)
-                case KnownSystem.RainbowDisc:
+                case RedumpSystem.RainbowDisc:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://segaretro.org/Prologue_21
-                case KnownSystem.SegaPrologue21:
+                case RedumpSystem.SegaPrologue21MultimediaKaraokeSystem:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Super_Audio_CD
-                case KnownSystem.SuperAudioCD:
+                case RedumpSystem.SuperAudioCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://www.cnet.com/products/tao-music-iktv-karaoke-station-karaoke-system-series/
-                case KnownSystem.TaoiKTV:
+                case RedumpSystem.TaoiKTV:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // http://ultimateconsoledatabase.com/golden/kiss_site.htm
-                case KnownSystem.TomyKissSite:
+                case RedumpSystem.TomyKissSite:
                     types.Add(MediaType.CDROM);
                     break;
 
                 // https://en.wikipedia.org/wiki/Video_CD
-                case KnownSystem.VideoCD:
+                case RedumpSystem.VideoCD:
                     types.Add(MediaType.CDROM);
                     break;
 
                 #endregion
 
-                case KnownSystem.NONE:
                 default:
                     types.Add(MediaType.NONE);
                     break;
@@ -861,7 +861,7 @@ namespace MPF.Utilities
         /// <param name="drive"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static KnownSystem? GetKnownSystem(Drive drive, KnownSystem? defaultValue)
+        public static RedumpSystem? GetRedumpSystem(Drive drive, RedumpSystem? defaultValue)
         {
             // If drive or drive letter are provided, we can't do anything
             if (drive?.Letter == null)
@@ -876,19 +876,19 @@ namespace MPF.Utilities
             // We're going to assume for floppies, HDDs, and removable drives
             // TODO: Try to be smarter about this
             if (drive.InternalDriveType != InternalDriveType.Optical)
-                return KnownSystem.IBMPCCompatible;
+                return RedumpSystem.IBMPCcompatible;
 
             // Audio CD
             if (drive.VolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
             {
-                return KnownSystem.AudioCD;
+                return RedumpSystem.AudioCD;
             }
 
             // DVD-Audio
             if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
                 && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Count() > 0)
             {
-                return KnownSystem.DVDAudio;
+                return RedumpSystem.DVDAudio;
             }
 
             // DVD-Video and Xbox
@@ -897,22 +897,22 @@ namespace MPF.Utilities
             {
                 // TODO: Maybe add video track hashes to compare for Xbox and X360?
                 if (drive.VolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
-                    return KnownSystem.MicrosoftXBOX;
+                    return RedumpSystem.MicrosoftXbox;
 
-                return KnownSystem.DVDVideo;
+                return RedumpSystem.DVDVideo;
             }
 
             // HD-DVD-Video
             if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
                 && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Count() > 0)
             {
-                return KnownSystem.HDDVDVideo;
+                return RedumpSystem.HDDVDVideo;
             }
 
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
             {
-                return KnownSystem.SegaDreamcast;
+                return RedumpSystem.SegaDreamcast;
             }
 
             // Sega Mega-CD / Sega-CD
@@ -921,7 +921,7 @@ namespace MPF.Utilities
                 || File.Exists(Path.Combine(drivePath, "_BOOT", "SP_AS.BIN"))
                 || File.Exists(Path.Combine(drivePath, "FILESYSTEM.BIN")))
             {
-                return KnownSystem.SegaCDMegaCD;
+                return RedumpSystem.SegaMegaCDSegaCD;
             }
 
             // Sega Saturn
@@ -931,7 +931,7 @@ namespace MPF.Utilities
                 if (sector != null)
                 {
                     if (sector.StartsWith(Interface.SaturnSectorZeroStart))
-                        return KnownSystem.SegaSaturn;
+                        return RedumpSystem.SegaSaturn;
                 }
             }
             catch { }
@@ -944,44 +944,44 @@ namespace MPF.Utilities
                 // Check for either BOOT or BOOT2
                 var systemCnf = new IniFile(systemCnfPath);
                 if (systemCnf.ContainsKey("BOOT"))
-                    return KnownSystem.SonyPlayStation;
+                    return RedumpSystem.SonyPlayStation;
                 else if (systemCnf.ContainsKey("BOOT2"))
-                    return KnownSystem.SonyPlayStation2;
+                    return RedumpSystem.SonyPlayStation2;
             }
             else if (File.Exists(psxExePath))
             {
-                return KnownSystem.SonyPlayStation;
+                return RedumpSystem.SonyPlayStation;
             }
 
             // Sony PlayStation 3
             if (drive.VolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
             {
-                return KnownSystem.SonyPlayStation3;
+                return RedumpSystem.SonyPlayStation3;
             }
 
             // Sony PlayStation 4
             if (drive.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {
-                return KnownSystem.SonyPlayStation4;
+                return RedumpSystem.SonyPlayStation4;
             }
 
             // Sony PlayStation 5
             if (drive.VolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
             {
-                return KnownSystem.SonyPlayStation5;
+                return RedumpSystem.SonyPlayStation5;
             }
 
             // V.Tech V.Flash / V.Smile Pro
             if (File.Exists(Path.Combine(drivePath, "0SYSTEM")))
             {
-                return KnownSystem.VTechVFlashVSmilePro;
+                return RedumpSystem.VTechVFlashVSmilePro;
             }
 
             // VCD
             if (Directory.Exists(Path.Combine(drivePath, "VCD"))
                 && Directory.EnumerateFiles(Path.Combine(drivePath, "VCD")).Count() > 0)
             {
-                return KnownSystem.VideoCD;
+                return RedumpSystem.VideoCD;
             }
 
             // Default return
@@ -991,10 +991,10 @@ namespace MPF.Utilities
         /// <summary>
         /// Verify that, given a system and a media type, they are correct
         /// </summary>
-        public static Result GetSupportStatus(KnownSystem? system, MediaType? type)
+        public static Result GetSupportStatus(RedumpSystem? system, MediaType? type)
         {
             // No system chosen, update status
-            if (system == KnownSystem.NONE)
+            if (system == null)
                 return Result.Failure("Please select a valid system");
 
             // If we're on an unsupported type, update the status accordingly

@@ -128,7 +128,7 @@ namespace MPF.Aaru
         public Parameters(string parameters) : base(parameters) { }
 
         /// <inheritdoc/>
-        public Parameters(KnownSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
+        public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
             : base(system, type, driveLetter, filename, driveSpeed, options)
         {
         }
@@ -263,12 +263,12 @@ namespace MPF.Aaru
                 // TODO: Can we get PS1 EDC status?
                 // TODO: Can we get PS1 LibCrypt status?
 
-                case KnownSystem.DVDAudio:
-                case KnownSystem.DVDVideo:
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.DVDVideo:
                     info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? "";
                     break;
 
-                case KnownSystem.KonamiPython2:
+                case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
@@ -279,7 +279,7 @@ namespace MPF.Aaru
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.MicrosoftXBOX:
+                case RedumpSystem.MicrosoftXbox:
                     if (GetXgdAuxInfo(sidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
                     {
                         info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
@@ -298,7 +298,7 @@ namespace MPF.Aaru
 
                     break;
 
-                case KnownSystem.MicrosoftXBOX360:
+                case RedumpSystem.MicrosoftXbox360:
                     if (GetXgdAuxInfo(sidecar, out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
                     {
                         info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
@@ -316,7 +316,7 @@ namespace MPF.Aaru
                     }
                     break;
 
-                case KnownSystem.SonyPlayStation:
+                case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
@@ -327,7 +327,7 @@ namespace MPF.Aaru
                     info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
                     break;
 
-                case KnownSystem.SonyPlayStation2:
+                case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
                         info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
@@ -338,11 +338,11 @@ namespace MPF.Aaru
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation4:
+                case RedumpSystem.SonyPlayStation4:
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
                     break;
 
-                case KnownSystem.SonyPlayStation5:
+                case RedumpSystem.SonyPlayStation5:
                     info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
                     break;
             }

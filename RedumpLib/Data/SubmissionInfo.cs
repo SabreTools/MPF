@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Converters;
-using MPF.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RedumpLib.Converters;
-using RedumpLib.Data;
 
-namespace MPF.Data
+namespace RedumpLib.Data
 {
     public class SubmissionInfo : ICloneable
     {
@@ -95,13 +92,13 @@ namespace MPF.Data
     {
         // Name not defined by Redump
         [JsonProperty(PropertyName = "d_system", Required = Required.AllowNull)]
-        [JsonConverter(typeof(KnownSystemConverter))]
-        public KnownSystem? System { get; set; }
+        [JsonConverter(typeof(SystemConverter))]
+        public RedumpSystem? System { get; set; }
 
         // Name not defined by Redump
         [JsonProperty(PropertyName = "d_media", Required = Required.AllowNull)]
-        [JsonConverter(typeof(MediaTypeConverter))]
-        public MediaType? Media { get; set; }
+        [JsonConverter(typeof(DiscTypeConverter))]
+        public DiscType? Media { get; set; }
 
         [JsonProperty(PropertyName = "d_title", Required = Required.AllowNull)]
         public string Title { get; set; }
@@ -116,6 +113,7 @@ namespace MPF.Data
         public string DiscTitle { get; set; }
 
         [JsonProperty(PropertyName = "d_category", Required = Required.AllowNull)]
+        [JsonConverter(typeof(DiscCategoryConverter))]
         public DiscCategory? Category { get; set; }
 
         [JsonProperty(PropertyName = "d_region", Required = Required.AllowNull)]
@@ -297,6 +295,7 @@ namespace MPF.Data
     public class EDCSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_edc", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(YesNoConverter))]
         public YesNo EDC { get; set; }
 
         public object Clone()
@@ -376,9 +375,11 @@ namespace MPF.Data
     public class CopyProtectionSection : ICloneable
     {
         [JsonProperty(PropertyName = "d_protection_a", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(YesNoConverter))]
         public YesNo AntiModchip { get; set; }
 
         [JsonProperty(PropertyName = "d_protection_1", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonConverter(typeof(YesNoConverter))]
         public YesNo LibCrypt { get; set; }
 
         [JsonProperty(PropertyName = "d_libcrypt", NullValueHandling = NullValueHandling.Ignore)]

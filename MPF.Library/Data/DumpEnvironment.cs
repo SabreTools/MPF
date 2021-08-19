@@ -13,6 +13,7 @@ using MPF.Converters;
 using MPF.Utilities;
 using Newtonsoft.Json;
 using RedumpLib.Attributes;
+using RedumpLib.Converters;
 using RedumpLib.Data;
 using RedumpLib.Web;
 
@@ -47,7 +48,7 @@ namespace MPF.Data
         /// <summary>
         /// Currently selected system
         /// </summary>
-        public KnownSystem? System { get; private set; }
+        public RedumpSystem? System { get; private set; }
 
         /// <summary>
         /// Currently selected media type
@@ -111,7 +112,7 @@ namespace MPF.Data
             string outputDirectory,
             string outputFilename,
             Drive drive,
-            KnownSystem? system,
+            RedumpSystem? system,
             MediaType? type,
             string parameters)
         {
@@ -202,7 +203,7 @@ namespace MPF.Data
         public string GetFullParameters(int? driveSpeed)
         {
             // Populate with the correct params for inputs (if we're not on the default option)
-            if (System != KnownSystem.NONE && Type != MediaType.NONE)
+            if (System != null && Type != MediaType.NONE)
             {
                 // If drive letter is invalid, skip this
                 if (Drive == null)
@@ -589,7 +590,7 @@ namespace MPF.Data
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     System = this.System,
-                    Media = this.Type,
+                    Media = this.Type.ToDiscType(),
                     Title = (Options.AddPlaceholders ? Template.RequiredValue : ""),
                     ForeignTitleNonLatin = (Options.AddPlaceholders ? Template.OptionalValue : ""),
                     DiscNumberLetter = (Options.AddPlaceholders ? Template.OptionalValue : ""),
@@ -793,19 +794,19 @@ namespace MPF.Data
                     break;
             }
 
-            // Extract info based specifically on KnownSystem
+            // Extract info based specifically on RedumpSystem
             switch (System)
             {
-                case KnownSystem.AcornArchimedes:
+                case RedumpSystem.AcornArchimedes:
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UK;
                     break;
 
-                case KnownSystem.AppleMacintosh:
-                case KnownSystem.EnhancedCD:
-                case KnownSystem.IBMPCCompatible:
-                case KnownSystem.PalmOS:
-                case KnownSystem.PocketPC:
-                case KnownSystem.RainbowDisc:
+                case RedumpSystem.AppleMacintosh:
+                case RedumpSystem.EnhancedCD:
+                case RedumpSystem.IBMPCcompatible:
+                case RedumpSystem.PalmOS:
+                case RedumpSystem.PocketPC:
+                case RedumpSystem.RainbowDisc:
                     if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
                         info.CommonDiscInfo.Comments += $"[T:ISBN] {(Options.AddPlaceholders ? Template.OptionalValue : "")}";
 
@@ -815,141 +816,141 @@ namespace MPF.Data
 
                     break;
 
-                case KnownSystem.AudioCD:
-                case KnownSystem.DVDAudio:
-                case KnownSystem.SuperAudioCD:
+                case RedumpSystem.AudioCD:
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.SuperAudioCD:
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Audio;
                     break;
 
-                case KnownSystem.BandaiPlaydiaQuickInteractiveSystem:
+                case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.BDVideo:
+                case RedumpSystem.BDVideo:
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
                     info.CopyProtection.Protection = (Options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
 
-                case KnownSystem.CommodoreAmiga:
+                case RedumpSystem.CommodoreAmigaCD:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.CommodoreAmigaCD32:
-                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
-                    break;
-
-                case KnownSystem.CommodoreAmigaCDTV:
+                case RedumpSystem.CommodoreAmigaCD32:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
-                case KnownSystem.DVDVideo:
+                case RedumpSystem.CommodoreAmigaCDTV:
+                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
+                    break;
+
+                case RedumpSystem.DVDVideo:
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
                     break;
 
-                case KnownSystem.FujitsuFMTowns:
+                case RedumpSystem.FujitsuFMTownsseries:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.FujitsuFMTownsMarty:
+                case RedumpSystem.FujitsuFMTownsMarty:
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.IncredibleTechnologiesEagle:
+                case RedumpSystem.IncredibleTechnologiesEagle:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.KonamieAmusement:
+                case RedumpSystem.KonamieAmusement:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.KonamiFirebeat:
+                case RedumpSystem.KonamiFireBeat:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.KonamiGVSystem:
+                case RedumpSystem.KonamiSystemGV:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.KonamiSystem573:
+                case RedumpSystem.KonamiSystem573:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.KonamiTwinkle:
+                case RedumpSystem.KonamiTwinkle:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.MattelHyperscan:
+                case RedumpSystem.MattelHyperScan:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.NamcoSegaNintendoTriforce:
+                case RedumpSystem.NamcoSegaNintendoTriforce:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.NavisoftNaviken21:
-                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-                    break;
-
-                case KnownSystem.NECPC88:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
-                    break;
-
-                case KnownSystem.NECPC98:
+                case RedumpSystem.NavisoftNaviken21:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.NECPCFX:
+                case RedumpSystem.NECPC88series:
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.SegaChihiro:
+                case RedumpSystem.NECPC98series:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    break;
-
-                case KnownSystem.SegaDreamcast:
-                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    break;
-
-                case KnownSystem.SegaNaomi:
-                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    break;
-
-                case KnownSystem.SegaNaomi2:
-                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    break;
-
-                case KnownSystem.SegaTitanVideo:
-                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
-                    break;
-
-                case KnownSystem.SharpX68000:
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.SNKNeoGeoCD:
+                case RedumpSystem.NECPCFXPCFXGA:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    break;
+
+                case RedumpSystem.SegaChihiro:
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.SonyPlayStation2:
+                case RedumpSystem.SegaDreamcast:
+                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case RedumpSystem.SegaNaomi:
+                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case RedumpSystem.SegaNaomi2:
+                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case RedumpSystem.SegaTitanVideo:
+                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case RedumpSystem.SharpX68000:
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
+                    break;
+
+                case RedumpSystem.SNKNeoGeoCD:
+                    info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
+                    break;
+
+                case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
                     break;
 
-                case KnownSystem.SonyPlayStation3:
+                case RedumpSystem.SonyPlayStation3:
                     info.Extras.DiscKey = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     info.Extras.DiscID = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
-                case KnownSystem.TomyKissSite:
+                case RedumpSystem.TomyKissSite:
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
-                case KnownSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
                     info.CopyProtection.Protection = (Options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
                     break;
             }
@@ -979,10 +980,9 @@ namespace MPF.Data
             {
                 // Sony-printed discs have layers in the opposite order
                 var system = info.CommonDiscInfo.System;
-                bool reverseOrder = (system == KnownSystem.SonyPlayStation2
-                    || system == KnownSystem.SonyPlayStation3
-                    || system == KnownSystem.SonyPlayStation4
-                    || system == KnownSystem.SonyPlayStation5);
+                bool reverseOrder = (system == RedumpSystem.SonyPlayStation2
+                    || system == RedumpSystem.SonyPlayStation3
+                    || system == RedumpSystem.SonyPlayStation4);
 
                 // Common Disc Info section
                 List<string> output = new List<string> { "Common Disc Info:" };
@@ -992,7 +992,7 @@ namespace MPF.Data
                 AddIfExists(output, Template.DiscTitleField, info.CommonDiscInfo.DiscTitle, 1);
                 AddIfExists(output, Template.SystemField, info.CommonDiscInfo.System.LongName(), 1);
                 AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(
-                        info.CommonDiscInfo.Media,
+                        info.CommonDiscInfo.Media.ToMediaType(),
                         info.SizeAndChecksums.Size,
                         info.SizeAndChecksums.Layerbreak,
                         info.SizeAndChecksums.Layerbreak2,
@@ -1090,7 +1090,7 @@ namespace MPF.Data
                 AddIfExists(output, Template.EditionField, info.VersionAndEditions.OtherEditions, 1);
 
                 // EDC section
-                if (info.CommonDiscInfo.System == KnownSystem.SonyPlayStation)
+                if (info.CommonDiscInfo.System == RedumpSystem.SonyPlayStation)
                 {
                     output.Add(""); output.Add("EDC:");
                     AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
@@ -1120,7 +1120,7 @@ namespace MPF.Data
                     || info.CopyProtection.LibCrypt != YesNo.NULL)
                 {
                     output.Add(""); output.Add("Copy Protection:");
-                    if (info.CommonDiscInfo.System == KnownSystem.SonyPlayStation)
+                    if (info.CommonDiscInfo.System == RedumpSystem.SonyPlayStation)
                     {
                         AddIfExists(output, Template.PlayStationAntiModchipField, info.CopyProtection.AntiModchip.LongName(), 1);
                         AddIfExists(output, Template.PlayStationLibCryptField, info.CopyProtection.LibCrypt.LongName(), 1);
