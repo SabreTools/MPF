@@ -100,9 +100,9 @@ namespace MPF.Data
         public const string PlayStationEDCField = "EDC";
         public const string PlayStationAntiModchipField = "Anti-modchip";
         public const string PlayStationLibCryptField = "LibCrypt";
-        public const string XBOXDMIHash = "DMI.bin Hashes";
-        public const string XBOXPFIHash = "PFI.bin Hashes";
-        public const string XBOXSSHash = "SS.bin Hashes";
+        public const string XBOXDMIHash = "DMI";
+        public const string XBOXPFIHash = "PFI";
+        public const string XBOXSSHash = "SS";
         public const string XBOXSSRanges = "Security Sector Ranges";
         public const string XBOXSSVersion = "Security Sector Version";
 

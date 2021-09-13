@@ -3182,12 +3182,15 @@ namespace MPF.DiscImageCreator
                         // Special File Hashes
                         else if (line.StartsWith("<rom"))
                         {
-                            if (line.Contains("SS.bin"))
-                                sshash = line;
-                            else if (line.Contains("PFI.bin"))
-                                pfihash = line;
-                            else if (line.Contains("DMI.bin"))
-                                dmihash = line;
+                            if (GetISOHashValues(line, out long _, out string crc32, out string _, out string _))
+                            {
+                                if (line.Contains("SS.bin"))
+                                    sshash = crc32.ToUpperInvariant();
+                                else if (line.Contains("PFI.bin"))
+                                    pfihash = crc32.ToUpperInvariant();
+                                else if (line.Contains("DMI.bin"))
+                                    dmihash = crc32.ToUpperInvariant();
+                            }
                         }
                     }
 
