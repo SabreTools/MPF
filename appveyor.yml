@@ -40,8 +40,8 @@ after_build:
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/6748071/DiscImageCreator_20210701.zip
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 
-- 7z e aaru-5.3.0-rc1_windows_x64.zip -oMPF\bin\Debug\net48\Programs\Aaru *
-- 7z e aaru-5.3.0-rc1_windows_x64.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Aaru *
+- 7z x aaru-5.3.0-rc1_windows_x64.zip -oMPF\bin\Debug\net48\Programs\Aaru *
+- 7z x aaru-5.3.0-rc1_windows_x64.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Aaru *
 
 - 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net48\Programs\DD *
 - 7z e dd-0.6beta3.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\DD *
