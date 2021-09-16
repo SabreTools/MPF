@@ -34,6 +34,13 @@ build:
   project: MPF.sln
 
 # post-build step
+on_success:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 success $env:WEBHOOK_URL
+on_failure:
+  - ps: Invoke-RestMethod https://raw.githubusercontent.com/DiscordHooks/appveyor-discord-webhook/master/send.ps1 -o send.ps1
+  - ps: ./send.ps1 failure $env:WEBHOOK_URL
+
 after_build:
 - ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.3.0-rc1/aaru-5.3.0-rc1_windows_x64.zip
 - ps: appveyor DownloadFile http://www.chrysocome.net/downloads/8ab730cd2a29e76ddd89be1f99357942/dd-0.6beta3.zip
