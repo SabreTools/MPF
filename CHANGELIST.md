@@ -3,6 +3,7 @@
 - Add Pocket PC support
 - Add HD-DVD-Video support
 - Convert to using separate Redump library code
+- Update to Aaru v5.3.0-rc1
 
 ### 2.1 (2021-07-22)
 - Enum, no more

@@ -9,7 +9,6 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.CueSheets;
 using MPF.Data;
-using MPF.Utilities;
 using RedumpLib.Data;
 using Schemas;
 
@@ -68,6 +67,8 @@ namespace MPF.Aaru
 
         public string FormatDumpValue { get; set; }
 
+        public string GeometryValue { get; set; }
+
         public string ImgBurnLogValue { get; set; }
 
         public string InputValue { get; set; }
@@ -77,6 +78,8 @@ namespace MPF.Aaru
         public string Input2Value { get; set; }
 
         public long? LengthValue { get; set; }
+
+        public int? MaxBlocksValue { get; set; }
 
         public string MediaBarcodeValue { get; set; }
 
@@ -373,20 +376,24 @@ namespace MPF.Aaru
             #region Pre-command flags
 
             // Debug
-            if (this[FlagStrings.DebugLong] == true)
-                parameters.Add(FlagStrings.DebugLong);
+            if (this[FlagStrings.DebugLong] != null)
+                parameters.Add($"{FlagStrings.DebugLong} {this[FlagStrings.DebugLong]}");
+
+            // Pause
+            if (this[FlagStrings.PauseLong] != null)
+                parameters.Add($"{FlagStrings.PauseLong} {this[FlagStrings.PauseLong]}");
 
             // Verbose
-            if (this[FlagStrings.VerboseLong] == true)
-                parameters.Add(FlagStrings.VerboseLong);
+            if (this[FlagStrings.VerboseLong] != null)
+                parameters.Add($"{FlagStrings.VerboseLong} {this[FlagStrings.VerboseLong]}");
 
             // Version
-            if (this[FlagStrings.VersionLong] == true)
-                parameters.Add(FlagStrings.VersionLong);
+            if (this[FlagStrings.VersionLong] != null)
+                parameters.Add($"{FlagStrings.VersionLong} {this[FlagStrings.VersionLong]}");
 
             // Help
-            if (this[FlagStrings.HelpLong] == true)
-                parameters.Add(FlagStrings.VersionLong);
+            if (this[FlagStrings.HelpLong] != null)
+                parameters.Add($"{FlagStrings.HelpLong} {this[FlagStrings.HelpLong]}");
 
             #endregion
 
@@ -403,302 +410,330 @@ namespace MPF.Aaru
             // Adler-32
             if (IsFlagSupported(FlagStrings.Adler32Long))
             {
-                if (this[FlagStrings.Adler32Long] == true)
-                    parameters.Add(FlagStrings.Adler32Long);
+                if (this[FlagStrings.Adler32Long] != null)
+                    parameters.Add($"{FlagStrings.Adler32Long} {this[FlagStrings.Adler32Long]}");
             }
 
             // Clear
             if (IsFlagSupported(FlagStrings.ClearLong))
             {
-                if (this[FlagStrings.ClearLong] == true)
-                    parameters.Add(FlagStrings.ClearLong);
+                if (this[FlagStrings.ClearLong] != null)
+                    parameters.Add($"{FlagStrings.ClearLong} {this[FlagStrings.ClearLong]}");
             }
 
             // Clear All
             if (IsFlagSupported(FlagStrings.ClearAllLong))
             {
-                if (this[FlagStrings.ClearAllLong] == true)
-                    parameters.Add(FlagStrings.ClearAllLong);
+                if (this[FlagStrings.ClearAllLong] != null)
+                    parameters.Add($"{FlagStrings.ClearAllLong} {this[FlagStrings.ClearAllLong]}");
             }
 
             // CRC16
             if (IsFlagSupported(FlagStrings.CRC16Long))
             {
-                if (this[FlagStrings.CRC16Long] == true)
-                    parameters.Add(FlagStrings.CRC16Long);
+                if (this[FlagStrings.CRC16Long] != null)
+                    parameters.Add($"{FlagStrings.CRC16Long} {this[FlagStrings.CRC16Long]}");
             }
 
             // CRC32
             if (IsFlagSupported(FlagStrings.CRC32Long))
             {
-                if (this[FlagStrings.CRC32Long] == true)
-                    parameters.Add(FlagStrings.CRC32Long);
+                if (this[FlagStrings.CRC32Long] != null)
+                    parameters.Add($"{FlagStrings.CRC32Long} {this[FlagStrings.CRC32Long]}");
             }
 
             // CRC64
             if (IsFlagSupported(FlagStrings.CRC64Long))
             {
-                if (this[FlagStrings.CRC64Long] == true)
-                    parameters.Add(FlagStrings.CRC64Long);
+                if (this[FlagStrings.CRC64Long] != null)
+                    parameters.Add($"{FlagStrings.CRC64Long} {this[FlagStrings.CRC64Long]}");
             }
 
             // Disk Tags
             if (IsFlagSupported(FlagStrings.DiskTagsLong))
             {
-                if (this[FlagStrings.DiskTagsLong] == true)
-                    parameters.Add(FlagStrings.DiskTagsLong);
+                if (this[FlagStrings.DiskTagsLong] != null)
+                    parameters.Add($"{FlagStrings.DiskTagsLong} {this[FlagStrings.DiskTagsLong]}");
             }
 
             // Duplicated Sectors
             if (IsFlagSupported(FlagStrings.DuplicatedSectorsLong))
             {
-                if (this[FlagStrings.DuplicatedSectorsLong] == true)
-                    parameters.Add(FlagStrings.DuplicatedSectorsLong);
+                if (this[FlagStrings.DuplicatedSectorsLong] != null)
+                    parameters.Add($"{FlagStrings.DuplicatedSectorsLong} {this[FlagStrings.DuplicatedSectorsLong]}");
             }
 
             // Eject
             if (IsFlagSupported(FlagStrings.EjectLong))
             {
-                if (this[FlagStrings.EjectLong] == true)
-                    parameters.Add(FlagStrings.EjectLong);
+                if (this[FlagStrings.EjectLong] != null)
+                    parameters.Add($"{FlagStrings.EjectLong} {this[FlagStrings.EjectLong]}");
             }
 
             // Extended Attributes
             if (IsFlagSupported(FlagStrings.ExtendedAttributesLong))
             {
-                if (this[FlagStrings.ExtendedAttributesLong] == true)
-                    parameters.Add(FlagStrings.ExtendedAttributesLong);
+                if (this[FlagStrings.ExtendedAttributesLong] != null)
+                    parameters.Add($"{FlagStrings.ExtendedAttributesLong} {this[FlagStrings.ExtendedAttributesLong]}");
             }
 
             // Filesystems
             if (IsFlagSupported(FlagStrings.FilesystemsLong))
             {
-                if (this[FlagStrings.FilesystemsLong] == true)
-                    parameters.Add(FlagStrings.FilesystemsLong);
+                if (this[FlagStrings.FilesystemsLong] != null)
+                    parameters.Add($"{FlagStrings.FilesystemsLong} {this[FlagStrings.FilesystemsLong]}");
             }
 
             // First Pregap
             if (IsFlagSupported(FlagStrings.FirstPregapLong))
             {
-                if (this[FlagStrings.FirstPregapLong] == true)
-                    parameters.Add(FlagStrings.FirstPregapLong);
+                if (this[FlagStrings.FirstPregapLong] != null)
+                    parameters.Add($"{FlagStrings.FirstPregapLong} {this[FlagStrings.FirstPregapLong]}");
             }
 
             // Fix Offset
             if (IsFlagSupported(FlagStrings.FixOffsetLong))
             {
-                if (this[FlagStrings.FixOffsetLong] == true)
-                    parameters.Add(FlagStrings.FixOffsetLong);
+                if (this[FlagStrings.FixOffsetLong] != null)
+                    parameters.Add($"{FlagStrings.FixOffsetLong} {this[FlagStrings.FixOffsetLong]}");
             }
 
             // Fix Subchannel
             if (IsFlagSupported(FlagStrings.FixSubchannelLong))
             {
-                if (this[FlagStrings.FixSubchannelLong] == true)
-                    parameters.Add(FlagStrings.FixSubchannelLong);
+                if (this[FlagStrings.FixSubchannelLong] != null)
+                    parameters.Add($"{FlagStrings.FixSubchannelLong} {this[FlagStrings.FixSubchannelLong]}");
             }
 
             // Fix Subchannel CRC
             if (IsFlagSupported(FlagStrings.FixSubchannelCrcLong))
             {
-                if (this[FlagStrings.FixSubchannelCrcLong] == true)
-                    parameters.Add(FlagStrings.FixSubchannelCrcLong);
+                if (this[FlagStrings.FixSubchannelCrcLong] != null)
+                    parameters.Add($"{FlagStrings.FixSubchannelCrcLong} {this[FlagStrings.FixSubchannelCrcLong]}");
             }
 
             // Fix Subchannel Position
             if (IsFlagSupported(FlagStrings.FixSubchannelPositionLong))
             {
-                if (this[FlagStrings.FixSubchannelPositionLong] == true)
-                    parameters.Add(FlagStrings.FixSubchannelPositionLong);
+                if (this[FlagStrings.FixSubchannelPositionLong] != null)
+                    parameters.Add($"{FlagStrings.FixSubchannelPositionLong} {this[FlagStrings.FixSubchannelPositionLong]}");
             }
 
             // Fletcher-16
             if (IsFlagSupported(FlagStrings.Fletcher16Long))
             {
-                if (this[FlagStrings.Fletcher16Long] == true)
-                    parameters.Add(FlagStrings.Fletcher16Long);
+                if (this[FlagStrings.Fletcher16Long] != null)
+                    parameters.Add($"{FlagStrings.Fletcher16Long} {this[FlagStrings.Fletcher16Long]}");
             }
 
             // Fletcher-32
             if (IsFlagSupported(FlagStrings.Fletcher32Long))
             {
-                if (this[FlagStrings.Fletcher32Long] == true)
-                    parameters.Add(FlagStrings.Fletcher32Long);
+                if (this[FlagStrings.Fletcher32Long] != null)
+                    parameters.Add($"{FlagStrings.Fletcher32Long} {this[FlagStrings.Fletcher32Long]}");
             }
 
             // Force
             if (IsFlagSupported(FlagStrings.ForceLong))
             {
-                if (this[FlagStrings.ForceLong] == true)
-                    parameters.Add(FlagStrings.ForceLong);
+                if (this[FlagStrings.ForceLong] != null)
+                    parameters.Add($"{FlagStrings.ForceLong} {this[FlagStrings.ForceLong]}");
             }
 
             // Generate Subchannels
             if (IsFlagSupported(FlagStrings.GenerateSubchannelsLong))
             {
-                if (this[FlagStrings.GenerateSubchannelsLong] == true)
-                    parameters.Add(FlagStrings.GenerateSubchannelsLong);
+                if (this[FlagStrings.GenerateSubchannelsLong] != null)
+                    parameters.Add($"{FlagStrings.GenerateSubchannelsLong} {this[FlagStrings.GenerateSubchannelsLong]}");
             }
 
             // Long Format
             if (IsFlagSupported(FlagStrings.LongFormatLong))
             {
-                if (this[FlagStrings.LongFormatLong] == true)
-                    parameters.Add(FlagStrings.LongFormatLong);
+                if (this[FlagStrings.LongFormatLong] != null)
+                    parameters.Add($"{FlagStrings.LongFormatLong} {this[FlagStrings.LongFormatLong]}");
             }
 
             // Long Sectors
             if (IsFlagSupported(FlagStrings.LongSectorsLong))
             {
-                if (this[FlagStrings.LongSectorsLong] == true)
-                    parameters.Add(FlagStrings.LongSectorsLong);
+                if (this[FlagStrings.LongSectorsLong] != null)
+                    parameters.Add($"{FlagStrings.LongSectorsLong} {this[FlagStrings.LongSectorsLong]}");
             }
 
             // MD5
             if (IsFlagSupported(FlagStrings.MD5Long))
             {
-                if (this[FlagStrings.MD5Long] == true)
-                    parameters.Add(FlagStrings.MD5Long);
+                if (this[FlagStrings.MD5Long] != null)
+                    parameters.Add($"{FlagStrings.MD5Long} {this[FlagStrings.MD5Long]}");
             }
 
             // Metadata
             if (IsFlagSupported(FlagStrings.MetadataLong))
             {
-                if (this[FlagStrings.MetadataLong] == true)
-                    parameters.Add(FlagStrings.MetadataLong);
+                if (this[FlagStrings.MetadataLong] != null)
+                    parameters.Add($"{FlagStrings.MetadataLong} {this[FlagStrings.MetadataLong]}");
             }
 
             // Partitions
             if (IsFlagSupported(FlagStrings.PartitionsLong))
             {
-                if (this[FlagStrings.PartitionsLong] == true)
-                    parameters.Add(FlagStrings.PartitionsLong);
+                if (this[FlagStrings.PartitionsLong] != null)
+                    parameters.Add($"{FlagStrings.PartitionsLong} {this[FlagStrings.PartitionsLong]}");
             }
 
             // Persistent
             if (IsFlagSupported(FlagStrings.PersistentLong))
             {
-                if (this[FlagStrings.PersistentLong] == true)
-                    parameters.Add(FlagStrings.PersistentLong);
+                if (this[FlagStrings.PersistentLong] != null)
+                    parameters.Add($"{FlagStrings.PersistentLong} {this[FlagStrings.PersistentLong]}");
             }
 
             // Private
             if (IsFlagSupported(FlagStrings.PrivateLong))
             {
-                if (this[FlagStrings.PrivateLong] == true)
-                    parameters.Add(FlagStrings.PrivateLong);
+                if (this[FlagStrings.PrivateLong] != null)
+                    parameters.Add($"{FlagStrings.PrivateLong} {this[FlagStrings.PrivateLong]}");
             }
 
             // Resume
             if (IsFlagSupported(FlagStrings.ResumeLong))
             {
-                if (this[FlagStrings.ResumeLong] == true)
-                    parameters.Add(FlagStrings.ResumeLong);
+                if (this[FlagStrings.ResumeLong] != null)
+                    parameters.Add($"{FlagStrings.ResumeLong} {this[FlagStrings.ResumeLong]}");
             }
 
             // Retry Subchannel
             if (IsFlagSupported(FlagStrings.RetrySubchannelLong))
             {
-                if (this[FlagStrings.RetrySubchannelLong] == true)
-                    parameters.Add(FlagStrings.RetrySubchannelLong);
+                if (this[FlagStrings.RetrySubchannelLong] != null)
+                    parameters.Add($"{FlagStrings.RetrySubchannelLong} {this[FlagStrings.RetrySubchannelLong]}");
             }
 
             // Sector Tags
             if (IsFlagSupported(FlagStrings.SectorTagsLong))
             {
-                if (this[FlagStrings.SectorTagsLong] == true)
-                    parameters.Add(FlagStrings.SectorTagsLong);
+                if (this[FlagStrings.SectorTagsLong] != null)
+                    parameters.Add($"{FlagStrings.SectorTagsLong} {this[FlagStrings.SectorTagsLong]}");
             }
 
             // Separated Tracks
             if (IsFlagSupported(FlagStrings.SeparatedTracksLong))
             {
-                if (this[FlagStrings.SeparatedTracksLong] == true)
-                    parameters.Add(FlagStrings.SeparatedTracksLong);
+                if (this[FlagStrings.SeparatedTracksLong] != null)
+                    parameters.Add($"{FlagStrings.SeparatedTracksLong} {this[FlagStrings.SeparatedTracksLong]}");
             }
 
             // SHA-1
             if (IsFlagSupported(FlagStrings.SHA1Long))
             {
-                if (this[FlagStrings.SHA1Long] == true)
-                    parameters.Add(FlagStrings.SHA1Long);
+                if (this[FlagStrings.SHA1Long] != null)
+                    parameters.Add($"{FlagStrings.SHA1Long} {this[FlagStrings.SHA1Long]}");
             }
 
             // SHA-256
             if (IsFlagSupported(FlagStrings.SHA256Long))
             {
-                if (this[FlagStrings.SHA256Long] == true)
-                    parameters.Add(FlagStrings.SHA256Long);
+                if (this[FlagStrings.SHA256Long] != null)
+                    parameters.Add($"{FlagStrings.SHA256Long} {this[FlagStrings.SHA256Long]}");
             }
 
             // SHA-384
             if (IsFlagSupported(FlagStrings.SHA384Long))
             {
-                if (this[FlagStrings.SHA384Long] == true)
-                    parameters.Add(FlagStrings.SHA384Long);
+                if (this[FlagStrings.SHA384Long] != null)
+                    parameters.Add($"{FlagStrings.SHA384Long} {this[FlagStrings.SHA384Long]}");
             }
 
             // SHA-512
             if (IsFlagSupported(FlagStrings.SHA512Long))
             {
-                if (this[FlagStrings.SHA512Long] == true)
-                    parameters.Add(FlagStrings.SHA512Long);
+                if (this[FlagStrings.SHA512Long] != null)
+                    parameters.Add($"{FlagStrings.SHA512Long} {this[FlagStrings.SHA512Long]}");
             }
 
             // Skip CD-i Ready Hole
             if (IsFlagSupported(FlagStrings.SkipCdiReadyHoleLong))
             {
-                if (this[FlagStrings.SkipCdiReadyHoleLong] == true)
-                    parameters.Add(FlagStrings.SkipCdiReadyHoleLong);
+                if (this[FlagStrings.SkipCdiReadyHoleLong] != null)
+                    parameters.Add($"{FlagStrings.SkipCdiReadyHoleLong} {this[FlagStrings.SkipCdiReadyHoleLong]}");
             }
 
             // SpamSum
             if (IsFlagSupported(FlagStrings.SpamSumLong))
             {
-                if (this[FlagStrings.SpamSumLong] == true)
-                    parameters.Add(FlagStrings.SpamSumLong);
+                if (this[FlagStrings.SpamSumLong] != null)
+                    parameters.Add($"{FlagStrings.SpamSumLong} {this[FlagStrings.SpamSumLong]}");
             }
 
             // Stop on Error
             if (IsFlagSupported(FlagStrings.StopOnErrorLong))
             {
-                if (this[FlagStrings.StopOnErrorLong] == true)
-                    parameters.Add(FlagStrings.StopOnErrorLong);
+                if (this[FlagStrings.StopOnErrorLong] != null)
+                    parameters.Add($"{FlagStrings.StopOnErrorLong} {this[FlagStrings.StopOnErrorLong]}");
+            }
+
+            // Stop on Error
+            if (IsFlagSupported(FlagStrings.StoreEncryptedLong))
+            {
+                if (this[FlagStrings.StoreEncryptedLong] != null)
+                    parameters.Add($"{FlagStrings.StoreEncryptedLong} {this[FlagStrings.StoreEncryptedLong]}");
             }
 
             // Tape
             if (IsFlagSupported(FlagStrings.TapeLong))
             {
-                if (this[FlagStrings.TapeLong] == true)
-                    parameters.Add(FlagStrings.TapeLong);
+                if (this[FlagStrings.TapeLong] != null)
+                    parameters.Add($"{FlagStrings.TapeLong} {this[FlagStrings.TapeLong]}");
+            }
+
+            // Title Keys
+            if (IsFlagSupported(FlagStrings.TitleKeysLong))
+            {
+                if (this[FlagStrings.TitleKeysLong] != null)
+                    parameters.Add($"{FlagStrings.TitleKeysLong} {this[FlagStrings.TitleKeysLong]}");
+            }
+
+            // Trap Disc
+            if (IsFlagSupported(FlagStrings.TrapDiscLong))
+            {
+                if (this[FlagStrings.TrapDiscLong] != null)
+                    parameters.Add($"{FlagStrings.TrapDiscLong} {this[FlagStrings.TrapDiscLong]}");
             }
 
             // Trim
             if (IsFlagSupported(FlagStrings.TrimLong))
             {
-                if (this[FlagStrings.TrimLong] == true)
-                    parameters.Add(FlagStrings.TrimLong);
+                if (this[FlagStrings.TrimLong] != null)
+                    parameters.Add($"{FlagStrings.TrimLong} {this[FlagStrings.TrimLong]}");
+            }
+
+            // Use Buffered Reads
+            if (IsFlagSupported(FlagStrings.UseBufferedReadsLong))
+            {
+                if (this[FlagStrings.UseBufferedReadsLong] != null)
+                    parameters.Add($"{FlagStrings.UseBufferedReadsLong} {this[FlagStrings.UseBufferedReadsLong]}");
             }
 
             // Verify Disc
             if (IsFlagSupported(FlagStrings.VerifyDiscLong))
             {
-                if (this[FlagStrings.VerifyDiscLong] == true)
-                    parameters.Add(FlagStrings.VerifyDiscLong);
+                if (this[FlagStrings.VerifyDiscLong] != null)
+                    parameters.Add($"{FlagStrings.VerifyDiscLong} {this[FlagStrings.VerifyDiscLong]}");
             }
 
             // Verify Sectors
             if (IsFlagSupported(FlagStrings.VerifySectorsLong))
             {
-                if (this[FlagStrings.VerifySectorsLong] == true)
-                    parameters.Add(FlagStrings.VerifySectorsLong);
+                if (this[FlagStrings.VerifySectorsLong] != null)
+                    parameters.Add($"{FlagStrings.VerifySectorsLong} {this[FlagStrings.VerifySectorsLong]}");
             }
 
             // Whole Disc
             if (IsFlagSupported(FlagStrings.WholeDiscLong))
             {
-                if (this[FlagStrings.WholeDiscLong] == true)
-                    parameters.Add(FlagStrings.WholeDiscLong);
+                if (this[FlagStrings.WholeDiscLong] != null)
+                    parameters.Add($"{FlagStrings.WholeDiscLong} {this[FlagStrings.WholeDiscLong]}");
             }
 
             #endregion
@@ -746,6 +781,13 @@ namespace MPF.Aaru
             {
                 if (this[FlagStrings.CountLong] == true && CountValue != null)
                     parameters.Add($"{FlagStrings.CountLong} {CountValue}");
+            }
+
+            // Max Blocks
+            if (IsFlagSupported(FlagStrings.MaxBlocksLong))
+            {
+                if (this[FlagStrings.MaxBlocksLong] == true && MaxBlocksValue != null)
+                    parameters.Add($"{FlagStrings.MaxBlocksLong} {MaxBlocksValue}");
             }
 
             // Media Last Sequence
@@ -859,6 +901,13 @@ namespace MPF.Aaru
                     parameters.Add($"{FlagStrings.FormatDumpLong} \"{FormatDumpValue}\"");
             }
 
+            // Geometry
+            if (IsFlagSupported(FlagStrings.GeometryLong))
+            {
+                if (this[FlagStrings.GeometryLong] == true && GeometryValue != null)
+                    parameters.Add($"{FlagStrings.GeometryLong} \"{GeometryValue}\"");
+            }
+
             // ImgBurn Log
             if (IsFlagSupported(FlagStrings.ImgBurnLogLong))
             {
@@ -963,10 +1012,11 @@ namespace MPF.Aaru
             switch (BaseCommand)
             {
                 // Input value only
+                case CommandStrings.ArchivePrefixLong + " " + CommandStrings.ArchiveInfo:
                 case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo:
                 case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport:
+                case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemInfo:
                 case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong:
-                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode:
@@ -1020,6 +1070,14 @@ namespace MPF.Aaru
         {
             return new Dictionary<string, List<string>>()
             {
+                #region Archive Family
+
+                [CommandStrings.ArchivePrefixLong + " " + CommandStrings.ArchiveInfo] = new List<string>()
+                {
+                },
+
+                #endregion
+
                 #region Database Family
 
                 [CommandStrings.DatabasePrefixLong + " " + CommandStrings.DatabaseStats] = new List<string>()
@@ -1047,6 +1105,7 @@ namespace MPF.Aaru
 
                 [CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport] = new List<string>()
                 {
+                    FlagStrings.TrapDiscLong,
                 },
 
                 #endregion
@@ -1065,16 +1124,28 @@ namespace MPF.Aaru
                     FlagStrings.OptionsShort,
                 },
 
-                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong] = new List<string>()
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemInfo] = new List<string>()
                 {
                     FlagStrings.EncodingLong,
                     FlagStrings.EncodingShort,
-                    FlagStrings.LongFormatLong,
-                    FlagStrings.LongFormatShort,
+                    FlagStrings.ExtendedAttributesLong,
+                    FlagStrings.ExtendedAttributesShort,
                     FlagStrings.NamespaceLong,
                     FlagStrings.NamespaceShort,
                     FlagStrings.OptionsLong,
                     FlagStrings.OptionsShort,
+                },
+
+                [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong] = new List<string>()
+                {
+                    FlagStrings.EncodingLong,
+                    FlagStrings.EncodingShort,
+                    FlagStrings.FilesystemsLong,
+                    FlagStrings.FilesystemsShort,
+                    FlagStrings.LongFormatLong,
+                    FlagStrings.LongFormatShort,
+                    FlagStrings.PartitionsLong,
+                    FlagStrings.PartitionsShort,
                 },
 
                 [CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemOptions] = new List<string>()
@@ -1084,20 +1155,6 @@ namespace MPF.Aaru
                 #endregion
 
                 #region Image Family
-
-                [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze] = new List<string>()
-                {
-                    FlagStrings.EncodingLong,
-                    FlagStrings.EncodingShort,
-                    FlagStrings.FilesystemsLong,
-                    FlagStrings.FilesystemsShort,
-                    FlagStrings.PartitionsLong,
-                    FlagStrings.PartitionsShort,
-                    FlagStrings.VerifyDiscLong,
-                    FlagStrings.VerifyDiscShort,
-                    FlagStrings.VerifySectorsLong,
-                    FlagStrings.VerifySectorsShort,
-                },
 
                 [CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong] = new List<string>()
                 {
@@ -1138,10 +1195,16 @@ namespace MPF.Aaru
                     FlagStrings.DriveModelLong,
                     FlagStrings.DriveRevisionLong,
                     FlagStrings.DriveSerialLong,
+                    FlagStrings.FixSubchannelLong,
+                    FlagStrings.FixSubchannelCrcLong,
+                    FlagStrings.FixSubchannelPositionLong,
                     FlagStrings.ForceLong,
                     FlagStrings.ForceShort,
                     FlagStrings.FormatConvertLong,
                     FlagStrings.FormatConvertShort,
+                    FlagStrings.GenerateSubchannelsLong,
+                    FlagStrings.GeometryLong,
+                    FlagStrings.GeometryShort,
                     FlagStrings.MediaBarcodeLong,
                     FlagStrings.MediaLastSequenceLong,
                     FlagStrings.MediaManufacturerLong,
@@ -1237,6 +1300,7 @@ namespace MPF.Aaru
                     FlagStrings.FormatConvertLong,
                     FlagStrings.FormatConvertShort,
                     FlagStrings.GenerateSubchannelsLong,
+                    FlagStrings.MaxBlocksLong,
                     FlagStrings.MetadataLong,
                     FlagStrings.OptionsLong,
                     FlagStrings.OptionsShort,
@@ -1253,8 +1317,11 @@ namespace MPF.Aaru
                     FlagStrings.SpeedLong,
                     FlagStrings.StopOnErrorLong,
                     FlagStrings.StopOnErrorShort,
+                    FlagStrings.StoreEncryptedLong,
                     FlagStrings.SubchannelLong,
+                    FlagStrings.TitleKeysLong,
                     FlagStrings.TrimLong,
+                    FlagStrings.UseBufferedReadsLong,
                     FlagStrings.XMLSidecarLong,
                     FlagStrings.XMLSidecarShort,
                 },
@@ -1271,6 +1338,7 @@ namespace MPF.Aaru
                     FlagStrings.ImgBurnLogShort,
                     FlagStrings.MHDDLogLong,
                     FlagStrings.MHDDLogShort,
+                    FlagStrings.UseBufferedReadsLong,
                 },
 
                 #endregion
@@ -1513,17 +1581,20 @@ namespace MPF.Aaru
                 int keyCount = Keys.Count();
 
                 // Debug
-                ProcessFlagParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, ref start);
+                ProcessBooleanParameter(parts, FlagStrings.DebugShort, FlagStrings.DebugLong, ref start, true);
+
+                // Pause
+                ProcessBooleanParameter(parts, null, FlagStrings.PauseLong, ref start, true);
 
                 // Verbose
-                ProcessFlagParameter(parts, FlagStrings.VerboseShort, FlagStrings.VerboseLong, ref start);
+                ProcessBooleanParameter(parts, FlagStrings.VerboseShort, FlagStrings.VerboseLong, ref start, true);
 
                 // Version
-                ProcessFlagParameter(parts, null, FlagStrings.VersionLong, ref start);
+                ProcessBooleanParameter(parts, null, FlagStrings.VersionLong, ref start, true);
 
                 // Help
-                ProcessFlagParameter(parts, FlagStrings.HelpShort, FlagStrings.HelpLong, ref start);
-                ProcessFlagParameter(parts, FlagStrings.HelpShortAlt, FlagStrings.HelpLong, ref start);
+                ProcessBooleanParameter(parts, FlagStrings.HelpShort, FlagStrings.HelpLong, ref start, true);
+                ProcessBooleanParameter(parts, FlagStrings.HelpShortAlt, FlagStrings.HelpLong, ref start, true);
 
                 // If we didn't add any new flags, break out since we might be at command handling
                 if (keyCount == Keys.Count())
@@ -1559,133 +1630,145 @@ namespace MPF.Aaru
                 #region Boolean flags
 
                 // Adler-32
-                ProcessFlagParameter(parts, FlagStrings.Adler32Short, FlagStrings.Adler32Long, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.Adler32Short, FlagStrings.Adler32Long, ref i, true);
 
                 // Clear
-                ProcessFlagParameter(parts, null, FlagStrings.ClearLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.ClearLong, ref i, true);
 
                 // Clear All
-                ProcessFlagParameter(parts, null, FlagStrings.ClearAllLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.ClearAllLong, ref i, true);
 
                 // CRC16
-                ProcessFlagParameter(parts, null, FlagStrings.CRC16Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.CRC16Long, ref i, true);
 
                 // CRC32
-                ProcessFlagParameter(parts, FlagStrings.CRC32Short, FlagStrings.CRC32Long, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.CRC32Short, FlagStrings.CRC32Long, ref i, true);
 
                 // CRC64
-                ProcessFlagParameter(parts, null, FlagStrings.CRC64Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.CRC64Long, ref i, true);
 
                 // Disk Tags
-                ProcessFlagParameter(parts, FlagStrings.DiskTagsShort, FlagStrings.DiskTagsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.DiskTagsShort, FlagStrings.DiskTagsLong, ref i, true);
 
                 // Deduplicated Sectors
-                ProcessFlagParameter(parts, FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.DuplicatedSectorsShort, FlagStrings.DuplicatedSectorsLong, ref i, true);
 
                 // Eject
-                ProcessFlagParameter(parts, null, FlagStrings.EjectLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.EjectLong, ref i, true);
 
                 // Extended Attributes
-                ProcessFlagParameter(parts, FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.ExtendedAttributesShort, FlagStrings.ExtendedAttributesLong, ref i, true);
 
                 // Filesystems
-                ProcessFlagParameter(parts, FlagStrings.FilesystemsShort, FlagStrings.FilesystemsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.FilesystemsShort, FlagStrings.FilesystemsLong, ref i, true);
 
                 // First Pregap
-                ProcessFlagParameter(parts, null, FlagStrings.FirstPregapLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.FirstPregapLong, ref i, true);
 
                 // Fix Offset
-                ProcessFlagParameter(parts, null, FlagStrings.FixOffsetLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.FixOffsetLong, ref i, true);
 
                 // Fix Subchannel
-                ProcessFlagParameter(parts, null, FlagStrings.FixSubchannelLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.FixSubchannelLong, ref i, true);
 
                 // Fix Subchannel CRC
-                ProcessFlagParameter(parts, null, FlagStrings.FixSubchannelCrcLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.FixSubchannelCrcLong, ref i, true);
 
                 // Fix Subchannel Position
-                ProcessFlagParameter(parts, null, FlagStrings.FixSubchannelPositionLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.FixSubchannelPositionLong, ref i, true);
 
                 // Fletcher-16
-                ProcessFlagParameter(parts, null, FlagStrings.Fletcher16Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.Fletcher16Long, ref i, true);
 
                 // Fletcher-32
-                ProcessFlagParameter(parts, null, FlagStrings.Fletcher32Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.Fletcher32Long, ref i, true);
 
                 // Force
-                ProcessFlagParameter(parts, FlagStrings.ForceShort, FlagStrings.ForceLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.ForceShort, FlagStrings.ForceLong, ref i, true);
 
                 // Generate Subchannels
-                ProcessFlagParameter(parts, null, FlagStrings.GenerateSubchannelsLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.GenerateSubchannelsLong, ref i, true);
 
                 // Long Format
-                ProcessFlagParameter(parts, FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.LongFormatShort, FlagStrings.LongFormatLong, ref i, true);
 
                 // Long Sectors
-                ProcessFlagParameter(parts, FlagStrings.LongSectorsShort, FlagStrings.LongSectorsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.LongSectorsShort, FlagStrings.LongSectorsLong, ref i, true);
 
                 // MD5
-                ProcessFlagParameter(parts, FlagStrings.MD5Short, FlagStrings.MD5Long, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.MD5Short, FlagStrings.MD5Long, ref i, true);
 
                 // Metadata
-                ProcessFlagParameter(parts, null, FlagStrings.MetadataLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.MetadataLong, ref i, true);
 
                 // Partitions
-                ProcessFlagParameter(parts, FlagStrings.PartitionsShort, FlagStrings.PartitionsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.PartitionsShort, FlagStrings.PartitionsLong, ref i, true);
 
                 // Persistent
-                ProcessFlagParameter(parts, null, FlagStrings.PersistentLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.PersistentLong, ref i, true);
 
                 // Private
-                ProcessFlagParameter(parts, null, FlagStrings.PrivateLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.PrivateLong, ref i, true);
 
                 // Resume
-                ProcessFlagParameter(parts, FlagStrings.ResumeShort, FlagStrings.ResumeLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.ResumeShort, FlagStrings.ResumeLong, ref i, true);
 
                 // Retry Subchannel
-                ProcessFlagParameter(parts, null, FlagStrings.RetrySubchannelLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.RetrySubchannelLong, ref i, true);
 
                 // Sector Tags
-                ProcessFlagParameter(parts, FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.SectorTagsShort, FlagStrings.SectorTagsLong, ref i, true);
 
                 // Separated Tracks
-                ProcessFlagParameter(parts, FlagStrings.SeparatedTracksShort, FlagStrings.SeparatedTracksLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.SeparatedTracksShort, FlagStrings.SeparatedTracksLong, ref i, true);
 
                 // SHA-1
-                ProcessFlagParameter(parts, FlagStrings.SHA1Short, FlagStrings.SHA1Long, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.SHA1Short, FlagStrings.SHA1Long, ref i, true);
 
                 // SHA-256
-                ProcessFlagParameter(parts, null, FlagStrings.SHA256Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.SHA256Long, ref i, true);
 
                 // SHA-384
-                ProcessFlagParameter(parts, null, FlagStrings.SHA384Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.SHA384Long, ref i, true);
 
                 // SHA-512
-                ProcessFlagParameter(parts, null, FlagStrings.SHA512Long, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.SHA512Long, ref i, true);
 
                 // Skip CD-i Ready Hole
-                ProcessFlagParameter(parts, null, FlagStrings.SkipCdiReadyHoleLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.SkipCdiReadyHoleLong, ref i, true);
 
                 // SpamSum
-                ProcessFlagParameter(parts, FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.SpamSumShort, FlagStrings.SpamSumLong, ref i, true);
 
                 // Stop on Error
-                ProcessFlagParameter(parts, FlagStrings.StopOnErrorShort, FlagStrings.StopOnErrorLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.StopOnErrorShort, FlagStrings.StopOnErrorLong, ref i, true);
+
+                // Store Encrypted
+                ProcessBooleanParameter(parts, null, FlagStrings.StoreEncryptedLong, ref i, true);
 
                 // Tape
-                ProcessFlagParameter(parts, FlagStrings.TapeShort, FlagStrings.TapeLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.TapeShort, FlagStrings.TapeLong, ref i, true);
+
+                // Title Keys
+                ProcessBooleanParameter(parts, null, FlagStrings.TitleKeysLong, ref i, true);
+
+                // Trap Disc
+                ProcessBooleanParameter(parts, FlagStrings.TrapDiscShort, FlagStrings.TrapDiscLong, ref i, true);
 
                 // Trim
-                ProcessFlagParameter(parts, null, FlagStrings.TrimLong, ref i);
+                ProcessBooleanParameter(parts, null, FlagStrings.TrimLong, ref i, true);
+
+                // Use Buffered Reads
+                ProcessBooleanParameter(parts, null, FlagStrings.UseBufferedReadsLong, ref i, true);
 
                 // Verify Disc
-                ProcessFlagParameter(parts, FlagStrings.VerifyDiscShort, FlagStrings.VerifyDiscLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.VerifyDiscShort, FlagStrings.VerifyDiscLong, ref i, true);
 
                 // Verify Sectors
-                ProcessFlagParameter(parts, FlagStrings.VerifySectorsShort, FlagStrings.VerifySectorsLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.VerifySectorsShort, FlagStrings.VerifySectorsLong, ref i, true);
 
                 // Whole Disc
-                ProcessFlagParameter(parts, FlagStrings.WholeDiscShort, FlagStrings.WholeDiscLong, ref i);
+                ProcessBooleanParameter(parts, FlagStrings.WholeDiscShort, FlagStrings.WholeDiscLong, ref i, true);
 
                 #endregion
 
@@ -1723,6 +1806,11 @@ namespace MPF.Aaru
                 intValue = ProcessInt32Parameter(parts, FlagStrings.CountShort, FlagStrings.CountLong, ref i);
                 if (intValue != null && intValue != Int32.MinValue)
                     CountValue = intValue;
+
+                // MaxBlocks
+                intValue = ProcessInt32Parameter(parts, null, FlagStrings.MaxBlocksLong, ref i);
+                if (intValue != null && intValue != Int32.MinValue)
+                    MaxBlocksValue = intValue;
 
                 // Media Last Sequence
                 intValue = ProcessInt32Parameter(parts, null, FlagStrings.MediaLastSequenceLong, ref i);
@@ -1811,6 +1899,11 @@ namespace MPF.Aaru
                 stringValue = ProcessStringParameter(parts, FlagStrings.FormatDumpShort, FlagStrings.FormatDumpLong, ref i);
                 if (!string.IsNullOrEmpty(stringValue))
                     FormatDumpValue = stringValue;
+
+                // Geometry
+                stringValue = ProcessStringParameter(parts, FlagStrings.GeometryShort, FlagStrings.GeometryLong, ref i);
+                if (!string.IsNullOrEmpty(stringValue))
+                    GeometryValue = stringValue;
 
                 // ImgBurn Log
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImgBurnLogShort, FlagStrings.ImgBurnLogLong, ref i);
@@ -1907,10 +2000,11 @@ namespace MPF.Aaru
             switch (BaseCommand)
             {
                 // Input value only
+                case CommandStrings.ArchivePrefixLong + " " + CommandStrings.ArchiveInfo:
                 case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceInfo:
                 case CommandStrings.DevicePrefixLong + " " + CommandStrings.DeviceReport:
+                case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemInfo:
                 case CommandStrings.FilesystemPrefixLong + " " + CommandStrings.FilesystemListLong:
-                case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageAnalyze:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageChecksumLong:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageCreateSidecar:
                 case CommandStrings.ImagePrefixLong + " " + CommandStrings.ImageDecode:
@@ -2032,6 +2126,20 @@ namespace MPF.Aaru
                 // Handle the family first
                 switch (splitCommand[0])
                 {
+                    case CommandStrings.ArchivePrefixShort:
+                    case CommandStrings.ArchivePrefixLong:
+                        family = CommandStrings.ArchivePrefixLong;
+                        switch (splitCommand[1])
+                        {
+                            case CommandStrings.ArchiveInfo:
+                                command = CommandStrings.ArchiveInfo;
+                                break;
+                            default:
+                                command = null;
+                                break;
+                        }
+
+                        break;
                     case CommandStrings.DatabasePrefixShort:
                     case CommandStrings.DatabasePrefixLong:
                         family = CommandStrings.DatabasePrefixLong;
@@ -2080,6 +2188,9 @@ namespace MPF.Aaru
                             case CommandStrings.FilesystemExtract:
                                 command = CommandStrings.FilesystemExtract;
                                 break;
+                            case CommandStrings.FilesystemInfo:
+                                command = CommandStrings.FilesystemInfo;
+                                break;
                             case CommandStrings.FilesystemListShort:
                             case CommandStrings.FilesystemListLong:
                                 command = CommandStrings.FilesystemListLong;
@@ -2099,9 +2210,6 @@ namespace MPF.Aaru
                         family = CommandStrings.ImagePrefixLong;
                         switch (splitCommand[1])
                         {
-                            case CommandStrings.ImageAnalyze:
-                                command = CommandStrings.ImageAnalyze;
-                                break;
                             case CommandStrings.ImageChecksumShort:
                             case CommandStrings.ImageChecksumLong:
                                 command = CommandStrings.ImageChecksumLong;

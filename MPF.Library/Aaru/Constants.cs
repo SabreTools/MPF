@@ -7,6 +7,11 @@ namespace MPF.Aaru
     {
         public const string NONE = "";
 
+        // Archive Family
+        public const string ArchivePrefixShort = "arc";
+        public const string ArchivePrefixLong = "archive";
+        public const string ArchiveInfo = "info";
+
         // Database Family
         public const string DatabasePrefixShort = "db";
         public const string DatabasePrefixLong = "database";
@@ -25,6 +30,7 @@ namespace MPF.Aaru
         public const string FilesystemPrefixShortAlt = "fs";
         public const string FilesystemPrefixLong = "filesystem";
         public const string FilesystemExtract = "extract";
+        public const string FilesystemInfo = "info";
         public const string FilesystemListShort = "ls";
         public const string FilesystemListLong = "list";
         public const string FilesystemOptions = "options";
@@ -32,7 +38,6 @@ namespace MPF.Aaru
         // Image Family
         public const string ImagePrefixShort = "i";
         public const string ImagePrefixLong = "image";
-        public const string ImageAnalyze = "analyze";
         public const string ImageChecksumShort = "chk";
         public const string ImageChecksumLong = "checksum";
         public const string ImageCompareShort = "cmp";
@@ -149,6 +154,7 @@ namespace MPF.Aaru
         public const string MetadataLong = "--metadata";
         public const string PartitionsShort = "-p";
         public const string PartitionsLong = "--partitions";
+        public const string PauseLong = "--pause";
         public const string PersistentLong = "--persistent";
         public const string PrivateLong = "--private";
         public const string ResumeShort = "-r";
@@ -168,9 +174,14 @@ namespace MPF.Aaru
         public const string SpamSumLong = "--spamsum";
         public const string StopOnErrorShort = "-s";
         public const string StopOnErrorLong = "--stop-on-error";
+        public const string StoreEncryptedLong = "--store-encrypted";
         public const string TapeShort = "-t";
         public const string TapeLong = "--tape";
+        public const string TitleKeysLong = "--title-keys";
+        public const string TrapDiscShort = "-t";
+        public const string TrapDiscLong = "--trap-disc";
         public const string TrimLong = "--trim";
+        public const string UseBufferedReadsLong = "--use-buffered-reads";
         public const string VerboseShort = "-v";
         public const string VerboseLong = "--verbose";
         public const string VerifyDiscShort = "-w";
@@ -195,6 +206,7 @@ namespace MPF.Aaru
         public const string BlockSizeLong = "--block-size";
         public const string CountShort = "-c";
         public const string CountLong = "--count";
+        public const string MaxBlocksLong = "--max-blocks";
         public const string MediaLastSequenceLong = "--media-lastsequence";
         public const string MediaSequenceLong = "--media-sequence";
         public const string SkipShort = "-k";
@@ -219,6 +231,8 @@ namespace MPF.Aaru
         public const string FormatConvertLong = "--format";
         public const string FormatDumpShort = "-t";
         public const string FormatDumpLong = "--format";
+        public const string GeometryShort = "-g";
+        public const string GeometryLong = "--geometry";
         public const string ImgBurnLogShort = "-b";
         public const string ImgBurnLogLong = "--ibg-log";
         public const string MediaBarcodeLong = "--media-barcode";
