@@ -92,7 +92,7 @@ namespace MPF.Data
             }
             set
             {
-                _settings["DefaultSystem"] = EnumConverter.GetLongName(value);
+                _settings["DefaultSystem"] = value.LongName();
             }
         }
 

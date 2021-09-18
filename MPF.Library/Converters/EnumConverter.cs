@@ -137,7 +137,7 @@ namespace MPF.Converters
         {
             try
             {
-                var sourceType = value.GetType();
+                var sourceType = value?.GetType();
                 sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
 
                 if (!LongNameMethods.TryGetValue(sourceType, out MethodInfo method))

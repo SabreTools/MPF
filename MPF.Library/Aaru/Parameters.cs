@@ -1429,14 +1429,10 @@ namespace MPF.Aaru
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
         {
-            switch (BaseCommand)
-            {
-                case CommandStrings.MediaDump:
-                    return true;
+            if (BaseCommand == $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}")
+                return true;
 
-                default:
-                    return false;
-            }
+            return false;
         }
 
         /// <inheritdoc/>
@@ -1491,7 +1487,7 @@ namespace MPF.Aaru
         {
             BaseCommand = $"{CommandStrings.MediaPrefixLong} {CommandStrings.MediaDump}";
 
-            InputValue = $"\\\\?\\{driveLetter}:";
+            InputValue = $"{driveLetter}:";
             OutputValue = filename;
 
             if (driveSpeed != null)
@@ -1513,32 +1509,39 @@ namespace MPF.Aaru
             }
 
             // Set user-defined options
-            this[FlagStrings.DebugLong] = options.AaruEnableDebug;
-            this[FlagStrings.VerboseLong] = options.AaruEnableVerbose;
-            this[FlagStrings.ForceLong] = options.AaruForceDumping;
-            this[FlagStrings.PrivateLong] = options.AaruStripPersonalData;
+            if (options.AaruEnableDebug)
+                this[FlagStrings.DebugLong] = options.AaruEnableDebug;
+            if (options.AaruEnableVerbose)
+                this[FlagStrings.VerboseLong] = options.AaruEnableVerbose;
+            if (options.AaruForceDumping)
+                this[FlagStrings.ForceLong] = options.AaruForceDumping;
+            if (options.AaruStripPersonalData)
+                this[FlagStrings.PrivateLong] = options.AaruStripPersonalData;
 
             // TODO: Look at dump-media formats and the like and see what options there are there to fill in defaults
             // Now sort based on disc type
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    this[FlagStrings.FirstPregapLong] = true;
-                    this[FlagStrings.FixOffsetLong] = true;
-                    this[FlagStrings.SubchannelLong] = true;
-                    SubchannelValue = "any";
+                    // Currently no defaults set
                     break;
                 case MediaType.DVD:
-                    // Currently no defaults set
+                    this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
+                    this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
+                    this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     break;
                 case MediaType.GDROM:
                     // Currently no defaults set
                     break;
                 case MediaType.HDDVD:
-                    // Currently no defaults set
+                    this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
+                    this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
+                    this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     break;
                 case MediaType.BluRay:
-                    // Currently no defaults set
+                    this[FlagStrings.StoreEncryptedLong] = true; // TODO: Make this configurable
+                    this[FlagStrings.TitleKeysLong] = false; // TODO: Make this configurable
+                    this[FlagStrings.TrimLong] = true; // TODO: Make this configurable
                     break;
 
                 // Special Formats
