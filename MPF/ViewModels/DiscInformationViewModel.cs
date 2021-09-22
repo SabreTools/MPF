@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using MPF.Data;
 using MPF.Windows;
 using RedumpLib.Data;
 

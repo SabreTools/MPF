@@ -1074,6 +1074,9 @@ namespace MPF.Data
                     AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 2);
                     AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 2);
 
+                    AddIfExists(output, "Label Side " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 2);
+                    AddIfExists(output, "Label Side " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 2);
+                    AddIfExists(output, "Label Side " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 2);
                     AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 2);
                     AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 2);
                 }
