@@ -83,6 +83,10 @@ namespace MPF.GUI.ViewModels
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
+
+            // Check for updates, if necessary
+            if (App.Options.CheckForUpdatesOnStartup)
+                CheckForUpdates();
         }
 
         #region Population
@@ -353,15 +357,15 @@ namespace MPF.GUI.ViewModels
             if (rescanDrives)
             {
                 App.Instance.StatusLabel.Content = "Creating drive list, please wait!";
-                await App.Instance.Dispatcher.InvokeAsync(() => PopulateDrives());
+                await App.Instance.Dispatcher.InvokeAsync(PopulateDrives);
             }
             else
             {
-                await App.Instance.Dispatcher.InvokeAsync(() => DetermineSystemType());
+                await App.Instance.Dispatcher.InvokeAsync(DetermineSystemType);
             }
 
             // Determine current media type, if possible
-            await App.Instance.Dispatcher.InvokeAsync(() => PopulateMediaType());
+            await App.Instance.Dispatcher.InvokeAsync(PopulateMediaType);
             CacheCurrentDiscType();
             SetCurrentDiscType();
 

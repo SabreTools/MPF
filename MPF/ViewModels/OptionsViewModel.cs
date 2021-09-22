@@ -199,25 +199,20 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Create an open folder dialog box
         /// </summary>
-        private FolderBrowserDialog CreateFolderBrowserDialog()
-        {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            return dialog;
-        }
+        private static FolderBrowserDialog CreateFolderBrowserDialog() => new FolderBrowserDialog();
 
         /// <summary>
         /// Create an open file dialog box
         /// </summary>
-        private OpenFileDialog CreateOpenFileDialog()
+        private static OpenFileDialog CreateOpenFileDialog()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-
-            dialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            dialog.Filter = "Executables (*.exe)|*.exe";
-            dialog.FilterIndex = 0;
-            dialog.RestoreDirectory = true;
-
-            return dialog;
+            return new OpenFileDialog()
+            {
+                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                Filter = "Executables (*.exe)|*.exe",
+                FilterIndex = 0,
+                RestoreDirectory = true,
+            };
         }
 
         /// <summary>
@@ -225,10 +220,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         /// <param name="name">Setting name to find</param>
         /// <returns>TextBox for that setting</returns>
-        private TextBox TextBoxForPathSetting(string name)
-        {
-            return Parent.FindName(name + "TextBox") as TextBox;
-        }
+        private TextBox TextBoxForPathSetting(string name) => Parent.FindName(name + "TextBox") as TextBox;
 
         #endregion
 

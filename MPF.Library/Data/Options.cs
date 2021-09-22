@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using MPF.Converters;
-using MPF.Utilities;
 using RedumpLib.Data;
 
 namespace MPF.Data
@@ -68,6 +67,15 @@ namespace MPF.Data
         {
             get { return GetBooleanSetting(_settings, "EnableDarkMode", false); }
             set { _settings["EnableDarkMode"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Check for updates on startup
+        /// </summary>
+        public bool CheckForUpdatesOnStartup
+        {
+            get { return GetBooleanSetting(_settings, "CheckForUpdatesOnStartup", true); }
+            set { _settings["CheckForUpdatesOnStartup"] = value.ToString(); }
         }
 
         /// <summary>

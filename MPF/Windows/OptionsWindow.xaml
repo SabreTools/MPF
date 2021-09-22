@@ -71,6 +71,11 @@
                             IsChecked="{Binding Options.EnableDarkMode}"
                             ToolTip="(Experimental) Enable dark mode across the entire application" Margin="0,4"
                             />
+
+                        <CheckBox VerticalAlignment="Center" Content="Check for Updates on Startup"
+                                  IsChecked="{Binding Options.CheckForUpdatesOnStartup}"
+                                  ToolTip="Check for updates when the application starts" Margin="0,4"
+                        />
                     </UniformGrid>
                 </TabItem>
                 
