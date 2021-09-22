@@ -1316,7 +1316,7 @@ namespace RedumpLib.Data
         /// <returns>RedumpSystem represented by the string, if possible</returns>
         public static RedumpSystem? ToRedumpSystem(string system)
         {
-            switch (system)
+            switch (system.ToLowerInvariant())
             {
                 #region BIOS Sets
 
