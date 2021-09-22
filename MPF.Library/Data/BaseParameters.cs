@@ -1182,7 +1182,7 @@ namespace MPF.Data
                 try
                 {
                     byte[] fileContent = File.ReadAllBytes(path);
-                    string protection = antiModchip.CheckContents(path, fileContent, includePosition: false);
+                    string protection = antiModchip.CheckContents(path, fileContent, false, null, null);
                     if (!string.IsNullOrWhiteSpace(protection))
                         return true;
                 }

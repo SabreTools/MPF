@@ -348,7 +348,7 @@ namespace MPF.Utilities
                 {
                     var scanner = new Scanner(progress)
                     {
-                        IncludePosition = options.IncludeDebugProtectionInformation,
+                        IncludeDebug = options.IncludeDebugProtectionInformation,
                         ScanAllFiles = options.ForceScanningForProtection,
                         ScanArchives = options.ScanArchivesForProtection,
                         ScanPackers = options.ScanPackersForProtection,
@@ -356,7 +356,7 @@ namespace MPF.Utilities
                     return scanner.GetProtections(path);
                 });
 
-                if (found == null || found.Count == 0)
+                if (found == null || found.Count() == 0)
                     return (true, "None found");
 
                 // Get an ordered list of distinct found protections
