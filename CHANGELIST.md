@@ -7,6 +7,7 @@
 - Update to BurnOutSharp 1.8.0
 - Update support packages
 - Add on-startup "check for updates" option
+- Update to Aaru v5.3.0-rc2
 
 ### 2.1 (2021-07-22)
 - Enum, no more
