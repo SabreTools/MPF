@@ -8,6 +8,8 @@
 - Update support packages
 - Add on-startup "check for updates" option
 - Update to Aaru v5.3.0-rc2
+- Add .NET 5.0 as build target
+- Remove .NET Core 3.1 and .NET 5.0 from AppVeyor build artifacts
 
 ### 2.1 (2021-07-22)
 - Enum, no more
