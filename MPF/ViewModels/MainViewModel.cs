@@ -218,6 +218,9 @@ namespace MPF.GUI.ViewModels
                 Clipboard.SetText(url);
 
             App.Logger.SecretLogLn(message);
+            if (url == null)
+                message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
+
             CustomMessageBox.Show(App.Instance, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 

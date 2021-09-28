@@ -2,7 +2,6 @@
 using System.Net;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
-using RedumpLib.Web;
 
 namespace MPF.Utilities
 {
