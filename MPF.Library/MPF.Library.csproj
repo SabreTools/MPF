@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
     <PlatformTarget>x86</PlatformTarget>
     <Title>MPF Library</Title>
     <AssemblyName>MPF.Library</AssemblyName>
@@ -23,11 +23,11 @@
     <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
     <DefineConstants>NET_FRAMEWORK</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'!='netcoreapp3.1'">
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
     <COMReference Include="IMAPI2">
       <Guid>{2735412F-7F64-5B0F-8F00-5D77AFBE261E}</Guid>
       <VersionMajor>1</VersionMajor>
