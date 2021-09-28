@@ -800,7 +800,7 @@ namespace RedumpLib.Data
         /// <returns>Category represented by the string, if possible</returns>
         public static DiscCategory? ToDiscCategory(string category)
         {
-            switch (category.ToLowerInvariant())
+            switch (category?.ToLowerInvariant())
             {
                 case "games":
                     return DiscCategory.Games;
@@ -849,7 +849,7 @@ namespace RedumpLib.Data
         /// <returns>DiscType represented by the string, if possible</returns>
         public static DiscType? ToDiscType(string discType)
         {
-            switch (discType.ToLowerInvariant())
+            switch (discType?.ToLowerInvariant())
             {
                 case "bd25":
                 case "bd-25":
@@ -1316,7 +1316,7 @@ namespace RedumpLib.Data
         /// <returns>RedumpSystem represented by the string, if possible</returns>
         public static RedumpSystem? ToRedumpSystem(string system)
         {
-            switch (system.ToLowerInvariant())
+            switch (system?.ToLowerInvariant())
             {
                 #region BIOS Sets
 
@@ -2158,7 +2158,7 @@ namespace RedumpLib.Data
         /// <returns>YesNo represented by the string, if possible</returns>
         public static YesNo? ToYesNo(string yesno)
         {
-            switch (yesno.ToLowerInvariant())
+            switch (yesno?.ToLowerInvariant())
             {
                 case "no":
                     return YesNo.No;
