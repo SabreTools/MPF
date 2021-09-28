@@ -15,17 +15,22 @@ namespace MPF.Data
         /// <summary>
         /// Drive partition format
         /// </summary>
-        public string DriveFormat { get { return driveInfo.DriveFormat; } }
+        public string DriveFormat => driveInfo?.DriveFormat;
 
         /// <summary>
         /// Windows drive letter
         /// </summary>
-        public char Letter { get { return driveInfo?.Name[0] ?? '\0'; } }
+        public char Letter => driveInfo?.Name[0] ?? '\0';
+
+        /// <summary>
+        /// Windows drive path
+        /// </summary>
+        public string Name => driveInfo?.Name;
 
         /// <summary>
         /// Represents if Windows has marked the drive as active
         /// </summary>
-        public bool MarkedActive { get { return driveInfo.IsReady; } }
+        public bool MarkedActive => driveInfo?.IsReady ?? false;
 
         /// <summary>
         /// Media label as read by Windows

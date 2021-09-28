@@ -11,6 +11,9 @@ using MPF.Data;
 using RedumpLib.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
+#else
+using Aaru.CommonTypes.Enums;
+using AaruDevices = Aaru.Devices;
 #endif
 
 namespace MPF.Utilities
@@ -41,6 +44,7 @@ namespace MPF.Utilities
                 .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
                 .ToList();
 
+            // TODO: Management searcher stuff is not supported on other platforms
             // Get the floppy drives and set the flag from removable
             try
             {
@@ -91,6 +95,7 @@ namespace MPF.Utilities
             else if (drive.InternalDriveType == InternalDriveType.Removable)
                 return (MediaType.FlashDrive, null);
 
+#if NET_FRAMEWORK
             // Get the current drive information
             string deviceId = null;
             bool loaded = false;
@@ -113,7 +118,6 @@ namespace MPF.Utilities
                 else if (!loaded)
                     return (null, "Device is not reporting media loaded");
 
-#if NET_FRAMEWORK
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
                 deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
                 string id = null;
@@ -141,19 +145,31 @@ namespace MPF.Utilities
 
                 var media = dataWriter.CurrentPhysicalMediaType;
                 return (media.IMAPIToMediaType(), null);
-#else
-                // TODO: This entire .NET Core path still doesn't work
-                // This may honestly require an entire import of IMAPI2 stuff and then try
-                // as best as possible to get it working.
-
-                return (null, "Media detection only supported on .NET Framework");
-#endif
-
             }
             catch (Exception ex)
             {
                 return (null, ex.Message);
             }
+#else
+            try
+            {
+                var device = new AaruDevices.Device(drive.Name);
+                if (device.Error)
+                    return (null, "Could not open device");
+                else if (device.Type != DeviceType.ATAPI && device.Type != DeviceType.SCSI)
+                    return (null, "Device does not support media type detection");
+
+                // TODO: In order to get the disc type, Aaru.Core will need to be included as a
+                // package. Unfortunately, it currently has a conflict with one of the required libraries:
+                // System.Text.Encoding.CodePages (BOS uses >= 5.0.0, DotNetZip uses >= 4.5.0 && < 5.0.0)
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message);
+            }
+
+            return (null, "Media detection only supported on .NET Framework");
+#endif
         }
 
         /// <summary>
