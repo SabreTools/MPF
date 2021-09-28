@@ -92,7 +92,6 @@
 
   <ItemGroup Condition="'$(TargetFramework)'!='net48'">
     <PackageReference Include="Aaru.Devices" Version="5.3.0-rc2" />
-    <PackageReference Include="Aaru.Devices" Version="5.3.0-rc2" />
   </ItemGroup>
   
   <ItemGroup>
