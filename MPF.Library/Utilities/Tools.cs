@@ -84,21 +84,28 @@ namespace MPF.Utilities
         /// </returns>
         public static (bool different, string message, string url) CheckForNewVersion()
         {
-            // Get current assembly version
-            var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
-            string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
+            try
+            {
+                // Get current assembly version
+                var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
+                string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
 
-            // Get the latest tag from GitHub
-            (string tag, string url) = GetRemoteVersionAndUrl();
-            bool different = version != tag;
+                // Get the latest tag from GitHub
+                (string tag, string url) = GetRemoteVersionAndUrl();
+                bool different = version != tag;
 
-            string message = $"Local version: {version}"
-                + $"{Environment.NewLine}Remote version: {tag}"
-                + (different
-                    ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
-                    : $"{Environment.NewLine}You have the newest version!");
+                string message = $"Local version: {version}"
+                    + $"{Environment.NewLine}Remote version: {tag}"
+                    + (different
+                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
+                        : $"{Environment.NewLine}You have the newest version!");
 
-            return (different, message, url);
+                return (different, message, url);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.ToString(), null);
+            }
         }
 
         /// <summary>
