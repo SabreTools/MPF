@@ -11,6 +11,7 @@
 - Add .NET 5.0 as build target
 - Remove .NET Core 3.1 and .NET 5.0 from AppVeyor build artifacts
 - Null-safeguard RedumpLib conversions
+- Move cuesheet code to separate DLL
 
 ### 2.1 (2021-07-22)
 - Enum, no more
