@@ -39,7 +39,7 @@ namespace MPF.Test
         [InlineData("superhero", "blah&foo.bin", "superhero", "blah&foo.bin")]
         public void FixOutputPathsTest(string outputDirectory, string outputFilename, string expectedOutputDirectory, string expectedOutputFilename)
         {
-            (string actualOutputDirectory, string actualOutputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, false);
+            (string actualOutputDirectory, string actualOutputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename, false);
             Assert.Equal(expectedOutputDirectory, actualOutputDirectory);
             Assert.Equal(expectedOutputFilename, actualOutputFilename);
         }

@@ -864,7 +864,7 @@ namespace MPF.GUI.ViewModels
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
-            (outputDirectory, outputFilename) = DumpEnvironment.NormalizeOutputPaths(outputDirectory, outputFilename, App.Options.InternalProgram == InternalProgram.DiscImageCreator);
+            (outputDirectory, outputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename, App.Options.InternalProgram == InternalProgram.DiscImageCreator);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
                 App.Instance.OutputDirectoryTextBox.Text = outputDirectory;
             else
@@ -1072,7 +1072,7 @@ namespace MPF.GUI.ViewModels
                 }
 
                 // If a complete dump already exists
-                (bool foundFiles, List<string> _) = Env.FoundAllFiles(true);
+                (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(Env.OutputDirectory, Env.OutputFilename, Env.Parameters, true);
                 if (foundFiles)
                 {
                     MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
