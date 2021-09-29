@@ -104,7 +104,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.MediaScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Tools.CreateListOfDrives(App.Options.IgnoreFixedDrives);
+            Drives = Drive.CreateListOfDrives(App.Options.IgnoreFixedDrives);
             App.Instance.DriveLetterComboBox.ItemsSource = Drives;
 
             if (App.Instance.DriveLetterComboBox.Items.Count > 0)
@@ -664,7 +664,7 @@ namespace MPF.GUI.ViewModels
             else if (drive.MarkedActive)
             {
                 App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
-                (MediaType? detectedMediaType, string errorMessage) = Tools.GetMediaType(drive);
+                (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType();
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null)
@@ -743,7 +743,7 @@ namespace MPF.GUI.ViewModels
             if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Tools.GetRedumpSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
+                var currentSystem = Drives[App.Instance.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(App.Options.DefaultSystem) ?? App.Options.DefaultSystem;
                 App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ("detected " + EnumConverter.GetLongName(currentSystem) + "."));
 
                 if (currentSystem != null)
