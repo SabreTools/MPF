@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using MPF.Converters;
+using MPF.Core.Converters;
 using RedumpLib.Data;
 
-namespace MPF.Data
+namespace MPF.Core.Data
 {
     public class Options : IDictionary<string, string>, ICloneable
     {

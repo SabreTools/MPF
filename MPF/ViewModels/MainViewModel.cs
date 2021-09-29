@@ -7,7 +7,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using WinForms = System.Windows.Forms;
 using BurnOutSharp;
-using MPF.Converters;
+using MPF.Core.Converters;
+using MPF.Core.Data;
+using MPF.Core.Utilities;
 using MPF.Data;
 using MPF.Utilities;
 using MPF.Windows;
@@ -103,7 +105,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.MediaScanButton.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
-            Drives = Validators.CreateListOfDrives(App.Options.IgnoreFixedDrives);
+            Drives = Tools.CreateListOfDrives(App.Options.IgnoreFixedDrives);
             App.Instance.DriveLetterComboBox.ItemsSource = Drives;
 
             if (App.Instance.DriveLetterComboBox.Items.Count > 0)
@@ -664,7 +666,7 @@ namespace MPF.GUI.ViewModels
             else if (drive.MarkedActive)
             {
                 App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
-                (MediaType? detectedMediaType, string errorMessage) = Validators.GetMediaType(drive);
+                (MediaType? detectedMediaType, string errorMessage) = Tools.GetMediaType(drive);
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null)
@@ -743,7 +745,7 @@ namespace MPF.GUI.ViewModels
             if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Validators.GetRedumpSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
+                var currentSystem = Tools.GetRedumpSystem(Drives[App.Instance.DriveLetterComboBox.SelectedIndex], App.Options.DefaultSystem);
                 App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ("detected " + EnumConverter.GetLongName(currentSystem) + "."));
 
                 if (currentSystem != null)
@@ -766,7 +768,7 @@ namespace MPF.GUI.ViewModels
             Env = DetermineEnvironment();
 
             // Get the status to write out
-            Result result = Validators.GetSupportStatus(Env.System, Env.Type);
+            Result result = Tools.GetSupportStatus(Env.System, Env.Type);
             App.Instance.StatusLabel.Content = result.Message;
 
             // Set the index for the current disc type

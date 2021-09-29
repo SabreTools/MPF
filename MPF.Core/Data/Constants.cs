@@ -2,7 +2,7 @@
 using System.Linq;
 using RedumpLib.Data;
 
-namespace MPF.Data
+namespace MPF.Core.Data
 {
     /// <summary>
     /// Constant values for UI

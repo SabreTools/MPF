@@ -1,6 +1,6 @@
 ﻿using RedumpLib.Data;
 
-namespace MPF.Utilities
+namespace MPF.Core.Utilities
 {
     public static class EnumExtensions
     {

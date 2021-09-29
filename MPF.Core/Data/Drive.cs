@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MPF.Data
+namespace MPF.Core.Data
 {
     /// <summary>
     /// Represents information for a single drive

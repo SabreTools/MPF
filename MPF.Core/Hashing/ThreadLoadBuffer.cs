@@ -2,7 +2,8 @@
 using System.IO;
 using System.Threading;
 
-namespace Compress.ThreadReaders
+//namespace Compress.ThreadReaders
+namespace MPF.Core.Hashing
 {
     public class ThreadLoadBuffer : IDisposable
     {

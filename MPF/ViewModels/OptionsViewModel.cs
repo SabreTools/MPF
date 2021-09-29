@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using MPF.Data;
+using MPF.Core.Data;
 using MPF.Windows;
 using RedumpLib.Web;
 using WPFCustomMessageBox;

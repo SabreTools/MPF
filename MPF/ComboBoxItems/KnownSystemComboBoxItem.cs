@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Converters;
-using MPF.Data;
-using MPF.Utilities;
+using MPF.Core.Converters;
+using MPF.Core.Utilities;
 using RedumpLib.Data;
 
 namespace MPF

@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MPF.Core;
+using MPF.Core.Data;
 using MPF.Data;
 using RedumpLib.Data;
 

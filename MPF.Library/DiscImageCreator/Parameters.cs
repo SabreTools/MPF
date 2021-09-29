@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BurnOutSharp.External.psxt001z;
+using MPF.Core;
+using MPF.Core.Data;
+using MPF.Core.Utilities;
 using MPF.CueSheets;
 using MPF.Data;
-using MPF.Utilities;
 using RedumpLib.Data;
 
 namespace MPF.DiscImageCreator

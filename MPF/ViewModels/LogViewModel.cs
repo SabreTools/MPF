@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using MPF.Data;
+using MPF.Core.Data;
 using MPF.UserControls;
 
 namespace MPF.GUI.ViewModels

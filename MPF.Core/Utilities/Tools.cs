@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using BurnOutSharp;
-using MPF.Converters;
-using MPF.Data;
+using System.Net;
+using System.Reflection;
+using MPF.Core.Converters;
+using MPF.Core.Data;
+using Newtonsoft.Json.Linq;
 using RedumpLib.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
@@ -16,10 +16,76 @@ using Aaru.CommonTypes.Enums;
 using AaruDevices = Aaru.Devices;
 #endif
 
-namespace MPF.Utilities
+namespace MPF.Core.Utilities
 {
-    public static class Validators
+    public static class Tools
     {
+        #region Byte Arrays
+
+        /// <summary>
+        /// Search for a byte array in another array
+        /// </summary>
+        public static bool Contains(this byte[] stack, byte[] needle, out int position, int start = 0, int end = -1)
+        {
+            // Initialize the found position to -1
+            position = -1;
+
+            // If either array is null or empty, we can't do anything
+            if (stack == null || stack.Length == 0 || needle == null || needle.Length == 0)
+                return false;
+
+            // If the needle array is larger than the stack array, it can't be contained within
+            if (needle.Length > stack.Length)
+                return false;
+
+            // If start or end are not set properly, set them to defaults
+            if (start < 0)
+                start = 0;
+            if (end < 0)
+                end = stack.Length - needle.Length;
+
+            for (int i = start; i < end; i++)
+            {
+                if (stack.EqualAt(needle, i))
+                {
+                    position = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// See if a byte array starts with another
+        /// </summary>
+        public static bool StartsWith(this byte[] stack, byte[] needle)
+        {
+            return stack.Contains(needle, out int _, start: 0, end: 1);
+        }
+
+        /// <summary>
+        /// Get if a stack at a certain index is equal to a needle
+        /// </summary>
+        private static bool EqualAt(this byte[] stack, byte[] needle, int index)
+        {
+            // If we're too close to the end of the stack, return false
+            if (needle.Length >= stack.Length - index)
+                return false;
+
+            for (int i = 0; i < needle.Length; i++)
+            {
+                if (stack[i + index] != needle[i])
+                    return false;
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Physical Access
+
         /// <summary>
         /// Create a list of active drives matched to their volume labels
         /// </summary>
@@ -305,6 +371,10 @@ namespace MPF.Utilities
             return defaultValue;
         }
 
+        #endregion
+
+        #region Support
+
         /// <summary>
         /// Verify that, given a system and a media type, they are correct
         /// </summary>
@@ -349,224 +419,73 @@ namespace MPF.Utilities
             }
         }
 
+        #endregion
+
+        #region Versioning
+
         /// <summary>
-        /// Run protection scan on a given dump environment
+        /// Check for a new MPF version
         /// </summary>
-        /// <param name="path">Path to scan for protection</param>
-        /// <param name="options">Options object that determines what to scan</param>
-        /// <param name="progress">Optional progress callback</param>
-        /// <returns>TCopy protection detected in the envirionment, if any</returns>
-        public static async Task<(bool, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
+        /// <returns>
+        /// Bool representing if the values are different.
+        /// String representing the message to display the the user.
+        /// String representing the new release URL.
+        /// </returns>
+        public static (bool different, string message, string url) CheckForNewVersion()
         {
             try
             {
-                var found = await Task.Run(() =>
-                {
-                    var scanner = new Scanner(progress)
-                    {
-                        IncludeDebug = options.IncludeDebugProtectionInformation,
-                        ScanAllFiles = options.ForceScanningForProtection,
-                        ScanArchives = options.ScanArchivesForProtection,
-                        ScanPackers = options.ScanPackersForProtection,
-                    };
-                    return scanner.GetProtections(path);
-                });
+                // Get current assembly version
+                var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
+                string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
 
-                if (found == null || found.Count() == 0)
-                    return (true, "None found");
+                // Get the latest tag from GitHub
+                (string tag, string url) = GetRemoteVersionAndUrl();
+                bool different = version != tag;
 
-                // Get an ordered list of distinct found protections
-                var orderedDistinctProtections = found
-                    .Where(kvp => kvp.Value != null && kvp.Value.Any())
-                    .SelectMany(kvp => kvp.Value)
-                    .Distinct()
-                    .OrderBy(p => p);
+                string message = $"Local version: {version}"
+                    + $"{Environment.NewLine}Remote version: {tag}"
+                    + (different
+                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
+                        : $"{Environment.NewLine}You have the newest version!");
 
-                // Sanitize and join protections for writing
-                string protections = SanitizeFoundProtections(orderedDistinctProtections);
-                return (true, protections);
+                return (different, message, url);
             }
             catch (Exception ex)
             {
-                return (false, ex.ToString());
+                return (false, ex.ToString(), null);
             }
         }
 
         /// <summary>
-        /// Sanitize unnecessary protection duplication from output
+        /// Get the current informational version formatted as a string
         /// </summary>
-        /// <param name="foundProtections">Enumerable of found protections</param>
-        private static string SanitizeFoundProtections(IEnumerable<string> foundProtections)
+        public static string GetCurrentVersion()
         {
-            // ActiveMARK
-            if (foundProtections.Any(p => p == "ActiveMARK 5") && foundProtections.Any(p => p == "ActiveMARK"))
-                foundProtections = foundProtections.Where(p => p != "ActiveMARK");
-
-            // Cactus Data Shield
-            if (foundProtections.Any(p => Regex.IsMatch(p, @"Cactus Data Shield [0-9]{3} .+")) && foundProtections.Any(p => p == "Cactus Data Shield 200"))
-                foundProtections = foundProtections.Where(p => p != "Cactus Data Shield 200");
-
-            // CD-Check
-            foundProtections = foundProtections.Where(p => p != "Executable-Based CD Check");
-
-            // CD-Cops
-            if (foundProtections.Any(p => p == "CD-Cops") && foundProtections.Any(p => p.StartsWith("CD-Cops") && p.Length > "CD-Cops".Length))
-                foundProtections = foundProtections.Where(p => p != "CD-Cops");
-
-            // CD-Key / Serial
-            foundProtections = foundProtections.Where(p => p != "CD-Key / Serial");
-
-            // Electronic Arts
-            if (foundProtections.Any(p => p == "EA CdKey Registration Module") && foundProtections.Any(p => p.StartsWith("EA CdKey Registration Module") && p.Length > "EA CdKey Registration Module".Length))
-                foundProtections = foundProtections.Where(p => p != "EA CdKey Registration Module");
-            if (foundProtections.Any(p => p == "EA DRM Protection") && foundProtections.Any(p => p.StartsWith("EA DRM Protection") && p.Length > "EA DRM Protection".Length))
-                foundProtections = foundProtections.Where(p => p != "EA DRM Protection");
-
-            // Games for Windows LIVE
-            if (foundProtections.Any(p => p == "Games for Windows LIVE") && foundProtections.Any(p => p.StartsWith("Games for Windows LIVE") && !p.Contains("Zero Day Piracy Protection") && p.Length > "Games for Windows LIVE".Length))
-                foundProtections = foundProtections.Where(p => p != "Games for Windows LIVE");
-
-            // Impulse Reactor
-            if (foundProtections.Any(p => p.StartsWith("Impulse Reactor Core Module")) && foundProtections.Any(p => p == "Impulse Reactor"))
-                foundProtections = foundProtections.Where(p => p != "Impulse Reactor");
-
-            // JoWood X-Prot
-            if (foundProtections.Any(p => p.StartsWith("JoWood X-Prot")))
-            {
-                if (foundProtections.Any(p => Regex.IsMatch(p, @"JoWood X-Prot [0-9]\.[0-9]\.[0-9]\.[0-9]{2}")))
-                {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.0-v1.3");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.4+");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v2");
-                }
-                else if (foundProtections.Any(p => p == "JoWood X-Prot v2"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.0-v1.3");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.4+");
-                }
-                else if (foundProtections.Any(p => p == "JoWood X-Prot v1.4+"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.0-v1.3");
-                }
-                else if (foundProtections.Any(p => p == "JoWood X-Prot v1.0-v1.3"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                }
-            }
-
-            // LaserLok
-            // TODO: Figure this one out
-
-            // Online RegistrationBu
-            foundProtections = foundProtections.Where(p => p.StartsWith("Executable-Based Online Registration"));
-
-            // ProtectDISC / VOB ProtectCD/DVD
-            // TODO: Figure this one out
-
-            // SafeCast
-            // TODO: Figure this one out
-
-            // SafeDisc
-            if (foundProtections.Any(p => p.StartsWith("SafeDisc")))
-            {
-                if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}")))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"));
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (drvmgt.dll)"));
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"));
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p.StartsWith("SafeDisc (drvmgt.dll)")))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"));
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"));
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p.StartsWith("SafeDisc (secdrv.sys)")))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"));
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p.StartsWith("SafeDisc (dplayerx.dll)")))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc 3.20-4.xx (version removed)"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc 2"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc 1/Lite"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc Lite"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc 1-3"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                }
-            }
-
-            // SecuROM
-            // TODO: Figure this one out
-
-            // SolidShield
-            // TODO: Figure this one out
-
-            // StarForce
-            // TODO: Figure this one out
-
-            // Sysiphus
-            if (foundProtections.Any(p => p == "Sysiphus") && foundProtections.Any(p => p.StartsWith("Sysiphus") && p.Length > "Sysiphus".Length))
-                foundProtections = foundProtections.Where(p => p != "Sysiphus");
-
-            // TAGES
-            // TODO: Figure this one out
-
-            // XCP
-            if (foundProtections.Any(p => p == "XCP") && foundProtections.Any(p => p.StartsWith("XCP") && p.Length > "XCP".Length))
-                foundProtections = foundProtections.Where(p => p != "XCP");
-
-            return string.Join(", ", foundProtections);
+            var assemblyVersion = Attribute.GetCustomAttribute(Assembly.GetEntryAssembly(), typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
+            return assemblyVersion.InformationalVersion;
         }
+
+        /// <summary>
+        /// Get the latest version of MPF from GitHub and the release URL
+        /// </summary>
+        private static (string tag, string url) GetRemoteVersionAndUrl()
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
+
+                // TODO: Figure out a better way than having this hardcoded...
+                string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
+                string latestReleaseJsonString = wc.DownloadString(url);
+                var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
+                string latestTag = latestReleaseJson["tag_name"].ToString();
+                string releaseUrl = latestReleaseJson["html_url"].ToString();
+
+                return (latestTag, releaseUrl);
+            }
+        }
+
+        #endregion
     }
 }

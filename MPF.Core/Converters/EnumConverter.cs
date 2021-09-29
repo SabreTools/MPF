@@ -2,13 +2,13 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
-using MPF.Data;
+using MPF.Core.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
 #endif
 using RedumpLib.Data;
 
-namespace MPF.Converters
+namespace MPF.Core.Converters
 {
     public static class EnumConverter
     {

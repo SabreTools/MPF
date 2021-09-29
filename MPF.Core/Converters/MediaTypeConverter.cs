@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedumpLib.Data;
 
-namespace MPF.Converters
+namespace MPF.Core.Converters
 {
     /// <summary>
     /// Serialize MediaType enum values

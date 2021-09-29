@@ -1,10 +1,27 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
-using MPF.Data;
 
-namespace MPF.Hashing
+namespace MPF.Core.Hashing
 {
+    /// <summary>
+    /// Available hashing types
+    /// </summary>
+    [Flags]
+    public enum Hash
+    {
+        CRC = 1 << 0,
+        MD5 = 1 << 1,
+        SHA1 = 1 << 2,
+        SHA256 = 1 << 3,
+        SHA384 = 1 << 4,
+        SHA512 = 1 << 5,
+
+        // Special combinations
+        Standard = CRC | MD5 | SHA1,
+        All = CRC | MD5 | SHA1 | SHA256 | SHA384 | SHA512,
+    }
+
     /// <summary>
     /// Async hashing class wraper
     /// </summary>
@@ -27,7 +44,7 @@ namespace MPF.Hashing
             switch (HashType)
             {
                 case Hash.CRC:
-                    _hasher = new OptimizedCRC.OptimizedCRC();
+                    _hasher = new OptimizedCRC();
                     break;
 
                 case Hash.MD5:
@@ -65,7 +82,7 @@ namespace MPF.Hashing
             switch (HashType)
             {
                 case Hash.CRC:
-                    (_hasher as OptimizedCRC.OptimizedCRC).Update(buffer, 0, size);
+                    (_hasher as OptimizedCRC).Update(buffer, 0, size);
                     break;
 
                 case Hash.MD5:
@@ -87,7 +104,7 @@ namespace MPF.Hashing
             switch (HashType)
             {
                 case Hash.CRC:
-                    (_hasher as OptimizedCRC.OptimizedCRC).Update(emptyBuffer, 0, 0);
+                    (_hasher as OptimizedCRC).Update(emptyBuffer, 0, 0);
                     break;
 
                 case Hash.MD5:
@@ -108,7 +125,7 @@ namespace MPF.Hashing
             switch (HashType)
             {
                 case Hash.CRC:
-                    return BitConverter.GetBytes((_hasher as OptimizedCRC.OptimizedCRC).Value).Reverse().ToArray();
+                    return BitConverter.GetBytes((_hasher as OptimizedCRC).Value).Reverse().ToArray();
 
                 case Hash.MD5:
                 case Hash.SHA1:

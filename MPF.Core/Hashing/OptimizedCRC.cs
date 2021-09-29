@@ -24,7 +24,8 @@
 
 using System;
 
-namespace OptimizedCRC
+//namespace OptimizedCRC
+namespace MPF.Core.Hashing
 {
     internal class OptimizedCRC : IDisposable
     {

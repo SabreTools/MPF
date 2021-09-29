@@ -1,6 +1,6 @@
 ﻿using System.Windows;
+using MPF.Core.Data;
 using MPF.GUI.ViewModels;
-using MPF.Data;
 using MPF.Windows;
 
 namespace MPF

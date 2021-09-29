@@ -49,6 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.CueSheets\MPF.CueSheets.csproj" />
     <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace MPF.Data
+namespace MPF.Core.Data
 {
     public class IniFile : IDictionary<string, string>
     {

@@ -7,9 +7,10 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp.ProtectionType;
-using Compress.ThreadReaders;
-using MPF.Hashing;
-using MPF.Utilities;
+using MPF.Core;
+using MPF.Core.Data;
+using MPF.Core.Hashing;
+using MPF.Core.Utilities;
 using RedumpLib.Data;
 
 namespace MPF.Data

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
-using MPF.Data;
+using MPF.Core.Data;
 
 namespace MPF
 {

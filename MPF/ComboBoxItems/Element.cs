@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Converters;
-using MPF.Utilities;
+using MPF.Core.Converters;
 
 namespace MPF
 {

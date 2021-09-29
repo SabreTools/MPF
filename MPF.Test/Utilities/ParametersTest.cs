@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using MPF.Data;
+using MPF.Core.Data;
 using MPF.DiscImageCreator;
-using MPF.Utilities;
 using RedumpLib.Data;
 using Xunit;
 

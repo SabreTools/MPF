@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using MPF.Core.Data;
 using MPF.CueSheets;
 using MPF.Data;
 using RedumpLib.Data;

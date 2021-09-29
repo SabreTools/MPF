@@ -2,9 +2,10 @@
 using System.IO;
 using System.Linq;
 using BurnOutSharp;
-using MPF.Converters;
+using MPF.Core.Converters;
+using MPF.Core.Data;
+using MPF.Core.Utilities;
 using MPF.Data;
-using MPF.Utilities;
 using RedumpLib.Data;
 using RedumpLib.Web;
 

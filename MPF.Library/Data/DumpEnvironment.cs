@@ -9,8 +9,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using MPF.Converters;
-using MPF.Utilities;
+using MPF.Core.Converters;
+using MPF.Core.Data;
+using MPF.Core.Utilities;
 using Newtonsoft.Json;
 using RedumpLib.Data;
 using RedumpLib.Web;
@@ -1252,7 +1253,7 @@ namespace MPF.Data
                 return Result.Failure("$Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
-            return Validators.GetSupportStatus(System, Type);
+            return Tools.GetSupportStatus(System, Type);
         }
 
         /// <summary>

@@ -4,9 +4,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MPF.Utilities
+namespace MPF.Core.Utilities
 {
-    internal static class Logging
+    public static class Logging
     {
         /// <summary>
         /// Process a chunk of text and send it to a handler

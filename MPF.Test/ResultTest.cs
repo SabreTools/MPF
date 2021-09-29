@@ -1,4 +1,4 @@
-﻿using MPF.Data;
+﻿using MPF.Core.Data;
 using Xunit;
 
 namespace MPF.Test

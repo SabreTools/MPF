@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MPF.Core;
+using MPF.Core.Data;
 using MPF.Data;
 using RedumpLib.Data;
 

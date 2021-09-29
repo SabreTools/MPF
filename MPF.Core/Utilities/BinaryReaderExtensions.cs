@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
 
-namespace MPF.Utilities
+namespace MPF.Core.Utilities
 {
     /// <summary>
     /// Big endian reading overloads for BinaryReader
     /// </summary>
-    internal static class BinaryReaderExtensions
+    public static class BinaryReaderExtensions
     {
         /// <summary>
         /// Reads the specified number of bytes from the stream, starting from a specified point in the byte array.

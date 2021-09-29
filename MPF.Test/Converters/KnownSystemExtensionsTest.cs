@@ -1,7 +1,6 @@
 ﻿using System;
-using MPF.Converters;
-using MPF.Data;
-using MPF.Utilities;
+using MPF.Core.Converters;
+using MPF.Core.Utilities;
 using RedumpLib.Data;
 using Xunit;
 
