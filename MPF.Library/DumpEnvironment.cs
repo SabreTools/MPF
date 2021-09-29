@@ -939,7 +939,7 @@ namespace MPF.Library
 
                 case RedumpSystem.SonyPlayStation:
                     resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
-                    info.CopyProtection.AntiModchip = await GetPlayStationAntiModchipDetected(protectionProgress) ? YesNo.Yes : YesNo.No;
+                    info.CopyProtection.AntiModchip = await GetPlayStationAntiModchipDetected() ? YesNo.Yes : YesNo.No;
                     resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
 
                     // Special case for DIC only
@@ -1466,11 +1466,10 @@ namespace MPF.Library
         /// <summary>
         /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
         /// </summary>
-        /// <param name="progress">Optional progress callback</param>
         /// <returns>Anti-modchip existance if possible, false on error</returns>
-        private async Task<bool> GetPlayStationAntiModchipDetected(IProgress<ProtectionProgress> progress = null)
+        private async Task<bool> GetPlayStationAntiModchipDetected()
         {
-            return await Protection.GetPlayStationAntiModchipDetected($"{Drive.Letter}:\\", progress);
+            return await Protection.GetPlayStationAntiModchipDetected($"{Drive.Letter}:\\");
         }
 
         /// <summary>

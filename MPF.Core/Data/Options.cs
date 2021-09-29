@@ -8,7 +8,7 @@ namespace MPF.Core.Data
 {
     public class Options : IDictionary<string, string>, ICloneable
     {
-        private Dictionary<string, string> _settings;
+        private readonly Dictionary<string, string> _settings;
 
         #region Internal Program
 

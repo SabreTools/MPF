@@ -17,10 +17,10 @@ namespace MPF.Core.Data
         public static readonly byte[] SaturnSectorZeroStart = new byte[] { 0x53, 0x45, 0x47, 0x41, 0x20, 0x53, 0x45, 0x47, 0x41, 0x53, 0x41, 0x54, 0x55, 0x52, 0x4E, 0x20 };
 
         // Private lists of known drive speed ranges
-        private static IReadOnlyList<int> cd { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
-        private static IReadOnlyList<int> dvd { get; } = cd.Where(s => s <= 24).ToList();
-        private static IReadOnlyList<int> bd { get; } = cd.Where(s => s <= 16).ToList();
-        private static IReadOnlyList<int> unknown { get; } = new List<int> { 1 };
+        private static IReadOnlyList<int> CD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+        private static IReadOnlyList<int> DVD { get; } = CD.Where(s => s <= 24).ToList();
+        private static IReadOnlyList<int> BD { get; } = CD.Where(s => s <= 16).ToList();
+        private static IReadOnlyList<int> Unknown { get; } = new List<int> { 1 };
 
         /// <summary>
         /// Get list of all drive speeds for a given MediaType
@@ -33,16 +33,16 @@ namespace MPF.Core.Data
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM:
-                    return cd;
+                    return CD;
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
-                    return dvd;
+                    return DVD;
                 case MediaType.BluRay:
-                    return bd;
+                    return BD;
                 default:
-                    return unknown;
+                    return Unknown;
             }
         }
     }

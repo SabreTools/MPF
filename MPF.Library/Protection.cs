@@ -61,7 +61,7 @@ namespace MPF.Library
         /// </summary>
         /// <param name="path">Path to scan for anti-modchip strings</param>
         /// <returns>Anti-modchip existance if possible, false on error</returns>
-        public static async Task<bool> GetPlayStationAntiModchipDetected(string path, IProgress<ProtectionProgress> progress = null)
+        public static async Task<bool> GetPlayStationAntiModchipDetected(string path)
         {
             return await Task.Run(() =>
             {

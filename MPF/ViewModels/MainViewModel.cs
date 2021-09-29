@@ -570,8 +570,7 @@ namespace MPF.GUI.ViewModels
         private void EnableDarkMode()
         {
             // Setup needed brushes
-            var darkModeBrush = new SolidColorBrush();
-            darkModeBrush.Color = Color.FromArgb(0xff, 0x20, 0x20, 0x20);
+            var darkModeBrush = new SolidColorBrush { Color = Color.FromArgb(0xff, 0x20, 0x20, 0x20) };
 
             // Handle application-wide resources
             Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = Brushes.Black;

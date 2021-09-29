@@ -13,6 +13,7 @@
 - Null-safeguard RedumpLib conversions
 - Move cuesheet code to separate DLL
 - Move CICMMetadata to top-level
+- Separate out remaining functionality into individual DLLs
 
 ### 2.1 (2021-07-22)
 - Enum, no more
