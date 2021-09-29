@@ -9,7 +9,7 @@ using BurnOutSharp.External.psxt001z;
 using BurnOutSharp.ProtectionType;
 using MPF.Core.Data;
 
-namespace MPF.Utilities
+namespace MPF.Library
 {
     public static class Protection
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using MPF.Data;
-using MPF.Utilities;
-using RedumpLib.Data;
+﻿using RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.Utilities

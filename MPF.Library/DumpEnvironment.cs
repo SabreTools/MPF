@@ -13,12 +13,11 @@ using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Modules;
-using MPF.Utilities;
 using Newtonsoft.Json;
 using RedumpLib.Data;
 using RedumpLib.Web;
 
-namespace MPF.Data
+namespace MPF.Library
 {
     /// <summary>
     /// Represents the state of all settings to be used during dumping
