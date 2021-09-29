@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BurnOutSharp.ProtectionType;
-using MPF.Core;
 using MPF.Core.Data;
 using MPF.Core.Hashing;
 using MPF.Core.Utilities;
@@ -1158,42 +1156,6 @@ namespace MPF.Data
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
-        /// </summary>
-        /// <param name="driveLetter">Drive letter to use to check</param>
-        /// <returns>Anti-modchip existance if possible, false on error</returns>
-        protected static bool GetPlayStationAntiModchipDetected(char? driveLetter)
-        {
-            // If there's no drive letter, we can't do this part
-            if (driveLetter == null)
-                return false;
-
-            // If the folder no longer exists, we can't do this part
-            string drivePath = driveLetter + ":\\";
-            if (!Directory.Exists(drivePath))
-                return false;
-
-            // Scan through each file to check for the anti-modchip strings
-            var antiModchip = new PSXAntiModchip();
-            foreach (string path in Directory.EnumerateFiles(drivePath, "*", SearchOption.AllDirectories))
-            {
-                try
-                {
-                    byte[] fileContent = File.ReadAllBytes(path);
-                    string protection = antiModchip.CheckContents(path, fileContent, false, null, null);
-                    if (!string.IsNullOrWhiteSpace(protection))
-                        return true;
-                }
-                catch
-                {
-                    // No-op, we don't care what the error was
-                }
-            }
-
-            return false;
         }
 
         /// <summary>

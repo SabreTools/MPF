@@ -914,7 +914,7 @@ namespace MPF.GUI.ViewModels
 
                 var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
-                (bool success, string output) = await Validators.RunProtectionScanOnPath(drive.Letter + ":\\", App.Options, progress);
+                (bool success, string output) = await Protection.RunProtectionScanOnPath(drive.Letter + ":\\", App.Options, progress);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
                 if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))

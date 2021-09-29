@@ -12,6 +12,7 @@ using BurnOutSharp;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
+using MPF.Utilities;
 using Newtonsoft.Json;
 using RedumpLib.Data;
 using RedumpLib.Web;
@@ -936,6 +937,12 @@ namespace MPF.Data
                     info.CommonDiscInfo.EXEDateBuildDate = (Options.AddPlaceholders ? Template.RequiredValue : "");
                     break;
 
+                case RedumpSystem.SonyPlayStation:
+                    resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
+                    info.CopyProtection.AntiModchip = await GetPlayStationAntiModchipDetected(protectionProgress) ? YesNo.Yes : YesNo.No;
+                    resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
+                    break;
+
                 case RedumpSystem.SonyPlayStation2:
                     info.CommonDiscInfo.LanguageSelection = new LanguageSelection?[] { LanguageSelection.BiosSettings, LanguageSelection.LanguageSelector, LanguageSelection.OptionsMenu };
                     break;
@@ -1374,7 +1381,7 @@ namespace MPF.Data
         {
             if (Options.ScanForProtection)
             {
-                (bool success, string output) = await Validators.RunProtectionScanOnPath($"{Drive.Letter}:\\", this.Options, progress);
+                (bool success, string output) = await Protection.RunProtectionScanOnPath($"{Drive.Letter}:\\", this.Options, progress);
                 if (success)
                     return output;
                 else
@@ -1382,6 +1389,16 @@ namespace MPF.Data
             }
 
             return "(CHECK WITH PROTECTIONID)";
+        }
+
+        /// <summary>
+        /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="path">Path to scan for anti-modchip strings</param>
+        /// <returns>Anti-modchip existance if possible, false on error</returns>
+        private async Task<bool> GetPlayStationAntiModchipDetected(IProgress<ProtectionProgress> progress = null)
+        {
+            return await Protection.GetPlayStationAntiModchipDetected($"{Drive.Letter}:\\", progress);
         }
 
         /// <summary>

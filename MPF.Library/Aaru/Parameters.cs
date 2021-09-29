@@ -328,7 +328,6 @@ namespace MPF.Aaru
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
-                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(drive?.Letter) ? YesNo.Yes : YesNo.No;
                     break;
 
                 case RedumpSystem.SonyPlayStation2:

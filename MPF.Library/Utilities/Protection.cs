@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
+using BurnOutSharp.ProtectionType;
 using MPF.Core.Data;
 
 namespace MPF.Utilities
@@ -51,6 +53,35 @@ namespace MPF.Utilities
             {
                 return (false, ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
+        /// </summary>
+        /// <param name="path">Path to scan for anti-modchip strings</param>
+        /// <returns>Anti-modchip existance if possible, false on error</returns>
+        public static async Task<bool> GetPlayStationAntiModchipDetected(string path, IProgress<ProtectionProgress> progress = null)
+        {
+            return await Task.Run(() =>
+            {
+                var antiModchip = new PSXAntiModchip();
+                foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        byte[] fileContent = File.ReadAllBytes(file);
+                        string protection = antiModchip.CheckContents(file, fileContent, false, null, null);
+                        if (!string.IsNullOrWhiteSpace(protection))
+                            return true;
+                    }
+                    catch
+                    {
+                        // No-op, we don't care what the error was
+                    }
+                }
+
+                return false;
+            });
         }
 
         /// <summary>
