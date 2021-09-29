@@ -78,6 +78,10 @@
     <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
+    <ProjectReference Include="..\CICMMetadata\CICMMetadataEditor\CICMMetadataEditor\CICMMetadataEditor.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="1.8.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
