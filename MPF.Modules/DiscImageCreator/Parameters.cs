@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using BurnOutSharp.External.psxt001z;
-using MPF.Core;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.CueSheets;
-using MPF.Data;
 using RedumpLib.Data;
 
-namespace MPF.DiscImageCreator
+namespace MPF.Modules.DiscImageCreator
 {
     /// <summary>
     /// Represents a generic set of DiscImageCreator parameters
@@ -655,39 +652,6 @@ namespace MPF.DiscImageCreator
                         info.EDC.EDC = YesNo.NULL;
 
                     info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
-
-                    bool? psLibCryptStatus = GetLibCryptDetected(basePath + ".sub");
-                    if (psLibCryptStatus == true)
-                    {
-                        // Guard against false positives
-                        if (File.Exists(basePath + "_subIntention.txt"))
-                        {
-                            string libCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
-                            if (string.IsNullOrEmpty(libCryptData))
-                            {
-                                info.CopyProtection.LibCrypt = YesNo.No;
-                            }
-                            else
-                            {
-                                info.CopyProtection.LibCrypt = YesNo.Yes;
-                                info.CopyProtection.LibCryptData = libCryptData;
-                            }
-                        }
-                        else
-                        {
-                            info.CopyProtection.LibCrypt = YesNo.No;
-                        }
-                    }
-                    else if (psLibCryptStatus == false)
-                    {
-                        info.CopyProtection.LibCrypt = YesNo.No;
-                    }
-                    else
-                    {
-                        info.CopyProtection.LibCrypt = YesNo.NULL;
-                        info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
-                    }
-
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -2737,20 +2701,6 @@ namespace MPF.DiscImageCreator
                 // We don't care what the error was
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Get if LibCrypt data is detected in the subchannel file, if possible
-        /// </summary>
-        /// <param name="sub">.sub file location</param>
-        /// <returns>Status of the LibCrypt data, if possible</returns>
-        private static bool? GetLibCryptDetected(string sub)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(sub))
-                return null;
-
-            return LibCrypt.CheckSubfile(sub);
         }
 
         /// <summary>

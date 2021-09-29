@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Data;
-using MPF.Utilities;
+using MPF.Modules.DiscImageCreator;
 using RedumpLib.Data;
 using Xunit;
 
@@ -16,50 +15,50 @@ namespace MPF.Test.Converters
         public static IEnumerable<object[]> RedumpSystems = RedumpSystemComboBoxItem.GenerateElements().Select(e => new object[] { e });
 
         [Theory]
-        [InlineData(DiscImageCreator.CommandStrings.Audio, MediaType.CDROM)]
-        [InlineData(DiscImageCreator.CommandStrings.BluRay, MediaType.BluRay)]
-        [InlineData(DiscImageCreator.CommandStrings.Close, null)]
-        [InlineData(DiscImageCreator.CommandStrings.CompactDisc, MediaType.CDROM)]
-        [InlineData(DiscImageCreator.CommandStrings.Data, MediaType.CDROM)]
-        [InlineData(DiscImageCreator.CommandStrings.DigitalVideoDisc, MediaType.DVD)]
-        [InlineData(DiscImageCreator.CommandStrings.Eject, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Floppy, MediaType.FloppyDisk)]
-        [InlineData(DiscImageCreator.CommandStrings.GDROM, MediaType.GDROM)]
-        [InlineData(DiscImageCreator.CommandStrings.MDS, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Reset, null)]
-        [InlineData(DiscImageCreator.CommandStrings.SACD, MediaType.CDROM)]
-        [InlineData(DiscImageCreator.CommandStrings.Start, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Stop, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Sub, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Swap, MediaType.GDROM)]
-        [InlineData(DiscImageCreator.CommandStrings.XBOX, MediaType.DVD)]
+        [InlineData(CommandStrings.Audio, MediaType.CDROM)]
+        [InlineData(CommandStrings.BluRay, MediaType.BluRay)]
+        [InlineData(CommandStrings.Close, null)]
+        [InlineData(CommandStrings.CompactDisc, MediaType.CDROM)]
+        [InlineData(CommandStrings.Data, MediaType.CDROM)]
+        [InlineData(CommandStrings.DigitalVideoDisc, MediaType.DVD)]
+        [InlineData(CommandStrings.Eject, null)]
+        [InlineData(CommandStrings.Floppy, MediaType.FloppyDisk)]
+        [InlineData(CommandStrings.GDROM, MediaType.GDROM)]
+        [InlineData(CommandStrings.MDS, null)]
+        [InlineData(CommandStrings.Reset, null)]
+        [InlineData(CommandStrings.SACD, MediaType.CDROM)]
+        [InlineData(CommandStrings.Start, null)]
+        [InlineData(CommandStrings.Stop, null)]
+        [InlineData(CommandStrings.Sub, null)]
+        [InlineData(CommandStrings.Swap, MediaType.GDROM)]
+        [InlineData(CommandStrings.XBOX, MediaType.DVD)]
         public void BaseCommandToMediaTypeTest(string command, MediaType? expected)
         {
-            MediaType? actual = DiscImageCreator.Converters.ToMediaType(command);
+            MediaType? actual = Modules.DiscImageCreator.Converters.ToMediaType(command);
             Assert.Equal(expected, actual);
         }
 
         [Theory]
-        [InlineData(DiscImageCreator.CommandStrings.Audio, RedumpSystem.AudioCD)]
-        [InlineData(DiscImageCreator.CommandStrings.BluRay, RedumpSystem.SonyPlayStation3)]
-        [InlineData(DiscImageCreator.CommandStrings.Close, null)]
-        [InlineData(DiscImageCreator.CommandStrings.CompactDisc, RedumpSystem.IBMPCcompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.Data, RedumpSystem.IBMPCcompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.DigitalVideoDisc, RedumpSystem.IBMPCcompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.Eject, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Floppy, RedumpSystem.IBMPCcompatible)]
-        [InlineData(DiscImageCreator.CommandStrings.GDROM, RedumpSystem.SegaDreamcast)]
-        [InlineData(DiscImageCreator.CommandStrings.MDS, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Reset, null)]
-        [InlineData(DiscImageCreator.CommandStrings.SACD, RedumpSystem.SuperAudioCD)]
-        [InlineData(DiscImageCreator.CommandStrings.Start, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Stop, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Sub, null)]
-        [InlineData(DiscImageCreator.CommandStrings.Swap, RedumpSystem.SegaDreamcast)]
-        [InlineData(DiscImageCreator.CommandStrings.XBOX, RedumpSystem.MicrosoftXbox)]
+        [InlineData(CommandStrings.Audio, RedumpSystem.AudioCD)]
+        [InlineData(CommandStrings.BluRay, RedumpSystem.SonyPlayStation3)]
+        [InlineData(CommandStrings.Close, null)]
+        [InlineData(CommandStrings.CompactDisc, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.Data, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.DigitalVideoDisc, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.Eject, null)]
+        [InlineData(CommandStrings.Floppy, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.GDROM, RedumpSystem.SegaDreamcast)]
+        [InlineData(CommandStrings.MDS, null)]
+        [InlineData(CommandStrings.Reset, null)]
+        [InlineData(CommandStrings.SACD, RedumpSystem.SuperAudioCD)]
+        [InlineData(CommandStrings.Start, null)]
+        [InlineData(CommandStrings.Stop, null)]
+        [InlineData(CommandStrings.Sub, null)]
+        [InlineData(CommandStrings.Swap, RedumpSystem.SegaDreamcast)]
+        [InlineData(CommandStrings.XBOX, RedumpSystem.MicrosoftXbox)]
         public void BaseCommandToRedumpSystemTest(string command, RedumpSystem? expected)
         {
-            RedumpSystem? actual = DiscImageCreator.Converters.ToRedumpSystem(command);
+            RedumpSystem? actual = Modules.DiscImageCreator.Converters.ToRedumpSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -73,7 +72,7 @@ namespace MPF.Test.Converters
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = DiscImageCreator.Converters.Extension(mediaType);
+            string actual = Modules.DiscImageCreator.Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 

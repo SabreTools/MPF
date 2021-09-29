@@ -12,6 +12,7 @@ using BurnOutSharp;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
+using MPF.Modules;
 using MPF.Utilities;
 using Newtonsoft.Json;
 using RedumpLib.Data;
@@ -143,20 +144,20 @@ namespace MPF.Data
             {
                 // Dumping support
                 case InternalProgram.Aaru:
-                    this.Parameters = new Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
+                    this.Parameters = new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
                     break;
 
                 case InternalProgram.DD:
-                    this.Parameters = new DD.Parameters(parameters) { ExecutablePath = Options.DDPath };
+                    this.Parameters = new Modules.DD.Parameters(parameters) { ExecutablePath = Options.DDPath };
                     break;
 
                 case InternalProgram.DiscImageCreator:
-                    this.Parameters = new DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
+                    this.Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
 
                 // Verification support only
                 case InternalProgram.CleanRip:
-                    this.Parameters = new CleanRip.Parameters(parameters) { ExecutablePath = null };
+                    this.Parameters = new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null };
                     break;
 
                 case InternalProgram.DCDumper:
@@ -164,12 +165,12 @@ namespace MPF.Data
                     break;
 
                 case InternalProgram.UmdImageCreator:
-                    this.Parameters = new UmdImageCreator.Parameters(parameters) { ExecutablePath = null };
+                    this.Parameters = new Modules.UmdImageCreator.Parameters(parameters) { ExecutablePath = null };
                     break;
 
                 // This should never happen, but it needs a fallback
                 default:
-                    this.Parameters = new DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
+                    this.Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
             }
 
@@ -214,20 +215,20 @@ namespace MPF.Data
                 switch (Options.InternalProgram)
                 {
                     case InternalProgram.Aaru:
-                        Parameters = new Aaru.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DD:
-                        Parameters = new DD.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.DD.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DiscImageCreator:
-                        Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
                         break;
 
                     // This should never happen, but it needs a fallback
                     default:
-                        Parameters = new DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
                         break;
                 }
 
@@ -323,9 +324,9 @@ namespace MPF.Data
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            var parameters = new DiscImageCreator.Parameters(string.Empty)
+            var parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
             {
-                BaseCommand = DiscImageCreator.CommandStrings.Eject,
+                BaseCommand = Modules.DiscImageCreator.CommandStrings.Eject,
                 DriveLetter = Drive.Letter.ToString(),
                 ExecutablePath = Options.DiscImageCreatorPath,
             };
@@ -353,9 +354,9 @@ namespace MPF.Data
             if (Drive.InternalDriveType != InternalDriveType.Optical)
                 return;
 
-            DiscImageCreator.Parameters parameters = new DiscImageCreator.Parameters(string.Empty)
+            Modules.DiscImageCreator.Parameters parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
             {
-                BaseCommand = DiscImageCreator.CommandStrings.Reset,
+                BaseCommand = Modules.DiscImageCreator.CommandStrings.Reset,
                 DriveLetter = Drive.Letter.ToString(),
                 ExecutablePath = Options.DiscImageCreatorPath,
             };
@@ -941,6 +942,15 @@ namespace MPF.Data
                     resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
                     info.CopyProtection.AntiModchip = await GetPlayStationAntiModchipDetected(protectionProgress) ? YesNo.Yes : YesNo.No;
                     resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
+
+                    // Special case for DIC only
+                    if (Parameters.InternalProgram == InternalProgram.DiscImageCreator)
+                    {
+                        resultProgress?.Report(Result.Success("Checking for LibCrypt status... this might take a while!"));
+                        GetLibCryptDetected(info, combinedBase);
+                        resultProgress?.Report(Result.Success("LibCrypt status checking complete!"));
+                    }
+                    
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -1392,9 +1402,72 @@ namespace MPF.Data
         }
 
         /// <summary>
+        /// Get the full lines from the input file, if possible
+        /// </summary>
+        /// <param name="filename">file location</param>
+        /// <param name="binary">True if should read as binary, false otherwise (default)</param>
+        /// <returns>Full text of the file, null on error</returns>
+        private static string GetFullFile(string filename, bool binary = false)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(filename))
+                return null;
+
+            // If we're reading as binary
+            if (binary)
+            {
+                byte[] bytes = File.ReadAllBytes(filename);
+                return BitConverter.ToString(bytes).Replace("-", string.Empty);
+            }
+
+            return string.Join("\n", File.ReadAllLines(filename));
+        }
+
+        /// <summary>
+        /// Get if LibCrypt data is detected in the subchannel file, if possible
+        /// </summary>
+        /// <param name="info">Base submission info to fill in specifics for</param>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>Status of the LibCrypt data, if possible</returns>
+        private void GetLibCryptDetected(SubmissionInfo info, string basePath)
+        {
+            bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
+            if (psLibCryptStatus == true)
+            {
+                // Guard against false positives
+                if (File.Exists(basePath + "_subIntention.txt"))
+                {
+                    string libCryptData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                    if (string.IsNullOrEmpty(libCryptData))
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.No;
+                    }
+                    else
+                    {
+                        info.CopyProtection.LibCrypt = YesNo.Yes;
+                        info.CopyProtection.LibCryptData = libCryptData;
+                    }
+                }
+                else
+                {
+                    info.CopyProtection.LibCrypt = YesNo.No;
+                }
+            }
+            else if (psLibCryptStatus == false)
+            {
+                info.CopyProtection.LibCrypt = YesNo.No;
+            }
+            else
+            {
+                info.CopyProtection.LibCrypt = YesNo.NULL;
+                info.CopyProtection.LibCryptData = "LibCrypt could not be detected because subchannel file is missing";
+            }
+        }
+
+        /// <summary>
         /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
         /// </summary>
-        /// <param name="path">Path to scan for anti-modchip strings</param>
+        /// <param name="progress">Optional progress callback</param>
         /// <returns>Anti-modchip existance if possible, false on error</returns>
         private async Task<bool> GetPlayStationAntiModchipDetected(IProgress<ProtectionProgress> progress = null)
         {

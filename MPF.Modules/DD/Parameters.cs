@@ -3,10 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Data;
-using MPF.Data;
 using RedumpLib.Data;
 
-namespace MPF.DD
+namespace MPF.Modules.DD
 {
     /// <summary>
     /// Represents a generic set of DD parameters

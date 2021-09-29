@@ -1,6 +1,6 @@
 using RedumpLib.Data;
 
-namespace MPF.DiscImageCreator
+namespace MPF.Modules.DiscImageCreator
 {
     public static class Converters
     {

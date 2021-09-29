@@ -1,4 +1,4 @@
-namespace MPF.DD
+namespace MPF.Modules.DD
 {
     /// <summary>
     /// Top-level commands for DD

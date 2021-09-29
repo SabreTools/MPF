@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
@@ -20,11 +20,27 @@
     <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+    <DefineConstants>NET_FRAMEWORK</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
+    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
+    <ProjectReference Include="..\MPF.CueSheets\MPF.CueSheets.csproj" />
+    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
+    <ProjectReference Include="..\CICMMetadata\CICMMetadataEditor\CICMMetadataEditor\CICMMetadataEditor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
+
 
 </Project>

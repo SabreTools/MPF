@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MPF.Core;
 using MPF.Core.Data;
-using MPF.Data;
 using RedumpLib.Data;
 
-namespace MPF.UmdImageCreator
+namespace MPF.Modules.UmdImageCreator
 {
     /// <summary>
     /// Represents a generic set of UmdImageCreator parameters

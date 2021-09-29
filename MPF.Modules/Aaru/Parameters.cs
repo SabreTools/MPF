@@ -9,11 +9,10 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.Core.Data;
 using MPF.CueSheets;
-using MPF.Data;
 using RedumpLib.Data;
 using Schemas;
 
-namespace MPF.Aaru
+namespace MPF.Modules.Aaru
 {
     /// <summary>
     /// Represents a generic set of Aaru parameters

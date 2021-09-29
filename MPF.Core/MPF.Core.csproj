@@ -3,7 +3,21 @@
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
     <PlatformTarget>x86</PlatformTarget>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
+    <Copyright>Copyright (c)2019-2021</Copyright>
+    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+    <Version>2.1</Version>
+    <AssemblyVersion>$(Version)</AssemblyVersion>
+    <FileVersion>$(Version)</FileVersion>
+    <IncludeSource>true</IncludeSource>
+    <IncludeSymbols>true</IncludeSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NrtRevisionFormat>$(Version)-{chash:8}</NrtRevisionFormat>
+    <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
+    <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'=='net48'">

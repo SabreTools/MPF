@@ -11,7 +11,7 @@ using MPF.Core.Hashing;
 using MPF.Core.Utilities;
 using RedumpLib.Data;
 
-namespace MPF.Data
+namespace MPF.Modules
 {
     public abstract class BaseParameters
     {

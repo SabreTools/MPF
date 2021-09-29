@@ -1,6 +1,6 @@
 using RedumpLib.Data;
 
-namespace MPF.DD
+namespace MPF.Modules.Aaru
 {
     public static class Converters
     {
@@ -13,8 +13,8 @@ namespace MPF.DD
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string Extension(MediaType? type)
         {
-            // DD has a single, unified output format by default
-            return ".bin";
+            // Aaru has a single, unified output format by default
+            return ".aaruf";
         }
 
         #endregion
