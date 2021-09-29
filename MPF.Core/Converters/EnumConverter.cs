@@ -75,48 +75,6 @@ namespace MPF.Core.Converters
         }
 #endif
 
-        /// <summary>
-        /// Convert physical media type to a MediaType
-        /// </summary>
-        /// <param name="type">PhsyicalMediaType value to check</param>
-        /// <returns>MediaType if possible, null on error</returns>
-        public static MediaType? ToMediaType(this PhysicalMediaType type)
-        {
-            switch (type)
-            {
-                case PhysicalMediaType.Unknown:
-                    return MediaType.NONE;
-
-                // CD-based media
-                case PhysicalMediaType.CDROM:
-                case PhysicalMediaType.CDROMXA:
-                case PhysicalMediaType.CDI:
-                case PhysicalMediaType.CDRecordable:
-                case PhysicalMediaType.CDRW:
-                case PhysicalMediaType.CDDA:
-                case PhysicalMediaType.CDPlus:
-                    return MediaType.CDROM;
-
-                // DVD-based media
-                case PhysicalMediaType.DVD:
-                case PhysicalMediaType.DVDPlusRW:
-                case PhysicalMediaType.DVDRAM:
-                case PhysicalMediaType.DVDROM:
-                case PhysicalMediaType.DVDVideo:
-                case PhysicalMediaType.DVDRecordable:
-                case PhysicalMediaType.DVDMinusRW:
-                case PhysicalMediaType.DVDAudio:
-                case PhysicalMediaType.DVD5:
-                case PhysicalMediaType.DVD9:
-                case PhysicalMediaType.DVD10:
-                case PhysicalMediaType.DVD18:
-                    return MediaType.DVD;
-
-                default:
-                    return null;
-            }
-        }
-
         #endregion
 
         #region Convert to Long Name
