@@ -1,5 +1,4 @@
-﻿using MPF.Data;
-using RedumpLib.Data;
+﻿using RedumpLib.Data;
 
 namespace MPF.Utilities
 {

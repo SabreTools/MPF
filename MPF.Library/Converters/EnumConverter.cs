@@ -6,8 +6,6 @@ using MPF.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
 #endif
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using RedumpLib.Data;
 
 namespace MPF.Converters

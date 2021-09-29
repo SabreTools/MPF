@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Cryptography;
 using MPF.Data;
-using OptimizedCRC;
 
 namespace MPF.Hashing
 {

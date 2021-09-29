@@ -1,6 +1,4 @@
 using System;
-using MPF.Data;
-using MPF.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RedumpLib.Data;

@@ -12,8 +12,6 @@ using BurnOutSharp;
 using MPF.Converters;
 using MPF.Utilities;
 using Newtonsoft.Json;
-using RedumpLib.Attributes;
-using RedumpLib.Converters;
 using RedumpLib.Data;
 using RedumpLib.Web;
 
