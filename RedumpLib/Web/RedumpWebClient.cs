@@ -63,6 +63,9 @@ namespace RedumpLib.Web
         /// <returns>True if the user could be logged in, false otherwise, null on error</returns>
         public bool? Login(string username, string password)
         {
+            // HTTP encode the password
+            password = WebUtility.UrlEncode(password);
+
             // Credentials verification
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
             {

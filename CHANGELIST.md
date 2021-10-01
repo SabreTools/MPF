@@ -16,6 +16,7 @@
 - Separate out remaining functionality into individual DLLs
 - Update to Aaru v5.3.0 LTS
 - Update to DIC 20211101
+- HTTP encode password for Redump login, again
 
 ### 2.1 (2021-07-22)
 - Enum, no more
