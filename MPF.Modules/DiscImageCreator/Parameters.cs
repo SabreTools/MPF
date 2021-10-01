@@ -1278,6 +1278,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.DisableBeep,
                     FlagStrings.Fix,
                     FlagStrings.ForceUnitAccess,
+                    FlagStrings.NoSkipSS,
                     FlagStrings.PadSector,
                     FlagStrings.Raw,
                     FlagStrings.Resume,
