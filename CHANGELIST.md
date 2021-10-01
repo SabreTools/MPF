@@ -14,6 +14,7 @@
 - Move cuesheet code to separate DLL
 - Move CICMMetadata to top-level
 - Separate out remaining functionality into individual DLLs
+- Update to Aaru v5.3.0 LTS
 
 ### 2.1 (2021-07-22)
 - Enum, no more
