@@ -414,9 +414,12 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
-                    info.CopyProtection.AntiModchip = await GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
-                    resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
+                    if (drive != null)
+                    {
+                        resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
+                        info.CopyProtection.AntiModchip = await GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
+                        resultProgress?.Report(Result.Success("Anti-modchip string scan complete!"));
+                    }
 
                     // Special case for DIC only
                     if (parameters.InternalProgram == InternalProgram.DiscImageCreator)
@@ -493,7 +496,7 @@ namespace MPF.Library
         /// <returns>Copy protection scheme if possible, null on error</returns>
         private static async Task<string> GetCopyProtection(Drive drive, Options options, IProgress<ProtectionProgress> progress = null)
         {
-            if (options.ScanForProtection)
+            if (options.ScanForProtection && drive != null)
             {
                 (bool success, string output) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
                 if (success)
