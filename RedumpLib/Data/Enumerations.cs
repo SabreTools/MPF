@@ -826,9 +826,6 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, LongName = "Namco System 246 / System 256", ShortName = "ns246", HasCues = true, HasDat = true)]
         NamcoSystem246256,
 
-        [System(Category = SystemCategory.Arcade, Available = false, LongName = "Namco System 357")]
-        NamcoSystem357,
-
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "New Jatre CD-i")]
         NewJatreCDi,
 

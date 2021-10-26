@@ -476,13 +476,6 @@ namespace RedumpLib.Data
                     types.Add(MediaType.CDROM);
                     break;
 
-                // http://system16.com/hardware.php?id=900
-                case RedumpSystem.NamcoSystem357:
-                    types.Add(MediaType.CDROM);
-                    types.Add(MediaType.DVD);
-                    types.Add(MediaType.BluRay);
-                    break;
-
                 // https://www.arcade-history.com/?n=the-yakyuuken-part-1&page=detail&id=33049
                 case RedumpSystem.NewJatreCDi:
                     types.Add(MediaType.CDROM);
@@ -1916,11 +1909,6 @@ namespace RedumpLib.Data
                 case "namcosystem12":
                 case "namco system 12":
                     return RedumpSystem.NamcoSystem12;
-                case "system357":
-                case "system 357":
-                case "namcosystem357":
-                case "namco system 357":
-                    return RedumpSystem.NamcoSystem357;
                 case "newjatrecdi":
                 case "new jatre cdi":
                 case "new jatre cd-i":
