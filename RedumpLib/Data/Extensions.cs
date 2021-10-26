@@ -457,15 +457,10 @@ namespace RedumpLib.Data
                     types.Add(MediaType.CDROM);
                     break;
 
+                // http://system16.com/hardware.php?id=543
                 // http://system16.com/hardware.php?id=546
                 // http://system16.com/hardware.php?id=872
-                case RedumpSystem.NamcoCapcomSystem256:
-                    types.Add(MediaType.CDROM);
-                    types.Add(MediaType.DVD);
-                    break;
-
-                // http://system16.com/hardware.php?id=543
-                case RedumpSystem.NamcoSystem246:
+                case RedumpSystem.NamcoSystem246256:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
@@ -479,13 +474,6 @@ namespace RedumpLib.Data
                 // http://system16.com/hardware.php?id=535
                 case RedumpSystem.NamcoSystem12:
                     types.Add(MediaType.CDROM);
-                    break;
-
-                // http://system16.com/hardware.php?id=900
-                case RedumpSystem.NamcoSystem357:
-                    types.Add(MediaType.CDROM);
-                    types.Add(MediaType.DVD);
-                    types.Add(MediaType.BluRay);
                     break;
 
                 // https://www.arcade-history.com/?n=the-yakyuuken-part-1&page=detail&id=33049
@@ -521,6 +509,10 @@ namespace RedumpLib.Data
 
                 // UNKNOWN
                 case RedumpSystem.RawThrillsVarious:
+                    types.Add(MediaType.DVD);
+                    break;
+
+                case RedumpSystem.SegaALLS:
                     types.Add(MediaType.DVD);
                     break;
 
@@ -560,10 +552,9 @@ namespace RedumpLib.Data
                     types.Add(MediaType.GDROM); // High density partition
                     break;
 
-                // http://system16.com/hardware.php?id=975
                 // https://en.wikipedia.org/wiki/List_of_Sega_arcade_system_boards#Sega_Nu
                 case RedumpSystem.SegaNu:
-                    types.Add(MediaType.BluRay);
+                    types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=910
@@ -1885,6 +1876,15 @@ namespace RedumpLib.Data
                 case "meritindustriesmegatouchxl":
                 case "merit industries megatouch xl":
                     return RedumpSystem.MeritIndustriesMegaTouchXL;
+                case "system246":
+                case "system 246":
+                case "namcosystem246":
+                case "namco system 246":
+                case "capcomsystem246":
+                case "capcom system 246":
+                case "taitosystem246":
+                case "taito system 246":
+                case "namco / capcom / taito system 246":
                 case "system256":
                 case "system 256":
                 case "supersystem256":
@@ -1898,17 +1898,7 @@ namespace RedumpLib.Data
                 case "capcomsupersystem256":
                 case "capcom super system 256":
                 case "namco / capcom system 256/super system 256":
-                    return RedumpSystem.NamcoCapcomSystem256;
-                case "system246":
-                case "system 246":
-                case "namcosystem246":
-                case "namco system 246":
-                case "capcomsystem246":
-                case "capcom system 246":
-                case "taitosystem246":
-                case "taito system 246":
-                case "namco / capcom / taito system 246":
-                    return RedumpSystem.NamcoSystem246;
+                    return RedumpSystem.NamcoSystem246256;
                 case "triforce":
                 case "namcotriforce":
                 case "namco triforce":
@@ -1923,11 +1913,6 @@ namespace RedumpLib.Data
                 case "namcosystem12":
                 case "namco system 12":
                     return RedumpSystem.NamcoSystem12;
-                case "system357":
-                case "system 357":
-                case "namcosystem357":
-                case "namco system 357":
-                    return RedumpSystem.NamcoSystem357;
                 case "newjatrecdi":
                 case "new jatre cdi":
                 case "new jatre cd-i":
@@ -1966,6 +1951,10 @@ namespace RedumpLib.Data
                 case "raw thrills":
                 case "raw thrills pc-based systems":
                     return RedumpSystem.RawThrillsVarious;
+                case "alls":
+                case "segaalls":
+                case "sega alls":
+                    return RedumpSystem.SegaALLS;
                 case "chihiro":
                 case "segachihiro":
                 case "sega chihiro":

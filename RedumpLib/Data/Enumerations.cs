@@ -817,20 +817,14 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Merit Industries MegaTouch XL")]
         MeritIndustriesMegaTouchXL,
 
-        [System(Category = SystemCategory.Arcade, Available = false, LongName = "Namco · Capcom System 256/Super System 256")]
-        NamcoCapcomSystem256,
-
         [System(Category = SystemCategory.Arcade, LongName = "Namco · Sega · Nintendo Triforce", ShortName = "triforce", HasCues = true, HasDat = true, HasGdi = true)]
         NamcoSegaNintendoTriforce,
 
         [System(Category = SystemCategory.Arcade, LongName = "Namco System 12", ShortName = "ns12")]
         NamcoSystem12,
 
-        [System(Category = SystemCategory.Arcade, LongName = "Namco System 246", ShortName = "ns246", HasCues = true, HasDat = true)]
-        NamcoSystem246,
-
-        [System(Category = SystemCategory.Arcade, Available = false, LongName = "Namco System 357")]
-        NamcoSystem357,
+        [System(Category = SystemCategory.Arcade, LongName = "Namco System 246 / System 256", ShortName = "ns246", HasCues = true, HasDat = true)]
+        NamcoSystem246256,
 
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "New Jatre CD-i")]
         NewJatreCDi,
@@ -852,6 +846,9 @@ namespace RedumpLib.Data
 
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Raw Thrills PC-based Systems")]
         RawThrillsVarious,
+
+        [System(Category = SystemCategory.Arcade, Available = false, LongName = "Sega ALLS")]
+        SegaALLS,
 
         [System(Category = SystemCategory.Arcade, LongName = "Sega Chihiro", ShortName = "chihiro", HasCues = true, HasDat = true, HasGdi = true)]
         SegaChihiro,
