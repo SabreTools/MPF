@@ -457,15 +457,10 @@ namespace RedumpLib.Data
                     types.Add(MediaType.CDROM);
                     break;
 
+                // http://system16.com/hardware.php?id=543
                 // http://system16.com/hardware.php?id=546
                 // http://system16.com/hardware.php?id=872
-                case RedumpSystem.NamcoCapcomSystem256:
-                    types.Add(MediaType.CDROM);
-                    types.Add(MediaType.DVD);
-                    break;
-
-                // http://system16.com/hardware.php?id=543
-                case RedumpSystem.NamcoSystem246:
+                case RedumpSystem.NamcoSystem246256:
                     types.Add(MediaType.CDROM);
                     types.Add(MediaType.DVD);
                     break;
@@ -1884,6 +1879,15 @@ namespace RedumpLib.Data
                 case "meritindustriesmegatouchxl":
                 case "merit industries megatouch xl":
                     return RedumpSystem.MeritIndustriesMegaTouchXL;
+                case "system246":
+                case "system 246":
+                case "namcosystem246":
+                case "namco system 246":
+                case "capcomsystem246":
+                case "capcom system 246":
+                case "taitosystem246":
+                case "taito system 246":
+                case "namco / capcom / taito system 246":
                 case "system256":
                 case "system 256":
                 case "supersystem256":
@@ -1897,17 +1901,7 @@ namespace RedumpLib.Data
                 case "capcomsupersystem256":
                 case "capcom super system 256":
                 case "namco / capcom system 256/super system 256":
-                    return RedumpSystem.NamcoCapcomSystem256;
-                case "system246":
-                case "system 246":
-                case "namcosystem246":
-                case "namco system 246":
-                case "capcomsystem246":
-                case "capcom system 246":
-                case "taitosystem246":
-                case "taito system 246":
-                case "namco / capcom / taito system 246":
-                    return RedumpSystem.NamcoSystem246;
+                    return RedumpSystem.NamcoSystem246256;
                 case "triforce":
                 case "namcotriforce":
                 case "namco triforce":
