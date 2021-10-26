@@ -560,10 +560,9 @@ namespace RedumpLib.Data
                     types.Add(MediaType.GDROM); // High density partition
                     break;
 
-                // http://system16.com/hardware.php?id=975
                 // https://en.wikipedia.org/wiki/List_of_Sega_arcade_system_boards#Sega_Nu
                 case RedumpSystem.SegaNu:
-                    types.Add(MediaType.BluRay);
+                    types.Add(MediaType.DVD);
                     break;
 
                 // http://system16.com/hardware.php?id=910
@@ -1966,6 +1965,10 @@ namespace RedumpLib.Data
                 case "raw thrills":
                 case "raw thrills pc-based systems":
                     return RedumpSystem.RawThrillsVarious;
+                case "alls":
+                case "segaalls":
+                case "sega alls":
+                    return RedumpSystem.SegaALLS;
                 case "chihiro":
                 case "segachihiro":
                 case "sega chihiro":

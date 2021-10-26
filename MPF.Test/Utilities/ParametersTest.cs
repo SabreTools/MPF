@@ -13,7 +13,7 @@ namespace MPF.Test.Utilities
         [InlineData(RedumpSystem.MicrosoftXbox, MediaType.CDROM, CommandStrings.CompactDisc)]
         [InlineData(RedumpSystem.MicrosoftXbox, MediaType.DVD, CommandStrings.XBOX)]
         [InlineData(RedumpSystem.MicrosoftXbox, MediaType.LaserDisc, null)]
-        [InlineData(RedumpSystem.SegaNu, MediaType.BluRay, CommandStrings.BluRay)]
+        [InlineData(RedumpSystem.SonyPlayStation3, MediaType.BluRay, CommandStrings.BluRay)]
         [InlineData(RedumpSystem.AppleMacintosh, MediaType.FloppyDisk, CommandStrings.Floppy)]
         [InlineData(RedumpSystem.RawThrillsVarious, MediaType.GDROM, null)]
         public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string expected)
