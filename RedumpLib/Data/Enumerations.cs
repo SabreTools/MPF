@@ -847,6 +847,9 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Raw Thrills PC-based Systems")]
         RawThrillsVarious,
 
+        [System(Category = SystemCategory.Arcade, Available = false, LongName = "Sega ALLS")]
+        SegaALLS,
+
         [System(Category = SystemCategory.Arcade, LongName = "Sega Chihiro", ShortName = "chihiro", HasCues = true, HasDat = true, HasGdi = true)]
         SegaChihiro,
 

@@ -512,6 +512,10 @@ namespace RedumpLib.Data
                     types.Add(MediaType.DVD);
                     break;
 
+                case RedumpSystem.SegaALLS:
+                    types.Add(MediaType.DVD);
+                    break;
+
                 // http://system16.com/hardware.php?id=729
                 case RedumpSystem.SegaChihiro:
                     types.Add(MediaType.CDROM); // Low density partition
