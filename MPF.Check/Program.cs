@@ -69,7 +69,7 @@ namespace MPF.Check
             string username = null, password = null;
             string internalProgram = "DiscImageCreator";
             string path = string.Empty;
-            bool scan = false, compress = false;
+            bool scan = false, compress = false, json = false;
 
             // Loop through and process options
             int startIndex = 2;
@@ -112,13 +112,19 @@ namespace MPF.Check
                 }
 
                 // Scan for protection (requires device path)
-                else if (args[startIndex].StartsWith("-s") || args[startIndex].StartsWith("--scan"))
+                else if (args[startIndex].Equals("-s") || args[startIndex].Equals("--scan"))
                 {
                     scan = true;
                 }
 
+                // Output submission JSON
+                else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
+                {
+                    json = true;
+                }
+
                 // Compress log and extraneous files
-                else if (args[startIndex].StartsWith("-z") || args[startIndex].StartsWith("--zip"))
+                else if (args[startIndex].Equals("-z") || args[startIndex].Equals("--zip"))
                 {
                     compress = true;
                 }
@@ -171,6 +177,7 @@ namespace MPF.Check
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
                     ShowDiscEjectReminder = false,
+                    OutputSubmissionJSON = json,
                     CompressLogFiles = compress,
 
                     RedumpUsername = username,
@@ -212,6 +219,7 @@ namespace MPF.Check
             Console.WriteLine("-u, --use <program>            Dumping program output type");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
+            Console.WriteLine("-j, --json                     Enable submission JSON output");
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine();
         }
