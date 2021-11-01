@@ -889,7 +889,7 @@ namespace MPF.Library
                         sw.WriteLine(line);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // We don't care what the error is right now
                 return false;
@@ -921,7 +921,7 @@ namespace MPF.Library
                     gs.Write(jsonBytes, 0, jsonBytes.Length);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 // We don't care what the error is right now
                 return false;
