@@ -63,9 +63,6 @@ namespace RedumpLib.Web
         /// <returns>True if the user could be logged in, false otherwise, null on error</returns>
         public bool? Login(string username, string password)
         {
-            // HTTP encode the password
-            password = WebUtility.UrlEncode(password);
-
             // Credentials verification
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
             {
@@ -82,38 +79,47 @@ namespace RedumpLib.Web
                 return false;
             }
 
-            try
+            // HTTP encode the password
+            password = WebUtility.UrlEncode(password);
+
+            // Attempt to login up to 3 times
+            for (int i = 0; i < 3; i++)
             {
-                // Get the current token from the login page
-                var loginPage = DownloadString(Constants.LoginUrl);
-                string token = Constants.TokenRegex.Match(loginPage).Groups[1].Value;
-
-                // Construct the login request
-                Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                Encoding = Encoding.UTF8;
-                var response = UploadString(Constants.LoginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0");
-
-                if (response.Contains("Incorrect username and/or password."))
+                try
                 {
-                    Console.WriteLine("Invalid credentials entered, continuing without logging in...");
-                    return false;
+                    // Get the current token from the login page
+                    var loginPage = DownloadString(Constants.LoginUrl);
+                    string token = Constants.TokenRegex.Match(loginPage).Groups[1].Value;
+
+                    // Construct the login request
+                    Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    Encoding = Encoding.UTF8;
+                    var response = UploadString(Constants.LoginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0");
+
+                    if (response.Contains("Incorrect username and/or password."))
+                    {
+                        Console.WriteLine("Invalid credentials entered, continuing without logging in...");
+                        return false;
+                    }
+
+                    // The user was able to be logged in
+                    Console.WriteLine("Credentials accepted! Logged into Redump...");
+                    LoggedIn = true;
+
+                    // If the user is a moderator or staff, set accordingly
+                    if (response.Contains("http://forum.redump.org/forum/9/staff/"))
+                        IsStaff = true;
+
+                    return true;
                 }
-
-                // The user was able to be logged in
-                Console.WriteLine("Credentials accepted! Logged into Redump...");
-                LoggedIn = true;
-
-                // If the user is a moderator or staff, set accordingly
-                if (response.Contains("http://forum.redump.org/forum/9/staff/"))
-                    IsStaff = true;
-
-                return true;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An exception occurred while trying to log in on attempt {i}: {ex}");
+                }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An exception occurred while trying to log in: {ex}");
-                return null;
-            }
+
+            Console.WriteLine("Could not login to Redump in 3 attempts, continuing without logging in...");
+            return false;
         }
 
         #region Single Page Helpers
@@ -126,7 +132,18 @@ namespace RedumpLib.Web
         public List<int> CheckSingleSitePage(string url)
         {
             List<int> ids = new List<int>();
-            var dumpsPage = DownloadString(url);
+            string dumpsPage = string.Empty;
+
+            // Try up to 3 times to retrieve the data
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    dumpsPage = DownloadString(url);
+                    break;
+                }
+                catch { }
+            }
 
             // If we have no dumps left
             if (dumpsPage.Contains("No discs found."))
@@ -170,7 +187,18 @@ namespace RedumpLib.Web
         /// <returns>True if the page could be downloaded, false otherwise</returns>
         public bool CheckSingleSitePage(string url, string outDir, bool failOnSingle)
         {
-            var dumpsPage = DownloadString(url);
+            string dumpsPage = string.Empty;
+
+            // Try up to 3 times to retrieve the data
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    dumpsPage = DownloadString(url);
+                    break;
+                }
+                catch { }
+            }
 
             // If we have no dumps left
             if (dumpsPage.Contains("No discs found."))
@@ -221,7 +249,18 @@ namespace RedumpLib.Web
         public List<int> CheckSingleWIPPage(string url)
         {
             List<int> ids = new List<int>();
-            var dumpsPage = DownloadString(url);
+            string dumpsPage = string.Empty;
+
+            // Try up to 3 times to retrieve the data
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    dumpsPage = DownloadString(url);
+                    break;
+                }
+                catch { }
+            }
 
             // If we have no dumps left
             if (dumpsPage.Contains("No discs found."))
@@ -255,7 +294,18 @@ namespace RedumpLib.Web
         /// <returns>True if the page could be downloaded, false otherwise</returns>
         public bool CheckSingleWIPPage(string url, string outDir, bool failOnSingle)
         {
-            var dumpsPage = DownloadString(url);
+            string dumpsPage = string.Empty;
+
+            // Try up to 3 times to retrieve the data
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    dumpsPage = DownloadString(url);
+                    break;
+                }
+                catch { }
+            }
 
             // If we have no dumps left
             if (dumpsPage.Contains("No discs found."))
@@ -343,7 +393,19 @@ namespace RedumpLib.Web
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = DownloadString(string.Format(Constants.DiscPageUrl, +id));
+                string discPage = string.Empty;
+
+                // Try up to 3 times to retrieve the data
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        discPage = DownloadString(string.Format(Constants.DiscPageUrl, +id));
+                        break;
+                    }
+                    catch { }
+                }
+
                 if (discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
                 {
                     Console.WriteLine($"ID {paddedId} could not be found!");
@@ -378,7 +440,19 @@ namespace RedumpLib.Web
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = DownloadString(string.Format(Constants.DiscPageUrl, +id));
+                string discPage = string.Empty;
+
+                // Try up to 3 times to retrieve the data
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        discPage = DownloadString(string.Format(Constants.DiscPageUrl, +id));
+                        break;
+                    }
+                    catch { }
+                }
+
                 if (discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
                 {
                     try
@@ -499,8 +573,20 @@ namespace RedumpLib.Web
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = DownloadString(string.Format(Constants.WipDiscPageUrl, +id));
-                if (discPage.Contains($"System \"{id}\" doesn't exist"))
+                string discPage = string.Empty;
+
+                // Try up to 3 times to retrieve the data
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        discPage = DownloadString(string.Format(Constants.WipDiscPageUrl, +id));
+                        break;
+                    }
+                    catch { }
+                }
+
+                if (discPage.Contains($"WIP disc with ID \"{id}\" doesn't exist"))
                 {
                     Console.WriteLine($"ID {paddedId} could not be found!");
                     return null;
@@ -534,8 +620,20 @@ namespace RedumpLib.Web
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = DownloadString(string.Format(Constants.WipDiscPageUrl, +id));
-                if (discPage.Contains($"System \"{id}\" doesn't exist"))
+                string discPage = string.Empty;
+
+                // Try up to 3 times to retrieve the data
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        discPage = DownloadString(string.Format(Constants.WipDiscPageUrl, +id));
+                        break;
+                    }
+                    catch { }
+                }
+
+                if (discPage.Contains($"WIP disc with ID \"{id}\" doesn't exist"))
                 {
                     try
                     {
