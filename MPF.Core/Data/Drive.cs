@@ -256,28 +256,42 @@ namespace MPF.Core.Data
             }
 
             // DVD-Audio
-            if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
-                && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Count() > 0)
+            try
             {
-                return RedumpSystem.DVDAudio;
+                if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Any())
+                {
+                    return RedumpSystem.DVDAudio;
+                }
             }
+            catch { }
 
             // DVD-Video and Xbox
-            if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
-                && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Count() > 0)
+            try
             {
-                // TODO: Maybe add video track hashes to compare for Xbox and X360?
-                if (this.VolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
-                    return RedumpSystem.MicrosoftXbox;
+                if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Any())
+                {
+                    // TODO: Maybe add video track hashes to compare for Xbox and X360?
+                    if (this.VolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
+                        return RedumpSystem.MicrosoftXbox;
 
-                return RedumpSystem.DVDVideo;
+                    return RedumpSystem.DVDVideo;
+                }
             }
+            catch { }
 
             // HD-DVD-Video
-            if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
-                && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Count() > 0)
+            try
             {
-                return RedumpSystem.HDDVDVideo;
+                if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Any())
+                {
+                    return RedumpSystem.HDDVDVideo;
+                }
+            }
+            catch
+            {
             }
 
             // Sega Dreamcast
@@ -349,11 +363,15 @@ namespace MPF.Core.Data
             }
 
             // VCD
-            if (Directory.Exists(Path.Combine(drivePath, "VCD"))
-                && Directory.EnumerateFiles(Path.Combine(drivePath, "VCD")).Count() > 0)
+            try
             {
-                return RedumpSystem.VideoCD;
+                if (Directory.Exists(Path.Combine(drivePath, "VCD"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "VCD")).Any())
+                {
+                    return RedumpSystem.VideoCD;
+                }
             }
+            catch { }
 
             // Default return
             return defaultValue;
