@@ -826,8 +826,7 @@ namespace MPF.Modules.DiscImageCreator
             if (BaseCommand == CommandStrings.Audio
                 || BaseCommand == CommandStrings.Data)
             {
-                if (StartLBAValue != null && StartLBAValue > 0
-                    && EndLBAValue != null && EndLBAValue > 0)
+                if (StartLBAValue != null && EndLBAValue != null)
                 {
                     parameters.Add(StartLBAValue.ToString());
                     parameters.Add(EndLBAValue.ToString());

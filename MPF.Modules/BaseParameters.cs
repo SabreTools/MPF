@@ -308,12 +308,7 @@ namespace MPF.Modules
         /// <param name="index">Current index</param>
         /// <returns>True if the next item exists, false otherwise</returns>
         protected static bool DoesExist(List<string> parameters, int index)
-        {
-            if (index >= parameters.Count)
-                return false;
-
-            return true;
-        }
+            => index < parameters.Count;
 
         /// <summary>
         /// Get the Base64 representation of a string
@@ -355,14 +350,9 @@ namespace MPF.Modules
         /// Returns whether a string is a valid drive letter
         /// </summary>
         /// <param name="parameter">String value to check</param>
-        /// <returns>True if it's a valid drive letter, false otherwise</returns>
+        /// <returns>True if it's a valid drive letter, false otherwise</W>
         protected static bool IsValidDriveLetter(string parameter)
-        {
-            if (!Regex.IsMatch(parameter, @"^[A-Z]:?\\?$"))
-                return false;
-
-            return true;
-        }
+            => Regex.IsMatch(parameter, @"^[A-Z]:?\\?$");
 
         /// <summary>
         /// Returns whether a string is a valid bool
@@ -370,9 +360,7 @@ namespace MPF.Modules
         /// <param name="parameter">String value to check</param>
         /// <returns>True if it's a valid bool, false otherwise</returns>
         protected static bool IsValidBool(string parameter)
-        {
-            return bool.TryParse(parameter, out bool _);
-        }
+            => bool.TryParse(parameter, out bool _);
 
         /// <summary>
         /// Returns whether a string is a valid byte
@@ -462,9 +450,7 @@ namespace MPF.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
         protected bool ProcessFlagParameter(List<string> parts, string flagString, ref int i)
-        {
-            return ProcessFlagParameter(parts, null, flagString, ref i);
-        }
+            => ProcessFlagParameter(parts, null, flagString, ref i);
 
         /// <summary>
         /// Process a flag parameter
@@ -499,9 +485,7 @@ namespace MPF.Modules
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
         protected bool ProcessBooleanParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-        {
-            return ProcessBooleanParameter(parts, null, flagString, ref i, missingAllowed);
-        }
+            => ProcessBooleanParameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a boolean parameter
@@ -576,9 +560,7 @@ namespace MPF.Modules
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
         protected sbyte? ProcessInt8Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-        {
-            return ProcessInt8Parameter(parts, null, flagString, ref i, missingAllowed);
-        }
+            => ProcessInt8Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an sbyte parameter
@@ -655,9 +637,7 @@ namespace MPF.Modules
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
         protected short? ProcessInt16Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-        {
-            return ProcessInt16Parameter(parts, null, flagString, ref i, missingAllowed);
-        }
+            => ProcessInt16Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an Int16 parameter
@@ -733,9 +713,7 @@ namespace MPF.Modules
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
         protected int? ProcessInt32Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-        {
-            return ProcessInt32Parameter(parts, null, flagString, ref i, missingAllowed);
-        }
+            => ProcessInt32Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an Int32 parameter
@@ -811,9 +789,7 @@ namespace MPF.Modules
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
         protected long? ProcessInt64Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-        {
-            return ProcessInt64Parameter(parts, null, flagString, ref i, missingAllowed);
-        }
+            => ProcessInt64Parameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process an Int64 parameter
@@ -881,7 +857,7 @@ namespace MPF.Modules
         }
 
         /// <summary>
-        /// Process an Int64 parameter
+        /// Process an string parameter
         /// </summary>
         /// <param name="parts">List of parts to be referenced</param>
         /// <param name="flagString">Flag string, if available</param>
@@ -889,9 +865,7 @@ namespace MPF.Modules
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
         protected string ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-        {
-            return ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
-        }
+            => ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a string parameter
