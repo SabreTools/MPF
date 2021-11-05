@@ -1710,12 +1710,12 @@ namespace MPF.Modules.DiscImageCreator
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    if (!IsValidInt32(parts[4], lowerBound: 0))
+                    if (!IsValidInt32(parts[4]))
                         return false;
                     else
                         StartLBAValue = Int32.Parse(parts[4]);
 
-                    if (!IsValidInt32(parts[5], lowerBound: 0))
+                    if (!IsValidInt32(parts[5]))
                         return false;
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
@@ -1797,12 +1797,12 @@ namespace MPF.Modules.DiscImageCreator
                     else
                         DriveSpeed = Int32.Parse(parts[3]);
 
-                    if (!IsValidInt32(parts[4], lowerBound: 0))
+                    if (!IsValidInt32(parts[4]))
                         return false;
                     else
                         StartLBAValue = Int32.Parse(parts[4]);
 
-                    if (!IsValidInt32(parts[5], lowerBound: 0))
+                    if (!IsValidInt32(parts[5]))
                         return false;
                     else
                         EndLBAValue = Int32.Parse(parts[5]);
@@ -2088,7 +2088,7 @@ namespace MPF.Modules.DiscImageCreator
                     return false;
             }
 
-            // Loop through all auxilary flags, if necessary
+            // Loop through all auxiliary flags, if necessary
             if (index > 0)
             {
                 for (int i = index; i < parts.Count; i++)
