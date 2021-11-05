@@ -37,7 +37,7 @@ namespace MPF.Test.Converters
         [InlineData(MediaType.NONE, null)]
         public void ExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = Modules.DiscImageCreator.Converters.Extension(mediaType);
+            string actual = MPF.Modules.DiscImageCreator.Converters.Extension(mediaType);
 
             Assert.Equal(expected, actual);
         }

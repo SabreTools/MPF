@@ -34,7 +34,7 @@ namespace MPF.Test.Converters
         [InlineData(CommandStrings.XBOX, MediaType.DVD)]
         public void BaseCommandToMediaTypeTest(string command, MediaType? expected)
         {
-            MediaType? actual = Modules.DiscImageCreator.Converters.ToMediaType(command);
+            MediaType? actual = MPF.Modules.DiscImageCreator.Converters.ToMediaType(command);
             Assert.Equal(expected, actual);
         }
 
@@ -58,7 +58,7 @@ namespace MPF.Test.Converters
         [InlineData(CommandStrings.XBOX, RedumpSystem.MicrosoftXbox)]
         public void BaseCommandToRedumpSystemTest(string command, RedumpSystem? expected)
         {
-            RedumpSystem? actual = Modules.DiscImageCreator.Converters.ToRedumpSystem(command);
+            RedumpSystem? actual = MPF.Modules.DiscImageCreator.Converters.ToRedumpSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -72,7 +72,7 @@ namespace MPF.Test.Converters
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = Modules.DiscImageCreator.Converters.Extension(mediaType);
+            string actual = MPF.Modules.DiscImageCreator.Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 
