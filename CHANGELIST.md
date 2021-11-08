@@ -17,6 +17,16 @@
 - Update to Aaru v5.3.0 LTS
 - Update to DIC 20211101
 - HTTP encode password for Redump login, again
+- Fix NullReferenceException in anti-modchip scans
+- Update arcade metadata (Shizmob)
+- Add JSON output option for MPF.Check
+- Fix JSON output serialization
+- Ensure corrupt directories on media don't throw errors
+- Add retry to Redump external calls
+- Make anti-modchip scans even safer
+- Remove lower bound checking on LBA values for DIC
+- Remove offset for audio discs on DIC output
+- Start adding regression tests for DIC
 
 ### 2.1 (2021-07-22)
 - Enum, no more
