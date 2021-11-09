@@ -343,6 +343,15 @@ namespace MPF.GUI.ViewModels
         {
             // Disable the dumping button
             App.Instance.StartStopButton.IsEnabled = false;
+            
+            // Safely uncheck the parameters box, just in case
+            if (App.Instance.EnableParametersCheckBox.IsChecked == true)
+            {
+                App.Instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
+                App.Instance.EnableParametersCheckBox.IsChecked = false;
+                App.Instance.ParametersTextBox.IsEnabled = false;
+                App.Instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+            }
 
             // Set the UI color scheme according to the options
             if (App.Options.EnableDarkMode)
