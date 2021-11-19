@@ -15,7 +15,7 @@
 - Move CICMMetadata to top-level
 - Separate out remaining functionality into individual DLLs
 - Update to Aaru v5.3.0 LTS
-- Update to DIC 20211101
+- Update to DIC 20211001
 - HTTP encode password for Redump login, again
 - Fix NullReferenceException in anti-modchip scans
 - Update arcade metadata (Shizmob)
@@ -29,6 +29,7 @@
 - Start adding regression tests for DIC
 - Ensure parameters box is safer during options save
 - Fix protection sanitization and add regression tests
+- Update to DIC 20211101
 
 ### 2.1 (2021-07-22)
 - Enum, no more
