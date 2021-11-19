@@ -28,6 +28,7 @@
 - Remove offset for audio discs on DIC output
 - Start adding regression tests for DIC
 - Ensure parameters box is safer during options save
+- Fix protection sanitization and add regression tests
 
 ### 2.1 (2021-07-22)
 - Enum, no more

@@ -26,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CICMMetadataEditor", "CICMM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.Core", "MPF.Core\MPF.Core.csproj", "{70B1265D-FE49-472A-A83D-0B462152D37A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.Modules", "MPF.Modules\MPF.Modules.csproj", "{8A4254BD-552F-4238-B8EB-D59AACD768B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.Modules", "MPF.Modules\MPF.Modules.csproj", "{8A4254BD-552F-4238-B8EB-D59AACD768B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

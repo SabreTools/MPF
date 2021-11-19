@@ -104,7 +104,7 @@ namespace MPF.Library
         /// Sanitize unnecessary protection duplication from output
         /// </summary>
         /// <param name="foundProtections">Enumerable of found protections</param>
-        private static string SanitizeFoundProtections(IEnumerable<string> foundProtections)
+        public static string SanitizeFoundProtections(IEnumerable<string> foundProtections)
         {
             // ActiveMARK
             if (foundProtections.Any(p => p == "ActiveMARK 5") && foundProtections.Any(p => p == "ActiveMARK"))
@@ -143,21 +143,21 @@ namespace MPF.Library
             {
                 if (foundProtections.Any(p => Regex.IsMatch(p, @"JoWood X-Prot [0-9]\.[0-9]\.[0-9]\.[0-9]{2}")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.0-v1.3");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.4+");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v2");
+                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot")
+                        .Where(p => p != "JoWood X-Prot v1.0-v1.3")
+                        .Where(p => p != "JoWood X-Prot v1.4+")
+                        .Where(p => p != "JoWood X-Prot v2");
                 }
                 else if (foundProtections.Any(p => p == "JoWood X-Prot v2"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.0-v1.3");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.4+");
+                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot")
+                        .Where(p => p != "JoWood X-Prot v1.0-v1.3")
+                        .Where(p => p != "JoWood X-Prot v1.4+");
                 }
                 else if (foundProtections.Any(p => p == "JoWood X-Prot v1.4+"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot");
-                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot v1.0-v1.3");
+                    foundProtections = foundProtections.Where(p => p != "JoWood X-Prot")
+                        .Where(p => p != "JoWood X-Prot v1.0-v1.3");
                 }
                 else if (foundProtections.Any(p => p == "JoWood X-Prot v1.0-v1.3"))
                 {
@@ -168,8 +168,8 @@ namespace MPF.Library
             // LaserLok
             // TODO: Figure this one out
 
-            // Online RegistrationBu
-            foundProtections = foundProtections.Where(p => p.StartsWith("Executable-Based Online Registration"));
+            // Online Registration
+            foundProtections = foundProtections.Where(p => !p.StartsWith("Executable-Based Online Registration"));
 
             // ProtectDISC / VOB ProtectCD/DVD
             // TODO: Figure this one out
@@ -182,71 +182,71 @@ namespace MPF.Library
             {
                 if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"));
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (drvmgt.dll)"));
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"));
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1/Lite")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc 2")
+                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
+                        .Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"))
+                        .Where(p => !p.StartsWith("SafeDisc (drvmgt.dll)"))
+                        .Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"))
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p.StartsWith("SafeDisc (drvmgt.dll)")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"));
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"));
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1/Lite")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc 2")
+                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
+                        .Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"))
+                        .Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"))
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p.StartsWith("SafeDisc (secdrv.sys)")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"));
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1/Lite")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc 2")
+                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
+                        .Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"))
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p.StartsWith("SafeDisc (dplayerx.dll)")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 3.20-4.xx (version removed)");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1/Lite")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc 2")
+                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 3.20-4.xx (version removed)"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 2");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1/Lite")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc 2")
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 2"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1/Lite");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1/Lite")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 1/Lite"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1-3")
+                        .Where(p => p != "SafeDisc Lite");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc Lite"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc 1-3");
+                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                        .Where(p => p != "SafeDisc 1-3");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 1-3"))
                 {
