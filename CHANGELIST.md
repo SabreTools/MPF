@@ -30,6 +30,7 @@
 - Ensure parameters box is safer during options save
 - Fix protection sanitization and add regression tests
 - Update to DIC 20211101
+- Add protection sanitization for StarForce
 
 ### 2.1 (2021-07-22)
 - Enum, no more

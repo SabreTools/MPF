@@ -261,7 +261,31 @@ namespace MPF.Library
             // TODO: Figure this one out
 
             // StarForce
-            // TODO: Figure this one out
+            if (foundProtections.Any(p => p.StartsWith("StarForce")))
+            {
+                if (foundProtections.Any(p => Regex.IsMatch(p, @"StarForce [0-9]+\..+")))
+                {
+                    foundProtections = foundProtections.Where(p => p != "StarForce")
+                        .Where(p => p != "StarForce 3-5")
+                        .Where(p => p != "StarForce 5")
+                        .Where(p => p != "StarForce 5 [Protected Module]");
+                }
+                else if (foundProtections.Any(p => p == "StarForce 5 [Protected Module]"))
+                {
+                    foundProtections = foundProtections.Where(p => p != "StarForce")
+                        .Where(p => p != "StarForce 3-5")
+                        .Where(p => p != "StarForce 5");
+                }
+                else if (foundProtections.Any(p => p == "StarForce 5"))
+                {
+                    foundProtections = foundProtections.Where(p => p != "StarForce")
+                        .Where(p => p != "StarForce 3-5");
+                }
+                else if (foundProtections.Any(p => p == "StarForce 3-5"))
+                {
+                    foundProtections = foundProtections.Where(p => p != "StarForce");
+                }
+            }
 
             // Sysiphus
             if (foundProtections.Any(p => p == "Sysiphus") && foundProtections.Any(p => p.StartsWith("Sysiphus") && p.Length > "Sysiphus".Length))

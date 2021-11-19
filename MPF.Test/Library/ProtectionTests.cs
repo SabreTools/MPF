@@ -215,6 +215,33 @@ namespace MPF.Test.Library
             Assert.Equal(protections[0], sanitized);
         }
 
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void SanitizeFoundProtectionStarForceTest(int skip)
+        {
+            List<string> protections = new List<string>()
+            {
+                "StarForce 1.20.000.000",
+                "StarForce 5 [Protected Module]",
+                "StarForce 5",
+                "StarForce 3-5",
+                "StarForce",
+            };
+
+            // Safeguard for the future
+            if (skip >= protections.Count)
+                throw new ArgumentException("Invalid skip value", nameof(skip));
+
+            // The list is in order of preference
+            protections = protections.Skip(skip).ToList();
+
+            string sanitized = Protection.SanitizeFoundProtections(protections);
+            Assert.Equal(protections[0], sanitized);
+        }
+
         [Fact]
         public void SanitizeFoundProtectionsSysiphusTest()
         {
