@@ -2473,12 +2473,20 @@ namespace MPF.Modules.DiscImageCreator
                                 if (line.Contains("No TitleKey"))
                                 {
                                     var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), No TitleKey$");
-                                    vobKeys += $"{match.Groups[1].Value} Title Key: No TitleKey\n";
+                                    string matchedFilename = match.Groups[1].Value;
+                                    if (matchedFilename.EndsWith(";1"))
+                                        matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
+
+                                    vobKeys += $"{matchedFilename} Title Key: No TitleKey\n";
                                 }
                                 else
                                 {
                                     var match = Regex.Match(line, @"^LBA:\s*[0-9]+, Filename: (.*?), EncryptedTitleKey: .*?, DecryptedTitleKey: (.*?)$");
-                                    vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value}\n";
+                                    string matchedFilename = match.Groups[1].Value;
+                                    if (matchedFilename.EndsWith(";1"))
+                                        matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
+
+                                    vobKeys += $"{matchedFilename} Title Key: {match.Groups[2].Value}\n";
                                 }
                             }
                         }
