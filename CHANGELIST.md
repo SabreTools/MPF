@@ -31,6 +31,7 @@
 - Fix protection sanitization and add regression tests
 - Update to DIC 20211101
 - Add protection sanitization for StarForce
+- Trim filenames for DVD protection from DIC
 
 ### 2.1 (2021-07-22)
 - Enum, no more
