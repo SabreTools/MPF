@@ -160,45 +160,6 @@ namespace MPF.Core.Converters
 
         #endregion
 
-        #region Convert to Short Name
-
-        /// <summary>
-        /// Short name method cache
-        /// </summary>
-        private static readonly ConcurrentDictionary<Type, MethodInfo> ShortNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
-
-        /// <summary>
-        /// Get the short string representation of a generic enumerable value
-        /// </summary>
-        /// <param name="value">Enum value to convert</param>
-        /// <returns>String representation of that value if possible, empty string on error</returns>
-        public static string GetShortName(Enum value)
-        {
-            try
-            {
-                var sourceType = value.GetType();
-                sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
-
-                if (!ShortNameMethods.TryGetValue(sourceType, out MethodInfo method))
-                {
-                    method = typeof(EnumConverter).GetMethod("ShortName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
-                    ShortNameMethods.TryAdd(sourceType, method);
-                }
-
-                if (method != null)
-                    return method.Invoke(null, new[] { value }) as string;
-                else
-                    return string.Empty;
-            }
-            catch
-            {
-                // Converter is not implemented for the given type
-                return string.Empty;
-            }
-        }
-
-        #endregion
-
         #region Convert From String
 
         /// <summary>

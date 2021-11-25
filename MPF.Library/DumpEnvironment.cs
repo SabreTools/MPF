@@ -341,7 +341,7 @@ namespace MPF.Library
             (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(this.OutputDirectory, this.OutputFilename, this.Parameters, false);
             if (!foundFiles)
             {
-                resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
+                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
                 return Result.Failure("Error! Please check output directory as dump may be incomplete!");
             }
 

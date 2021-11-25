@@ -753,7 +753,7 @@ namespace MPF.GUI.ViewModels
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Drives[App.Instance.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(App.Options.DefaultSystem) ?? App.Options.DefaultSystem;
-                App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ("detected " + EnumConverter.GetLongName(currentSystem) + "."));
+                App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
 
                 if (currentSystem != null)
                 {
