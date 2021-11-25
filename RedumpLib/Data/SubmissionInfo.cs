@@ -296,7 +296,7 @@ namespace RedumpLib.Data
     {
         [JsonProperty(PropertyName = "d_edc", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(YesNoConverter))]
-        public YesNo EDC { get; set; }
+        public YesNo? EDC { get; set; }
 
         public object Clone()
         {
@@ -376,11 +376,11 @@ namespace RedumpLib.Data
     {
         [JsonProperty(PropertyName = "d_protection_a", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(YesNoConverter))]
-        public YesNo AntiModchip { get; set; }
+        public YesNo? AntiModchip { get; set; }
 
         [JsonProperty(PropertyName = "d_protection_1", NullValueHandling = NullValueHandling.Ignore)]
         [JsonConverter(typeof(YesNoConverter))]
-        public YesNo LibCrypt { get; set; }
+        public YesNo? LibCrypt { get; set; }
 
         [JsonProperty(PropertyName = "d_libcrypt", NullValueHandling = NullValueHandling.Ignore)]
         public string LibCryptData { get; set; }

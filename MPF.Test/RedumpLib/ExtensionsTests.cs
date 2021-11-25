@@ -360,7 +360,7 @@ namespace MPF.Test.RedumpLib
         /// <summary>
         /// Check that every Region has a long name provided
         /// </summary>
-        /// <param name="mediaType">Region value to check</param>
+        /// <param name="region">Region value to check</param>
         /// <param name="expectNull">True to expect a null value, false otherwise</param>
         [Theory]
         [MemberData(nameof(GenerateRegionTestData))]
@@ -401,6 +401,155 @@ namespace MPF.Test.RedumpLib
             foreach (Region? region in Enum.GetValues(typeof(Region)))
             {
                 testData.Add(new object[] { region, false });
+            }
+
+            return testData;
+        }
+
+        #endregion
+
+        #region System
+
+        /// <summary>
+        /// RedumpSystem values that are considered markers and not real systems
+        /// </summary>
+        private static readonly RedumpSystem?[] _markerSystemTypes = new RedumpSystem?[]
+        {
+            RedumpSystem.MarkerArcadeEnd,
+            RedumpSystem.MarkerComputerEnd,
+            RedumpSystem.MarkerDiscBasedConsoleEnd,
+            RedumpSystem.MarkerOtherEnd,
+        };
+
+        /// <summary>
+        /// Check that every RedumpSystem has a long name provided
+        /// </summary>
+        /// <param name="redumpSystem">RedumpSystem value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
+        [Theory]
+        [MemberData(nameof(GenerateRedumpSystemTestData))]
+        public void RedumpSystemLongNameTest(RedumpSystem? redumpSystem, bool expectNull)
+        {
+            string actual = redumpSystem.LongName();
+
+            if (expectNull)
+                Assert.Null(actual);
+            else
+                Assert.NotNull(actual);
+        }
+
+        // TODO: Re-enable the following test once non-Redump systems are accounted for
+
+        /// <summary>
+        /// Check that every RedumpSystem has a short name provided
+        /// </summary>
+        /// <param name="redumpSystem">RedumpSystem value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
+        //[Theory]
+        //[MemberData(nameof(GenerateRedumpSystemTestData))]
+        //public void RedumpSystemShortNameTest(RedumpSystem? redumpSystem, bool expectNull)
+        //{
+        //    string actual = redumpSystem.ShortName();
+
+        //    if (expectNull)
+        //        Assert.Null(actual);
+        //    else
+        //        Assert.NotNull(actual);
+        //}
+
+        // TODO: Test the other attributes as well
+        // Most are bool checks so they're not as interesting to have unit tests around
+        // SystemCategory always returns something as well, so is it worth testing?
+
+        /// <summary>
+        /// Generate a test set of RedumpSystem values
+        /// </summary>
+        /// <returns>MemberData-compatible list of RedumpSystem values</returns>
+        public static List<object[]> GenerateRedumpSystemTestData()
+        {
+            var testData = new List<object[]>() { new object[] { null, true } };
+            foreach (RedumpSystem? redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
+            {
+                // We want to skip all markers for this
+                if (_markerSystemTypes.Contains(redumpSystem))
+                    continue;
+
+                testData.Add(new object[] { redumpSystem, false });
+            }
+
+            return testData;
+        }
+
+        #endregion
+
+        #region System Category
+
+        /// <summary>
+        /// Check that every SystemCategory has a long name provided
+        /// </summary>
+        /// <param name="systemCategory">SystemCategory value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
+        [Theory]
+        [MemberData(nameof(GenerateSystemCategoryTestData))]
+        public void SystemCategoryLongNameTest(SystemCategory? systemCategory, bool expectNull)
+        {
+            string actual = systemCategory.LongName();
+
+            if (expectNull)
+                Assert.Null(actual);
+            else
+                Assert.NotNull(actual);
+        }
+
+        /// <summary>
+        /// Generate a test set of SystemCategory values
+        /// </summary>
+        /// <returns>MemberData-compatible list of SystemCategory values</returns>
+        public static List<object[]> GenerateSystemCategoryTestData()
+        {
+            var testData = new List<object[]>() { new object[] { null, true } };
+            foreach (SystemCategory? systemCategory in Enum.GetValues(typeof(SystemCategory)))
+            {
+                if (systemCategory == SystemCategory.NONE)
+                    testData.Add(new object[] { systemCategory, true });
+                else
+                    testData.Add(new object[] { systemCategory, false });
+            }
+
+            return testData;
+        }
+
+        #endregion
+
+        #region Yes/No
+
+        /// <summary>
+        /// Check that every YesNo has a long name provided
+        /// </summary>
+        /// <param name="yesNo">YesNo value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
+        [Theory]
+        [MemberData(nameof(GenerateYesNoTestData))]
+        public void YesNoLongNameTest(YesNo? yesNo, bool expectNull)
+        {
+            string actual = yesNo.LongName();
+
+            if (expectNull)
+                Assert.Null(actual);
+            else
+                Assert.NotNull(actual);
+        }
+
+        /// <summary>
+        /// Generate a test set of YesNo values
+        /// </summary>
+        /// <returns>MemberData-compatible list of YesNo values</returns>
+        public static List<object[]> GenerateYesNoTestData()
+        {
+            var testData = new List<object[]>() { new object[] { null, false } };
+            foreach (YesNo? yesNo in Enum.GetValues(typeof(YesNo)))
+            {
+                testData.Add(new object[] { yesNo, false });
             }
 
             return testData;

@@ -2138,7 +2138,7 @@ namespace RedumpLib.Data
         /// </summary>
         /// <param name="yesno"></param>
         /// <returns></returns>
-        public static string LongName(this YesNo yesno) => AttributeHelper<YesNo>.GetAttribute(yesno)?.LongName ?? "Yes/No";
+        public static string LongName(this YesNo? yesno) => AttributeHelper<YesNo?>.GetAttribute(yesno)?.LongName ?? "Yes/No";
 
         /// <summary>
         /// Get the YesNo enum value for a given string
