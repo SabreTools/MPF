@@ -1,9 +1,9 @@
 ﻿using RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test.Utilities
+namespace MPF.Test.RedumpLib
 {
-    public class ValidatorsTest
+    public class ExtensionsTests
     {
         [Theory]
         [InlineData(RedumpSystem.BandaiPippin, MediaType.CDROM)]
@@ -16,20 +16,6 @@ namespace MPF.Test.Utilities
         {
             var actual = knownSystem.MediaTypes();
             Assert.Contains(expected, actual);
-        }
-
-        [Fact]
-        public void CreateListOfDrivesTest()
-        {
-            // TODO: Implement
-            Assert.True(true);
-        }
-
-        [Fact]
-        public void GetDiscTypeTest()
-        {
-            // TODO: Implement
-            Assert.True(true);
         }
     }
 }

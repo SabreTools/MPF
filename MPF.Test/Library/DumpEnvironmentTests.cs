@@ -4,9 +4,9 @@ using MPF.Library;
 using RedumpLib.Data;
 using Xunit;
 
-namespace MPF.Test
+namespace MPF.Test.Library
 {
-    public class DumpEnvironmentTest
+    public class DumpEnvironmentTests
     {
         [Theory]
         [InlineData(null, 'D', false, MediaType.NONE, false)]
