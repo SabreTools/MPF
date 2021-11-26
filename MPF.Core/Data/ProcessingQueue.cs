@@ -33,10 +33,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Dispose the current instance
         /// </summary>
-        public void Dispose()
-        {
-            this.TokenSource.Cancel();
-        }
+        public void Dispose() => this.TokenSource.Cancel();
 
         /// <summary>
         /// Enqueue a new item for processing

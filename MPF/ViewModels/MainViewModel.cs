@@ -287,7 +287,7 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Toggle the Start/Stop button
         /// </summary>
-        public void ToggleStartStop()
+        public async void ToggleStartStop()
         {
             // Dump or stop the dump
             if ((string)App.Instance.StartStopButton.Content == Interface.StartDumping)
@@ -303,13 +303,13 @@ namespace MPF.GUI.ViewModels
                 if (Env.Options.EjectAfterDump == true)
                 {
                     App.Logger.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
-                    Env.EjectDisc();
+                    await Env.EjectDisc();
                 }
 
                 if (App.Options.DICResetDriveAfterDump)
                 {
                     App.Logger.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
-                    Env.ResetDrive();
+                    await Env.ResetDrive();
                 }
             }
 
@@ -873,7 +873,7 @@ namespace MPF.GUI.ViewModels
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             string outputDirectory = Path.GetDirectoryName(trimmedPath);
             string outputFilename = Path.GetFileName(trimmedPath);
-            (outputDirectory, outputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename, App.Options.InternalProgram == InternalProgram.DiscImageCreator);
+            (outputDirectory, outputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename);
             if (!string.IsNullOrWhiteSpace(outputDirectory))
                 App.Instance.OutputDirectoryTextBox.Text = outputDirectory;
             else

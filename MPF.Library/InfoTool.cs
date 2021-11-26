@@ -481,7 +481,7 @@ namespace MPF.Library
         }
 
         /// <summary>
-        /// Get the existance of an anti-modchip string from a PlayStation disc, if possible
+        /// Get the existence of an anti-modchip string from a PlayStation disc, if possible
         /// </summary>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
@@ -868,6 +868,50 @@ namespace MPF.Library
         }
 
         /// <summary>
+        /// Get the adjusted name of the media based on layers, if applicable
+        /// </summary>
+        /// <param name="mediaType">MediaType to get the proper name for</param>
+        /// <param name="size">Size of the current media</param>
+        /// <param name="layerbreak">First layerbreak value, as applicable</param>
+        /// <param name="layerbreak2">Second layerbreak value, as applicable</param>
+        /// <param name="layerbreak3">Third ayerbreak value, as applicable</param>
+        /// <returns>String representation of the media, including layer specification</returns>
+        public static string GetFixedMediaType(MediaType? mediaType, long size, long layerbreak, long layerbreak2, long layerbreak3)
+        {
+            switch (mediaType)
+            {
+                case MediaType.DVD:
+                    if (layerbreak != default)
+                        return $"{mediaType.LongName()}-9";
+                    else
+                        return $"{mediaType.LongName()}-5";
+
+                case MediaType.BluRay:
+                    if (layerbreak3 != default)
+                        return $"{mediaType.LongName()}-128";
+                    else if (layerbreak2 != default)
+                        return $"{mediaType.LongName()}-100";
+                    else if (layerbreak != default && size > 53_687_063_712)
+                        return $"{mediaType.LongName()}-66";
+                    else if (layerbreak != default)
+                        return $"{mediaType.LongName()}-50";
+                    else if (size > 26_843_531_856)
+                        return $"{mediaType.LongName()}-33";
+                    else
+                        return $"{mediaType.LongName()}-25";
+
+                case MediaType.UMD:
+                    if (layerbreak != default)
+                        return $"{mediaType.LongName()}-DL";
+                    else
+                        return $"{mediaType.LongName()}-SL";
+
+                default:
+                    return mediaType.LongName();
+            }
+        }
+
+        /// <summary>
         /// Write the data to the output folder
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
@@ -997,50 +1041,6 @@ namespace MPF.Library
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
         }
 
-        /// <summary>
-        /// Get the adjusted name of the media baed on layers, if applicable
-        /// </summary>
-        /// <param name="mediaType">MediaType to get the proper name for</param>
-        /// <param name="size">Size of the current media</param>
-        /// <param name="layerbreak">First layerbreak value, as applicable</param>
-        /// <param name="layerbreak2">Second layerbreak value, as applicable</param>
-        /// <param name="layerbreak3">Third ayerbreak value, as applicable</param>
-        /// <returns>String representation of the media, including layer specification</returns>
-        private static string GetFixedMediaType(MediaType? mediaType, long size, long layerbreak, long layerbreak2, long layerbreak3)
-        {
-            switch (mediaType)
-            {
-                case MediaType.DVD:
-                    if (layerbreak != default)
-                        return $"{mediaType.LongName()}-9";
-                    else
-                        return $"{mediaType.LongName()}-5";
-
-                case MediaType.BluRay:
-                    if (layerbreak3 != default)
-                        return $"{mediaType.LongName()}-128";
-                    else if (layerbreak2 != default)
-                        return $"{mediaType.LongName()}-100";
-                    else if (layerbreak != default && size > 53_687_063_712)
-                        return $"{mediaType.LongName()}-66";
-                    else if (layerbreak != default)
-                        return $"{mediaType.LongName()}-50";
-                    else if (size > 26_843_531_856)
-                        return $"{mediaType.LongName()}-33";
-                    else
-                        return $"{mediaType.LongName()}-25";
-
-                case MediaType.UMD:
-                    if (layerbreak != default)
-                        return $"{mediaType.LongName()}-DL";
-                    else
-                        return $"{mediaType.LongName()}-SL";
-
-                default:
-                    return mediaType.LongName();
-            }
-        }
-
         #endregion
 
         #region Normalization
@@ -1050,8 +1050,7 @@ namespace MPF.Library
         /// </summary>
         /// <param name="directory">Directory name to normalize</param>
         /// <param name="filename">Filename to normalize</param>
-        /// <param name="replacePeriods">True to replace '.' with '_' in filenames, false otherwise</param>
-        public static (string, string) NormalizeOutputPaths(string directory, string filename, bool replacePeriods)
+        public static (string, string) NormalizeOutputPaths(string directory, string filename)
         {
             try
             {
@@ -1079,8 +1078,6 @@ namespace MPF.Library
                     directory = directory.Replace(c, '_');
                 foreach (char c in Path.GetInvalidFileNameChars())
                     filename = filename.Replace(c, '_');
-                if (replacePeriods)
-                    filename = Path.GetFileNameWithoutExtension(filename).Replace('.', '_') + "." + Path.GetExtension(filename).TrimStart('.');
 
                 // If we had a directory separator at the end before, add it again
                 if (endedWithDirectorySeparator)

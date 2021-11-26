@@ -62,9 +62,8 @@ namespace MPF.Library
         #region Event Handlers
 
         /// <summary>
-        /// Geneeic way of reporting a message
+        /// Generic way of reporting a message
         /// </summary>
-        /// <param name="message">String value to report</param>
         public EventHandler<string> ReportStatus;
 
         /// <summary>
@@ -75,18 +74,12 @@ namespace MPF.Library
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
-        private void OutputToLog(object proc, string args)
-        {
-            outputQueue.Enqueue(args);
-        }
+        private void OutputToLog(object proc, string args) => outputQueue.Enqueue(args);
 
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-        private void ProcessOutputs(string nextOutput)
-        {
-            ReportStatus.Invoke(this, nextOutput);
-        }
+        private void ProcessOutputs(string nextOutput) => ReportStatus.Invoke(this, nextOutput);
 
         #endregion
 
@@ -112,7 +105,7 @@ namespace MPF.Library
             this.Options = options;
 
             // Output paths
-            (this.OutputDirectory, this.OutputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename, options.InternalProgram == InternalProgram.DiscImageCreator);
+            (this.OutputDirectory, this.OutputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename);
 
             // UI information
             this.Drive = drive;
@@ -220,69 +213,19 @@ namespace MPF.Library
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void CancelDumping()
-        {
-            Parameters.KillInternalProgram();
-        }
+        public void CancelDumping() => Parameters.KillInternalProgram();
 
         /// <summary>
         /// Eject the disc using DiscImageCreator
         /// </summary>
-        public async void EjectDisc()
-        {
-            // Validate that the path is configured
-            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
-                return;
-
-            // Validate that the required program exists
-            if (!File.Exists(Options.DiscImageCreatorPath))
-                return;
-
-            CancelDumping();
-
-            // Validate we're not trying to eject a non-optical
-            if (Drive.InternalDriveType != InternalDriveType.Optical)
-                return;
-
-            var parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
-            {
-                BaseCommand = Modules.DiscImageCreator.CommandStrings.Eject,
-                DriveLetter = Drive.Letter.ToString(),
-                ExecutablePath = Options.DiscImageCreatorPath,
-            };
-
-            await ExecuteInternalProgram(parameters);
-        }
+        public async Task<string> EjectDisc() =>
+            await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
         /// </summary>
-        public async void ResetDrive()
-        {
-            // Validate that the path is configured
-            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
-                return;
-
-            // Validate that the required program exists
-            if (!File.Exists(Options.DiscImageCreatorPath))
-                return;
-
-            // Precautionary check for dumping, just in case
-            CancelDumping();
-
-            // Validate we're not trying to reset a non-optical
-            if (Drive.InternalDriveType != InternalDriveType.Optical)
-                return;
-
-            Modules.DiscImageCreator.Parameters parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
-            {
-                BaseCommand = Modules.DiscImageCreator.CommandStrings.Reset,
-                DriveLetter = Drive.Letter.ToString(),
-                ExecutablePath = Options.DiscImageCreatorPath,
-            };
-
-            await ExecuteInternalProgram(parameters);
-        }
+        public async Task<string> ResetDrive() =>
+            await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
@@ -328,7 +271,7 @@ namespace MPF.Library
         /// </summary>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
-        /// <param name="processUserInfo">Optional user prompt to deal with submsision information</param>
+        /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
             IProgress<Result> resultProgress = null,
@@ -359,21 +302,21 @@ namespace MPF.Library
                 protectionProgress);
             resultProgress?.Report(Result.Success("Extracting information complete!"));
 
-            // Eject the disc automatically if confugured to
+            // Eject the disc automatically if configured to
             if (Options.EjectAfterDump == true)
             {
                 resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
-                EjectDisc();
+                await EjectDisc();
             }
 
-            // Reset the drive automatically if confugured to
+            // Reset the drive automatically if configured to
             if (Options.InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
-                ResetDrive();
+                await ResetDrive();
             }
 
-            // Get user-modifyable information if confugured to
+            // Get user-modifiable information if confugured to
             if (Options.PromptForDiscInformation && processUserInfo != null)
             {
                 resultProgress?.Report(Result.Success("Waiting for additional disc information..."));
@@ -446,10 +389,7 @@ namespace MPF.Library
         /// Run any additional tools given a DumpEnvironment
         /// </summary>
         /// <returns>Result instance with the outcome</returns>
-        private Result ExecuteAdditionalTools()
-        {
-            return Result.Success("No external tools needed!");
-        }
+        private Result ExecuteAdditionalTools() => Result.Success("No external tools needed!");
 
         /// <summary>
         /// Run internal program async with an input set of parameters
@@ -499,7 +439,7 @@ namespace MPF.Library
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            (OutputDirectory, OutputFilename) = InfoTool.NormalizeOutputPaths(OutputDirectory, OutputFilename, Options.InternalProgram == InternalProgram.DiscImageCreator);
+            (OutputDirectory, OutputFilename) = InfoTool.NormalizeOutputPaths(OutputDirectory, OutputFilename);
 
             // Validate that the output path isn't on the dumping drive
             string fullOutputPath = Path.GetFullPath(Path.Combine(OutputDirectory, OutputFilename));
@@ -517,6 +457,50 @@ namespace MPF.Library
 
             // Validate that the current configuration is supported
             return Tools.GetSupportStatus(System, Type);
+        }
+
+        /// <summary>
+        /// Validate that DIscImageCreator is able to be found
+        /// </summary>
+        /// <returns>True if DiscImageCreator is found properly, false otherwise</returns>
+        private bool RequiredProgramsExist()
+        {
+            // Validate that the path is configured
+            if (string.IsNullOrWhiteSpace(Options.DiscImageCreatorPath))
+                return false;
+
+            // Validate that the required program exists
+            if (!File.Exists(Options.DiscImageCreatorPath))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Run a standalone DiscImageCreator command
+        /// </summary>
+        /// <param name="command">Command string to run</param>
+        /// <returns>The output of the command on success, null on error</returns>
+        private async Task<string> RunStandaloneDiscImageCreatorCommand(string command)
+        {
+            // Validate that DiscImageCreator is all set
+            if (!RequiredProgramsExist())
+                return null;
+
+            // Validate we're not trying to eject a non-optical
+            if (Drive.InternalDriveType != InternalDriveType.Optical)
+                return null;
+
+            CancelDumping();
+
+            var parameters = new Modules.DiscImageCreator.Parameters(string.Empty)
+            {
+                BaseCommand = command,
+                DriveLetter = Drive.Letter.ToString(),
+                ExecutablePath = Options.DiscImageCreatorPath,
+            };
+
+            return await ExecuteInternalProgram(parameters);
         }
 
         #endregion
