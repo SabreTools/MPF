@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using MPF.Core.Utilities;
 using MPF.Windows;
 using RedumpLib.Data;
 
@@ -73,9 +74,7 @@ namespace MPF.GUI.ViewModels
         {
             // Sony-printed discs have layers in the opposite order
             var system = SubmissionInfo?.CommonDiscInfo?.System;
-            bool reverseOrder = system == RedumpSystem.SonyPlayStation2
-                || system == RedumpSystem.SonyPlayStation3
-                || system == RedumpSystem.SonyPlayStation4;
+            bool reverseOrder = system.HasReversedRingcodes();
 
             // Different media types mean different fields available
             switch (SubmissionInfo?.CommonDiscInfo?.Media)

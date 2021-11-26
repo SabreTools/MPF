@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using MPF.Modules;
 using Newtonsoft.Json;
 using RedumpLib.Data;
@@ -666,9 +667,7 @@ namespace MPF.Library
             {
                 // Sony-printed discs have layers in the opposite order
                 var system = info.CommonDiscInfo.System;
-                bool reverseOrder = (system == RedumpSystem.SonyPlayStation2
-                    || system == RedumpSystem.SonyPlayStation3
-                    || system == RedumpSystem.SonyPlayStation4);
+                bool reverseOrder = system.HasReversedRingcodes();
 
                 // Common Disc Info section
                 List<string> output = new List<string> { "Common Disc Info:" };

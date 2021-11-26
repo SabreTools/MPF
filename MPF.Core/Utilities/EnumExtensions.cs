@@ -27,6 +27,25 @@ namespace MPF.Core.Utilities
         }
 
         /// <summary>
+        /// Determine if a system has reversed ringcodes
+        /// </summary>
+        /// <param name="system">RedumpSystem value to check</param>
+        /// <returns>True if the system has reversed ringcodes, false otherwise</returns>
+        public static bool HasReversedRingcodes(this RedumpSystem? system)
+        {
+            switch (system)
+            {
+                case RedumpSystem.SonyPlayStation2:
+                case RedumpSystem.SonyPlayStation3:
+                case RedumpSystem.SonyPlayStation4:
+                //case RedumpSystem.SonyPlayStation5:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
         /// Determine if a system is considered audio-only
         /// </summary>
         /// <param name="system">RedumpSystem value to check</param>
@@ -73,7 +92,7 @@ namespace MPF.Core.Utilities
                     return false;
             }
         }
-       
+
         /// <summary>
         /// Determine if a system is considered XGD
         /// </summary>

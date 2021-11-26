@@ -8,6 +8,8 @@ namespace MPF.Test.Modules
 {
     public class DiscImageCreatorTests
     {
+        #region Old Tests
+
         [Theory]
         [InlineData(RedumpSystem.MicrosoftXbox, MediaType.CDROM, CommandStrings.CompactDisc)]
         [InlineData(RedumpSystem.MicrosoftXbox, MediaType.DVD, CommandStrings.XBOX)]
@@ -36,7 +38,6 @@ namespace MPF.Test.Modules
         /* reread c2 */
         [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new string[] { FlagStrings.C2Opcode })]
         [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new string[] { FlagStrings.C2Opcode })]
-
         public void ParametersFromOptionsTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, string[] expected)
         {
             var options = new Options { DICParanoidMode = paranoid, DICRereadCount = rereadC2 };
@@ -66,6 +67,70 @@ namespace MPF.Test.Modules
             var actual = new Parameters(parameters);
             Assert.Equal(expected, actual.IsValid());
         }
+
+        [Theory]
+        [InlineData(MediaType.CDROM, ".bin")]
+        [InlineData(MediaType.DVD, ".iso")]
+        [InlineData(MediaType.LaserDisc, ".raw")]
+        [InlineData(MediaType.NintendoWiiUOpticalDisc, ".wud")]
+        [InlineData(MediaType.FloppyDisk, ".img")]
+        [InlineData(MediaType.Cassette, ".wav")]
+        [InlineData(MediaType.NONE, null)]
+        public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
+        {
+            string actual = MPF.Modules.DiscImageCreator.Converters.Extension(mediaType);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(CommandStrings.Audio, MediaType.CDROM)]
+        [InlineData(CommandStrings.BluRay, MediaType.BluRay)]
+        [InlineData(CommandStrings.Close, null)]
+        [InlineData(CommandStrings.CompactDisc, MediaType.CDROM)]
+        [InlineData(CommandStrings.Data, MediaType.CDROM)]
+        [InlineData(CommandStrings.DigitalVideoDisc, MediaType.DVD)]
+        [InlineData(CommandStrings.Eject, null)]
+        [InlineData(CommandStrings.Floppy, MediaType.FloppyDisk)]
+        [InlineData(CommandStrings.GDROM, MediaType.GDROM)]
+        [InlineData(CommandStrings.MDS, null)]
+        [InlineData(CommandStrings.Reset, null)]
+        [InlineData(CommandStrings.SACD, MediaType.CDROM)]
+        [InlineData(CommandStrings.Start, null)]
+        [InlineData(CommandStrings.Stop, null)]
+        [InlineData(CommandStrings.Sub, null)]
+        [InlineData(CommandStrings.Swap, MediaType.GDROM)]
+        [InlineData(CommandStrings.XBOX, MediaType.DVD)]
+        public void BaseCommandToMediaTypeTest(string command, MediaType? expected)
+        {
+            MediaType? actual = MPF.Modules.DiscImageCreator.Converters.ToMediaType(command);
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(CommandStrings.Audio, RedumpSystem.AudioCD)]
+        [InlineData(CommandStrings.BluRay, RedumpSystem.SonyPlayStation3)]
+        [InlineData(CommandStrings.Close, null)]
+        [InlineData(CommandStrings.CompactDisc, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.Data, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.DigitalVideoDisc, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.Eject, null)]
+        [InlineData(CommandStrings.Floppy, RedumpSystem.IBMPCcompatible)]
+        [InlineData(CommandStrings.GDROM, RedumpSystem.SegaDreamcast)]
+        [InlineData(CommandStrings.MDS, null)]
+        [InlineData(CommandStrings.Reset, null)]
+        [InlineData(CommandStrings.SACD, RedumpSystem.SuperAudioCD)]
+        [InlineData(CommandStrings.Start, null)]
+        [InlineData(CommandStrings.Stop, null)]
+        [InlineData(CommandStrings.Sub, null)]
+        [InlineData(CommandStrings.Swap, RedumpSystem.SegaDreamcast)]
+        [InlineData(CommandStrings.XBOX, RedumpSystem.MicrosoftXbox)]
+        public void BaseCommandToRedumpSystemTest(string command, RedumpSystem? expected)
+        {
+            RedumpSystem? actual = MPF.Modules.DiscImageCreator.Converters.ToRedumpSystem(command);
+            Assert.Equal(expected, actual);
+        }
+
+        #endregion
 
         [Fact]
         public void DiscImageCreatorAudioParametersTest()
