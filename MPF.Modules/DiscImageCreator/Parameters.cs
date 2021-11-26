@@ -2477,7 +2477,7 @@ namespace MPF.Modules.DiscImageCreator
                                     if (matchedFilename.EndsWith(";1"))
                                         matchedFilename = matchedFilename.Substring(0, matchedFilename.Length - 2);
 
-                                    vobKeys += $"{matchedFilename} Title Key: No TitleKey\n";
+                                    vobKeys += $"{matchedFilename} Title Key: No Title Key\n";
                                 }
                                 else
                                 {
