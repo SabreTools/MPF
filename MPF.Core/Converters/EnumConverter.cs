@@ -2,10 +2,10 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
-using MPF.Core.Data;
 #if NET_FRAMEWORK
 using IMAPI2;
 #endif
+using MPF.Core.Data;
 using RedumpLib.Data;
 
 namespace MPF.Core.Converters
@@ -102,7 +102,6 @@ namespace MPF.Core.Converters
                     method = typeof(RedumpLib.Data.Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
                     if (method == null)
                         method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
-
 
                     LongNameMethods.TryAdd(sourceType, method);
                 }

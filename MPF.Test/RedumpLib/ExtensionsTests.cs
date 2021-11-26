@@ -145,6 +145,7 @@ namespace MPF.Test.RedumpLib
         /// Check that every DiscCategory has a long name provided
         /// </summary>
         /// <param name="discCategory">DiscCategory value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
         [Theory]
         [MemberData(nameof(GenerateDiscCategoryTestData))]
         public void DiscCategoryLongNameTest(DiscCategory? discCategory, bool expectNull)
