@@ -5,6 +5,35 @@ namespace MPF.Core.Utilities
     public static class EnumExtensions
     {
         /// <summary>
+        /// Determine if a system is okay if it's not detected by Windows
+        /// </summary>
+        /// <param name="system">RedumpSystem value to check</param>
+        /// <returns>True if Windows show see a disc when dumping, false otherwise</returns>
+        public static bool DetectedByWindows(this RedumpSystem? system)
+        {
+            switch (system)
+            {
+                case RedumpSystem.AmericanLaserGames3DO:
+                case RedumpSystem.AppleMacintosh:
+                case RedumpSystem.Atari3DO:
+                case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
+                case RedumpSystem.NewJatreCDi:
+                case RedumpSystem.NintendoGameCube:
+                case RedumpSystem.NintendoWii:
+                case RedumpSystem.NintendoWiiU:
+                case RedumpSystem.PhilipsCDi:
+                case RedumpSystem.PhilipsCDiDigitalVideo:
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
+                case RedumpSystem.PanasonicM2:
+                case RedumpSystem.PioneerLaserActive:
+                case RedumpSystem.SuperAudioCD:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
         /// Determine if the media supports drive speeds
         /// </summary>
         /// <param name="type">MediaType value to check</param>

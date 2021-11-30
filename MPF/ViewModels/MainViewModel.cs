@@ -1072,7 +1072,11 @@ namespace MPF.GUI.ViewModels
                 // Validate that the user explicitly wants an inactive drive to be considered for dumping
                 if (!Env.Drive.MarkedActive)
                 {
-                    MessageBoxResult mbresult = CustomMessageBox.Show("The currently selected drive does not appear to contain a disc! Are you sure you want to continue?", "Missing Disc", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                    string message = "The currently selected drive does not appear to contain a disc! "
+                        + (!Env.System.DetectedByWindows() ? $"This is normal for {Env.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
+                        + "Do you want to continue?";
+
+                    MessageBoxResult mbresult = CustomMessageBox.Show(message, "No Disc Detected", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                     if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                     {
                         App.Logger.LogLn("Dumping aborted!");
