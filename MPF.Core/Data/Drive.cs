@@ -255,6 +255,13 @@ namespace MPF.Core.Data
                 return RedumpSystem.AudioCD;
             }
 
+            // BD-Video
+            if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
+            {
+                // Technically BD-Audio has this as well, but it's hard to split that out right now
+                return RedumpSystem.BDVideo;
+            }
+
             // DVD-Audio
             try
             {
