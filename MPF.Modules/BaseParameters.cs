@@ -1324,14 +1324,10 @@ namespace MPF.Modules
         {
             switch (category)
             {
-                case "GAME":
-                    return DiscCategory.Games;
-                case "VIDEO":
-                    return DiscCategory.Video;
-                case "AUDIO":
-                    return DiscCategory.Audio;
-                default:
-                    return null;
+                case "GAME": return DiscCategory.Games;
+                case "VIDEO": return DiscCategory.Video;
+                case "AUDIO": return DiscCategory.Audio;
+                default: return null;
             }
         }
 
@@ -1353,20 +1349,13 @@ namespace MPF.Modules
                 // char secondRegion = serial[3];
                 switch (serial[2])
                 {
-                    case 'A':
-                        return Region.Asia;
-                    case 'C':
-                        return Region.China;
-                    case 'E':
-                        return Region.Europe;
-                    case 'J':
-                        return Region.JapanKorea;
-                    case 'K':
-                        return Region.Korea;
-                    case 'P':
-                        return Region.Japan;
-                    case 'U':
-                        return Region.USA;
+                    case 'A': return Region.Asia;
+                    case 'C': return Region.China;
+                    case 'E': return Region.Europe;
+                    case 'J': return Region.JapanKorea;
+                    case 'K': return Region.Korea;
+                    case 'P': return Region.Japan;
+                    case 'U': return Region.USA;
                 }
             }
 
@@ -1391,34 +1380,6 @@ namespace MPF.Modules
                 return Region.Europe;
 
             return null;
-        }
-
-        /// <summary>
-        /// Determine the region based on the XGD serial character
-        /// </summary>
-        /// <param name="region">Character denoting the region</param>
-        /// <returns>Region, if possible</returns>
-        protected static Region? GetXgdRegion(char region)
-        {
-            switch (region)
-            {
-                case 'W':
-                    return Region.World;
-                case 'A':
-                    return Region.USA;
-                case 'J':
-                    return Region.JapanAsia;
-                case 'E':
-                    return Region.Europe;
-                case 'K':
-                    return Region.USAJapan;
-                case 'L':
-                    return Region.USAEurope;
-                case 'H':
-                    return Region.JapanEurope;
-                default:
-                    return null;
-            }
         }
 
         #endregion

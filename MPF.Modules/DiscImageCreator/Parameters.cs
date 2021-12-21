@@ -472,40 +472,31 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
-                    {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = ss ?? "";
-                    }
-
-                    if (GetXboxDMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial, out string version, out Region? region))
-                    {
-                        info.CommonDiscInfo.Serial = serial ?? "";
-                        info.VersionAndEditions.Version = version ?? "";
-                        info.CommonDiscInfo.Region = region;
-                    }
-
-                    break;
-
                 case RedumpSystem.MicrosoftXbox360:
-                    if (GetXgdAuxInfo(basePath + "_disc.txt", out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    string xgdXeMID = string.Empty;
+                    if (this.System == RedumpSystem.MicrosoftXbox)
+                        xgdXeMID = GetXGD1XeMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    else if (this.System == RedumpSystem.MicrosoftXbox360)
+                        xgdXeMID = GetXGD23XeMID(Path.Combine(outputDirectory, "DMI.bin"));
+
+                    XgdInfo xgdInfo = new XgdInfo(xgdXeMID);
+                    if (xgdInfo?.Initialized == true)
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = ss360 ?? "";
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXXeMID}: {xgdInfo.XeMID ?? ""}\n";
+                        info.CommonDiscInfo.Serial = xgdInfo.GetSerial() ?? "";
+                        info.VersionAndEditions.Version = xgdInfo.GetVersion() ?? "";
+                        info.CommonDiscInfo.Region = xgdInfo.InternalRegion;
                     }
 
-                    if (GetXbox360DMIInfo(Path.Combine(outputDirectory, "DMI.bin"), out string serial360, out string version360, out Region? region360))
+                    if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgdDMIHash, out string xgdPFIHash, out string xgdSSHash, out string xgdSS, out string xgdSSVer))
                     {
-                        info.CommonDiscInfo.Serial = serial360 ?? "";
-                        info.VersionAndEditions.Version = version360 ?? "";
-                        info.CommonDiscInfo.Region = region360;
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {xgdDMIHash ?? ""}\n" +
+                                                        $"{Template.XBOXPFIHash}: {xgdPFIHash ?? ""}\n" +
+                                                        $"{Template.XBOXSSHash}: {xgdSSHash ?? ""}\n" +
+                                                        $"{Template.XBOXSSVersion}: {xgdSSVer ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = xgdSS ?? "";
                     }
+
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
@@ -3094,8 +3085,13 @@ namespace MPF.Modules.DiscImageCreator
         /// Get the XGD auxiliary info from the outputted files, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
+        /// <param name="dmihash">Extracted DMI.bin CRC32 hash (upper-cased)</param>
+        /// <param name="pfihash">Extracted PFI.bin CRC32 hash (upper-cased)</param>
+        /// <param name="sshash">Extracted SS.bin CRC32 hash (upper-cased)</param>
+        /// <param name="ss">Extracted security sector data</param>
+        /// <param name="ssver">Extracted security sector version</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXgdAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
+        private static bool GetXGDAuxInfo(string disc, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
         {
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
@@ -3169,65 +3165,49 @@ namespace MPF.Modules.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the Xbox serial info from the DMI.bin file, if possible
+        /// Get the XGD1 Master ID (XeMID) information
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
-        /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXboxDMIInfo(string dmi, out string serial, out string version, out Region? region)
+        /// <returns>String representation of the XGD1 DMI information, empty string on error</returns>
+        private static string GetXGD1XeMID(string dmi)
         {
-            serial = null; version = null; region = Region.World;
-
             if (!File.Exists(dmi))
-                return false;
+                return string.Empty;
 
             using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
             {
                 try
                 {
                     br.BaseStream.Seek(8, SeekOrigin.Begin);
-                    char[] str = br.ReadChars(8);
-
-                    serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}";
-                    version = $"1.{str[5]}{str[6]}";
-                    region = GetXgdRegion(str[7]);
-                    return true;
+                    return new string(br.ReadChars(8));
                 }
                 catch
                 {
-                    return false;
+                    return string.Empty;
                 }
             }
         }
 
         /// <summary>
-        /// Get the Xbox 360 serial info from the DMI.bin file, if possible
+        /// Get the XGD2/3 Master ID (XeMID) information
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
-        /// <returns>True on successful extraction of info, false otherwise</returns>
-        private static bool GetXbox360DMIInfo(string dmi, out string serial, out string version, out Region? region)
+        /// <returns>String representation of the XGD2/3 DMI information, empty string on error</returns>
+        private static string GetXGD23XeMID(string dmi)
         {
-            serial = null; version = null; region = Region.World;
-
             if (!File.Exists(dmi))
-                return false;
+                return string.Empty;
 
             using (BinaryReader br = new BinaryReader(File.OpenRead(dmi)))
             {
                 try
                 {
                     br.BaseStream.Seek(64, SeekOrigin.Begin);
-                    char[] str = br.ReadChars(14);
-
-                    serial = $"{str[0]}{str[1]}-{str[2]}{str[3]}{str[4]}{str[5]}";
-                    version = $"1.{str[6]}{str[7]}";
-                    region = GetXgdRegion(str[8]);
-                    // str[9], str[10], str[11] - unknown purpose
-                    // str[12], str[13] - disc <12> of <13>
-                    return true;
+                    return new string(br.ReadChars(14));
                 }
                 catch
                 {
-                    return false;
+                    return string.Empty;
                 }
             }
         }

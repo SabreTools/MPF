@@ -34,6 +34,7 @@
 - Trim filenames for DVD protection from DIC
 - Fill out internal tests around Redump library
 - Refine the "missing disc" text
+- Overhaul XeMID handling
 
 ### 2.1 (2021-07-22)
 - Enum, no more
