@@ -7,7 +7,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using WinForms = System.Windows.Forms;
 using BurnOutSharp;
-using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Library;

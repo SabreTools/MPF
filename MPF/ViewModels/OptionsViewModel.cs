@@ -114,7 +114,7 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Browse and set a path based on the invoking button
         /// </summary>
-        private void BrowseForPath(Button button)
+        private void BrowseForPath(System.Windows.Controls.Button button)
         {
             // If the button is null, we can't do anything
             if (button == null)
@@ -126,23 +126,30 @@ namespace MPF.GUI.ViewModels
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
 
-            CommonDialog dialog = shouldBrowseForPath ? (CommonDialog)CreateFolderBrowserDialog() : CreateOpenFileDialog();
+            string currentPath = TextBoxForPathSetting(pathSettingName)?.Text;
+            string initialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            if (!shouldBrowseForPath && !string.IsNullOrEmpty(currentPath))
+                initialDirectory = Path.GetDirectoryName(Path.GetFullPath(currentPath));
+
+            CommonDialog dialog = shouldBrowseForPath
+                ? (CommonDialog)CreateFolderBrowserDialog()
+                : CreateOpenFileDialog(initialDirectory);
             using (dialog)
             {
                 DialogResult result = dialog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    string path;
-                    bool exists;
+                    string path = string.Empty;
+                    bool exists = false;
 
-                    if (shouldBrowseForPath)
+                    if (shouldBrowseForPath && dialog is FolderBrowserDialog folderBrowserDialog)
                     {
-                        path = (dialog as FolderBrowserDialog).SelectedPath;
+                        path = folderBrowserDialog.SelectedPath;
                         exists = Directory.Exists(path);
                     }
-                    else
+                    else if (dialog is OpenFileDialog openFileDialog)
                     {
-                        path = (dialog as OpenFileDialog).FileName;
+                        path = openFileDialog.FileName;
                         exists = File.Exists(path);
                     }
 
@@ -153,7 +160,7 @@ namespace MPF.GUI.ViewModels
                     else
                     {
                         CustomMessageBox.Show(
-                            "Specified path doesn't exists!",
+                            "Specified path doesn't exist!",
                             "Error",
                             MessageBoxButton.OK,
                             MessageBoxImage.Error
@@ -204,11 +211,11 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Create an open file dialog box
         /// </summary>
-        private static OpenFileDialog CreateOpenFileDialog()
+        private static OpenFileDialog CreateOpenFileDialog(string initialDirectory)
         {
             return new OpenFileDialog()
             {
-                InitialDirectory = AppDomain.CurrentDomain.BaseDirectory,
+                InitialDirectory = initialDirectory,
                 Filter = "Executables (*.exe)|*.exe",
                 FilterIndex = 0,
                 RestoreDirectory = true,
@@ -220,7 +227,8 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         /// <param name="name">Setting name to find</param>
         /// <returns>TextBox for that setting</returns>
-        private TextBox TextBoxForPathSetting(string name) => Parent.FindName(name + "TextBox") as TextBox;
+        private System.Windows.Controls.TextBox TextBoxForPathSetting(string name) =>
+            Parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
         #endregion
 
@@ -230,7 +238,7 @@ namespace MPF.GUI.ViewModels
         /// Handler for generic Click event
         /// </summary>
         private void BrowseForPathClick(object sender, EventArgs e) =>
-            BrowseForPath(sender as Button);
+            BrowseForPath(sender as System.Windows.Controls.Button);
 
         /// <summary>
         /// Handler for AcceptButton Click event
