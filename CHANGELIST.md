@@ -37,6 +37,7 @@
 - Overhaul XeMID handling
 - Fix output dialog issues in Options window
 - Fix saving path settings if set from dialog
+- Allow default system if skipping system detection enabled
 
 ### 2.1 (2021-07-22)
 - Enum, no more

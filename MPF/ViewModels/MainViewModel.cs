@@ -1,18 +1,18 @@
-﻿using System;
+﻿using BurnOutSharp;
+using MPF.Core.Data;
+using MPF.Core.Utilities;
+using MPF.Library;
+using MPF.Windows;
+using RedumpLib.Data;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using WinForms = System.Windows.Forms;
-using BurnOutSharp;
-using MPF.Core.Data;
-using MPF.Core.Utilities;
-using MPF.Library;
-using MPF.Windows;
-using RedumpLib.Data;
 using WPFCustomMessageBox;
+using WinForms = System.Windows.Forms;
 
 namespace MPF.GUI.ViewModels
 {
@@ -342,7 +342,7 @@ namespace MPF.GUI.ViewModels
         {
             // Disable the dumping button
             App.Instance.StartStopButton.IsEnabled = false;
-            
+
             // Safely uncheck the parameters box, just in case
             if (App.Instance.EnableParametersCheckBox.IsChecked == true)
             {
@@ -759,6 +759,13 @@ namespace MPF.GUI.ViewModels
                     int sysIndex = Systems.FindIndex(s => s == currentSystem);
                     App.Instance.SystemTypeComboBox.SelectedIndex = sysIndex;
                 }
+            }
+            else if (App.Options.SkipSystemDetection && App.Options.DefaultSystem != null)
+            {
+                var currentSystem = App.Options.DefaultSystem;
+                App.Logger.VerboseLog($"System detection disabled, setting to default of {currentSystem.LongName()}.");
+                int sysIndex = Systems.FindIndex(s => s == currentSystem);
+                App.Instance.SystemTypeComboBox.SelectedIndex = sysIndex;
             }
 
             // Ensure the UI gets updated
@@ -1309,7 +1316,7 @@ namespace MPF.GUI.ViewModels
         private void OutputDirectoryTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             if (_canExecuteTextChanged)
-              EnsureDiscInformation();
+                EnsureDiscInformation();
         }
 
         /// <summary>
