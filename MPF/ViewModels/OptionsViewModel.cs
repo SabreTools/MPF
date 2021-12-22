@@ -18,17 +18,17 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Parent OptionsWindow object
         /// </summary>
-        public OptionsWindow Parent { get; private set; }
+        public OptionsWindow Parent { get; }
 
         /// <summary>
         /// Current set of options
         /// </summary>
-        public Options Options { get; private set; }
+        public Options Options { get; }
 
         /// <summary>
         /// Flag for if settings were saved or not
         /// </summary>
-        public bool SavedSettings { get; private set; } = false;
+        public bool SavedSettings { get; private set; }
 
         #endregion
 
@@ -37,12 +37,12 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// List of available internal programs
         /// </summary>
-        public List<Element<InternalProgram>> InternalPrograms { get; private set; } = PopulateInternalPrograms();
+        public List<Element<InternalProgram>> InternalPrograms => PopulateInternalPrograms();
 
         /// <summary>
         /// Current list of supported system profiles
         /// </summary>
-        public List<RedumpSystemComboBoxItem> Systems { get; private set; } = RedumpSystemComboBoxItem.GenerateElements().ToList();
+        public List<RedumpSystemComboBoxItem> Systems => RedumpSystemComboBoxItem.GenerateElements().ToList();
 
         #endregion
 
@@ -155,6 +155,7 @@ namespace MPF.GUI.ViewModels
 
                     if (exists)
                     {
+                        Options[pathSettingName] = path;
                         TextBoxForPathSetting(pathSettingName).Text = path;
                     }
                     else
