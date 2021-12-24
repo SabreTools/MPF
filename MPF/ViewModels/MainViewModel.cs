@@ -827,7 +827,7 @@ namespace MPF.GUI.ViewModels
 
             // Set the output filename, if we changed drives or it's not already
             if (driveChanged || string.IsNullOrEmpty(App.Instance.OutputFilenameTextBox.Text))
-                App.Instance.OutputFilenameTextBox.Text = (drive?.VolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
+                App.Instance.OutputFilenameTextBox.Text = (drive?.FormattedVolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
 
             // If the extension for the file changed, update that automatically
             else if (Path.GetExtension(App.Instance.OutputFilenameTextBox.Text) != extension)

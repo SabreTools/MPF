@@ -48,7 +48,12 @@ namespace MPF.Core.Data
         /// <summary>
         /// Media label as read by Windows
         /// </summary>
-        public string VolumeLabel
+        public string VolumeLabel => driveInfo?.VolumeLabel;
+
+        /// <summary>
+        /// Media label as read by Windows, formatted to avoid odd outputs
+        /// </summary>
+        public string FormattedVolumeLabel
         {
             get
             {
@@ -250,7 +255,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.IBMPCcompatible;
 
             // Audio CD
-            if (this.VolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+            if (this.FormattedVolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
             {
                 return RedumpSystem.AudioCD;
             }
@@ -280,7 +285,7 @@ namespace MPF.Core.Data
                     && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Any())
                 {
                     // TODO: Maybe add video track hashes to compare for Xbox and X360?
-                    if (this.VolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
+                    if (this.FormattedVolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
                         return RedumpSystem.MicrosoftXbox;
 
                     return RedumpSystem.DVDVideo;
@@ -346,19 +351,19 @@ namespace MPF.Core.Data
             }
 
             // Sony PlayStation 3
-            if (this.VolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (this.FormattedVolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
             {
                 return RedumpSystem.SonyPlayStation3;
             }
 
             // Sony PlayStation 4
-            if (this.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (this.FormattedVolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
             {
                 return RedumpSystem.SonyPlayStation4;
             }
 
             // Sony PlayStation 5
-            if (this.VolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (this.FormattedVolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
             {
                 return RedumpSystem.SonyPlayStation5;
             }

@@ -39,6 +39,7 @@
 - Fix saving path settings if set from dialog
 - Allow default system if skipping system detection enabled
 - Add internal support for all Redump site codes
+- Use the Volume Label special site code
 
 ### 2.1 (2021-07-22)
 - Enum, no more
