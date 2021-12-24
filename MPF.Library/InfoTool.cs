@@ -68,16 +68,17 @@ namespace MPF.Library
                 {
                     System = system,
                     Media = mediaType.ToDiscType(),
-                    Title = (options.AddPlaceholders ? Template.RequiredValue : ""),
-                    ForeignTitleNonLatin = (options.AddPlaceholders ? Template.OptionalValue : ""),
-                    DiscNumberLetter = (options.AddPlaceholders ? Template.OptionalValue : ""),
-                    DiscTitle = (options.AddPlaceholders ? Template.OptionalValue : ""),
+                    Title = (options.AddPlaceholders ? Template.RequiredValue : string.Empty),
+                    ForeignTitleNonLatin = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    DiscNumberLetter = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    DiscTitle = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
                     Category = null,
                     Region = null,
                     Languages = null,
-                    Serial = (options.AddPlaceholders ? Template.RequiredIfExistsValue : ""),
-                    Barcode = (options.AddPlaceholders ? Template.OptionalValue : ""),
-                    Contents = (options.AddPlaceholders ? Template.OptionalValue : ""),
+                    Serial = (options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty),
+                    Barcode = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    Contents = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    Comments = string.Empty,
                 },
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
@@ -159,7 +160,7 @@ namespace MPF.Library
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible
-            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && !info.CommonDiscInfo.Comments.Contains(Template.VolumeLabelCommentField))
+            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && info.CommonDiscInfo.Comments.Contains(Template.VolumeLabelCommentField))
                 info.CommonDiscInfo.Comments += $"{Template.VolumeLabelCommentField} {drive.VolumeLabel}\n";
 
             // Extract info based generically on MediaType
