@@ -510,7 +510,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -527,7 +527,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Serial: {scdSerial ?? ""}";
+                        info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {scdSerial ?? ""}";
                         info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
                     }
 
@@ -544,7 +544,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -563,7 +563,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -582,7 +582,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -601,7 +601,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"Internal Serial: {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -618,7 +618,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Serial: {saturnSerial ?? ""}";
+                        info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {saturnSerial ?? ""}";
                         info.VersionAndEditions.Version = saturnVersion ?? "";
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
                     }
@@ -628,7 +628,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Serial: {playstationSerial ?? ""}\n";
+                        info.CommonDiscInfo.Comments += $"{Template.InternalSerialNameCommentField} {playstationSerial ?? ""}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }

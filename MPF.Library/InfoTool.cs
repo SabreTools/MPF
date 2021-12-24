@@ -285,7 +285,7 @@ namespace MPF.Library
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
                     if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
-                        info.CommonDiscInfo.Comments += $"[T:ISBN] {(options.AddPlaceholders ? Template.OptionalValue : "")}";
+                        info.CommonDiscInfo.Comments += $"{Template.ISBNCommentField} {(options.AddPlaceholders ? Template.OptionalValue : "")}";
 
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     info.CopyProtection.Protection = await GetCopyProtection(drive, options, protectionProgress);
@@ -1213,7 +1213,7 @@ namespace MPF.Library
                 info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
                     + WebUtility.HtmlDecode(match.Groups[1].Value)
                     .Replace("<br />", "\n")
-                    .Replace("<b>ISBN</b>", "[T:ISBN]") + "\n";
+                    .ReplaceCommentFieldsWithTags() + "\n";
             }
 
             // Contents
@@ -1245,6 +1245,63 @@ namespace MPF.Library
                 else
                     info.LastModified = null;
             }
+        }
+
+        /// <summary>
+        /// Process a comment block and replace with internal identifiers
+        /// </summary>
+        /// <param name="comments">Comments block to process</param>
+        /// <returns>Processed comments block, if possible</returns>
+        private static string ReplaceCommentFieldsWithTags(this string comments)
+        {
+            if (string.IsNullOrWhiteSpace(comments))
+                return comments;
+
+            return comments
+                .Replace(Template.AcclaimIDCommentString, Template.AcclaimIDCommentField)
+                .Replace(Template.ActivisionIDCommentString, Template.ActivisionIDCommentField)
+                .Replace(Template.AlternativeTitleCommentString, Template.AlternativeTitleCommentField)
+                .Replace(Template.AlternativeForeignTitleCommentString, Template.AlternativeForeignTitleCommentField)
+                .Replace(Template.BandaiIDCommentString, Template.BandaiIDCommentField)
+                .Replace(Template.BBFCRegistrationNumberCommentString, Template.BBFCRegistrationNumberCommentField)
+                .Replace(Template.DNASDiscIDCommentString, Template.DNASDiscIDCommentField)
+                .Replace(Template.ElectronicArtsIDCommentString, Template.ElectronicArtsIDCommentField)
+                .Replace(Template.ExtrasCommentString, Template.ExtrasCommentField)
+                .Replace(Template.FoxInteractiveIDCommentString, Template.FoxInteractiveIDCommentField)
+                .Replace(Template.GameFootageCommentString, Template.GameFootageCommentField)
+                .Replace(Template.GenreCommentString, Template.GenreCommentField)
+                .Replace(Template.GTInteractiveIDCommentString, Template.GTInteractiveIDCommentField)
+                .Replace(Template.InternalSerialNameCommentString, Template.InternalSerialNameCommentField)
+                .Replace(Template.ISBNCommentString, Template.ISBNCommentField)
+                .Replace(Template.ISSNCommentString, Template.ISSNCommentField)
+                .Replace(Template.JASRACIDCommentString, Template.JASRACIDCommentField)
+                .Replace(Template.KingRecordsIDCommentString, Template.KingRecordsIDCommentField)
+                .Replace(Template.KoeiIDCommentString, Template.KoeiIDCommentField)
+                .Replace(Template.KonamiIDCommentString, Template.KonamiIDCommentField)
+                .Replace(Template.LucasArtsIDCommentString, Template.LucasArtsIDCommentField)
+                .Replace(Template.NaganoIDCommentString, Template.NaganoIDCommentField)
+                .Replace(Template.NamcoIDCommentString, Template.NamcoIDCommentField)
+                .Replace(Template.NetYarozeGamesCommentSring, Template.NetYarozeGamesCommentField)
+                .Replace(Template.NipponIchiSoftwareIDCommentString, Template.NipponIchiSoftwareIDCommentField)
+                .Replace(Template.OriginIDCommentString, Template.OriginIDCommentField)
+                .Replace(Template.PatchesCommentString, Template.PatchesCommentField)
+                .Replace(Template.PlayableDemosCommentString, Template.PlayableDemosCommentField)
+                .Replace(Template.PonyCanyonIDCommentString, Template.PonyCanyonIDCommentField)
+                .Replace(Template.PostgapTypeCommentString, Template.PostgapTypeCommentField)
+                .Replace(Template.PPNCommentString, Template.PPNCommentField)
+                .Replace(Template.RollingDemosCommentString, Template.RollingDemosCommentField)
+                .Replace(Template.SavegamesCommentString, Template.SavegamesCommentField)
+                .Replace(Template.SegaIDCommentString, Template.SegaIDCommentField)
+                .Replace(Template.SelenIDCommentString, Template.SelenIDCommentField)
+                .Replace(Template.SeriesCommentString, Template.SeriesCommentField)
+                .Replace(Template.TaitoIDCommentString, Template.TaitoIDCommentField)
+                .Replace(Template.TechDemosCommentString, Template.TechDemosCommentField)
+                .Replace(Template.UbisoftIDCommentString, Template.UbisoftIDCommentField)
+                .Replace(Template.ValveIDCommentString, Template.ValveIDCommentField)
+                .Replace(Template.VGCCodeCommentString, Template.VFCCodeCommentField)
+                .Replace(Template.VideosCommentString, Template.VideosCommentField)
+                .Replace(Template.VolumeLabelCommentString, Template.VolumeLabelCommentField)
+                .Replace(Template.VCDCommentString, Template.VCDCommentField);
         }
 
         /// <summary>
