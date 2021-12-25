@@ -25,7 +25,7 @@ namespace RedumpLib.Data
             + "<tr><td>(?<row1number>.*?)</td><td>(?<row1contents>.*?)</td><td>(?<row1ascii>.*?)</td></tr>"
             + "<tr><td>(?<row2number>.*?)</td><td>(?<row2contents>.*?)</td><td>(?<row2ascii>.*?)</td></tr>"
             + "<tr><td>(?<row3number>.*?)</td><td>(?<row3contents>.*?)</td><td>(?<row3ascii>.*?)</td></tr>"
-            + "<tr><td>(?<row4number>.*?)</td><td>(?<row4contents>.*?)</td><td>(?<row4ascii>.*?)</td></tr>");
+            + "<tr><td>(?<row4number>.*?)</td><td>(?<row4contents>.*?)</td><td>(?<row4ascii>.*?)</td></tr>", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex matching the category field on a disc page
@@ -35,12 +35,12 @@ namespace RedumpLib.Data
         /// <summary>
         /// Regex matching the comments field on a disc page
         /// </summary>
-        public static Regex CommentsRegex = new Regex(@"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>");
+        public static Regex CommentsRegex = new Regex(@"<tr><th>Comments</th></tr><tr><td>(.*?)</td></tr>", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex matching the contents field on a disc page
         /// </summary>
-        public static Regex ContentsRegex = new Regex(@"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>");
+        public static Regex ContentsRegex = new Regex(@"<tr><th>Contents</th></tr><tr .*?><td>(.*?)</td></tr>", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex matching individual disc links on a results page
@@ -110,7 +110,7 @@ namespace RedumpLib.Data
             + @"<tr><td>Creation</td><td>(?<creationbytes>.*?)</td><td>(?<creationdate>.*?)</td><td>(?<creationtime>.*?)</td><td>(?<creationtimezone>.*?)</td></tr>"
             + @"<tr><td>Modification</td><td>(?<modificationbytes>.*?)</td><td>(?<modificationdate>.*?)</td><td>(?<modificationtime>.*?)</td><td>(?<modificationtimezone>.*?)</td></tr>"
             + @"<tr><td>Expiration</td><td>(?<expirationbytes>.*?)</td><td>(?<expirationdate>.*?)</td><td>(?<expirationtime>.*?)</td><td>(?<expirationtimezone>.*?)</td></tr>"
-            + @"<tr><td>Effective</td><td>(?<effectivebytes>.*?)</td><td>(?<effectivedate>.*?)</td><td>(?<effectivetime>.*?)</td><td>(?<effectivetimezone>.*?)</td></tr>");
+            + @"<tr><td>Effective</td><td>(?<effectivebytes>.*?)</td><td>(?<effectivedate>.*?)</td><td>(?<effectivetime>.*?)</td><td>(?<effectivetimezone>.*?)</td></tr>", RegexOptions.Singleline);
         
         /// <summary>
         /// Regex matching the region field on a disc page
@@ -120,12 +120,12 @@ namespace RedumpLib.Data
         /// <summary>
         /// Regex matching a double-layer disc ringcode information
         /// </summary>
-        public static Regex RingCodeDoubleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
+        public static Regex RingCodeDoubleRegex = new Regex(@"", RegexOptions.Singleline); // Varies based on available fields, like Addtional Mould
 
         /// <summary>
         /// Regex matching a single-layer disc ringcode information
         /// </summary>
-        public static Regex RingCodeSingleRegex = new Regex(@""); // Varies based on available fields, like Addtional Mould
+        public static Regex RingCodeSingleRegex = new Regex(@"", RegexOptions.Singleline); // Varies based on available fields, like Addtional Mould
 
         /// <summary>
         /// Regex matching the serial field on a disc page
@@ -150,7 +150,7 @@ namespace RedumpLib.Data
         /// <summary>
         /// Regex matching a single track on a disc page
         /// </summary>
-        public static Regex TrackRegex = new Regex(@"<tr><td>(?<number>.*?)</td><td>(?<type>.*?)</td><td>(?<pregap>.*?)</td><td>(?<length>.*?)</td><td>(?<sectors>.*?)</td><td>(?<size>.*?)</td><td>(?<crc32>.*?)</td><td>(?<md5>.*?)</td><td>(?<sha1>.*?)</td></tr>");
+        public static Regex TrackRegex = new Regex(@"<tr><td>(?<number>.*?)</td><td>(?<type>.*?)</td><td>(?<pregap>.*?)</td><td>(?<length>.*?)</td><td>(?<sectors>.*?)</td><td>(?<size>.*?)</td><td>(?<crc32>.*?)</td><td>(?<md5>.*?)</td><td>(?<sha1>.*?)</td></tr>", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex matching the track count on a disc page
