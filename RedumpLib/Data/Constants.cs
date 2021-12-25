@@ -35,7 +35,7 @@ namespace RedumpLib.Data
         public const string GTInteractiveIDCommentField = "[T:GTID]";
         public const string GTInteractiveIDCommentString = "<b>GT Interactive ID</b>:";
         public const string InternalSerialNameCommentField = "[T:ISN]";
-        public const string InternalSerialNameCommentString = "<b>Internal Serial Name</b>:";
+        public const string InternalSerialNameCommentString = "<b>Internal Serial</b>:";
         public const string ISBNCommentField = "[T:ISBN]";
         public const string ISBNCommentString = "<b>ISBN</b>:";
         public const string ISSNCommentField = "[T:ISSN]";
