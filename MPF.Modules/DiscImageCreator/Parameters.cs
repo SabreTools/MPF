@@ -463,7 +463,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {pythonTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
@@ -652,7 +652,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {playstationTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }

@@ -274,7 +274,7 @@ namespace MPF.Modules.Aaru
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {pythonTwoSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {pythonTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
@@ -322,7 +322,7 @@ namespace MPF.Modules.Aaru
                 case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {playstationSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
@@ -332,7 +332,7 @@ namespace MPF.Modules.Aaru
                 case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
-                        info.CommonDiscInfo.Comments += $"Internal Disc Serial: {playstationTwoSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {playstationTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
