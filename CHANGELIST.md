@@ -43,6 +43,7 @@
 - Capture newlines in Redump fields
 - Invert condition for volume label
 - Fix missing ISN usages
+- Fix ISN string
 
 ### 2.1 (2021-07-22)
 - Enum, no more
