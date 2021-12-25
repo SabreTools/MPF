@@ -160,7 +160,7 @@ namespace MPF.Library
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible
-            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && info.CommonDiscInfo.Comments.Contains(Template.VolumeLabelCommentField))
+            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && !info.CommonDiscInfo.Comments.Contains(Template.VolumeLabelCommentField))
                 info.CommonDiscInfo.Comments += $"{Template.VolumeLabelCommentField} {drive.VolumeLabel}\n";
 
             // Extract info based generically on MediaType
