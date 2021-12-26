@@ -93,41 +93,7 @@ namespace MPF.Library
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
-            {
-                // Set the current dumper based on username
-                info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
-
-                info.MatchedIDs = new List<int>();
-                using (RedumpWebClient wc = new RedumpWebClient())
-                {
-                    // Login to Redump
-                    bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
-                    if (loggedIn == null)
-                    {
-                        resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
-                    }
-                    else if (loggedIn == true)
-                    {
-                        // Loop through all of the hashdata to find matching IDs
-                        resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
-                        string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
-                        foreach (string hashData in splitData)
-                        {
-                            ValidateSingleTrack(wc, info, hashData, resultProgress);
-                        }
-
-                        resultProgress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0 ? "Matched IDs: " + string.Join(",", info.MatchedIDs) : "No matches found")));
-
-                        // If we have exactly 1 ID and the track count matches, we can grab a bunch of info from it
-                        if (info.MatchedIDs.Count == 1 && ValidateTrackCount(wc, info.MatchedIDs[0], splitData.Length))
-                        {
-                            resultProgress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
-                            FillFromId(wc, info, info.MatchedIDs[0]);
-                            resultProgress?.Report(Result.Success("Information filling complete!"));
-                        }
-                    }
-                }
-            }
+                FillFromRedump(options, info, resultProgress);
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
@@ -438,6 +404,7 @@ namespace MPF.Library
 
             return info;
         }
+
 
         /// <summary>
         /// Ensures that all required output files have been created
@@ -1228,6 +1195,69 @@ namespace MPF.Library
                     info.LastModified = lastModified;
                 else
                     info.LastModified = null;
+            }
+        }
+
+        /// <summary>
+        /// Fill in a SubmissionInfo object from Redump, if possible
+        /// </summary>
+        /// <param name="options">Options object representing user-defined options</param>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <param name="resultProgress">Optional result progress callback</param>
+        private static void FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        {
+            // Set the current dumper based on username
+            info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
+            info.MatchedIDs = new List<int>();
+
+            using (RedumpWebClient wc = new RedumpWebClient())
+            {
+                // Login to Redump
+                bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
+                if (loggedIn == null)
+                {
+                    resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
+                    return;
+                }
+                else if (loggedIn == false)
+                {
+                    // Don't log the as a failure or error
+                    return;
+                }
+
+                // Loop through all of the hashdata to find matching IDs
+                resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
+                string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
+                foreach (string hashData in splitData)
+                {
+                    ValidateSingleTrack(wc, info, hashData, resultProgress);
+                }
+
+                resultProgress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0
+                    ? "Matched IDs: " + string.Join(",", info.MatchedIDs)
+                    : "No matches found")));
+
+                // Exit early if there are no matched IDs
+                if (info.MatchedIDs.Count == 0)
+                    return;
+
+                // Find the first matched ID where the track count matches, we can grab a bunch of info from it
+                int totalMatchedIDsCount = info.MatchedIDs.Count;
+                for (int i = 0; i < totalMatchedIDsCount; i++)
+                {
+                    // Skip if the track count doesn't match
+                    if (!ValidateTrackCount(wc, info.MatchedIDs[i], splitData.Length))
+                        continue;
+
+                    // Fill in the fields from the existing ID
+                    resultProgress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[i]}..."));
+                    FillFromId(wc, info, info.MatchedIDs[0]);
+                    resultProgress?.Report(Result.Success("Information filling complete!"));
+
+                    // Set the matched IDs to just the current
+                    info.MatchedIDs = new List<int> { info.MatchedIDs[i] };
+                    break;
+                }
             }
         }
 

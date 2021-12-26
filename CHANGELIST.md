@@ -45,6 +45,7 @@
 - Fix missing ISN usages
 - Fix ISN string
 - Validate track count when matching Redump
+- Allow for better matching of multi track discs
 
 ### 2.1 (2021-07-22)
 - Enum, no more
