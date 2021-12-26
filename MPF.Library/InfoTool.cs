@@ -113,39 +113,13 @@ namespace MPF.Library
                         string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
                         foreach (string hashData in splitData)
                         {
-                            if (GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
-                            {
-                                // Get all matching IDs for the track
-                                List<int> newIds = ListSearchResults(wc, sha1);
-
-                                // If we got null back, there was an error
-                                if (newIds == null)
-                                {
-                                    resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
-                                    break;
-                                }
-
-                                // If no IDs match any track, then we don't match a disc at all
-                                if (!newIds.Any())
-                                {
-                                    info.MatchedIDs = new List<int>();
-                                    break;
-                                }
-
-                                // If we have multiple tracks, only take IDs that are in common
-                                if (info.MatchedIDs.Any())
-                                    info.MatchedIDs = info.MatchedIDs.Intersect(newIds).ToList();
-
-                                // If we're on the first track, all IDs are added
-                                else
-                                    info.MatchedIDs = newIds;
-                            }
+                            ValidateSingleTrack(wc, info, hashData, resultProgress);
                         }
 
                         resultProgress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0 ? "Matched IDs: " + string.Join(",", info.MatchedIDs) : "No matches found")));
 
-                        // If we have exactly 1 ID, we can grab a bunch of info from it
-                        if (info.MatchedIDs.Count == 1)
+                        // If we have exactly 1 ID and the track count matches, we can grab a bunch of info from it
+                        if (info.MatchedIDs.Count == 1 && ValidateTrackCount(wc, info.MatchedIDs[0], splitData.Length))
                         {
                             resultProgress?.Report(Result.Success($"Filling fields from existing ID {info.MatchedIDs[0]}..."));
                             FillFromId(wc, info, info.MatchedIDs[0]);
@@ -1179,6 +1153,11 @@ namespace MPF.Library
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
             }
 
+            // Serial
+            //match = Constants.SerialRegex.Match(discData);
+            //if (match.Success)
+            //    info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
+
             // Error count
             match = Constants.ErrorCountRegex.Match(discData);
             if (match.Success)
@@ -1349,6 +1328,74 @@ namespace MPF.Library
             }
 
             return ids;
+        }
+
+        /// <summary>
+        /// Validate a single track against Redump, if possible
+        /// </summary>
+        /// <param name="wc">RedumpWebClient for making the connection</param>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <param name="hashData">DAT-formatted hash data to parse out</param>
+        /// <param name="resultProgress">Optional result progress callback</param>
+        private static void ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
+        {
+            // If the line isn't parseable, we can't validate
+            if (!GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
+                return;
+
+            // Get all matching IDs for the track
+            List<int> newIds = ListSearchResults(wc, sha1);
+
+            // If we got null back, there was an error
+            if (newIds == null)
+            {
+                resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
+                return;
+            }
+
+            // If no IDs match any track, then we don't match a disc at all
+            if (!newIds.Any())
+            {
+                info.MatchedIDs = new List<int>();
+                return;
+            }
+
+            // If we have multiple tracks, only take IDs that are in common
+            if (info.MatchedIDs.Any())
+                info.MatchedIDs = info.MatchedIDs.Intersect(newIds).ToList();
+
+            // If we're on the first track, all IDs are added
+            else
+                info.MatchedIDs = newIds;
+        }
+
+        /// <summary>
+        /// Validate that the current track count and remote track count match
+        /// </summary>
+        /// <param name="wc">RedumpWebClient for making the connection</param>
+        /// <param name="id">Redump disc ID to retrieve</param>
+        /// <param name="localCount">Local count of tracks for the current disc</param>
+        /// <returns>True if the track count matches, false otherwise</returns>
+        private static bool ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
+        {
+            // If we can't pull the remote data, we can't match
+            string discData = wc.DownloadSingleSiteID(id);
+            if (string.IsNullOrEmpty(discData))
+                return false;
+
+            // Discs with only 1 track don't have a track count listed
+            var match = Constants.TrackCountRegex.Match(discData);
+            if (!match.Success && localCount == 1)
+                return true;
+            else if (!match.Success)
+                return false;
+
+            // If the count isn't parseable, we're not taking chances
+            if (!Int32.TryParse(match.Groups[1].Value, out int remoteCount))
+                return false;
+
+            // Finally check to see if the counts match
+            return localCount == remoteCount;
         }
 
         #endregion
