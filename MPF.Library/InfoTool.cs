@@ -1121,6 +1121,7 @@ namespace MPF.Library
             }
 
             // Serial
+            // TODO: Re-enable if there's a way of verifying against a disc
             //match = Constants.SerialRegex.Match(discData);
             //if (match.Success)
             //    info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
@@ -1158,14 +1159,15 @@ namespace MPF.Library
             }
 
             // Comments
-            match = Constants.CommentsRegex.Match(discData);
-            if (match.Success)
-            {
-                info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
-                    + WebUtility.HtmlDecode(match.Groups[1].Value)
-                    .Replace("<br />", "\n")
-                    .ReplaceCommentFieldsWithTags() + "\n";
-            }
+            // TODO: Re-enable when there's a better way of parsing comments
+            //match = Constants.CommentsRegex.Match(discData);
+            //if (match.Success)
+            //{
+            //    info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
+            //        + WebUtility.HtmlDecode(match.Groups[1].Value)
+            //        .Replace("<br />", "\n")
+            //        .ReplaceCommentFieldsWithTags() + "\n";
+            //}
 
             // Contents
             match = Constants.ContentsRegex.Match(discData);
