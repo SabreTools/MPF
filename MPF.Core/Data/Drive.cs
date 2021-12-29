@@ -48,7 +48,21 @@ namespace MPF.Core.Data
         /// <summary>
         /// Media label as read by Windows
         /// </summary>
-        public string VolumeLabel => driveInfo?.VolumeLabel;
+        /// <remarks>The try/catch is needed because Windows will throw an exception if the drive is not marked as active</remarks>
+        public string VolumeLabel
+        {
+            get
+            {
+                try
+                {
+                    return driveInfo?.VolumeLabel;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
 
         /// <summary>
         /// Media label as read by Windows, formatted to avoid odd outputs

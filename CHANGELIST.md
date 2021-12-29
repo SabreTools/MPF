@@ -47,6 +47,7 @@
 - Validate track count when matching Redump
 - Allow for better matching of multi track discs
 - Temporarily disable pulling comments from Redump pages
+- Add safety around volume labels
 
 ### 2.1 (2021-07-22)
 - Enum, no more
