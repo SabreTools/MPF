@@ -1399,8 +1399,10 @@ namespace MPF.Library
                         .Replace("<br />", "\n")
                         .Replace("[+]", string.Empty)
                         .ReplaceHtmlWithSiteCodes();
-                
-                // Setup the new comments block
+
+                // Create state variables
+                bool addToLast = false;
+                SiteCode? lastSiteCode = null;
                 string newComments = string.Empty;
 
                 // Process the comments block line-by-line
@@ -1412,6 +1414,8 @@ namespace MPF.Library
                     // If we have an empty line, we want to treat this as intentional
                     if (string.IsNullOrWhiteSpace(commentLine))
                     {
+                        addToLast = false;
+                        lastSiteCode = null;
                         newComments += $"{commentLine}\n";
                         continue;
                     }
@@ -1419,7 +1423,11 @@ namespace MPF.Library
                     // If the line doesn't contain a site code tag, just keep it
                     if (!commentLine.Contains("[T:"))
                     {
-                        newComments += $"{commentLine}\n";
+                        if (addToLast && lastSiteCode != null)
+                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += $"\n{commentLine}";
+                        else
+                            newComments += $"{commentLine}\n";
+
                         continue;
                     }
 
@@ -1431,9 +1439,31 @@ namespace MPF.Library
                         if (!commentLine.Contains(siteCode.ShortName()))
                             continue;
 
+                        // Cache the current site code
+                        lastSiteCode = siteCode;
+
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
                             info.CommonDiscInfo.CommentsSpecialFields[siteCode] = commentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+
+                        // A subset of tags can be multiline
+                        switch (siteCode)
+                        {
+                            case SiteCode.Extras:
+                            case SiteCode.GameFootage:
+                            case SiteCode.NetYarozeGames:
+                            case SiteCode.Patches:
+                            case SiteCode.PlayableDemos:
+                            case SiteCode.RollingDemos:
+                            case SiteCode.Savegames:
+                            case SiteCode.TechDemos:
+                            case SiteCode.Videos:
+                                addToLast = true;
+                                break;
+                            default:
+                                addToLast = false;
+                                break;
+                        }
 
                         // Mark as having found a tag
                         foundTag = true;
@@ -1442,7 +1472,12 @@ namespace MPF.Library
 
                     // If we didn't find a known tag, just add the line, just in case
                     if (!foundTag)
-                        newComments += $"{commentLine}\n";
+                    {
+                        if (addToLast && lastSiteCode != null)
+                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += $"\n{commentLine}";
+                        else
+                            newComments += $"{commentLine}\n";
+                    }
                 }
 
                 // Set the new comments field
@@ -1463,7 +1498,9 @@ namespace MPF.Library
                         .ReplaceHtmlWithSiteCodes();
                 oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
 
-                // Setup the new contents block
+                // Create state variables
+                bool addToLast = false;
+                SiteCode? lastSiteCode = null;
                 string newContents = string.Empty;
 
                 // Process the contents block line-by-line
@@ -1475,6 +1512,8 @@ namespace MPF.Library
                     // If we have an empty line, we want to treat this as intentional
                     if (string.IsNullOrWhiteSpace(contentLine))
                     {
+                        addToLast = false;
+                        lastSiteCode = null;
                         newContents += $"{contentLine}\n";
                         continue;
                     }
@@ -1482,7 +1521,11 @@ namespace MPF.Library
                     // If the line doesn't contain a site code tag, just keep it
                     if (!contentLine.Contains("[T:"))
                     {
-                        newContents += $"{contentLine}\n";
+                        if (addToLast && lastSiteCode != null)
+                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += $"\n{contentLine}";
+                        else
+                            newContents += $"{contentLine}\n";
+
                         continue;
                     }
 
@@ -1494,9 +1537,31 @@ namespace MPF.Library
                         if (!contentLine.Contains(siteCode.ShortName()))
                             continue;
 
+                        // Cache the current site code
+                        lastSiteCode = siteCode;
+
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode))
                             info.CommonDiscInfo.ContentsSpecialFields[siteCode] = contentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+
+                        // A subset of tags can be multiline
+                        switch (siteCode)
+                        {
+                            case SiteCode.Extras:
+                            case SiteCode.GameFootage:
+                            case SiteCode.NetYarozeGames:
+                            case SiteCode.Patches:
+                            case SiteCode.PlayableDemos:
+                            case SiteCode.RollingDemos:
+                            case SiteCode.Savegames:
+                            case SiteCode.TechDemos:
+                            case SiteCode.Videos:
+                                addToLast = true;
+                                break;
+                            default:
+                                addToLast = false;
+                                break;
+                        }
 
                         // Mark as having found a tag
                         foundTag = true;
@@ -1505,7 +1570,12 @@ namespace MPF.Library
 
                     // If we didn't find a known tag, just add the line, just in case
                     if (!foundTag)
-                        newContents += $"{contentLine}\n";
+                    {
+                        if (addToLast && lastSiteCode != null)
+                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += $"\n{contentLine}";
+                        else
+                            newContents += $"{contentLine}\n";
+                    }
                 }
 
                 // Set the new contents field

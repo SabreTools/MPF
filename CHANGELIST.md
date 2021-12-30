@@ -3,6 +3,7 @@
 - Add internal structure for special site codes
 - Add new tabs for special site information
 - Clean up default handling of fields
+- Try to handle multi-line fields during parsing
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
