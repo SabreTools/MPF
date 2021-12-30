@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.2 (2021-12-30)
 - Fix Saturn header finding
 - Add Pocket PC support
 - Add HD-DVD-Video support
