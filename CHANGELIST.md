@@ -4,6 +4,7 @@
 - Add new tabs for special site information
 - Clean up default handling of fields
 - Try to handle multi-line fields during parsing
+- Fix CSSKey log handling
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

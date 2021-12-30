@@ -690,6 +690,8 @@ namespace MPF.Modules.DiscImageCreator
                     info.Artifacts["ccd"] = GetBase64(GetFullFile(basePath + ".ccd"));
                 if (File.Exists(basePath + "_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
                     info.Artifacts["cmd"] = GetBase64(GetFullFile(basePath + "_cmd.txt"));
+                if (File.Exists(basePath + "_CSSKey.txt"))
+                    info.Artifacts["csskey"] = GetBase64(GetFullFile(basePath + "_CSSKey.txt"));
                 if (File.Exists(basePath + ".cue"))
                     info.Artifacts["cue"] = GetBase64(GetFullFile(basePath + ".cue"));
                 if (File.Exists(basePath + ".dat"))
@@ -1434,8 +1436,6 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add(cmdPath);
                     if (File.Exists($"{basePath}_cmd.txt"))
                         logFiles.Add($"{basePath}_cmd.txt");
-                    if (File.Exists($"{basePath}_CSSKey.txt"))
-                        logFiles.Add($"{basePath}_CSSKey.txt");
                     if (File.Exists($"{basePath}.dat"))
                         logFiles.Add($"{basePath}.dat");
                     if (File.Exists($"{basePath}.sub"))
@@ -1480,6 +1480,8 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add(cmdPath);
                     if (File.Exists($"{basePath}_cmd.txt"))
                         logFiles.Add($"{basePath}_cmd.txt");
+                    if (File.Exists($"{basePath}_CSSKey.txt"))
+                        logFiles.Add($"{basePath}_CSSKey.txt");
                     if (File.Exists($"{basePath}.dat"))
                         logFiles.Add($"{basePath}.dat");
                     if (File.Exists($"{basePath}_disc.txt"))
