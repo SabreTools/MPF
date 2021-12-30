@@ -1234,6 +1234,24 @@ namespace RedumpLib.Data
 
         #endregion
 
+        #region Site Code
+
+        /// <summary>
+        /// Get the HTML version for each known site code
+        /// </summary>
+        /// <param name="siteCode"></param>
+        /// <returns></returns>
+        public static string LongName(this SiteCode? siteCode) => AttributeHelper<SiteCode?>.GetAttribute(siteCode)?.LongName;
+
+        /// <summary>
+        /// Get the short tag for each known site code
+        /// </summary>
+        /// <param name="siteCode"></param>
+        /// <returns></returns>
+        public static string ShortName(this SiteCode? siteCode) => AttributeHelper<SiteCode?>.GetAttribute(siteCode)?.ShortName;
+
+        #endregion
+
         #region System
 
         /// <summary>

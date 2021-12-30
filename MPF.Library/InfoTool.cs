@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 using BurnOutSharp;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
@@ -14,6 +15,7 @@ using MPF.Modules;
 using Newtonsoft.Json;
 using RedumpLib.Data;
 using RedumpLib.Web;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MPF.Library
 {
@@ -99,9 +101,12 @@ namespace MPF.Library
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
+            // Shortcut for adding volume label for now
+            string volumeLabel = (SiteCode.VolumeLabel as SiteCode?).LongName();
+
             // Add the volume label to comments, if possible
-            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && !info.CommonDiscInfo.Comments.Contains(Constants.VolumeLabelCommentField))
-                info.CommonDiscInfo.Comments += $"{Constants.VolumeLabelCommentField} {drive.VolumeLabel}\n";
+            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && !info.CommonDiscInfo.Comments.Contains(volumeLabel))
+                info.CommonDiscInfo.Comments += $"{volumeLabel} {drive.VolumeLabel}\n";
 
             // Extract info based generically on MediaType
             switch (mediaType)
@@ -216,6 +221,9 @@ namespace MPF.Library
                     break;
             }
 
+            // Shortcut for adding ISBN for now
+            string isbn = (SiteCode.ISBN as SiteCode?).LongName();
+
             // Extract info based specifically on RedumpSystem
             switch (system)
             {
@@ -230,7 +238,7 @@ namespace MPF.Library
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
                     if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
-                        info.CommonDiscInfo.Comments += $"{Constants.ISBNCommentField} {(options.AddPlaceholders ? Template.OptionalValue : "")}";
+                        info.CommonDiscInfo.Comments += $"{isbn} {(options.AddPlaceholders ? Template.OptionalValue : "")}";
 
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     info.CopyProtection.Protection = await GetCopyProtection(drive, options, protectionProgress);
@@ -1047,6 +1055,175 @@ namespace MPF.Library
         #region Web Calls
 
         /// <summary>
+        /// Create a new SubmissionInfo object from a disc page
+        /// </summary>
+        /// <param name="discData">String containing the HTML disc data</param>
+        /// <remarks>Not currently working</remarks>
+        private static void CreateFromID(string discData)
+        {
+            SubmissionInfo info = new SubmissionInfo()
+            {
+                CommonDiscInfo = new CommonDiscInfoSection(),
+                VersionAndEditions = new VersionAndEditionsSection(),
+            };
+
+            // No disc data means we can't parse it
+            if (string.IsNullOrWhiteSpace(discData))
+                return;
+
+            try
+            {
+                // Load the current disc page into an XML document
+                XmlDocument redumpPage = new XmlDocument() { PreserveWhitespace = true };
+                redumpPage.LoadXml(discData);
+
+                // If the current page isn't valid, we can't parse it
+                if (!redumpPage.HasChildNodes)
+                    return;
+
+                // Get the body node, if possible
+                XmlNode bodyNode = redumpPage["html"]?["body"];
+                if (bodyNode == null || !bodyNode.HasChildNodes)
+                    return;
+
+                // Loop through and get the main node, if possible
+                XmlNode mainNode = null;
+                foreach (XmlNode tempNode in bodyNode.ChildNodes)
+                {
+                    // We only care about div elements
+                    if (!string.Equals(tempNode.Name, "div", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    // We only care if it has attributes
+                    if (tempNode.Attributes == null)
+                        continue;
+
+                    // The main node has a class of "main"
+                    if (string.Equals(tempNode.Attributes["class"]?.Value, "main", StringComparison.OrdinalIgnoreCase))
+                    {
+                        mainNode = tempNode;
+                        break;
+                    }
+                }
+
+                // If the main node is invalid, we can't do anything
+                if (mainNode == null || !mainNode.HasChildNodes)
+                    return;
+
+                // Try to find elements as we're going
+                foreach (XmlNode childNode in mainNode.ChildNodes)
+                {
+                    // The title is the only thing in h1 tags
+                    if (string.Equals(childNode.Name, "h1", StringComparison.OrdinalIgnoreCase))
+                        info.CommonDiscInfo.Title = childNode.InnerText;
+
+                    // Most things are div elements but can be hard to parse out
+                    else if (!string.Equals(childNode.Name, "div", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    // Only 2 of the internal divs have classes attached and one is not used here
+                    if (childNode.Attributes != null && string.Equals(childNode.Attributes["class"]?.Value, "game", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // If we don't have children nodes, skip this one over
+                        if (!childNode.HasChildNodes)
+                            continue;
+
+                        // The game node contains multiple other elements
+                        foreach (XmlNode gameNode in childNode.ChildNodes)
+                        {
+                            // Table elements contain multiple other parts of information
+                            if (string.Equals(gameNode.Name, "table", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // All tables have some attribute we can use
+                                if (gameNode.Attributes == null)
+                                    continue;
+
+                                // The gameinfo node contains most of the major information
+                                if (string.Equals(gameNode.Attributes["class"]?.Value, "gameinfo", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    // If we don't have children nodes, skip this one over
+                                    if (!gameNode.HasChildNodes)
+                                        continue;
+
+                                    // Loop through each of the rows
+                                    foreach (XmlNode gameInfoNode in gameNode.ChildNodes)
+                                    {
+                                        // If we run into anything not a row, ignore it
+                                        if (!string.Equals(gameInfoNode.Name, "tr", StringComparison.OrdinalIgnoreCase))
+                                            continue;
+
+                                        // If we don't have the required nodes, ignore it
+                                        if (gameInfoNode["th"] == null || gameInfoNode["td"] == null)
+                                            continue;
+
+                                        XmlNode gameInfoNodeHeader = gameInfoNode["th"];
+                                        XmlNode gameInfoNodeData = gameInfoNode["td"];
+
+                                        if (string.Equals(gameInfoNodeHeader.InnerText, "System", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            info.CommonDiscInfo.System = RedumpLib.Data.Extensions.ToRedumpSystem(gameInfoNodeData["a"]?.InnerText);
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Media", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            info.CommonDiscInfo.Media = RedumpLib.Data.Extensions.ToDiscType(gameInfoNodeData.InnerText);
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Category", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            info.CommonDiscInfo.Category = RedumpLib.Data.Extensions.ToDiscCategory(gameInfoNodeData.InnerText);
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Region", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            // TODO: COMPLETE
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Languages", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            // TODO: COMPLETE
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Edition", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            info.VersionAndEditions.OtherEditions = gameInfoNodeData.InnerText;
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Added", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            if (DateTime.TryParse(gameInfoNodeData.InnerText, out DateTime added))
+                                                info.Added = added;
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "Last modified", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            if (DateTime.TryParse(gameInfoNodeData.InnerText, out DateTime lastModified))
+                                                info.LastModified = lastModified;
+                                        }
+                                    }
+                                }
+
+                                // The gamecomments node contains way more than it implies
+                                if (string.Equals(gameNode.Attributes["class"]?.Value, "gamecomments", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    // TODO: COMPLETE
+                                }
+
+                                // TODO: COMPLETE
+                            }
+
+                            // The only other supported elements are divs
+                            else if (!string.Equals(gameNode.Name, "div", StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            // Check the div for dumper info
+                            // TODO: COMPLETE
+                        }
+                    }
+
+                    // Figure out what the div contains, if possible
+                    // TODO: COMPLETE
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
         /// Fill out an existing SubmissionInfo object based on a disc page
         /// </summary>
         /// <param name="wc">RedumpWebClient for making the connection</param>
@@ -1166,7 +1343,7 @@ namespace MPF.Library
             //    info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
             //        + WebUtility.HtmlDecode(match.Groups[1].Value)
             //        .Replace("<br />", "\n")
-            //        .ReplaceCommentFieldsWithTags() + "\n";
+            //        .ReplaceHtmlWithSiteCodes() + "\n";
             //}
 
             // Contents
@@ -1175,7 +1352,8 @@ namespace MPF.Library
             {
                 info.CommonDiscInfo.Contents = WebUtility.HtmlDecode(match.Groups[1].Value)
                        .Replace("<br />", "\n")
-                       .Replace("</div>", "");
+                       .Replace("</div>", "")
+                       .ReplaceHtmlWithSiteCodes();
                 info.CommonDiscInfo.Contents = Regex.Replace(info.CommonDiscInfo.Contents, @"<div .*?>", "");
             }
 
@@ -1264,60 +1442,21 @@ namespace MPF.Library
         }
 
         /// <summary>
-        /// Process a comment block and replace with internal identifiers
+        /// Process a text block and replace with internal identifiers
         /// </summary>
-        /// <param name="comments">Comments block to process</param>
-        /// <returns>Processed comments block, if possible</returns>
-        private static string ReplaceCommentFieldsWithTags(this string comments)
+        /// <param name="text">Text block to process</param>
+        /// <returns>Processed text block, if possible</returns>
+        private static string ReplaceHtmlWithSiteCodes(this string text)
         {
-            if (string.IsNullOrWhiteSpace(comments))
-                return comments;
+            if (string.IsNullOrWhiteSpace(text))
+                return text;
 
-            return comments
-                .Replace(Constants.AcclaimIDCommentString, Constants.AcclaimIDCommentField)
-                .Replace(Constants.ActivisionIDCommentString, Constants.ActivisionIDCommentField)
-                .Replace(Constants.AlternativeTitleCommentString, Constants.AlternativeTitleCommentField)
-                .Replace(Constants.AlternativeForeignTitleCommentString, Constants.AlternativeForeignTitleCommentField)
-                .Replace(Constants.BandaiIDCommentString, Constants.BandaiIDCommentField)
-                .Replace(Constants.BBFCRegistrationNumberCommentString, Constants.BBFCRegistrationNumberCommentField)
-                .Replace(Constants.DNASDiscIDCommentString, Constants.DNASDiscIDCommentField)
-                .Replace(Constants.ElectronicArtsIDCommentString, Constants.ElectronicArtsIDCommentField)
-                .Replace(Constants.ExtrasCommentString, Constants.ExtrasCommentField)
-                .Replace(Constants.FoxInteractiveIDCommentString, Constants.FoxInteractiveIDCommentField)
-                .Replace(Constants.GameFootageCommentString, Constants.GameFootageCommentField)
-                .Replace(Constants.GenreCommentString, Constants.GenreCommentField)
-                .Replace(Constants.GTInteractiveIDCommentString, Constants.GTInteractiveIDCommentField)
-                .Replace(Constants.InternalSerialNameCommentString, Constants.InternalSerialNameCommentField)
-                .Replace(Constants.ISBNCommentString, Constants.ISBNCommentField)
-                .Replace(Constants.ISSNCommentString, Constants.ISSNCommentField)
-                .Replace(Constants.JASRACIDCommentString, Constants.JASRACIDCommentField)
-                .Replace(Constants.KingRecordsIDCommentString, Constants.KingRecordsIDCommentField)
-                .Replace(Constants.KoeiIDCommentString, Constants.KoeiIDCommentField)
-                .Replace(Constants.KonamiIDCommentString, Constants.KonamiIDCommentField)
-                .Replace(Constants.LucasArtsIDCommentString, Constants.LucasArtsIDCommentField)
-                .Replace(Constants.NaganoIDCommentString, Constants.NaganoIDCommentField)
-                .Replace(Constants.NamcoIDCommentString, Constants.NamcoIDCommentField)
-                .Replace(Constants.NetYarozeGamesCommentSring, Constants.NetYarozeGamesCommentField)
-                .Replace(Constants.NipponIchiSoftwareIDCommentString, Constants.NipponIchiSoftwareIDCommentField)
-                .Replace(Constants.OriginIDCommentString, Constants.OriginIDCommentField)
-                .Replace(Constants.PatchesCommentString, Constants.PatchesCommentField)
-                .Replace(Constants.PlayableDemosCommentString, Constants.PlayableDemosCommentField)
-                .Replace(Constants.PonyCanyonIDCommentString, Constants.PonyCanyonIDCommentField)
-                .Replace(Constants.PostgapTypeCommentString, Constants.PostgapTypeCommentField)
-                .Replace(Constants.PPNCommentString, Constants.PPNCommentField)
-                .Replace(Constants.RollingDemosCommentString, Constants.RollingDemosCommentField)
-                .Replace(Constants.SavegamesCommentString, Constants.SavegamesCommentField)
-                .Replace(Constants.SegaIDCommentString, Constants.SegaIDCommentField)
-                .Replace(Constants.SelenIDCommentString, Constants.SelenIDCommentField)
-                .Replace(Constants.SeriesCommentString, Constants.SeriesCommentField)
-                .Replace(Constants.TaitoIDCommentString, Constants.TaitoIDCommentField)
-                .Replace(Constants.TechDemosCommentString, Constants.TechDemosCommentField)
-                .Replace(Constants.UbisoftIDCommentString, Constants.UbisoftIDCommentField)
-                .Replace(Constants.ValveIDCommentString, Constants.ValveIDCommentField)
-                .Replace(Constants.VGCCodeCommentString, Constants.VFCCodeCommentField)
-                .Replace(Constants.VideosCommentString, Constants.VideosCommentField)
-                .Replace(Constants.VolumeLabelCommentString, Constants.VolumeLabelCommentField)
-                .Replace(Constants.VCDCommentString, Constants.VCDCommentField);
+            foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
+            {
+                text = text.Replace(siteCode.LongName(), siteCode.ShortName());
+            }
+
+            return text;
         }
 
         /// <summary>

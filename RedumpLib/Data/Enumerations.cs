@@ -1197,6 +1197,144 @@ namespace RedumpLib.Data
     }
 
     /// <summary>
+    /// List of all Redump site codes
+    /// </summary>
+    public enum SiteCode
+    {
+        [HumanReadable(ShortName = "[T:ACC]", LongName = "<b>Acclaim ID</b>:")]
+        AcclaimID,
+
+        [HumanReadable(ShortName = "[T:ACT]", LongName = "<b>Activision ID</b>:")]
+        ActivisionID,
+
+        [HumanReadable(ShortName = "[T:ALT]", LongName = "<b>Alternative Title</b>:")]
+        AlternativeTitle,
+
+        [HumanReadable(ShortName = "[T:ALTF]", LongName = "<b>Alternative Foreign Title</b>:")]
+        AlternativeForeignTitle,
+
+        [HumanReadable(ShortName = "[T:BID]", LongName = "<b>Bandai ID</b>:")]
+        BandaiID,
+
+        [HumanReadable(ShortName = "[T:BBFC]", LongName = "<b>BBFC Reg. No.</b>:")]
+        BBFCRegistrationNumber,
+
+        [HumanReadable(ShortName = "[T:DNAS]", LongName = "<b>DNAS Disc ID</b>:")]
+        DNASDiscID,
+
+        [HumanReadable(ShortName = "[T:EAID]", LongName = "<b>Electronic Arts ID</b>:")]
+        ElectronicArtsID,
+
+        [HumanReadable(ShortName = "[T:X]", LongName = "<b>Extras</b>:")]
+        Extras,
+
+        [HumanReadable(ShortName = "[T:FIID]", LongName = "<b>Fox Interactive ID</b>:")]
+        FoxInteractiveID,
+
+        [HumanReadable(ShortName = "[T:GF]", LongName = "<b>Game Footage</b>:")]
+        GameFootage,
+
+        [HumanReadable(ShortName = "[T:G]", LongName = "<b>Genre</b>:")]
+        Genre,
+
+        [HumanReadable(ShortName = "[T:GTID]", LongName = "<b>GT Interactive ID</b>:")]
+        GTInteractiveID,
+
+        [HumanReadable(ShortName = "[T:ISN]", LongName = "<b>Internal Serial</b>:")]
+        InternalSerialName,
+
+        [HumanReadable(ShortName = "[T:ISBN]", LongName = "<b>ISBN</b>:")]
+        ISBN,
+
+        [HumanReadable(ShortName = "[T:ISSN]", LongName = "<b>ISSN</b>:")]
+        ISSN,
+
+        [HumanReadable(ShortName = "[T:JID]", LongName = "<b>JASRAC ID</b>:")]
+        JASRACID,
+
+        [HumanReadable(ShortName = "[T:KIRZ]", LongName = "<b>King Records ID</b>:")]
+        KingRecordsID,
+
+        [HumanReadable(ShortName = "[T:KOEI]", LongName = "<b>Koei ID</b>:")]
+        KoeiID,
+
+        [HumanReadable(ShortName = "[T:KID]", LongName = "<b>Konami ID</b>:")]
+        KonamiID,
+
+        [HumanReadable(ShortName = "[T:LAID]", LongName = "<b>Lucas Arts ID</b>:")]
+        LucasArtsID,
+
+        [HumanReadable(ShortName = "[T:NGID]", LongName = "<b>Nagano ID</b>:")]
+        NaganoID,
+
+        [HumanReadable(ShortName = "[T:NID]", LongName = "<b>Namco ID</b>:")]
+        NamcoID,
+
+        [HumanReadable(ShortName = "[T:NYG]", LongName = "<b>Net Yaroze Games</b>:")]
+        NetYarozeGames,
+
+        [HumanReadable(ShortName = "[T:NPS]", LongName = "<b>Nippon Ichi Software ID</b>:")]
+        NipponIchiSoftwareID,
+
+        [HumanReadable(ShortName = "[T:OID]", LongName = "<b>Origin ID</b>:")]
+        OriginID,
+
+        [HumanReadable(ShortName = "[T:P]", LongName = "<b>Patches</b>:")]
+        Patches,
+
+        [HumanReadable(ShortName = "[T:PD]", LongName = "<b>Playable Demos</b>:")]
+        PlayableDemos,
+
+        [HumanReadable(ShortName = "[T:PCID]", LongName = "<b>Pony Canyon ID</b>:")]
+        PonyCanyonID,
+
+        [HumanReadable(ShortName = "[T:PT2]", LongName = "<b>Postgap type</b>: Form 2")]
+        PostgapType,
+
+        [HumanReadable(ShortName = "[T:PPN]", LongName = "<b>PPN</b>:")]
+        PPN,
+
+        [HumanReadable(ShortName = "[T:RD]", LongName = "<b>Rolling Demos</b>:")]
+        RollingDemos,
+
+        [HumanReadable(ShortName = "[T:SG]", LongName = "<b>Savegames</b>:")]
+        Savegames,
+
+        [HumanReadable(ShortName = "[T:SID]", LongName = "<b>Sega ID</b>:")]
+        SegaID,
+
+        [HumanReadable(ShortName = "[T:SNID]", LongName = "<b>Selen ID</b>:")]
+        SelenID,
+
+        [HumanReadable(ShortName = "[T:S]", LongName = "<b>Series</b>:")]
+        Series,
+
+        [HumanReadable(ShortName = "[T:TID]", LongName = "<b>Taito ID</b>:")]
+        TaitoID,
+
+        [HumanReadable(ShortName = "[T:TD]", LongName = "<b>Tech Demos</b>:")]
+        TechDemos,
+
+        [HumanReadable(ShortName = "[T:UID]", LongName = "<b>Ubisoft ID</b>:")]
+        UbisoftID,
+
+        [HumanReadable(ShortName = "[T:VID]", LongName = "<b>Valve ID</b>:")]
+        ValveID,
+
+        [HumanReadable(ShortName = "[T:VFC]", LongName = "<b>VFC code</b>:")]
+        VFCCode,
+
+        [HumanReadable(ShortName = "[T:V]", LongName = "<b>Videos</b>:")]
+        Videos,
+
+        [HumanReadable(ShortName = "[T:VOL]", LongName = "<b>Volume Label</b>:")]
+        VolumeLabel,
+
+        [HumanReadable(ShortName = "[T:VCD]", LongName = "<b>V-CD</b>")]
+        VCD,
+    }
+
+    /// <summary>
     /// List of system categories
     /// </summary>
     public enum SystemCategory

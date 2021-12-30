@@ -1,3 +1,6 @@
+### WIP (xxxx-xx-xx)
+- Start overhauling Redump information pulling, again
+
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
 - Add Pocket PC support

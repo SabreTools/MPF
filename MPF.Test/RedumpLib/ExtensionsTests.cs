@@ -409,6 +409,59 @@ namespace MPF.Test.RedumpLib
 
         #endregion
 
+        #region Site Code
+
+        /// <summary>
+        /// Check that every SiteCode has a long name provided
+        /// </summary>
+        /// <param name="siteCode">SiteCode value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
+        [Theory]
+        [MemberData(nameof(GenerateSiteCodeTestData))]
+        public void SiteCodeLongNameTest(SiteCode? siteCode, bool expectNull)
+        {
+            string actual = siteCode.LongName();
+
+            if (expectNull)
+                Assert.Null(actual);
+            else
+                Assert.NotNull(actual);
+        }
+
+        /// <summary>
+        /// Check that every SiteCode has a short name provided
+        /// </summary>
+        /// <param name="siteCode">SiteCode value to check</param>
+        /// <param name="expectNull">True to expect a null value, false otherwise</param>
+        [Theory]
+        [MemberData(nameof(GenerateSiteCodeTestData))]
+        public void SiteCodeShortNameTest(SiteCode? siteCode, bool expectNull)
+        {
+            string actual = siteCode.ShortName();
+
+            if (expectNull)
+                Assert.Null(actual);
+            else
+                Assert.NotNull(actual);
+        }
+
+        /// <summary>
+        /// Generate a test set of SiteCode values
+        /// </summary>
+        /// <returns>MemberData-compatible list of SiteCode values</returns>
+        public static List<object[]> GenerateSiteCodeTestData()
+        {
+            var testData = new List<object[]>() { new object[] { null, true } };
+            foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
+            {
+                testData.Add(new object[] { siteCode, false });
+            }
+
+            return testData;
+        }
+
+        #endregion
+
         #region System
 
         /// <summary>

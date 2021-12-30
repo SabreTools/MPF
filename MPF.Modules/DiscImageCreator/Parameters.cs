@@ -439,6 +439,9 @@ namespace MPF.Modules.DiscImageCreator
                     break;
             }
 
+            // Shortcut for adding ISN for now
+            string internalSerialName = (SiteCode.InternalSerialName as SiteCode?).LongName();
+
             // Extract info based specifically on RedumpSystem
             switch (this.System)
             {
@@ -463,7 +466,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
-                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {pythonTwoSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{internalSerialName} {pythonTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
@@ -510,7 +513,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{internalSerialName} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -527,7 +530,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (GetSegaCDBuildInfo(info.Extras.Header, out string scdSerial, out string fixedDate))
                     {
-                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {scdSerial ?? ""}";
+                        info.CommonDiscInfo.Comments += $"{internalSerialName} {scdSerial ?? ""}";
                         info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
                     }
 
@@ -544,7 +547,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{internalSerialName} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -563,7 +566,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{internalSerialName} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -582,7 +585,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{internalSerialName} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -601,7 +604,7 @@ namespace MPF.Modules.DiscImageCreator
 
                         if (GetGDROMBuildInfo(info.Extras.Header, out string gdSerial, out string gdVersion, out string gdDate))
                         {
-                            info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {gdSerial ?? ""}";
+                            info.CommonDiscInfo.Comments += $"{internalSerialName} {gdSerial ?? ""}";
                             info.VersionAndEditions.Version = gdVersion ?? "";
                             info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
                         }
@@ -618,7 +621,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
                     {
-                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {saturnSerial ?? ""}";
+                        info.CommonDiscInfo.Comments += $"{internalSerialName} {saturnSerial ?? ""}";
                         info.VersionAndEditions.Version = saturnVersion ?? "";
                         info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
                     }
@@ -628,7 +631,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SonyPlayStation:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
                     {
-                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {playstationSerial ?? ""}\n";
+                        info.CommonDiscInfo.Comments += $"{internalSerialName} {playstationSerial ?? ""}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
@@ -652,7 +655,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SonyPlayStation2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
                     {
-                        info.CommonDiscInfo.Comments += $"{Constants.InternalSerialNameCommentField} {playstationTwoSerial}\n";
+                        info.CommonDiscInfo.Comments += $"{internalSerialName} {playstationTwoSerial}\n";
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
