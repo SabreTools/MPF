@@ -2,6 +2,7 @@
 - Start overhauling Redump information pulling, again
 - Add internal structure for special site codes
 - Add new tabs for special site information
+- Clean up default handling of fields
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

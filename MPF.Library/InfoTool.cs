@@ -79,7 +79,7 @@ namespace MPF.Library
                     Languages = null,
                     Serial = (options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty),
                     Barcode = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
-                    Contents = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    Contents = string.Empty,
                     ContentsSpecialFields = new Dictionary<SiteCode?, string>(),
                     Comments = string.Empty,
                     CommentsSpecialFields = new Dictionary<SiteCode?, string>(),
@@ -233,9 +233,6 @@ namespace MPF.Library
                 case RedumpSystem.PalmOS:
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
-                    // Remove any ISBN in the comments
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISBN] = (options.AddPlaceholders ? Template.OptionalValue : string.Empty);
-
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     info.CopyProtection.Protection = await GetCopyProtection(drive, options, protectionProgress);
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
@@ -402,9 +399,11 @@ namespace MPF.Library
             // Set the category if it's not overriden
             info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.Games;
 
-            // Comments is one of the few fields with odd handling
+            // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
                 info.CommonDiscInfo.Comments = (options.AddPlaceholders ? Template.OptionalValue : "");
+            if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
+                info.CommonDiscInfo.Contents = (options.AddPlaceholders ? Template.OptionalValue : "");
 
             return info;
         }
@@ -1398,6 +1397,7 @@ namespace MPF.Library
                     + (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
                     + WebUtility.HtmlDecode(match.Groups[1].Value)
                         .Replace("<br />", "\n")
+                        .Replace("[+]", string.Empty)
                         .ReplaceHtmlWithSiteCodes();
                 
                 // Setup the new comments block
@@ -1459,6 +1459,7 @@ namespace MPF.Library
                     + WebUtility.HtmlDecode(match.Groups[1].Value)
                         .Replace("<br />", "\n")
                         .Replace("</div>", string.Empty)
+                        .Replace("[+]", string.Empty)
                         .ReplaceHtmlWithSiteCodes();
                 oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
 
