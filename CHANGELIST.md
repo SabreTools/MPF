@@ -1,5 +1,6 @@
 ### WIP (xxxx-xx-xx)
 - Start overhauling Redump information pulling, again
+- Add internal structure for special site codes
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

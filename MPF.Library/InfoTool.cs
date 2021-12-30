@@ -80,7 +80,9 @@ namespace MPF.Library
                     Serial = (options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty),
                     Barcode = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
                     Contents = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    ContentsSpecialFields = new Dictionary<SiteCode?, string>(),
                     Comments = string.Empty,
+                    CommentsSpecialFields = new Dictionary<SiteCode?, string>(),
                 },
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
@@ -101,12 +103,9 @@ namespace MPF.Library
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
-            // Shortcut for adding volume label for now
-            string volumeLabel = (SiteCode.VolumeLabel as SiteCode?).LongName();
-
             // Add the volume label to comments, if possible
-            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && !info.CommonDiscInfo.Comments.Contains(volumeLabel))
-                info.CommonDiscInfo.Comments += $"{volumeLabel} {drive.VolumeLabel}\n";
+            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel) && !info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
+                info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = drive.VolumeLabel;
 
             // Extract info based generically on MediaType
             switch (mediaType)
@@ -221,9 +220,6 @@ namespace MPF.Library
                     break;
             }
 
-            // Shortcut for adding ISBN for now
-            string isbn = (SiteCode.ISBN as SiteCode?).LongName();
-
             // Extract info based specifically on RedumpSystem
             switch (system)
             {
@@ -237,8 +233,8 @@ namespace MPF.Library
                 case RedumpSystem.PalmOS:
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
-                    if (string.IsNullOrWhiteSpace(info.CommonDiscInfo.Comments))
-                        info.CommonDiscInfo.Comments += $"{isbn} {(options.AddPlaceholders ? Template.OptionalValue : "")}";
+                    // Remove any ISBN in the comments
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISBN] = (options.AddPlaceholders ? Template.OptionalValue : string.Empty);
 
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     info.CopyProtection.Protection = await GetCopyProtection(drive, options, protectionProgress);
@@ -412,7 +408,6 @@ namespace MPF.Library
 
             return info;
         }
-
 
         /// <summary>
         /// Ensures that all required output files have been created
@@ -866,6 +861,51 @@ namespace MPF.Library
         }
 
         /// <summary>
+        /// Process any fields that have to be combined
+        /// </summary>
+        /// <param name="info">Information object to normalize</param>
+        public static void ProcessSpecialFields(SubmissionInfo info)
+        {
+            // Process the comments field
+            if (info.CommonDiscInfo?.CommentsSpecialFields != null && info.CommonDiscInfo.CommentsSpecialFields?.Any() == true)
+            {
+                // If the field is missing, add an empty one to fill in
+                if (info.CommonDiscInfo.Comments == null)
+                    info.CommonDiscInfo.Comments = string.Empty;
+
+                // Add all special fields before any comments
+                info.CommonDiscInfo.Comments = string.Join(
+                    "\n", info.CommonDiscInfo.CommentsSpecialFields.Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
+                ) + "\n" + info.CommonDiscInfo.Comments;
+
+                // Trim the comments field
+                info.CommonDiscInfo.Comments = info.CommonDiscInfo.Comments.Trim();
+
+                // Wipe out the special fields dictionary
+                info.CommonDiscInfo.CommentsSpecialFields = null;
+            }
+
+            // Process the contents field
+            if (info.CommonDiscInfo?.ContentsSpecialFields != null && info.CommonDiscInfo.ContentsSpecialFields?.Any() == true)
+            {
+                // If the field is missing, add an empty one to fill in
+                if (info.CommonDiscInfo.Contents == null)
+                    info.CommonDiscInfo.Contents = string.Empty;
+
+                // Add all special fields before any contents
+                info.CommonDiscInfo.Contents = string.Join(
+                    "\n", info.CommonDiscInfo.ContentsSpecialFields.Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
+                ) + "\n" + info.CommonDiscInfo.Contents;
+
+                // Trim the contents field
+                info.CommonDiscInfo.Contents = info.CommonDiscInfo.Contents.Trim();
+
+                // Wipe out the special fields dictionary
+                info.CommonDiscInfo.ContentsSpecialFields = null;
+            }
+        }
+
+        /// <summary>
         /// Write the data to the output folder
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
@@ -1058,8 +1098,9 @@ namespace MPF.Library
         /// Create a new SubmissionInfo object from a disc page
         /// </summary>
         /// <param name="discData">String containing the HTML disc data</param>
+        /// <returns>Filled SubmissionInfo object on success, null on error</returns>
         /// <remarks>Not currently working</remarks>
-        private static void CreateFromID(string discData)
+        private static SubmissionInfo CreateFromID(string discData)
         {
             SubmissionInfo info = new SubmissionInfo()
             {
@@ -1069,22 +1110,22 @@ namespace MPF.Library
 
             // No disc data means we can't parse it
             if (string.IsNullOrWhiteSpace(discData))
-                return;
+                return null;
 
             try
             {
                 // Load the current disc page into an XML document
-                XmlDocument redumpPage = new XmlDocument() { PreserveWhitespace = true };
+                XmlDocument redumpPage = new XmlDocument() {PreserveWhitespace = true};
                 redumpPage.LoadXml(discData);
 
                 // If the current page isn't valid, we can't parse it
                 if (!redumpPage.HasChildNodes)
-                    return;
+                    return null;
 
                 // Get the body node, if possible
                 XmlNode bodyNode = redumpPage["html"]?["body"];
                 if (bodyNode == null || !bodyNode.HasChildNodes)
-                    return;
+                    return null;
 
                 // Loop through and get the main node, if possible
                 XmlNode mainNode = null;
@@ -1108,7 +1149,7 @@ namespace MPF.Library
 
                 // If the main node is invalid, we can't do anything
                 if (mainNode == null || !mainNode.HasChildNodes)
-                    return;
+                    return null;
 
                 // Try to find elements as we're going
                 foreach (XmlNode childNode in mainNode.ChildNodes)
@@ -1122,7 +1163,8 @@ namespace MPF.Library
                         continue;
 
                     // Only 2 of the internal divs have classes attached and one is not used here
-                    if (childNode.Attributes != null && string.Equals(childNode.Attributes["class"]?.Value, "game", StringComparison.OrdinalIgnoreCase))
+                    if (childNode.Attributes != null && string.Equals(childNode.Attributes["class"]?.Value, "game",
+                            StringComparison.OrdinalIgnoreCase))
                     {
                         // If we don't have children nodes, skip this one over
                         if (!childNode.HasChildNodes)
@@ -1139,7 +1181,8 @@ namespace MPF.Library
                                     continue;
 
                                 // The gameinfo node contains most of the major information
-                                if (string.Equals(gameNode.Attributes["class"]?.Value, "gameinfo", StringComparison.OrdinalIgnoreCase))
+                                if (string.Equals(gameNode.Attributes["class"]?.Value, "gameinfo",
+                                        StringComparison.OrdinalIgnoreCase))
                                 {
                                     // If we don't have children nodes, skip this one over
                                     if (!gameNode.HasChildNodes)
@@ -1161,15 +1204,15 @@ namespace MPF.Library
 
                                         if (string.Equals(gameInfoNodeHeader.InnerText, "System", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            info.CommonDiscInfo.System = RedumpLib.Data.Extensions.ToRedumpSystem(gameInfoNodeData["a"]?.InnerText);
+                                            info.CommonDiscInfo.System = Extensions.ToRedumpSystem(gameInfoNodeData["a"]?.InnerText);
                                         }
                                         else if (string.Equals(gameInfoNodeHeader.InnerText, "Media", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            info.CommonDiscInfo.Media = RedumpLib.Data.Extensions.ToDiscType(gameInfoNodeData.InnerText);
+                                            info.CommonDiscInfo.Media = Extensions.ToDiscType(gameInfoNodeData.InnerText);
                                         }
                                         else if (string.Equals(gameInfoNodeHeader.InnerText, "Category", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            info.CommonDiscInfo.Category = RedumpLib.Data.Extensions.ToDiscCategory(gameInfoNodeData.InnerText);
+                                            info.CommonDiscInfo.Category = Extensions.ToDiscCategory(gameInfoNodeData.InnerText);
                                         }
                                         else if (string.Equals(gameInfoNodeHeader.InnerText, "Region", StringComparison.OrdinalIgnoreCase))
                                         {
@@ -1220,7 +1263,12 @@ namespace MPF.Library
                     // TODO: COMPLETE
                 }
             }
-            catch { }
+            catch
+            {
+                return null;
+            }
+
+            return info;
         }
 
         /// <summary>
@@ -1335,26 +1383,128 @@ namespace MPF.Library
                 info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
             }
 
+            // TODO: Unify handling of fields that can include site codes (Comments/Contents)
+
             // Comments
-            // TODO: Re-enable when there's a better way of parsing comments
-            //match = Constants.CommentsRegex.Match(discData);
-            //if (match.Success)
-            //{
-            //    info.CommonDiscInfo.Comments += (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
-            //        + WebUtility.HtmlDecode(match.Groups[1].Value)
-            //        .Replace("<br />", "\n")
-            //        .ReplaceHtmlWithSiteCodes() + "\n";
-            //}
+            match = Constants.CommentsRegex.Match(discData);
+            if (match.Success)
+            {
+                // Process the old comments block
+                string oldComments = info.CommonDiscInfo.Comments
+                    + (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
+                    + WebUtility.HtmlDecode(match.Groups[1].Value)
+                        .Replace("<br />", "\n")
+                        .ReplaceHtmlWithSiteCodes();
+                
+                // Setup the new comments block
+                string newComments = string.Empty;
+
+                // Process the comments block line-by-line
+                string[] commentsSeparated = oldComments.Split('\n');
+                for (int i = 0; i < commentsSeparated.Length; i++)
+                {
+                    string commentLine = commentsSeparated[i].Trim();
+
+                    // If we have an empty line, we want to treat this as intentional
+                    if (string.IsNullOrWhiteSpace(commentLine))
+                    {
+                        newComments += $"{commentLine}\n";
+                        continue;
+                    }
+
+                    // If the line doesn't contain a site code tag, just keep it
+                    if (!commentLine.Contains("[T:"))
+                    {
+                        newComments += $"{commentLine}\n";
+                        continue;
+                    }
+
+                    // Otherwise, we need to find what tag is in use
+                    bool foundTag = false;
+                    foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
+                    {
+                        // If the line doesn't contain this tag, just skip
+                        if (!commentLine.Contains(siteCode.ShortName()))
+                            continue;
+
+                        // If we don't already have this site code, add it to the dictionary
+                        if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
+                            info.CommonDiscInfo.CommentsSpecialFields[siteCode] = commentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+
+                        // Mark as having found a tag
+                        foundTag = true;
+                        break;
+                    }
+
+                    // If we didn't find a known tag, just add the line, just in case
+                    if (!foundTag)
+                        newComments += $"{commentLine}\n";
+                }
+
+                // Set the new comments field
+                info.CommonDiscInfo.Comments = newComments;
+            }
 
             // Contents
             match = Constants.ContentsRegex.Match(discData);
             if (match.Success)
             {
-                info.CommonDiscInfo.Contents = WebUtility.HtmlDecode(match.Groups[1].Value)
-                       .Replace("<br />", "\n")
-                       .Replace("</div>", "")
-                       .ReplaceHtmlWithSiteCodes();
-                info.CommonDiscInfo.Contents = Regex.Replace(info.CommonDiscInfo.Contents, @"<div .*?>", "");
+                // Process the old contents block
+                string oldContents = info.CommonDiscInfo.Contents
+                    + (string.IsNullOrEmpty(info.CommonDiscInfo.Contents) ? string.Empty : "\n")
+                    + WebUtility.HtmlDecode(match.Groups[1].Value)
+                        .Replace("<br />", "\n")
+                        .Replace("</div>", string.Empty)
+                        .ReplaceHtmlWithSiteCodes();
+                oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
+
+                // Setup the new contents block
+                string newContents = string.Empty;
+
+                // Process the contents block line-by-line
+                string[] contentsSeparated = oldContents.Split('\n');
+                for (int i = 0; i < contentsSeparated.Length; i++)
+                {
+                    string contentLine = contentsSeparated[i].Trim();
+
+                    // If we have an empty line, we want to treat this as intentional
+                    if (string.IsNullOrWhiteSpace(contentLine))
+                    {
+                        newContents += $"{contentLine}\n";
+                        continue;
+                    }
+
+                    // If the line doesn't contain a site code tag, just keep it
+                    if (!contentLine.Contains("[T:"))
+                    {
+                        newContents += $"{contentLine}\n";
+                        continue;
+                    }
+
+                    // Otherwise, we need to find what tag is in use
+                    bool foundTag = false;
+                    foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
+                    {
+                        // If the line doesn't contain this tag, just skip
+                        if (!contentLine.Contains(siteCode.ShortName()))
+                            continue;
+
+                        // If we don't already have this site code, add it to the dictionary
+                        if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode))
+                            info.CommonDiscInfo.ContentsSpecialFields[siteCode] = contentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+
+                        // Mark as having found a tag
+                        foundTag = true;
+                        break;
+                    }
+
+                    // If we didn't find a known tag, just add the line, just in case
+                    if (!foundTag)
+                        newContents += $"{contentLine}\n";
+                }
+
+                // Set the new contents field
+                info.CommonDiscInfo.Contents = newContents;
             }
 
             // Added

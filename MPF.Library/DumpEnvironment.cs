@@ -330,6 +330,11 @@ namespace MPF.Library
                     resultProgress?.Report(Result.Success("Disc information skipped!"));
             }
 
+            // Process special fields for site codes
+            resultProgress?.Report(Result.Success("Processing site codes..."));
+            InfoTool.ProcessSpecialFields(submissionInfo);
+            resultProgress?.Report(Result.Success("Processing complete!"));
+
             // Format the information for the text output
             resultProgress?.Report(Result.Success("Formatting information..."));
             List<string> formattedValues = InfoTool.FormatOutputData(submissionInfo);

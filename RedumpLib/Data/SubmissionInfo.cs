@@ -211,8 +211,14 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_comments", NullValueHandling = NullValueHandling.Ignore)]
         public string Comments { get; set; }
 
+        [JsonIgnore]
+        public Dictionary<SiteCode?, string> CommentsSpecialFields { get; set; }
+
         [JsonProperty(PropertyName = "d_contents", NullValueHandling = NullValueHandling.Ignore)]
         public string Contents { get; set; }
+
+        [JsonIgnore]
+        public Dictionary<SiteCode?, string> ContentsSpecialFields { get; set; }
 
         public object Clone()
         {
@@ -254,7 +260,9 @@ namespace RedumpLib.Data
                 EXEDateBuildDate = this.EXEDateBuildDate,
                 ErrorsCount = this.ErrorsCount,
                 Comments = this.Comments,
+                CommentsSpecialFields = this.CommentsSpecialFields.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
                 Contents = this.Contents,
+                ContentsSpecialFields = this.ContentsSpecialFields.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
             };
         }
     }
