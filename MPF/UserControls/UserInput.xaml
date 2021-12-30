@@ -22,6 +22,7 @@
                  AcceptsTab="{Binding ElementName=userInput, Path=Tab}"
                  AcceptsReturn="{Binding ElementName=userInput, Path=Enter}"
                  TextWrapping="{Binding ElementName=userInput, Path=TextWrapping}"
+                 IsEnabled="{Binding ElementName=userInput, Path=IsEnabled}"
                  VerticalContentAlignment="{Binding ElementName=userInput, Path=VerticalContentAlignmentValue}"
                  VerticalScrollBarVisibility="{Binding ElementName=userInput, Path=ScrollBarVisibility}"/>
     </Grid>

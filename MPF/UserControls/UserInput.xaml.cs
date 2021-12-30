@@ -28,6 +28,9 @@ namespace MPF.UserControls
         public static readonly DependencyProperty TextWrappingProperty =
             DependencyProperty.Register("TextWrapping", typeof(TextWrapping), typeof(UserInput));
 
+        public static readonly DependencyProperty IsEnabledProperty =
+            DependencyProperty.Register("IsEnabledValue", typeof(bool), typeof(UserInput));
+
         public static readonly DependencyProperty VerticalContentAlignmentValueProperty =
             DependencyProperty.Register("VerticalContentAlignmentValue", typeof(VerticalAlignment), typeof(UserInput));
 
@@ -74,6 +77,12 @@ namespace MPF.UserControls
             set => SetValue(TextWrappingProperty, value);
         }
 
+        public bool IsEnabledValue
+        {
+            get => (bool)GetValue(IsEnabledProperty);
+            set => SetValue(IsEnabledProperty, value);
+        }
+
         public VerticalAlignment VerticalContentAlignmentValue
         {
             get => (VerticalAlignment)GetValue(VerticalContentAlignmentValueProperty);
@@ -96,6 +105,7 @@ namespace MPF.UserControls
             Tab = false;
             Enter = false;
             TextWrapping = TextWrapping.NoWrap;
+            IsEnabledValue = true;
             VerticalContentAlignmentValue = VerticalAlignment.Center;
             ScrollBarVisibility = ScrollBarVisibility.Auto;
 

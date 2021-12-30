@@ -260,9 +260,9 @@ namespace RedumpLib.Data
                 EXEDateBuildDate = this.EXEDateBuildDate,
                 ErrorsCount = this.ErrorsCount,
                 Comments = this.Comments,
-                CommentsSpecialFields = this.CommentsSpecialFields.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                CommentsSpecialFields = this.CommentsSpecialFields?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
                 Contents = this.Contents,
-                ContentsSpecialFields = this.ContentsSpecialFields.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                ContentsSpecialFields = this.ContentsSpecialFields?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
             };
         }
     }

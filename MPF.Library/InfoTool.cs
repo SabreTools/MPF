@@ -875,7 +875,9 @@ namespace MPF.Library
 
                 // Add all special fields before any comments
                 info.CommonDiscInfo.Comments = string.Join(
-                    "\n", info.CommonDiscInfo.CommentsSpecialFields.Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
+                    "\n", info.CommonDiscInfo.CommentsSpecialFields
+                        .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
+                        .Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
                 ) + "\n" + info.CommonDiscInfo.Comments;
 
                 // Trim the comments field
@@ -894,7 +896,9 @@ namespace MPF.Library
 
                 // Add all special fields before any contents
                 info.CommonDiscInfo.Contents = string.Join(
-                    "\n", info.CommonDiscInfo.ContentsSpecialFields.Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
+                    "\n", info.CommonDiscInfo.ContentsSpecialFields
+                        .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
+                        .Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
                 ) + "\n" + info.CommonDiscInfo.Contents;
 
                 // Trim the contents field
