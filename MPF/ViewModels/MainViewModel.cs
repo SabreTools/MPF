@@ -86,7 +86,7 @@ namespace MPF.GUI.ViewModels
 
             // Check for updates, if necessary
             if (App.Options.CheckForUpdatesOnStartup)
-                CheckForUpdates();
+                CheckForUpdates(showIfSame: false);
         }
 
         #region Population
@@ -209,7 +209,8 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Check for available updates
         /// </summary>
-        public void CheckForUpdates()
+        /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
+        public void CheckForUpdates(bool showIfSame)
         {
             (bool different, string message, string url) = Tools.CheckForNewVersion();
 
@@ -221,7 +222,8 @@ namespace MPF.GUI.ViewModels
             if (url == null)
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
 
-            CustomMessageBox.Show(App.Instance, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+            if (showIfSame || different)
+                CustomMessageBox.Show(App.Instance, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -1247,7 +1249,7 @@ namespace MPF.GUI.ViewModels
         /// Handler for CheckForUpdatesMenuItem Click event
         /// </summary>
         private void CheckForUpdatesClick(object sender, RoutedEventArgs e) =>
-            CheckForUpdates();
+            CheckForUpdates(showIfSame: true);
 
         /// <summary>
         /// Handler for OptionsMenuItem Click event
