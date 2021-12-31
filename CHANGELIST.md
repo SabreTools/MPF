@@ -10,6 +10,7 @@
 - Tweak new disc information fields and tabs
 - Allow internal serial and volume label to be hidden
 - Be smarter about showing update checks
+- Ensure all fields are read-only on read-only tab
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
