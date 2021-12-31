@@ -42,8 +42,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Images\ring-code-guide-2-layer.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Images\Icon.ico" />
-    <Resource Include="Images\ring-code-guide.png" />
+    <Resource Include="Images\ring-code-guide-2-layer.png" />
+    <Resource Include="Images\ring-code-guide-1-layer.png" />
   </ItemGroup>
 
   <ItemGroup>
