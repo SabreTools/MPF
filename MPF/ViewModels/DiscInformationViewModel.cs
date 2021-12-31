@@ -76,6 +76,42 @@ namespace MPF.GUI.ViewModels
             var system = SubmissionInfo?.CommonDiscInfo?.System;
             bool reverseOrder = system.HasReversedRingcodes();
 
+            // Hide read-only fields that don't have values set
+            if (SubmissionInfo?.MatchedIDs == null)
+                Parent.MatchedIDs.Visibility = Visibility.Collapsed;
+            else
+                Parent.MatchedIDs.Text = string.Join(", ", SubmissionInfo.MatchedIDs);
+            if (SubmissionInfo?.CopyProtection?.AntiModchip == null)
+                Parent.AntiModchip.Visibility = Visibility.Collapsed;
+            else
+                Parent.AntiModchip.Text = SubmissionInfo.CopyProtection.AntiModchip.LongName();
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.ErrorsCount))
+                Parent.ErrorsCount.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.EXEDateBuildDate))
+                Parent.EXEDateBuildDate.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.EDC?.EDC == null)
+                Parent.EDC.Visibility = Visibility.Collapsed;
+            else
+                Parent.EDC.Text = SubmissionInfo.EDC.EDC.LongName();
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.Header))
+                Parent.Header.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CopyProtection?.LibCrypt == null)
+                Parent.LibCrypt.Visibility = Visibility.Collapsed;
+            else
+                Parent.LibCrypt.Text = SubmissionInfo.CopyProtection.LibCrypt.LongName();
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.LibCryptData))
+                Parent.LibCryptData.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.PIC))
+                Parent.PIC.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.Protection))
+                Parent.Protection.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.PVD))
+                Parent.PVD.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.SecuROMData))
+                Parent.SecuROMData.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.SecuritySectorRanges))
+                Parent.SecuritySectorRanges.Visibility = Visibility.Collapsed;
+
             // Different media types mean different fields available
             switch (SubmissionInfo?.CommonDiscInfo?.Media)
             {

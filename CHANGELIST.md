@@ -5,6 +5,7 @@
 - Clean up default handling of fields
 - Try to handle multi-line fields during parsing
 - Fix CSSKey log handling
+- Show most read-only fields in new tab
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
