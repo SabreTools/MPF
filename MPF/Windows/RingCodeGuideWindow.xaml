@@ -119,29 +119,35 @@
                             <RowDefinition/>
                             <RowDefinition/>
                             <RowDefinition/>
+                            <RowDefinition/>
                         </Grid.RowDefinitions>
 
                         <Image Grid.Row="0" Source="/Images/ring-code-guide-2-layer.png"
-                               HorizontalAlignment="Center" Stretch="Fill" Width="500" Height="500"
+                               HorizontalAlignment="Center" Stretch="Fill" Width="475" Height="500"
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;15</TextBlock>
+                                <TextBlock><Bold Foreground="Red">1. Outer Mastering Ring:</Bold> IM01501A-L1&lt;tab&gt;03 +&lt;tab&gt;+</TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="2">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Green">2. Mastering SID:</Bold> IFPI L553</TextBlock>
+                                <TextBlock><Bold Foreground="Green">2. Inner Mastering Ring:</Bold> IM01501A-L0&lt;tab&gt;03 +&lt;tab&gt;+</TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="3">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Purple">3. Toolstamp/Mastering Code:</Bold> A2</TextBlock>
+                                <TextBlock><Bold Foreground="Purple">3. Outer Mastering SID:</Bold> IFPI LB48</TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="4">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="LightBlue">4. Mould SID:</Bold> IFPI 94V1</TextBlock>
+                                <TextBlock><Bold Foreground="LightBlue">4. Inner Mastering SID:</Bold> IFPI LB48</TextBlock>
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="5">
+                            <Label.Content>
+                                <TextBlock><Bold>Note:</Bold> See the 1-Layer guide for more details on additional fields</TextBlock>
                             </Label.Content>
                         </Label>
                     </Grid>

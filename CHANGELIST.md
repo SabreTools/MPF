@@ -11,6 +11,8 @@
 - Allow internal serial and volume label to be hidden
 - Be smarter about showing update checks
 - Ensure all fields are read-only on read-only tab
+- Add model for 2-layer ringcode guide
+- Add first attempt 2-layer ringcode guide
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
