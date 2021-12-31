@@ -79,8 +79,16 @@ namespace MPF.Test.RedumpLib
                     Barcode = "UPC Barcode",
                     EXEDateBuildDate = "19xx-xx-xx",
                     ErrorsCount = "0",
-                    Comments = "[T:ISBN] ISBN\r\nComment data",
-                    Contents = "Demos:\r\n- Game Demo 1",
+                    Comments = "Comment data line 1\r\nComment data line 2",
+                    CommentsSpecialFields = new Dictionary<SiteCode?, string>()
+                    {
+                        [SiteCode.ISBN] = "ISBN",
+                    },
+                    Contents = "Special contents 1\r\nSpecial contents 2",
+                    ContentsSpecialFields = new Dictionary<SiteCode?, string>()
+                    {
+                        [SiteCode.PlayableDemos] = "Game Demo 1",
+                    },
                 },
 
                 VersionAndEditions = new VersionAndEditionsSection()

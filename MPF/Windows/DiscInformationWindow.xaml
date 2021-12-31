@@ -146,13 +146,13 @@
 
                 <TabItem x:Name="AdditionalInformation" Header="Additional Information" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
+                        <controls:UserInput Label="Generic" Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
                         <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
                         <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
                         <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
                         <controls:UserInput x:Name="PostgapTypeTextBox" Label="Postgap type (Form 2)"/> <!-- Should be boolean -->
                         <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
                         <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/>  <!-- Should be boolean -->
-                        <controls:UserInput Label="Other" Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
                     </StackPanel>
                 </TabItem>
 
@@ -193,6 +193,7 @@
                 <TabItem x:Name="ContentInformation" Header="Content Information" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                         <StackPanel Orientation="Vertical" MaxHeight="375">
+                            <controls:UserInput Label="Generic" Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
@@ -202,7 +203,6 @@
                             <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput Label="Other" Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
@@ -251,15 +251,15 @@
                             <controls:UserInput x:Name="EDC" Label="EDC" IsEnabled="False"/>
                             <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" Text="{Binding SubmissionInfo.CommonDiscInfo.ErrorsCount, Mode=TwoWay}" IsEnabled="False"/>
                             <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" Text="{Binding SubmissionInfo.CommonDiscInfo.EXEDateBuildDate, Mode=TwoWay}" IsEnabled="False"/>
-                            <controls:UserInput x:Name="Header" Label="Header" Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" />
+                            <controls:UserInput x:Name="Header" Label="Header" Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsEnabled="False"/>
                             <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsEnabled="False"/>
-                            <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" />
-                            <controls:UserInput x:Name="PIC" Label="PIC" Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" />
+                            <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
+                            <controls:UserInput x:Name="PIC" Label="PIC" Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
                             <controls:UserInput x:Name="Protection" Label="Protection" Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" IsEnabled="False"/>
-                            <controls:UserInput x:Name="PVD" Label="PVD" Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" />
-                            <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" />
-                            <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" />
+                            <controls:UserInput x:Name="PVD" Label="PVD" Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
+                            <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
+                            <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
                             <controls:UserInput x:Name="VolumeLabelTextBox" Label="Volume Label" IsEnabled="False"/>
 
                             <!-- TODO: Add track/checksum data once there's a reasonable way to do so -->

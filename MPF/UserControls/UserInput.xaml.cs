@@ -116,7 +116,7 @@ namespace MPF.UserControls
             TextWrapping = TextWrapping.NoWrap;
             IsEnabledValue = true;
             VerticalContentAlignmentValue = VerticalAlignment.Center;
-            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
             InitializeComponent();
