@@ -6,6 +6,7 @@
 - Try to handle multi-line fields during parsing
 - Fix CSSKey log handling
 - Show most read-only fields in new tab
+- Add horizontal scroll to user input
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

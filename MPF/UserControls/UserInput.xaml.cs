@@ -34,8 +34,11 @@ namespace MPF.UserControls
         public static readonly DependencyProperty VerticalContentAlignmentValueProperty =
             DependencyProperty.Register("VerticalContentAlignmentValue", typeof(VerticalAlignment), typeof(UserInput));
 
-        public static readonly DependencyProperty ScrollBarVisibilityProperty =
-            DependencyProperty.Register("ScrollBarVisibility", typeof(ScrollBarVisibility), typeof(UserInput));
+        public static readonly DependencyProperty HorizontalScrollBarVisibilityProperty =
+            DependencyProperty.Register("HorizontalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(UserInput));
+
+        public static readonly DependencyProperty VerticalScrollBarVisibilityProperty =
+            DependencyProperty.Register("VerticalScrollBarVisibility", typeof(ScrollBarVisibility), typeof(UserInput));
         
         #endregion
 
@@ -89,10 +92,16 @@ namespace MPF.UserControls
             set => SetValue(VerticalContentAlignmentValueProperty, value);
         }
 
-        public ScrollBarVisibility ScrollBarVisibility
+        public ScrollBarVisibility HorizontalScrollBarVisibility
         {
-            get => (ScrollBarVisibility)GetValue(ScrollBarVisibilityProperty);
-            set => SetValue(ScrollBarVisibilityProperty, value);
+            get => (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty);
+            set => SetValue(HorizontalScrollBarVisibilityProperty, value);
+        }
+
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get => (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty);
+            set => SetValue(VerticalScrollBarVisibilityProperty, value);
         }
 
         #endregion
@@ -107,7 +116,8 @@ namespace MPF.UserControls
             TextWrapping = TextWrapping.NoWrap;
             IsEnabledValue = true;
             VerticalContentAlignmentValue = VerticalAlignment.Center;
-            ScrollBarVisibility = ScrollBarVisibility.Auto;
+            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
             InitializeComponent();
         }
