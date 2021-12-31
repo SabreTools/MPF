@@ -8,6 +8,7 @@
 - Show most read-only fields in new tab
 - Add horizontal scroll to user input
 - Tweak new disc information fields and tabs
+- Allow internal serial and volume label to be hidden
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

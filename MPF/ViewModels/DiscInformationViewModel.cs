@@ -95,6 +95,8 @@ namespace MPF.GUI.ViewModels
                 Parent.EDC.Text = SubmissionInfo.EDC.EDC.LongName();
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.Header))
                 Parent.Header.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalSerialName) != true)
+                Parent.InternalSerialName.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CopyProtection?.LibCrypt == null)
                 Parent.LibCrypt.Visibility = Visibility.Collapsed;
             else
@@ -111,6 +113,8 @@ namespace MPF.GUI.ViewModels
                 Parent.SecuROMData.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.SecuritySectorRanges))
                 Parent.SecuritySectorRanges.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.VolumeLabel) != true)
+                Parent.VolumeLabel.Visibility = Visibility.Collapsed;
 
             // Different media types mean different fields available
             switch (SubmissionInfo?.CommonDiscInfo?.Media)
@@ -284,7 +288,7 @@ namespace MPF.GUI.ViewModels
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Series))
                     Parent.SeriesTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Series];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
-                    Parent.VolumeLabelTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel];
+                    Parent.VolumeLabel.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VCD))
                     Parent.VCDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VCD];
 
@@ -396,7 +400,7 @@ namespace MPF.GUI.ViewModels
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PostgapType] = Parent.PostgapTypeTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Series] = Parent.SeriesTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = Parent.VolumeLabelTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = Parent.VolumeLabel.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VCD] = Parent.VCDTextBox.Text;
 
             // Media Identifiers

@@ -260,7 +260,7 @@
                             <controls:UserInput x:Name="PVD" Label="PVD" Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
                             <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
                             <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="50" TextWrapping="NoWrap" VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
-                            <controls:UserInput x:Name="VolumeLabelTextBox" Label="Volume Label" IsEnabled="False"/>
+                            <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsEnabled="False"/>
 
                             <!-- TODO: Add track/checksum data once there's a reasonable way to do so -->
                         </StackPanel>
