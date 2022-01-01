@@ -1396,9 +1396,13 @@ namespace MPF.Library
                 string oldComments = info.CommonDiscInfo.Comments
                     + (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
                     + WebUtility.HtmlDecode(match.Groups[1].Value)
-                        .Replace("<br />", "\n")
+                        .Replace("\r\n", "\n")
+                        .Replace("<br />\n", "<br />")
+                        .Replace("<br />", string.Empty)
+                        .Replace("</div>", string.Empty)
                         .Replace("[+]", string.Empty)
                         .ReplaceHtmlWithSiteCodes();
+                oldComments = Regex.Replace(oldComments, @"<div .*?>", string.Empty);
 
                 // Create state variables
                 bool addToLast = false;
@@ -1492,7 +1496,9 @@ namespace MPF.Library
                 string oldContents = info.CommonDiscInfo.Contents
                     + (string.IsNullOrEmpty(info.CommonDiscInfo.Contents) ? string.Empty : "\n")
                     + WebUtility.HtmlDecode(match.Groups[1].Value)
-                        .Replace("<br />", "\n")
+                        .Replace("\r\n", "\n")
+                        .Replace("<br />\n", "<br />")
+                        .Replace("<br />", string.Empty)
                         .Replace("</div>", string.Empty)
                         .Replace("[+]", string.Empty)
                         .ReplaceHtmlWithSiteCodes();
