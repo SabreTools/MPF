@@ -79,7 +79,7 @@ namespace RedumpLib.Data
                 DumpersAndStatus = this.DumpersAndStatus?.Clone() as DumpersAndStatusSection,
                 TracksAndWriteOffsets = this.TracksAndWriteOffsets?.Clone() as TracksAndWriteOffsetsSection,
                 SizeAndChecksums = this.SizeAndChecksums?.Clone() as SizeAndChecksumsSection,
-                Artifacts = this.Artifacts.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                Artifacts = this.Artifacts?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
             };
         }
     }
