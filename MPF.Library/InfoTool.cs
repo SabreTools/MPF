@@ -51,9 +51,6 @@ namespace MPF.Library
             if (!system.MediaTypes().Contains(mediaType))
                 return null;
 
-            // Sanitize the output filename to strip off any potential extension
-            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-
             // Check that all of the relevant files are there
             (bool foundFiles, List<string> missingFiles) = FoundAllFiles(outputDirectory, outputFilename, parameters, false);
             if (!foundFiles)
@@ -61,6 +58,9 @@ namespace MPF.Library
                 resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
                 return null;
             }
+
+            // Sanitize the output filename to strip off any potential extension
+            outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Create the SubmissionInfo object with all user-inputted values by default
             string combinedBase = Path.Combine(outputDirectory, outputFilename);

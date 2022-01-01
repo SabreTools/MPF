@@ -14,6 +14,7 @@
 - Add model for 2-layer ringcode guide
 - Add first attempt 2-layer ringcode guide
 - Add even more safety to clone
+- Sanitize filename after check
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
