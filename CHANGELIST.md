@@ -17,6 +17,7 @@
 - Sanitize filename after check
 - Handle pulled linebreaks better
 - Skip anti-modchip string in some cases
+- Handle pulled linebreaks better, again
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
