@@ -16,6 +16,7 @@
 - Add even more safety to clone
 - Sanitize filename after check
 - Handle pulled linebreaks better
+- Skip anti-modchip string in some cases
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

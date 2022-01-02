@@ -361,7 +361,8 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (drive != null)
+                    // Only check the disc if the dumping program couldn't detect
+                    if (drive != null && info.CopyProtection.AntiModchip == YesNo.NULL)
                     {
                         resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
                         info.CopyProtection.AntiModchip = await GetAntiModchipDetected(drive) ? YesNo.Yes : YesNo.No;
