@@ -18,6 +18,7 @@
 - Handle pulled linebreaks better
 - Skip anti-modchip string in some cases
 - Handle pulled linebreaks better, again
+- Tweak more Disc Info window formatting
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
