@@ -22,6 +22,7 @@
 - Skip unnecessary newlines in parsing
 - Force scroll visibility, tweak text sizes again
 - Fix newline skipping
+- Add missing continue statement
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

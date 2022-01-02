@@ -1439,6 +1439,8 @@ namespace MPF.Library
                         {
                             newComments += $"{commentLine}\n";
                         }
+
+                        continue;;
                     }
 
                     // Otherwise, we need to find what tag is in use
