@@ -267,27 +267,27 @@
                             <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsEnabled="False"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.EXEDateBuildDate, Mode=TwoWay}"/>
                             <controls:UserInput x:Name="Header" Label="Header" IsEnabled="False"
-                                                Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="100" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto"/>
+                                                Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
                             <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsEnabled="False"/>
                             <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsEnabled="False"/>
                             <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsEnabled="False"
-                                                Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="100" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
+                                                Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
                             <controls:UserInput x:Name="PIC" Label="PIC" IsEnabled="False"
-                                                Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="100" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" />
+                                                Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
                             <controls:UserInput x:Name="Protection" Label="Protection" IsEnabled="False"
                                                 Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}"/>
                             <controls:UserInput x:Name="PVD" Label="PVD" IsEnabled="False"
-                                                Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="100" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto"/>
+                                                Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
                             <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsEnabled="False"
-                                                Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="100" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto"/>
+                                                Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
                             <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsEnabled="False"
-                                                Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="100" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto"/>
+                                                Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
                             <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsEnabled="False"/>
 
                             <!-- TODO: Add track/checksum data once there's a reasonable way to do so -->

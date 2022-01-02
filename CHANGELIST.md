@@ -20,6 +20,7 @@
 - Handle pulled linebreaks better, again
 - Tweak more Disc Info window formatting
 - Skip unnecessary newlines in parsing
+- Force scroll visibility, tweak text sizes again
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
