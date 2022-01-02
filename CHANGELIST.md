@@ -21,6 +21,7 @@
 - Tweak more Disc Info window formatting
 - Skip unnecessary newlines in parsing
 - Force scroll visibility, tweak text sizes again
+- Fix newline skipping
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

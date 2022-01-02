@@ -1429,11 +1429,16 @@ namespace MPF.Library
                     if (!commentLine.Contains("[T:"))
                     {
                         if (addToLast && lastSiteCode != null)
-                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += $"\n{commentLine}";
+                        {
+                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode]))
+                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += "\n";
+                            
+                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += commentLine;
+                        }
                         else
+                        {
                             newComments += $"{commentLine}\n";
-
-                        continue;
+                        }
                     }
 
                     // Otherwise, we need to find what tag is in use
@@ -1449,12 +1454,8 @@ namespace MPF.Library
 
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
-                        {
-                            string strippedLine = commentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
-                            if (!string.IsNullOrWhiteSpace(strippedLine))
-                                info.CommonDiscInfo.CommentsSpecialFields[siteCode] = strippedLine;
-                        }
-                        
+                            info.CommonDiscInfo.CommentsSpecialFields[siteCode] = commentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+
                         // A subset of tags can be multiline
                         switch (siteCode)
                         {
@@ -1533,9 +1534,16 @@ namespace MPF.Library
                     if (!contentLine.Contains("[T:"))
                     {
                         if (addToLast && lastSiteCode != null)
-                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += $"\n{contentLine}";
+                        {
+                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode]))
+                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += "\n";
+
+                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += contentLine;
+                        }
                         else
+                        {
                             newContents += $"{contentLine}\n";
+                        }
 
                         continue;
                     }
@@ -1553,11 +1561,7 @@ namespace MPF.Library
 
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode))
-                        {
-                            string strippedLine = contentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
-                            if (!string.IsNullOrWhiteSpace(strippedLine))
-                                info.CommonDiscInfo.ContentsSpecialFields[siteCode] = strippedLine;
-                        }
+                            info.CommonDiscInfo.ContentsSpecialFields[siteCode] = contentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
 
                         // A subset of tags can be multiline
                         switch (siteCode)
