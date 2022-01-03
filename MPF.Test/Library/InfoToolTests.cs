@@ -100,7 +100,7 @@ namespace MPF.Test.Library
 
             // Validate the lines
             Assert.Equal(3, splitComments.Length);
-            Assert.Equal(3, splitContents.Length);
+            Assert.Equal(5, splitContents.Length);
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace MPF.Test.Library
 
             // Validate the lines
             Assert.Single(splitComments);
-            Assert.Single(splitContents);
+            Assert.Equal(2, splitContents.Length);
         }
 
         [Fact]
