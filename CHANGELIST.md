@@ -23,6 +23,7 @@
 - Force scroll visibility, tweak text sizes again
 - Fix newline skipping
 - Add missing continue statement
+- Add newlines for mutliline special fields
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

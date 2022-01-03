@@ -877,7 +877,7 @@ namespace MPF.Library
                 info.CommonDiscInfo.Comments = string.Join(
                     "\n", info.CommonDiscInfo.CommentsSpecialFields
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
-                        .Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
+                        .Select(kvp => $"{kvp.Key.ShortName()}{(IsMultiLine(kvp.Key) ? "\n" : " ")}{kvp.Value}{(IsMultiLine(kvp.Key) ? "\n" : string.Empty)}")
                 ) + "\n" + info.CommonDiscInfo.Comments;
 
                 // Trim the comments field
@@ -898,7 +898,7 @@ namespace MPF.Library
                 info.CommonDiscInfo.Contents = string.Join(
                     "\n", info.CommonDiscInfo.ContentsSpecialFields
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
-                        .Select(kvp => $"{kvp.Key.ShortName()} {kvp.Value}")
+                        .Select(kvp => $"{kvp.Key.ShortName()}{(IsMultiLine(kvp.Key) ? "\n" : " ")}{kvp.Value}{(IsMultiLine(kvp.Key) ? "\n" : string.Empty)}")
                 ) + "\n" + info.CommonDiscInfo.Contents;
 
                 // Trim the contents field
@@ -1459,23 +1459,7 @@ namespace MPF.Library
                             info.CommonDiscInfo.CommentsSpecialFields[siteCode] = commentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
 
                         // A subset of tags can be multiline
-                        switch (siteCode)
-                        {
-                            case SiteCode.Extras:
-                            case SiteCode.GameFootage:
-                            case SiteCode.NetYarozeGames:
-                            case SiteCode.Patches:
-                            case SiteCode.PlayableDemos:
-                            case SiteCode.RollingDemos:
-                            case SiteCode.Savegames:
-                            case SiteCode.TechDemos:
-                            case SiteCode.Videos:
-                                addToLast = true;
-                                break;
-                            default:
-                                addToLast = false;
-                                break;
-                        }
+                        addToLast = IsMultiLine(siteCode);
 
                         // Mark as having found a tag
                         foundTag = true;
@@ -1566,23 +1550,7 @@ namespace MPF.Library
                             info.CommonDiscInfo.ContentsSpecialFields[siteCode] = contentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
 
                         // A subset of tags can be multiline
-                        switch (siteCode)
-                        {
-                            case SiteCode.Extras:
-                            case SiteCode.GameFootage:
-                            case SiteCode.NetYarozeGames:
-                            case SiteCode.Patches:
-                            case SiteCode.PlayableDemos:
-                            case SiteCode.RollingDemos:
-                            case SiteCode.Savegames:
-                            case SiteCode.TechDemos:
-                            case SiteCode.Videos:
-                                addToLast = true;
-                                break;
-                            default:
-                                addToLast = false;
-                                break;
-                        }
+                        addToLast = IsMultiLine(siteCode);
 
                         // Mark as having found a tag
                         foundTag = true;
@@ -1684,6 +1652,31 @@ namespace MPF.Library
                     info.MatchedIDs = new List<int> { info.MatchedIDs[i] };
                     break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Check if a site code is multi-line or not
+        /// </summary>
+        /// <param name="siteCode">SiteCode to check</param>
+        /// <returns>True if the code field is multiline by default, false otherwise</returns>
+        /// <remarks>TODO: This should move to Extensions at some point</remarks>
+        private static bool IsMultiLine(SiteCode? siteCode)
+        {
+            switch (siteCode)
+            {
+                case SiteCode.Extras:
+                case SiteCode.GameFootage:
+                case SiteCode.NetYarozeGames:
+                case SiteCode.Patches:
+                case SiteCode.PlayableDemos:
+                case SiteCode.RollingDemos:
+                case SiteCode.Savegames:
+                case SiteCode.TechDemos:
+                case SiteCode.Videos:
+                    return true;
+                default:
+                    return false;
             }
         }
 
