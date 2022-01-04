@@ -24,6 +24,7 @@
 - Fix newline skipping
 - Add missing continue statement
 - Add newlines for mutliline special fields
+- Omit volume label for "Audio CD"
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
