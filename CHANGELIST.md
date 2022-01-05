@@ -26,6 +26,7 @@
 - Add newlines for mutliline special fields
 - Omit volume label for "Audio CD"
 - Remove Enter/Escape registration on disc info window
+- Logically group more things in disc info window
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

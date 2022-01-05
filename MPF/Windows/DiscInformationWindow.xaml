@@ -68,12 +68,17 @@
                         Style="{DynamicResource CustomTabControlStyle}">
                 <TabItem x:Name="CommonInfo" Header="Common Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel Orientation="Vertical">
-                        <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Common Disc Information" IsExpanded="True">
+                        <Expander Header="Common Disc Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
-                                <controls:UserInput Label="Title" Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
-                                <controls:UserInput Label="Foreign Title (Non-Latin)"  Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
-                                <controls:UserInput Label="Disc Number / Letter" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
-                                <controls:UserInput Label="Disc Title" Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Title"
+                                                    Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Foreign Title (Non-Latin)" 
+                                                    Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Disc Number / Letter"
+                                                    Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
+                                <controls:UserInput Label="Disc Title"
+                                                    Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
 
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -135,7 +140,8 @@
                                 <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
                             </StackPanel>
                         </Expander>
-                        <Expander Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Version and Editions" IsExpanded="True">
+                        <Expander Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
                                 <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
                                 <controls:UserInput Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
@@ -145,115 +151,149 @@
                 </TabItem>
 
                 <TabItem x:Name="AdditionalInformation" Header="Additional Information" Style="{DynamicResource CustomTabItemStyle}">
-                    <StackPanel Orientation="Vertical">
-                        <controls:UserInput Label="Generic"
-                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
-                                            Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                        <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
-                        <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
-                        <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
-                        <controls:UserInput x:Name="PostgapTypeTextBox" Label="Postgap type (Form 2)"/> <!-- Should be boolean -->
-                        <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
-                        <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/>  <!-- Should be boolean -->
-                    </StackPanel>
-                </TabItem>
-
-                <TabItem x:Name="MediaIdentifiers" Header="Media Identifiers" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                         <StackPanel Orientation="Vertical" MaxHeight="375">
-                            <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
-                            <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"/>
-                            <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"/>
-                            <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
-                            <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
-                            <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"/>
-                            <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"/>
-                            <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"/>
-                            <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
-                            <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
-                            <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"/>
-                            <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"/>
-                            <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"/>
-                            <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID"/>
-                            <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID"/>
-                            <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID"/>
-                            <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID"/>
-                            <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID"/>
-                            <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID"/>
-                            <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"/>
-                            <controls:UserInput x:Name="PPNTextBox" Label="PPN"/>
-                            <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"/>
-                            <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"/>
-                            <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"/>
-                            <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"/>
-                            <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"/>
-                            <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"/>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
-
-                <TabItem x:Name="ContentInformation" Header="Content Information" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="375">
-                            <controls:UserInput Label="Generic"
+                            <Expander Header="Content" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
+                                    <StackPanel Orientation="Vertical" MaxHeight="375">
+                                        <controls:UserInput Label="Contents"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
-                                                Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
-                                                Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
-                                                Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games"
-                                                TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
-                                                Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos"
-                                                TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos"
-                                                TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames"
-                                                TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos"
-                                                TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="VideosTextBox" Label="Videos"
-                                                TextHeight="50" Tab="True" Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                        <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Expander>
+                            <Expander Header="Media Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
+
+                                    <StackPanel Orientation="Vertical" MaxHeight="375">
+                                        <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
+                                        <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"/>
+                                        <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"/>
+                                        <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
+                                        <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
+                                        <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"/>
+                                        <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"/>
+                                        <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"/>
+                                        <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
+                                        <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
+                                        <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"/>
+                                        <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"/>
+                                        <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"/>
+                                        <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID"/>
+                                        <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID"/>
+                                        <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID"/>
+                                        <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID"/>
+                                        <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID"/>
+                                        <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID"/>
+                                        <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"/>
+                                        <controls:UserInput x:Name="PPNTextBox" Label="PPN"/>
+                                        <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"/>
+                                        <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"/>
+                                        <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"/>
+                                        <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"/>
+                                        <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"/>
+                                        <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"/>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Expander>
+                            <Expander Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <StackPanel Orientation="Vertical" MaxHeight="375">
+                                    <controls:UserInput Label="Comments"
+                                                        Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
+                                                        Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
+                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
+                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
+                                    <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
+                                    <controls:UserInput x:Name="PostgapTypeTextBox" Label="Postgap type (Form 2)"/> <!-- Should be boolean -->
+                                    <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
+                                    <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/> <!-- Should be boolean -->
+                                </StackPanel>
+                            </Expander>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem x:Name="L0Info" Header="Data/L0 Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}" Tab="True"/>
-                        <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringSID, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MouldSID, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould, Mode=TwoWay}"/>
-                    </StackPanel>
-                </TabItem>
+                <TabItem x:Name="RingcodeInfo" Header="Ringcode Information" Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
+                        <StackPanel Orientation="Vertical" MaxHeight="375">
+                            <Expander x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L0MasteringSID" Label="Data/L0 Mastering SID"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L0Toolstamp" Label="Data/L0 Toolstamp/Mastering Code"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0ToolstampMasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L0MouldSID" Label="Data/L0 Mould SID"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MouldSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </Expander>
 
-                <TabItem x:Name="L1Info" Header="Label/L1 Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}" Tab="True"/>
-                        <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringSID, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MouldSID, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould, Mode=TwoWay}"/>
-                    </StackPanel>
-                </TabItem>
+                            <Expander x:Name="L1Info" Header="Label/L1 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L1MasteringSID" Label="Label/L1 Mastering SID"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L1Toolstamp" Label="Label/L1 Toolstamp/Mastering Code"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1ToolstampMasteringCode, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L1MouldSID" Label="Label/L1 Mould SID"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MouldSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </Expander>
 
-                <TabItem x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Style="{DynamicResource CustomTabItemStyle}">
-                    <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}" Tab="True"/>
-                        <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringSID, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode, Mode=TwoWay}"/>
-                    </StackPanel>
-                </TabItem>
+                            <Expander x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L2MasteringSID" Label="L2 Mastering SID"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </Expander>
 
-                <TabItem x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Style="{DynamicResource CustomTabItemStyle}">
-                    <StackPanel Orientation="Vertical">
-                        <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}" Tab="True"/>
-                        <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringSID, Mode=TwoWay}"/>
-                        <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code" Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode, Mode=TwoWay}"/>
-                    </StackPanel>
+                            <Expander x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L3MasteringSID" Label="L3 Mastering SID"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringSID, Mode=TwoWay}"/>
+                                    <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code"
+                                            Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
 
                 <TabItem x:Name="ReadOnlyInfo" Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
