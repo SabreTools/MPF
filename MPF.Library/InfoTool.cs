@@ -992,6 +992,9 @@ namespace MPF.Library
             for (int i = 0; i < indent; i++)
                 prefix += "\t";
 
+            // Convert to tabs
+            value = value.Replace("<tab>", "\t");
+
             // If the value contains a newline
             value = value.Replace("\r\n", "\n");
             if (value.Contains("\n"))

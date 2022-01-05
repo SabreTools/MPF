@@ -27,6 +27,8 @@
 - Omit volume label for "Audio CD"
 - Remove Enter/Escape registration on disc info window
 - Logically group more things in disc info window
+- Remove tab key from disc info window
+- Add `<tab>` processing
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
