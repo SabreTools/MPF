@@ -30,6 +30,7 @@
 - Remove tab key from disc info window
 - Add `<tab>` processing
 - Unban newly opened consoles
+- Tweak minimalized layout a bit more
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

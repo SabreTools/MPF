@@ -15,7 +15,7 @@
     </WindowChrome.WindowChrome>
     
     <Grid>
-        <StackPanel Orientation="Vertical" Width="500" MaxHeight="550">
+        <StackPanel Orientation="Vertical" Width="500" MaxHeight="650">
             <Grid Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="25"/>
@@ -73,8 +73,10 @@
                             <StackPanel Orientation="Vertical">
                                 <controls:UserInput Label="Title"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
+                                <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
                                 <controls:UserInput Label="Foreign Title (Non-Latin)" 
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
+                                <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
                                 <controls:UserInput Label="Disc Number / Letter"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
                                 <controls:UserInput Label="Disc Title"
@@ -140,6 +142,7 @@
                                 <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
                             </StackPanel>
                         </Expander>
+                        
                         <Expander Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                             <StackPanel Orientation="Vertical">
@@ -152,12 +155,27 @@
 
                 <TabItem x:Name="AdditionalInformation" Header="Additional Information" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="375">
+                        <StackPanel Orientation="Vertical" MaxHeight="500">
+                            <Expander Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                <StackPanel Orientation="Vertical" MaxHeight="375">
+                                    <controls:UserInput Label="Comments"
+                                                        Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
+                                                        Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
+                                    <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
+                                    <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
+                                    <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
+                                    <controls:UserInput x:Name="PostgapTypeTextBox" Label="Postgap type (Form 2)"/> <!-- Should be boolean -->
+                                    <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
+                                    <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/> <!-- Should be boolean -->
+                                </StackPanel>
+                            </Expander>
+                            
                             <Expander Header="Content" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                                 <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                                     <StackPanel Orientation="Vertical" MaxHeight="375">
-                                        <controls:UserInput Label="Contents"
+                                        <controls:UserInput Label="General"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                                         <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
@@ -181,10 +199,10 @@
                                     </StackPanel>
                                 </ScrollViewer>
                             </Expander>
-                            <Expander Header="Media Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            
+                            <Expander Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                                 <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-
                                     <StackPanel Orientation="Vertical" MaxHeight="375">
                                         <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
                                         <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"/>
@@ -194,8 +212,6 @@
                                         <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"/>
                                         <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"/>
                                         <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"/>
-                                        <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
-                                        <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
                                         <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"/>
                                         <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"/>
                                         <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"/>
@@ -216,27 +232,13 @@
                                     </StackPanel>
                                 </ScrollViewer>
                             </Expander>
-                            <Expander Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
-                                <StackPanel Orientation="Vertical" MaxHeight="375">
-                                    <controls:UserInput Label="Comments"
-                                                        Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
-                                                        Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
-                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
-                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
-                                    <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
-                                    <controls:UserInput x:Name="PostgapTypeTextBox" Label="Postgap type (Form 2)"/> <!-- Should be boolean -->
-                                    <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
-                                    <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/> <!-- Should be boolean -->
-                                </StackPanel>
-                            </Expander>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 
                 <TabItem x:Name="RingcodeInfo" Header="Ringcode Information" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="375">
+                        <StackPanel Orientation="Vertical" MaxHeight="500">
                             <Expander x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                                 <StackPanel Orientation="Vertical">
