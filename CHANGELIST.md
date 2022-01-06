@@ -31,6 +31,7 @@
 - Add `<tab>` processing
 - Unban newly opened consoles
 - Tweak minimalized layout a bit more
+- Add tab setting
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

@@ -270,6 +270,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Enable tabs in all input fields
+        /// </summary>
+        public bool EnableTabsInInputFields
+        {
+            get { return GetBooleanSetting(_settings, "EnableTabsInInputFields", false); }
+            set { _settings["EnableTabsInInputFields"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Show disc eject reminder before the disc information window is shown
         /// </summary>
         public bool ShowDiscEjectReminder

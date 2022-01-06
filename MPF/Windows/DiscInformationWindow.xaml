@@ -159,7 +159,7 @@
                             <Expander Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                                 <StackPanel Orientation="Vertical" MaxHeight="375">
-                                    <controls:UserInput Label="Comments"
+                                    <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
                                     <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
@@ -175,7 +175,7 @@
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
                                 <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                                     <StackPanel Orientation="Vertical" MaxHeight="375">
-                                        <controls:UserInput Label="General"
+                                        <controls:UserInput x:Name="GeneralContent" Label="General"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                                         <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"

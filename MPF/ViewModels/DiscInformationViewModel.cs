@@ -68,15 +68,52 @@ namespace MPF.GUI.ViewModels
         #region Helpers
 
         /// <summary>
-        /// Manipulate fields based on the current disc
+        /// Enable tab entry on supported fields
         /// </summary>
-        private void ManipulateFields()
+        private void EnableTabsInInputFields()
         {
-            // Sony-printed discs have layers in the opposite order
-            var system = SubmissionInfo?.CommonDiscInfo?.System;
-            bool reverseOrder = system.HasReversedRingcodes();
+            // Additional Information
+            Parent.CommentsTextBox.Tab = true;
+            Parent.GeneralContent.Tab = true;
+            Parent.ExtrasTextBox.Tab = true;
+            Parent.GameFootageTextBox.Tab = true;
+            Parent.NetYarozeGamesTextBox.Tab = true;
+            Parent.PatchesTextBox.Tab = true;
+            Parent.PlayableDemosTextBox.Tab = true;
+            Parent.RollingDemosTextBox.Tab = true;
+            Parent.SavegamesTextBox.Tab = true;
+            Parent.TechDemosTextBox.Tab = true;
 
-            // Hide read-only fields that don't have values set
+            // L0
+            Parent.L0MasteringRing.Tab = true;
+            Parent.L0MasteringSID.Tab = true;
+            Parent.L0Toolstamp.Tab = true;
+            Parent.L0MouldSID.Tab = true;
+            Parent.L0AdditionalMould.Tab = true;
+
+            // L1
+            Parent.L1MasteringRing.Tab = true;
+            Parent.L1MasteringSID.Tab = true;
+            Parent.L1Toolstamp.Tab = true;
+            Parent.L1MouldSID.Tab = true;
+            Parent.L1AdditionalMould.Tab = true;
+
+            // L2
+            Parent.L2MasteringRing.Tab = true;
+            Parent.L2MasteringSID.Tab = true;
+            Parent.L2Toolstamp.Tab = true;
+
+            // L3
+            Parent.L3MasteringRing.Tab = true;
+            Parent.L3MasteringSID.Tab = true;
+            Parent.L3Toolstamp.Tab = true;
+        }
+
+        /// <summary>
+        /// Hide any optional, read-only fields if they don't have a value
+        /// </summary>
+        private void HideReadOnlyFields()
+        {
             if (SubmissionInfo?.MatchedIDs == null)
                 Parent.MatchedIDs.Visibility = Visibility.Collapsed;
             else
@@ -115,146 +152,25 @@ namespace MPF.GUI.ViewModels
                 Parent.SecuritySectorRanges.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.VolumeLabel) != true)
                 Parent.VolumeLabel.Visibility = Visibility.Collapsed;
+        }
+
+        /// <summary>
+        /// Manipulate fields based on the current disc
+        /// </summary>
+        private void ManipulateFields()
+        {
+            // Enable tabs in all fields, if required
+            if (App.Options.EnableTabsInInputFields)
+                EnableTabsInInputFields();
+
+            // Hide read-only fields that don't have values set
+            HideReadOnlyFields();
 
             // Different media types mean different fields available
-            switch (SubmissionInfo?.CommonDiscInfo?.Media)
-            {
-                case DiscType.CD:
-                case DiscType.GDROM:
-                    Parent.L0Info.Header = "Data Side";
-                    Parent.L0MasteringRing.Label = "Mastering Ring";
-                    Parent.L0MasteringSID.Label = "Mastering SID";
-                    Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                    Parent.L0MouldSID.Label = "Mould SID";
-                    Parent.L0AdditionalMould.Label = "Additional Mould";
-
-                    Parent.L1Info.Header = "Label Side";
-                    Parent.L1MasteringRing.Visibility = Visibility.Collapsed;
-                    Parent.L1MasteringSID.Visibility = Visibility.Collapsed;
-                    Parent.L1Toolstamp.Visibility = Visibility.Collapsed;
-                    Parent.L1MouldSID.Label = "Mould SID";
-                    Parent.L1AdditionalMould.Label = "Additional Mould";
-                    break;
-
-                case DiscType.DVD5:
-                case DiscType.DVD9:
-                case DiscType.HDDVDSL:
-                case DiscType.BD25:
-                case DiscType.BD50:
-                case DiscType.NintendoGameCubeGameDisc:
-                case DiscType.NintendoWiiOpticalDiscSL:
-                case DiscType.NintendoWiiOpticalDiscDL:
-                case DiscType.NintendoWiiUOpticalDiscSL:
-                    // Quad-layer discs
-                    if (SubmissionInfo?.SizeAndChecksums?.Layerbreak3 != default(long))
-                    {
-                        Parent.L2Info.Visibility = Visibility.Visible;
-                        Parent.L3Info.Visibility = Visibility.Visible;
-
-                        Parent.L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                        Parent.L0MasteringRing.Label = "Mastering Ring";
-                        Parent.L0MasteringSID.Label = "Mastering SID";
-                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L0MouldSID.Label = "Data Side Mould SID";
-                        Parent.L0AdditionalMould.Label = "Data Side Additional Mould";
-
-                        Parent.L1Info.Header = "Layer 1";
-                        Parent.L1MasteringRing.Label = "Mastering Ring";
-                        Parent.L1MasteringSID.Label = "Mastering SID";
-                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L1MouldSID.Label = "Label Side Mould SID";
-                        Parent.L1AdditionalMould.Label = "Label Side Additional Mould";
-
-                        Parent.L2Info.Header = "Layer 2";
-                        Parent.L2MasteringRing.Label = "Mastering Ring";
-                        Parent.L2MasteringSID.Label = "Mastering SID";
-                        Parent.L2Toolstamp.Label = "Toolstamp/Mastering Code";
-
-                        Parent.L3Info.Header = reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)";
-                        Parent.L3MasteringRing.Label = "Mastering Ring";
-                        Parent.L3MasteringSID.Label = "Mastering SID";
-                        Parent.L3Toolstamp.Label = "Toolstamp/Mastering Code";
-                    }
-
-                    // Triple-layer discs
-                    else if (SubmissionInfo?.SizeAndChecksums?.Layerbreak2 != default(long))
-                    {
-                        Parent.L2Info.Visibility = Visibility.Visible;
-
-                        Parent.L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                        Parent.L0MasteringRing.Label = "Mastering Ring";
-                        Parent.L0MasteringSID.Label = "Mastering SID";
-                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L0MouldSID.Label = "Data Side Mould SID";
-                        Parent.L0AdditionalMould.Label = "Data Side Additional Mould";
-
-                        Parent.L1Info.Header = "Layer 1";
-                        Parent.L1MasteringRing.Label = "Mastering Ring";
-                        Parent.L1MasteringSID.Label = "Mastering SID";
-                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L1MouldSID.Label = "Label Side Mould SID";
-                        Parent.L1AdditionalMould.Label = "Label Side Additional Mould";
-
-                        Parent.L2Info.Header = reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)";
-                        Parent.L2MasteringRing.Label = "Mastering Ring";
-                        Parent.L2MasteringSID.Label = "Mastering SID";
-                        Parent.L2Toolstamp.Label = "Toolstamp/Mastering Code";
-                    }
-
-                    // Double-layer discs
-                    else if (SubmissionInfo?.SizeAndChecksums?.Layerbreak != default(long))
-                    {
-                        Parent.L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
-                        Parent.L0MasteringRing.Label = "Mastering Ring";
-                        Parent.L0MasteringSID.Label = "Mastering SID";
-                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L0MouldSID.Label = "Data Side Mould SID";
-                        Parent.L0AdditionalMould.Label = "Data Side Additional Mould";
-
-                        Parent.L1Info.Header = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
-                        Parent.L1MasteringRing.Label = "Mastering Ring";
-                        Parent.L1MasteringSID.Label = "Mastering SID";
-                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L1MouldSID.Label = "Label Side Mould SID";
-                        Parent.L1AdditionalMould.Label = "Label Side Additional Mould";
-                    }
-
-                    // Single-layer discs
-                    else
-                    {
-                        Parent.L0Info.Header = "Data Side";
-                        Parent.L0MasteringRing.Label = "Mastering Ring";
-                        Parent.L0MasteringSID.Label = "Mastering SID";
-                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L0MouldSID.Label = "Mould SID";
-                        Parent.L0AdditionalMould.Label = "Additional Mould";
-
-                        Parent.L1Info.Header = "Label Side";
-                        Parent.L1MasteringRing.Label = "Mastering Ring";
-                        Parent.L1MasteringSID.Label = "Mastering SID";
-                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
-                        Parent.L1MouldSID.Label = "Mould SID";
-                        Parent.L1AdditionalMould.Label = "Additional Mould";
-                    }
-
-                    break;
-
-                // All other media we assume to have no rings
-                default:
-                    Parent.L0Info.Visibility = Visibility.Collapsed;
-                    Parent.L1Info.Visibility = Visibility.Collapsed;
-                    Parent.L2Info.Visibility = Visibility.Collapsed;
-                    Parent.L3Info.Visibility = Visibility.Collapsed;
-                    break;
-            }
+            UpdateFromDiscType();
 
             // Different systems mean different fields available
-            switch (system)
-            {
-                case RedumpSystem.SonyPlayStation2:
-                    Parent.LanguageSelectionGrid.Visibility = Visibility.Visible;
-                    break;
-            }
+            UpdateFromSystemType();
         }
 
         /// <summary>
@@ -442,6 +358,161 @@ namespace MPF.GUI.ViewModels
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Savegames] = Parent.SavegamesTextBox.Text;
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.TechDemos] = Parent.TechDemosTextBox.Text;
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Videos] = Parent.VideosTextBox.Text;
+        }
+
+        /// <summary>
+        /// Update visible fields and sections based on the media type
+        /// </summary>
+        private void UpdateFromDiscType()
+        {
+            // Sony-printed discs have layers in the opposite order
+            var system = SubmissionInfo?.CommonDiscInfo?.System;
+            bool reverseOrder = system.HasReversedRingcodes();
+
+            switch (SubmissionInfo?.CommonDiscInfo?.Media)
+            {
+                case DiscType.CD:
+                case DiscType.GDROM:
+                    Parent.L0Info.Header = "Data Side";
+                    Parent.L0MasteringRing.Label = "Mastering Ring";
+                    Parent.L0MasteringSID.Label = "Mastering SID";
+                    Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                    Parent.L0MouldSID.Label = "Mould SID";
+                    Parent.L0AdditionalMould.Label = "Additional Mould";
+
+                    Parent.L1Info.Header = "Label Side";
+                    Parent.L1MasteringRing.Visibility = Visibility.Collapsed;
+                    Parent.L1MasteringSID.Visibility = Visibility.Collapsed;
+                    Parent.L1Toolstamp.Visibility = Visibility.Collapsed;
+                    Parent.L1MouldSID.Label = "Mould SID";
+                    Parent.L1AdditionalMould.Label = "Additional Mould";
+                    break;
+
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                case DiscType.HDDVDSL:
+                case DiscType.BD25:
+                case DiscType.BD50:
+                case DiscType.NintendoGameCubeGameDisc:
+                case DiscType.NintendoWiiOpticalDiscSL:
+                case DiscType.NintendoWiiOpticalDiscDL:
+                case DiscType.NintendoWiiUOpticalDiscSL:
+                    // Quad-layer discs
+                    if (SubmissionInfo?.SizeAndChecksums?.Layerbreak3 != default(long))
+                    {
+                        Parent.L2Info.Visibility = Visibility.Visible;
+                        Parent.L3Info.Visibility = Visibility.Visible;
+
+                        Parent.L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        Parent.L0MasteringRing.Label = "Mastering Ring";
+                        Parent.L0MasteringSID.Label = "Mastering SID";
+                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L0MouldSID.Label = "Data Side Mould SID";
+                        Parent.L0AdditionalMould.Label = "Data Side Additional Mould";
+
+                        Parent.L1Info.Header = "Layer 1";
+                        Parent.L1MasteringRing.Label = "Mastering Ring";
+                        Parent.L1MasteringSID.Label = "Mastering SID";
+                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L1MouldSID.Label = "Label Side Mould SID";
+                        Parent.L1AdditionalMould.Label = "Label Side Additional Mould";
+
+                        Parent.L2Info.Header = "Layer 2";
+                        Parent.L2MasteringRing.Label = "Mastering Ring";
+                        Parent.L2MasteringSID.Label = "Mastering SID";
+                        Parent.L2Toolstamp.Label = "Toolstamp/Mastering Code";
+
+                        Parent.L3Info.Header = reverseOrder ? "Layer 3 (Inner)" : "Layer 3 (Outer)";
+                        Parent.L3MasteringRing.Label = "Mastering Ring";
+                        Parent.L3MasteringSID.Label = "Mastering SID";
+                        Parent.L3Toolstamp.Label = "Toolstamp/Mastering Code";
+                    }
+
+                    // Triple-layer discs
+                    else if (SubmissionInfo?.SizeAndChecksums?.Layerbreak2 != default(long))
+                    {
+                        Parent.L2Info.Visibility = Visibility.Visible;
+
+                        Parent.L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        Parent.L0MasteringRing.Label = "Mastering Ring";
+                        Parent.L0MasteringSID.Label = "Mastering SID";
+                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L0MouldSID.Label = "Data Side Mould SID";
+                        Parent.L0AdditionalMould.Label = "Data Side Additional Mould";
+
+                        Parent.L1Info.Header = "Layer 1";
+                        Parent.L1MasteringRing.Label = "Mastering Ring";
+                        Parent.L1MasteringSID.Label = "Mastering SID";
+                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L1MouldSID.Label = "Label Side Mould SID";
+                        Parent.L1AdditionalMould.Label = "Label Side Additional Mould";
+
+                        Parent.L2Info.Header = reverseOrder ? "Layer 2 (Inner)" : "Layer 2 (Outer)";
+                        Parent.L2MasteringRing.Label = "Mastering Ring";
+                        Parent.L2MasteringSID.Label = "Mastering SID";
+                        Parent.L2Toolstamp.Label = "Toolstamp/Mastering Code";
+                    }
+
+                    // Double-layer discs
+                    else if (SubmissionInfo?.SizeAndChecksums?.Layerbreak != default(long))
+                    {
+                        Parent.L0Info.Header = reverseOrder ? "Layer 0 (Outer)" : "Layer 0 (Inner)";
+                        Parent.L0MasteringRing.Label = "Mastering Ring";
+                        Parent.L0MasteringSID.Label = "Mastering SID";
+                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L0MouldSID.Label = "Data Side Mould SID";
+                        Parent.L0AdditionalMould.Label = "Data Side Additional Mould";
+
+                        Parent.L1Info.Header = reverseOrder ? "Layer 1 (Inner)" : "Layer 1 (Outer)";
+                        Parent.L1MasteringRing.Label = "Mastering Ring";
+                        Parent.L1MasteringSID.Label = "Mastering SID";
+                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L1MouldSID.Label = "Label Side Mould SID";
+                        Parent.L1AdditionalMould.Label = "Label Side Additional Mould";
+                    }
+
+                    // Single-layer discs
+                    else
+                    {
+                        Parent.L0Info.Header = "Data Side";
+                        Parent.L0MasteringRing.Label = "Mastering Ring";
+                        Parent.L0MasteringSID.Label = "Mastering SID";
+                        Parent.L0Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L0MouldSID.Label = "Mould SID";
+                        Parent.L0AdditionalMould.Label = "Additional Mould";
+
+                        Parent.L1Info.Header = "Label Side";
+                        Parent.L1MasteringRing.Label = "Mastering Ring";
+                        Parent.L1MasteringSID.Label = "Mastering SID";
+                        Parent.L1Toolstamp.Label = "Toolstamp/Mastering Code";
+                        Parent.L1MouldSID.Label = "Mould SID";
+                        Parent.L1AdditionalMould.Label = "Additional Mould";
+                    }
+
+                    break;
+
+                // All other media we assume to have no rings
+                default:
+                    Parent.L0Info.Visibility = Visibility.Collapsed;
+                    Parent.L1Info.Visibility = Visibility.Collapsed;
+                    Parent.L2Info.Visibility = Visibility.Collapsed;
+                    Parent.L3Info.Visibility = Visibility.Collapsed;
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Update visible fields and sections based on the system type
+        /// </summary>
+        private void UpdateFromSystemType()
+        {
+            var system = SubmissionInfo?.CommonDiscInfo?.System;
+            switch (system)
+            {
+                case RedumpSystem.SonyPlayStation2:
+                    Parent.LanguageSelectionGrid.Visibility = Visibility.Visible;
+                    break;
+            }
         }
 
         #endregion
