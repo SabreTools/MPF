@@ -461,7 +461,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox", ShortName = "xbox", HasCues = true, HasDat = true)]
         MicrosoftXbox,
 
-        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox 360", ShortName = "xbox360", IsBanned = true, HasCues = true, HasDat = true)]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox 360", ShortName = "xbox360", HasCues = true, HasDat = true)]
         MicrosoftXbox360,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox One", ShortName = "xboxone", IsBanned = true, HasDat = true)]
@@ -485,7 +485,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, Available = false, LongName = "Nintendo-Sony Super NES CD-ROM System")]
         NintendoSonySuperNESCDROMSystem,
 
-        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Nintendo Wii", ShortName = "wii", IsBanned = true, HasDat = true)]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Nintendo Wii", ShortName = "wii", HasDat = true)]
         NintendoWii,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Nintendo Wii U", ShortName = "wiiu", IsBanned = true, HasDat = true, HasKeys = true)]
@@ -521,7 +521,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 2", ShortName = "ps2", HasCues = true, HasDat = true)]
         SonyPlayStation2,
 
-        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 3", ShortName = "ps3", IsBanned = true, HasCues = true, HasDat = true, HasDkeys = true, HasKeys = true)]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 3", ShortName = "ps3", HasCues = true, HasDat = true, HasDkeys = true, HasKeys = true)]
         SonyPlayStation3,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 4", ShortName = "ps4", IsBanned = true, HasDat = true)]
@@ -868,10 +868,10 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Sega Nu")]
         SegaNu,
 
-        [System(Category = SystemCategory.Arcade, LongName = "Sega RingEdge", ShortName = "sre", IsBanned = true, HasDat = true)]
+        [System(Category = SystemCategory.Arcade, LongName = "Sega RingEdge", ShortName = "sre", HasDat = true)]
         SegaRingEdge,
 
-        [System(Category = SystemCategory.Arcade, LongName = "Sega RingEdge 2", ShortName = "sre2", IsBanned = true, HasDat = true)]
+        [System(Category = SystemCategory.Arcade, LongName = "Sega RingEdge 2", ShortName = "sre2", HasDat = true)]
         SegaRingEdge2,
 
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Sega RingWide")]

@@ -29,6 +29,7 @@
 - Logically group more things in disc info window
 - Remove tab key from disc info window
 - Add `<tab>` processing
+- Unban newly opened consoles
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
