@@ -33,6 +33,7 @@
 - Tweak minimalized layout a bit more
 - Add tab setting
 - Further disc info window tweaks
+- Changed IsEnabled to IsReadOnly
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
