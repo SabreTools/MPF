@@ -153,7 +153,7 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem x:Name="AdditionalInformation" Header="Additional Information" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="Additional Info" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                         <StackPanel Orientation="Vertical" MaxHeight="500">
                             <Expander Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
@@ -170,38 +170,9 @@
                                     <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/> <!-- Should be boolean -->
                                 </StackPanel>
                             </Expander>
-                            
-                            <Expander Header="Content" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
-                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                                    <StackPanel Orientation="Vertical" MaxHeight="375">
-                                        <controls:UserInput x:Name="GeneralContent" Label="General"
-                                                Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                        <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </Expander>
-                            
+
                             <Expander Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="False">
                                 <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                                     <StackPanel Orientation="Vertical" MaxHeight="375">
                                         <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
@@ -236,7 +207,35 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem x:Name="RingcodeInfo" Header="Ringcode Information" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
+                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
+                        <StackPanel Orientation="Vertical" MaxHeight="500">
+                            <controls:UserInput x:Name="GeneralContent" Label="General"
+                                                Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Ringcodes" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                         <StackPanel Orientation="Vertical" MaxHeight="500">
                             <Expander x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
@@ -298,7 +297,7 @@
                     </ScrollViewer>
                 </TabItem>
 
-                <TabItem x:Name="ReadOnlyInfo" Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
+                <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
                         <StackPanel Orientation="Vertical" MaxHeight="375">
                             <controls:UserInput x:Name="MatchedIDs" Label="Matched ID(s)" IsEnabled="False"/>
