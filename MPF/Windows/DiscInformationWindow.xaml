@@ -67,7 +67,7 @@
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
                 <TabItem x:Name="CommonInfo" Header="Common Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <GroupBox Header="Common Disc Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -85,7 +85,7 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="0.75*" />
                                             <ColumnDefinition Width="1.25*" />
                                         </Grid.ColumnDefinitions>
 
@@ -96,7 +96,7 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="0.75*" />
                                             <ColumnDefinition Width="1.25*" />
                                         </Grid.ColumnDefinitions>
 
@@ -107,7 +107,7 @@
 
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="0.75*" />
                                             <ColumnDefinition Width="1.25*" />
                                         </Grid.ColumnDefinitions>
 
@@ -124,7 +124,7 @@
 
                                     <Grid x:Name="LanguageSelectionGrid" Visibility="Collapsed">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="0.75*" />
                                             <ColumnDefinition Width="1.25*" />
                                         </Grid.ColumnDefinitions>
 
@@ -156,7 +156,7 @@
                 </TabItem>
 
                 <TabItem Header="Additional Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <GroupBox Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -169,7 +169,7 @@
                                     <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="0.75*" />
                                             <ColumnDefinition Width="1.25*" />
                                         </Grid.ColumnDefinitions>
 
@@ -179,7 +179,7 @@
                                     <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="0.75*" />
                                             <ColumnDefinition Width="1.25*" />
                                         </Grid.ColumnDefinitions>
 
@@ -224,7 +224,7 @@
                 </TabItem>
 
                 <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <controls:UserInput x:Name="GeneralContent" Label="General"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
@@ -252,7 +252,7 @@
                 </TabItem>
 
                 <TabItem Header="Ringcodes" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <GroupBox x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
@@ -314,7 +314,7 @@
                 </TabItem>
 
                 <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                    <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
                             <controls:UserInput x:Name="MatchedIDs" Label="Matched ID(s)" IsReadOnly="True"/>
                             <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True"/>
