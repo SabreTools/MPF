@@ -39,6 +39,7 @@
 - Adjust width ratios for disc info window
 - Fix IsReadOnly
 - Only include booleans if the value is true
+- Add hidden debug option for "ShowDebugViewMenuItem"
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

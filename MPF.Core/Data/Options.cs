@@ -104,6 +104,16 @@ namespace MPF.Core.Data
             }
         }
 
+        /// <summary>
+        /// Default output path for dumps
+        /// </summary>
+        /// <remarks>This is a hidden setting</remarks>
+        public bool ShowDebugViewMenuItem
+        {
+            get { return GetBooleanSetting(_settings, "ShowDebugViewMenuItem", false); }
+            set { _settings["ShowDebugViewMenuItem"] = value.ToString(); }
+        }
+
         #endregion
 
         #region Dumping Speeds

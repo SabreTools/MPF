@@ -53,6 +53,10 @@
                                   Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
                                   Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                                   Template="{DynamicResource CustomMenuItemTemplate}" />
+                            <MenuItem x:Name="DebugViewMenuItem" Header="_Debug Info Window" HorizontalAlignment="Left" Width="185"
+                                      Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
+                                      Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
+                                      Template="{DynamicResource CustomMenuItemTemplate}" Visibility="Collapsed" />
                         </MenuItem>
                         <MenuItem x:Name="HelpMenuItem" Header="_Help"
                               Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
