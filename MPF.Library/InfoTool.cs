@@ -881,7 +881,17 @@ namespace MPF.Library
                 info.CommonDiscInfo.Comments = string.Join(
                     "\n", info.CommonDiscInfo.CommentsSpecialFields
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
-                        .Select(kvp => $"{kvp.Key.ShortName()}{(IsMultiLine(kvp.Key) ? "\n" : " ")}{kvp.Value}{(IsMultiLine(kvp.Key) ? "\n" : string.Empty)}")
+                        .Select(kvp =>
+                        {
+                            bool isMultiLine = IsMultiLine(kvp.Key);
+                            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
+
+                            // Special case for boolean fields
+                            if ((kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD) && kvp.Value != true.ToString())
+                                return line.Trim();
+
+                            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
+                        })
                 ) + "\n" + info.CommonDiscInfo.Comments;
 
                 // Trim the comments field
@@ -902,7 +912,17 @@ namespace MPF.Library
                 info.CommonDiscInfo.Contents = string.Join(
                     "\n", info.CommonDiscInfo.ContentsSpecialFields
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
-                        .Select(kvp => $"{kvp.Key.ShortName()}{(IsMultiLine(kvp.Key) ? "\n" : " ")}{kvp.Value}{(IsMultiLine(kvp.Key) ? "\n" : string.Empty)}")
+                        .Select(kvp =>
+                        {
+                            bool isMultiLine = IsMultiLine(kvp.Key);
+                            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
+
+                            // Special case for boolean fields
+                            if ((kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD) && kvp.Value != true.ToString())
+                                return line.Trim();
+
+                            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
+                        })
                 ) + "\n" + info.CommonDiscInfo.Contents;
 
                 // Trim the contents field

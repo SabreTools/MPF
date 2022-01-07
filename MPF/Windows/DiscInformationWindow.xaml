@@ -167,9 +167,25 @@
                                     <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
                                     <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
                                     <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
-                                    <controls:UserInput x:Name="PostgapTypeTextBox" Label="Postgap type (Form 2)"/> <!-- Should be boolean -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label/>
+                                        <CheckBox Grid.Column="1" x:Name="PostgapTypeCheckBox" Content="Postgap type (Form 2)" Margin="0,4"/>
+                                    </Grid>
                                     <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
-                                    <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/> <!-- Should be boolean -->
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label/>
+                                        <CheckBox Grid.Column="1" x:Name="VCDCheckBox" Content="V-CD" Margin="0,4"/>
+                                    </Grid>
                                 </StackPanel>
                             </GroupBox>
 
