@@ -67,98 +67,100 @@
                         Foreground="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"
                         Style="{DynamicResource CustomTabControlStyle}">
                 <TabItem x:Name="CommonInfo" Header="Common Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <StackPanel Orientation="Vertical">
-                        <Expander Header="Common Disc Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
-                            <StackPanel Orientation="Vertical">
-                                <controls:UserInput Label="Title"
+                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                        <StackPanel Orientation="Vertical">
+                            <GroupBox Header="Common Disc Information" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput Label="Title"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.Title, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
-                                <controls:UserInput Label="Foreign Title (Non-Latin)" 
+                                    <controls:UserInput x:Name="AlternativeTitleTextBox" Label="Alternative Title"/>
+                                    <controls:UserInput Label="Foreign Title (Non-Latin)" 
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.ForeignTitleNonLatin, Mode=TwoWay}"/>
-                                <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
-                                <controls:UserInput Label="Disc Number / Letter"
+                                    <controls:UserInput x:Name="AlternativeForeignTitleTextBox" Label="Alternative Foreign Title"/>
+                                    <controls:UserInput Label="Disc Number / Letter"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscNumberLetter, Mode=TwoWay}"/>
-                                <controls:UserInput Label="Disc Title"
+                                    <controls:UserInput Label="Disc Title"
                                                     Text="{Binding SubmissionInfo.CommonDiscInfo.DiscTitle, Mode=TwoWay}"/>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1.25*" />
-                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                                    <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Categories}"
+                                        <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
+                                        <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Categories}"
                                           Style="{DynamicResource CustomComboBoxStyle}" />
-                                </Grid>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1.25*" />
-                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                                    <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Regions}"
+                                        <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
+                                        <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Regions}"
                                           Style="{DynamicResource CustomComboBoxStyle}" />
-                                </Grid>
+                                    </Grid>
 
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1.25*" />
-                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                                    <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding Languages}"
+                                        <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
+                                        <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding Languages}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </Grid>
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </Grid>
 
-                                <Grid x:Name="LanguageSelectionGrid" Visibility="Collapsed">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*" />
-                                        <ColumnDefinition Width="1.25*" />
-                                    </Grid.ColumnDefinitions>
+                                    <Grid x:Name="LanguageSelectionGrid" Visibility="Collapsed">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.25*" />
+                                        </Grid.ColumnDefinitions>
 
-                                    <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
-                                    <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding LanguageSelections}"
+                                        <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
+                                        <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding LanguageSelections}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
-                                        <ComboBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
-                                            </DataTemplate>
-                                        </ComboBox.ItemTemplate>
-                                    </ComboBox>
-                                </Grid>
+                                            <ComboBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked}" />
+                                                </DataTemplate>
+                                            </ComboBox.ItemTemplate>
+                                        </ComboBox>
+                                    </Grid>
 
-                                <controls:UserInput Label="Serial" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
-                                <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
-                            </StackPanel>
-                        </Expander>
-                        
-                        <Expander Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
-                            <StackPanel Orientation="Vertical">
-                                <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
-                                <controls:UserInput Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
-                            </StackPanel>
-                        </Expander>
-                    </StackPanel>
+                                    <controls:UserInput Label="Serial" Text="{Binding SubmissionInfo.CommonDiscInfo.Serial, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="Barcode" Text="{Binding SubmissionInfo.CommonDiscInfo.Barcode, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <GroupBox Header="Version and Editions" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput Label="Version" Text="{Binding SubmissionInfo.VersionAndEditions.Version, Mode=TwoWay}"/>
+                                    <controls:UserInput Label="Edition" Text="{Binding SubmissionInfo.VersionAndEditions.OtherEditions, Mode=TwoWay}"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </ScrollViewer>
                 </TabItem>
 
                 <TabItem Header="Additional Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="500">
-                            <Expander Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
-                                <StackPanel Orientation="Vertical" MaxHeight="375">
+                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                        <StackPanel Orientation="Vertical">
+                            <GroupBox Header="Extras" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="CommentsTextBox" Label="Comments"
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
@@ -169,47 +171,45 @@
                                     <controls:UserInput x:Name="SeriesTextBox" Label="Series"/>
                                     <controls:UserInput x:Name="VCDTextBox" Label="V-CD"/> <!-- Should be boolean -->
                                 </StackPanel>
-                            </Expander>
+                            </GroupBox>
 
-                            <Expander Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="False">
-                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                                    <StackPanel Orientation="Vertical" MaxHeight="375">
-                                        <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
-                                        <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"/>
-                                        <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"/>
-                                        <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
-                                        <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
-                                        <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"/>
-                                        <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"/>
-                                        <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"/>
-                                        <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"/>
-                                        <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"/>
-                                        <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"/>
-                                        <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID"/>
-                                        <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID"/>
-                                        <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID"/>
-                                        <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID"/>
-                                        <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID"/>
-                                        <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID"/>
-                                        <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"/>
-                                        <controls:UserInput x:Name="PPNTextBox" Label="PPN"/>
-                                        <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"/>
-                                        <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"/>
-                                        <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"/>
-                                        <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"/>
-                                        <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"/>
-                                        <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"/>
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </Expander>
+                            <GroupBox Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
+                                    <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"/>
+                                    <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"/>
+                                    <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
+                                    <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
+                                    <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"/>
+                                    <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"/>
+                                    <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"/>
+                                    <controls:UserInput x:Name="JASRACIDTextBox" Label="JASRAC ID"/>
+                                    <controls:UserInput x:Name="KingRecordsIDTextBox" Label="King Records ID"/>
+                                    <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"/>
+                                    <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID"/>
+                                    <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID"/>
+                                    <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID"/>
+                                    <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID"/>
+                                    <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID"/>
+                                    <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID"/>
+                                    <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"/>
+                                    <controls:UserInput x:Name="PPNTextBox" Label="PPN"/>
+                                    <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"/>
+                                    <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"/>
+                                    <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"/>
+                                    <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"/>
+                                    <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"/>
+                                    <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"/>
+                                </StackPanel>
+                            </GroupBox>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 
                 <TabItem Header="Contents" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="500">
+                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                        <StackPanel Orientation="Vertical">
                             <controls:UserInput x:Name="GeneralContent" Label="General"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
@@ -236,10 +236,10 @@
                 </TabItem>
 
                 <TabItem Header="Ringcodes" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="500">
-                            <Expander x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                        <StackPanel Orientation="Vertical">
+                            <GroupBox x:Name="L0Info" Header="Data/L0 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L0MasteringRing" Label="Data/L0 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0MasteringRing, Mode=TwoWay}"/>
@@ -252,10 +252,10 @@
                                     <controls:UserInput x:Name="L0AdditionalMould" Label="Data/L0 Additional Mould"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer0AdditionalMould, Mode=TwoWay}"/>
                                 </StackPanel>
-                            </Expander>
+                            </GroupBox>
 
-                            <Expander x:Name="L1Info" Header="Label/L1 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                            <GroupBox x:Name="L1Info" Header="Label/L1 Info" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L1MasteringRing" Label="Label/L1 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1MasteringRing, Mode=TwoWay}"/>
@@ -268,10 +268,10 @@
                                     <controls:UserInput x:Name="L1AdditionalMould" Label="Label/L1 Additional Mould"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer1AdditionalMould, Mode=TwoWay}"/>
                                 </StackPanel>
-                            </Expander>
+                            </GroupBox>
 
-                            <Expander x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                            <GroupBox x:Name="L2Info" Header="L2 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L2MasteringRing" Label="L2 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2MasteringRing, Mode=TwoWay}"/>
@@ -280,10 +280,10 @@
                                     <controls:UserInput x:Name="L2Toolstamp" Label="L2 Toolstamp/Mastering Code"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer2ToolstampMasteringCode, Mode=TwoWay}"/>
                                 </StackPanel>
-                            </Expander>
+                            </GroupBox>
 
-                            <Expander x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
-                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsExpanded="True">
+                            <GroupBox x:Name="L3Info" Header="L3 Info" Visibility="Collapsed" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="L3MasteringRing" Label="L3 Mastering Ring"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3MasteringRing, Mode=TwoWay}"/>
@@ -292,44 +292,44 @@
                                     <controls:UserInput x:Name="L3Toolstamp" Label="L3 Toolstamp/Mastering Code"
                                             Text="{Binding SubmissionInfo.CommonDiscInfo.Layer3ToolstampMasteringCode, Mode=TwoWay}"/>
                                 </StackPanel>
-                            </Expander>
+                            </GroupBox>
                         </StackPanel>
                     </ScrollViewer>
                 </TabItem>
 
                 <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
-                    <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="VerticalOnly">
-                        <StackPanel Orientation="Vertical" MaxHeight="375">
-                            <controls:UserInput x:Name="MatchedIDs" Label="Matched ID(s)" IsEnabled="False"/>
-                            <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsEnabled="False"/>
-                            <controls:UserInput x:Name="EDC" Label="EDC" IsEnabled="False"/>
-                            <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsEnabled="False"
+                    <ScrollViewer CanContentScroll="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
+                        <StackPanel Orientation="Vertical">
+                            <controls:UserInput x:Name="MatchedIDs" Label="Matched ID(s)" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.ErrorsCount, Mode=TwoWay}"/>
-                            <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsEnabled="False"
+                            <controls:UserInput x:Name="EXEDateBuildDate" Label="EXE/Build Date" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.EXEDateBuildDate, Mode=TwoWay}"/>
-                            <controls:UserInput x:Name="Header" Label="Header" IsEnabled="False"
+                            <controls:UserInput x:Name="Header" Label="Header" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
-                            <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsEnabled="False"/>
-                            <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsEnabled="False"/>
-                            <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsEnabled="False"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
-                            <controls:UserInput x:Name="PIC" Label="PIC" IsEnabled="False"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
-                            <controls:UserInput x:Name="Protection" Label="Protection" IsEnabled="False"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="Protection" Label="Protection" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}"/>
-                            <controls:UserInput x:Name="PVD" Label="PVD" IsEnabled="False"
+                            <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
-                            <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsEnabled="False"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
-                            <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsEnabled="False"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"/>
-                            <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsEnabled="False"/>
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsReadOnly="True"/>
 
                             <!-- TODO: Add track/checksum data once there's a reasonable way to do so -->
                         </StackPanel>
