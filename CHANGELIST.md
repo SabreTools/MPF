@@ -38,6 +38,7 @@
 - Convert postgap and VCD fields to checkboxes
 - Adjust width ratios for disc info window
 - Fix IsReadOnly
+- Only include booleans if the value is true
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

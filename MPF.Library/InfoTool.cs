@@ -887,11 +887,17 @@ namespace MPF.Library
                             string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
 
                             // Special case for boolean fields
-                            if ((kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD) && kvp.Value != true.ToString())
+                            if (kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD)
+                            {
+                                if (kvp.Value != true.ToString())
+                                    return string.Empty;
+
                                 return line.Trim();
+                            }
 
                             return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
                         })
+                        .Where(s => !string.IsNullOrEmpty(s))
                 ) + "\n" + info.CommonDiscInfo.Comments;
 
                 // Trim the comments field
@@ -918,11 +924,17 @@ namespace MPF.Library
                             string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
 
                             // Special case for boolean fields
-                            if ((kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD) && kvp.Value != true.ToString())
+                            if (kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD)
+                            {
+                                if (kvp.Value != true.ToString())
+                                    return string.Empty;
+
                                 return line.Trim();
+                            }
 
                             return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
                         })
+                        .Where(s => !string.IsNullOrEmpty(s))
                 ) + "\n" + info.CommonDiscInfo.Contents;
 
                 // Trim the contents field
