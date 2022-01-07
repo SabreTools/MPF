@@ -22,7 +22,7 @@
                  AcceptsTab="{Binding ElementName=userInput, Path=Tab}"
                  AcceptsReturn="{Binding ElementName=userInput, Path=Enter}"
                  TextWrapping="{Binding ElementName=userInput, Path=TextWrapping}"
-                 IsReadOnly="{Binding ElementName=userInput, Path=IsEnabled}"
+                 IsReadOnly="{Binding ElementName=userInput, Path=IsReadOnly}"
                  VerticalContentAlignment="{Binding ElementName=userInput, Path=VerticalContentAlignmentValue}"
                  HorizontalScrollBarVisibility="{Binding ElementName=userInput, Path=HorizontalScrollBarVisibility}"
                  VerticalScrollBarVisibility="{Binding ElementName=userInput, Path=VerticalScrollBarVisibility}"/>

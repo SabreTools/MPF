@@ -37,6 +37,7 @@
 - Fix scrolling issues in disc info window
 - Convert postgap and VCD fields to checkboxes
 - Adjust width ratios for disc info window
+- Fix IsReadOnly
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
