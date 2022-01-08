@@ -40,6 +40,7 @@
 - Fix IsReadOnly
 - Only include booleans if the value is true
 - Add hidden debug option for "ShowDebugViewMenuItem"
+- Fix incorrect header check
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
