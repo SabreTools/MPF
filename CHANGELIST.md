@@ -44,6 +44,7 @@
 - Make protection read-only field multiline
 - Reformat Saturn internal date
 - Fix Sega CD internal serial reading
+- Fix crash on invalid parameters
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

@@ -998,10 +998,15 @@ namespace MPF.GUI.ViewModels
             if (Env.Parameters == null)
                 return;
 
-            int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(Env.Parameters.InputPath[0]);
-            if (driveIndex > -1)
-                App.Instance.DriveLetterComboBox.SelectedIndex = driveIndex;
-
+            // Catch this in case there's an input path issue
+            try
+            {
+                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(Env.Parameters.InputPath[0]);
+                if (driveIndex > -1)
+                    App.Instance.DriveLetterComboBox.SelectedIndex = driveIndex;
+            }
+            catch { }
+            
             int driveSpeed = Env.Parameters.Speed ?? -1;
             if (driveSpeed > 0)
                 App.Instance.DriveSpeedComboBox.SelectedValue = driveSpeed;
