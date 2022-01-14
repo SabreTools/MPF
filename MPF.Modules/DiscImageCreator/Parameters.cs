@@ -473,29 +473,45 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                case RedumpSystem.MicrosoftXbox360:
-                    string xgdXeMID = string.Empty;
-                    if (this.System == RedumpSystem.MicrosoftXbox)
-                        xgdXeMID = GetXGD1XeMID(Path.Combine(outputDirectory, "DMI.bin"));
-                    else if (this.System == RedumpSystem.MicrosoftXbox360)
-                        xgdXeMID = GetXGD23XeMID(Path.Combine(outputDirectory, "DMI.bin"));
-
-                    XgdInfo xgdInfo = new XgdInfo(xgdXeMID);
-                    if (xgdInfo?.Initialized == true)
+                    string xgd1XMID = GetXGD1XMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    XgdInfo xgd1Info = new XgdInfo(xgd1XMID);
+                    if (xgd1Info?.Initialized == true)
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXXeMID}: {xgdInfo.XeMID ?? ""}\n";
-                        info.CommonDiscInfo.Serial = xgdInfo.GetSerial() ?? "";
-                        info.VersionAndEditions.Version = xgdInfo.GetVersion() ?? "";
-                        info.CommonDiscInfo.Region = xgdInfo.InternalRegion;
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXXMID}: {xgd1Info.XMID ?? ""}\n";
+                        info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? "";
+                        info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
+                        info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
 
-                    if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgdDMIHash, out string xgdPFIHash, out string xgdSSHash, out string xgdSS, out string xgdSSVer))
+                    if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string xgd1SS, out string xgd1SSVer))
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {xgdDMIHash ?? ""}\n" +
-                                                        $"{Template.XBOXPFIHash}: {xgdPFIHash ?? ""}\n" +
-                                                        $"{Template.XBOXSSHash}: {xgdSSHash ?? ""}\n" +
-                                                        $"{Template.XBOXSSVersion}: {xgdSSVer ?? ""}\n";
-                        info.Extras.SecuritySectorRanges = xgdSS ?? "";
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {xgd1DMIHash ?? ""}\n" +
+                                                        $"{Template.XBOXPFIHash}: {xgd1PFIHash ?? ""}\n" +
+                                                        $"{Template.XBOXSSHash}: {xgd1SSHash ?? ""}\n" +
+                                                        $"{Template.XBOXSSVersion}: {xgd1SSVer ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = xgd1SS ?? "";
+                    }
+
+                    break;
+
+                case RedumpSystem.MicrosoftXbox360:
+                    string xgd23XeMID = GetXGD23XeMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    XgdInfo xgd23Info = new XgdInfo(xgd23XeMID);
+                    if (xgd23Info?.Initialized == true)
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOX360XeMID}: {xgd23Info.XMID ?? ""}\n";
+                        info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? "";
+                        info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
+                        info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
+                    }
+
+                    if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string xgd23SS, out string xgd23SSVer))
+                    {
+                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {xgd23DMIHash ?? ""}\n" +
+                                                        $"{Template.XBOXPFIHash}: {xgd23PFIHash ?? ""}\n" +
+                                                        $"{Template.XBOXSSHash}: {xgd23SSHash ?? ""}\n" +
+                                                        $"{Template.XBOXSSVersion}: {xgd23SSVer ?? ""}\n";
+                        info.Extras.SecuritySectorRanges = xgd23SS ?? "";
                     }
 
                     break;
@@ -3178,11 +3194,11 @@ namespace MPF.Modules.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the XGD1 Master ID (XeMID) information
+        /// Get the XGD1 Master ID (XMID) information
         /// </summary>
         /// <param name="dmi">DMI.bin file location</param>
         /// <returns>String representation of the XGD1 DMI information, empty string on error</returns>
-        private static string GetXGD1XeMID(string dmi)
+        private static string GetXGD1XMID(string dmi)
         {
             if (!File.Exists(dmi))
                 return string.Empty;

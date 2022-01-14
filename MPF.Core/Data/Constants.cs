@@ -105,7 +105,8 @@ namespace MPF.Core.Data
         public const string XBOXSSHash = "SS";
         public const string XBOXSSRanges = "Security Sector Ranges";
         public const string XBOXSSVersion = "Security Sector Version";
-        public const string XBOXXeMID = "XeMID";
+        public const string XBOXXMID = "XMID";
+        public const string XBOX360XeMID = "XeMID";
 
         // Default values
 

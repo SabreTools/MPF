@@ -6,7 +6,7 @@ namespace MPF.Core.Data
     /// Contains information specific to an XGD disc
     /// </summary>
     /// <remarks>
-    /// XGD1 XeMID Format Information:
+    /// XGD1 XMID Format Information:
     ///
     /// AABBBCCD
     /// - AA        => The two-ASCII-character publisher identifier (see GetPublisher for details)
@@ -37,9 +37,9 @@ namespace MPF.Core.Data
         public bool Initialized { get; private set; }
 
         /// <summary>
-        /// Raw XeMID string that all other information is derived from
+        /// Raw XMID/XeMID string that all other information is derived from
         /// </summary>
-        public string XeMID { get; private set; }
+        public string XMID { get; private set; }
 
         /// <summary>
         /// 2-character publisher identifier
@@ -112,27 +112,27 @@ namespace MPF.Core.Data
         #endregion
 
         /// <summary>
-        /// Populate a set of XGD information from a Master ID (XeMID) string
+        /// Populate a set of XGD information from a Master ID (XMID/XeMID) string
         /// </summary>
-        /// <param name="xemid">XeMID string representing the DMI information</param>
+        /// <param name="xmid">XMID/XeMID string representing the DMI information</param>
         /// <param name="validate">True if value validation should be performed, false otherwise</param>
-        public XgdInfo(string xemid, bool validate = false)
+        public XgdInfo(string xmid, bool validate = false)
         {
             this.Initialized = false;
-            if (string.IsNullOrWhiteSpace(xemid))
+            if (string.IsNullOrWhiteSpace(xmid))
                 return;
 
-            this.XeMID = xemid.TrimEnd('\0');
-            if (string.IsNullOrWhiteSpace(this.XeMID))
+            this.XMID = xmid.TrimEnd('\0');
+            if (string.IsNullOrWhiteSpace(this.XMID))
                 return;
 
             // XGD1 information is 8 characters
-            if (this.XeMID.Length == 8)
-                this.Initialized = ParseXGD1XeMID(this.XeMID, validate);
+            if (this.XMID.Length == 8)
+                this.Initialized = ParseXGD1XMID(this.XMID, validate);
 
             // XGD2/3 information is semi-variable length
-            else if (this.XeMID.Length == 13 || this.XeMID.Length == 14 || this.XeMID.Length == 21 || this.XeMID.Length == 22)
-                this.Initialized = ParseXGD23XeMID(this.XeMID, validate);
+            else if (this.XMID.Length == 13 || this.XMID.Length == 14 || this.XMID.Length == 21 || this.XMID.Length == 22)
+                this.Initialized = ParseXGD23XeMID(this.XMID, validate);
         }
 
         /// <summary>
@@ -191,23 +191,23 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Parse an XGD1 XeMID string
+        /// Parse an XGD1 XMID string
         /// </summary>
-        /// <param name="xemid">XeMID string to attempt to parse</param>
+        /// <param name="xmid">XMID string to attempt to parse</param>
         /// <param name="validate">True if value validation should be performed, false otherwise</param>
-        /// <returns>True if the XeMID could be parsed, false otherwise</returns>
-        private bool ParseXGD1XeMID(string xemid, bool validate)
+        /// <returns>True if the XMID could be parsed, false otherwise</returns>
+        private bool ParseXGD1XMID(string xmid, bool validate)
         {
-            if (xemid == null || xemid.Length != 8)
+            if (xmid == null || xmid.Length != 8)
                 return false;
 
-            this.PublisherIdentifier = xemid.Substring(0, 2);
+            this.PublisherIdentifier = xmid.Substring(0, 2);
             if (validate && string.IsNullOrEmpty(this.PublisherName))
                 return false;
 
-            this.GameID = xemid.Substring(2, 3);
-            this.SKU = xemid.Substring(5, 2);
-            this.RegionIdentifier = xemid[7];
+            this.GameID = xmid.Substring(2, 3);
+            this.SKU = xmid.Substring(5, 2);
+            this.RegionIdentifier = xmid[7];
             if (validate && this.InternalRegion == null)
                 return false;
 
