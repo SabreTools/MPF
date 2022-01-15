@@ -1373,9 +1373,12 @@ namespace MPF.Library
                 info.CommonDiscInfo.Category = DiscCategory.Games;
 
             // Region
-            match = Constants.RegionRegex.Match(discData);
-            if (match.Success)
-                info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+            if (info.CommonDiscInfo.Region == null)
+            {
+                match = Constants.RegionRegex.Match(discData);
+                if (match.Success)
+                    info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
+            }
 
             // Languages
             var matches = Constants.LanguagesRegex.Matches(discData);
@@ -1395,11 +1398,10 @@ namespace MPF.Library
             //    info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
 
             // Error count
-            match = Constants.ErrorCountRegex.Match(discData);
-            if (match.Success)
+            if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
             {
-                // If the error count is empty, fill from the page
-                if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
+                match = Constants.ErrorCountRegex.Match(discData);
+                if (match.Success)
                     info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
             }
 
