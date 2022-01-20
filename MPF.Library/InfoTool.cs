@@ -103,9 +103,8 @@ namespace MPF.Library
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
-            // Add the volume label to comments, if possible
-            if (!string.IsNullOrWhiteSpace(drive?.VolumeLabel)
-                && !drive.VolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase)
+            // Add the volume label to comments, if possible or necessary
+            if (drive.GetRedumpSystemFromVolumeLabel() == null
                 && !info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
             {
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = drive.VolumeLabel;

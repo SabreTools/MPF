@@ -268,11 +268,10 @@ namespace MPF.Core.Data
             if (this.InternalDriveType != Data.InternalDriveType.Optical)
                 return RedumpSystem.IBMPCcompatible;
 
-            // Audio CD
-            if (this.FormattedVolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
-            {
-                return RedumpSystem.AudioCD;
-            }
+            // Check volume labels first
+            RedumpSystem? systemFromLabel = GetRedumpSystemFromVolumeLabel();
+            if (systemFromLabel != null)
+                return systemFromLabel;
 
             // BD-Video
             if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
@@ -281,7 +280,7 @@ namespace MPF.Core.Data
                 return RedumpSystem.BDVideo;
             }
 
-            // DVD-Audio
+            // DVD-Audio and DVD-Video
             try
             {
                 if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
@@ -289,19 +288,10 @@ namespace MPF.Core.Data
                 {
                     return RedumpSystem.DVDAudio;
                 }
-            }
-            catch { }
 
-            // DVD-Video and Xbox
-            try
-            {
-                if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
+                else if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
                     && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Any())
                 {
-                    // TODO: Maybe add video track hashes to compare for Xbox and X360?
-                    if (this.FormattedVolumeLabel.StartsWith("SEP13011042", StringComparison.OrdinalIgnoreCase))
-                        return RedumpSystem.MicrosoftXbox;
-
                     return RedumpSystem.DVDVideo;
                 }
             }
@@ -364,24 +354,6 @@ namespace MPF.Core.Data
                 return RedumpSystem.SonyPlayStation;
             }
 
-            // Sony PlayStation 3
-            if (this.FormattedVolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
-            {
-                return RedumpSystem.SonyPlayStation3;
-            }
-
-            // Sony PlayStation 4
-            if (this.FormattedVolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
-            {
-                return RedumpSystem.SonyPlayStation4;
-            }
-
-            // Sony PlayStation 5
-            if (this.FormattedVolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
-            {
-                return RedumpSystem.SonyPlayStation5;
-            }
-
             // V.Tech V.Flash / V.Smile Pro
             if (File.Exists(Path.Combine(drivePath, "0SYSTEM")))
             {
@@ -401,6 +373,49 @@ namespace MPF.Core.Data
 
             // Default return
             return defaultValue;
+        }
+
+        /// <summary>
+        /// Get the current system from the drive volume label
+        /// </summary>
+        /// <returns>The system based on volume label, null if none detected</returns>
+        public RedumpSystem? GetRedumpSystemFromVolumeLabel()
+        {
+            // Audio CD
+            if (this.FormattedVolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.AudioCD;
+
+            // Microsoft Xbox
+            if (this.FormattedVolumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox;
+            else if (this.FormattedVolumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox;
+
+            // Microsoft Xbox 360
+            if (this.FormattedVolumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox360;
+            else if (this.FormattedVolumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.MicrosoftXbox360;
+
+            // Microsoft Xbox 360 - Too overly broad even if a lot of discs use this
+            //if (this.FormattedVolumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
+            //    return RedumpSystem.MicrosoftXbox360; // Also for Xbox One?
+            //if (this.FormattedVolumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
+            //    return RedumpSystem.MicrosoftXbox360;
+
+            // Sony PlayStation 3
+            if (this.FormattedVolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SonyPlayStation3;
+
+            // Sony PlayStation 4
+            if (this.FormattedVolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SonyPlayStation4;
+
+            // Sony PlayStation 5
+            if (this.FormattedVolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SonyPlayStation5;
+
+            return null;
         }
 
         /// <summary>

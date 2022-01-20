@@ -47,6 +47,7 @@
 - Fix crash on invalid parameters
 - Differentiate XMID and XeMID
 - Conditionally pull region from Redump
+- Be smarter about volume labels
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
