@@ -381,38 +381,42 @@ namespace MPF.Core.Data
         /// <returns>The system based on volume label, null if none detected</returns>
         public RedumpSystem? GetRedumpSystemFromVolumeLabel()
         {
+            // If the volume label is empty, we can't do anything
+            if (string.IsNullOrWhiteSpace(this.VolumeLabel))
+                return null;
+
             // Audio CD
-            if (this.FormattedVolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel.Equals("Audio CD", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.AudioCD;
 
             // Microsoft Xbox
-            if (this.FormattedVolumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel.Equals("SEP13011042", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox;
-            else if (this.FormattedVolumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
+            else if (this.VolumeLabel.Equals("SEP13011042072", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox;
 
             // Microsoft Xbox 360
-            if (this.FormattedVolumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel.Equals("XBOX360", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox360;
-            else if (this.FormattedVolumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
+            else if (this.VolumeLabel.Equals("XGD2DVD_NTSC", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.MicrosoftXbox360;
 
             // Microsoft Xbox 360 - Too overly broad even if a lot of discs use this
-            //if (this.FormattedVolumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
+            //if (this.VolumeLabel.Equals("CD_ROM", StringComparison.OrdinalIgnoreCase))
             //    return RedumpSystem.MicrosoftXbox360; // Also for Xbox One?
-            //if (this.FormattedVolumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
+            //if (this.VolumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
             //    return RedumpSystem.MicrosoftXbox360;
 
             // Sony PlayStation 3
-            if (this.FormattedVolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SonyPlayStation3;
 
             // Sony PlayStation 4
-            if (this.FormattedVolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel.Equals("PS4VOLUME", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SonyPlayStation4;
 
             // Sony PlayStation 5
-            if (this.FormattedVolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
+            if (this.VolumeLabel.Equals("PS5VOLUME", StringComparison.OrdinalIgnoreCase))
                 return RedumpSystem.SonyPlayStation5;
 
             return null;
