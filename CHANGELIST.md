@@ -50,6 +50,7 @@
 - Be smarter about volume labels
 - Use volume label in checks, not formatted version
 - Sync with Redump region and language selection
+- Try to delete old log archive before writing
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

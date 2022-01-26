@@ -575,6 +575,17 @@ namespace MPF.Library
             if (!files.Any())
                 return true;
 
+            // If the file already exists, we want to delete the old one
+            try
+            {
+                if (File.Exists(archiveName))
+                    File.Delete(archiveName);
+            }
+            catch
+            {
+                return false;
+            }
+
             // Add the log files to the archive and delete the uncompressed file after
             ZipArchive zf = null;
             try
