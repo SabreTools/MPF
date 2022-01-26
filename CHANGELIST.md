@@ -49,6 +49,7 @@
 - Conditionally pull region from Redump
 - Be smarter about volume labels
 - Use volume label in checks, not formatted version
+- Sync with Redump region and language selection
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

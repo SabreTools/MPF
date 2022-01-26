@@ -926,8 +926,12 @@ namespace RedumpLib.Data
                     return Language.Albanian;
                 case "ara":
                     return Language.Arabic;
+                case "hye":
+                    return Language.Armenian;
                 case "baq":
                     return Language.Basque;
+                case "bel":
+                    return Language.Belarusian;
                 case "bul":
                     return Language.Bulgarian;
                 case "cat":
@@ -962,10 +966,10 @@ namespace RedumpLib.Data
                     return Language.Hindi;
                 case "hun":
                     return Language.Hungarian;
-                case "ind":
-                    return Language.Indonesian;
                 case "isl":
                     return Language.Icelandic;
+                case "ind":
+                    return Language.Indonesian;
                 case "ita":
                     return Language.Italian;
                 case "jap":
@@ -1010,6 +1014,8 @@ namespace RedumpLib.Data
                     return Language.Turkish;
                 case "ukr":
                     return Language.Ukrainian;
+                case "vie":
+                    return Language.Vietnamese;
                 default:
                     return null;
             }
@@ -1089,6 +1095,8 @@ namespace RedumpLib.Data
                     return Region.Austria;
                 case "At,Ch":
                     return Region.AustriaSwitzerland;
+                case "By":
+                    return Region.Belarus;
                 case "Be":
                     return Region.Belgium;
                 case "Be,N":

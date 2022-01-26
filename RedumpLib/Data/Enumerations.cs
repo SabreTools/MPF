@@ -129,8 +129,14 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Arabic", ShortName = "ara")]
         Arabic,
 
+        [HumanReadable(LongName = "Armenian", ShortName = "hye")]
+        Armenian,
+
         [HumanReadable(LongName = "Basque", ShortName = "baq")]
         Basque,
+
+        [HumanReadable(LongName = "Belarusian", ShortName = "bel")]
+        Belarusian,
 
         [HumanReadable(LongName = "Bulgarian", ShortName = "bul")]
         Bulgarian,
@@ -183,11 +189,11 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Hungarian", ShortName = "hun")]
         Hungarian,
 
-        [HumanReadable(LongName = "Indonesian", ShortName = "ind")]
-        Indonesian,
-
         [HumanReadable(LongName = "Icelandic", ShortName = "isl")]
         Icelandic,
+
+        [HumanReadable(LongName = "Indonesian", ShortName = "ind")]
+        Indonesian,
 
         [HumanReadable(LongName = "Italian", ShortName = "ita")]
         Italian,
@@ -254,6 +260,9 @@ namespace RedumpLib.Data
 
         [HumanReadable(LongName = "Ukrainian", ShortName = "ukr")]
         Ukrainian,
+
+        [HumanReadable(LongName = "Vietnamese", ShortName = "vie")]
+        Vietnamese,
     }
 
     /// <summary>
@@ -987,6 +996,9 @@ namespace RedumpLib.Data
 
         [HumanReadable(LongName = "Austria, Switzerland", ShortName = "At,Ch")]
         AustriaSwitzerland,
+
+        [HumanReadable(LongName = "Belarus", ShortName = "By")]
+        Belarus,
 
         [HumanReadable(LongName = "Belgium", ShortName = "Be")]
         Belgium,
