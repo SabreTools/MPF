@@ -892,22 +892,7 @@ namespace MPF.Library
                     "\n", info.CommonDiscInfo.CommentsSpecialFields
                         .OrderBy(kvp => kvp.Key)
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
-                        .Select(kvp =>
-                        {
-                            bool isMultiLine = IsMultiLine(kvp.Key);
-                            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
-
-                            // Special case for boolean fields
-                            if (kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD)
-                            {
-                                if (kvp.Value != true.ToString())
-                                    return string.Empty;
-
-                                return line.Trim();
-                            }
-
-                            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
-                        })
+                        .Select(FormatSiteTag)
                         .Where(s => !string.IsNullOrEmpty(s))
                 ) + "\n" + info.CommonDiscInfo.Comments;
 
@@ -930,22 +915,7 @@ namespace MPF.Library
                     "\n", info.CommonDiscInfo.ContentsSpecialFields
                         .OrderBy(kvp => kvp.Key)
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
-                        .Select(kvp =>
-                        {
-                            bool isMultiLine = IsMultiLine(kvp.Key);
-                            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
-
-                            // Special case for boolean fields
-                            if (kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD)
-                            {
-                                if (kvp.Value != true.ToString())
-                                    return string.Empty;
-
-                                return line.Trim();
-                            }
-
-                            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
-                        })
+                        .Select(FormatSiteTag)
                         .Where(s => !string.IsNullOrEmpty(s))
                 ) + "\n" + info.CommonDiscInfo.Contents;
 
@@ -1088,6 +1058,28 @@ namespace MPF.Library
                 return;
 
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
+        }
+
+        /// <summary>
+        /// Format a single site tag to string
+        /// </summary>
+        /// <param name="kvp">KeyValuePair representing the site tag and value</param>
+        /// <returns>String-formatted tag and value</returns>
+        private static string FormatSiteTag(KeyValuePair<SiteCode?, string> kvp)
+        {
+            bool isMultiLine = IsMultiLine(kvp.Key);
+            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
+
+            // Special case for boolean fields
+            if (kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD)
+            {
+                if (kvp.Value != true.ToString())
+                    return string.Empty;
+
+                return line.Trim();
+            }
+
+            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
         }
 
         #endregion
