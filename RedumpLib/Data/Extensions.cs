@@ -1040,169 +1040,18 @@ namespace RedumpLib.Data
         /// <returns>Region represented by the string, if possible</returns>
         public static Region? ToRegion(string region)
         {
-            switch (region)
-            {
-                case "Ar":
-                    return Region.Argentina;
-                case "A":
-                    return Region.Asia;
-                case "A,E":
-                    return Region.AsiaEurope;
-                case "A,U":
-                    return Region.AsiaUSA;
-                case "Au":
-                    return Region.Australia;
-                case "Au,G":
-                    return Region.AustraliaGermany;
-                case "Au,Nz":
-                    return Region.AustraliaNewZealand;
-                case "At":
-                    return Region.Austria;
-                case "At,Ch":
-                    return Region.AustriaSwitzerland;
-                case "By":
-                    return Region.Belarus;
-                case "Be":
-                    return Region.Belgium;
-                case "Be,N":
-                    return Region.BelgiumNetherlands;
-                case "B":
-                    return Region.Brazil;
-                case "Bg":
-                    return Region.Bulgaria;
-                case "Ca":
-                    return Region.Canada;
-                case "C":
-                    return Region.China;
-                case "Hr":
-                    return Region.Croatia;
-                case "Cz":
-                    return Region.Czech;
-                case "Dk":
-                    return Region.Denmark;
-                case "Ee":
-                    return Region.Estonia;
-                case "E":
-                    return Region.Europe;
-                case "E,A":
-                    return Region.EuropeAsia;
-                case "E,Au":
-                    return Region.EuropeAustralia;
-                case "E,Ca":
-                    return Region.EuropeCanada;
-                case "E,G":
-                    return Region.EuropeGermany;
-                case "Ex":
-                    return Region.Export;
-                case "Fi":
-                    return Region.Finland;
-                case "F":
-                    return Region.France;
-                case "F,S":
-                    return Region.FranceSpain;
-                case "G":
-                    return Region.Germany;
-                case "GC":
-                    return Region.GreaterChina;
-                case "Gr":
-                    return Region.Greece;
-                case "H":
-                    return Region.Hungary;
-                case "Is":
-                    return Region.Iceland;
-                case "In":
-                    return Region.India;
-                case "Ie":
-                    return Region.Ireland;
-                case "Il":
-                    return Region.Israel;
-                case "I":
-                    return Region.Italy;
-                case "J":
-                    return Region.Japan;
-                case "J,A":
-                    return Region.JapanAsia;
-                case "J,E":
-                    return Region.JapanEurope;
-                case "J,K":
-                    return Region.JapanKorea;
-                case "J,U":
-                    return Region.JapanUSA;
-                case "K":
-                    return Region.Korea;
-                case "LAm":
-                    return Region.LatinAmerica;
-                case "Lt":
-                    return Region.Lithuania;
-                case "N":
-                    return Region.Netherlands;
-                case "Nz":
-                    return Region.NewZealand;
-                case "No":
-                    return Region.Norway;
-                case "P":
-                    return Region.Poland;
-                case "Pt":
-                    return Region.Portugal;
-                case "Ro":
-                    return Region.Romania;
-                case "R":
-                    return Region.Russia;
-                case "Sca":
-                    return Region.Scandinavia;
-                case "Rs":
-                    return Region.Serbia;
-                case "Sg":
-                    return Region.Singapore;
-                case "Sk":
-                    return Region.Slovakia;
-                case "Za":
-                    return Region.SouthAfrica;
-                case "S":
-                    return Region.Spain;
-                case "S,Pt":
-                    return Region.SpainPortugal;
-                case "Sw":
-                    return Region.Sweden;
-                case "Ch":
-                    return Region.Switzerland;
-                case "Tw":
-                    return Region.Taiwan;
-                case "Th":
-                    return Region.Thailand;
-                case "Tr":
-                    return Region.Turkey;
-                case "Ae":
-                    return Region.UnitedArabEmirates;
-                case "Uk":
-                    return Region.UK;
-                case "Uk,Au":
-                    return Region.UKAustralia;
-                case "Ue":
-                    return Region.Ukraine;
-                case "U":
-                    return Region.USA;
-                case "U,A":
-                    return Region.USAAsia;
-                case "U,Au":
-                    return Region.USAAustralia;
-                case "U,B":
-                    return Region.USABrazil;
-                case "U,Ca":
-                    return Region.USACanada;
-                case "U,E":
-                    return Region.USAEurope;
-                case "U,G":
-                    return Region.USAGermany;
-                case "U,J":
-                    return Region.USAJapan;
-                case "U,K":
-                    return Region.USAKorea;
-                case "W":
-                    return Region.World;
-                default:
-                    return null;
-            }
+            region = region.ToLowerInvariant();
+            var regions = Enum.GetValues(typeof(Region)).Cast<Region?>().ToList();
+
+            // Check ISO 3166-1 alpha-2 codes
+            Dictionary<string, Region?> regionMapping = regions
+                .Where(r => r.ShortName() != null)
+                .ToDictionary(r => r.ShortName().ToLowerInvariant(), r => r);
+
+            if (regionMapping.ContainsKey(region))
+                return regionMapping[region];
+
+            return null;
         }
 
         #endregion

@@ -1353,9 +1353,9 @@ namespace MPF.Modules
                     case 'C': return Region.China;
                     case 'E': return Region.Europe;
                     case 'J': return Region.JapanKorea;
-                    case 'K': return Region.Korea;
+                    case 'K': return Region.SouthKorea;
                     case 'P': return Region.Japan;
-                    case 'U': return Region.USA;
+                    case 'U': return Region.UnitedStatesOfAmerica;
                 }
             }
 

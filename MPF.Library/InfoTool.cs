@@ -227,7 +227,7 @@ namespace MPF.Library
             switch (system)
             {
                 case RedumpSystem.AcornArchimedes:
-                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UK;
+                    info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.UnitedKingdom;
                     break;
 
                 case RedumpSystem.AppleMacintosh:

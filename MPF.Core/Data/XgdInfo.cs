@@ -408,7 +408,7 @@ namespace MPF.Core.Data
             switch (region)
             {
                 case 'W': return Region.World;
-                case 'A': return Region.USA;
+                case 'A': return Region.UnitedStatesOfAmerica;
                 case 'J': return Region.JapanAsia;
                 case 'E': return Region.Europe;
                 case 'K': return Region.USAJapan;

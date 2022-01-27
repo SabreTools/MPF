@@ -2399,10 +2399,61 @@ namespace RedumpLib.Data
     /// <summary>
     /// List of all known regions
     /// </summary>
+    /// <remarks>
+    /// https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+    /// 
+    /// Because of how Redump stores region IDs, the second letter of each
+    /// code is lower-cased. In any other system, both letters would be
+    /// capitalized properly.
+    /// </remarks>
     public enum Region
     {
+        // TODO: Should "regions" and multi-country sets be phased out?
+        // TODO: Should "regions" be moved to the end?
+
+        #region A
+
+        [HumanReadable(LongName = "Afghanistan", ShortName = "Af")]
+        Afghanistan,
+
+        [HumanReadable(LongName = "Åland Islands", ShortName = "Af")]
+        AlandIslands,
+
+        [HumanReadable(LongName = "Albania", ShortName = "Al")]
+        Albania,
+
+        [HumanReadable(LongName = "Algeria", ShortName = "Dz")]
+        Algeria,
+
+        [HumanReadable(LongName = "American Samoa", ShortName = "As")]
+        AmericanSamoa,
+
+        [HumanReadable(LongName = "Andorra", ShortName = "Ad")]
+        Andorra,
+
+        [HumanReadable(LongName = "Angola", ShortName = "Ao")]
+        Angola,
+
+        [HumanReadable(LongName = "Anguilla", ShortName = "Ai")]
+        Anguilla,
+
+        [HumanReadable(LongName = "Antarctica", ShortName = "Aq")]
+        Antarctica,
+
+        [HumanReadable(LongName = "Antigua and Barbuda", ShortName = "Ag")]
+        AntiguaAndBarbuda,
+
         [HumanReadable(LongName = "Argentina", ShortName = "Ar")]
         Argentina,
+
+        [HumanReadable(LongName = "Armenia", ShortName = "Am")]
+        Armenia,
+
+        [HumanReadable(LongName = "Aruba", ShortName = "Aw")]
+        Aruba,
+
+        [HumanReadable(LongName = "Ascension Island", ShortName = "Ac")]
+        AscensionIsland,
 
         [HumanReadable(LongName = "Asia", ShortName = "A")]
         Asia,
@@ -2428,6 +2479,25 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Austria, Switzerland", ShortName = "At,Ch")]
         AustriaSwitzerland,
 
+        [HumanReadable(LongName = "Azerbaijan", ShortName = "Az")]
+        Azerbaijan,
+
+        #endregion
+
+        #region B
+
+        [HumanReadable(LongName = "Bahamas", ShortName = "Bs")]
+        Bahamas,
+
+        [HumanReadable(LongName = "Bahrain", ShortName = "Bh")]
+        Bahrain,
+
+        [HumanReadable(LongName = "Bangladesh", ShortName = "Bd")]
+        Bangladesh,
+
+        [HumanReadable(LongName = "Barbados", ShortName = "Bb")]
+        Barbados,
+
         [HumanReadable(LongName = "Belarus", ShortName = "By")]
         Belarus,
 
@@ -2437,29 +2507,185 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Belgium, Netherlands", ShortName = "Be,N")]
         BelgiumNetherlands,
 
+        [HumanReadable(LongName = "Belize", ShortName = "Bz")]
+        Belize,
+
+        [HumanReadable(LongName = "Benin", ShortName = "Bj")]
+        Benin,
+
+        [HumanReadable(LongName = "Bermuda", ShortName = "Bm")]
+        Bermuda,
+
+        [HumanReadable(LongName = "Bhutan", ShortName = "Bt")]
+        Bhutan,
+
+        [HumanReadable(LongName = "Bolivia", ShortName = "Bo")]
+        Bolivia,
+
+        [HumanReadable(LongName = "Bonaire, Sint Eustatius and Saba", ShortName = "Bq")]
+        Bonaire,
+
+        [HumanReadable(LongName = "Bosnia and Herzegovina", ShortName = "Ba")]
+        BosniaAndHerzegovina,
+
+        [HumanReadable(LongName = "Botswana", ShortName = "Bw")]
+        Botswana,
+
+        [HumanReadable(LongName = "Bouvet Island", ShortName = "Bv")]
+        BouvetIsland,
+
+        // Should be "Br"
         [HumanReadable(LongName = "Brazil", ShortName = "B")]
         Brazil,
+
+        [HumanReadable(LongName = "British Indian Ocean Territory", ShortName = "Io")]
+        BritishIndianOceanTerritory,
+
+        [HumanReadable(LongName = "Brunei Darussalam", ShortName = "Bn")]
+        BruneiDarussalam,
 
         [HumanReadable(LongName = "Bulgaria", ShortName = "Bg")]
         Bulgaria,
 
+        [HumanReadable(LongName = "Burkina Faso", ShortName = "Bf")]
+        BurkinaFaso,
+
+        [HumanReadable(LongName = "Burundi", ShortName = "Bi")]
+        Burundi,
+
+        #endregion
+
+        #region C
+
+        [HumanReadable(LongName = "Cabo Verde", ShortName = "Cv")]
+        CaboVerde,
+
+        [HumanReadable(LongName = "Cambodia", ShortName = "Kh")]
+        Cambodia,
+
+        [HumanReadable(LongName = "Cameroon", ShortName = "Cm")]
+        Cameroon,
+
         [HumanReadable(LongName = "Canada", ShortName = "Ca")]
         Canada,
 
+        [HumanReadable(LongName = "Canary Islands", ShortName = "Ic")]
+        CanaryIslands,
+
+        [HumanReadable(LongName = "Cayman Islands", ShortName = "Ky")]
+        CaymanIslands,
+
+        [HumanReadable(LongName = "Central African Republic", ShortName = "Cf")]
+        CentralAfricanRepublic,
+
+        [HumanReadable(LongName = "Ceuta, Melilla", ShortName = "Ea")]
+        CeutaMelilla,
+
+        [HumanReadable(LongName = "Chad", ShortName = "Td")]
+        Chad,
+
+        [HumanReadable(LongName = "Chile", ShortName = "Cl")]
+        Chile,
+
+        // Should be "Cn"
         [HumanReadable(LongName = "China", ShortName = "C")]
         China,
+
+        [HumanReadable(LongName = "Christmas Island", ShortName = "Cx")]
+        ChristmasIsland,
+
+        [HumanReadable(LongName = "Clipperton Island", ShortName = "Cp")]
+        ClippertonIsland,
+
+        [HumanReadable(LongName = "Cocos (Keeling) Islands", ShortName = "Cc")]
+        CocosIslands,
+
+        [HumanReadable(LongName = "Colombia", ShortName = "Co")]
+        Colombia,
+
+        [HumanReadable(LongName = "Comoros", ShortName = "Km")]
+        Comoros,
+
+        [HumanReadable(LongName = "Congo", ShortName = "Cg")]
+        Congo,
+
+        [HumanReadable(LongName = "Cook Islands", ShortName = "Ck")]
+        CookIslands,
+
+        [HumanReadable(LongName = "Costa Rica", ShortName = "Cr")]
+        CostaRica,
+
+        [HumanReadable(LongName = "Côte d'Ivoire", ShortName = "Ci")]
+        CoteDIvoire,
 
         [HumanReadable(LongName = "Croatia", ShortName = "Hr")]
         Croatia,
 
-        [HumanReadable(LongName = "Czech", ShortName = "Cz")]
-        Czech,
+        [HumanReadable(LongName = "Cuba", ShortName = "Cu")]
+        Cuba,
+
+        [HumanReadable(LongName = "Curaçao", ShortName = "Cw")]
+        Curacao,
+
+        [HumanReadable(LongName = "Cyprus", ShortName = "Cy")]
+        Cyprus,
+
+        [HumanReadable(LongName = "Czechia", ShortName = "Cz")]
+        Czechia,
+
+        [HumanReadable(LongName = "Czechoslovakia", ShortName = "Cs")]
+        Czechoslovakia,
+
+        #endregion
+
+        #region D
+
+        // Zaire was "Zr"
+        [HumanReadable(LongName = "Democratic Republic of the Congo (Zaire)", ShortName = "Cd")]
+        DemocraticRepublicOfTheCongo,
 
         [HumanReadable(LongName = "Denmark", ShortName = "Dk")]
         Denmark,
 
+        [HumanReadable(LongName = "Diego Garcia", ShortName = "Dg")]
+        DiegoGarcia,
+
+        [HumanReadable(LongName = "Djibouti", ShortName = "Dj")]
+        Djibouti,
+
+        [HumanReadable(LongName = "Dominica", ShortName = "Dm")]
+        Dominica,
+
+        [HumanReadable(LongName = "Dominican Republic", ShortName = "Do")]
+        DominicanRepublic,
+
+        #endregion
+
+        #region E
+
+        [HumanReadable(LongName = "Ecuador", ShortName = "Ec")]
+        Ecuador,
+
+        [HumanReadable(LongName = "Egypt", ShortName = "Eg")]
+        Egypt,
+
+        [HumanReadable(LongName = "El Salvador", ShortName = "Sv")]
+        ElSalvador,
+
+        [HumanReadable(LongName = "Equatorial Guinea", ShortName = "Gq")]
+        EquatorialGuinea,
+
+        [HumanReadable(LongName = "Eritrea", ShortName = "Er")]
+        Eritrea,
+
         [HumanReadable(LongName = "Estonia", ShortName = "Ee")]
         Estonia,
+
+        [HumanReadable(LongName = "Eswatini", ShortName = "Sz")]
+        Eswatini,
+
+        [HumanReadable(LongName = "Ethiopia", ShortName = "Et")]
+        Ethiopia,
 
         [HumanReadable(LongName = "Europe", ShortName = "E")]
         Europe,
@@ -2476,20 +2702,79 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Europe, Germany", ShortName = "E,G")]
         EuropeGermany,
 
+        // Commented out to avoid confusion
+        //[HumanReadable(LongName = "European Union", ShortName = "Eu")]
+        //EuropeanUnion,
+
+        // Commented out to avoid confusion
+        //[HumanReadable(LongName = "Eurozone", ShortName = "Ez")]
+        //Eurozone,
+
         [HumanReadable(LongName = "Export", ShortName = "Ex")]
         Export,
 
+        #endregion
+
+        #region F
+
+        [HumanReadable(LongName = "Falkland Islands (Malvinas)", ShortName = "Fk")]
+        FalklandIslands,
+
+        [HumanReadable(LongName = "Faroe Islands", ShortName = "Fo")]
+        FaroeIslands,
+
+        [HumanReadable(LongName = "Federated States of Micronesia", ShortName = "Fm")]
+        FederatedStatesOfMicronesia,
+
+        [HumanReadable(LongName = "Fiji", ShortName = "Fj")]
+        Fiji,
+
+        // Formerly "Sf"
         [HumanReadable(LongName = "Finland", ShortName = "Fi")]
         Finland,
 
+        // Should be "Fr"
         [HumanReadable(LongName = "France", ShortName = "F")]
         France,
+
+        // Commented out to avoid confusion
+        //[HumanReadable(LongName = "France, Metropolitan", ShortName = "Fx")]
+        //FranceMetropolitan,
 
         [HumanReadable(LongName = "France, Spain", ShortName = "F,S")]
         FranceSpain,
 
+        [HumanReadable(LongName = "French Guiana", ShortName = "Gf")]
+        FrenchGuiana,
+
+        [HumanReadable(LongName = "French Polynesia", ShortName = "Pf")]
+        FrenchPolynesia,
+
+        [HumanReadable(LongName = "French Southern Territories", ShortName = "Tf")]
+        FrenchSouthernTerritories,
+
+        #endregion
+
+        #region G
+
+        [HumanReadable(LongName = "Gabon", ShortName = "Ga")]
+        Gabon,
+
+        [HumanReadable(LongName = "Gambia", ShortName = "Gm")]
+        Gambia,
+
+        [HumanReadable(LongName = "Georgia", ShortName = "Ge")]
+        Georgia,
+
+        // Should be "De"
         [HumanReadable(LongName = "Germany", ShortName = "G")]
         Germany,
+
+        [HumanReadable(LongName = "Ghana", ShortName = "Gh")]
+        Ghana,
+
+        [HumanReadable(LongName = "Gibraltar", ShortName = "Gi")]
+        Gibraltar,
 
         [HumanReadable(LongName = "Greater China", ShortName = "GC")]
         GreaterChina,
@@ -2497,8 +2782,59 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Greece", ShortName = "Gr")]
         Greece,
 
+        [HumanReadable(LongName = "Greenland", ShortName = "Gl")]
+        Greenland,
+
+        [HumanReadable(LongName = "Grenada", ShortName = "Gd")]
+        Grenada,
+
+        [HumanReadable(LongName = "Guadeloupe", ShortName = "Gp")]
+        Guadeloupe,
+
+        [HumanReadable(LongName = "Guam", ShortName = "Gu")]
+        Guam,
+
+        [HumanReadable(LongName = "Guatemala", ShortName = "Gt")]
+        Guatemala,
+
+        [HumanReadable(LongName = "Guernsey", ShortName = "Gg")]
+        Guernsey,
+
+        [HumanReadable(LongName = "Guinea", ShortName = "Gn")]
+        Guinea,
+
+        [HumanReadable(LongName = "Guinea-Bissau", ShortName = "Gw")]
+        GuineaBissau,
+
+        [HumanReadable(LongName = "Guyana", ShortName = "Gy")]
+        Guyana,
+
+        #endregion
+
+        #region H
+
+        [HumanReadable(LongName = "Haiti", ShortName = "Ht")]
+        Haiti,
+
+        [HumanReadable(LongName = "Heard Island and McDonald Islands", ShortName = "Hm")]
+        HeardIslandAndMcDonaldIslands,
+
+        [HumanReadable(LongName = "Holy See (Vatican City)", ShortName = "Va")]
+        HolySee,
+
+        [HumanReadable(LongName = "Honduras", ShortName = "Hn")]
+        Honduras,
+
+        [HumanReadable(LongName = "Hong Kong", ShortName = "Hk")]
+        HongKong,
+
+        // Should be "Hu"
         [HumanReadable(LongName = "Hungary", ShortName = "H")]
         Hungary,
+
+        #endregion
+
+        #region I
 
         [HumanReadable(LongName = "Iceland", ShortName = "Is")]
         Iceland,
@@ -2506,15 +2842,39 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "India", ShortName = "In")]
         India,
 
+        [HumanReadable(LongName = "Indonesia", ShortName = "Id")]
+        Indonesia,
+
+        [HumanReadable(LongName = "Iran", ShortName = "Ir")]
+        Iran,
+
+        [HumanReadable(LongName = "Iraq", ShortName = "Iq")]
+        Iraq,
+
         [HumanReadable(LongName = "Ireland", ShortName = "Ie")]
         Ireland,
+
+        [HumanReadable(LongName = "Island of Sark", ShortName = "Cq")]
+        IslandOfSark,
+
+        [HumanReadable(LongName = "Isle of Man", ShortName = "Im")]
+        IsleOfMan,
 
         [HumanReadable(LongName = "Israel", ShortName = "Il")]
         Israel,
 
+        // Should be "It"
         [HumanReadable(LongName = "Italy", ShortName = "I")]
         Italy,
 
+        #endregion
+
+        #region J
+
+        [HumanReadable(LongName = "Jamaica", ShortName = "Jm")]
+        Jamaica,
+
+        // Should be "Jp"
         [HumanReadable(LongName = "Japan", ShortName = "J")]
         Japan,
 
@@ -2530,77 +2890,427 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Japan, USA", ShortName = "J,U")]
         JapanUSA,
 
-        [HumanReadable(LongName = "Korea", ShortName = "K")]
-        Korea,
+        [HumanReadable(LongName = "Jersey", ShortName = "Je")]
+        Jersey,
+
+        [HumanReadable(LongName = "Jordan", ShortName = "Jo")]
+        Jordan,
+
+        #endregion
+
+        #region K
+
+        [HumanReadable(LongName = "Kazakhstan", ShortName = "Kz")]
+        Kazakhstan,
+
+        [HumanReadable(LongName = "Kenya", ShortName = "Ke")]
+        Kenya,
+
+        [HumanReadable(LongName = "Kiribati", ShortName = "Ki")]
+        Kiribati,
+
+        [HumanReadable(LongName = "Korea (Democratic People's Republic of Korea)", ShortName = "Kp")]
+        NorthKorea,
+
+        // Should be "Kr"
+        [HumanReadable(LongName = "Korea (Republic of Korea)", ShortName = "K")]
+        SouthKorea,
+
+        [HumanReadable(LongName = "Kuwait", ShortName = "Kw")]
+        Kuwait,
+
+        [HumanReadable(LongName = "Kyrgyzstan", ShortName = "Kg")]
+        Kyrgyzstan,
+
+        #endregion
+
+        #region L
+
+        [HumanReadable(LongName = "(Laos) Lao People's Democratic Republic", ShortName = "La")]
+        Laos,
 
         [HumanReadable(LongName = "Latin America", ShortName = "LAm")]
         LatinAmerica,
 
+        [HumanReadable(LongName = "Latvia", ShortName = "Lv")]
+        Latvia,
+
+        [HumanReadable(LongName = "Lebanon", ShortName = "Lb")]
+        Lebanon,
+
+        [HumanReadable(LongName = "Lesotho", ShortName = "Ls")]
+        Lesotho,
+
+        [HumanReadable(LongName = "Liberia", ShortName = "Lr")]
+        Liberia,
+
+        [HumanReadable(LongName = "Libya", ShortName = "Ly")]
+        Libya,
+
+        [HumanReadable(LongName = "Liechtenstein", ShortName = "Li")]
+        Liechtenstein,
+
         [HumanReadable(LongName = "Lithuania", ShortName = "Lt")]
         Lithuania,
 
+        [HumanReadable(LongName = "Luxembourg", ShortName = "Lu")]
+        Luxembourg,
+
+        #endregion
+
+        #region M
+
+        [HumanReadable(LongName = "Macao", ShortName = "Mo")]
+        Macao,
+
+        [HumanReadable(LongName = "Madagascar", ShortName = "Mg")]
+        Madagascar,
+
+        [HumanReadable(LongName = "Malawi", ShortName = "Mw")]
+        Malawi,
+
+        [HumanReadable(LongName = "Malaysia", ShortName = "My")]
+        Malaysia,
+
+        [HumanReadable(LongName = "Maldives", ShortName = "Mv")]
+        Maldives,
+
+        [HumanReadable(LongName = "Mali", ShortName = "Ml")]
+        Mali,
+
+        [HumanReadable(LongName = "Malta", ShortName = "Mt")]
+        Malta,
+
+        [HumanReadable(LongName = "Marshall Islands", ShortName = "Mh")]
+        MarshallIslands,
+
+        [HumanReadable(LongName = "Martinique", ShortName = "Mq")]
+        Martinique,
+
+        [HumanReadable(LongName = "Mauritania", ShortName = "Mr")]
+        Mauritania,
+
+        [HumanReadable(LongName = "Mauritius", ShortName = "Mu")]
+        Mauritius,
+
+        [HumanReadable(LongName = "Mayotte", ShortName = "Yt")]
+        Mayotte,
+
+        [HumanReadable(LongName = "Mexico", ShortName = "Mx")]
+        Mexico,
+
+        [HumanReadable(LongName = "Monaco", ShortName = "Mc")]
+        Monaco,
+
+        [HumanReadable(LongName = "Mongolia", ShortName = "Mn")]
+        Mongolia,
+
+        [HumanReadable(LongName = "Montenegro", ShortName = "Me")]
+        Montenegro,
+
+        [HumanReadable(LongName = "Montserrat", ShortName = "Ms")]
+        Montserrat,
+
+        [HumanReadable(LongName = "Morocco", ShortName = "Ma")]
+        Morocco,
+
+        [HumanReadable(LongName = "Mozambique", ShortName = "Mz")]
+        Mozambique,
+
+        // Burma was "Bu"
+        [HumanReadable(LongName = "Myanmar (Burma)", ShortName = "Mm")]
+        Myanmar,
+
+        #endregion
+
+        #region N
+
+        [HumanReadable(LongName = "Namibia", ShortName = "Na")]
+        Namibia,
+
+        [HumanReadable(LongName = "Nauru", ShortName = "Nr")]
+        Nauru,
+
+        [HumanReadable(LongName = "Nepal", ShortName = "Np")]
+        Nepal,
+
+        // Should be "Nl"
         [HumanReadable(LongName = "Netherlands", ShortName = "N")]
         Netherlands,
+
+        [HumanReadable(LongName = "Netherlands Antilles", ShortName = "An")]
+        NetherlandsAntilles,
+
+        // Commented out to avoid confusion
+        //[HumanReadable(LongName = "Neutral Zone", ShortName = "Nt")]
+        //NeutralZone,
+
+        [HumanReadable(LongName = "New Caledonia", ShortName = "Nc")]
+        NewCaledonia,
 
         [HumanReadable(LongName = "New Zealand", ShortName = "Nz")]
         NewZealand,
 
+        [HumanReadable(LongName = "Nicaragua", ShortName = "Ni")]
+        Nicaragua,
+
+        [HumanReadable(LongName = "Niger", ShortName = "Ne")]
+        Niger,
+
+        [HumanReadable(LongName = "Nigeria", ShortName = "Ng")]
+        Nigeria,
+
+        [HumanReadable(LongName = "Niue", ShortName = "Nu")]
+        Niue,
+
+        [HumanReadable(LongName = "Norfolk Island", ShortName = "Nf")]
+        NorfolkIsland,
+
+        [HumanReadable(LongName = "North Macedonia", ShortName = "Mk")]
+        NorthMacedonia,
+
+        [HumanReadable(LongName = "Northern Mariana Islands", ShortName = "Mp")]
+        NorthernMarianaIslands,
+
         [HumanReadable(LongName = "Norway", ShortName = "No")]
         Norway,
 
+        #endregion
+
+        #region O
+
+        [HumanReadable(LongName = "Oman", ShortName = "Om")]
+        Oman,
+
+        #endregion
+
+        #region P
+
+        [HumanReadable(LongName = "Pakistan", ShortName = "Pk")]
+        Pakistan,
+
+        [HumanReadable(LongName = "Palau", ShortName = "Pw")]
+        Palau,
+
+        [HumanReadable(LongName = "Panama", ShortName = "Pa")]
+        Panama,
+
+        [HumanReadable(LongName = "Papua New Guinea", ShortName = "Pg")]
+        PapuaNewGuinea,
+
+        [HumanReadable(LongName = "Paraguay", ShortName = "Py")]
+        Paraguay,
+
+        [HumanReadable(LongName = "Peru", ShortName = "Pe")]
+        Peru,
+
+        [HumanReadable(LongName = "Philippines", ShortName = "Ph")]
+        Philippines,
+
+        [HumanReadable(LongName = "Pitcairn", ShortName = "Pn")]
+        Pitcairn,
+
+        // Should be "Pl"
         [HumanReadable(LongName = "Poland", ShortName = "P")]
         Poland,
 
         [HumanReadable(LongName = "Portugal", ShortName = "Pt")]
         Portugal,
 
+        [HumanReadable(LongName = "Puerto Rico", ShortName = "Pr")]
+        PuertoRico,
+
+        #endregion
+
+        #region Q
+
+        [HumanReadable(LongName = "Qatar", ShortName = "Qa")]
+        Qatar,
+
+        #endregion
+
+        #region R
+
+        [HumanReadable(LongName = "Republic of Moldova", ShortName = "Md")]
+        RepublicOfMoldova,
+
+        [HumanReadable(LongName = "Réunion", ShortName = "Re")]
+        Reunion,
+
         [HumanReadable(LongName = "Romania", ShortName = "Ro")]
         Romania,
 
-        [HumanReadable(LongName = "Russia", ShortName = "R")]
-        Russia,
+        // Should be "Ru"
+        [HumanReadable(LongName = "Russian Federation", ShortName = "R")]
+        RussianFederation,
+
+        [HumanReadable(LongName = "Rwanda", ShortName = "Rw")]
+        Rwanda,
+
+        #endregion
+
+        #region S
+
+        [HumanReadable(LongName = "Saint Barthélemy", ShortName = "Bl")]
+        SaintBarthelemy,
+
+        [HumanReadable(LongName = "Saint Helena, Ascension and Tristan da Cunha", ShortName = "Sh")]
+        SaintHelena,
+
+        [HumanReadable(LongName = "Saint Kitts and Nevis", ShortName = "Kn")]
+        SaintKittsAndNevis,
+
+        [HumanReadable(LongName = "Saint Lucia", ShortName = "Lc")]
+        SaintLucia,
+
+        [HumanReadable(LongName = "Saint Martin", ShortName = "Mf")]
+        SaintMartin,
+
+        [HumanReadable(LongName = "Saint Pierre and Miquelon", ShortName = "Pm")]
+        SaintPierreAndMiquelon,
+
+        [HumanReadable(LongName = "Saint Vincent and the Grenadines", ShortName = "Vc")]
+        SaintVincentAndTheGrenadines,
+
+        [HumanReadable(LongName = "Samoa", ShortName = "Ws")]
+        Samoa,
+
+        [HumanReadable(LongName = "San Marino", ShortName = "Sm")]
+        SanMarino,
+
+        [HumanReadable(LongName = "Sao Tome and Principe", ShortName = "St")]
+        SaoTomeAndPrincipe,
+
+        [HumanReadable(LongName = "Saudi Arabia", ShortName = "Sa")]
+        SaudiArabia,
 
         [HumanReadable(LongName = "Scandinavia", ShortName = "Sca")]
         Scandinavia,
 
+        [HumanReadable(LongName = "Senegal", ShortName = "Sn")]
+        Senegal,
+
         [HumanReadable(LongName = "Serbia", ShortName = "Rs")]
         Serbia,
+
+        [HumanReadable(LongName = "Seychelles", ShortName = "Sc")]
+        Seychelles,
+
+        [HumanReadable(LongName = "Sierra Leone", ShortName = "Sl")]
+        SierraLeone,
 
         [HumanReadable(LongName = "Singapore", ShortName = "Sg")]
         Singapore,
 
+        [HumanReadable(LongName = "Sint Maarten", ShortName = "Sx")]
+        SintMaarten,
+
         [HumanReadable(LongName = "Slovakia", ShortName = "Sk")]
         Slovakia,
+
+        [HumanReadable(LongName = "Slovenia", ShortName = "Si")]
+        Slovenia,
+
+        [HumanReadable(LongName = "Solomon Islands", ShortName = "Sb")]
+        SolomonIslands,
+
+        [HumanReadable(LongName = "Somalia", ShortName = "So")]
+        Somalia,
 
         [HumanReadable(LongName = "South Africa", ShortName = "Za")]
         SouthAfrica,
 
+        [HumanReadable(LongName = "South Georgia and the South Sandwich Islands", ShortName = "Gs")]
+        SouthGeorgia,
+
+        [HumanReadable(LongName = "South Sudan", ShortName = "Ss")]
+        SouthSudan,
+
+        // Should be "Es"
         [HumanReadable(LongName = "Spain", ShortName = "S")]
         Spain,
 
         [HumanReadable(LongName = "Spain, Portugal", ShortName = "S,Pt")]
         SpainPortugal,
 
+        [HumanReadable(LongName = "Sri Lanka", ShortName = "Lk")]
+        SriLanka,
+
+        [HumanReadable(LongName = "State of Palestine", ShortName = "Ps")]
+        StateOfPalestine,
+
+        [HumanReadable(LongName = "Sudan", ShortName = "Sd")]
+        Sudan,
+
+        [HumanReadable(LongName = "Suriname", ShortName = "Sr")]
+        Suriname,
+
+        [HumanReadable(LongName = "Svalbard and Jan Mayen", ShortName = "Sj")]
+        SvalbardAndJanMayen,
+
+        // Should be "Se"
         [HumanReadable(LongName = "Sweden", ShortName = "Sw")]
         Sweden,
 
         [HumanReadable(LongName = "Switzerland", ShortName = "Ch")]
         Switzerland,
 
+        [HumanReadable(LongName = "Syrian Arab Republic", ShortName = "Sy")]
+        SyrianArabRepublic,
+
+        #endregion
+
+        #region T
+
         [HumanReadable(LongName = "Taiwan", ShortName = "Tw")]
         Taiwan,
+
+        [HumanReadable(LongName = "Tajikistan", ShortName = "Tj")]
+        Tajikistan,
 
         [HumanReadable(LongName = "Thailand", ShortName = "Th")]
         Thailand,
 
+        // East Timor was "Tp" 
+        [HumanReadable(LongName = "Timor-Leste (East Timor)", ShortName = "Tl")]
+        TimorLeste,
+
+        [HumanReadable(LongName = "Togo", ShortName = "Tg")]
+        Togo,
+
+        [HumanReadable(LongName = "Tokelau", ShortName = "Tk")]
+        Tokelau,
+
+        [HumanReadable(LongName = "Tonga", ShortName = "To")]
+        Tonga,
+
+        [HumanReadable(LongName = "Trinidad and Tobago", ShortName = "Tt")]
+        TrinidadAndTobago,
+
+        [HumanReadable(LongName = "Tristan da Cunha", ShortName = "Ta")]
+        TristanDaCunha,
+
+        [HumanReadable(LongName = "Tunisia", ShortName = "Tn")]
+        Tunisia,
+
         [HumanReadable(LongName = "Turkey", ShortName = "Tr")]
         Turkey,
 
-        [HumanReadable(LongName = "United Arab Emirates", ShortName = "Ae")]
-        UnitedArabEmirates,
+        [HumanReadable(LongName = "Turkmenistan", ShortName = "Tm")]
+        Turkmenistan,
 
-        [HumanReadable(LongName = "UK", ShortName = "Uk")]
-        UK,
+        [HumanReadable(LongName = "Turks and Caicos Islands", ShortName = "Tc")]
+        TurksAndCaicosIslands,
+
+        [HumanReadable(LongName = "Tuvalu", ShortName = "Tv")]
+        Tuvalu,
+
+        #endregion
+
+        #region U
+
+        [HumanReadable(LongName = "Uganda", ShortName = "Ug")]
+        Uganda,
 
         [HumanReadable(LongName = "UK, Australia", ShortName = "Uk,Au")]
         UKAustralia,
@@ -2608,8 +3318,29 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Ukraine", ShortName = "Ue")]
         Ukraine,
 
-        [HumanReadable(LongName = "USA", ShortName = "U")]
-        USA,
+        [HumanReadable(LongName = "United Arab Emirates", ShortName = "Ae")]
+        UnitedArabEmirates,
+
+        // Should be both "Gb" and "Uk"
+        [HumanReadable(LongName = "United Kingdom of Great Britain and Northern Ireland", ShortName = "Uk")]
+        UnitedKingdom,
+
+        // Commented out to avoid confusion
+        //[HumanReadable(LongName = "United Nations", ShortName = "Un")]
+        //UnitedNations,
+
+        [HumanReadable(LongName = "United Republic of Tanzania", ShortName = "Tz")]
+        UnitedRepublicOfTanzania,
+
+        [HumanReadable(LongName = "United States Minor Outlying Islands", ShortName = "Um")]
+        UnitedStatesMinorOutlyingIslands,
+
+        // Should be "Us"
+        [HumanReadable(LongName = "United States of America", ShortName = "U")]
+        UnitedStatesOfAmerica,
+
+        [HumanReadable(LongName = "Uruguay", ShortName = "Uy")]
+        Uruguay,
 
         [HumanReadable(LongName = "USA, Asia", ShortName = "U,A")]
         USAAsia,
@@ -2635,8 +3366,65 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "USA, Korea", ShortName = "U,K")]
         USAKorea,
 
+        [HumanReadable(LongName = "USSR", ShortName = "Su")]
+        USSR,
+
+        [HumanReadable(LongName = "Uzbekistan", ShortName = "Uz")]
+        Uzbekistan,
+
+        #endregion
+
+        #region V
+
+        [HumanReadable(LongName = "Vanuatu", ShortName = "Vu")]
+        Vanuatu,
+
+        [HumanReadable(LongName = "Venezuela", ShortName = "Ve")]
+        Venezuela,
+
+        [HumanReadable(LongName = "Viet Nam", ShortName = "Vn")]
+        VietNam,
+
+        [HumanReadable(LongName = "Virgin Islands (British)", ShortName = "Vg")]
+        BritishVirginIslands,
+
+        [HumanReadable(LongName = "Virgin Islands (US)", ShortName = "Vi")]
+        USVirginIslands,
+
+        #endregion
+
+        #region W
+
+        [HumanReadable(LongName = "Wallis and Futuna", ShortName = "Wf")]
+        WallisAndFutuna,
+
+        [HumanReadable(LongName = "Western Sahara", ShortName = "Eh")]
+        WesternSahara,
+
         [HumanReadable(LongName = "World", ShortName = "W")]
         World,
+
+        #endregion
+
+        #region Y
+
+        [HumanReadable(LongName = "Yemen", ShortName = "Ye")]
+        Yemen,
+
+        [HumanReadable(LongName = "Yugoslavia", ShortName = "Yu")]
+        Yugoslavia,
+
+        #endregion
+
+        #region Z
+
+        [HumanReadable(LongName = "Zambia", ShortName = "Zm")]
+        Zambia,
+
+        [HumanReadable(LongName = "Zimbabwe", ShortName = "Zw")]
+        Zimbabwe,
+
+        #endregion
     }
 
     /// <summary>

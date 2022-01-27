@@ -245,7 +245,7 @@ namespace MPF.Modules.CleanRip
                                     region = Region.Germany;
                                     break;
                                 case 'E':
-                                    region = Region.USA;
+                                    region = Region.UnitedStatesOfAmerica;
                                     break;
                                 case 'F':
                                     region = Region.France;
@@ -257,7 +257,7 @@ namespace MPF.Modules.CleanRip
                                     region = Region.Japan;
                                     break;
                                 case 'K':
-                                    region = Region.Korea;
+                                    region = Region.SouthKorea;
                                     break;
                                 case 'L':
                                     region = Region.Europe; // Japanese import to Europe
@@ -266,22 +266,22 @@ namespace MPF.Modules.CleanRip
                                     region = Region.Europe; // American import to Europe
                                     break;
                                 case 'N':
-                                    region = Region.USA; // Japanese import to USA
+                                    region = Region.UnitedStatesOfAmerica; // Japanese import to USA
                                     break;
                                 case 'P':
                                     region = Region.Europe;
                                     break;
                                 case 'R':
-                                    region = Region.Russia;
+                                    region = Region.RussianFederation;
                                     break;
                                 case 'S':
                                     region = Region.Spain;
                                     break;
                                 case 'Q':
-                                    region = Region.Korea; // Korea with Japanese language
+                                    region = Region.SouthKorea; // Korea with Japanese language
                                     break;
                                 case 'T':
-                                    region = Region.Korea; // Korea with English language
+                                    region = Region.SouthKorea; // Korea with English language
                                     break;
                                 case 'X':
                                     region = null; // Not a real region code
