@@ -1060,28 +1060,6 @@ namespace MPF.Library
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
         }
 
-        /// <summary>
-        /// Format a single site tag to string
-        /// </summary>
-        /// <param name="kvp">KeyValuePair representing the site tag and value</param>
-        /// <returns>String-formatted tag and value</returns>
-        private static string FormatSiteTag(KeyValuePair<SiteCode?, string> kvp)
-        {
-            bool isMultiLine = IsMultiLine(kvp.Key);
-            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
-
-            // Special case for boolean fields
-            if (kvp.Key == SiteCode.PostgapType || kvp.Key == SiteCode.VCD)
-            {
-                if (kvp.Value != true.ToString())
-                    return string.Empty;
-
-                return line.Trim();
-            }
-
-            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
-        }
-
         #endregion
 
         #region Normalization
@@ -1701,31 +1679,6 @@ namespace MPF.Library
         }
 
         /// <summary>
-        /// Check if a site code is multi-line or not
-        /// </summary>
-        /// <param name="siteCode">SiteCode to check</param>
-        /// <returns>True if the code field is multiline by default, false otherwise</returns>
-        /// <remarks>TODO: This should move to Extensions at some point</remarks>
-        private static bool IsMultiLine(SiteCode? siteCode)
-        {
-            switch (siteCode)
-            {
-                case SiteCode.Extras:
-                case SiteCode.GameFootage:
-                case SiteCode.NetYarozeGames:
-                case SiteCode.Patches:
-                case SiteCode.PlayableDemos:
-                case SiteCode.RollingDemos:
-                case SiteCode.Savegames:
-                case SiteCode.TechDemos:
-                case SiteCode.Videos:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
         /// Process a text block and replace with internal identifiers
         /// </summary>
         /// <param name="text">Text block to process</param>
@@ -1851,6 +1804,75 @@ namespace MPF.Library
 
             // Finally check to see if the counts match
             return localCount == remoteCount;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Format a single site tag to string
+        /// </summary>
+        /// <param name="kvp">KeyValuePair representing the site tag and value</param>
+        /// <returns>String-formatted tag and value</returns>
+        private static string FormatSiteTag(KeyValuePair<SiteCode?, string> kvp)
+        {
+            bool isMultiLine = IsMultiLine(kvp.Key);
+            string line = $"{kvp.Key.ShortName()}{(isMultiLine ? "\n" : " ")}";
+
+            // Special case for boolean fields
+            if (IsBoolean(kvp.Key))
+            {
+                if (kvp.Value != true.ToString())
+                    return string.Empty;
+
+                return line.Trim();
+            }
+
+            return $"{line}{kvp.Value}{(isMultiLine ? "\n" : string.Empty)}";
+        }
+
+        /// <summary>
+        /// Check if a site code is boolean or not
+        /// </summary>
+        /// <param name="siteCode">SiteCode to check</param>
+        /// <returns>True if the code field is a flag with no value, false otherwise</returns>
+        /// <remarks>TODO: This should move to Extensions at some point</remarks>
+        private static bool IsBoolean(SiteCode? siteCode)
+        {
+            switch (siteCode)
+            {
+                case SiteCode.PostgapType:
+                case SiteCode.VCD:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if a site code is multi-line or not
+        /// </summary>
+        /// <param name="siteCode">SiteCode to check</param>
+        /// <returns>True if the code field is multiline by default, false otherwise</returns>
+        /// <remarks>TODO: This should move to Extensions at some point</remarks>
+        private static bool IsMultiLine(SiteCode? siteCode)
+        {
+            switch (siteCode)
+            {
+                case SiteCode.Extras:
+                case SiteCode.GameFootage:
+                case SiteCode.NetYarozeGames:
+                case SiteCode.Patches:
+                case SiteCode.PlayableDemos:
+                case SiteCode.RollingDemos:
+                case SiteCode.Savegames:
+                case SiteCode.TechDemos:
+                case SiteCode.Videos:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         #endregion
