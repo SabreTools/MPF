@@ -842,7 +842,7 @@ namespace RedumpLib.Data
         [Language(LongName = "Lozi", ThreeLetterCode = "loz")]
         Lozi,
 
-        [Language(LongName = "Luba-Katanga", TwoLetterCode = "lu", ThreeLetterCode = "loz")]
+        [Language(LongName = "Luba-Katanga", TwoLetterCode = "lu", ThreeLetterCode = "lub")]
         LubaKatanga,
 
         [Language(LongName = "Luba-Lulua", ThreeLetterCode = "lua")]

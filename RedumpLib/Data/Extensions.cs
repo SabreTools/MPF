@@ -970,21 +970,21 @@ namespace RedumpLib.Data
         /// </summary>
         /// <param name="language"></param>
         /// <returns></returns>
-        private static string ThreeLetterCode(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.ThreeLetterCode;
+        public static string ThreeLetterCode(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.ThreeLetterCode;
 
         /// <summary>
         /// Get the ISO 639-2 alternate code for each known language
         /// </summary>
         /// <param name="language"></param>
         /// <returns></returns>
-        private static string ThreeLetterCodeAlt(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.ThreeLetterCodeAlt;
+        public static string ThreeLetterCodeAlt(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.ThreeLetterCodeAlt;
 
         /// <summary>
         /// Get the ISO 639-1 code for each known language
         /// </summary>
         /// <param name="language"></param>
         /// <returns></returns>
-        private static string TwoLetterCode(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.TwoLetterCode;
+        public static string TwoLetterCode(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.TwoLetterCode;
 
         #endregion
 

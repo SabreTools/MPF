@@ -58,6 +58,7 @@
 - Better helper method organization
 - Start supporting ordered tags and non-tags
 - Add more non-tag support; rearrange info window
+- Fix incorrect language three-letter code
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

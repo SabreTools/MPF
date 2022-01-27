@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using RedumpLib.Data;
 using Xunit;
@@ -248,6 +249,87 @@ namespace MPF.Test.RedumpLib
                 Assert.Null(actual);
             else
                 Assert.NotNull(actual);
+        }
+
+        /// <summary>
+        /// Ensure that every Language that has an ISO 639-1 code is unique
+        /// </summary>
+        [Fact]
+        public void NoDuplicateTwoLetterCodeTest()
+        {
+            var fullLanguages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
+            var filteredLanguages = new Dictionary<string, Language?>();
+
+            int totalCount = 0;
+            foreach (Language? language in fullLanguages)
+            {
+                string code = language.TwoLetterCode();
+                if (string.IsNullOrWhiteSpace(code))
+                    continue;
+
+                // Throw if the code already exists
+                if (filteredLanguages.ContainsKey(code))
+                    throw new DuplicateNameException($"Code {code} already in dictionary");
+
+                filteredLanguages[code] = language;
+                totalCount++;
+            }
+
+            Assert.Equal(totalCount, filteredLanguages.Count);
+        }
+
+        /// <summary>
+        /// Ensure that every Language that has a standard/bibliographic ISO 639-2 code is unique
+        /// </summary>
+        [Fact]
+        public void NoDuplicateThreeLetterCodeTest()
+        {
+            var fullLanguages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
+            var filteredLanguages = new Dictionary<string, Language?>();
+
+            int totalCount = 0;
+            foreach (Language? language in fullLanguages)
+            {
+                string code = language.ThreeLetterCode();
+                if (string.IsNullOrWhiteSpace(code))
+                    continue;
+
+                // Throw if the code already exists
+                if (filteredLanguages.ContainsKey(code))
+                    throw new DuplicateNameException($"Code {code} already in dictionary");
+
+                filteredLanguages[code] = language;
+                totalCount++;
+            }
+
+            Assert.Equal(totalCount, filteredLanguages.Count);
+        }
+
+        /// <summary>
+        /// Ensure that every Language that has a terminology ISO 639-2 code is unique
+        /// </summary>
+        [Fact]
+        public void NoDuplicateThreeLetterCodeAltTest()
+        {
+            var fullLanguages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
+            var filteredLanguages = new Dictionary<string, Language?>();
+
+            int totalCount = 0;
+            foreach (Language? language in fullLanguages)
+            {
+                string code = language.ThreeLetterCodeAlt();
+                if (string.IsNullOrWhiteSpace(code))
+                    continue;
+
+                // Throw if the code already exists
+                if (filteredLanguages.ContainsKey(code))
+                    throw new DuplicateNameException($"Code {code} already in dictionary");
+
+                filteredLanguages[code] = language;
+                totalCount++;
+            }
+
+            Assert.Equal(totalCount, filteredLanguages.Count);
         }
 
         /// <summary>
