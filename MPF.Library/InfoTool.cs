@@ -889,8 +889,7 @@ namespace MPF.Library
 
                 // Add all special fields before any comments
                 info.CommonDiscInfo.Comments = string.Join(
-                    "\n", info.CommonDiscInfo.CommentsSpecialFields
-                        .OrderBy(kvp => kvp.Key)
+                    "\n", OrderCommentTags(info.CommonDiscInfo.CommentsSpecialFields)
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
                         .Select(FormatSiteTag)
                         .Where(s => !string.IsNullOrEmpty(s))
@@ -1692,6 +1691,15 @@ namespace MPF.Library
                 text = text.Replace(siteCode.LongName(), siteCode.ShortName());
             }
 
+            // For some outdated tags, we need to use alternate names
+            text = text.Replace("DMI:", ((SiteCode?)SiteCode.DMIHash).ShortName());
+            text = text.Replace("<b>LucasArts ID</b>:", ((SiteCode?)SiteCode.LucasArtsID).ShortName());
+            text = text.Replace("PFI:", ((SiteCode?)SiteCode.PFIHash).ShortName());
+            text = text.Replace("SS:", ((SiteCode?)SiteCode.SSHash).ShortName());
+            text = text.Replace("SS version:", ((SiteCode?)SiteCode.SSVersion).ShortName());
+            text = text.Replace("XeMID:", ((SiteCode?)SiteCode.XeMID).ShortName());
+            text = text.Replace("XMID:", ((SiteCode?)SiteCode.XMID).ShortName());
+
             return text;
         }
 
@@ -1885,6 +1893,99 @@ namespace MPF.Library
             // If the input is invalid, just return an empty set
             if (tags == null || tags.Count == 0)
                 return sorted;
+
+            // Identifying Info
+            if (tags.ContainsKey(SiteCode.AlternativeTitle))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.AlternativeTitle, tags[SiteCode.AlternativeTitle]));
+            if (tags.ContainsKey(SiteCode.AlternativeForeignTitle))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.AlternativeForeignTitle, tags[SiteCode.AlternativeForeignTitle]));
+            if (tags.ContainsKey(SiteCode.VolumeLabel))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.VolumeLabel, tags[SiteCode.VolumeLabel]));
+            if (tags.ContainsKey(SiteCode.InternalSerialName))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.InternalSerialName, tags[SiteCode.InternalSerialName]));
+            
+            if (tags.ContainsKey(SiteCode.XMID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.XMID, tags[SiteCode.XMID]));
+            if (tags.ContainsKey(SiteCode.XeMID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.XeMID, tags[SiteCode.XeMID]));
+            if (tags.ContainsKey(SiteCode.DMIHash))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.DMIHash, tags[SiteCode.DMIHash]));
+            if (tags.ContainsKey(SiteCode.PFIHash))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.PFIHash, tags[SiteCode.PFIHash]));
+            if (tags.ContainsKey(SiteCode.SSHash))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SSHash, tags[SiteCode.SSHash]));
+            if (tags.ContainsKey(SiteCode.SSVersion))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SSVersion, tags[SiteCode.SSVersion]));
+            
+            if (tags.ContainsKey(SiteCode.BBFCRegistrationNumber))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.BBFCRegistrationNumber, tags[SiteCode.BBFCRegistrationNumber]));
+            if (tags.ContainsKey(SiteCode.DiscHologramID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.DiscHologramID, tags[SiteCode.DiscHologramID]));
+            if (tags.ContainsKey(SiteCode.DNASDiscID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.DNASDiscID, tags[SiteCode.DNASDiscID]));
+            if (tags.ContainsKey(SiteCode.ISBN))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.ISBN, tags[SiteCode.ISBN]));
+            if (tags.ContainsKey(SiteCode.ISSN))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.ISSN, tags[SiteCode.ISSN]));
+            if (tags.ContainsKey(SiteCode.PPN))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.PPN, tags[SiteCode.PPN]));
+            if (tags.ContainsKey(SiteCode.VFCCode))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.VFCCode, tags[SiteCode.VFCCode]));
+
+            if (tags.ContainsKey(SiteCode.Genre))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Genre, tags[SiteCode.Genre]));
+            if (tags.ContainsKey(SiteCode.Series))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Series, tags[SiteCode.Series]));
+            if (tags.ContainsKey(SiteCode.PostgapType))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.PostgapType, tags[SiteCode.PostgapType]));
+            if (tags.ContainsKey(SiteCode.VCD))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.VCD, tags[SiteCode.VCD]));
+
+            // Publisher / Company IDs
+            if (tags.ContainsKey(SiteCode.AcclaimID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.AcclaimID, tags[SiteCode.AcclaimID]));
+            if (tags.ContainsKey(SiteCode.ActivisionID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.ActivisionID, tags[SiteCode.ActivisionID]));
+            if (tags.ContainsKey(SiteCode.BandaiID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.BandaiID, tags[SiteCode.BandaiID]));
+            if (tags.ContainsKey(SiteCode.ElectronicArtsID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.ElectronicArtsID, tags[SiteCode.ElectronicArtsID]));
+            if (tags.ContainsKey(SiteCode.FoxInteractiveID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.FoxInteractiveID, tags[SiteCode.FoxInteractiveID]));
+            if (tags.ContainsKey(SiteCode.GTInteractiveID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.GTInteractiveID, tags[SiteCode.GTInteractiveID]));
+            if (tags.ContainsKey(SiteCode.JASRACID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.JASRACID, tags[SiteCode.JASRACID]));
+            if (tags.ContainsKey(SiteCode.KingRecordsID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.KingRecordsID, tags[SiteCode.KingRecordsID]));
+            if (tags.ContainsKey(SiteCode.KoeiID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.KoeiID, tags[SiteCode.KoeiID]));
+            if (tags.ContainsKey(SiteCode.KonamiID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.KonamiID, tags[SiteCode.KonamiID]));
+            if (tags.ContainsKey(SiteCode.LucasArtsID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.LucasArtsID, tags[SiteCode.LucasArtsID]));
+            if (tags.ContainsKey(SiteCode.MicrosoftID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.MicrosoftID, tags[SiteCode.MicrosoftID]));
+            if (tags.ContainsKey(SiteCode.NaganoID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.NaganoID, tags[SiteCode.NaganoID]));
+            if (tags.ContainsKey(SiteCode.NamcoID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.NamcoID, tags[SiteCode.NamcoID]));
+            if (tags.ContainsKey(SiteCode.NipponIchiSoftwareID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.NipponIchiSoftwareID, tags[SiteCode.NipponIchiSoftwareID]));
+            if (tags.ContainsKey(SiteCode.OriginID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.OriginID, tags[SiteCode.OriginID]));
+            if (tags.ContainsKey(SiteCode.PonyCanyonID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.PonyCanyonID, tags[SiteCode.PonyCanyonID]));
+            if (tags.ContainsKey(SiteCode.SegaID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SegaID, tags[SiteCode.SegaID]));
+            if (tags.ContainsKey(SiteCode.SelenID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SelenID, tags[SiteCode.SelenID]));
+            if (tags.ContainsKey(SiteCode.TaitoID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.TaitoID, tags[SiteCode.TaitoID]));
+            if (tags.ContainsKey(SiteCode.UbisoftID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.UbisoftID, tags[SiteCode.UbisoftID]));
+            if (tags.ContainsKey(SiteCode.ValveID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.ValveID, tags[SiteCode.ValveID]));
 
             return sorted;
         }

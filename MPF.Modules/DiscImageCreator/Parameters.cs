@@ -477,7 +477,7 @@ namespace MPF.Modules.DiscImageCreator
                     XgdInfo xgd1Info = new XgdInfo(xgd1XMID);
                     if (xgd1Info?.Initialized == true)
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXXMID}: {xgd1Info.XMID ?? ""}\n";
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.XMID;
                         info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? "";
                         info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
@@ -485,10 +485,10 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string xgd1SS, out string xgd1SSVer))
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {xgd1DMIHash ?? ""}\n" +
-                                                        $"{Template.XBOXPFIHash}: {xgd1PFIHash ?? ""}\n" +
-                                                        $"{Template.XBOXSSHash}: {xgd1SSHash ?? ""}\n" +
-                                                        $"{Template.XBOXSSVersion}: {xgd1SSVer ?? ""}\n";
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
                         info.Extras.SecuritySectorRanges = xgd1SS ?? "";
                     }
 
@@ -499,7 +499,7 @@ namespace MPF.Modules.DiscImageCreator
                     XgdInfo xgd23Info = new XgdInfo(xgd23XeMID);
                     if (xgd23Info?.Initialized == true)
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOX360XeMID}: {xgd23Info.XMID ?? ""}\n";
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.XMID;
                         info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? "";
                         info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
@@ -507,10 +507,10 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string xgd23SS, out string xgd23SSVer))
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {xgd23DMIHash ?? ""}\n" +
-                                                        $"{Template.XBOXPFIHash}: {xgd23PFIHash ?? ""}\n" +
-                                                        $"{Template.XBOXSSHash}: {xgd23SSHash ?? ""}\n" +
-                                                        $"{Template.XBOXSSVersion}: {xgd23SSVer ?? ""}\n";
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
                         info.Extras.SecuritySectorRanges = xgd23SS ?? "";
                     }
 

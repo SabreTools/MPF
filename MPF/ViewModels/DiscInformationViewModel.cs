@@ -122,6 +122,8 @@ namespace MPF.GUI.ViewModels
                 Parent.AntiModchip.Visibility = Visibility.Collapsed;
             else
                 Parent.AntiModchip.Text = SubmissionInfo.CopyProtection.AntiModchip.LongName();
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.DMIHash) != true)
+                Parent.DMIHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.ErrorsCount))
                 Parent.ErrorsCount.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.EXEDateBuildDate))
@@ -140,6 +142,8 @@ namespace MPF.GUI.ViewModels
                 Parent.LibCrypt.Text = SubmissionInfo.CopyProtection.LibCrypt.LongName();
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.LibCryptData))
                 Parent.LibCryptData.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.PFIHash) != true)
+                Parent.PFIHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.PIC))
                 Parent.PIC.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.Protection))
@@ -148,10 +152,18 @@ namespace MPF.GUI.ViewModels
                 Parent.PVD.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.SecuROMData))
                 Parent.SecuROMData.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.SSHash) != true)
+                Parent.SSHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.SecuritySectorRanges))
                 Parent.SecuritySectorRanges.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.SSVersion) != true)
+                Parent.SSVersion.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.VolumeLabel) != true)
                 Parent.VolumeLabel.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.XeMID) != true)
+                Parent.XeMID.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.XMID) != true)
+                Parent.XMID.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -197,32 +209,36 @@ namespace MPF.GUI.ViewModels
                     Parent.AlternativeForeignTitleTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.AlternativeForeignTitle];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Genre))
                     Parent.GenreTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Genre];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.InternalSerialName))
-                    Parent.InternalSerialName.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ISBN))
-                    Parent.ISBNTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISBN];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ISSN))
-                    Parent.ISSNTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISSN];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PostgapType))
                     Parent.PostgapTypeCheckBox.IsChecked = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PostgapType] != null;
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Series))
                     Parent.SeriesTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Series];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
-                    Parent.VolumeLabel.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VCD))
                     Parent.VCDCheckBox.IsChecked = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VCD] != null;
 
-                // Media Identifiers
+                // Physical Identifiers
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.BBFCRegistrationNumber))
+                    Parent.BBFCRegistrationNumberTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.BBFCRegistrationNumber];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DiscHologramID))
+                    Parent.DiscHologramIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DNASDiscID))
+                    Parent.DNASDiscIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DNASDiscID];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ISBN))
+                    Parent.ISBNTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISBN];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ISSN))
+                    Parent.ISSNTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISSN];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PPN))
+                    Parent.PPNTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PPN];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VFCCode))
+                    Parent.VFCCodeTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VFCCode];
+
+                // Publisher Identifiers
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.AcclaimID))
                     Parent.AcclaimIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.AcclaimID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ActivisionID))
                     Parent.ActivisionIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ActivisionID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.BandaiID))
                     Parent.BandaiIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.BandaiID];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.BBFCRegistrationNumber))
-                    Parent.BBFCRegistrationNumberTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.BBFCRegistrationNumber];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DNASDiscID))
-                    Parent.DNASDiscIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DNASDiscID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ElectronicArtsID))
                     Parent.ElectronicArtsIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ElectronicArtsID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.FoxInteractiveID))
@@ -239,6 +255,8 @@ namespace MPF.GUI.ViewModels
                     Parent.KonamiIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.KonamiID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.LucasArtsID))
                     Parent.LucasArtsIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.LucasArtsID];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.MicrosoftID))
+                    Parent.MicrosoftIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.MicrosoftID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.NaganoID))
                     Parent.NaganoIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.NaganoID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.NamcoID))
@@ -249,8 +267,6 @@ namespace MPF.GUI.ViewModels
                     Parent.OriginIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.OriginID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PonyCanyonID))
                     Parent.PonyCanyonIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PonyCanyonID];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PPN))
-                    Parent.PPNTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PPN];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SegaID))
                     Parent.SegaIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SegaID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SelenID))
@@ -261,8 +277,16 @@ namespace MPF.GUI.ViewModels
                     Parent.UbisoftIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.UbisoftID];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.ValveID))
                     Parent.ValveIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ValveID];
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VFCCode))
-                    Parent.VFCCodeTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VFCCode];
+
+                // Read-Only Information
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.InternalSerialName))
+                    Parent.InternalSerialName.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
+                    Parent.VolumeLabel.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.XeMID))
+                    Parent.XeMID.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.XMID))
+                    Parent.XMID.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID];
             }
 
             // Content Fields
@@ -318,24 +342,29 @@ namespace MPF.GUI.ViewModels
             if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields == null)
                 SubmissionInfo.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode?, string>();
 
+            #region Comment Fields
+
             // Additional Information
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.AlternativeTitle] = Parent.AlternativeTitleTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.AlternativeForeignTitle] = Parent.AlternativeForeignTitleTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Genre] = Parent.GenreTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISBN] = Parent.ISBNTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISSN] = Parent.ISSNTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PostgapType] = Parent.PostgapTypeCheckBox.IsChecked?.ToString();
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Series] = Parent.SeriesTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = Parent.VolumeLabel.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VCD] = Parent.VCDCheckBox.IsChecked?.ToString();
 
-            // Media Identifiers
+            // Physical Identifiers
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.BBFCRegistrationNumber] = Parent.BBFCRegistrationNumberTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DiscHologramID] = Parent.DiscHologramIDTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DNASDiscID] = Parent.DNASDiscIDTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISBN] = Parent.ISBNTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ISSN] = Parent.ISSNTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PPN] = Parent.PPNTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VFCCode] = Parent.VFCCodeTextBox.Text;
+
+            // Publisher Identifiers
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.AcclaimID] = Parent.AcclaimIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ActivisionID] = Parent.ActivisionIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.BandaiID] = Parent.BandaiIDTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.BBFCRegistrationNumber] = Parent.BBFCRegistrationNumberTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DNASDiscID] = Parent.DNASDiscIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ElectronicArtsID] = Parent.ElectronicArtsIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.FoxInteractiveID] = Parent.FoxInteractiveIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.GTInteractiveID] = Parent.GTInteractiveIDTextBox.Text;
@@ -344,29 +373,47 @@ namespace MPF.GUI.ViewModels
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.KoeiID] = Parent.KoeiIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.KonamiID] = Parent.KonamiIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.LucasArtsID] = Parent.LucasArtsIDTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.MicrosoftID] = Parent.MicrosoftIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.NaganoID] = Parent.NaganoIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.NamcoID] = Parent.NamcoIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.NipponIchiSoftwareID] = Parent.NipponIchiSoftwareIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.OriginID] = Parent.OriginIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PonyCanyonID] = Parent.PonyCanyonIDTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PPN] = Parent.PPNTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SegaID] = Parent.SegaIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SelenID] = Parent.SelenIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.TaitoID] = Parent.TaitoIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.UbisoftID] = Parent.UbisoftIDTextBox.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ValveID] = Parent.ValveIDTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VFCCode] = Parent.VFCCodeTextBox.Text;
 
-            // Content Fields
-            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Extras] = Parent.ExtrasTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.GameFootage] = Parent.GameFootageTextBox.Text;
+            // Read-Only Information
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = Parent.VolumeLabel.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = Parent.XeMID.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = Parent.XMID.Text;
+
+            #endregion
+
+            #region Content Fields
+
+            // Games
+            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Games] = Parent.GamesTextBox.Text;
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.NetYarozeGames] = Parent.NetYarozeGamesTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Patches] = Parent.PatchesTextBox.Text;
+
+            // Demos
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.PlayableDemos] = Parent.PlayableDemosTextBox.Text;
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.RollingDemos] = Parent.RollingDemosTextBox.Text;
-            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Savegames] = Parent.SavegamesTextBox.Text;
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.TechDemos] = Parent.TechDemosTextBox.Text;
+
+            // Video
+            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.GameFootage] = Parent.GameFootageTextBox.Text;
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Videos] = Parent.VideosTextBox.Text;
+
+            // Miscellaneous
+            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Patches] = Parent.PatchesTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Savegames] = Parent.SavegamesTextBox.Text;
+            SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Extras] = Parent.ExtrasTextBox.Text;
+
+            #endregion
         }
 
         /// <summary>

@@ -3450,6 +3450,14 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:BBFC]", LongName = "<b>BBFC Reg. No.</b>:")]
         BBFCRegistrationNumber,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Disc Hologram ID/b>:", LongName = "<b>Disc Hologram ID</b>:")]
+        DiscHologramID,
+
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>DMI/b>:", LongName = "<b>DMI</b>:")]
+        DMIHash,
+
         [HumanReadable(ShortName = "[T:DNAS]", LongName = "<b>DNAS Disc ID</b>:")]
         DNASDiscID,
 
@@ -3499,6 +3507,10 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:LAID]", LongName = "<b>Lucas Arts ID</b>:")]
         LucasArtsID,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Microsoft ID</b>:", LongName = "<b>Microsoft ID</b>:")]
+        MicrosoftID,
+
         [HumanReadable(ShortName = "[T:NGID]", LongName = "<b>Nagano ID</b>:")]
         NaganoID,
 
@@ -3516,6 +3528,10 @@ namespace RedumpLib.Data
 
         [HumanReadable(ShortName = "[T:P]", LongName = "<b>Patches</b>:")]
         Patches,
+
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>PFI/b>:", LongName = "<b>PFI</b>:")]
+        PFIHash,
 
         [HumanReadable(ShortName = "[T:PD]", LongName = "<b>Playable Demos</b>:")]
         PlayableDemos,
@@ -3544,6 +3560,14 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:S]", LongName = "<b>Series</b>:")]
         Series,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>SS/b>:", LongName = "<b>SS</b>:")]
+        SSHash,
+
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>SS version/b>:", LongName = "<b>SS version</b>:")]
+        SSVersion,
+
         [HumanReadable(ShortName = "[T:TID]", LongName = "<b>Taito ID</b>:")]
         TaitoID,
 
@@ -3567,6 +3591,14 @@ namespace RedumpLib.Data
 
         [HumanReadable(ShortName = "[T:VCD]", LongName = "<b>V-CD</b>")]
         VCD,
+
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>XeMID</b>:", LongName = "<b>XeMID</b>:")]
+        XeMID,
+
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>XMID</b>:", LongName = "<b>XMID</b>:")]
+        XMID,
     }
 
     /// <summary>

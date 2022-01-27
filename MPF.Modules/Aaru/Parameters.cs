@@ -284,12 +284,12 @@ namespace MPF.Modules.Aaru
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    if (GetXgdAuxInfo(sidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver))
+                    if (GetXgdAuxInfo(sidecar, out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string ss, out string xgd1SSVer))
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmihash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfihash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {sshash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver ?? ""}\n";
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
                         info.Extras.SecuritySectorRanges = ss ?? "";
                     }
 
@@ -303,12 +303,12 @@ namespace MPF.Modules.Aaru
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    if (GetXgdAuxInfo(sidecar, out string dmi360hash, out string pfi360hash, out string ss360hash, out string ss360, out string ssver360))
+                    if (GetXgdAuxInfo(sidecar, out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string ss360, out string xgd23SSVer))
                     {
-                        info.CommonDiscInfo.Comments += $"{Template.XBOXDMIHash}: {dmi360hash ?? ""}\n" +
-                            $"{Template.XBOXPFIHash}: {pfi360hash ?? ""}\n" +
-                            $"{Template.XBOXSSHash}: {ss360hash ?? ""}\n" +
-                            $"{Template.XBOXSSVersion}: {ssver360 ?? ""}\n";
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
                         info.Extras.SecuritySectorRanges = ss360 ?? "";
                     }
 

@@ -165,8 +165,6 @@
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
                                     <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
-                                    <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
-                                    <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
@@ -189,14 +187,25 @@
                                 </StackPanel>
                             </GroupBox>
 
-                            <GroupBox Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                            <GroupBox Header="Physical Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <StackPanel Orientation="Vertical">
+                                    <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
+                                    <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID"/>
+                                    <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
+                                    <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>
+                                    <controls:UserInput x:Name="ISSNTextBox" Label="ISSN"/>
+                                    <controls:UserInput x:Name="PPNTextBox" Label="PPN"/>
+                                    <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"/>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <GroupBox Header="Publisher Identifiers" Margin="5" Padding="5" BorderThickness="1" BorderBrush="LightGray"
+                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="AcclaimIDTextBox" Label="Acclaim ID"/>
                                     <controls:UserInput x:Name="ActivisionIDTextBox" Label="Activision ID"/>
                                     <controls:UserInput x:Name="BandaiIDTextBox" Label="Bandai ID"/>
-                                    <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
-                                    <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
                                     <controls:UserInput x:Name="ElectronicArtsIDTextBox" Label="Electronic Arts ID"/>
                                     <controls:UserInput x:Name="FoxInteractiveIDTextBox" Label="Fox Interactive ID"/>
                                     <controls:UserInput x:Name="GTInteractiveIDTextBox" Label="GT Interactive ID"/>
@@ -205,18 +214,17 @@
                                     <controls:UserInput x:Name="KoeiIDTextBox" Label="Koei ID"/>
                                     <controls:UserInput x:Name="KonamiIDTextBox" Label="Konami ID"/>
                                     <controls:UserInput x:Name="LucasArtsIDTextBox" Label="LucasArts ID"/>
+                                    <controls:UserInput x:Name="MicrosoftIDTextBox" Label="Microsoft ID"/>
                                     <controls:UserInput x:Name="NaganoIDTextBox" Label="Nagano ID"/>
                                     <controls:UserInput x:Name="NamcoIDTextBox" Label="Namco ID"/>
                                     <controls:UserInput x:Name="NipponIchiSoftwareIDTextBox" Label="Nippon Ichi Software ID"/>
                                     <controls:UserInput x:Name="OriginIDTextBox" Label="Origin ID"/>
                                     <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"/>
-                                    <controls:UserInput x:Name="PPNTextBox" Label="PPN"/>
                                     <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"/>
                                     <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"/>
                                     <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"/>
                                     <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"/>
                                     <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"/>
-                                    <controls:UserInput x:Name="VFCCodeTextBox" Label="VFC code"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
@@ -328,6 +336,7 @@
                         <StackPanel Orientation="Vertical">
                             <controls:UserInput x:Name="MatchedIDs" Label="Matched ID(s)" IsReadOnly="True"/>
                             <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="DMIHash" Label="DMI Hash" IsReadOnly="True"/>
                             <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True"/>
                             <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.ErrorsCount, Mode=TwoWay}"/>
@@ -341,6 +350,7 @@
                             <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="PFIHash" Label="PFI Hash" IsReadOnly="True"/>
                             <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
@@ -353,10 +363,14 @@
                             <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="SSHash" Label="Security Sector Hash" IsReadOnly="True"/>
                             <controls:UserInput x:Name="SecuritySectorRanges" Label="Security Sector Ranges" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.SecuritySectorRanges, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+                            <controls:UserInput x:Name="SSVersion" Label="Security Sector Version" IsReadOnly="True"/>
                             <controls:UserInput x:Name="VolumeLabel" Label="Volume Label" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="XeMID" Label="XeMID" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="XMID" Label="XMID" IsReadOnly="True"/>
 
                             <!-- TODO: Add track/checksum data once there's a reasonable way to do so -->
                         </StackPanel>
