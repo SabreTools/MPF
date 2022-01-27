@@ -890,6 +890,7 @@ namespace MPF.Library
                 // Add all special fields before any comments
                 info.CommonDiscInfo.Comments = string.Join(
                     "\n", info.CommonDiscInfo.CommentsSpecialFields
+                        .OrderBy(kvp => kvp.Key)
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
                         .Select(kvp =>
                         {
@@ -927,6 +928,7 @@ namespace MPF.Library
                 // Add all special fields before any contents
                 info.CommonDiscInfo.Contents = string.Join(
                     "\n", info.CommonDiscInfo.ContentsSpecialFields
+                        .OrderBy(kvp => kvp.Key)
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
                         .Select(kvp =>
                         {

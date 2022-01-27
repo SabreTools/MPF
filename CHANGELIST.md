@@ -53,6 +53,7 @@
 - Try to delete old log archive before writing
 - Add support for all ISO language codes
 - Add support for all ISO region codes
+- Ensure ordering in output site tags
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
