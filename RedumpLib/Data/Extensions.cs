@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using RedumpLib.Attributes;
 
 namespace RedumpLib.Data
@@ -909,7 +911,23 @@ namespace RedumpLib.Data
         /// </summary>
         /// <param name="language"></param>
         /// <returns></returns>
-        public static string ShortName(this Language? language) => AttributeHelper<Language?>.GetAttribute(language)?.ShortName;
+        public static string ShortName(this Language? language)
+        {
+            // Some languages need to use the alternate code instead
+            switch (language)
+            {
+                case Language.Albanian:
+                case Language.Armenian:
+                case Language.Icelandic:
+                case Language.Macedonian:
+                case Language.Romanian:
+                case Language.Slovak:
+                    return language.ThreeLetterCodeAlt();
+
+                default:
+                    return language.ThreeLetterCode();
+            }
+        }
 
         /// <summary>
         /// Get the Language enum value for a given string
@@ -918,108 +936,55 @@ namespace RedumpLib.Data
         /// <returns>Language represented by the string, if possible</returns>
         public static Language? ToLanguage(string lang)
         {
-            switch (lang)
-            {
-                case "afr":
-                    return Language.Afrikaans;
-                case "sqi":
-                    return Language.Albanian;
-                case "ara":
-                    return Language.Arabic;
-                case "hye":
-                    return Language.Armenian;
-                case "baq":
-                    return Language.Basque;
-                case "bel":
-                    return Language.Belarusian;
-                case "bul":
-                    return Language.Bulgarian;
-                case "cat":
-                    return Language.Catalan;
-                case "chi":
-                    return Language.Chinese;
-                case "hrv":
-                    return Language.Croatian;
-                case "cze":
-                    return Language.Czech;
-                case "dan":
-                    return Language.Danish;
-                case "dut":
-                    return Language.Dutch;
-                case "eng":
-                    return Language.English;
-                case "est":
-                    return Language.Estonian;
-                case "fin":
-                    return Language.Finnish;
-                case "fre":
-                    return Language.French;
-                case "gla":
-                    return Language.Gaelic;
-                case "ger":
-                    return Language.German;
-                case "gre":
-                    return Language.Greek;
-                case "heb":
-                    return Language.Hebrew;
-                case "hin":
-                    return Language.Hindi;
-                case "hun":
-                    return Language.Hungarian;
-                case "isl":
-                    return Language.Icelandic;
-                case "ind":
-                    return Language.Indonesian;
-                case "ita":
-                    return Language.Italian;
-                case "jap":
-                    return Language.Japanese;
-                case "kor":
-                    return Language.Korean;
-                case "lat":
-                    return Language.Latin;
-                case "lav":
-                    return Language.Latvian;
-                case "lit":
-                    return Language.Lithuanian;
-                case "mkd":
-                    return Language.Macedonian;
-                case "nor":
-                    return Language.Norwegian;
-                case "pol":
-                    return Language.Polish;
-                case "por":
-                    return Language.Portuguese;
-                case "pan":
-                    return Language.Punjabi;
-                case "ron":
-                    return Language.Romanian;
-                case "rus":
-                    return Language.Russian;
-                case "srp":
-                    return Language.Serbian;
-                case "slk":
-                    return Language.Slovak;
-                case "slv":
-                    return Language.Slovenian;
-                case "spa":
-                    return Language.Spanish;
-                case "swe":
-                    return Language.Swedish;
-                case "tam":
-                    return Language.Tamil;
-                case "tha":
-                    return Language.Thai;
-                case "tur":
-                    return Language.Turkish;
-                case "ukr":
-                    return Language.Ukrainian;
-                case "vie":
-                    return Language.Vietnamese;
-                default:
-                    return null;
-            }
+            var languages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
+
+            // Check ISO 639-1 codes
+            Dictionary<string, Language?> languageMapping = languages
+                .Where(l => l.TwoLetterCode() != null)
+                .ToDictionary(l => l.TwoLetterCode(), l => l);
+
+            if (languageMapping.ContainsKey(lang))
+                return languageMapping[lang];
+
+            // Check standard ISO 639-2 codes
+            languageMapping = languages
+                .Where(l => l.ThreeLetterCode() != null)
+                .ToDictionary(l => l.ThreeLetterCode(), l => l);
+
+            if (languageMapping.ContainsKey(lang))
+                return languageMapping[lang];
+
+            // Check alternate ISO 639-2 codes
+            languageMapping = languages
+                .Where(l => l.ThreeLetterCodeAlt() != null)
+                .ToDictionary(l => l.ThreeLetterCodeAlt(), l => l);
+
+            if (languageMapping.ContainsKey(lang))
+                return languageMapping[lang];
+
+            return null;
         }
+
+        /// <summary>
+        /// Get the ISO 639-2 code for each known language
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        private static string ThreeLetterCode(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.ThreeLetterCode;
+
+        /// <summary>
+        /// Get the ISO 639-2 alternate code for each known language
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        private static string ThreeLetterCodeAlt(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.ThreeLetterCodeAlt;
+
+        /// <summary>
+        /// Get the ISO 639-1 code for each known language
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        private static string TwoLetterCode(this Language? language) => ((LanguageAttribute)AttributeHelper<Language?>.GetAttribute(language))?.TwoLetterCode;
 
         #endregion
 
