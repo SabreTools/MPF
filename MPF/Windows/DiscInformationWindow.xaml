@@ -229,23 +229,33 @@
                             <controls:UserInput x:Name="GeneralContent" Label="General"
                                                 Text="{Binding SubmissionInfo.CommonDiscInfo.Contents, Mode=TwoWay}" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
+                            
+                            <!-- Games -->
+                            <controls:UserInput x:Name="GamesTextBox" Label="Games" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="NetYarozeGamesTextBox" Label="Net Yaroze Games" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            
+                            <!-- Demos -->
                             <controls:UserInput x:Name="PlayableDemosTextBox" Label="Playable Demos" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="RollingDemosTextBox" Label="Rolling Demos" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
-                            <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50"
-                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="TechDemosTextBox" Label="Tech Demos" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+
+                            <!-- Video -->
+                            <controls:UserInput x:Name="GameFootageTextBox" Label="Game Footage" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                             <controls:UserInput x:Name="VideosTextBox" Label="Videos" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+
+                            <!-- Miscellaneous -->
+                            <controls:UserInput x:Name="PatchesTextBox" Label="Patches" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="SavegamesTextBox" Label="Savegames" TextHeight="50"
+                                                Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
+                            <controls:UserInput x:Name="ExtrasTextBox" Label="Extras" TextHeight="50"
                                                 Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top"/>
                         </StackPanel>
                     </ScrollViewer>

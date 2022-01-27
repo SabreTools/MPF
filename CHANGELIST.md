@@ -56,6 +56,7 @@
 - Ensure ordering in output site tags
 - Make site code formatting helper method
 - Better helper method organization
+- Start supporting ordered tags and non-tags
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

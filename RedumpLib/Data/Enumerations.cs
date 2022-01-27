@@ -3465,6 +3465,10 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:GF]", LongName = "<b>Game Footage</b>:")]
         GameFootage,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Games</b>:", LongName = "<b>Games</b>:")]
+        Games,
+
         [HumanReadable(ShortName = "[T:G]", LongName = "<b>Genre</b>:")]
         Genre,
 

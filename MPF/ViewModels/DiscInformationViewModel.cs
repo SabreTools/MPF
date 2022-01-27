@@ -268,24 +268,33 @@ namespace MPF.GUI.ViewModels
             // Content Fields
             if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields != null)
             {
-                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Extras))
-                    Parent.ExtrasTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Extras];
-                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.GameFootage))
-                    Parent.GameFootageTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.GameFootage];
+                // Games
+                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Games))
+                    Parent.GamesTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Games];
                 if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.NetYarozeGames))
                     Parent.NetYarozeGamesTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.NetYarozeGames];
-                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Patches))
-                    Parent.PatchesTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Patches];
+
+                // Demos
                 if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.PlayableDemos))
                     Parent.PlayableDemosTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.PlayableDemos];
                 if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.RollingDemos))
                     Parent.RollingDemosTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.RollingDemos];
-                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Savegames))
-                    Parent.SavegamesTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Savegames];
                 if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.TechDemos))
                     Parent.TechDemosTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.TechDemos];
+
+                // Video
+                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.GameFootage))
+                    Parent.GameFootageTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.GameFootage];
                 if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Videos))
                     Parent.VideosTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Videos];
+
+                // Miscellaneous
+                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Patches))
+                    Parent.PatchesTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Patches];
+                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Savegames))
+                    Parent.SavegamesTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Savegames];
+                if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields.ContainsKey(SiteCode.Extras))
+                    Parent.ExtrasTextBox.Text = SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Extras];
             }
         }
 

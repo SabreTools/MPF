@@ -912,8 +912,7 @@ namespace MPF.Library
 
                 // Add all special fields before any contents
                 info.CommonDiscInfo.Contents = string.Join(
-                    "\n", info.CommonDiscInfo.ContentsSpecialFields
-                        .OrderBy(kvp => kvp.Key)
+                    "\n", OrderContentTags(info.CommonDiscInfo.ContentsSpecialFields)
                         .Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value))
                         .Select(FormatSiteTag)
                         .Where(s => !string.IsNullOrEmpty(s))
@@ -1873,6 +1872,64 @@ namespace MPF.Library
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// Order comment code tags according to Redump requirements
+        /// </summary>
+        /// <returns>Ordered list of KeyValuePairs representing the tags and values</returns>
+        private static List<KeyValuePair<SiteCode?, string>> OrderCommentTags(Dictionary<SiteCode?, string> tags)
+        {
+            var sorted = new List<KeyValuePair<SiteCode?, string>>();
+
+            // If the input is invalid, just return an empty set
+            if (tags == null || tags.Count == 0)
+                return sorted;
+
+            return sorted;
+        }
+
+        /// <summary>
+        /// Order content code tags according to Redump requirements
+        /// </summary>
+        /// <returns>Ordered list of KeyValuePairs representing the tags and values</returns>
+        private static List<KeyValuePair<SiteCode?, string>> OrderContentTags(Dictionary<SiteCode?, string> tags)
+        {
+            var sorted = new List<KeyValuePair<SiteCode?, string>>();
+
+            // If the input is invalid, just return an empty set
+            if (tags == null || tags.Count == 0)
+                return sorted;
+
+            // Games
+            if (tags.ContainsKey(SiteCode.Games))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Games, tags[SiteCode.Games]));
+            if (tags.ContainsKey(SiteCode.NetYarozeGames))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.NetYarozeGames, tags[SiteCode.NetYarozeGames]));
+            
+            // Demos
+            if (tags.ContainsKey(SiteCode.PlayableDemos))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.PlayableDemos, tags[SiteCode.PlayableDemos]));
+            if (tags.ContainsKey(SiteCode.RollingDemos))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.RollingDemos, tags[SiteCode.RollingDemos]));
+            if (tags.ContainsKey(SiteCode.TechDemos))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.TechDemos, tags[SiteCode.TechDemos]));
+
+            // Video
+            if (tags.ContainsKey(SiteCode.GameFootage))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.GameFootage, tags[SiteCode.GameFootage]));
+            if (tags.ContainsKey(SiteCode.Videos))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Videos, tags[SiteCode.Videos]));
+
+            // Miscellaneous
+            if (tags.ContainsKey(SiteCode.Patches))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Patches, tags[SiteCode.Patches]));
+            if (tags.ContainsKey(SiteCode.Savegames))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Savegames, tags[SiteCode.Savegames]));
+            if (tags.ContainsKey(SiteCode.Extras))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Extras, tags[SiteCode.Extras]));
+
+            return sorted;
         }
 
         #endregion
