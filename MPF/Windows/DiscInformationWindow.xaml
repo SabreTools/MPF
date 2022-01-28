@@ -222,6 +222,7 @@
                                     <controls:UserInput x:Name="PonyCanyonIDTextBox" Label="Pony Canyon ID"/>
                                     <controls:UserInput x:Name="SegaIDTextBox" Label="Sega ID"/>
                                     <controls:UserInput x:Name="SelenIDTextBox" Label="Selen ID"/>
+                                    <controls:UserInput x:Name="SierraIDTextBox" Label="Sierra ID"/>
                                     <controls:UserInput x:Name="TaitoIDTextBox" Label="Taito ID"/>
                                     <controls:UserInput x:Name="UbisoftIDTextBox" Label="Ubisoft ID"/>
                                     <controls:UserInput x:Name="ValveIDTextBox" Label="Valve ID"/>

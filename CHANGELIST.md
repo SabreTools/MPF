@@ -65,6 +65,7 @@
 - Disable unnecessary cuesheet parsing
 - Fix incorrect region two-letter code
 - Adjust long names for some languages
+- Add Sierra ID to list of pseudo-tags
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

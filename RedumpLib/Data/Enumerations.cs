@@ -3609,6 +3609,10 @@ namespace RedumpLib.Data
         Series,
 
         // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Sierra ID</b>:", LongName = "<b>Sierra ID</b>:")]
+        SierraID,
+
+        // TODO: This doesn't have a site tag yet
         [HumanReadable(ShortName = "<b>SS</b>:", LongName = "<b>SS</b>:")]
         SSHash,
 

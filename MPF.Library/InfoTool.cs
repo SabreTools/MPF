@@ -1958,6 +1958,8 @@ namespace MPF.Library
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SegaID, tags[SiteCode.SegaID]));
             if (tags.ContainsKey(SiteCode.SelenID))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SelenID, tags[SiteCode.SelenID]));
+            if (tags.ContainsKey(SiteCode.SierraID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SierraID, tags[SiteCode.SierraID]));
             if (tags.ContainsKey(SiteCode.TaitoID))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.TaitoID, tags[SiteCode.TaitoID]));
             if (tags.ContainsKey(SiteCode.UbisoftID))
