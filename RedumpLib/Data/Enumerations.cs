@@ -3451,11 +3451,11 @@ namespace RedumpLib.Data
         BBFCRegistrationNumber,
 
         // TODO: This doesn't have a site tag yet
-        [HumanReadable(ShortName = "<b>Disc Hologram ID/b>:", LongName = "<b>Disc Hologram ID</b>:")]
+        [HumanReadable(ShortName = "<b>Disc Hologram ID</b>:", LongName = "<b>Disc Hologram ID</b>:")]
         DiscHologramID,
 
         // TODO: This doesn't have a site tag yet
-        [HumanReadable(ShortName = "<b>DMI/b>:", LongName = "<b>DMI</b>:")]
+        [HumanReadable(ShortName = "<b>DMI</b>:", LongName = "<b>DMI</b>:")]
         DMIHash,
 
         [HumanReadable(ShortName = "[T:DNAS]", LongName = "<b>DNAS Disc ID</b>:")]
@@ -3530,7 +3530,7 @@ namespace RedumpLib.Data
         Patches,
 
         // TODO: This doesn't have a site tag yet
-        [HumanReadable(ShortName = "<b>PFI/b>:", LongName = "<b>PFI</b>:")]
+        [HumanReadable(ShortName = "<b>PFI</b>:", LongName = "<b>PFI</b>:")]
         PFIHash,
 
         [HumanReadable(ShortName = "[T:PD]", LongName = "<b>Playable Demos</b>:")]
@@ -3561,11 +3561,11 @@ namespace RedumpLib.Data
         Series,
 
         // TODO: This doesn't have a site tag yet
-        [HumanReadable(ShortName = "<b>SS/b>:", LongName = "<b>SS</b>:")]
+        [HumanReadable(ShortName = "<b>SS</b>:", LongName = "<b>SS</b>:")]
         SSHash,
 
         // TODO: This doesn't have a site tag yet
-        [HumanReadable(ShortName = "<b>SS version/b>:", LongName = "<b>SS version</b>:")]
+        [HumanReadable(ShortName = "<b>SS version</b>:", LongName = "<b>SS version</b>:")]
         SSVersion,
 
         [HumanReadable(ShortName = "[T:TID]", LongName = "<b>Taito ID</b>:")]
