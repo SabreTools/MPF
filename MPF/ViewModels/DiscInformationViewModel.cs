@@ -279,8 +279,16 @@ namespace MPF.GUI.ViewModels
                     Parent.ValveIDTextBox.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ValveID];
 
                 // Read-Only Information
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DMIHash))
+                    Parent.DMIHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.InternalSerialName))
                     Parent.InternalSerialName.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PFIHash))
+                    Parent.PFIHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SSHash))
+                    Parent.SSHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SSVersion))
+                    Parent.SSVersion.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
                     Parent.VolumeLabel.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.XeMID))
@@ -386,7 +394,11 @@ namespace MPF.GUI.ViewModels
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.ValveID] = Parent.ValveIDTextBox.Text;
 
             // Read-Only Information
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = Parent.DMIHash.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = Parent.PFIHash.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = Parent.SSHash.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = Parent.SSVersion.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = Parent.VolumeLabel.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = Parent.XeMID.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = Parent.XMID.Text;
