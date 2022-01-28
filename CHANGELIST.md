@@ -64,6 +64,7 @@
 - Fix parsing of non-tag tags again
 - Disable unnecessary cuesheet parsing
 - Fix incorrect region two-letter code
+- Adjust long names for some languages
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

@@ -3,6 +3,9 @@ namespace RedumpLib.Attributes
     /// <summary>
     /// Attribute specifc to Language values
     /// </summary>
+    /// <remarks>
+    /// Some languages have multiple proper names. Should all be supported?
+    /// </remarks>
     public class LanguageAttribute : HumanReadableAttribute
     {
         /// <summary>

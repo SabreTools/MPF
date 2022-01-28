@@ -135,7 +135,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Adangme", ThreeLetterCode = "ada")]
         Adangme,
 
-        [Language(LongName = "Adyghe; Adygei", ThreeLetterCode = "ady")]
+        // Adyghe; Adygei
+        [Language(LongName = "Adyghe", ThreeLetterCode = "ady")]
         Adyghe,
 
         [Language(LongName = "Afar", TwoLetterCode = "aa", ThreeLetterCode = "aar")]
@@ -184,7 +185,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Arapaho", ThreeLetterCode = "arp")]
         Arapaho,
 
-        [Language(LongName = "Aromanian; Arumanian; Macedo-Romanian", ThreeLetterCode = "rup")]
+        // Aromanian; Arumanian; Macedo-Romanian
+        [Language(LongName = "Aromanian", ThreeLetterCode = "rup")]
         Aromanian,
 
         [Language(LongName = "Arawak", ThreeLetterCode = "arw")]
@@ -193,7 +195,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Assamese", TwoLetterCode = "as", ThreeLetterCode = "asm")]
         Assamese,
 
-        [Language(LongName = "Asturian; Bable; Leonese; Asturleonese", ThreeLetterCode = "ast")]
+        // Asturian; Bable; Leonese; Asturleonese
+        [Language(LongName = "Asturian", ThreeLetterCode = "ast")]
         Asturian,
 
         [Language(LongName = "Athapascan", ThreeLetterCode = "den")]
@@ -236,7 +239,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Basque", TwoLetterCode = "eu", ThreeLetterCode = "baq", ThreeLetterCodeAlt = "eus")]
         Basque,
 
-        [Language(LongName = "Beja; Bedawiyet", ThreeLetterCode = "bej")]
+        // Beja; Bedawiyet
+        [Language(LongName = "Beja", ThreeLetterCode = "bej")]
         Beja,
 
         [Language(LongName = "Belarusian", TwoLetterCode = "be", ThreeLetterCode = "bel")]
@@ -260,10 +264,12 @@ namespace RedumpLib.Data
         [Language(LongName = "Bislama", TwoLetterCode = "bla", ThreeLetterCode = "bis")]
         Bislama,
 
-        [Language(LongName = "Blin; Bilin", ThreeLetterCode = "byn")]
+        // Blin; Bilin
+        [Language(LongName = "Blin", ThreeLetterCode = "byn")]
         Blin,
 
-        [Language(LongName = "Blissymbols; Blissymbolics; Bliss", ThreeLetterCode = "zbl")]
+        // Blissymbols; Blissymbolics; Bliss
+        [Language(LongName = "Blissymbols", ThreeLetterCode = "zbl")]
         Blissymbols,
 
         [Language(LongName = "Bosnian", TwoLetterCode = "bs", ThreeLetterCode = "bos")]
@@ -294,7 +300,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Caddo", ThreeLetterCode = "cad")]
         Caddo,
 
-        [Language(LongName = "Catalan; Valencian", TwoLetterCode = "ca", ThreeLetterCode = "cat")]
+        // Catalan; Valencian
+        [Language(LongName = "Catalan", TwoLetterCode = "ca", ThreeLetterCode = "cat")]
         Catalan,
 
         [Language(LongName = "Cebuano", ThreeLetterCode = "ceb")]
@@ -321,7 +328,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Chibcha", ThreeLetterCode = "chb")]
         Chibcha,
 
-        [Language(LongName = "Chichewa; Chewa; Nyanja", TwoLetterCode = "ny", ThreeLetterCode = "nya")]
+        // Chichewa; Chewa; Nyanja
+        [Language(LongName = "Chichewa", TwoLetterCode = "ny", ThreeLetterCode = "nya")]
         Chichewa,
 
         [Language(LongName = "Chinese", TwoLetterCode = "zh", ThreeLetterCode = "chi", ThreeLetterCodeAlt = "zho")]
@@ -330,7 +338,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Chinook jargon", ThreeLetterCode = "chn")]
         ChinookJargon,
 
-        [Language(LongName = "Chipewyan; Dene Suline", ThreeLetterCode = "chp")]
+        // Chipewyan; Dene Suline
+        [Language(LongName = "Chipewyan", ThreeLetterCode = "chp")]
         Chipewyan,
 
         [Language(LongName = "Choctaw", ThreeLetterCode = "cho")]
@@ -368,16 +377,17 @@ namespace RedumpLib.Data
         [Language(LongName = "Creoles and pidgins", ThreeLetterCode = "crp")]
         CreolesAndPidgins,
 
-        [Language(LongName = "Creoles and pidgins, English-based", ThreeLetterCode = "cpe")]
+        [Language(LongName = "Creoles and pidgins (English-based)", ThreeLetterCode = "cpe")]
         EnglishCreole,
 
-        [Language(LongName = "Creoles and pidgins, French-based", ThreeLetterCode = "cpf")]
+        [Language(LongName = "Creoles and pidgins (French-based)", ThreeLetterCode = "cpf")]
         FrenchCreole,
 
-        [Language(LongName = "Creoles and pidgins, Portuguese-based", ThreeLetterCode = "cpp")]
+        [Language(LongName = "Creoles and pidgins (Portuguese-based)", ThreeLetterCode = "cpp")]
         PortugueseCreole,
 
-        [Language(LongName = "Crimean Tatar; Crimean Turkish", ThreeLetterCode = "crh")]
+        // Crimean Tatar; Crimean Turkish
+        [Language(LongName = "Crimean Tatar", ThreeLetterCode = "crh")]
         CrimeanTatar,
 
         [Language(LongName = "Croatian", TwoLetterCode = "hr", ThreeLetterCode = "hrv")]
@@ -405,7 +415,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Dinka", ThreeLetterCode = "din")]
         Dinka,
 
-        [Language(LongName = "Divehi; Dhivehi; Maldivian", TwoLetterCode = "dv", ThreeLetterCode = "div")]
+        // Divehi; Dhivehi; Maldivian
+        [Language(LongName = "Divehi", TwoLetterCode = "dv", ThreeLetterCode = "div")]
         Divehi,
 
         [Language(LongName = "Dogrib", ThreeLetterCode = "dgr")]
@@ -417,7 +428,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Duala", ThreeLetterCode = "dua")]
         Duala,
 
-        [Language(LongName = "Dutch; Flemish", TwoLetterCode = "nl", ThreeLetterCode = "dut", ThreeLetterCodeAlt = "nld")]
+        // Dutch; Flemish
+        [Language(LongName = "Dutch", TwoLetterCode = "nl", ThreeLetterCode = "dut", ThreeLetterCodeAlt = "nld")]
         Dutch,
 
         [Language(LongName = "Dutch, Middle (ca.1050-1350)", ThreeLetterCode = "dum")]
@@ -488,7 +500,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Fijian", TwoLetterCode = "fj", ThreeLetterCode = "fij")]
         Fijian,
 
-        [Language(LongName = "Filipino; Pilipino", ThreeLetterCode = "fil")]
+        // Filipino; Pilipino
+        [Language(LongName = "Filipino", ThreeLetterCode = "fil")]
         Filipino,
 
         [Language(LongName = "Finnish", TwoLetterCode = "fi", ThreeLetterCode = "fin")]
@@ -519,7 +532,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Ga", ThreeLetterCode = "gaa")]
         Ga,
 
-        [Language(LongName = "Gaelic; Scottish Gaelic", TwoLetterCode = "gd", ThreeLetterCode = "gla")]
+        // Gaelic; Scottish Gaelic
+        [Language(LongName = "Gaelic", TwoLetterCode = "gd", ThreeLetterCode = "gla")]
         Gaelic,
 
         [Language(LongName = "Galibi Carib", ThreeLetterCode = "car")]
@@ -589,7 +603,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Haida", ThreeLetterCode = "hai")]
         Haida,
 
-        [Language(LongName = "Haitian; Haitian Creole", TwoLetterCode = "ht", ThreeLetterCode = "hat")]
+        // Haitian; Haitian Creole
+        [Language(LongName = "Haitian", TwoLetterCode = "ht", ThreeLetterCode = "hat")]
         Haitian,
 
         [Language(LongName = "Hausa", TwoLetterCode = "ha", ThreeLetterCode = "gau")]
@@ -616,7 +631,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Hittite", ThreeLetterCode = "hit")]
         Hittite,
 
-        [Language(LongName = "Hmong; Mong", ThreeLetterCode = "hmn")]
+        // Hmong; Mong
+        [Language(LongName = "Hmong", ThreeLetterCode = "hmn")]
         Hmong,
 
         [Language(LongName = "Hungarian", TwoLetterCode = "hu", ThreeLetterCode = "hun")]
@@ -653,10 +669,12 @@ namespace RedumpLib.Data
         [Language(LongName = "Ingush", ThreeLetterCode = "inh")]
         Ingush,
 
-        [Language(LongName = "Interlingua (International Auxiliary Language Association)", TwoLetterCode = "ia", ThreeLetterCode = "ina")]
+        // Interlingua (International Auxiliary Language Association)
+        [Language(LongName = "Interlingua", TwoLetterCode = "ia", ThreeLetterCode = "ina")]
         Interlingua,
 
-        [Language(LongName = "Interlingue; Occidental", TwoLetterCode = "ie", ThreeLetterCode = "ile")]
+        // Interlingue; Occidental
+        [Language(LongName = "Interlingue", TwoLetterCode = "ie", ThreeLetterCode = "ile")]
         Interlingue,
 
         [Language(LongName = "Inuktitut", TwoLetterCode = "iu", ThreeLetterCode = "iku")]
@@ -703,13 +721,16 @@ namespace RedumpLib.Data
         [Language(LongName = "Kabyle", ThreeLetterCode = "kab")]
         Kabyle,
 
-        [Language(LongName = "Kachin; Jingpho", ThreeLetterCode = "kac")]
+        // Kachin; Jingpho
+        [Language(LongName = "Kachin", ThreeLetterCode = "kac")]
         Kachin,
 
-        [Language(LongName = "Kalaallisut; Greenlandic", TwoLetterCode = "kl", ThreeLetterCode = "kal")]
+        // Kalaallisut; Greenlandic
+        [Language(LongName = "Kalaallisut", TwoLetterCode = "kl", ThreeLetterCode = "kal")]
         Kalaallisut,
 
-        [Language(LongName = "Kalmyk; Oirat", ThreeLetterCode = "xal")]
+        // Kalmyk; Oirat
+        [Language(LongName = "Kalmyk", ThreeLetterCode = "xal")]
         Kalmyk,
 
         [Language(LongName = "Kamba", ThreeLetterCode = "kam")]
@@ -745,10 +766,12 @@ namespace RedumpLib.Data
         [Language(LongName = "Khasi", ThreeLetterCode = "kha")]
         Khasi,
 
-        [Language(LongName = "Khotanese; Sakan", ThreeLetterCode = "kho")]
+        // Khotanese; Sakan
+        [Language(LongName = "Khotanese", ThreeLetterCode = "kho")]
         Khotanese,
 
-        [Language(LongName = "Kikuyu; Gikuyu", TwoLetterCode = "ki", ThreeLetterCode = "kik")]
+        // Kikuyu; Gikuyu
+        [Language(LongName = "Kikuyu", TwoLetterCode = "ki", ThreeLetterCode = "kik")]
         Kikuyu,
 
         [Language(LongName = "Kimbundu", ThreeLetterCode = "kmb")]
@@ -757,10 +780,12 @@ namespace RedumpLib.Data
         [Language(LongName = "Kinyarwanda", TwoLetterCode = "rw", ThreeLetterCode = "kin")]
         Kinyarwanda,
 
-        [Language(LongName = "Kirghiz; Kyrgyz", TwoLetterCode = "ky", ThreeLetterCode = "kir")]
+        // Kirghiz; Kyrgyz
+        [Language(LongName = "Kirghiz", TwoLetterCode = "ky", ThreeLetterCode = "kir")]
         Kirghiz,
 
-        [Language(LongName = "Klingon; tlhIngan-Hol", ThreeLetterCode = "tlh")]
+        // Klingon; tlhIngan-Hol
+        [Language(LongName = "Klingon", ThreeLetterCode = "tlh")]
         Klingon,
 
         [Language(LongName = "Komi", TwoLetterCode = "kv", ThreeLetterCode = "kom")]
@@ -781,7 +806,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Kpelle", ThreeLetterCode = "kpe")]
         Kpelle,
 
-        [Language(LongName = "Kuanyama; Kwanyama", TwoLetterCode = "kj", ThreeLetterCode = "kua")]
+        // Kuanyama; Kwanyama
+        [Language(LongName = "Kuanyama", TwoLetterCode = "kj", ThreeLetterCode = "kua")]
         Kuanyama,
 
         [Language(LongName = "Kumyk", ThreeLetterCode = "kum")]
@@ -821,7 +847,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Lezghian", ThreeLetterCode = "lez")]
         Lezghian,
 
-        [Language(LongName = "Limburgan; Limburger; Limburgish", TwoLetterCode = "li", ThreeLetterCode = "lim")]
+        // Limburgan; Limburger; Limburgish
+        [Language(LongName = "Limburgan", TwoLetterCode = "li", ThreeLetterCode = "lim")]
         Limburgan,
 
         [Language(LongName = "Lingala", TwoLetterCode = "ln", ThreeLetterCode = "lin")]
@@ -833,7 +860,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Lojban", ThreeLetterCode = "jbo")]
         Lojban,
 
-        [Language(LongName = "Low German; Low Saxon", ThreeLetterCode = "nds")]
+        // Low German; Low Saxon
+        [Language(LongName = "Low German", ThreeLetterCode = "nds")]
         LowGerman,
 
         [Language(LongName = "Lower Sorbian", ThreeLetterCode = "dsb")]
@@ -863,7 +891,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Lushai", ThreeLetterCode = "lus")]
         Lushai,
 
-        [Language(LongName = "Luxembourgish; Letzeburgesch", TwoLetterCode = "lb", ThreeLetterCode = "ltz")]
+        // Luxembourgish; Letzeburgesch
+        [Language(LongName = "Luxembourgish", TwoLetterCode = "lb", ThreeLetterCode = "ltz")]
         Luxembourgish,
 
         #endregion
@@ -915,7 +944,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Maori", TwoLetterCode = "mi", ThreeLetterCode = "mao", ThreeLetterCodeAlt = "mri")]
         Maori,
 
-        [Language(LongName = "Mapudungun; Mapuche", ThreeLetterCode = "arn")]
+        // Mapudungun; Mapuche
+        [Language(LongName = "Mapudungun", ThreeLetterCode = "arn")]
         Mapudungun,
 
         [Language(LongName = "Marathi", TwoLetterCode = "mr", ThreeLetterCode = "mar")]
@@ -936,7 +966,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Mende", ThreeLetterCode = "men")]
         Mende,
 
-        [Language(LongName = "Mi'kmaq; Micmac", ThreeLetterCode = "mic")]
+        // Mi'kmaq; Micmac
+        [Language(LongName = "Mi'kmaq", ThreeLetterCode = "mic")]
         Mikmaq,
 
         [Language(LongName = "Minangkabau", ThreeLetterCode = "min")]
@@ -973,7 +1004,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Nauru", TwoLetterCode = "na", ThreeLetterCode = "nau")]
         Nauru,
 
-        [Language(LongName = "Navajo; Navaho", TwoLetterCode = "nv", ThreeLetterCode = "nav")]
+        // Navajo; Navaho
+        [Language(LongName = "Navajo", TwoLetterCode = "nv", ThreeLetterCode = "nav")]
         Navajo,
 
         [Language(LongName = "Ndonga", TwoLetterCode = "ng", ThreeLetterCode = "ndo")]
@@ -982,7 +1014,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Neapolitan", ThreeLetterCode = "nap")]
         Neapolitan,
 
-        [Language(LongName = "Nepal Bhasa; Newari", ThreeLetterCode = "new")]
+        // Nepal Bhasa; Newari
+        [Language(LongName = "Nepal Bhasa", ThreeLetterCode = "new")]
         NepalBhasa,
 
         [Language(LongName = "Nepali", TwoLetterCode = "ne", ThreeLetterCode = "nep")]
@@ -1041,7 +1074,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Occitan (post 1500)", TwoLetterCode = "oc", ThreeLetterCode = "oci")]
         Occitan,
 
-        [Language(LongName = "Occitan, Old (to 1500); Provençal, Old (to 1500)", ThreeLetterCode = "pro")]
+        // Occitan, Old (to 1500); Provençal, Old (to 1500)
+        [Language(LongName = "Occitan, Old (to 1500)", ThreeLetterCode = "pro")]
         OldOccitan,
 
         [Language(LongName = "Ojibwa", TwoLetterCode = "oj", ThreeLetterCode = "oji")]
@@ -1056,7 +1090,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Osage", ThreeLetterCode = "osa")]
         Osage,
 
-        [Language(LongName = "Ossetian; Ossetic", TwoLetterCode = "os", ThreeLetterCode = "oss")]
+        // Ossetian; Ossetic
+        [Language(LongName = "Ossetian", TwoLetterCode = "os", ThreeLetterCode = "oss")]
         Ossetian,
         
         #endregion
@@ -1072,19 +1107,22 @@ namespace RedumpLib.Data
         [Language(LongName = "Pali", TwoLetterCode = "pi", ThreeLetterCode = "pli")]
         Pali,
 
-        [Language(LongName = "Pampanga; Kapampangan", ThreeLetterCode = "pam")]
+        // Pampanga; Kapampangan
+        [Language(LongName = "Pampanga", ThreeLetterCode = "pam")]
         Pampanga,
 
         [Language(LongName = "Pangasinan", ThreeLetterCode = "pag")]
         Pangasinan,
 
-        [Language(LongName = "Panjabi; Punjabi", TwoLetterCode = "pa", ThreeLetterCode = "pan")]
+        // Panjabi; Punjabi
+        [Language(LongName = "Panjabi", TwoLetterCode = "pa", ThreeLetterCode = "pan")]
         Panjabi,
 
         [Language(LongName = "Papiamento", ThreeLetterCode = "pap")]
         Papiamento,
 
-        [Language(LongName = "Pedi; Sepedi; Northern Sotho", ThreeLetterCode = "nso")]
+        // Pedi; Sepedi; Northern Sotho
+        [Language(LongName = "Pedi", ThreeLetterCode = "nso")]
         Pedi,
 
         [Language(LongName = "Persian", TwoLetterCode = "fa", ThreeLetterCode = "per", ThreeLetterCodeAlt = "fas")]
@@ -1102,7 +1140,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Portuguese", TwoLetterCode = "pt", ThreeLetterCode = "por")]
         Portuguese,
 
-        [Language(LongName = "Pushto; Pashto", TwoLetterCode = "ps", ThreeLetterCode = "pus")]
+        // Pushto; Pashto
+        [Language(LongName = "Pushto", TwoLetterCode = "ps", ThreeLetterCode = "pus")]
         Pushto,
 
         #endregion
@@ -1124,10 +1163,12 @@ namespace RedumpLib.Data
         [Language(LongName = "Rapanui", ThreeLetterCode = "rap")]
         Rapanui,
 
-        [Language(LongName = "Rarotongan; Cook Islands Maori", ThreeLetterCode = "rar")]
+        // Rarotongan; Cook Islands Maori
+        [Language(LongName = "Rarotongan", ThreeLetterCode = "rar")]
         Rarotongan,
 
-        [Language(LongName = "Romanian; Moldavian; Moldovan", TwoLetterCode = "ro", ThreeLetterCode = "rum", ThreeLetterCodeAlt = "ron")]
+        // Romanian; Moldavian; Moldovan
+        [Language(LongName = "Romanian", TwoLetterCode = "ro", ThreeLetterCode = "rum", ThreeLetterCodeAlt = "ron")]
         Romanian,
 
         [Language(LongName = "Romansh", TwoLetterCode = "rm", ThreeLetterCode = "roh")]
@@ -1188,7 +1229,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Shona", TwoLetterCode = "sn", ThreeLetterCode = "sna")]
         Shona,
 
-        [Language(LongName = "Sichuan Yi; Nuosu", TwoLetterCode = "ii", ThreeLetterCode = "iii")]
+        // Sichuan Yi; Nuosu
+        [Language(LongName = "Sichuan Yi", TwoLetterCode = "ii", ThreeLetterCode = "iii")]
         SichuanYi,
 
         [Language(LongName = "Sicilian", ThreeLetterCode = "scn")]
@@ -1206,7 +1248,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Sindhi", TwoLetterCode = "sd", ThreeLetterCode = "snd")]
         Sindhi,
 
-        [Language(LongName = "Sinhala; Sinhalese", TwoLetterCode = "si", ThreeLetterCode = "sin")]
+        // Sinhala; Sinhalese
+        [Language(LongName = "Sinhala", TwoLetterCode = "si", ThreeLetterCode = "sin")]
         Sinhala,
 
         [Language(LongName = "Skolt Sami", ThreeLetterCode = "sms")]
@@ -1239,7 +1282,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Southern Sami", ThreeLetterCode = "sma")]
         SouthernSami,
 
-        [Language(LongName = "Spanish; Castilian", TwoLetterCode = "es", ThreeLetterCode = "spa")]
+        // Spanish; Castilian
+        [Language(LongName = "Spanish", TwoLetterCode = "es", ThreeLetterCode = "spa")]
         Spanish,
 
         [Language(LongName = "Sranan Tongo", ThreeLetterCode = "srn")]
@@ -1269,7 +1313,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Swedish", TwoLetterCode = "sv", ThreeLetterCode = "swe")]
         Swedish,
 
-        [Language(LongName = "Swiss German; Alemannic; Alsatian", ThreeLetterCode = "gsw")]
+        // Swiss German; Alemannic; Alsatian
+        [Language(LongName = "Swiss German", ThreeLetterCode = "gsw")]
         SwissGerman,
 
         [Language(LongName = "Syriac", ThreeLetterCode = "syr")]
@@ -1382,7 +1427,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Ugaritic", ThreeLetterCode = "uga")]
         Ugaritic,
 
-        [Language(LongName = "Uighur; Uyghur", TwoLetterCode = "ug", ThreeLetterCode = "uig")]
+        // Uighur; Uyghur
+        [Language(LongName = "Uighur", TwoLetterCode = "ug", ThreeLetterCode = "uig")]
         Uighur,
 
         [Language(LongName = "Ukrainian", TwoLetterCode = "uk", ThreeLetterCode = "ukr")]
@@ -1442,7 +1488,8 @@ namespace RedumpLib.Data
         [Language(LongName = "Western Frisian", TwoLetterCode = "fy", ThreeLetterCode = "fry")]
         WesternFrisian,
 
-        [Language(LongName = "Wolaitta; Wolaytta", ThreeLetterCode = "wal")]
+        // Wolaitta; Wolaytta
+        [Language(LongName = "Wolaitta", ThreeLetterCode = "wal")]
         Wolaitta,
 
         [Language(LongName = "Wolof", TwoLetterCode = "wo", ThreeLetterCode = "wol")]
@@ -1481,14 +1528,15 @@ namespace RedumpLib.Data
         [Language(LongName = "Zapotec", ThreeLetterCode = "zap")]
         Zapotec,
 
-        //Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki
+        // Zaza; Dimili; Dimli; Kirdki; Kirmanjki; Zazaki
         [Language(LongName = "Zaza", ThreeLetterCode = "zza")]
         Zaza,
 
         [Language(LongName = "Zenaga", ThreeLetterCode = "zen")]
         Zenaga,
 
-        [Language(LongName = "Zhuang; Chuang", TwoLetterCode = "za", ThreeLetterCode = "zha")]
+        // Zhuang; Chuang
+        [Language(LongName = "Zhuang", TwoLetterCode = "za", ThreeLetterCode = "zha")]
         Zhuang,
 
         [Language(LongName = "Zulu", TwoLetterCode = "zu", ThreeLetterCode = "zul")]
