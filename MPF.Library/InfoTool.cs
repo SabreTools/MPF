@@ -1446,24 +1446,6 @@ namespace MPF.Library
                         continue;
                     }
 
-                    // If the line doesn't contain a site code tag, just keep it
-                    if (!commentLine.Contains("[T:"))
-                    {
-                        if (addToLast && lastSiteCode != null)
-                        {
-                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode]))
-                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += "\n";
-                            
-                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += commentLine;
-                        }
-                        else
-                        {
-                            newComments += $"{commentLine}\n";
-                        }
-
-                        continue;;
-                    }
-
                     // Otherwise, we need to find what tag is in use
                     bool foundTag = false;
                     foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
@@ -1491,9 +1473,16 @@ namespace MPF.Library
                     if (!foundTag)
                     {
                         if (addToLast && lastSiteCode != null)
-                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += $"\n{commentLine}";
+                        {
+                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode]))
+                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += "\n";
+
+                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += commentLine;
+                        }
                         else
+                        {
                             newComments += $"{commentLine}\n";
+                        }
                     }
                 }
 
@@ -1537,24 +1526,6 @@ namespace MPF.Library
                         continue;
                     }
 
-                    // If the line doesn't contain a site code tag, just keep it
-                    if (!contentLine.Contains("[T:"))
-                    {
-                        if (addToLast && lastSiteCode != null)
-                        {
-                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode]))
-                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += "\n";
-
-                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += contentLine;
-                        }
-                        else
-                        {
-                            newContents += $"{contentLine}\n";
-                        }
-
-                        continue;
-                    }
-
                     // Otherwise, we need to find what tag is in use
                     bool foundTag = false;
                     foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
@@ -1582,9 +1553,16 @@ namespace MPF.Library
                     if (!foundTag)
                     {
                         if (addToLast && lastSiteCode != null)
-                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += $"\n{contentLine}";
+                        {
+                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode]))
+                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += "\n";
+
+                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += contentLine;
+                        }
                         else
+                        {
                             newContents += $"{contentLine}\n";
+                        }
                     }
                 }
 

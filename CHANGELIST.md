@@ -61,6 +61,7 @@
 - Fix incorrect language three-letter code
 - Hook up additional Xbox field to disc info window
 - Fix non-tag tag shortnames
+- Fix parsing of non-tag tags again
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
