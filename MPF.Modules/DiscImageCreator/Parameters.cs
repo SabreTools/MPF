@@ -384,7 +384,7 @@ namespace MPF.Modules.DiscImageCreator
                     }
 
                     info.TracksAndWriteOffsets.Cuesheet = GetFullFile(basePath + ".cue") ?? "";
-                    var cueSheet = new CueSheet(basePath + ".cue"); // TODO: Do something with this
+                    //var cueSheet = new CueSheet(basePath + ".cue"); // TODO: Do something with this
 
                     // Audio CDs "all have an offset of 0" and should not be included
                     if (System != RedumpSystem.AudioCD)
