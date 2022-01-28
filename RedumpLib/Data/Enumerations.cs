@@ -2416,7 +2416,7 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Afghanistan", ShortName = "Af")]
         Afghanistan,
 
-        [HumanReadable(LongName = "Åland Islands", ShortName = "Af")]
+        [HumanReadable(LongName = "Åland Islands", ShortName = "Ax")]
         AlandIslands,
 
         [HumanReadable(LongName = "Albania", ShortName = "Al")]

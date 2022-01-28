@@ -255,7 +255,7 @@ namespace MPF.Test.RedumpLib
         /// Ensure that every Language that has an ISO 639-1 code is unique
         /// </summary>
         [Fact]
-        public void NoDuplicateTwoLetterCodeTest()
+        public void LanguageNoDuplicateTwoLetterCodeTest()
         {
             var fullLanguages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
             var filteredLanguages = new Dictionary<string, Language?>();
@@ -282,7 +282,7 @@ namespace MPF.Test.RedumpLib
         /// Ensure that every Language that has a standard/bibliographic ISO 639-2 code is unique
         /// </summary>
         [Fact]
-        public void NoDuplicateThreeLetterCodeTest()
+        public void LanguageNoDuplicateThreeLetterCodeTest()
         {
             var fullLanguages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
             var filteredLanguages = new Dictionary<string, Language?>();
@@ -309,7 +309,7 @@ namespace MPF.Test.RedumpLib
         /// Ensure that every Language that has a terminology ISO 639-2 code is unique
         /// </summary>
         [Fact]
-        public void NoDuplicateThreeLetterCodeAltTest()
+        public void LanguageNoDuplicateThreeLetterCodeAltTest()
         {
             var fullLanguages = Enum.GetValues(typeof(Language)).Cast<Language?>().ToList();
             var filteredLanguages = new Dictionary<string, Language?>();
@@ -472,6 +472,33 @@ namespace MPF.Test.RedumpLib
                 Assert.Null(actual);
             else
                 Assert.NotNull(actual);
+        }
+
+        /// <summary>
+        /// Ensure that every Language that has an ISO 639-1 code is unique
+        /// </summary>
+        [Fact]
+        public void RegionNoDuplicateShortNameTest()
+        {
+            var fullRegions = Enum.GetValues(typeof(Region)).Cast<Region?>().ToList();
+            var filteredRegions = new Dictionary<string, Region?>();
+
+            int totalCount = 0;
+            foreach (Region? region in fullRegions)
+            {
+                string code = region.ShortName();
+                if (string.IsNullOrWhiteSpace(code))
+                    continue;
+
+                // Throw if the code already exists
+                if (filteredRegions.ContainsKey(code))
+                    throw new DuplicateNameException($"Code {code} already in dictionary");
+
+                filteredRegions[code] = region;
+                totalCount++;
+            }
+
+            Assert.Equal(totalCount, filteredRegions.Count);
         }
 
         /// <summary>
