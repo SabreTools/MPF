@@ -66,6 +66,7 @@
 - Fix incorrect region two-letter code
 - Adjust long names for some languages
 - Add Sierra ID to list of pseudo-tags
+- Add another hand-formatted version of SS tag
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

@@ -1674,6 +1674,7 @@ namespace MPF.Library
             text = text.Replace("<b>LucasArts ID</b>:", ((SiteCode?)SiteCode.LucasArtsID).ShortName());
             text = text.Replace("PFI:", ((SiteCode?)SiteCode.PFIHash).ShortName());
             text = text.Replace("SS:", ((SiteCode?)SiteCode.SSHash).ShortName());
+            text = text.Replace("SSv1:", ((SiteCode?)SiteCode.SSHash).ShortName());
             text = text.Replace("SS version:", ((SiteCode?)SiteCode.SSVersion).ShortName());
             text = text.Replace("XeMID:", ((SiteCode?)SiteCode.XeMID).ShortName());
             text = text.Replace("XMID:", ((SiteCode?)SiteCode.XMID).ShortName());
