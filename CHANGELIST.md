@@ -67,6 +67,7 @@
 - Adjust long names for some languages
 - Add Sierra ID to list of pseudo-tags
 - Add another hand-formatted version of SS tag
+- Move internal serial before volume label
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
