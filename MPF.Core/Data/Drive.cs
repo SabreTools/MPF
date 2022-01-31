@@ -273,42 +273,18 @@ namespace MPF.Core.Data
             if (systemFromLabel != null)
                 return systemFromLabel;
 
-            // BD-Video
-            if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
-            {
-                // Technically BD-Audio has this as well, but it's hard to split that out right now
-                return RedumpSystem.BDVideo;
-            }
+            #region Consoles
 
-            // DVD-Audio and DVD-Video
+            // Microsoft Xbox 360
             try
             {
-                if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Any())
+                if (Directory.Exists(Path.Combine(drivePath, "$SystemUpdate"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "$SystemUpdate")).Any())
                 {
-                    return RedumpSystem.DVDAudio;
-                }
-
-                else if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Any())
-                {
-                    return RedumpSystem.DVDVideo;
+                    return RedumpSystem.MicrosoftXbox360;
                 }
             }
             catch { }
-
-            // HD-DVD-Video
-            try
-            {
-                if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Any())
-                {
-                    return RedumpSystem.HDDVDVideo;
-                }
-            }
-            catch
-            {
-            }
 
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
@@ -360,6 +336,45 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
+            #endregion
+
+            #region Video Formats
+
+            // BD-Video
+            if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
+            {
+                // Technically BD-Audio has this as well, but it's hard to split that out right now
+                return RedumpSystem.BDVideo;
+            }
+
+            // DVD-Audio and DVD-Video
+            try
+            {
+                if (Directory.Exists(Path.Combine(drivePath, "AUDIO_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "AUDIO_TS")).Any())
+                {
+                    return RedumpSystem.DVDAudio;
+                }
+
+                else if (Directory.Exists(Path.Combine(drivePath, "VIDEO_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "VIDEO_TS")).Any())
+                {
+                    return RedumpSystem.DVDVideo;
+                }
+            }
+            catch { }
+
+            // HD-DVD-Video
+            try
+            {
+                if (Directory.Exists(Path.Combine(drivePath, "HVDVD_TS"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "HVDVD_TS")).Any())
+                {
+                    return RedumpSystem.HDDVDVideo;
+                }
+            }
+            catch { }
+
             // VCD
             try
             {
@@ -370,6 +385,8 @@ namespace MPF.Core.Data
                 }
             }
             catch { }
+
+            #endregion
 
             // Default return
             return defaultValue;

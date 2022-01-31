@@ -68,6 +68,7 @@
 - Add Sierra ID to list of pseudo-tags
 - Add another hand-formatted version of SS tag
 - Move internal serial before volume label
+- Check for $SystemUpdate folder for X360 discs
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
