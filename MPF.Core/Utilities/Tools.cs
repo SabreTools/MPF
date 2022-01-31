@@ -123,14 +123,12 @@ namespace MPF.Core.Utilities
         #region Versioning
 
         /// <summary>
-        /// Check for a new MPF version
+        /// Check for a new MPF version, updating if the local copy is outdated.
         /// </summary>
         /// <returns>
         /// Bool representing if the values are different.
-        /// String representing the message to display the the user.
-        /// String representing the new release URL.
         /// </returns>
-        public static (bool different, string message, string url) CheckForNewVersion()
+        public static bool CheckForNewVersion()
         {
             try
             {
@@ -139,20 +137,15 @@ namespace MPF.Core.Utilities
                 string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
 
                 // Get the latest tag from GitHub
-                (string tag, string url) = GetRemoteVersionAndUrl();
+                string tag = GetRemoteVersion();
                 bool different = version != tag;
 
-                string message = $"Local version: {version}"
-                    + $"{Environment.NewLine}Remote version: {tag}"
-                    + (different
-                        ? $"{Environment.NewLine}The update URL has been added copied to your clipboard"
-                        : $"{Environment.NewLine}You have the newest version!");
-
-                return (different, message, url);
+                return (different);
             }
+
             catch (Exception ex)
             {
-                return (false, ex.ToString(), null);
+                return false;
             }
         }
 
@@ -166,9 +159,9 @@ namespace MPF.Core.Utilities
         }
 
         /// <summary>
-        /// Get the latest version of MPF from GitHub and the release URL
+        /// Get the latest version of MPF from GitHub
         /// </summary>
-        private static (string tag, string url) GetRemoteVersionAndUrl()
+        private static string GetRemoteVersion()
         {
 #if NETFRAMEWORK
             using (System.Net.WebClient wc = new System.Net.WebClient())
@@ -180,10 +173,10 @@ namespace MPF.Core.Utilities
                 string latestReleaseJsonString = wc.DownloadString(url);
                 var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
                 string latestTag = latestReleaseJson["tag_name"].ToString();
-                string releaseUrl = latestReleaseJson["html_url"].ToString();
 
-                return (latestTag, releaseUrl);
+                return latestTag;
             }
+
 #else
             using (System.Net.Http.HttpClient hc = new System.Net.Http.HttpClient())
             {
@@ -194,9 +187,8 @@ namespace MPF.Core.Utilities
                 string latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
                 string latestTag = latestReleaseJson["tag_name"].ToString();
-                string releaseUrl = latestReleaseJson["html_url"].ToString();
 
-                return (latestTag, releaseUrl);
+                return latestTag;
             }
 #endif
         }

@@ -30,6 +30,7 @@
     <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="2.5.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Onova" Version="2.6.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
       <PrivateAssets>all</PrivateAssets>

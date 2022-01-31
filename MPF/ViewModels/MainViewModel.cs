@@ -15,6 +15,8 @@ using MPF.UI.Core.Windows;
 using RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
+using Onova;
+using Onova.Services;
 
 namespace MPF.UI.ViewModels
 {
@@ -91,7 +93,34 @@ namespace MPF.UI.ViewModels
                 CheckForUpdates(showIfSame: false);
         }
 
-        #region Population
+        /// <summary>
+        /// Update the application
+        /// </summary>
+        private static async void UpdateAsync()
+        {
+#if NETFRAMEWORK
+            using (var manager = new UpdateManager(new GithubPackageResolver("SabreTools", "MPF", "MPF_*-net48.zip"), new ZipPackageExtractor()))
+#else
+            using (var manager = new UpdateManager(new GithubPackageResolver("SabreTools", "MPF", "MPF_*net6.0-windows.zip"), new ZipPackageExtractor()))
+#endif
+            {
+                // Check for new version and, if available, perform full update and restart
+                var result = await manager.CheckForUpdatesAsync();
+                if (result.CanUpdate)
+                {
+                    // Prepare an update by downloading and extracting the package
+                    await manager.PrepareUpdateAsync(result.LastVersion);
+
+                    // Launch an executable that will apply the update and restart afterwards
+                    manager.LaunchUpdater(result.LastVersion, true);
+
+                    // Terminate the running application so that the updater can overwrite files
+                    Environment.Exit(0);
+                }
+            }
+        }
+
+#region Population
 
         /// <summary>
         /// Get a complete list of active disc drives and fill the combo box
@@ -186,9 +215,9 @@ namespace MPF.UI.ViewModels
             App.Instance.UpdateLayout();
         }
 
-        #endregion
+#endregion
 
-        #region UI Commands
+#region UI Commands
 
         /// <summary>
         /// Change the currently selected media type
@@ -224,18 +253,14 @@ namespace MPF.UI.ViewModels
         /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
         public void CheckForUpdates(bool showIfSame)
         {
-            (bool different, string message, string url) = Tools.CheckForNewVersion();
-
-            // If we have a new version, put it in the clipboard
-            if (different)
-                Clipboard.SetText(url);
-
-            App.Logger.SecretLogLn(message);
-            if (url == null)
-                message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
-
-            if (showIfSame || different)
-                CustomMessageBox.Show(App.Instance, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+            if (Tools.CheckForNewVersion())
+            {
+                var result = CustomMessageBox.Show(App.Instance, "You are out of date, would you like to update?", "Version Update Check", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                    UpdateAsync();
+            }
+            else if (showIfSame)
+                CustomMessageBox.Show(App.Instance, "You have the newest version!", "Version Update Check", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -485,9 +510,9 @@ namespace MPF.UI.ViewModels
             }
         }
 
-        #endregion
+#endregion
 
-        #region UI Functionality
+#region UI Functionality
 
         /// <summary>
         /// Performs UI value setup end to end
@@ -764,9 +789,9 @@ namespace MPF.UI.ViewModels
             Application.Current.Resources["TabItem.Static.Border"] = Brushes.DarkGray;
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
 
         /// <summary>
         /// Browse for an output file path
@@ -1315,9 +1340,9 @@ namespace MPF.UI.ViewModels
             return true;
         }
 
-        #endregion
+#endregion
 
-        #region Event Handlers
+#region Event Handlers
 
         /// <summary>
         /// Handler for OptionsWindow OnUpdated event
@@ -1325,7 +1350,7 @@ namespace MPF.UI.ViewModels
         private void OnOptionsUpdated(object sender, EventArgs e) =>
             UpdateOptions(sender as OptionsWindow);
 
-        #region Progress Reporting
+#region Progress Reporting
 
         /// <summary>
         /// Handler for Result ProgressChanged event
@@ -1370,9 +1395,9 @@ namespace MPF.UI.ViewModels
             App.Logger.VerboseLogLn(message);
         }
 
-        #endregion
+#endregion
 
-        #region Menu Bar
+#region Menu Bar
 
         /// <summary>
         /// Handler for AboutMenuItem Click event
@@ -1404,9 +1429,9 @@ namespace MPF.UI.ViewModels
         private void OptionsMenuItemClick(object sender, RoutedEventArgs e) =>
             ShowOptionsWindow();
 
-        #endregion
+#endregion
 
-        #region User Area
+#region User Area
 
         /// <summary>
         /// Handler for CopyProtectScanButton Click event
@@ -1483,8 +1508,8 @@ namespace MPF.UI.ViewModels
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
         }
 
-        #endregion
+#endregion
 
-        #endregion // Event Handlers
+#endregion // Event Handlers
     }
 }
