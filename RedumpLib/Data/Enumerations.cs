@@ -3360,6 +3360,11 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "Uganda", ShortName = "Ug")]
         Uganda,
 
+        // Should be both "Gb" and "Uk"
+        // United Kingdom of Great Britain and Northern Ireland
+        [HumanReadable(LongName = "UK", ShortName = "Uk")]
+        UnitedKingdom,
+
         [HumanReadable(LongName = "UK, Australia", ShortName = "Uk,Au")]
         UKAustralia,
 
@@ -3368,10 +3373,6 @@ namespace RedumpLib.Data
 
         [HumanReadable(LongName = "United Arab Emirates", ShortName = "Ae")]
         UnitedArabEmirates,
-
-        // Should be both "Gb" and "Uk"
-        [HumanReadable(LongName = "United Kingdom of Great Britain and Northern Ireland", ShortName = "Uk")]
-        UnitedKingdom,
 
         // Commented out to avoid confusion
         //[HumanReadable(LongName = "United Nations", ShortName = "Un")]
@@ -3383,12 +3384,13 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "United States Minor Outlying Islands", ShortName = "Um")]
         UnitedStatesMinorOutlyingIslands,
 
-        // Should be "Us"
-        [HumanReadable(LongName = "United States of America", ShortName = "U")]
-        UnitedStatesOfAmerica,
-
         [HumanReadable(LongName = "Uruguay", ShortName = "Uy")]
         Uruguay,
+
+        // Should be "Us"
+        // United States of America
+        [HumanReadable(LongName = "USA", ShortName = "U")]
+        UnitedStatesOfAmerica,
 
         [HumanReadable(LongName = "USA, Asia", ShortName = "U,A")]
         USAAsia,
