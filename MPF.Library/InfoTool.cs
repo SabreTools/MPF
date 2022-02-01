@@ -70,15 +70,15 @@ namespace MPF.Library
                 {
                     System = system,
                     Media = mediaType.ToDiscType(),
-                    Title = (options.AddPlaceholders ? Template.RequiredValue : string.Empty),
-                    ForeignTitleNonLatin = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
-                    DiscNumberLetter = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
-                    DiscTitle = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    Title = options.AddPlaceholders ? Template.RequiredValue : string.Empty,
+                    ForeignTitleNonLatin = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
+                    DiscNumberLetter = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
+                    DiscTitle = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
                     Category = null,
                     Region = null,
                     Languages = null,
-                    Serial = (options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty),
-                    Barcode = (options.AddPlaceholders ? Template.OptionalValue : string.Empty),
+                    Serial = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
+                    Barcode = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
                     Contents = string.Empty,
                     ContentsSpecialFields = new Dictionary<SiteCode?, string>(),
                     Comments = string.Empty,
@@ -86,8 +86,8 @@ namespace MPF.Library
                 },
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
-                    Version = (options.AddPlaceholders ? Template.RequiredIfExistsValue : ""),
-                    OtherEditions = (options.AddPlaceholders ? "Original (VERIFY THIS)" : ""),
+                    Version = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
+                    OtherEditions = options.AddPlaceholders ? "(VERIFY THIS) Original" : string.Empty,
                 },
                 TracksAndWriteOffsets = new TracksAndWriteOffsetsSection(),
             };
@@ -115,12 +115,12 @@ namespace MPF.Library
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer1MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0AdditionalMould = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
 
                 case MediaType.DVD:
@@ -129,68 +129,68 @@ namespace MPF.Library
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0AdditionalMould = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0AdditionalMould = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
                     break;
 
                 case MediaType.NintendoGameCubeGameDisc:
-                    info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer1MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.CommonDiscInfo.Layer0AdditionalMould = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0AdditionalMould = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0AdditionalMould = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
-                    info.Extras.DiscKey = (options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
 
                     break;
 
@@ -198,27 +198,27 @@ namespace MPF.Library
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.CommonDiscInfo.Layer0MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer0MouldSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
-                        info.CommonDiscInfo.Layer1MasteringRing = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1MasteringSID = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
-                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                        info.CommonDiscInfo.Layer1MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                        info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
-                    info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
-                    info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : "");
+                    info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
+                    info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.TracksAndWriteOffsets.ClrMameProData = null;
                     break;
             }
@@ -249,26 +249,26 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.BandaiPlaydiaQuickInteractiveSystem:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
                 case RedumpSystem.BDVideo:
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
-                    info.CopyProtection.Protection = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCD32:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
                 case RedumpSystem.CommodoreAmigaCDTV:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Europe;
                     break;
 
@@ -277,7 +277,7 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.FujitsuFMTownsseries:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
@@ -286,39 +286,39 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.IncredibleTechnologiesEagle:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamieAmusement:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiFireBeat:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiSystemGV:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiSystem573:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.KonamiTwinkle:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.MattelHyperScan:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.NamcoSegaNintendoTriforce:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.NavisoftNaviken21:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
@@ -327,7 +327,7 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.NECPC98series:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? Region.Japan;
                     break;
 
@@ -336,23 +336,23 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.SegaChihiro:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaDreamcast:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaNaomi2:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SegaTitanVideo:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SharpX68000:
@@ -360,7 +360,7 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.SNKNeoGeoCD:
-                    info.CommonDiscInfo.EXEDateBuildDate = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -387,8 +387,8 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.Extras.DiscKey = (options.AddPlaceholders ? Template.RequiredValue : "");
-                    info.Extras.DiscID = (options.AddPlaceholders ? Template.RequiredValue : "");
+                    info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
+                    info.Extras.DiscID = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
                 case RedumpSystem.TomyKissSite:
@@ -396,7 +396,7 @@ namespace MPF.Library
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
-                    info.CopyProtection.Protection = (options.AddPlaceholders ? Template.RequiredIfExistsValue : "");
+                    info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
             }
 
@@ -405,9 +405,9 @@ namespace MPF.Library
 
             // Comments and contents have odd handling
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Comments))
-                info.CommonDiscInfo.Comments = (options.AddPlaceholders ? Template.OptionalValue : "");
+                info.CommonDiscInfo.Comments = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
-                info.CommonDiscInfo.Contents = (options.AddPlaceholders ? Template.OptionalValue : "");
+                info.CommonDiscInfo.Contents = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
 
             return info;
         }
@@ -1375,7 +1375,7 @@ namespace MPF.Library
             // TODO: Re-enable if there's a way of verifying against a disc
             //match = Constants.SerialRegex.Match(discData);
             //if (match.Success)
-            //    info.CommonDiscInfo.Serial = WebUtility.HtmlDecode(match.Groups[1].Value);
+            //    info.CommonDiscInfo.Serial = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
 
             // Error count
             if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
@@ -1388,7 +1388,7 @@ namespace MPF.Library
             // Version
             match = Constants.VersionRegex.Match(discData);
             if (match.Success)
-                info.VersionAndEditions.Version = WebUtility.HtmlDecode(match.Groups[1].Value);
+                info.VersionAndEditions.Version = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
 
             // Dumpers
             matches = Constants.DumpersRegex.Matches(discData);
@@ -1459,7 +1459,7 @@ namespace MPF.Library
 
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
-                            info.CommonDiscInfo.CommentsSpecialFields[siteCode] = commentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+                            info.CommonDiscInfo.CommentsSpecialFields[siteCode] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
 
                         // A subset of tags can be multiline
                         addToLast = IsMultiLine(siteCode);
@@ -1539,7 +1539,7 @@ namespace MPF.Library
 
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode))
-                            info.CommonDiscInfo.ContentsSpecialFields[siteCode] = contentLine.Replace(siteCode.ShortName(), string.Empty).Trim();
+                            info.CommonDiscInfo.ContentsSpecialFields[siteCode] = $"(VERIFY THIS) {contentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
 
                         // A subset of tags can be multiline
                         addToLast = IsMultiLine(siteCode);

@@ -71,6 +71,7 @@
 - Check for $SystemUpdate folder for X360 discs
 - Slightly rename UK and USA regions for UI
 - Add another hand-formatted version of SS tag
+- Add verification reminders for pulled tags
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
