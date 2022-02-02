@@ -73,6 +73,7 @@
 - Add another hand-formatted version of SS tag
 - Add verification reminders for pulled tags
 - Read longer string for Saturn internal serial
+- Ensure version only pulled if one doesn't exist
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

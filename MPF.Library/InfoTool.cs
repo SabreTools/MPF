@@ -1386,9 +1386,12 @@ namespace MPF.Library
             }
 
             // Version
-            match = Constants.VersionRegex.Match(discData);
-            if (match.Success)
-                info.VersionAndEditions.Version = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
+            if (info.VersionAndEditions.Version == null)
+            {
+                match = Constants.VersionRegex.Match(discData);
+                if (match.Success)
+                    info.VersionAndEditions.Version = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
+            }
 
             // Dumpers
             matches = Constants.DumpersRegex.Matches(discData);
