@@ -74,6 +74,7 @@
 - Add verification reminders for pulled tags
 - Read longer string for Saturn internal serial
 - Ensure version only pulled if one doesn't exist
+- Ensure Games pseudo-tag is multi-line
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

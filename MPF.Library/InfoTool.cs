@@ -1851,6 +1851,7 @@ namespace MPF.Library
             switch (siteCode)
             {
                 case SiteCode.Extras:
+                case SiteCode.Games:
                 case SiteCode.GameFootage:
                 case SiteCode.NetYarozeGames:
                 case SiteCode.Patches:
