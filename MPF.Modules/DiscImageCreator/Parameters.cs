@@ -2927,7 +2927,7 @@ namespace MPF.Modules.DiscImageCreator
                 string[] header = segaHeader.Split('\n');
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
-                serial = serialVersionLine.Substring(0, 8);
+                serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";

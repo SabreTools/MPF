@@ -72,6 +72,7 @@
 - Slightly rename UK and USA regions for UI
 - Add another hand-formatted version of SS tag
 - Add verification reminders for pulled tags
+- Read longer string for Saturn internal serial
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
