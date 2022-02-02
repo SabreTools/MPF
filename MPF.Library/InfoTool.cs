@@ -1673,6 +1673,7 @@ namespace MPF.Library
             }
 
             // For some outdated tags, we need to use alternate names
+            text = text.Replace("<b>Demos</b>:", ((SiteCode?)SiteCode.PlayableDemos).ShortName());
             text = text.Replace("DMI:", ((SiteCode?)SiteCode.DMIHash).ShortName());
             text = text.Replace("<b>LucasArts ID</b>:", ((SiteCode?)SiteCode.LucasArtsID).ShortName());
             text = text.Replace("PFI:", ((SiteCode?)SiteCode.PFIHash).ShortName());
