@@ -77,6 +77,7 @@
 - Ensure Games pseudo-tag is multi-line
 - Add alternate pseudo-tag for Playable Demos
 - Make error clearer if something is unsupported in Check
+- Ensure drive is not null for volume labels
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding
