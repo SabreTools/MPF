@@ -1623,19 +1623,20 @@ namespace MPF.Library
                 }
 
                 // Loop through all of the hashdata to find matching IDs
+                bool allFound = true;
                 resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
                 string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
                 foreach (string hashData in splitData)
                 {
-                    ValidateSingleTrack(wc, info, hashData, resultProgress);
+                    allFound &= ValidateSingleTrack(wc, info, hashData, resultProgress);
                 }
 
                 resultProgress?.Report(Result.Success("Match finding complete! " + (info.MatchedIDs.Count > 0
                     ? "Matched IDs: " + string.Join(",", info.MatchedIDs)
                     : "No matches found")));
 
-                // Exit early if there are no matched IDs
-                if (info.MatchedIDs.Count == 0)
+                // Exit early if one failed or there are no matched IDs
+                if (!allFound || info.MatchedIDs.Count == 0)
                     return;
 
                 // Find the first matched ID where the track count matches, we can grab a bunch of info from it
@@ -1737,11 +1738,15 @@ namespace MPF.Library
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="hashData">DAT-formatted hash data to parse out</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        private static void ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
+        /// <returns>True if the track was found, false otherwise</returns>
+        private static bool ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
         {
             // If the line isn't parseable, we can't validate
             if (!GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
-                return;
+            {
+                resultProgress?.Report(Result.Failure("Line could not be parsed for hash data"));
+                return false;
+            }
 
             // Get all matching IDs for the track
             List<int> newIds = ListSearchResults(wc, sha1);
@@ -1750,14 +1755,14 @@ namespace MPF.Library
             if (newIds == null)
             {
                 resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
-                return;
+                return false;
             }
 
             // If no IDs match any track, then we don't match a disc at all
             if (!newIds.Any())
             {
                 info.MatchedIDs = new List<int>();
-                return;
+                return false;
             }
 
             // If we have multiple tracks, only take IDs that are in common
@@ -1767,6 +1772,8 @@ namespace MPF.Library
             // If we're on the first track, all IDs are added
             else
                 info.MatchedIDs = newIds;
+
+            return true;
         }
 
         /// <summary>
