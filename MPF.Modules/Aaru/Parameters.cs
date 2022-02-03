@@ -183,7 +183,8 @@ namespace MPF.Modules.Aaru
                     break;
 
                 default:
-                    return (false, missingFiles); // TODO: Figure out more formats
+                    missingFiles.Add("Media and system combination not supported for Aaru");
+                    break;
             }
 
             return (!missingFiles.Any(), missingFiles);

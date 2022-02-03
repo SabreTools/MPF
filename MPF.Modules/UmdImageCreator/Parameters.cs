@@ -52,7 +52,8 @@ namespace MPF.Modules.UmdImageCreator
                     break;
 
                 default:
-                    return (false, missingFiles);
+                    missingFiles.Add("Media and system combination not supported for UmdImageCreator");
+                    break;
             }
 
             return (!missingFiles.Any(), missingFiles);

@@ -346,7 +346,8 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 default:
-                    return (false, missingFiles);
+                    missingFiles.Add("Media and system combination not supported for DiscImageCreator");
+                    break;
             }
 
             return (!missingFiles.Any(), missingFiles);

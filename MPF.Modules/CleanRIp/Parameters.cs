@@ -50,7 +50,8 @@ namespace MPF.Modules.CleanRip
                     break;
 
                 default:
-                    return (false, missingFiles);
+                    missingFiles.Add("Media and system combination not supported for CleanRip");
+                    break;
             }
 
             return (!missingFiles.Any(), missingFiles);
