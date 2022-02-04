@@ -1176,11 +1176,18 @@ namespace MPF.Modules
             if (!string.IsNullOrEmpty(bootValue))
             {
                 var match = Regex.Match(bootValue, @"cdrom.?:\\?(.*)");
-                if (match != null && match.Groups.Count > 1)
+                if (match.Groups.Count > 1)
                 {
-                    exeName = match.Groups[1].Value;
-                    exeName = exeName.Split(';')[0];
-                    serial = exeName.Replace('_', '-').Replace(".", string.Empty);
+                    // EXE name may have a trailing `;` after
+                    // EXE name should always be in all caps
+                    exeName = match.Groups[1].Value
+                        .Split(';')[0]
+                        .ToUpperInvariant();
+
+                    // Serial is most of the EXE name normalized
+                    serial = exeName
+                        .Replace('_', '-')
+                        .Replace(".", string.Empty);
                 }
             }
 
