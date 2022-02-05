@@ -119,6 +119,28 @@ namespace MPF.Library
         #region Public Functionality
 
         /// <summary>
+        /// Adjust output paths if we're using DiscImageCreator
+        /// </summary>
+        public void AdjustPathsForDiscImageCreator()
+        {
+            // Only DiscImageCreator has issues with paths
+            if (this.Parameters.InternalProgram != InternalProgram.DiscImageCreator)
+                return;
+
+            // Replace all instances in the output directory
+            this.OutputDirectory = this.OutputDirectory.Replace('.', '_');
+
+            // Currently, only periods in directories matter
+            // Leave the following code commented in case filename handling breaks again
+
+            // Replace all instances in the output filename, except the extension
+            //string tempFilename = Path.GetFileNameWithoutExtension(this.OutputFilename)
+            //    .Replace('.', '_');
+            //string tempExtension = Path.GetExtension(this.OutputFilename)?.TrimStart('.');
+            //this.OutputFilename = $"{tempFilename}.{tempExtension}";
+        }
+
+        /// <summary>
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>

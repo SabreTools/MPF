@@ -1202,6 +1202,9 @@ namespace MPF.GUI.ViewModels
             // One last check to determine environment, just in case
             Env = DetermineEnvironment();
 
+            // Run path adjustments for DiscImageCreator
+            Env.AdjustPathsForDiscImageCreator();
+
             // If still in custom parameter mode, check that users meant to continue or not
             if (App.Instance.EnableParametersCheckBox.IsChecked == true)
             {

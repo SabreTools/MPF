@@ -80,6 +80,7 @@
 - Ensure drive is not null for volume labels
 - Check explicitly for no matches on Redump pull
 - Normalize PS1/PS2 executable names
+- Adjust paths for DIC just before dumping
 
 ### 2.2 (2021-12-30)
 - Fix Saturn header finding

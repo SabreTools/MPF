@@ -1089,7 +1089,8 @@ namespace MPF.Library
 
                 // Take care of extra path characters
                 directory = new StringBuilder(directory)
-                    .Replace(':', '_', 0, directory.LastIndexOf(':') == -1 ? 0 : directory.LastIndexOf(':')).ToString();
+                    .Replace(':', '_', 0, directory.LastIndexOf(':') == -1 ? 0 : directory.LastIndexOf(':'))
+                    .ToString();
 
                 // Sanitize everything else
                 foreach (char c in Path.GetInvalidPathChars())
