@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
 - Add internal structure for special site codes
 - Add new tabs for special site information
