@@ -1602,7 +1602,7 @@ namespace MPF.Library
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        public static void FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        private static void FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
         {
             // Set the current dumper based on username
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
