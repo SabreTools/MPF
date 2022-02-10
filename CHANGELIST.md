@@ -4,6 +4,7 @@
 - Add /mr default flag options
 - Make FillFromRedump private again
 - Fix DVD layer finding corner case
+- Fix failing module tests
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

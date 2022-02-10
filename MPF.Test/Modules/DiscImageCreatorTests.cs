@@ -19,38 +19,102 @@ namespace MPF.Test.Modules
         [InlineData(RedumpSystem.RawThrillsVarious, MediaType.GDROM, null)]
         public void ParametersFromSystemAndTypeTest(RedumpSystem? knownSystem, MediaType? mediaType, string expected)
         {
-            var options = new Options { };
+            var options = new Options();
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
             Assert.Equal(expected, actual.BaseCommand);
         }
 
         [Theory]
-        [InlineData(RedumpSystem.AppleMacintosh, MediaType.LaserDisc, true, 20, null, null)]
-        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, false, 20, null, new string[] { FlagStrings.Raw })]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, 20, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
-        /* paranoid mode tests */
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, true, 1000, 2, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
-        [InlineData(RedumpSystem.AppleMacintosh, MediaType.CDROM, false, 20, null, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, 500, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, 500, null, new string[] { FlagStrings.CopyrightManagementInformation })]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, 500, null, new string[] { FlagStrings.CopyrightManagementInformation, FlagStrings.ScanFileProtect })]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, 500, null, new string[] { FlagStrings.CopyrightManagementInformation })]
-        /* reread c2 */
-        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, false, 1000, null, new string[] { FlagStrings.C2Opcode })]
-        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, false, -1, null, new string[] { FlagStrings.C2Opcode })]
-        public void ParametersFromOptionsTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoid, int rereadC2, int? subchannelLevel, string[] expected)
+        [InlineData(RedumpSystem.AppleMacintosh, MediaType.LaserDisc, null)] // Deliberately unsupported
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.NintendoGameCube, MediaType.NintendoGameCubeGameDisc, new string[] { FlagStrings.Raw })]
+        public void ParametersFromOptionsSpecialDefaultTest(RedumpSystem? knownSystem, MediaType? mediaType,string[] expected)
         {
-            var options = new Options { DICParanoidMode = paranoid, DICRereadCount = rereadC2 };
+            var options = new Options();
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
             HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
-            HashSet<string> actualSet = new HashSet<string>(actual.Keys ?? new string[0]);
+            HashSet<string> actualSet = GenerateUsedKeys(actual);
+            Assert.Equal(expectedSet, actualSet);
+        }
+
+        [Theory]
+        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, 1000, new string[] { FlagStrings.C2Opcode })]
+        [InlineData(RedumpSystem.SegaDreamcast, MediaType.GDROM, -1, new string[] { FlagStrings.C2Opcode })]
+        public void ParametersFromOptionsC2RereadTest(RedumpSystem? knownSystem, MediaType? mediaType, int rereadC2, string[] expected)
+        {
+            var options = new Options { DICRereadCount = rereadC2 };
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
+
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> actualSet = GenerateUsedKeys(actual);
+
             Assert.Equal(expectedSet, actualSet);
             if (rereadC2 == -1 || !knownSystem.MediaTypes().Contains(mediaType))
                 Assert.Null(actual.C2OpcodeValue[0]);
             else
                 Assert.Equal(rereadC2, actual.C2OpcodeValue[0]);
-            Assert.Equal(subchannelLevel, actual.SubchannelReadLevelValue);
+        }
+
+        [Theory]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, true, new string[0])]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, false, new string[0])]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, true, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.MultiSectorRead, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, false, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, new string[0])]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, new string[0])]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, new string[0])]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, new string[0])]
+        public void ParametersFromOptionsMultiSectorReadTest(RedumpSystem? knownSystem, MediaType? mediaType, bool multiSectorRead, string[] expected)
+        {
+            var options = new Options { DICMultiSectorRead = multiSectorRead };
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
+
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> actualSet = GenerateUsedKeys(actual);
+            Assert.Equal(expectedSet, actualSet);
+            if (expectedSet.Count != 0 && multiSectorRead)
+                Assert.Equal(0, actual.MultiSectorReadValue);
+        }
+
+        [Theory]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, true, new string[0])]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, false, new string[0])]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, true, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, false, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, new string[] { FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, new string[0])]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, new string[0])]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, new string[0])]
+        public void ParametersFromOptionsParanoidModeTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoidMode, string[] expected)
+        {
+            var options = new Options { DICParanoidMode = paranoidMode };
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
+
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> actualSet = GenerateUsedKeys(actual);
+            Assert.Equal(expectedSet, actualSet);
+            if (paranoidMode)
+            {
+                if (actualSet.Contains(FlagStrings.ScanSectorProtect))
+                    Assert.True(actual[FlagStrings.ScanSectorProtect]);
+
+                if (actualSet.Contains(FlagStrings.SubchannelReadLevel))
+                {
+                    Assert.True(actual[FlagStrings.SubchannelReadLevel]);
+                    Assert.Equal(2, actual.SubchannelReadLevelValue);
+                }
+            }
+            else
+            {
+                if (actualSet.Contains(FlagStrings.ScanSectorProtect))
+                    Assert.False(actual[FlagStrings.ScanSectorProtect]);
+
+                if (actualSet.Contains(FlagStrings.SubchannelReadLevel))
+                    Assert.False(actual[FlagStrings.SubchannelReadLevel]);
+
+                Assert.Null(actual.SubchannelReadLevelValue);
+            }
         }
 
         [Theory]
@@ -78,7 +142,7 @@ namespace MPF.Test.Modules
         [InlineData(MediaType.NONE, null)]
         public void MediaTypeToExtensionTest(MediaType? mediaType, string expected)
         {
-            string actual = MPF.Modules.DiscImageCreator.Converters.Extension(mediaType);
+            string actual = Converters.Extension(mediaType);
             Assert.Equal(expected, actual);
         }
 
@@ -102,7 +166,7 @@ namespace MPF.Test.Modules
         [InlineData(CommandStrings.XBOX, MediaType.DVD)]
         public void BaseCommandToMediaTypeTest(string command, MediaType? expected)
         {
-            MediaType? actual = MPF.Modules.DiscImageCreator.Converters.ToMediaType(command);
+            MediaType? actual = Converters.ToMediaType(command);
             Assert.Equal(expected, actual);
         }
 
@@ -126,7 +190,7 @@ namespace MPF.Test.Modules
         [InlineData(CommandStrings.XBOX, RedumpSystem.MicrosoftXbox)]
         public void BaseCommandToRedumpSystemTest(string command, RedumpSystem? expected)
         {
-            RedumpSystem? actual = MPF.Modules.DiscImageCreator.Converters.ToRedumpSystem(command);
+            RedumpSystem? actual = Converters.ToRedumpSystem(command);
             Assert.Equal(expected, actual);
         }
 
@@ -160,6 +224,26 @@ namespace MPF.Test.Modules
             string newParameters = parametersObject.GenerateParameters();
             Assert.NotNull(newParameters);
             Assert.Equal(originalParameters, newParameters);
+        }
+
+        /// <summary>
+        /// Generate a HashSet of keys that are considered to be set
+        /// </summary>
+        /// <param name="parameters">Parameters object to get keys from</param>
+        /// <returns>HashSet representing the strings</returns>
+        private static HashSet<string> GenerateUsedKeys(Parameters parameters)
+        {
+            HashSet<string> usedKeys = new HashSet<string>();
+            if (parameters?.Keys == null)
+                return usedKeys;
+
+            foreach (string key in parameters.Keys)
+            {
+                if (parameters[key] == true)
+                    usedKeys.Add(key);
+            }
+
+            return usedKeys;
         }
     }
 }
