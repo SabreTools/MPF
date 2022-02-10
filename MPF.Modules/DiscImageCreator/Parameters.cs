@@ -2686,14 +2686,16 @@ namespace MPF.Modules.DiscImageCreator
                         else if (xgd && line.StartsWith("LayerBreak"))
                         {
                             // LayerBreak: <size> (L0 Video: <size>, L0 Middle: <size>, L0 Game: <size>)
-                            return line.Split(' ')[1];
+                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                            return split[1];
                         }
 
                         // Dual-layer discs have a regular layerbreak
                         else if (!xgd && line.StartsWith("LayerZeroSector"))
                         {
                             // LayerZeroSector: <size> (<hex>)
-                            return line.Split(' ')[1];
+                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                            return split[1];
                         }
 
                         line = sr.ReadLine();
