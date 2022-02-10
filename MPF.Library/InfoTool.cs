@@ -1319,18 +1319,18 @@ namespace MPF.Library
                 if (firstParenLocation >= 0)
                 {
                     info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
-                    var subMatches = Constants.DiscNumberLetterRegex.Match(title);
-                    for (int i = 1; i < subMatches.Groups.Count; i++)
+                    var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
+                    foreach (Match subMatch in subMatches)
                     {
-                        string subMatch = subMatches.Groups[i].Value;
+                        var subMatchValue = subMatch.Groups[1].Value;
 
                         // Disc number or letter
-                        if (subMatch.StartsWith("Disc"))
-                            info.CommonDiscInfo.DiscNumberLetter = subMatch.Remove(0, "Disc ".Length);
+                        if (subMatchValue.StartsWith("Disc"))
+                            info.CommonDiscInfo.DiscNumberLetter = subMatchValue.Remove(0, "Disc ".Length);
 
                         // Disc title
                         else
-                            info.CommonDiscInfo.DiscTitle = subMatch;
+                            info.CommonDiscInfo.DiscTitle = subMatchValue;
                     }
                 }
                 // Otherwise, leave the title as-is
@@ -1602,7 +1602,7 @@ namespace MPF.Library
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        private static void FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        public static void FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
         {
             // Set the current dumper based on username
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
