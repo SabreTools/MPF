@@ -300,7 +300,7 @@
                 </TabItem>
 
                 <TabItem Header="DiscImageCreator" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="3">
+                    <UniformGrid Columns="2" Rows="5">
                         <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
                             IsChecked="{Binding Options.DICQuietMode}"
                             ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"
@@ -319,6 +319,18 @@
                         <CheckBox VerticalAlignment="Center" Content="Reset After Dump"
                             IsChecked="{Binding Options.DICResetDriveAfterDump}"
                             ToolTip="Reset disc drives after dumping; useful for some older machines" Margin="0,4"
+                            />
+
+                        <CheckBox VerticalAlignment="Center" Content="Multi-Sector Read"
+                            IsChecked="{Binding Options.DICMultiSectorRead}"
+                            ToolTip="Enable the /mr flag for BD drive dumping" Margin="0,4"
+                            />
+                        <Label/> <!-- Empty label for padding -->
+
+                        <Label Content="Multi-Sector Read Value:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                            Text="{Binding Options.DICMultiSectorReadValue}" IsEnabled="{Binding Options.DICMultiSectorRead}"
+                            ToolTip="Set the default value for the /mr flag"
                             />
 
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>

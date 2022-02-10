@@ -1655,6 +1655,9 @@ namespace MPF.Modules.DiscImageCreator
             {
                 case MediaType.CDROM:
                     this[FlagStrings.C2Opcode] = true;
+                    this[FlagStrings.MultiSectorRead] = options.DICMultiSectorRead;
+                    if (options.DICMultiSectorRead)
+                        this.MultiSectorReadValue = options.DICMultiSectorReadValue;
 
                     switch (this.System)
                     {

@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 - Update to DIC 20211001
 - Fix Redump disc title pulling
+- Add /mr default flag options
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

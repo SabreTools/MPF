@@ -199,6 +199,24 @@ namespace MPF.Core.Data
         #region DiscImageCreator
 
         /// <summary>
+        /// Enable multi-sector read flag by default
+        /// </summary>
+        public bool DICMultiSectorRead
+        {
+            get { return GetBooleanSetting(_settings, "DICMultiSectorRead", false); }
+            set { _settings["DICMultiSectorRead"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Include a default multi-sector read value
+        /// </summary>
+        public int DICMultiSectorReadValue
+        {
+            get { return GetInt32Setting(_settings, "DICMultiSectorReadValue", 0); }
+            set { _settings["DICMultiSectorRead"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Enable overly-secure dumping flags by default
         /// </summary>
         /// <remarks>
