@@ -67,6 +67,7 @@ namespace MPF.Modules.DiscImageCreator
         public const string SkipSector = "/sk";
         public const string SubchannelReadLevel = "/s";
         public const string UseAnchorVolumeDescriptorPointer = "/avdp";
+        public const string VerifyAudio = "/vrfy";
         public const string VideoNow = "/vn";
         public const string VideoNowColor = "/vnc";
         public const string VideoNowXP = "/vnx";

@@ -149,6 +149,12 @@ namespace MPF.Modules.DiscImageCreator
         public int? SubchannelReadLevelValue { get; set; }
 
         /// <summary>
+        /// Set verify audio level for the dump
+        /// Possible values: 0 no offset (default), 1 with offset, 2 without dumping
+        /// </summary>
+        public int? VerifyAudioValue { get; set; }
+
+        /// <summary>
         /// Set number of empty bytes to insert at the head of first track for VideoNow (default 0)
         /// </summary>
         public int? VideoNowValue { get; set; }
@@ -1179,6 +1185,22 @@ namespace MPF.Modules.DiscImageCreator
                     parameters.Add(FlagStrings.UseAnchorVolumeDescriptorPointer);
             }
 
+            // Verify Audio
+            if (IsFlagSupported(FlagStrings.VerifyAudio))
+            {
+                if (this[FlagStrings.VerifyAudio] == true)
+                {
+                    parameters.Add(FlagStrings.VerifyAudio);
+                    if (VerifyAudioValue != null)
+                    {
+                        if (VerifyAudioValue >= 0 && VerifyAudioValue <= 2)
+                            parameters.Add(VerifyAudioValue.ToString());
+                        else
+                            return null;
+                    }
+                }
+            }
+
             // VideoNow
             if (IsFlagSupported(FlagStrings.VideoNow))
             {
@@ -1271,6 +1293,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SeventyFour,
                     FlagStrings.SubchannelReadLevel,
+                    FlagStrings.VerifyAudio,
                     FlagStrings.VideoNow,
                     FlagStrings.VideoNowColor,
                     FlagStrings.VideoNowXP,
@@ -2298,6 +2321,11 @@ namespace MPF.Modules.DiscImageCreator
 
                     // SeventyFour
                     ProcessFlagParameter(parts, FlagStrings.UseAnchorVolumeDescriptorPointer, ref i);
+
+                    // VerifyAudio
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.VerifyAudio, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0 && intValue <= 2)
+                        VerifyAudioValue = intValue;
 
                     // VideoNow
                     intValue = ProcessInt32Parameter(parts, FlagStrings.VideoNow, ref i, missingAllowed: true);
