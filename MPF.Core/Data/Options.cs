@@ -307,6 +307,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Limit language and region selections to Redump-supported only
+        /// </summary>
+        public bool EnableRedumpCompatibility
+        {
+            get { return GetBooleanSetting(_settings, "EnableRedumpCompatibility", true); }
+            set { _settings["EnableRedumpCompatibility"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Show disc eject reminder before the disc information window is shown
         /// </summary>
         public bool ShowDiscEjectReminder

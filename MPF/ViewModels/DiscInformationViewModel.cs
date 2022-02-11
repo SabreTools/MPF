@@ -36,9 +36,150 @@ namespace MPF.GUI.ViewModels
         public List<Element<Region>> Regions { get; private set; } = Element<Region>.GenerateElements().ToList();
 
         /// <summary>
+        /// List of Redump-supported Regions
+        /// </summary>
+        private static readonly List<Region> RedumpRegions = new List<Region>
+        {
+            Region.Argentina,
+            Region.Asia,
+            Region.AsiaEurope,
+            Region.AsiaUSA,
+            Region.Australia,
+            Region.AustraliaGermany,
+            Region.AustraliaNewZealand,
+            Region.Austria,
+            Region.AustriaSwitzerland,
+            Region.Belarus,
+            Region.Belgium,
+            Region.BelgiumNetherlands,
+            Region.Brazil,
+            Region.Bulgaria,
+            Region.Canada,
+            Region.China,
+            Region.Croatia,
+            Region.Czechia,
+            Region.Denmark,
+            Region.Estonia,
+            Region.Europe,
+            Region.EuropeAsia,
+            Region.EuropeAustralia,
+            Region.EuropeCanada,
+            Region.EuropeGermany,
+            Region.Export,
+            Region.Finland,
+            Region.France,
+            Region.FranceSpain,
+            Region.Germany,
+            Region.GreaterChina,
+            Region.Greece,
+            Region.Hungary,
+            Region.Iceland,
+            Region.India,
+            Region.Ireland,
+            Region.Israel,
+            Region.Italy,
+            Region.Japan,
+            Region.JapanAsia,
+            Region.JapanEurope,
+            Region.JapanKorea,
+            Region.JapanUSA,
+            Region.SouthKorea,
+            Region.LatinAmerica,
+            Region.Lithuania,
+            Region.Netherlands,
+            Region.NewZealand,
+            Region.Norway,
+            Region.Poland,
+            Region.Portugal,
+            Region.Romania,
+            Region.RussianFederation,
+            Region.Scandinavia,
+            Region.Serbia,
+            Region.Singapore,
+            Region.Slovakia,
+            Region.SouthAfrica,
+            Region.Spain,
+            Region.SpainPortugal,
+            Region.Sweden,
+            Region.Switzerland,
+            Region.Taiwan,
+            Region.Thailand,
+            Region.Turkey,
+            Region.UnitedArabEmirates,
+            Region.UnitedKingdom,
+            Region.UKAustralia,
+            Region.Ukraine,
+            Region.UnitedStatesOfAmerica,
+            Region.USAAsia,
+            Region.USAAustralia,
+            Region.USABrazil,
+            Region.USACanada,
+            Region.USAEurope,
+            Region.USAGermany,
+            Region.USAJapan,
+            Region.USAKorea,
+            Region.World,
+        };
+
+        /// <summary>
         /// List of available languages
         /// </summary>
         public List<Element<Language>> Languages { get; private set; } = Element<Language>.GenerateElements().ToList();
+
+        /// <summary>
+        /// List of Redump-supported Languages
+        /// </summary>
+        private static readonly List<Language> RedumpLanguages = new List<Language>
+        {
+            Language.Afrikaans,
+            Language.Albanian,
+            Language.Arabic,
+            Language.Armenian,
+            Language.Basque,
+            Language.Belarusian,
+            Language.Bulgarian,
+            Language.Catalan,
+            Language.Chinese,
+            Language.Croatian,
+            Language.Czech,
+            Language.Danish,
+            Language.Dutch,
+            Language.English,
+            Language.Estonian,
+            Language.Finnish,
+            Language.French,
+            Language.Gaelic,
+            Language.German,
+            Language.Greek,
+            Language.Hebrew,
+            Language.Hindi,
+            Language.Hungarian,
+            Language.Icelandic,
+            Language.Indonesian,
+            Language.Italian,
+            Language.Japanese,
+            Language.Korean,
+            Language.Latin,
+            Language.Latvian,
+            Language.Lithuanian,
+            Language.Macedonian,
+            Language.Norwegian,
+            Language.Polish,
+            Language.Portuguese,
+            Language.Panjabi,
+            Language.Romanian,
+            Language.Russian,
+            Language.Serbian,
+            Language.Slovak,
+            Language.Slovenian,
+            Language.Spanish,
+            Language.Swedish,
+            Language.Tamil,
+            Language.Thai,
+            Language.Turkish,
+            Language.Ukrainian,
+            Language.Vietnamese,
+        };
 
         /// <summary>
         /// List of available languages
@@ -54,6 +195,13 @@ namespace MPF.GUI.ViewModels
         {
             Parent = parent;
             SubmissionInfo = submissionInfo.Clone() as SubmissionInfo ?? new SubmissionInfo();
+
+            // Limit lists, if necessary
+            if (App.Options.EnableRedumpCompatibility)
+            {
+                SetRedumpRegions();
+                SetRedumpLanguages();
+            }
 
             // Add handlers
             Parent.AcceptButton.Click += OnAcceptClick;
@@ -429,6 +577,22 @@ namespace MPF.GUI.ViewModels
             SubmissionInfo.CommonDiscInfo.ContentsSpecialFields[SiteCode.Extras] = Parent.ExtrasTextBox.Text;
 
             #endregion
+        }
+
+        /// <summary>
+        /// Repopulate the list of Languages based on Redump support
+        /// </summary>
+        private void SetRedumpLanguages()
+        {
+            this.Languages = RedumpLanguages.Select(l => new Element<Language>(l)).ToList();
+        }
+
+        /// <summary>
+        /// Repopulate the list of Regions based on Redump support
+        /// </summary>
+        private void SetRedumpRegions()
+        {
+            this.Regions = RedumpRegions.Select(r => new Element<Region>(r)).ToList();
         }
 
         /// <summary>

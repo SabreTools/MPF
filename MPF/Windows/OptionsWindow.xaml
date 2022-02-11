@@ -173,9 +173,14 @@
                                       />
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Tab Input"
-                                          IsChecked="{Binding Options.EnableTabsInInputFields}"
-                                          ToolTip="Enable entering tabs in supported input fields instead of tab navigation" Margin="0,4"
-                                />
+                                     IsChecked="{Binding Options.EnableTabsInInputFields}"
+                                     ToolTip="Enable entering tabs in supported input fields instead of tab navigation" Margin="0,4"
+                                     />
+
+                                <CheckBox VerticalAlignment="Center" Content="Enable Redump Compatibility"
+                                     IsChecked="{Binding Options.EnableRedumpCompatibility}"
+                                     ToolTip="Enable limiting region and language lists to only those supported by Redump" Margin="0,4"
+                                     />
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Eject Reminder"
                                      IsChecked="{Binding Options.ShowDiscEjectReminder}"
