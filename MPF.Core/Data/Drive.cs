@@ -46,6 +46,11 @@ namespace MPF.Core.Data
         public bool MarkedActive => driveInfo?.IsReady ?? false;
 
         /// <summary>
+        /// Represents the total size of the drive
+        /// </summary>
+        public long TotalSize => driveInfo?.TotalSize ?? default;
+
+        /// <summary>
         /// Media label as read by Windows
         /// </summary>
         /// <remarks>The try/catch is needed because Windows will throw an exception if the drive is not marked as active</remarks>
@@ -279,7 +284,8 @@ namespace MPF.Core.Data
             try
             {
                 if (Directory.Exists(Path.Combine(drivePath, "$SystemUpdate"))
-                    && Directory.EnumerateFiles(Path.Combine(drivePath, "$SystemUpdate")).Any())
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "$SystemUpdate")).Any()
+                    && this.TotalSize <= 500_000_000)
                 {
                     return RedumpSystem.MicrosoftXbox360;
                 }

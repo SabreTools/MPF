@@ -6,6 +6,7 @@
 - Fix DVD layer finding corner case
 - Fix failing module tests
 - Add option to limit region and language selections
+- Cap X360 directory check to 500MB
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
