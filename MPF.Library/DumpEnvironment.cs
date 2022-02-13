@@ -138,6 +138,9 @@ namespace MPF.Library
             //    .Replace('.', '_');
             //string tempExtension = Path.GetExtension(this.OutputFilename)?.TrimStart('.');
             //this.OutputFilename = $"{tempFilename}.{tempExtension}";
+
+            // Assign the path to the filename as well for dumping
+            ((Modules.DiscImageCreator.Parameters)this.Parameters).Filename = Path.Combine(this.OutputDirectory, this.OutputFilename);
         }
 
         /// <summary>
