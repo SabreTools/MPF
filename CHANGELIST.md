@@ -9,6 +9,7 @@
 - Cap X360 directory check to 500MB
 - Assign normalized path to parameters
 - Move path normalization to better place
+- Specifically include Unsafe Nuget package
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
