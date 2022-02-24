@@ -292,6 +292,17 @@ namespace MPF.Core.Data
             }
             catch { }
 
+            // Microsoft Xbox One
+            try
+            {
+                if (Directory.Exists(Path.Combine(drivePath, "MSXC"))
+                    && Directory.EnumerateFiles(Path.Combine(drivePath, "MSXC")).Any())
+                {
+                    return RedumpSystem.MicrosoftXboxOne;
+                }
+            }
+            catch { }
+
             // Sega Dreamcast
             if (File.Exists(Path.Combine(drivePath, "IP.BIN")))
             {
