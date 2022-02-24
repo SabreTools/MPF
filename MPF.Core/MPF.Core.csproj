@@ -51,11 +51,11 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.Management" Version="6.0.0-rc.1.21451.13" />
+    <PackageReference Include="System.Management" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'!='net48'">
-    <PackageReference Include="Aaru.Devices" Version="5.3.0-rc2" />
+    <PackageReference Include="Aaru.Devices" Version="5.3.0" />
   </ItemGroup>
 
   <ItemGroup>
