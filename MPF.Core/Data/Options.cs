@@ -249,6 +249,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Default number of DVD/HD-DVD/BD rereads
+        /// </summary>
+        public int DICDVDRereadCount
+        {
+            get { return GetInt32Setting(_settings, "DICDVDRereadCount", 10); }
+            set { _settings["DICDVDRereadCount"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Reset drive after dumping (useful for older drives)
         /// </summary>
         public bool DICResetDriveAfterDump

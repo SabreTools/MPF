@@ -12,6 +12,7 @@
 - Specifically include Unsafe Nuget package
 - Update Nuget packages to newest stable
 - Add Xbox One system detection
+- Update to DIC 20220301
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

@@ -338,10 +338,16 @@
                             ToolTip="Set the default value for the /mr flag"
                             />
 
-                        <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <Label Content="CD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
                             Text="{Binding Options.DICRereadCount}"
-                            ToolTip="Specifies how many rereads are attempted on C2 error"
+                            ToolTip="Specifies how many rereads are attempted on C2 error [CD only]"
+                            />
+
+                        <Label Content="DVD/HD-DVD/BD Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                        <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
+                            Text="{Binding Options.DICDVDRereadCount}"
+                            ToolTip="Specifies how many rereads are attempted on read error [DVD/HD-DVD/BD only]"
                             />
                     </UniformGrid>
                 </TabItem>

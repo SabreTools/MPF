@@ -57,14 +57,34 @@ namespace MPF.Test.Modules
         }
 
         [Theory]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, true, new string[0])]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, false, new string[0])]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, 1000, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, -1, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.BluRay, 1000, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.BluRay, -1, new string[] { FlagStrings.DVDReread })]
+        public void ParametersFromOptionsDVDRereadTest(RedumpSystem? knownSystem, MediaType? mediaType, int rereadDVDBD, string[] expected)
+        {
+            var options = new Options { DICDVDRereadCount = rereadDVDBD };
+            var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
+
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> actualSet = GenerateUsedKeys(actual);
+
+            Assert.Equal(expectedSet, actualSet);
+            if (rereadDVDBD == -1 || !knownSystem.MediaTypes().Contains(mediaType))
+                Assert.Null(actual.DVDRereadValue);
+            else
+                Assert.Equal(rereadDVDBD, actual.DVDRereadValue);
+        }
+
+        [Theory]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, true, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, false, new string[] { FlagStrings.DVDReread })]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, true, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.MultiSectorRead, FlagStrings.ScanFileProtect })]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, false, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect })]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, new string[0])]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, new string[0])]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, new string[0])]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, new string[0])]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, new string[] { FlagStrings.DVDReread })]
         public void ParametersFromOptionsMultiSectorReadTest(RedumpSystem? knownSystem, MediaType? mediaType, bool multiSectorRead, string[] expected)
         {
             var options = new Options { DICMultiSectorRead = multiSectorRead };
@@ -73,19 +93,19 @@ namespace MPF.Test.Modules
             HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
             HashSet<string> actualSet = GenerateUsedKeys(actual);
             Assert.Equal(expectedSet, actualSet);
-            if (expectedSet.Count != 0 && multiSectorRead)
+            if (expectedSet.Count != 1 && multiSectorRead)
                 Assert.Equal(0, actual.MultiSectorReadValue);
         }
 
         [Theory]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, true, new string[0])]
-        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, false, new string[0])]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, true, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.BDVideo, MediaType.BluRay, false, new string[] { FlagStrings.DVDReread })]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, true, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect, FlagStrings.ScanSectorProtect, FlagStrings.SubchannelReadLevel })]
         [InlineData(RedumpSystem.IBMPCcompatible, MediaType.CDROM, false, new string[] { FlagStrings.C2Opcode, FlagStrings.NoFixSubQSecuROM, FlagStrings.ScanFileProtect })]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, new string[] { FlagStrings.ScanFileProtect })]
-        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, new string[0])]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, new string[0])]
-        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, new string[0])]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, true, new string[] { FlagStrings.DVDReread, FlagStrings.ScanFileProtect })]
+        [InlineData(RedumpSystem.IBMPCcompatible, MediaType.DVD, false, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, true, new string[] { FlagStrings.DVDReread })]
+        [InlineData(RedumpSystem.HDDVDVideo, MediaType.HDDVD, false, new string[] { FlagStrings.DVDReread })]
         public void ParametersFromOptionsParanoidModeTest(RedumpSystem? knownSystem, MediaType? mediaType, bool paranoidMode, string[] expected)
         {
             var options = new Options { DICParanoidMode = paranoidMode };

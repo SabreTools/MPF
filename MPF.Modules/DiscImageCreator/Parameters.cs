@@ -89,13 +89,18 @@ namespace MPF.Modules.DiscImageCreator
         public string BEOpcodeValue { get; set; }
 
         /// <summary>
-        /// C2 reread options for dumping
+        /// C2 reread options for dumping [CD only]
         /// [0] - Reread value (default 4000)
         /// [1] - 0 reread issue sector (default), 1 reread all
         /// [2] - First LBA to reread (default 0)
         /// [3] - Last LBA to reread (default EOS)
         /// </summary>
         public int?[] C2OpcodeValue { get; set; } = new int?[4];
+
+        /// <summary>
+        /// C2 reread options for dumping [DVD/HD-DVD/BD only] (default 10)
+        /// </summary>
+        public int? DVDRereadValue { get; set; }
 
         /// <summary>
         /// End LBA for fixing
@@ -966,6 +971,17 @@ namespace MPF.Modules.DiscImageCreator
                     parameters.Add(FlagStrings.DisableBeep);
             }
 
+            // DVD/HD-DVD/BD Reread
+            if (IsFlagSupported(FlagStrings.DVDReread))
+            {
+                if (this[FlagStrings.DVDReread] == true)
+                {
+                    parameters.Add(FlagStrings.DVDReread);
+                    if (DVDRereadValue != null)
+                        parameters.Add(DVDRereadValue.ToString());
+                }
+            }
+
             // Extract MicroSoftCabFile
             if (IsFlagSupported(FlagStrings.ExtractMicroSoftCabFile))
             {
@@ -1261,8 +1277,8 @@ namespace MPF.Modules.DiscImageCreator
                 [CommandStrings.BluRay] = new List<string>()
                 {
                     FlagStrings.DisableBeep,
+                    FlagStrings.DVDReread,
                     FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
                     FlagStrings.UseAnchorVolumeDescriptorPointer,
                 },
 
@@ -1322,9 +1338,9 @@ namespace MPF.Modules.DiscImageCreator
                 {
                     FlagStrings.CopyrightManagementInformation,
                     FlagStrings.DisableBeep,
+                    FlagStrings.DVDReread,
                     FlagStrings.Fix,
                     FlagStrings.ForceUnitAccess,
-                    FlagStrings.NoSkipSS,
                     FlagStrings.PadSector,
                     FlagStrings.Raw,
                     FlagStrings.Resume,
@@ -1377,7 +1393,6 @@ namespace MPF.Modules.DiscImageCreator
                 [CommandStrings.SACD] = new List<string>()
                 {
                     FlagStrings.DisableBeep,
-                    FlagStrings.ForceUnitAccess,
                 },
 
                 [CommandStrings.Start] = new List<string>()
@@ -1425,7 +1440,6 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.NoSkipSS,
-                    FlagStrings.UseAnchorVolumeDescriptorPointer,
                 },
 
                 [CommandStrings.XBOXSwap] = new List<string>()
@@ -1610,6 +1624,7 @@ namespace MPF.Modules.DiscImageCreator
             AddOffsetValue = null;
             BEOpcodeValue = null;
             C2OpcodeValue = new int?[4];
+            DVDRereadValue = null;
             FixValue = null;
             ForceUnitAccessValue = null;
             NoSkipSecuritySectorValue = null;
@@ -1647,6 +1662,20 @@ namespace MPF.Modules.DiscImageCreator
                     break;
                 default:
                     C2OpcodeValue[0] = options.DICRereadCount;
+                    break;
+            }
+
+            // Set the DVD/HD-DVD/BD reread count
+            switch (options.DICDVDRereadCount)
+            {
+                case -1:
+                    DVDRereadValue = null;
+                    break;
+                case 0:
+                    DVDRereadValue = 10;
+                    break;
+                default:
+                    DVDRereadValue = options.DICDVDRereadCount;
                     break;
             }
 
@@ -1690,15 +1719,17 @@ namespace MPF.Modules.DiscImageCreator
                 case MediaType.DVD:
                     this[FlagStrings.CopyrightManagementInformation] = options.DICUseCMIFlag;
                     this[FlagStrings.ScanFileProtect] = options.DICParanoidMode;
+                    this[FlagStrings.DVDReread] = true;
                     break;
                 case MediaType.GDROM:
                     this[FlagStrings.C2Opcode] = true;
                     break;
                 case MediaType.HDDVD:
                     this[FlagStrings.CopyrightManagementInformation] = options.DICUseCMIFlag;
+                    this[FlagStrings.DVDReread] = true;
                     break;
                 case MediaType.BluRay:
-                    // Currently no defaults set
+                    this[FlagStrings.DVDReread] = true;
                     break;
 
                 // Special Formats
@@ -2201,6 +2232,11 @@ namespace MPF.Modules.DiscImageCreator
 
                     // Disable Beep
                     ProcessFlagParameter(parts, FlagStrings.DisableBeep, ref i);
+
+                    // DVD/HD-DVD/BD Reread
+                    intValue = ProcessInt32Parameter(parts, FlagStrings.DVDReread, ref i, missingAllowed: true);
+                    if (intValue != null && intValue != Int32.MinValue)
+                        DVDRereadValue = intValue;
 
                     // Extract MS-CAB
                     ProcessFlagParameter(parts, FlagStrings.ExtractMicroSoftCabFile, ref i);
