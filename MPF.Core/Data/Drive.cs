@@ -95,7 +95,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// DriveInfo object representing the drive, if possible
         /// </summary>
-        private readonly DriveInfo driveInfo;
+        private DriveInfo driveInfo;
 
         public Drive(InternalDriveType? driveType, DriveInfo driveInfo)
         {
@@ -497,5 +497,11 @@ namespace MPF.Core.Data
                 fs?.Dispose();
             }
         }
+
+        /// <summary>
+        /// Refresh the current drive information based on path
+        /// </summary>
+        public void RefreshDrive()
+            => this.driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d?.Name == this.Name);
     }
 }

@@ -1202,6 +1202,9 @@ namespace MPF.GUI.ViewModels
             // One last check to determine environment, just in case
             Env = DetermineEnvironment();
 
+            // Force an internal drive refresh in case the user entered things manually
+            Env.Drive.RefreshDrive();
+
             // If still in custom parameter mode, check that users meant to continue or not
             if (App.Instance.EnableParametersCheckBox.IsChecked == true)
             {
