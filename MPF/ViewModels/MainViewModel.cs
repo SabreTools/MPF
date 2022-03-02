@@ -76,6 +76,7 @@ namespace MPF.GUI.ViewModels
             // Disable buttons until we load fully
             App.Instance.StartStopButton.IsEnabled = false;
             App.Instance.MediaScanButton.IsEnabled = false;
+            App.Instance.UpdateVolumeLabel.IsEnabled = false;
             App.Instance.CopyProtectScanButton.IsEnabled = false;
 
             // Add the click handlers to the UI
@@ -105,6 +106,7 @@ namespace MPF.GUI.ViewModels
 
             // Always enable the media scan
             App.Instance.MediaScanButton.IsEnabled = true;
+            App.Instance.UpdateVolumeLabel.IsEnabled = true;
 
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(App.Options.IgnoreFixedDrives);
@@ -548,6 +550,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.CopyProtectScanButton.Click += CopyProtectScanButtonClick;
             App.Instance.EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
             App.Instance.MediaScanButton.Click += MediaScanButtonClick;
+            App.Instance.UpdateVolumeLabel.Click += UpdateVolumeLabelClick;
             App.Instance.OutputDirectoryBrowseButton.Click += OutputDirectoryBrowseButtonClick;
             App.Instance.StartStopButton.Click += StartStopButtonClick;
 
@@ -612,6 +615,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.EnableParametersCheckBox.IsEnabled = false;
             App.Instance.StartStopButton.Content = Interface.StopDumping;
             App.Instance.MediaScanButton.IsEnabled = false;
+            App.Instance.UpdateVolumeLabel.IsEnabled = false;
             App.Instance.CopyProtectScanButton.IsEnabled = false;
         }
 
@@ -631,6 +635,7 @@ namespace MPF.GUI.ViewModels
             App.Instance.EnableParametersCheckBox.IsEnabled = true;
             App.Instance.StartStopButton.Content = Interface.StartDumping;
             App.Instance.MediaScanButton.IsEnabled = true;
+            App.Instance.UpdateVolumeLabel.IsEnabled = true;
             App.Instance.CopyProtectScanButton.IsEnabled = true;
         }
 
@@ -1006,7 +1011,7 @@ namespace MPF.GUI.ViewModels
                     App.Instance.DriveLetterComboBox.SelectedIndex = driveIndex;
             }
             catch { }
-            
+
             int driveSpeed = Env.Parameters.Speed ?? -1;
             if (driveSpeed > 0)
                 App.Instance.DriveSpeedComboBox.SelectedValue = driveSpeed;
@@ -1067,6 +1072,7 @@ namespace MPF.GUI.ViewModels
                 App.Instance.StatusLabel.Content = "Scanning for copy protection... this might take a while!";
                 App.Instance.StartStopButton.IsEnabled = false;
                 App.Instance.MediaScanButton.IsEnabled = false;
+                App.Instance.UpdateVolumeLabel.IsEnabled = false;
                 App.Instance.CopyProtectScanButton.IsEnabled = false;
 
                 var progress = new Progress<ProtectionProgress>();
@@ -1096,6 +1102,7 @@ namespace MPF.GUI.ViewModels
                 App.Instance.StatusLabel.Content = tempContent;
                 App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
                 App.Instance.MediaScanButton.IsEnabled = true;
+                App.Instance.UpdateVolumeLabel.IsEnabled = true;
                 App.Instance.CopyProtectScanButton.IsEnabled = true;
             }
         }
@@ -1450,6 +1457,15 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         private void MediaScanButtonClick(object sender, RoutedEventArgs e) =>
             InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
+
+        /// <summary>
+        /// Handler for UpdateVolumeLabel Click event
+        /// </summary>
+        private void UpdateVolumeLabelClick(object sender, RoutedEventArgs w)
+        {
+            if (_canExecuteSelectionChanged)
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+        }
 
         /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
