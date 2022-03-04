@@ -478,7 +478,7 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
         /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
+        public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives, bool skipTypeDetection = false)
         {
             // Disable the dumping button
             App.Instance.StartStopButton.IsEnabled = false;
@@ -516,56 +516,18 @@ namespace MPF.GUI.ViewModels
                 await App.Instance.Dispatcher.InvokeAsync(DetermineSystemType);
             }
 
-            // Determine current media type, if possible
-            await App.Instance.Dispatcher.InvokeAsync(PopulateMediaType);
-            CacheCurrentDiscType();
-            SetCurrentDiscType();
-
-            // Set the initial environment and UI values
-            SetSupportedDriveSpeed();
-            Env = DetermineEnvironment();
-            GetOutputNames(true);
-            EnsureDiscInformation();
-
-            // Enable event handlers
-            EnableEventHandlers();
-
-            // Enable the dumping button, if necessary
-            App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
-        }
-
-        /// <summary>
-        /// Updates the volume label and output path
-        /// </summary>
-        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
-        private void UpdateVolumeLabel(bool removeEventHandlers)
-        {
-            // Disable the dumping button
-            App.Instance.StartStopButton.IsEnabled = false;
-
-            // Safely uncheck the parameters box, just in case
-            if (App.Instance.EnableParametersCheckBox.IsChecked == true)
+            // Are we just updating the output filename and path?
+            if (!skipTypeDetection)
             {
-                App.Instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
-                App.Instance.EnableParametersCheckBox.IsChecked = false;
-                App.Instance.ParametersTextBox.IsEnabled = false;
-                App.Instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+                // Determine current media type, if possible
+                await App.Instance.Dispatcher.InvokeAsync(PopulateMediaType);
+                CacheCurrentDiscType();
+                SetCurrentDiscType();
             }
 
-            // Set the UI color scheme according to the options
-            if (App.Options.EnableDarkMode)
-                EnableDarkMode();
-            else
-                DisableDarkMode();
-
-            // Force the UI to reload after applying the theme
-            App.Instance.UpdateLayout();
-
-            // Remove event handlers to ensure ordering
-            if (removeEventHandlers)
-                DisableEventHandlers();
-
-            // Updated the output filename and path
+            // Set the initial environment and UI values
+            if (!skipTypeDetection)
+                SetSupportedDriveSpeed();
             Env = DetermineEnvironment();
             GetOutputNames(true);
             EnsureDiscInformation();
@@ -1507,7 +1469,7 @@ namespace MPF.GUI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                UpdateVolumeLabel(removeEventHandlers: true);
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: false, skipTypeDetection: true);
         }
 
         /// <summary>
