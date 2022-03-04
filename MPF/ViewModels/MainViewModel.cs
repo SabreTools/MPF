@@ -535,6 +535,49 @@ namespace MPF.GUI.ViewModels
         }
 
         /// <summary>
+        /// Updates the volume label and output path
+        /// </summary>
+        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
+        private void UpdateVolumeLabel(bool removeEventHandlers)
+        {
+            // Disable the dumping button
+            App.Instance.StartStopButton.IsEnabled = false;
+
+            // Safely uncheck the parameters box, just in case
+            if (App.Instance.EnableParametersCheckBox.IsChecked == true)
+            {
+                App.Instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
+                App.Instance.EnableParametersCheckBox.IsChecked = false;
+                App.Instance.ParametersTextBox.IsEnabled = false;
+                App.Instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+            }
+
+            // Set the UI color scheme according to the options
+            if (App.Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                DisableDarkMode();
+
+            // Force the UI to reload after applying the theme
+            App.Instance.UpdateLayout();
+
+            // Remove event handlers to ensure ordering
+            if (removeEventHandlers)
+                DisableEventHandlers();
+
+            // Updated the output filename and path
+            Env = DetermineEnvironment();
+            GetOutputNames(true);
+            EnsureDiscInformation();
+
+            // Enable event handlers
+            EnableEventHandlers();
+
+            // Enable the dumping button, if necessary
+            App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+        }
+
+        /// <summary>
         /// Add all event handlers
         /// </summary>
         private void AddEventHandlers()
@@ -1464,7 +1507,7 @@ namespace MPF.GUI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+                UpdateVolumeLabel(removeEventHandlers: true);
         }
 
         /// <summary>
