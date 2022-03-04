@@ -478,7 +478,8 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
         /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives, bool skipTypeDetection = false)
+        /// <param name="refreshOnly">Whether the initialization only updates the output paths</param>
+        public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives, bool refreshOnly = false)
         {
             // Disable the dumping button
             App.Instance.StartStopButton.IsEnabled = false;
@@ -511,23 +512,22 @@ namespace MPF.GUI.ViewModels
                 App.Instance.StatusLabel.Content = "Creating drive list, please wait!";
                 await App.Instance.Dispatcher.InvokeAsync(PopulateDrives);
             }
-            else
+            else if (!refreshOnly)
             {
                 await App.Instance.Dispatcher.InvokeAsync(DetermineSystemType);
             }
 
             // Are we just updating the output filename and path?
-            if (!skipTypeDetection)
+            if (!refreshOnly)
             {
                 // Determine current media type, if possible
                 await App.Instance.Dispatcher.InvokeAsync(PopulateMediaType);
                 CacheCurrentDiscType();
                 SetCurrentDiscType();
+                SetSupportedDriveSpeed();
             }
 
             // Set the initial environment and UI values
-            if (!skipTypeDetection)
-                SetSupportedDriveSpeed();
             Env = DetermineEnvironment();
             GetOutputNames(true);
             EnsureDiscInformation();
@@ -1469,7 +1469,7 @@ namespace MPF.GUI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false, skipTypeDetection: true);
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: false, refreshOnly: true);
         }
 
         /// <summary>
