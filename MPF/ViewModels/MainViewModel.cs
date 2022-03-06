@@ -108,6 +108,9 @@ namespace MPF.GUI.ViewModels
             App.Instance.MediaScanButton.IsEnabled = true;
             App.Instance.UpdateVolumeLabel.IsEnabled = true;
 
+            // If we have a selected drive, keep track of it
+            char? lastSelectedDrive = (App.Instance.DriveLetterComboBox.SelectedValue as Drive)?.Letter;
+
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(App.Options.IgnoreFixedDrives);
             App.Instance.DriveLetterComboBox.ItemsSource = Drives;
@@ -116,14 +119,20 @@ namespace MPF.GUI.ViewModels
             {
                 App.Logger.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
 
-                // Check for active optical drives first
-                int index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
+                // Check for the last selected drive, if possible
+                int index = -1;
+                if (lastSelectedDrive != null)
+                    index = Drives.FindIndex(d => d.MarkedActive && d.Letter == lastSelectedDrive);
 
-                // Then we check for floppy drives
+                // Check for active optical drives
+                if (index == -1)
+                    index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Optical);
+
+                // Check for active floppy drives
                 if (index == -1)
                     index = Drives.FindIndex(d => d.MarkedActive && d.InternalDriveType == InternalDriveType.Floppy);
 
-                // Then we try all other drive types
+                // Check for any active drives
                 if (index == -1)
                     index = Drives.FindIndex(d => d.MarkedActive);
 
@@ -1232,46 +1241,9 @@ namespace MPF.GUI.ViewModels
 
             try
             {
-                // Validate that the user explicitly wants an inactive drive to be considered for dumping
-                if (!Env.Drive.MarkedActive)
-                {
-                    string message = "The currently selected drive does not appear to contain a disc! "
-                        + (!Env.System.DetectedByWindows() ? $"This is normal for {Env.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
-                        + "Do you want to continue?";
-
-                    MessageBoxResult mbresult = CustomMessageBox.Show(message, "No Disc Detected", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                    if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
-                    {
-                        App.Logger.LogLn("Dumping aborted!");
-                        return;
-                    }
-                }
-
-                // If a complete dump already exists
-                (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(Env.OutputDirectory, Env.OutputFilename, Env.Parameters, true);
-                if (foundFiles)
-                {
-                    MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                    if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
-                    {
-                        App.Logger.LogLn("Dumping aborted!");
-                        return;
-                    }
-                }
-
-                // Validate that at least some space exists
-                // TODO: Tie this to the size of the disc, type of disc, etc.
-                string fullPath = Path.GetFullPath(Env.OutputDirectory);
-                var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath));
-                if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30))
-                {
-                    MessageBoxResult mbresult = CustomMessageBox.Show("There is less than 1gb of space left on the target drive. Are you sure you want to continue?", "Low Space", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                    if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
-                    {
-                        App.Logger.LogLn("Dumping aborted!");
-                        return;
-                    }
-                }
+                // Run pre-dumping validation checks
+                if (!ValidateBeforeDumping())
+                    return;
 
                 // Disable all UI elements apart from dumping button
                 DisableAllUIElements();
@@ -1327,6 +1299,57 @@ namespace MPF.GUI.ViewModels
                 // Reset all UI elements
                 EnableAllUIElements();
             }
+        }
+
+        /// <summary>
+        /// Perform validation, including user input, before attempting to start dumping
+        /// </summary>
+        /// <returns>True if dumping should start, false otherwise</returns>
+        private bool ValidateBeforeDumping()
+        {
+            // Validate that the user explicitly wants an inactive drive to be considered for dumping
+            if (!Env.Drive.MarkedActive)
+            {
+                string message = "The currently selected drive does not appear to contain a disc! "
+                    + (!Env.System.DetectedByWindows() ? $"This is normal for {Env.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
+                    + "Do you want to continue?";
+
+                MessageBoxResult mbresult = CustomMessageBox.Show(message, "No Disc Detected", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                {
+                    App.Logger.LogLn("Dumping aborted!");
+                    return false;
+                }
+            }
+
+            // If a complete dump already exists
+            (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(Env.OutputDirectory, Env.OutputFilename, Env.Parameters, true);
+            if (foundFiles)
+            {
+                MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                {
+                    App.Logger.LogLn("Dumping aborted!");
+                    return false;
+                }
+            }
+
+            // Validate that at least some space exists
+            // TODO: Tie this to the size of the disc, type of disc, etc.
+            string fullPath = Path.GetFullPath(Env.OutputDirectory);
+            var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath));
+            if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30))
+            {
+                MessageBoxResult mbresult = CustomMessageBox.Show("There is less than 1gb of space left on the target drive. Are you sure you want to continue?", "Low Space", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+                if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                {
+                    App.Logger.LogLn("Dumping aborted!");
+                    return false;
+                }
+            }
+
+            // If nothing above fails, we want to continue
+            return true;
         }
 
         #endregion

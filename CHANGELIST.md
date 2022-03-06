@@ -16,6 +16,8 @@
 - Force internal drive refresh
 - Add single drive refresh button (IcySon55)
 - Fix "missing" option in window
+- Track last used drive on refresh
+- Clean up pre-dump validation
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
