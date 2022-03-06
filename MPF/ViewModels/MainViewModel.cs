@@ -1482,15 +1482,6 @@ namespace MPF.GUI.ViewModels
             InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
 
         /// <summary>
-        /// Handler for UpdateVolumeLabel Click event
-        /// </summary>
-        private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
-        {
-            if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
-        }
-
-        /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
         /// </summary>
         private void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1532,10 +1523,19 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Handler for SystemTypeComboBox SelectionChanged event
         /// </summary>
-        public void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
                 ChangeSystem();
+        }
+
+        /// <summary>
+        /// Handler for UpdateVolumeLabel Click event
+        /// </summary>
+        private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
         }
 
         #endregion
