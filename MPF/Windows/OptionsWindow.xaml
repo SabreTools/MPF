@@ -305,7 +305,7 @@
                 </TabItem>
 
                 <TabItem Header="DiscImageCreator" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="5">
+                    <UniformGrid Columns="2" Rows="6">
                         <CheckBox VerticalAlignment="Center" Content="Quiet Mode"
                             IsChecked="{Binding Options.DICQuietMode}"
                             ToolTip="Disable sounds (beeps) during and after operations" Margin="0,4"

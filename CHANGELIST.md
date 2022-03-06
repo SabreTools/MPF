@@ -15,6 +15,7 @@
 - Update to DIC 20220301
 - Force internal drive refresh
 - Add single drive refresh button (IcySon55)
+- Fix "missing" option in window
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
