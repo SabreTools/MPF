@@ -48,6 +48,9 @@ namespace MPF.Library
 
                 // Sanitize and join protections for writing
                 string protections = SanitizeFoundProtections(orderedDistinctProtections);
+                if (string.IsNullOrWhiteSpace(protections))
+                    return (true, "None found");
+
                 return (true, protections);
             }
             catch (Exception ex)
