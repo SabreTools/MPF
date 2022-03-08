@@ -1543,15 +1543,6 @@ namespace MPF.GUI.ViewModels
                 ChangeSystem();
         }
 
-        /// <summary>
-        /// Handler for UpdateVolumeLabel Click event
-        /// </summary>
-        private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
-        {
-            if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
-        }
-
         #endregion
 
         #endregion // Event Handlers
