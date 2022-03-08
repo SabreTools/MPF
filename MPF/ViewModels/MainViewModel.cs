@@ -1466,15 +1466,6 @@ namespace MPF.GUI.ViewModels
         }
 
         /// <summary>
-        /// Handler for DriveSpeedComboBox SelectionChanged event
-        /// </summary>
-        private void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_canExecuteSelectionChanged)
-                EnsureDiscInformation();
-        }
-
-        /// <summary>
         /// Handler for EnableParametersCheckBox Click event
         /// </summary>
         private void EnableParametersCheckBoxClick(object sender, RoutedEventArgs e) =>
@@ -1485,15 +1476,6 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         private void MediaScanButtonClick(object sender, RoutedEventArgs e) =>
             InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
-
-        /// <summary>
-        /// Handler for UpdateVolumeLabel Click event
-        /// </summary>
-        private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
-        {
-            if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false, refreshOnly: true);
-        }
 
         /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
@@ -1541,6 +1523,24 @@ namespace MPF.GUI.ViewModels
         {
             if (_canExecuteSelectionChanged)
                 ChangeSystem();
+        }
+
+        /// <summary>
+        /// Handler for DriveSpeedComboBox SelectionChanged event
+        /// </summary>
+        private void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                EnsureDiscInformation();
+        }
+
+        /// <summary>
+        /// Handler for UpdateVolumeLabel Click event
+        /// </summary>
+        private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                InitializeUIValues(removeEventHandlers: true, rescanDrives: false, refreshOnly: true);
         }
 
         #endregion
