@@ -22,6 +22,7 @@
 - Add upper case `<TAB>` processing
 - Reorder event handers
 - Handle sanitized protections edge case
+- Update Aaru Nuget package
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
