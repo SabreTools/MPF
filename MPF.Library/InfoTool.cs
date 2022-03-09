@@ -104,12 +104,8 @@ namespace MPF.Library
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            if (drive != null
-                && drive.GetRedumpSystemFromVolumeLabel() == null
-                && !info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
-            {
+            if (drive != null && drive.GetRedumpSystemFromVolumeLabel() == null)
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = drive.VolumeLabel;
-            }
 
             // Extract info based generically on MediaType
             switch (mediaType)
