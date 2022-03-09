@@ -222,15 +222,19 @@ namespace MPF.GUI.ViewModels
         {
             // Additional Information
             Parent.CommentsTextBox.Tab = true;
+
+            // Contents
             Parent.GeneralContent.Tab = true;
-            Parent.ExtrasTextBox.Tab = true;
-            Parent.GameFootageTextBox.Tab = true;
+            Parent.GamesTextBox.Tab = true;
             Parent.NetYarozeGamesTextBox.Tab = true;
-            Parent.PatchesTextBox.Tab = true;
             Parent.PlayableDemosTextBox.Tab = true;
             Parent.RollingDemosTextBox.Tab = true;
-            Parent.SavegamesTextBox.Tab = true;
             Parent.TechDemosTextBox.Tab = true;
+            Parent.GameFootageTextBox.Tab = true;
+            Parent.VideosTextBox.Tab = true;
+            Parent.PatchesTextBox.Tab = true;
+            Parent.SavegamesTextBox.Tab = true;
+            Parent.ExtrasTextBox.Tab = true;
 
             // L0
             Parent.L0MasteringRing.Tab = true;

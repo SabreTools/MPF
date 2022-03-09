@@ -25,6 +25,7 @@
 - Update Aaru Nuget package
 - Return faster on empty protection sets
 - Remove redundant check around volume label
+- Fix tabs in Games and Videos boxes
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
