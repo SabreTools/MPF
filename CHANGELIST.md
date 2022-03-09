@@ -23,6 +23,7 @@
 - Reorder event handers
 - Handle sanitized protections edge case
 - Update Aaru Nuget package
+- Return faster on empty protection sets
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
