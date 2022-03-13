@@ -1681,6 +1681,15 @@ namespace MPF.Library
                     info.FullyMatchedID = fullyMatchedIDs[i];
                     break;
                 }
+
+                // Clear out fully matched IDs from the partial list
+                if (info.FullyMatchedID.HasValue)
+                {
+                    if (info.PartiallyMatchedIDs.Count() == 1)
+                        info.PartiallyMatchedIDs = null;
+                    else
+                        info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
+                }
             }
         }
 
