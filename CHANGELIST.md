@@ -26,6 +26,8 @@
 - Return faster on empty protection sets
 - Remove redundant check around volume label
 - Fix tabs in Games and Videos boxes
+- Make fully and partially matching IDs more apparent
+- Add write offset as read-only field
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

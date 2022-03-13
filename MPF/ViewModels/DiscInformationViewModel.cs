@@ -266,14 +266,22 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         private void HideReadOnlyFields()
         {
-            if (SubmissionInfo?.MatchedIDs == null)
-                Parent.MatchedIDs.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.FullyMatchedID == null)
+                Parent.FullyMatchedID.Visibility = Visibility.Collapsed;
             else
-                Parent.MatchedIDs.Text = string.Join(", ", SubmissionInfo.MatchedIDs);
+                Parent.FullyMatchedID.Text = SubmissionInfo.FullyMatchedID.ToString();
+            if (SubmissionInfo?.PartiallyMatchedIDs == null)
+                Parent.PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
+            else
+                Parent.PartiallyMatchedIDs.Text = string.Join(", ", SubmissionInfo.PartiallyMatchedIDs);
             if (SubmissionInfo?.CopyProtection?.AntiModchip == null)
                 Parent.AntiModchip.Visibility = Visibility.Collapsed;
             else
                 Parent.AntiModchip.Text = SubmissionInfo.CopyProtection.AntiModchip.LongName();
+            if (SubmissionInfo?.TracksAndWriteOffsets?.OtherWriteOffsets == null)
+                Parent.DiscOffset.Visibility = Visibility.Collapsed;
+            else
+                Parent.DiscOffset.Text = SubmissionInfo.TracksAndWriteOffsets.OtherWriteOffsets;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.DMIHash) != true)
                 Parent.DMIHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.ErrorsCount))

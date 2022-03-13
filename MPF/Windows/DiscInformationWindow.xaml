@@ -335,8 +335,10 @@
                 <TabItem Header="Read-Only Info" Style="{DynamicResource CustomTabItemStyle}">
                     <ScrollViewer CanContentScroll="False" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MaxHeight="500">
                         <StackPanel Orientation="Vertical">
-                            <controls:UserInput x:Name="MatchedIDs" Label="Matched ID(s)" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="FullyMatchedID" Label="Fully Matched ID" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="PartiallyMatchedIDs" Label="Partially Matched ID(s)" IsReadOnly="True"/>
                             <controls:UserInput x:Name="AntiModchip" Label="Anti-Modchip" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="DiscOffset" Label="Disc Offset" IsReadOnly="True"/>
                             <controls:UserInput x:Name="DMIHash" Label="DMI Hash" IsReadOnly="True"/>
                             <controls:UserInput x:Name="EDC" Label="EDC" IsReadOnly="True"/>
                             <controls:UserInput x:Name="ErrorsCount" Label="Error(s) Count" IsReadOnly="True"

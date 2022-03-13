@@ -42,7 +42,8 @@ namespace MPF.Test.RedumpLib
             var submissionInfo = new SubmissionInfo()
             {
                 SchemaVersion = 1,
-                MatchedIDs = new List<int> { 0, 1, 2, 3 },
+                FullyMatchedID = 3,
+                PartiallyMatchedIDs = new List<int> { 0, 1, 2, 3 },
                 Added = DateTime.UtcNow,
                 LastModified = DateTime.UtcNow,
 
