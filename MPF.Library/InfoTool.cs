@@ -644,7 +644,8 @@ namespace MPF.Library
                         info.SizeAndChecksums.Layerbreak3),
                     1);
                 AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
-                AddIfExists(output, Template.MatchingIDsField, info.PartiallyMatchedIDs, 1);
+                AddIfExists(output, Template.FullyMatchingIDField, info.FullyMatchedID?.ToString(), 1);
+                AddIfExists(output, Template.PartiallyMatchingIDsField, info.PartiallyMatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName() ?? "SPACE! (CHANGE THIS)", 1);
                 AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName() ?? "SILENCE! (CHANGE THIS)").ToArray(), 1);
                 AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { }).Select(l => l.LongName()).ToArray(), 1);
