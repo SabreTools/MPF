@@ -73,6 +73,7 @@ namespace RedumpLib.Data
             return new SubmissionInfo
             {
                 SchemaVersion = this.SchemaVersion,
+                FullyMatchedID = this.FullyMatchedID,
                 PartiallyMatchedIDs = this.PartiallyMatchedIDs,
                 Added = this.Added,
                 LastModified = this.LastModified,

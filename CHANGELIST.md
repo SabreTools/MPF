@@ -30,6 +30,7 @@
 - Add write offset as read-only field
 - Explicitly clear list, just in case
 - Add both fully and partially matching to info file
+- Fix submission info clone
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
