@@ -1642,6 +1642,11 @@ namespace MPF.Library
                         else
                             fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
                     }
+                    // If no tracks were found, remove all fully matched IDs found so far
+                    else
+                    {
+                        fullyMatchedIDs = new List<int>();
+                    }
                 }
 
                 // Make sure we only have unique IDs
