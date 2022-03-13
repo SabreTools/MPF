@@ -32,6 +32,7 @@
 - Add both fully and partially matching to info file
 - Fix submission info clone
 - Clear out fully matched IDs from the partial list
+- Refine copy protection section showing
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
