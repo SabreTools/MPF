@@ -19,7 +19,7 @@ namespace MPF.Library
         /// <param name="path">Path to scan for protection</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
-        /// <returns>TCopy protection detected in the envirionment, if any</returns>
+        /// <returns>TCopy protection detected in the environment, if any</returns>
         public static async Task<(bool, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
         {
             try
@@ -36,12 +36,20 @@ namespace MPF.Library
                     return scanner.GetProtections(path);
                 });
 
-                if (found == null || found.Count() == 0)
+                // If nothing was returned, return
+                if (found == null || !found.Any())
+                    return (true, "None found");
+
+                // Filter out any empty protections
+                var filteredProtections = found
+                    .Where(kvp => kvp.Value != null && kvp.Value.Any());
+
+                // If the filtered list contains nothing, return
+                if (!found.Any())
                     return (true, "None found");
 
                 // Get an ordered list of distinct found protections
-                var orderedDistinctProtections = found
-                    .Where(kvp => kvp.Value != null && kvp.Value.Any())
+                var orderedDistinctProtections = filteredProtections
                     .SelectMany(kvp => kvp.Value)
                     .Distinct()
                     .OrderBy(p => p);

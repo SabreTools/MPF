@@ -22,6 +22,17 @@
 - Add upper case `<TAB>` processing
 - Reorder event handers
 - Handle sanitized protections edge case
+- Update Aaru Nuget package
+- Return faster on empty protection sets
+- Remove redundant check around volume label
+- Fix tabs in Games and Videos boxes
+- Make fully and partially matching IDs more apparent
+- Add write offset as read-only field
+- Explicitly clear list, just in case
+- Add both fully and partially matching to info file
+- Fix submission info clone
+- Clear out fully matched IDs from the partial list
+- Refine copy protection section showing
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

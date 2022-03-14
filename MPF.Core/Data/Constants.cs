@@ -88,7 +88,8 @@ namespace MPF.Core.Data
         public const string CRC32Field = "CRC32";
         public const string MD5Field = "MD5";
         public const string SHA1Field = "SHA1";
-        public const string MatchingIDsField = "Matching IDs";
+        public const string FullyMatchingIDField = "Fully Matching ID";
+        public const string PartiallyMatchingIDsField = "Partially Matching IDs";
         public const string ErrorCountField = "Error Count";
         public const string CuesheetField = "Cuesheet";
         public const string SubIntentionField = "SubIntention Data (SecuROM/LibCrypt)";

@@ -222,15 +222,19 @@ namespace MPF.GUI.ViewModels
         {
             // Additional Information
             Parent.CommentsTextBox.Tab = true;
+
+            // Contents
             Parent.GeneralContent.Tab = true;
-            Parent.ExtrasTextBox.Tab = true;
-            Parent.GameFootageTextBox.Tab = true;
+            Parent.GamesTextBox.Tab = true;
             Parent.NetYarozeGamesTextBox.Tab = true;
-            Parent.PatchesTextBox.Tab = true;
             Parent.PlayableDemosTextBox.Tab = true;
             Parent.RollingDemosTextBox.Tab = true;
-            Parent.SavegamesTextBox.Tab = true;
             Parent.TechDemosTextBox.Tab = true;
+            Parent.GameFootageTextBox.Tab = true;
+            Parent.VideosTextBox.Tab = true;
+            Parent.PatchesTextBox.Tab = true;
+            Parent.SavegamesTextBox.Tab = true;
+            Parent.ExtrasTextBox.Tab = true;
 
             // L0
             Parent.L0MasteringRing.Tab = true;
@@ -262,14 +266,22 @@ namespace MPF.GUI.ViewModels
         /// </summary>
         private void HideReadOnlyFields()
         {
-            if (SubmissionInfo?.MatchedIDs == null)
-                Parent.MatchedIDs.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.FullyMatchedID == null)
+                Parent.FullyMatchedID.Visibility = Visibility.Collapsed;
             else
-                Parent.MatchedIDs.Text = string.Join(", ", SubmissionInfo.MatchedIDs);
+                Parent.FullyMatchedID.Text = SubmissionInfo.FullyMatchedID.ToString();
+            if (SubmissionInfo?.PartiallyMatchedIDs == null)
+                Parent.PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
+            else
+                Parent.PartiallyMatchedIDs.Text = string.Join(", ", SubmissionInfo.PartiallyMatchedIDs);
             if (SubmissionInfo?.CopyProtection?.AntiModchip == null)
                 Parent.AntiModchip.Visibility = Visibility.Collapsed;
             else
                 Parent.AntiModchip.Text = SubmissionInfo.CopyProtection.AntiModchip.LongName();
+            if (SubmissionInfo?.TracksAndWriteOffsets?.OtherWriteOffsets == null)
+                Parent.DiscOffset.Visibility = Visibility.Collapsed;
+            else
+                Parent.DiscOffset.Text = SubmissionInfo.TracksAndWriteOffsets.OtherWriteOffsets;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.DMIHash) != true)
                 Parent.DMIHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.ErrorsCount))

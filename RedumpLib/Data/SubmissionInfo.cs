@@ -15,10 +15,16 @@ namespace RedumpLib.Data
         public int SchemaVersion { get; set; } = 1;
 
         /// <summary>
-        /// List of matched Redump IDs
+        /// Fully matched Redump ID
         /// </summary>
         [JsonIgnore]
-        public List<int> MatchedIDs { get; set; }
+        public int? FullyMatchedID { get; set; }
+
+        /// <summary>
+        /// List of partially matched Redump IDs
+        /// </summary>
+        [JsonIgnore]
+        public List<int> PartiallyMatchedIDs { get; set; }
 
         /// <summary>
         /// DateTime of when the disc was added
@@ -67,7 +73,8 @@ namespace RedumpLib.Data
             return new SubmissionInfo
             {
                 SchemaVersion = this.SchemaVersion,
-                MatchedIDs = this.MatchedIDs,
+                FullyMatchedID = this.FullyMatchedID,
+                PartiallyMatchedIDs = this.PartiallyMatchedIDs,
                 Added = this.Added,
                 LastModified = this.LastModified,
                 CommonDiscInfo = this.CommonDiscInfo?.Clone() as CommonDiscInfoSection,
