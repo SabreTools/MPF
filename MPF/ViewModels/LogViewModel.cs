@@ -292,7 +292,7 @@ namespace MPF.GUI.ViewModels
                 switch (this.LogLevel)
                 {
                     case LogLevel.SECRET:
-                        return Brushes.Blue;
+                        return Brushes.Teal;
                     case LogLevel.ERROR:
                         return Brushes.Red;
                     case LogLevel.VERBOSE:
