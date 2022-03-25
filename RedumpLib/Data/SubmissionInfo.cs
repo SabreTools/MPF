@@ -155,7 +155,7 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_ring_0_mo1_sid", NullValueHandling = NullValueHandling.Ignore)]
         public string Layer0MouldSID { get; set; }
 
-        [JsonProperty(PropertyName = "dr_ring_0_mo1", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "d_ring_0_mo1", NullValueHandling = NullValueHandling.Ignore)]
         public string Layer0AdditionalMould { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma2", Required = Required.AllowNull)]
@@ -170,7 +170,7 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_ring_0_mo2_sid", NullValueHandling = NullValueHandling.Ignore)]
         public string Layer1MouldSID { get; set; }
 
-        [JsonProperty(PropertyName = "dr_ring_0_mo2", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonProperty(PropertyName = "d_ring_0_mo2", NullValueHandling = NullValueHandling.Ignore)]
         public string Layer1AdditionalMould { get; set; }
 
         [JsonProperty(PropertyName = "d_ring_0_ma3", Required = Required.AllowNull)]
