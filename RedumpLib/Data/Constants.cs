@@ -177,12 +177,12 @@ namespace RedumpLib.Data
         public const string DiscPageUrl = @"http://redump.org/disc/{0}/";
 
         /// <summary>
-        /// Redump last modified search URL
+        /// Redump last modified search URL template
         /// </summary>
         public const string LastModifiedUrl = @"http://redump.org/discs/sort/modified/dir/desc?page={0}";
 
         /// <summary>
-        /// Redump login page URL
+        /// Redump login page URL template
         /// </summary>
         public const string LoginUrl = "http://forum.redump.org/login/";
 
@@ -230,6 +230,11 @@ namespace RedumpLib.Data
         /// Redump user dumps URL template
         /// </summary>
         public const string UserDumpsUrl = @"http://redump.org/discs/dumper/{0}/?page={1}";
+
+        /// <summary>
+        /// Redump last modified user dumps URL template
+        /// </summary>
+        public const string UserDumpsLastModifiedUrl = @"http://redump.org/discs/sort/modified/dir/desc/dumper/{0}?page={1}";
 
         /// <summary>
         /// Redump WIP disc page URL template
