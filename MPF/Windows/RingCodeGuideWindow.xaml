@@ -86,7 +86,7 @@
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;15</TextBlock>
+                                <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13</TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="2">
