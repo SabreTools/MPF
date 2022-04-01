@@ -86,7 +86,7 @@
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;15</TextBlock>
+                                <TextBlock><Bold Foreground="Red">1. Mastering Ring:</Bold> Sony DADC&lt;tab&gt;A0100368905-0101&lt;tab&gt;13</TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="2">
@@ -132,7 +132,7 @@
                         </Label>
                         <Label Grid.Row="2">
                             <Label.Content>
-                                <TextBlock><Bold Foreground="Green">2. Inner Mastering Ring:</Bold> IM01501A-L0&lt;tab&gt;03 +&lt;tab&gt;+</TextBlock>
+                                <TextBlock><Bold Foreground="Green">2. Inner Mastering Ring:</Bold> IM01501A-L0&lt;tab&gt;01 +&lt;tab&gt;+</TextBlock>
                             </Label.Content>
                         </Label>
                         <Label Grid.Row="3">
