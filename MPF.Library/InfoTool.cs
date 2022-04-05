@@ -764,10 +764,11 @@ namespace MPF.Library
                 }
 
                 // Copy Protection section
-                if (!string.IsNullOrEmpty(info.CopyProtection.Protection)
+                if (!string.IsNullOrWhiteSpace(info.CopyProtection.Protection)
                     || info.CopyProtection.AntiModchip != YesNo.NULL
                     || info.CopyProtection.LibCrypt != YesNo.NULL
-                    || info.CopyProtection.SecuROMData != null)
+                    || !string.IsNullOrWhiteSpace(info.CopyProtection.LibCryptData)
+                    || !string.IsNullOrWhiteSpace(info.CopyProtection.SecuROMData))
                 {
                     output.Add(""); output.Add("Copy Protection:");
                     if (info.CommonDiscInfo.System == RedumpSystem.SonyPlayStation)

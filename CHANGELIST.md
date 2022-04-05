@@ -38,6 +38,7 @@
 - Increase JSON accuracy for disc types
 - Further separate out protection scan outputs
 - Compress JSON for artifacts alone
+- Even stricter output for copy protection section
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
