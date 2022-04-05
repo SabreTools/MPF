@@ -894,6 +894,9 @@ namespace MPF.Library
                         .Where(s => !string.IsNullOrEmpty(s))
                 ) + "\n" + info.CommonDiscInfo.Comments;
 
+                // Normalize newlines
+                info.CommonDiscInfo.Comments = info.CommonDiscInfo.Comments.Replace("\r\n", "\n");
+
                 // Trim the comments field
                 info.CommonDiscInfo.Comments = info.CommonDiscInfo.Comments.Trim();
 
@@ -915,6 +918,9 @@ namespace MPF.Library
                         .Select(FormatSiteTag)
                         .Where(s => !string.IsNullOrEmpty(s))
                 ) + "\n" + info.CommonDiscInfo.Contents;
+
+                // Normalize newlines
+                info.CommonDiscInfo.Contents = info.CommonDiscInfo.Contents.Replace("\r\n", "\n");
 
                 // Trim the contents field
                 info.CommonDiscInfo.Contents = info.CommonDiscInfo.Contents.Trim();
