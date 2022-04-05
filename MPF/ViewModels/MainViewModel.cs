@@ -290,7 +290,7 @@ namespace MPF.GUI.ViewModels
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     System = RedumpSystem.IBMPCcompatible,
-                    Media = DiscType.BD50,
+                    Media = DiscType.BD128,
                     Title = "Game Title",
                     ForeignTitleNonLatin = "Foreign Game Title",
                     DiscNumberLetter = "1",
@@ -373,7 +373,7 @@ namespace MPF.GUI.ViewModels
 
                 DumpersAndStatus = new DumpersAndStatusSection()
                 {
-                    Status = DumpStatus.TwoOrMoHumanReadablesGreen,
+                    Status = DumpStatus.TwoOrMoreGreen,
                     Dumpers = new string[] { "Dumper1", "Dumper2" },
                     OtherDumpers = "Dumper3",
                 },

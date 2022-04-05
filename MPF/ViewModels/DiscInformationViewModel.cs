@@ -638,8 +638,13 @@ namespace MPF.GUI.ViewModels
                 case DiscType.DVD5:
                 case DiscType.DVD9:
                 case DiscType.HDDVDSL:
+                case DiscType.HDDVDDL:
                 case DiscType.BD25:
+                case DiscType.BD33:
                 case DiscType.BD50:
+                case DiscType.BD66:
+                case DiscType.BD100:
+                case DiscType.BD128:
                 case DiscType.NintendoGameCubeGameDisc:
                 case DiscType.NintendoWiiOpticalDiscSL:
                 case DiscType.NintendoWiiOpticalDiscDL:

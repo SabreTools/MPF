@@ -18,12 +18,17 @@ namespace MPF.Test.RedumpLib
         private static readonly DiscType?[] _mappableDiscTypes = new DiscType?[]
         {
             DiscType.BD25,
+            DiscType.BD33,
             DiscType.BD50,
+            DiscType.BD66,
+            DiscType.BD100,
+            DiscType.BD128,
             DiscType.CD,
             DiscType.DVD5,
             DiscType.DVD9,
             DiscType.GDROM,
             DiscType.HDDVDSL,
+            DiscType.HDDVDDL,
             DiscType.NintendoGameCubeGameDisc,
             DiscType.NintendoWiiOpticalDiscSL,
             DiscType.NintendoWiiOpticalDiscDL,

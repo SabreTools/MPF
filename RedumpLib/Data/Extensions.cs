@@ -747,7 +747,11 @@ namespace RedumpLib.Data
             switch (discType)
             {
                 case DiscType.BD25:
+                case DiscType.BD33:
                 case DiscType.BD50:
+                case DiscType.BD66:
+                case DiscType.BD100:
+                case DiscType.BD128:
                     return MediaType.BluRay;
                 case DiscType.CD:
                     return MediaType.CDROM;
@@ -757,6 +761,7 @@ namespace RedumpLib.Data
                 case DiscType.GDROM:
                     return MediaType.GDROM;
                 case DiscType.HDDVDSL:
+                case DiscType.HDDVDDL:
                     return MediaType.HDDVD;
                 // case DiscType.MILCD: // TODO: Support this?
                 //     return MediaType.MILCD;
@@ -847,9 +852,21 @@ namespace RedumpLib.Data
                 case "bd25":
                 case "bd-25":
                     return DiscType.BD25;
+                case "bd33":
+                case "bd-33":
+                    return DiscType.BD33;
                 case "bd50":
                 case "bd-50":
                     return DiscType.BD50;
+                case "bd66":
+                case "bd-66":
+                    return DiscType.BD66;
+                case "bd100":
+                case "bd-100":
+                    return DiscType.BD100;
+                case "bd128":
+                case "bd-128":
+                    return DiscType.BD128;
                 case "cd":
                 case "cdrom":
                 case "cd-rom":
@@ -868,6 +885,9 @@ namespace RedumpLib.Data
                 case "hddvdsl":
                 case "hd-dvd sl":
                     return DiscType.HDDVDSL;
+                case "hddvddl":
+                case "hd-dvd dl":
+                    return DiscType.HDDVDDL;
                 case "milcd":
                 case "mil-cd":
                     return DiscType.MILCD;

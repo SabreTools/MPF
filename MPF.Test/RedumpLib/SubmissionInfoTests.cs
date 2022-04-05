@@ -133,7 +133,7 @@ namespace MPF.Test.RedumpLib
 
                 DumpersAndStatus = new DumpersAndStatusSection()
                 {
-                    Status = DumpStatus.TwoOrMoHumanReadablesGreen,
+                    Status = DumpStatus.TwoOrMoreGreen,
                     Dumpers = new string[] { "Dumper1", "Dumper2" },
                     OtherDumpers = "Dumper3",
                 },

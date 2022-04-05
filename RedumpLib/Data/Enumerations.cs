@@ -44,6 +44,11 @@ namespace RedumpLib.Data
     /// <summary>
     /// List of all disc types
     /// </summary>
+    /// <remarks>
+    /// All names here match Redump names for the types, not official
+    /// naming. Some names had to be extrapolated due to no current support
+    /// in the Redump site.
+    /// </remarks>
     public enum DiscType
     {
         NONE = 0,
@@ -51,8 +56,20 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "BD-25")]
         BD25,
 
+        [HumanReadable(LongName = "BD-33")]
+        BD33,
+
         [HumanReadable(LongName = "BD-50")]
         BD50,
+
+        [HumanReadable(LongName = "BD-66")]
+        BD66,
+
+        [HumanReadable(LongName = "BD-100")]
+        BD100,
+
+        [HumanReadable(LongName = "BD-128")]
+        BD128,
 
         [HumanReadable(LongName = "CD")]
         CD,
@@ -68,7 +85,10 @@ namespace RedumpLib.Data
         
         [HumanReadable(LongName = "HD-DVD SL")]
         HDDVDSL,
-        
+
+        [HumanReadable(LongName = "HD-DVD DL")]
+        HDDVDDL,
+
         [HumanReadable(LongName = "MIL-CD")]
         MILCD,
         
@@ -99,7 +119,7 @@ namespace RedumpLib.Data
         BadDumpRed = 2,
         PossibleBadDumpYellow = 3,
         OriginalMediaBlue = 4,
-        TwoOrMoHumanReadablesGreen = 5,
+        TwoOrMoreGreen = 5,
     }
 
     /// <summary>

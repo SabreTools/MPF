@@ -406,6 +406,9 @@ namespace MPF.Library
             if (string.IsNullOrEmpty(info.CommonDiscInfo.Contents))
                 info.CommonDiscInfo.Contents = options.AddPlaceholders ? Template.OptionalValue : string.Empty;
 
+            // Normalize the disc type with all current information
+            NormalizeDiscType(info);
+
             return info;
         }
 
@@ -836,7 +839,7 @@ namespace MPF.Library
         /// <param name="size">Size of the current media</param>
         /// <param name="layerbreak">First layerbreak value, as applicable</param>
         /// <param name="layerbreak2">Second layerbreak value, as applicable</param>
-        /// <param name="layerbreak3">Third ayerbreak value, as applicable</param>
+        /// <param name="layerbreak3">Third layerbreak value, as applicable</param>
         /// <returns>String representation of the media, including layer specification</returns>
         public static string GetFixedMediaType(MediaType? mediaType, long size, long layerbreak, long layerbreak2, long layerbreak3)
         {
@@ -1067,6 +1070,69 @@ namespace MPF.Library
         #endregion
 
         #region Normalization
+
+        /// <summary>
+        /// Adjust the disc type based on size and layerbreak information
+        /// </summary>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <returns>Corrected disc type, if possible</returns>
+        public static void NormalizeDiscType(SubmissionInfo info)
+        {
+            // If we have nothing valid, do nothing
+            if (info?.CommonDiscInfo?.Media == null)
+                return;
+
+            switch (info.CommonDiscInfo.Media)
+            {
+                case DiscType.BD25:
+                case DiscType.BD33:
+                case DiscType.BD50:
+                case DiscType.BD66:
+                case DiscType.BD100:
+                case DiscType.BD128:
+                    if (info.SizeAndChecksums.Layerbreak3 != default)
+                        info.CommonDiscInfo.Media = DiscType.BD128;
+                    else if (info.SizeAndChecksums.Layerbreak2 != default)
+                        info.CommonDiscInfo.Media = DiscType.BD100;
+                    else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 53_687_063_712)
+                        info.CommonDiscInfo.Media = DiscType.BD66;
+                    else if (info.SizeAndChecksums.Layerbreak != default)
+                        info.CommonDiscInfo.Media = DiscType.BD50;
+                    else if (info.SizeAndChecksums.Size > 26_843_531_856)
+                        info.CommonDiscInfo.Media = DiscType.BD33;
+                    else
+                        info.CommonDiscInfo.Media = DiscType.BD25;
+                    break;
+
+                case DiscType.DVD5:
+                case DiscType.DVD9:
+                    if (info.SizeAndChecksums.Layerbreak != default)
+                        info.CommonDiscInfo.Media = DiscType.DVD9;
+                    else
+                        info.CommonDiscInfo.Media = DiscType.DVD5;
+                    break;
+
+                case DiscType.HDDVDSL:
+                case DiscType.HDDVDDL:
+                    if (info.SizeAndChecksums.Layerbreak != default)
+                        info.CommonDiscInfo.Media = DiscType.HDDVDDL;
+                    else
+                        info.CommonDiscInfo.Media = DiscType.HDDVDSL;
+                    break;
+
+                case DiscType.UMDSL:
+                case DiscType.UMDDL:
+                    if (info.SizeAndChecksums.Layerbreak != default)
+                        info.CommonDiscInfo.Media = DiscType.UMDDL;
+                    else
+                        info.CommonDiscInfo.Media = DiscType.UMDSL;
+                    break;
+
+                // All other disc types are not processed
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// Normalize a split set of paths
