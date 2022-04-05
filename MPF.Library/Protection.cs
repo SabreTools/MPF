@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,8 +20,8 @@ namespace MPF.Library
         /// <param name="path">Path to scan for protection</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
-        /// <returns>TCopy protection detected in the environment, if any</returns>
-        public static async Task<(bool, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
+        /// <returns>Set of all detected copy protections with an optional error string</returns>
+        public static async Task<(Dictionary<string, ConcurrentQueue<string>>, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
         {
             try
             {
@@ -38,33 +39,45 @@ namespace MPF.Library
 
                 // If nothing was returned, return
                 if (found == null || !found.Any())
-                    return (true, "None found");
+                    return (null, null);
 
                 // Filter out any empty protections
                 var filteredProtections = found
-                    .Where(kvp => kvp.Value != null && kvp.Value.Any());
+                    .Where(kvp => kvp.Value != null && kvp.Value.Any())
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-                // If the filtered list contains nothing, return
-                if (!found.Any())
-                    return (true, "None found");
-
-                // Get an ordered list of distinct found protections
-                var orderedDistinctProtections = filteredProtections
-                    .SelectMany(kvp => kvp.Value)
-                    .Distinct()
-                    .OrderBy(p => p);
-
-                // Sanitize and join protections for writing
-                string protections = SanitizeFoundProtections(orderedDistinctProtections);
-                if (string.IsNullOrWhiteSpace(protections))
-                    return (true, "None found");
-
-                return (true, protections);
+                // Return the filtered set of protections
+                return (filteredProtections, null);
             }
             catch (Exception ex)
             {
-                return (false, ex.ToString());
+                return (null, ex.ToString());
             }
+        }
+
+        /// <summary>
+        /// Format found protections to a deduplicated, ordered string
+        /// </summary>
+        /// <param name="protections">Dictionary of file to list of protection mappings</param>
+        /// <returns>Detected protections, if any</returns>
+        public static string FormatProtections(Dictionary<string, ConcurrentQueue<string>> protections)
+        {
+            // If the filtered list contains nothing, return
+            if (!protections.Any())
+                return "None found";
+
+            // Get an ordered list of distinct found protections
+            var orderedDistinctProtections = protections
+                .SelectMany(kvp => kvp.Value)
+                .Distinct()
+                .OrderBy(p => p);
+
+            // Sanitize and join protections for writing
+            string protectionString = SanitizeFoundProtections(orderedDistinctProtections);
+            if (string.IsNullOrWhiteSpace(protectionString))
+                return "None found";
+
+            return protectionString;
         }
 
         /// <summary>

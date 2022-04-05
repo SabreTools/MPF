@@ -451,11 +451,8 @@ namespace MPF.Library
         {
             if (options.ScanForProtection && drive != null)
             {
-                (bool success, string output) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
-                if (success)
-                    return output;
-                else
-                    return "An error occurred while scanning!";
+                (var protection, string _) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
+                return Protection.FormatProtections(protection);
             }
 
             return "(CHECK WITH PROTECTIONID)";

@@ -36,6 +36,7 @@
 - Update Nuget packages
 - Normalize newlines in comments and contents
 - Increase JSON accuracy for disc types
+- Further separate out protection scan outputs
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

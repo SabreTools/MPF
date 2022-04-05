@@ -1087,7 +1087,8 @@ namespace MPF.GUI.ViewModels
 
                 var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
-                (bool success, string output) = await Protection.RunProtectionScanOnPath(drive.Letter + ":\\", App.Options, progress);
+                (var protections, string error) = await Protection.RunProtectionScanOnPath(drive.Letter + ":\\", App.Options, progress);
+                string output = Protection.FormatProtections(protections);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
                 if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
@@ -1098,16 +1099,16 @@ namespace MPF.GUI.ViewModels
 
                 if (!App.Instance.LogPanel.IsExpanded)
                 {
-                    if (success)
+                    if (string.IsNullOrEmpty(error))
                         CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
                     else
                         CustomMessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
 
-                if (success)
+                if (string.IsNullOrEmpty(error))
                     App.Logger.LogLn($"Detected the following protections in {drive.Letter}:\r\n\r\n{output}");
                 else
-                    App.Logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{output}");
+                    App.Logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
                 App.Instance.StatusLabel.Content = tempContent;
                 App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
