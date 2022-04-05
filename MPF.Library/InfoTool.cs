@@ -965,22 +965,37 @@ namespace MPF.Library
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
+        /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
         /// <returns>True on success, false on error</returns>
-        public static bool WriteOutputData(string outputDirectory, SubmissionInfo info)
+        public static bool WriteOutputData(string outputDirectory, SubmissionInfo info, bool includedArtifacts)
         {
             // Check to see if the input is valid
             if (info == null)
                 return false;
 
-            // Now write out to the JSON
             try
             {
-                using (var fs = File.Create(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
-                using (var gs = new GZipStream(fs, CompressionMode.Compress))
+                // Serialize the JSON and get it writable
+                string json = JsonConvert.SerializeObject(info, Formatting.Indented);
+                byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
+
+                // If we included artifacts, write to a GZip-compressed file
+                if (includedArtifacts)
                 {
-                    string json = JsonConvert.SerializeObject(info, Formatting.Indented);
-                    byte[] jsonBytes = Encoding.UTF8.GetBytes(json);
-                    gs.Write(jsonBytes, 0, jsonBytes.Length);
+                    using (var fs = File.Create(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
+                    using (var gs = new GZipStream(fs, CompressionMode.Compress))
+                    {
+                        gs.Write(jsonBytes, 0, jsonBytes.Length);
+                    }
+                }
+
+                // Otherwise, write out to a normal JSON
+                else
+                {
+                    using (var fs = File.Create(Path.Combine(outputDirectory, "!submissionInfo.json")))
+                    {
+                        fs.Write(jsonBytes, 0, jsonBytes.Length);
+                    }
                 }
             }
             catch (Exception ex)

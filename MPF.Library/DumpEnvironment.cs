@@ -376,15 +376,15 @@ namespace MPF.Library
             // Write the JSON output, if required
             if (Options.OutputSubmissionJSON)
             {
-                resultProgress?.Report(Result.Success("Writing information to !submissionInfo.json.gz..."));
-                success = InfoTool.WriteOutputData(this.OutputDirectory, submissionInfo);
+                resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(Options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
+                success = InfoTool.WriteOutputData(this.OutputDirectory, submissionInfo, Options.IncludeArtifacts);
                 if (success)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
                     resultProgress?.Report(Result.Failure("Writing could not complete!"));
             }
 
-            // Conpress the logs, if required
+            // Compress the logs, if required
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
