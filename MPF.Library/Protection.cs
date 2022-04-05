@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,13 +14,13 @@ namespace MPF.Library
     public static class Protection
     {
         /// <summary>
-        /// Run protection scan on a given dump environment
+        /// Run protection scan on a given path
         /// </summary>
         /// <param name="path">Path to scan for protection</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(Dictionary<string, ConcurrentQueue<string>>, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
+        public static async Task<(Dictionary<string, List<string>>, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
         {
             try
             {
@@ -44,7 +43,9 @@ namespace MPF.Library
                 // Filter out any empty protections
                 var filteredProtections = found
                     .Where(kvp => kvp.Value != null && kvp.Value.Any())
-                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.OrderBy(s => s).ToList());
 
                 // Return the filtered set of protections
                 return (filteredProtections, null);
@@ -60,8 +61,12 @@ namespace MPF.Library
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
         /// <returns>Detected protections, if any</returns>
-        public static string FormatProtections(Dictionary<string, ConcurrentQueue<string>> protections)
+        public static string FormatProtections(Dictionary<string, List<string>> protections)
         {
+            // If the filtered list is null, return null
+            if (protections == null)
+                return null;
+
             // If the filtered list contains nothing, return
             if (!protections.Any())
                 return "None found";

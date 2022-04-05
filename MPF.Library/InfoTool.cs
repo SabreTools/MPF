@@ -234,7 +234,8 @@ namespace MPF.Library
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    info.CopyProtection.Protection = await GetCopyProtection(drive, options, protectionProgress);
+                    (string protectionString, Dictionary<string, List<string>> _) = await GetCopyProtection(drive, options, protectionProgress);
+                    info.CopyProtection.Protection = protectionString;
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 
                     break;
@@ -441,21 +442,21 @@ namespace MPF.Library
             => await Protection.GetPlayStationAntiModchipDetected($"{drive.Letter}:\\");
 
         /// <summary>
-        /// Get the current copy protection scheme, if possible
+        /// Get the current detected copy protection(s), if possible
         /// </summary>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
-        /// <returns>Copy protection scheme if possible, null on error</returns>
-        private static async Task<string> GetCopyProtection(Drive drive, Options options, IProgress<ProtectionProgress> progress = null)
+        /// <returns>Detected copy protection(s) if possible, null on error</returns>
+        private static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Options options, IProgress<ProtectionProgress> progress = null)
         {
             if (options.ScanForProtection && drive != null)
             {
                 (var protection, string _) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
-                return Protection.FormatProtections(protection);
+                return (Protection.FormatProtections(protection), protection);
             }
 
-            return "(CHECK WITH PROTECTIONID)";
+            return ("(CHECK WITH PROTECTIONID)", null);
         }
 
         /// <summary>
