@@ -766,8 +766,8 @@ namespace MPF.Library
 
                 // Copy Protection section
                 if (!string.IsNullOrWhiteSpace(info.CopyProtection.Protection)
-                    || info.CopyProtection.AntiModchip != YesNo.NULL
-                    || info.CopyProtection.LibCrypt != YesNo.NULL
+                    || (info.CopyProtection.AntiModchip != null && info.CopyProtection.AntiModchip != YesNo.NULL)
+                    || (info.CopyProtection.LibCrypt != null && info.CopyProtection.LibCrypt != YesNo.NULL)
                     || !string.IsNullOrWhiteSpace(info.CopyProtection.LibCryptData)
                     || !string.IsNullOrWhiteSpace(info.CopyProtection.SecuROMData))
                 {
