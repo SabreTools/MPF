@@ -41,6 +41,7 @@
 - Even stricter output for copy protection section
 - Report dictionary to InfoTool
 - Even even stricter copy protection output
+- Disable PVD creation for Aaru
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

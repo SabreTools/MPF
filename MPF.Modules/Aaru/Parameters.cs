@@ -204,9 +204,12 @@ namespace MPF.Modules.Aaru
 
             switch (this.Type)
             {
+                // TODO: Can this do GD-ROM?
                 case MediaType.CDROM:
-                    // TODO: Can this do GD-ROM?
-                    info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+
+                    // TODO: Re-enable once PVD generation / finding is fixed
+                    // Generate / obtain the PVD
+                    //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
 
                     long errorCount = -1;
                     if (File.Exists(basePath + ".resume.xml"))
@@ -233,6 +236,10 @@ namespace MPF.Modules.Aaru
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
+                    // TODO: Re-enable once PVD generation / finding is fixed
+                    // Generate / obtain the PVD
+                    //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+
                     // Deal with the layerbreak
                     string layerbreak = null;
                     if (this.Type == MediaType.DVD)
@@ -243,12 +250,11 @@ namespace MPF.Modules.Aaru
                     // If we have a single-layer disc
                     if (string.IsNullOrWhiteSpace(layerbreak))
                     {
-                        info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
+                        // Currently no-op
                     }
                     // If we have a dual-layer disc
                     else
                     {
-                        info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
                         info.SizeAndChecksums.Layerbreak = Int64.Parse(layerbreak);
                     }
 
