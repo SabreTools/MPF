@@ -1177,9 +1177,13 @@ namespace MPF.Library
                     .Replace(':', '_', 0, directory.LastIndexOf(':') == -1 ? 0 : directory.LastIndexOf(':'))
                     .ToString();
 
-                // Sanitize everything else
+                // Sanitize the directory path
+                directory = directory.Replace('?', '_');
                 foreach (char c in Path.GetInvalidPathChars())
                     directory = directory.Replace(c, '_');
+
+                // Sanitize the filename
+                filename = filename.Replace('?', '_');
                 foreach (char c in Path.GetInvalidFileNameChars())
                     filename = filename.Replace(c, '_');
 
