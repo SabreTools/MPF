@@ -43,6 +43,7 @@
 - Even even stricter copy protection output
 - Disable PVD creation for Aaru
 - Explicitly sanitize '?' from path
+- Combine cases in protection scan
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

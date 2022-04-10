@@ -63,12 +63,8 @@ namespace MPF.Library
         /// <returns>Detected protections, if any</returns>
         public static string FormatProtections(Dictionary<string, List<string>> protections)
         {
-            // If the filtered list is null, return null
-            if (protections == null)
-                return null;
-
-            // If the filtered list contains nothing, return
-            if (!protections.Any())
+            // If the filtered list is empty in some way, return
+            if (protections == null || !protections.Any())
                 return "None found";
 
             // Get an ordered list of distinct found protections
