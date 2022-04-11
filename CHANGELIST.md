@@ -47,6 +47,7 @@
 - Convert status label to TextBlock
 - Add option for copy protection file output
 - Make protection field user-editable
+- Add warning to tooltip
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
