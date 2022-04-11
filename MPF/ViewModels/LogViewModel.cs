@@ -10,7 +10,7 @@ using System.Windows.Media;
 using MPF.Core.Data;
 using MPF.UserControls;
 
-namespace MPF.GUI.ViewModels
+namespace MPF.UI.ViewModels
 {
     public class LogViewModel
     {

@@ -1,5 +1,5 @@
 ﻿using System.Windows.Controls;
-using MPF.GUI.ViewModels;
+using MPF.UI.ViewModels;
 
 namespace MPF.UserControls
 {

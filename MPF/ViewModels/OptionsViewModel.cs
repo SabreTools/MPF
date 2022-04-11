@@ -10,7 +10,7 @@ using MPF.Windows;
 using RedumpLib.Web;
 using WPFCustomMessageBox;
 
-namespace MPF.GUI.ViewModels
+namespace MPF.UI.ViewModels
 {
     public class OptionsViewModel
     {

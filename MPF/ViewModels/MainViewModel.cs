@@ -16,7 +16,7 @@ using RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 
-namespace MPF.GUI.ViewModels
+namespace MPF.UI.ViewModels
 {
     public class MainViewModel
     {
