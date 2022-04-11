@@ -45,6 +45,7 @@
 - Explicitly sanitize '?' from path
 - Combine cases in protection scan
 - Convert status label to TextBlock
+- Add option for copy protection file output
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

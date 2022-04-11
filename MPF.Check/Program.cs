@@ -69,7 +69,7 @@ namespace MPF.Check
             string username = null, password = null;
             string internalProgram = "DiscImageCreator";
             string path = string.Empty;
-            bool scan = false, compress = false, json = false;
+            bool scan = false, protectFile = false, compress = false, json = false;
 
             // Loop through and process options
             int startIndex = 2;
@@ -115,6 +115,12 @@ namespace MPF.Check
                 else if (args[startIndex].Equals("-s") || args[startIndex].Equals("--scan"))
                 {
                     scan = true;
+                }
+
+                // Output protection to separate file (requires scan for protection)
+                else if (args[startIndex].Equals("-f") || args[startIndex].Equals("--protect-file"))
+                {
+                    protectFile = true;
                 }
 
                 // Output submission JSON
@@ -175,6 +181,7 @@ namespace MPF.Check
                 {
                     InternalProgram = EnumConverter.ToInternalProgram(internalProgram),
                     ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
+                    OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrWhiteSpace(path),
                     PromptForDiscInformation = false,
                     ShowDiscEjectReminder = false,
                     OutputSubmissionJSON = json,
@@ -219,6 +226,7 @@ namespace MPF.Check
             Console.WriteLine("-u, --use <program>            Dumping program output type");
             Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
             Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
+            Console.WriteLine("-f, --protect-file             Output protection to separate file (requires --scan)");
             Console.WriteLine("-j, --json                     Enable submission JSON output");
             Console.WriteLine("-z, --zip                      Enable log file compression");
             Console.WriteLine();

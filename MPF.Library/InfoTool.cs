@@ -234,8 +234,9 @@ namespace MPF.Library
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    (string protectionString, Dictionary<string, List<string>> _) = await GetCopyProtection(drive, options, protectionProgress);
+                    (string protectionString, Dictionary<string, List<string>> fullProtections) = await GetCopyProtection(drive, options, protectionProgress);
                     info.CopyProtection.Protection = protectionString;
+                    info.CopyProtection.FullProtections = fullProtections;
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 
                     break;
@@ -997,6 +998,38 @@ namespace MPF.Library
                     using (var fs = File.Create(Path.Combine(outputDirectory, "!submissionInfo.json")))
                     {
                         fs.Write(jsonBytes, 0, jsonBytes.Length);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // We don't care what the error is right now
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Write the protection data to the output folder
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <param name="info">SubmissionInfo object containing the protection information</param>
+        /// <returns>True on success, false on error</returns>
+        public static bool WriteProtectionData(string outputDirectory, SubmissionInfo info)
+        {
+            // Check to see if the inputs are valid
+            if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
+                return true;
+
+            // Now write out to a generic file
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!protectionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                {
+                    foreach (var kvp in info.CopyProtection.FullProtections)
+                    {
+                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
                     }
                 }
             }

@@ -402,6 +402,9 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_protection", NullValueHandling = NullValueHandling.Ignore)]
         public string Protection { get; set; }
 
+        [JsonIgnore]
+        public Dictionary<string, List<string>> FullProtections { get; set; }
+
         [JsonProperty(PropertyName = "d_securom", NullValueHandling = NullValueHandling.Ignore)]
         public string SecuROMData { get; set; }
 
@@ -413,6 +416,7 @@ namespace RedumpLib.Data
                 LibCrypt = this.LibCrypt,
                 LibCryptData = this.LibCryptData,
                 Protection = this.Protection,
+                FullProtections = this.FullProtections.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
                 SecuROMData = this.SecuROMData,
             };
         }

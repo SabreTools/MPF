@@ -289,6 +289,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Output all found protections to a separate file in the directory
+        /// </summary>
+        public bool OutputSeparateProtectionFile
+        {
+            get { return GetBooleanSetting(_settings, "OutputSeparateProtectionFile", false); }
+            set { _settings["OutputSeparateProtectionFile"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Add placeholder values in the submission info
         /// </summary>
         public bool AddPlaceholders

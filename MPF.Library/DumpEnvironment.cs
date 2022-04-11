@@ -373,6 +373,17 @@ namespace MPF.Library
             else
                 resultProgress?.Report(Result.Failure("Writing could not complete!"));
 
+            // Write the copy protection output
+            if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
+            {
+                resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
+                success = InfoTool.WriteProtectionData(this.OutputDirectory, submissionInfo);
+                if (success)
+                    resultProgress?.Report(Result.Success("Writing complete!"));
+                else
+                    resultProgress?.Report(Result.Failure("Writing could not complete!"));
+            }
+
             // Write the JSON output, if required
             if (Options.OutputSubmissionJSON)
             {
