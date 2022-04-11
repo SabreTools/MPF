@@ -1,15 +1,15 @@
-﻿<windows:WindowBase x:Class="MPF.Windows.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="clr-namespace:MPF.UserControls"
-        xmlns:viewModels="clr-namespace:MPF.GUI.ViewModels"
-        xmlns:windows="clr-namespace:MPF.Windows"
-        mc:Ignorable="d"
-        Title="Media Preservation Frontend" Width="600" WindowStyle="None"
-        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
-        BorderBrush="DarkGray" BorderThickness="2">
+﻿<coreWindows:WindowBase x:Class="MPF.Windows.MainWindow"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:controls="clr-namespace:MPF.UserControls"
+                        xmlns:viewModels="clr-namespace:MPF.GUI.ViewModels"
+                        xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows;assembly=MPF.UI.Core"
+                        mc:Ignorable="d"
+                        Title="Media Preservation Frontend" Width="600" WindowStyle="None"
+                        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
+                        BorderBrush="DarkGray" BorderThickness="2">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
@@ -186,4 +186,4 @@
             </Expander>
         </StackPanel>
     </Grid>
-</windows:WindowBase>
+</coreWindows:WindowBase>

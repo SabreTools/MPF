@@ -1,4 +1,5 @@
 ﻿using MPF.GUI.ViewModels;
+using MPF.UI.Core.Windows;
 
 namespace MPF.Windows
 {

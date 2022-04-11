@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace MPF.Windows
+namespace MPF.UI.Core.Windows
 {
     public class WindowBase : Window
     {

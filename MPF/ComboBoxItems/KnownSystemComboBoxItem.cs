@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Core.Converters;
 using MPF.Core.Utilities;
+using MPF.UI.Core.ComboBoxItems;
 using RedumpLib.Data;
 
 namespace MPF

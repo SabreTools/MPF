@@ -1,16 +1,18 @@
-﻿using BurnOutSharp;
-using MPF.Core.Data;
-using MPF.Core.Utilities;
-using MPF.Library;
-using MPF.Windows;
-using RedumpLib.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using BurnOutSharp;
+using MPF.Core.Data;
+using MPF.Core.Utilities;
+using MPF.Library;
+using MPF.UI.Core.ComboBoxItems;
+using MPF.Windows;
+using MPF.UI.Core.Windows;
+using RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 
@@ -1198,7 +1200,7 @@ namespace MPF.GUI.ViewModels
             if (App.Options.ShowDiscEjectReminder)
                 CustomMessageBox.Show(App.Instance, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            var discInformationWindow = new DiscInformationWindow(submissionInfo)
+            var discInformationWindow = new DiscInformationWindow(App.Options, submissionInfo)
             {
                 Owner = App.Instance,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,

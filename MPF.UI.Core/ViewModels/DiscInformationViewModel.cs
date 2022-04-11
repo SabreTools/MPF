@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using MPF.Core.Data;
 using MPF.Core.Utilities;
-using MPF.Windows;
+using MPF.UI.Core.ComboBoxItems;
+using MPF.UI.Core.Windows;
 using RedumpLib.Data;
 
-namespace MPF.GUI.ViewModels
+namespace MPF.UI.Core.ViewModels
 {
     public class DiscInformationViewModel
     {
@@ -15,6 +17,11 @@ namespace MPF.GUI.ViewModels
         /// Parent DiscInformationWindow object
         /// </summary>
         public DiscInformationWindow Parent { get; private set; }
+
+        /// <summary>
+        /// Application-level Options object
+        /// </summary>
+        public Options Options { get; private set; }
 
         /// <summary>
         /// SubmissionInfo object to fill and save
@@ -191,13 +198,14 @@ namespace MPF.GUI.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public DiscInformationViewModel(DiscInformationWindow parent, SubmissionInfo submissionInfo)
+        public DiscInformationViewModel(DiscInformationWindow parent, Options options, SubmissionInfo submissionInfo)
         {
             Parent = parent;
+            Options = options;
             SubmissionInfo = submissionInfo.Clone() as SubmissionInfo ?? new SubmissionInfo();
 
             // Limit lists, if necessary
-            if (App.Options.EnableRedumpCompatibility)
+            if (this.Options.EnableRedumpCompatibility)
             {
                 SetRedumpRegions();
                 SetRedumpLanguages();
@@ -330,7 +338,7 @@ namespace MPF.GUI.ViewModels
         private void ManipulateFields()
         {
             // Enable tabs in all fields, if required
-            if (App.Options.EnableTabsInInputFields)
+            if (this.Options.EnableTabsInInputFields)
                 EnableTabsInInputFields();
 
             // Hide read-only fields that don't have values set

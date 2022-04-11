@@ -1,14 +1,14 @@
-﻿<windows:WindowBase x:Class="MPF.Windows.OptionsWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MPF"
-        xmlns:windows="clr-namespace:MPF.Windows"
-        mc:Ignorable="d"
-        Title="Options" Width="515.132" WindowStyle="None"
-        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
-        BorderBrush="DarkGray" BorderThickness="2">
+﻿<coreWindows:WindowBase x:Class="MPF.Windows.OptionsWindow"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:local="clr-namespace:MPF"
+                        xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows;assembly=MPF.UI.Core"
+                        mc:Ignorable="d"
+                        Title="Options" Width="515.132" WindowStyle="None"
+                        WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
+                        BorderBrush="DarkGray" BorderThickness="2">
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
@@ -413,4 +413,4 @@
             </GroupBox>
         </StackPanel>
     </Grid>
-</windows:WindowBase>
+</coreWindows:WindowBase>

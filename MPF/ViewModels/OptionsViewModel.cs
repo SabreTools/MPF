@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using MPF.Core.Data;
+using MPF.UI.Core.ComboBoxItems;
 using MPF.Windows;
 using RedumpLib.Web;
 using WPFCustomMessageBox;

@@ -3,16 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>net48;netcoreapp3.1;net5.0-windows</TargetFrameworks>
     <PlatformTarget>x86</PlatformTarget>
-    <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Images\Icon.ico</ApplicationIcon>
-    <Title>MPF</Title>
-    <AssemblyName>MPF</AssemblyName>
-    <Description>Frontend for various dumping programs</Description>
+    <Title>MPF.UI.Core</Title>
+    <AssemblyName>MPF.UI.Core</AssemblyName>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2021</Copyright>
-    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
+    <Copyright>Copyright (c)2019-2022</Copyright>
     <Version>2.3</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
@@ -27,10 +23,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="2.0.0" GeneratePathProperty="true">
-      <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -38,17 +30,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\Icon.ico" />
+    <Resource Include="Images\ring-code-guide-1-layer.png" />
+    <Resource Include="Images\ring-code-guide-2-layer.png" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
-    <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
     <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
@@ -56,4 +43,19 @@
     <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="UserControls\UserInput.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Windows\DiscInformationWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Windows\RingCodeGuideWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
 </Project>

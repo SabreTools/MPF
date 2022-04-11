@@ -1,7 +1,8 @@
-﻿using MPF.GUI.ViewModels;
+﻿using MPF.Core.Data;
+using MPF.UI.Core.ViewModels;
 using RedumpLib.Data;
 
-namespace MPF.Windows
+namespace MPF.UI.Core.Windows
 {
     /// <summary>
     /// Interaction logic for DiscInformationWindow.xaml
@@ -16,10 +17,10 @@ namespace MPF.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-        public DiscInformationWindow(SubmissionInfo submissionInfo)
+        public DiscInformationWindow(Options options, SubmissionInfo submissionInfo)
         {
             InitializeComponent();
-            DataContext = new DiscInformationViewModel(this, submissionInfo);
+            DataContext = new DiscInformationViewModel(this, options, submissionInfo);
         }
     }
 }

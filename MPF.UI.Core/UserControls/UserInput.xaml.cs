@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace MPF.UserControls
+namespace MPF.UI.Core.UserControls
 {
     /// <summary>
     /// Interaction logic for UserInput.xaml
@@ -105,7 +105,6 @@ namespace MPF.UserControls
         }
 
         #endregion
-
 
         public UserInput()
         {
