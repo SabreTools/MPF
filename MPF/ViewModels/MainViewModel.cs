@@ -138,7 +138,7 @@ namespace MPF.GUI.ViewModels
 
                 // Set the selected index
                 App.Instance.DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
-                App.Instance.StatusLabel.Content = "Valid drive found! Choose your Media Type";
+                App.Instance.StatusLabel.Text = "Valid drive found! Choose your Media Type";
                 App.Instance.CopyProtectScanButton.IsEnabled = true;
 
                 // Get the current system type
@@ -152,7 +152,7 @@ namespace MPF.GUI.ViewModels
             {
                 App.Logger.VerboseLogLn("Found no drives");
                 App.Instance.DriveLetterComboBox.SelectedIndex = -1;
-                App.Instance.StatusLabel.Content = "No valid drive found!";
+                App.Instance.StatusLabel.Text = "No valid drive found!";
                 App.Instance.StartStopButton.IsEnabled = false;
                 App.Instance.CopyProtectScanButton.IsEnabled = false;
             }
@@ -518,7 +518,7 @@ namespace MPF.GUI.ViewModels
             // Populate the list of drives and determine the system
             if (rescanDrives)
             {
-                App.Instance.StatusLabel.Content = "Creating drive list, please wait!";
+                App.Instance.StatusLabel.Text = "Creating drive list, please wait!";
                 await App.Instance.Dispatcher.InvokeAsync(PopulateDrives);
             }
             else
@@ -936,7 +936,7 @@ namespace MPF.GUI.ViewModels
 
             // Get the status to write out
             Result result = Tools.GetSupportStatus(Env.System, Env.Type);
-            App.Instance.StatusLabel.Content = result.Message;
+            App.Instance.StatusLabel.Text = result.Message;
 
             // Set the index for the current disc type
             SetCurrentDiscType();
@@ -1078,8 +1078,8 @@ namespace MPF.GUI.ViewModels
             {
                 App.Logger.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
 
-                var tempContent = App.Instance.StatusLabel.Content;
-                App.Instance.StatusLabel.Content = "Scanning for copy protection... this might take a while!";
+                var tempContent = App.Instance.StatusLabel.Text;
+                App.Instance.StatusLabel.Text = "Scanning for copy protection... this might take a while!";
                 App.Instance.StartStopButton.IsEnabled = false;
                 App.Instance.MediaScanButton.IsEnabled = false;
                 App.Instance.UpdateVolumeLabel.IsEnabled = false;
@@ -1110,7 +1110,7 @@ namespace MPF.GUI.ViewModels
                 else
                     App.Logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
-                App.Instance.StatusLabel.Content = tempContent;
+                App.Instance.StatusLabel.Text = tempContent;
                 App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
                 App.Instance.MediaScanButton.IsEnabled = true;
                 App.Instance.UpdateVolumeLabel.IsEnabled = true;
@@ -1132,7 +1132,7 @@ namespace MPF.GUI.ViewModels
             if (index != -1)
                 App.Instance.MediaTypeComboBox.SelectedIndex = index;
             else
-                App.Instance.StatusLabel.Content = $"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!";
+                App.Instance.StatusLabel.Text = $"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!";
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
@@ -1251,7 +1251,7 @@ namespace MPF.GUI.ViewModels
                 DisableAllUIElements();
 
                 // Output to the label and log
-                App.Instance.StatusLabel.Content = "Starting dumping process... Please wait!";
+                App.Instance.StatusLabel.Text = "Starting dumping process... Please wait!";
                 App.Logger.LogLn("Starting dumping process... Please wait!");
                 if (App.Options.ToolsInSeparateWindow)
                     App.Logger.LogLn("Look for the separate command window for more details");
@@ -1273,7 +1273,7 @@ namespace MPF.GUI.ViewModels
                 if (!Env.Parameters.IsDumpingCommand())
                 {
                     App.Logger.LogLn("No dumping command was run, submission information will not be gathered.");
-                    App.Instance.StatusLabel.Content = "Execution complete!";
+                    App.Instance.StatusLabel.Text = "Execution complete!";
 
                     // Reset all UI elements
                     EnableAllUIElements();
@@ -1288,13 +1288,13 @@ namespace MPF.GUI.ViewModels
                 else
                 {
                     App.Logger.ErrorLogLn(result.Message);
-                    App.Instance.StatusLabel.Content = "Execution failed!";
+                    App.Instance.StatusLabel.Text = "Execution failed!";
                 }
             }
             catch (Exception ex)
             {
                 App.Logger.ErrorLogLn(ex.ToString());
-                App.Instance.StatusLabel.Content = "An exception occurred!";
+                App.Instance.StatusLabel.Text = "An exception occurred!";
             }
             finally
             {
@@ -1388,9 +1388,9 @@ namespace MPF.GUI.ViewModels
 
             // Update the label with only the first line of output
             if (message.Contains("\n"))
-                App.Instance.StatusLabel.Content = value.Message.Split('\n')[0] + " (See log output)";
+                App.Instance.StatusLabel.Text = value.Message.Split('\n')[0] + " (See log output)";
             else
-                App.Instance.StatusLabel.Content = value.Message;
+                App.Instance.StatusLabel.Text = value.Message;
 
             // Log based on success or failure
             if (value)
@@ -1405,7 +1405,7 @@ namespace MPF.GUI.ViewModels
         private void ProgressUpdated(object sender, ProtectionProgress value)
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
-            App.Instance.StatusLabel.Content = message;
+            App.Instance.StatusLabel.Text = message;
             App.Logger.VerboseLogLn(message);
         }
 

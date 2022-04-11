@@ -44,6 +44,7 @@
 - Disable PVD creation for Aaru
 - Explicitly sanitize '?' from path
 - Combine cases in protection scan
+- Convert status label to TextBlock
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
