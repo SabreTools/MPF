@@ -165,6 +165,9 @@
                                                         Text="{Binding SubmissionInfo.CommonDiscInfo.Comments, Mode=TwoWay}" TextHeight="50"
                                                         Enter="True" TextWrapping="Wrap" VerticalContentAlignmentValue="Top" />
                                     <controls:UserInput x:Name="GenreTextBox" Label="Genre"/>
+                                    <controls:UserInput x:Name="ProtectionTextBox" Label="Protection"
+                                                        Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="75" TextWrapping="Wrap"
+                                                        VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="0.75*" />
@@ -356,9 +359,6 @@
                             <controls:UserInput x:Name="PFIHash" Label="PFI Hash" IsReadOnly="True"/>
                             <controls:UserInput x:Name="PIC" Label="PIC" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.PIC, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
-                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                            <controls:UserInput x:Name="Protection" Label="Protection" IsReadOnly="True"
-                                                Text="{Binding SubmissionInfo.CopyProtection.Protection, Mode=TwoWay}" TextHeight="75" TextWrapping="Wrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"

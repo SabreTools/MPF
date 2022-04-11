@@ -306,8 +306,6 @@ namespace MPF.GUI.ViewModels
                 Parent.PFIHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.PIC))
                 Parent.PIC.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.Protection))
-                Parent.Protection.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.PVD))
                 Parent.PVD.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.SecuROMData))

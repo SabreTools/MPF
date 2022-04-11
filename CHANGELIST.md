@@ -46,6 +46,7 @@
 - Combine cases in protection scan
 - Convert status label to TextBlock
 - Add option for copy protection file output
+- Make protection field user-editable
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
