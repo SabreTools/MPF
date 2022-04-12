@@ -406,6 +406,9 @@ namespace MPF.Modules.DiscImageCreator
                         info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
                     }
 
+                    // Attempt to get multisession data
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = GetMultisessionInformation(basePath + "_disc.txt") ?? "";
+
                     break;
 
                 case MediaType.DVD:
@@ -2819,8 +2822,99 @@ namespace MPF.Modules.DiscImageCreator
             {
                 try
                 {
-                    // TODO: Implement parsing of the disc file
-                    return null;
+                    // Seek to the TOC data
+                    string line = sr.ReadLine();
+                    if (!line.StartsWith("========== TOC"))
+                        while (!(line = sr.ReadLine()).StartsWith("========== TOC")) ;
+
+                    // Create the required regex
+                    Regex trackLengthRegex = new Regex(@"^\s*.*?Track\s*([0-9]{1,2}), LBA\s*[0-9]{1,8} - \s*[0-9]{1,8}, Length\s*([0-9]{1,8})$");
+
+                    // Read in the track length data
+                    var trackLengthMapping = new Dictionary<string, string>();
+                    while ((line = sr.ReadLine()).Contains("Track"))
+                    {
+                        var match = trackLengthRegex.Match(line);
+                        trackLengthMapping[match.Groups[1].Value] = match.Groups[2].Value;
+                    }
+
+                    // Seek to the FULL TOC data
+                    line = sr.ReadLine();
+                    if (!line.StartsWith("========== FULL TOC"))
+                        while (!(line = sr.ReadLine()).StartsWith("========== FULL TOC")) ;
+
+                    // Create the required regex
+                    Regex trackSessionRegex = new Regex(@"^\s*Session\s*([0-9]{1,2}),.*?,\s*Track\s*([0-9]{1,2}).*?$");
+
+                    // Read in the track session data
+                    var trackSessionMapping = new Dictionary<string, string>();
+                    while (!(line = sr.ReadLine()).StartsWith("========== OpCode"))
+                    {
+                        var match = trackSessionRegex.Match(line);
+                        if (!match.Success)
+                            continue;
+
+                        trackSessionMapping[match.Groups[2].Value] = match.Groups[1].Value;
+                    }
+
+                    // If we have all Session 1, we can just skip out
+                    if (trackSessionMapping.All(kvp => kvp.Value == "1"))
+                        return null;
+
+                    // Seek to the multisession data
+                    line = sr.ReadLine().Trim();
+                    if (!line.StartsWith("Lead-out length"))
+                        while (!(line = sr.ReadLine().Trim()).StartsWith("Lead-out length")) ;
+
+                    // TODO: Are there any examples of 3+ session discs?
+
+                    // Read the first session lead-out
+                    string firstSessionLeadOutLengthString = line.Substring("Lead-out length of 1st session: ".Length);
+                    line = sr.ReadLine().Trim();
+                    
+                    // Read the second session lead-in, if it exists
+                    string secondSessionLeadInLengthString = null;
+                    if (line.StartsWith("Lead-in length"))
+                    {
+                        secondSessionLeadInLengthString = line.Substring("Lead-in length of 2nd session: ".Length);
+                        line = sr.ReadLine().Trim();
+                    }
+                    
+                    // Read the second session pregap
+                    string secondSessionPregapLengthString = line.Substring("Pregap length of 1st track of 2nd session: ".Length);
+
+                    // Calculate the session gap total
+                    if (!int.TryParse(firstSessionLeadOutLengthString, out int firstSessionLeadOutLength))
+                        firstSessionLeadOutLength = 0;
+                    if (!int.TryParse(secondSessionLeadInLengthString, out int secondSessionLeadInLength))
+                        secondSessionLeadInLength = 0;
+                    if (!int.TryParse(secondSessionPregapLengthString, out int secondSessionPregapLength))
+                        secondSessionPregapLength = 0;
+                    int sessionGapTotal = firstSessionLeadOutLength + secondSessionLeadInLength + secondSessionPregapLength;
+
+                    // Calculate first session length and total length
+                    int firstSessionLength = 0, totalLength = 0;
+                    foreach (var lengthMapping in trackLengthMapping)
+                    {
+                        if (!int.TryParse(lengthMapping.Value, out int trackLength))
+                            trackLength = 0;
+
+                        if (trackSessionMapping.TryGetValue(lengthMapping.Key, out string session))
+                            firstSessionLength += session == "1" ? trackLength : 0;
+
+                        totalLength += trackLength;
+                    }
+
+                    // Adjust the session gap in a consistent way
+                    if (firstSessionLength - sessionGapTotal < 0)
+                        sessionGapTotal = firstSessionLeadOutLength + secondSessionLeadInLength;
+
+                    // Create and return the formatted output
+                    string multisessionData =
+                        $"Session 1: 0-{firstSessionLength - sessionGapTotal - 1}\n"
+                        + $"Session 2: {firstSessionLength}-{totalLength - 1}";
+
+                    return multisessionData;
                 }
                 catch
                 {
