@@ -50,6 +50,7 @@
 - Add warning to tooltip
 - Create core UI library
 - Rename MPF.GUI to MPF.UI
+- Add multisession pseudo-tag
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

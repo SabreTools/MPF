@@ -3581,6 +3581,10 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "<b>Microsoft ID</b>:", LongName = "<b>Microsoft ID</b>:")]
         MicrosoftID,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Multisession</b>:", LongName = "<b>Multisession</b>:")]
+        Multisession,
+
         [HumanReadable(ShortName = "[T:NGID]", LongName = "<b>Nagano ID</b>:")]
         NaganoID,
 

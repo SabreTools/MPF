@@ -2049,7 +2049,9 @@ namespace MPF.Library
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.InternalSerialName, tags[SiteCode.InternalSerialName]));
             if (tags.ContainsKey(SiteCode.VolumeLabel))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.VolumeLabel, tags[SiteCode.VolumeLabel]));
-            
+            if (tags.ContainsKey(SiteCode.Multisession))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Multisession, tags[SiteCode.Multisession]));
+
             if (tags.ContainsKey(SiteCode.XMID))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.XMID, tags[SiteCode.XMID]));
             if (tags.ContainsKey(SiteCode.XeMID))

@@ -352,6 +352,8 @@
                                                 Text="{Binding SubmissionInfo.Extras.Header, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="InternalSerialName" Label="Internal Serial" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="Multisession" Label="Multisession" IsReadOnly="True" TextHeight="75" TextWrapping="NoWrap"
+                                                VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                             <controls:UserInput x:Name="LibCrypt" Label="LibCrypt" IsReadOnly="True"/>
                             <controls:UserInput x:Name="LibCryptData" Label="LibCrypt Data" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.LibCryptData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
