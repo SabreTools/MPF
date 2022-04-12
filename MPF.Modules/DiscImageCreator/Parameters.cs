@@ -2805,6 +2805,32 @@ namespace MPF.Modules.DiscImageCreator
         }
 
         /// <summary>
+        /// Get multisession information from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Formatted multisession information, null on error</returns>
+        private static string GetMultisessionInformation(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return null;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // TODO: Implement parsing of the disc file
+                    return null;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the hex contents of the PIC file
         /// </summary>
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
@@ -2829,10 +2855,10 @@ namespace MPF.Modules.DiscImageCreator
         }
 
         /// <summary>
-        /// Get the existance of an anti-modchip string from the input file, if possible
+        /// Get the existence of an anti-modchip string from the input file, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
-        /// <returns>Anti-modchip existance if possible, false on error</returns>
+        /// <returns>Anti-modchip existence if possible, false on error</returns>
         private static bool GetPlayStationAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
@@ -2923,7 +2949,7 @@ namespace MPF.Modules.DiscImageCreator
         /// Get the PVD from the input file, if possible
         /// </summary>
         /// <param name="mainInfo">_mainInfo.txt file location</param>
-        /// <returns>Newline-deliminated PVD if possible, null on error</returns>
+        /// <returns>Newline-delimited PVD if possible, null on error</returns>
         private static string GetPVD(string mainInfo)
         {
             // If the file doesn't exist, we can't get info from it
