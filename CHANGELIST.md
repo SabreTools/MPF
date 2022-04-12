@@ -55,6 +55,7 @@
 - Move and update options loader; clean up Check
 - Move helper methods around
 - Consolidate Redump login testing
+- Separate common arguments to new helper
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

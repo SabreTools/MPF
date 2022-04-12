@@ -14,32 +14,14 @@ namespace MPF.Check
     {
         public static void Main(string[] args)
         {
-            // Try processing the standalone arguments first
+            // Try processing the standalone arguments
             if (ProcessStandaloneArguments(args))
                 return;
 
-            // All other use requires at least 3 arguments
-            if (args.Length < 3)
-            {
-                DisplayHelp("Invalid number of arguments");
+            // Try processing the common arguments
+            (bool success, MediaType mediaType, RedumpSystem? knownSystem) = ProcessCommonArguments(args);
+            if (!success)
                 return;
-            }
-
-            // Check the MediaType
-            var mediaType = EnumConverter.ToMediaType(args[0].Trim('"'));
-            if (mediaType == MediaType.NONE)
-            {
-                DisplayHelp($"{args[0]} is not a recognized media type");
-                return;
-            }
-
-            // Check the RedumpSystem
-            var knownSystem = Extensions.ToRedumpSystem(args[1].Trim('"'));
-            if (knownSystem == null)
-            {
-                DisplayHelp($"{args[1]} is not a recognized system");
-                return;
-            }
 
             // Loop through and process options
             (Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
@@ -107,6 +89,38 @@ namespace MPF.Check
                 Console.WriteLine(argument);
             }
             Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Process common arguments for all functionality
+        /// </summary>
+        /// <returns>True if all arguments pass, false otherwise</returns>
+        private static (bool, MediaType, RedumpSystem?) ProcessCommonArguments(string[] args)
+        {
+            // All other use requires at least 3 arguments
+            if (args.Length < 3)
+            {
+                DisplayHelp("Invalid number of arguments");
+                return (false, MediaType.NONE, null);
+            }
+
+            // Check the MediaType
+            var mediaType = EnumConverter.ToMediaType(args[0].Trim('"'));
+            if (mediaType == MediaType.NONE)
+            {
+                DisplayHelp($"{args[0]} is not a recognized media type");
+                return (false, MediaType.NONE, null);
+            }
+
+            // Check the RedumpSystem
+            var knownSystem = Extensions.ToRedumpSystem(args[1].Trim('"'));
+            if (knownSystem == null)
+            {
+                DisplayHelp($"{args[1]} is not a recognized system");
+                return (false, MediaType.NONE, null);
+            }
+
+            return (true, mediaType, knownSystem);
         }
 
         /// <summary>
