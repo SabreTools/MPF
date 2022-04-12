@@ -52,6 +52,7 @@
 - Rename MPF.GUI to MPF.UI
 - Add multisession pseudo-tag
 - Add multisession helper method skeleton
+- Move and update options loader; clean up Check
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

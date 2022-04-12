@@ -15,34 +15,11 @@ namespace MPF.Check
     {
         public static void Main(string[] args)
         {
-            // Help options
-            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
-            {
-                DisplayHelp();
+            // Try processing the standalone arguments first
+            if (ProcessStandaloneArguments(args))
                 return;
-            }
 
-            // List options
-            if (args[0] == "-lm" || args[0] == "--listmedia")
-            {
-                ListMediaTypes();
-                Console.ReadLine();
-                return;
-            }
-            else if (args[0] == "-lp" || args[0] == "--listprograms")
-            {
-                ListPrograms();
-                Console.ReadLine();
-                return;
-            }
-            else if (args[0] == "-ls" || args[0] == "--listsystems")
-            {
-                ListSystems();
-                Console.ReadLine();
-                return;
-            }
-
-            // Normal operation check
+            // All other use requires at least 3 arguments
             if (args.Length < 3)
             {
                 DisplayHelp("Invalid number of arguments");
@@ -65,82 +42,8 @@ namespace MPF.Check
                 return;
             }
 
-            // Default values
-            string username = null, password = null;
-            string internalProgram = "DiscImageCreator";
-            string path = string.Empty;
-            bool scan = false, protectFile = false, compress = false, json = false;
-
             // Loop through and process options
-            int startIndex = 2;
-            for (; startIndex < args.Length; startIndex++)
-            {
-                // Redump login
-                if (args[startIndex].StartsWith("-c=") || args[startIndex].StartsWith("--credentials="))
-                {
-                    string[] credentials = args[startIndex].Split('=')[1].Split(';');
-                    username = credentials[0];
-                    password = credentials[1];
-                }
-                else if (args[startIndex] == "-c" || args[startIndex] == "--credentials")
-                {
-                    username = args[startIndex + 1];
-                    password = args[startIndex + 2];
-                    startIndex += 2;
-                }
-
-                // Use specific program
-                else if (args[startIndex].StartsWith("-u=") || args[startIndex].StartsWith("--use="))
-                {
-                    internalProgram = args[startIndex].Split('=')[1];
-                }
-                else if (args[startIndex] == "-u" || args[startIndex] == "--use")
-                {
-                    internalProgram = args[startIndex + 1];
-                    startIndex++;
-                }
-
-                // Use a device path for physical checks
-                else if (args[startIndex].StartsWith("-p=") || args[startIndex].StartsWith("--path="))
-                {
-                    path = args[startIndex].Split('=')[1];
-                }
-                else if (args[startIndex] == "-p" || args[startIndex] == "--path")
-                {
-                    path = args[startIndex + 1];
-                    startIndex++;
-                }
-
-                // Scan for protection (requires device path)
-                else if (args[startIndex].Equals("-s") || args[startIndex].Equals("--scan"))
-                {
-                    scan = true;
-                }
-
-                // Output protection to separate file (requires scan for protection)
-                else if (args[startIndex].Equals("-f") || args[startIndex].Equals("--protect-file"))
-                {
-                    protectFile = true;
-                }
-
-                // Output submission JSON
-                else if (args[startIndex].Equals("-j") || args[startIndex].Equals("--json"))
-                {
-                    json = true;
-                }
-
-                // Compress log and extraneous files
-                else if (args[startIndex].Equals("-z") || args[startIndex].Equals("--zip"))
-                {
-                    compress = true;
-                }
-
-                // Default, we fall out
-                else
-                {
-                    break;
-                }
-            }
+            (Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
 
             // Make new Progress objects
             var resultProgress = new Progress<Result>();
@@ -148,20 +51,8 @@ namespace MPF.Check
             var protectionProgress = new Progress<ProtectionProgress>();
             protectionProgress.ProgressChanged += ProgressUpdated;
 
-            // If credentials are invalid, alert the user
-            if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
-            {
-                using (RedumpWebClient wc = new RedumpWebClient())
-                {
-                    bool? loggedIn = wc.Login(username, password);
-                    if (loggedIn == true)
-                        Console.WriteLine("Redump username and password accepted!");
-                    else if (loggedIn == false)
-                        Console.WriteLine("Redump username and password denied!");
-                    else
-                        Console.WriteLine("An error occurred validating your crendentials!");
-                }
-            }
+            // Validate the supplied credentials
+            ValidateCredentials(options);
 
             // Loop through all the rest of the args
             for (int i = startIndex; i < args.Length; i++)
@@ -177,20 +68,6 @@ namespace MPF.Check
                 string filepath = Path.GetFullPath(args[i].Trim('"'));
 
                 // Now populate an environment
-                var options = new Options
-                {
-                    InternalProgram = EnumConverter.ToInternalProgram(internalProgram),
-                    ScanForProtection = scan && !string.IsNullOrWhiteSpace(path),
-                    OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrWhiteSpace(path),
-                    PromptForDiscInformation = false,
-                    ShowDiscEjectReminder = false,
-                    OutputSubmissionJSON = json,
-                    CompressLogFiles = compress,
-
-                    RedumpUsername = username,
-                    RedumpPassword = password,
-                };
-
                 Drive drive = null;
                 if (!string.IsNullOrWhiteSpace(path))
                     drive = new Drive(null, new DriveInfo(path));
@@ -221,20 +98,20 @@ namespace MPF.Check
             Console.WriteLine("-ls, --listsystems      List supported system types");
             Console.WriteLine("-lp, --listprograms     List supported dumping program outputs");
             Console.WriteLine();
+
             Console.WriteLine("Check Options:");
-            Console.WriteLine("-c, --credentials <user> <pw>  Redump username and password");
-            Console.WriteLine("-u, --use <program>            Dumping program output type");
-            Console.WriteLine("-p, --path <drivepath>         Physical drive path for additional checks");
-            Console.WriteLine("-s, --scan                     Enable copy protection scan (requires --path)");
-            Console.WriteLine("-f, --protect-file             Output protection to separate file (requires --scan)");
-            Console.WriteLine("-j, --json                     Enable submission JSON output");
-            Console.WriteLine("-z, --zip                      Enable log file compression");
+            var supportedArguments = OptionsLoader.PrintSupportedArguments();
+            foreach (string argument in supportedArguments)
+            {
+                Console.WriteLine(argument);
+            }
             Console.WriteLine();
         }
 
         /// <summary>
         /// List all media types with their short usable names
         /// </summary>
+        /// TODO: Move to a common location
         private static void ListMediaTypes()
         {
             Console.WriteLine("Supported Media Types:");
@@ -250,6 +127,7 @@ namespace MPF.Check
         /// <summary>
         /// List all programs with their short usable names
         /// </summary>
+        /// TODO: Move to a common location
         private static void ListPrograms()
         {
             Console.WriteLine("Supported Programs:");
@@ -265,6 +143,7 @@ namespace MPF.Check
         /// <summary>
         /// List all systems with their short usable names
         /// </summary>
+        /// TODO: Move to a common location
         private static void ListSystems()
         {
             Console.WriteLine("Supported Known Systems:");
@@ -277,6 +156,42 @@ namespace MPF.Check
             {
                 Console.WriteLine($"{val.ShortName()} - {val.LongName()}");
             }
+        }
+
+        /// <summary>
+        /// Process any standalone arguments for the program
+        /// </summary>
+        /// <returns>True if one of the arguments was processed, false otherwise</returns>
+        private static bool ProcessStandaloneArguments(string[] args)
+        {
+            // Help options
+            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
+            {
+                DisplayHelp();
+                return true;
+            }
+
+            // List options
+            if (args[0] == "-lm" || args[0] == "--listmedia")
+            {
+                ListMediaTypes();
+                Console.ReadLine();
+                return true;
+            }
+            else if (args[0] == "-lp" || args[0] == "--listprograms")
+            {
+                ListPrograms();
+                Console.ReadLine();
+                return true;
+            }
+            else if (args[0] == "-ls" || args[0] == "--listsystems")
+            {
+                ListSystems();
+                Console.ReadLine();
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -293,6 +208,29 @@ namespace MPF.Check
         private static void ProgressUpdated(object sender, ProtectionProgress value)
         {
             Console.WriteLine($"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
+        }
+
+        /// <summary>
+        /// Validate supplied credentials
+        /// </summary>
+        /// TODO: Move to a common location
+        private static void ValidateCredentials(Options options)
+        {
+            // If options are invalid or we're missing something key, just return
+            if (string.IsNullOrWhiteSpace(options?.RedumpUsername) || string.IsNullOrWhiteSpace(options?.RedumpPassword))
+                return;
+
+            // Try logging in with the supplied credentials otherwise
+            using (RedumpWebClient wc = new RedumpWebClient())
+            {
+                bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
+                if (loggedIn == true)
+                    Console.WriteLine("Redump username and password accepted!");
+                else if (loggedIn == false)
+                    Console.WriteLine("Redump username and password denied!");
+                else
+                    Console.WriteLine("An error occurred validating your crendentials!");
+            }
         }
     }
 }
