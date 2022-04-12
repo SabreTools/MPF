@@ -1022,6 +1022,24 @@ namespace RedumpLib.Data
         #region Media Type
 
         /// <summary>
+        /// List all media types with their short usable names
+        /// </summary>
+        public static List<string> ListMediaTypes()
+        {
+            var mediaTypes = new List<string>();
+
+            foreach (var val in Enum.GetValues(typeof(MediaType)))
+            {
+                if (((MediaType)val) == MediaType.NONE)
+                    continue;
+
+                mediaTypes.Add($"{((MediaType?)val).ShortName()} - {((MediaType?)val).LongName()}");
+            }
+
+            return mediaTypes;
+        }
+
+        /// <summary>
         /// Get the Redump longnames for each known media type
         /// </summary>
         /// <param name="mediaType"></param>
@@ -1095,6 +1113,46 @@ namespace RedumpLib.Data
         #endregion
 
         #region System
+
+        /// <summary>
+        /// Determine if a system is a marker value
+        /// </summary>
+        /// <param name="system">RedumpSystem value to check</param>
+        /// <returns>True if the system is a marker value, false otherwise</returns>
+        public static bool IsMarker(this RedumpSystem? system)
+        {
+            switch (system)
+            {
+                case RedumpSystem.MarkerArcadeEnd:
+                case RedumpSystem.MarkerComputerEnd:
+                case RedumpSystem.MarkerDiscBasedConsoleEnd:
+                // case RedumpSystem.MarkerOtherConsoleEnd:
+                case RedumpSystem.MarkerOtherEnd:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// List all systems with their short usable names
+        /// </summary>
+        public static List<string> ListSystems()
+        {
+            var systems = new List<string>();
+
+            var knownSystems = Enum.GetValues(typeof(RedumpSystem))
+                .OfType<RedumpSystem?>()
+                .Where(s => s != null && !s.IsMarker() && s.GetCategory() != SystemCategory.NONE)
+                .OrderBy(s => s.LongName() ?? string.Empty);
+
+            foreach (var val in knownSystems)
+            {
+                systems.Add($"{val.ShortName()} - {val.LongName()}");
+            }
+
+            return systems;
+        }
 
         /// <summary>
         /// Get the Redump longnames for each known system

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using BurnOutSharp;
 using MPF.Core.Converters;
 using MPF.Core.Data;
@@ -109,56 +108,6 @@ namespace MPF.Check
         }
 
         /// <summary>
-        /// List all media types with their short usable names
-        /// </summary>
-        /// TODO: Move to a common location
-        private static void ListMediaTypes()
-        {
-            Console.WriteLine("Supported Media Types:");
-            foreach (var val in Enum.GetValues(typeof(MediaType)))
-            {
-                if (((MediaType)val) == MediaType.NONE)
-                    continue;
-
-                Console.WriteLine($"{((MediaType?)val).ShortName()} - {((MediaType?)val).LongName()}");
-            }
-        }
-
-        /// <summary>
-        /// List all programs with their short usable names
-        /// </summary>
-        /// TODO: Move to a common location
-        private static void ListPrograms()
-        {
-            Console.WriteLine("Supported Programs:");
-            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
-            {
-                if (((InternalProgram)val) == InternalProgram.NONE)
-                    continue;
-
-                Console.WriteLine($"{((InternalProgram?)val).LongName()}");
-            }
-        }
-
-        /// <summary>
-        /// List all systems with their short usable names
-        /// </summary>
-        /// TODO: Move to a common location
-        private static void ListSystems()
-        {
-            Console.WriteLine("Supported Known Systems:");
-            var knownSystems = Enum.GetValues(typeof(RedumpSystem))
-                .OfType<RedumpSystem?>()
-                .Where(s => s != null && !s.IsMarker() && s.GetCategory() != SystemCategory.NONE)
-                .OrderBy(s => s.LongName() ?? string.Empty);
-
-            foreach (var val in knownSystems)
-            {
-                Console.WriteLine($"{val.ShortName()} - {val.LongName()}");
-            }
-        }
-
-        /// <summary>
         /// Process any standalone arguments for the program
         /// </summary>
         /// <returns>True if one of the arguments was processed, false otherwise</returns>
@@ -174,19 +123,31 @@ namespace MPF.Check
             // List options
             if (args[0] == "-lm" || args[0] == "--listmedia")
             {
-                ListMediaTypes();
+                Console.WriteLine("Supported Media Types:");
+                foreach (string mediaType in Extensions.ListMediaTypes())
+                {
+                    Console.WriteLine(mediaType);
+                }
                 Console.ReadLine();
                 return true;
             }
             else if (args[0] == "-lp" || args[0] == "--listprograms")
             {
-                ListPrograms();
+                Console.WriteLine("Supported Programs:");
+                foreach (string program in EnumExtensions.ListPrograms())
+                {
+                    Console.WriteLine(program);
+                }
                 Console.ReadLine();
                 return true;
             }
             else if (args[0] == "-ls" || args[0] == "--listsystems")
             {
-                ListSystems();
+                Console.WriteLine("Supported Systems:");
+                foreach (string system in Extensions.ListSystems())
+                {
+                    Console.WriteLine(system);
+                }
                 Console.ReadLine();
                 return true;
             }

@@ -579,17 +579,6 @@ namespace MPF.Test.RedumpLib
         #region System
 
         /// <summary>
-        /// RedumpSystem values that are considered markers and not real systems
-        /// </summary>
-        private static readonly RedumpSystem?[] _markerSystemTypes = new RedumpSystem?[]
-        {
-            RedumpSystem.MarkerArcadeEnd,
-            RedumpSystem.MarkerComputerEnd,
-            RedumpSystem.MarkerDiscBasedConsoleEnd,
-            RedumpSystem.MarkerOtherEnd,
-        };
-
-        /// <summary>
         /// Check that every RedumpSystem has a long name provided
         /// </summary>
         /// <param name="redumpSystem">RedumpSystem value to check</param>
@@ -639,7 +628,7 @@ namespace MPF.Test.RedumpLib
             foreach (RedumpSystem? redumpSystem in Enum.GetValues(typeof(RedumpSystem)))
             {
                 // We want to skip all markers for this
-                if (_markerSystemTypes.Contains(redumpSystem))
+                if (redumpSystem.IsMarker())
                     continue;
 
                 testData.Add(new object[] { redumpSystem, false });

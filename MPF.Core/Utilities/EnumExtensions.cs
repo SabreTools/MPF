@@ -1,4 +1,8 @@
-﻿using RedumpLib.Data;
+﻿using System;
+using System.Collections.Generic;
+using MPF.Core.Converters;
+using MPF.Core.Data;
+using RedumpLib.Data;
 
 namespace MPF.Core.Utilities
 {
@@ -103,26 +107,6 @@ namespace MPF.Core.Utilities
         }
 
         /// <summary>
-        /// Determine if a system is a marker value
-        /// </summary>
-        /// <param name="system">RedumpSystem value to check</param>
-        /// <returns>True if the system is a marker value, false otherwise</returns>
-        public static bool IsMarker(this RedumpSystem? system)
-        {
-            switch (system)
-            {
-                case RedumpSystem.MarkerArcadeEnd:
-                case RedumpSystem.MarkerComputerEnd:
-                case RedumpSystem.MarkerDiscBasedConsoleEnd:
-                // case RedumpSystem.MarkerOtherConsoleEnd:
-                case RedumpSystem.MarkerOtherEnd:
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        /// <summary>
         /// Determine if a system is considered XGD
         /// </summary>
         /// <param name="system">RedumpSystem value to check</param>
@@ -139,6 +123,24 @@ namespace MPF.Core.Utilities
                 default:
                     return false;
             }
+        }
+
+        /// <summary>
+        /// List all programs with their short usable names
+        /// </summary>
+        public static List<string> ListPrograms()
+        {
+            var programs = new List<string>();
+
+            foreach (var val in Enum.GetValues(typeof(InternalProgram)))
+            {
+                if (((InternalProgram)val) == InternalProgram.NONE)
+                    continue;
+
+                programs.Add($"{((InternalProgram?)val).LongName()}");
+            }
+
+            return programs;
         }
     }
 }
