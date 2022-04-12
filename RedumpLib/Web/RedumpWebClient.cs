@@ -56,6 +56,28 @@ namespace RedumpLib.Web
         }
 
         /// <summary>
+        /// Validate supplied credentials
+        /// </summary>
+        public static (bool?, string) ValidateCredentials(string username, string password)
+        {
+            // If options are invalid or we're missing something key, just return
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                return (false, null);
+
+            // Try logging in with the supplied credentials otherwise
+            using (RedumpWebClient wc = new RedumpWebClient())
+            {
+                bool? loggedIn = wc.Login(username, password);
+                if (loggedIn == true)
+                    return (true, "Redump username and password accepted!");
+                else if (loggedIn == false)
+                    return (false, "Redump username and password denied!");
+                else
+                    return (null, "An error occurred validating your credentials!");
+            }
+        }
+
+        /// <summary>
         /// Login to Redump, if possible
         /// </summary>
         /// <param name="username">Redump username</param>

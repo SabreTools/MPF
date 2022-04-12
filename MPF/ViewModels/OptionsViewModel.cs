@@ -189,16 +189,13 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private void TestRedumpLogin()
         {
-            using (RedumpWebClient wc = new RedumpWebClient())
-            {
-                bool? loggedIn = wc.Login(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
-                if (loggedIn == true)
-                    CustomMessageBox.Show(Parent, "Redump login credentials accepted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                else if (loggedIn == false)
-                    CustomMessageBox.Show(Parent, "Redump login credentials denied!", "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
-                else
-                    CustomMessageBox.Show(Parent, "Error validating credentials!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            (bool? success, string message) = RedumpWebClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
+            if (success == true)
+                CustomMessageBox.Show(Parent, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            else if (success == false)
+                CustomMessageBox.Show(Parent, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            else
+                CustomMessageBox.Show(Parent, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         #endregion

@@ -54,6 +54,7 @@
 - Add multisession helper method skeleton
 - Move and update options loader; clean up Check
 - Move helper methods around
+- Consolidate Redump login testing
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

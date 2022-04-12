@@ -51,7 +51,9 @@ namespace MPF.Check
             protectionProgress.ProgressChanged += ProgressUpdated;
 
             // Validate the supplied credentials
-            ValidateCredentials(options);
+            (bool? _, string message) = RedumpWebClient.ValidateCredentials(options?.RedumpUsername, options?.RedumpPassword);
+            if (!string.IsNullOrWhiteSpace(message))
+                Console.WriteLine(message);
 
             // Loop through all the rest of the args
             for (int i = startIndex; i < args.Length; i++)
@@ -169,29 +171,6 @@ namespace MPF.Check
         private static void ProgressUpdated(object sender, ProtectionProgress value)
         {
             Console.WriteLine($"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
-        }
-
-        /// <summary>
-        /// Validate supplied credentials
-        /// </summary>
-        /// TODO: Move to a common location
-        private static void ValidateCredentials(Options options)
-        {
-            // If options are invalid or we're missing something key, just return
-            if (string.IsNullOrWhiteSpace(options?.RedumpUsername) || string.IsNullOrWhiteSpace(options?.RedumpPassword))
-                return;
-
-            // Try logging in with the supplied credentials otherwise
-            using (RedumpWebClient wc = new RedumpWebClient())
-            {
-                bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
-                if (loggedIn == true)
-                    Console.WriteLine("Redump username and password accepted!");
-                else if (loggedIn == false)
-                    Console.WriteLine("Redump username and password denied!");
-                else
-                    Console.WriteLine("An error occurred validating your crendentials!");
-            }
         }
     }
 }
