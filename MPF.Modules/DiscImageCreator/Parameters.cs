@@ -407,7 +407,9 @@ namespace MPF.Modules.DiscImageCreator
                     }
 
                     // Attempt to get multisession data
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = GetMultisessionInformation(basePath + "_disc.txt") ?? "";
+                    string cdMultiSessionInfo = GetMultisessionInformation(basePath + "_disc.txt");
+                    if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
                     break;
 
