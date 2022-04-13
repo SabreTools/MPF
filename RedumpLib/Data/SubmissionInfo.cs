@@ -416,7 +416,7 @@ namespace RedumpLib.Data
                 LibCrypt = this.LibCrypt,
                 LibCryptData = this.LibCryptData,
                 Protection = this.Protection,
-                FullProtections = this.FullProtections.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                FullProtections = this.FullProtections?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
                 SecuROMData = this.SecuROMData,
             };
         }
