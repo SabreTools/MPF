@@ -57,6 +57,7 @@
 - Consolidate Redump login testing
 - Separate common arguments to new helper
 - Parse and format CD multisession data
+- Convert triple space to tab
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

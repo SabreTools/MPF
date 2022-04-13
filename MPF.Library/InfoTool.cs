@@ -1062,6 +1062,7 @@ namespace MPF.Library
             // Convert to tabs
             value = value.Replace("<tab>", "\t");
             value = value.Replace("<TAB>", "\t");
+            value = value.Replace("   ", "\t");
 
             // If the value contains a newline
             value = value.Replace("\r\n", "\n");
