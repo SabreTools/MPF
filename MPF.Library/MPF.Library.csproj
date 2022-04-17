@@ -21,10 +21,6 @@
     <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
-    <DefineConstants>NET_FRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.Modules\MPF.Modules.csproj" />
