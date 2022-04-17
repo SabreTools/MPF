@@ -8,7 +8,7 @@
     <AssemblyName>MPF.Check</AssemblyName>
     <Description>Validator for various dumping programs</Description>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2021</Copyright>
+    <Copyright>Copyright (c)2019-2022</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <Version>2.3</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>

@@ -65,6 +65,7 @@
 - Update AppVeyor to VS2022
 - Update Nuget packages
 - Remove needless csproj constants
+- Update copyright date to 2022
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
