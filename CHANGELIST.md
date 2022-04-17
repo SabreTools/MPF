@@ -62,6 +62,7 @@
 - Be more picky about multisession
 - Sanitize whitespace around tabs
 - Convert internal libraries to .NET Standard 2.0
+- Update AppVeyor to VS2022
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
