@@ -20,10 +20,6 @@
     <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
-    <DefineConstants>NET_FRAMEWORK</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup Condition="'$(TargetFramework)'=='net48'">
     <COMReference Include="IMAPI2">
       <Guid>{2735412F-7F64-5B0F-8F00-5D77AFBE261E}</Guid>

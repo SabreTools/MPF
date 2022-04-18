@@ -2,7 +2,7 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
 using IMAPI2;
 #endif
 using MPF.Core.Data;
@@ -34,7 +34,7 @@ namespace MPF.Core.Converters
             }
         }
 
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
         /// <summary>
         /// Convert IMAPI physical media type to a MediaType
         /// </summary>

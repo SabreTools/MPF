@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
 using IMAPI2;
 #endif
 using MPF.Core.Converters;
@@ -25,7 +25,7 @@ namespace MPF.Test.Core.Converters
             DriveType.Removable,
         };
 
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
         /// <summary>
         /// IMAPI_MEDIA_PHYSICAL_TYPE values that map to MediaType
         /// </summary>
@@ -71,7 +71,7 @@ namespace MPF.Test.Core.Converters
                 Assert.NotNull(actual);
         }
 
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
         /// <summary>
         /// Check that every supported IMAPI_MEDIA_PHYSICAL_TYPE maps to an MediaType
         /// </summary>
@@ -108,7 +108,7 @@ namespace MPF.Test.Core.Converters
             return testData;
         }
 
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
         /// <summary>
         /// Generate a test set of IMAPI_MEDIA_PHYSICAL_TYPE values
         /// </summary>

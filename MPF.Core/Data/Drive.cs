@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Management;
 using MPF.Core.Converters;
 using MPF.Core.Utilities;
 using RedumpLib.Data;
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
+using System.Management;
 using IMAPI2;
 #else
 using Aaru.CommonTypes.Enums;
@@ -127,7 +127,7 @@ namespace MPF.Core.Data
                 .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
                 .ToList();
 
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
             // Get the floppy drives and set the flag from removable
             try
             {
@@ -179,7 +179,7 @@ namespace MPF.Core.Data
             else if (this.InternalDriveType == Data.InternalDriveType.Removable)
                 return (MediaType.FlashDrive, null);
 
-#if NET_FRAMEWORK
+#if NETFRAMEWORK
             // Get the current drive information
             string deviceId = null;
             bool loaded = false;
