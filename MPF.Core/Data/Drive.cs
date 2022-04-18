@@ -236,22 +236,32 @@ namespace MPF.Core.Data
 #else
             try
             {
+                // Set a few rough sizes to check for
+                double cdMaxSize = 850 * Math.Pow(1024, 2);
+                double dvdMaxSize = 9 * Math.Pow(1024, 3);
+
+                // Attempt to determine media type by size
+                if (driveInfo.TotalSize < cdMaxSize)
+                    return (MediaType.CDROM, null);
+                else if (driveInfo.TotalSize < dvdMaxSize)
+                    return (MediaType.DVD, null);
+                else
+                    return (MediaType.BluRay, null);
+
+                // TODO: In order to get the disc type, Aaru.Core will need to be included as a
+                // package. Unfortunately, it currently has a conflict with one of the required libraries:
+                // System.Text.Encoding.CodePages (BOS uses >= 5.0.0, DotNetZip uses >= 4.5.0 && < 5.0.0)
+
                 var device = new AaruDevices.Device(this.Name);
                 if (device.Error)
                     return (null, "Could not open device");
                 else if (device.Type != DeviceType.ATAPI && device.Type != DeviceType.SCSI)
                     return (null, "Device does not support media type detection");
-
-                // TODO: In order to get the disc type, Aaru.Core will need to be included as a
-                // package. Unfortunately, it currently has a conflict with one of the required libraries:
-                // System.Text.Encoding.CodePages (BOS uses >= 5.0.0, DotNetZip uses >= 4.5.0 && < 5.0.0)
             }
             catch (Exception ex)
             {
                 return (null, ex.Message);
             }
-
-            return (null, "Media detection only supported on .NET Framework");
 #endif
         }
 

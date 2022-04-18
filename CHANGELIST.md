@@ -67,6 +67,7 @@
 - Remove needless csproj constants
 - Update copyright date to 2022
 - Revert AppVeyor to VS2019 for now
+- Add size-based media type detection for non-Framework
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
