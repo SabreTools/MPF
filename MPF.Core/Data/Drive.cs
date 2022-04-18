@@ -242,12 +242,12 @@ namespace MPF.Core.Data
                 double dvdMaxSize = 9 * Math.Pow(1024, 3);
 
                 // Attempt to determine media type by size
-                if (driveInfo.TotalSize < cdMaxSize)
-                    return (MediaType.CDROM, null);
-                else if (driveInfo.TotalSize < dvdMaxSize)
-                    return (MediaType.DVD, null);
+                if (this.TotalSize < cdMaxSize)
+                    return (MediaType.CDROM, $"Detected filesystem: {this.DriveFormat}");
+                else if (this.TotalSize < dvdMaxSize)
+                    return (MediaType.DVD, $"Detected filesystem: {this.DriveFormat}");
                 else
-                    return (MediaType.BluRay, null);
+                    return (MediaType.BluRay, $"Detected filesystem: {this.DriveFormat}");
 
                 // TODO: In order to get the disc type, Aaru.Core will need to be included as a
                 // package. Unfortunately, it currently has a conflict with one of the required libraries:

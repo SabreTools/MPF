@@ -832,7 +832,7 @@ namespace MPF.UI.ViewModels
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null)
-                    App.Logger.VerboseLogLn($"Error in detecting media type: {errorMessage}");
+                    App.Logger.VerboseLogLn($"Message from detecting media type: {errorMessage}");
 
                 // If we got either an error or no media, default to the current System default
                 if (detectedMediaType == null)
