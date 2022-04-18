@@ -127,7 +127,7 @@ namespace MPF.Core.Data
                 .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
                 .ToList();
 
-            // TODO: Management searcher stuff is not supported on other platforms
+#if NET_FRAMEWORK
             // Get the floppy drives and set the flag from removable
             try
             {
@@ -150,6 +150,7 @@ namespace MPF.Core.Data
             {
                 // No-op
             }
+#endif
 
             // Order the drives by drive letter
             drives = drives.OrderBy(i => i.Letter).ToList();
@@ -288,7 +289,7 @@ namespace MPF.Core.Data
             if (systemFromLabel != null)
                 return systemFromLabel;
 
-            #region Consoles
+#region Consoles
 
             // Microsoft Xbox 360
             try
@@ -363,9 +364,9 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
-            #endregion
+#endregion
 
-            #region Video Formats
+#region Video Formats
 
             // BD-Video
             if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
@@ -413,7 +414,7 @@ namespace MPF.Core.Data
             }
             catch { }
 
-            #endregion
+#endregion
 
             // Default return
             return defaultValue;
