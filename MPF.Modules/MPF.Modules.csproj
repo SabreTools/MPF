@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;netcoreapp3.1;net5.0</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1;net6.0</TargetFrameworks>
     <PlatformTarget>x86</PlatformTarget>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2022</Copyright>
@@ -37,6 +37,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'!='net48'">
+    <PackageReference Include="Aaru.Devices" Version="5.3.1" />
   </ItemGroup>
 
 

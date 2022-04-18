@@ -6,7 +6,7 @@ pull_requests:
   do_not_increment_build_number: true
 
 # vm template
-image: Visual Studio 2019
+image: Visual Studio 2022
 
 # environment variables
 environment:
@@ -42,15 +42,15 @@ after_build:
 
 - 7z x aaru-5.3.1_windows_x64.zip -oMPF\bin\Debug\net48\Programs\Aaru *
 #- 7z x aaru-5.3.1_windows_x64.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Aaru *
-#- 7z x aaru-5.3.1_windows_x64.zip -oMPF\bin\Debug\net5.0\Programs\Aaru *
+#- 7z x aaru-5.3.1_windows_x64.zip -oMPF\bin\Debug\net6.0\Programs\Aaru *
 
 - 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net48\Programs\DD *
 #- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\DD *
-#- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net5.0\Programs\DD *
+#- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0\Programs\DD *
 
 - 7z e DiscImageCreator_20220301.zip -oMPF\bin\Debug\net48\Programs\Creator Release_ANSI\*
 #- 7z e DiscImageCreator_20220301.zip -oMPF\bin\Debug\netcoreapp3.1\Programs\Creator Release_ANSI\*
-#- 7z e DiscImageCreator_20220301.zip -oMPF\bin\Debug\net5.0\Programs\Creator Release_ANSI\*
+#- 7z e DiscImageCreator_20220301.zip -oMPF\bin\Debug\net6.0\Programs\Creator Release_ANSI\*
 
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net48 *
 - mkdir MPF\bin\Debug\net48\Programs\Subdump
@@ -58,19 +58,19 @@ after_build:
 #- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\netcoreapp3.1 *
 #- mkdir MPF\bin\Debug\netcoreapp3.1\Programs\Subdump
 #- mv MPF\bin\Debug\netcoreapp3.1\subdump_fua_0x28.exe MPF\bin\Debug\netcoreapp3.1\Programs\Subdump\subdump.exe
-#- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net5.0 *
-#- mkdir MPF\bin\Debug\net5.0\Programs\Subdump
-#- mv MPF\bin\Debug\net5.0\subdump_fua_0x28.exe MPF\bin\Debug\net5.0\Programs\Subdump\subdump.exe
+#- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0 *
+#- mkdir MPF\bin\Debug\net6.0\Programs\Subdump
+#- mv MPF\bin\Debug\net6.0\subdump_fua_0x28.exe MPF\bin\Debug\net6.0\Programs\Subdump\subdump.exe
 
 - cd MPF\bin\Debug
 - 7z a MPF_net48.zip net48\*
 #- 7z a MPF_netcoreapp3.1.zip netcoreapp3.1\*
-#- 7z a MPF_net5.0.zip net5.0\*
+#- 7z a MPF_net6.0.zip net6.0\*
 
 - cd ..\..\..\MPF.Check\bin\Debug
 - 7z a MPF-Check_net48.zip net48\*
 #- 7z a MPF-Check_netcoreapp3.1.zip netcoreapp3.1\*
-#- 7z a MPF-Check_net5.0.zip net5.0\*
+#- 7z a MPF-Check_net6.0.zip net6.0\*
 
 # success/failure tracking
 on_success:
@@ -86,12 +86,12 @@ artifacts:
   name: MPF (WPF UI) (.NET Framework 4.8)
 #- path: MPF\bin\Debug\MPF_netcoreapp3.1.zip
 #  name: MPF (WPF UI) (.NET Core 3.1)
-#- path: MPF\bin\Debug\MPF_net5.0.zip
-#  name: MPF (WPF UI) (.NET 5.0)
+#- path: MPF\bin\Debug\MPF_net6.0.zip
+#  name: MPF (WPF UI) (.NET 6.0)
 
 - path: MPF.Check\bin\Debug\MPF-Check_net48.zip
   name: MPF Check (.NET Framework 4.8)
 #- path: MPF.Check\bin\Debug\MPF-Check_netcoreapp3.1.zip
 #  name: MPF Check (.NET Core 3.1)
-#- path: MPF.Check\bin\Debug\MPF-Check_net5.0.zip
-#  name: MPF Check (.NET 5.0)
+#- path: MPF.Check\bin\Debug\MPF-Check_net6.0.zip
+#  name: MPF Check (.NET 6.0)

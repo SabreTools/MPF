@@ -71,6 +71,7 @@
 - Gate ManagmentObject use further
 - Use built-in NETFRAMEWORK directive
 - Update to BurnOutSharp 2.1.0
+- .NET 6.0 and Cleanup
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
