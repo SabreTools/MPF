@@ -2025,6 +2025,7 @@ namespace MPF.Library
                 case SiteCode.Extras:
                 case SiteCode.Games:
                 case SiteCode.GameFootage:
+                case SiteCode.Multisession:
                 case SiteCode.NetYarozeGames:
                 case SiteCode.Patches:
                 case SiteCode.PlayableDemos:

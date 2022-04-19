@@ -79,6 +79,7 @@
 - Sync to newest CICM
 - Update solution file for VS2022
 - Add Aaru as a submodule for .NET 6
+- Multisession is multi-line
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
