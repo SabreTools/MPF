@@ -79,8 +79,11 @@ namespace MPF.Core.Converters
         /// </summary>
         /// <param name="type">Aaru.CommonTypes.MediaType value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
-        public static MediaType? MediaTypeToMediaType(this Aaru.CommonTypes.MediaType type)
+        public static MediaType? MediaTypeToMediaType(this Aaru.CommonTypes.MediaType? type)
         {
+            if (type == null)
+                return null;
+
             return (int)type switch
             {
                 // Generics

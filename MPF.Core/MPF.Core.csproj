@@ -51,6 +51,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
     <ProjectReference Include="..\Aaru\Aaru.CommonTypes\Aaru.CommonTypes.csproj" />
+    <ProjectReference Include="..\Aaru\Aaru.Core\Aaru.Core.csproj" />
     <ProjectReference Include="..\Aaru\Aaru.Devices\Aaru.Devices.csproj" />
   </ItemGroup>
 

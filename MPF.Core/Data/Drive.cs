@@ -10,7 +10,9 @@ using System.Management;
 using IMAPI2;
 #else
 using Aaru.CommonTypes.Enums;
-using AaruDevices = Aaru.Devices;
+using Aaru.Core.Media.Info;
+using Aaru.Decoders.SCSI.SSC;
+using Aaru.Devices;
 #endif
 
 namespace MPF.Core.Data
@@ -106,7 +108,7 @@ namespace MPF.Core.Data
         /// <summary>
         /// Create a list of active drives matched to their volume labels
         /// </summary>
-        /// <param name="ignoreFixedDrives">Ture to ignore fixed drives from population, false otherwise</param>
+        /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
         /// <returns>Active drives, matched to labels, if possible</returns>
         /// <remarks>
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
@@ -151,7 +153,8 @@ namespace MPF.Core.Data
                 // No-op
             }
 #else
-            // TODO: Add implementation of finding all drives using Aaru.Devices
+            // TODO: Use this returned drive list once fixed
+            var driveList = GetDriveList(ignoreFixedDrives);
 #endif
 
             // Order the drives by drive letter
@@ -234,27 +237,9 @@ namespace MPF.Core.Data
 #else
             try
             {
-                // Set a few rough sizes to check for
-                double cdMaxSize = 850 * Math.Pow(1024, 2);
-                double dvdMaxSize = 9 * Math.Pow(1024, 3);
-
-                // Attempt to determine media type by size
-                if (this.TotalSize < cdMaxSize)
-                    return (MediaType.CDROM, $"Detected filesystem: {this.DriveFormat}");
-                else if (this.TotalSize < dvdMaxSize)
-                    return (MediaType.DVD, $"Detected filesystem: {this.DriveFormat}");
-                else
-                    return (MediaType.BluRay, $"Detected filesystem: {this.DriveFormat}");
-
-                // Create an Aaru device from the current path
-                var device = AaruDevices.Device.Create(this.Name, out _);
-                if (device.Error)
-                    return (null, "Could not open device");
-                else if (device.Type != DeviceType.ATAPI && device.Type != DeviceType.SCSI)
-                    return (null, "Device does not support media type detection");
-
-                // TODO: Use the current device and get the media type from it
-
+                // TODO: Get the device type for devices with set media types
+                var aaruMediaType = GetMediaType(this.Name);
+                return (EnumConverter.MediaTypeToMediaType(aaruMediaType), null);
             }
             catch (Exception ex)
             {
@@ -515,5 +500,119 @@ namespace MPF.Core.Data
         /// </summary>
         public void RefreshDrive()
             => this.driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d?.Name == this.Name);
+
+#if NET6_0_OR_GREATER
+
+        /// <summary>
+        /// Get all devices attached converted to Drive objects
+        /// </summary>
+        /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
+        /// <returns>List of drives, null on error</returns>
+        private static List<Drive> GetDriveList(bool ignoreFixedDrives)
+        {
+            DeviceInfo[] deviceInfos = Device.ListDevices();
+            if (deviceInfos == null)
+                return null;
+
+            var drives = new List<Drive>();
+            foreach (DeviceInfo deviceInfo in deviceInfos)
+            {
+                if (deviceInfo.Path == null)
+                    continue;
+
+                var drive = GetDriveFromDevice(deviceInfo.Path, ignoreFixedDrives);
+                if (drive == null)
+                    continue;
+
+                drives.Add(drive);
+            }
+
+            return drives;
+        }
+
+        /// <summary>
+        /// Generate a Drive object from a single device
+        /// </summary>
+        /// <param name="devicePath">Path to the device</param>
+        /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
+        /// <returns>Drive object for the device, null on error</returns>
+        private static Drive GetDriveFromDevice(string devicePath, bool ignoreFixedDrives)
+        {
+            if (devicePath.Length == 2 &&
+               devicePath[1] == ':' &&
+               devicePath[0] != '/' &&
+               char.IsLetter(devicePath[0]))
+                devicePath = "\\\\.\\" + char.ToUpper(devicePath[0]) + ':';
+
+            var dev = Device.Create(devicePath, out _);
+            if (dev == null || dev.Error)
+                return null;
+
+            // TODO: Narrow down devices to "readable" ones
+            // TODO: Look at Prettify_0000 for optical disc drive support
+
+            var devInfo = new Aaru.Core.Devices.Info.DeviceInfo(dev);
+            if (devInfo.MediumDensitySupport != null && devInfo.MediaTypeSupportHeader.HasValue)
+            {
+                foreach (DensitySupport.MediaTypeSupportDescriptor descriptor in devInfo.MediaTypeSupportHeader.Value.descriptors)
+                {
+                    string mediumType = descriptor.name;
+                }
+            }
+
+            if (!ignoreFixedDrives)
+            {
+                switch (dev.Type)
+                {
+                    case DeviceType.MMC:
+                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+
+                    case DeviceType.SecureDigital:
+                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                }
+
+                if (dev.IsUsb)
+                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+
+                if (dev.IsFireWire)
+                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+
+                if (dev.IsPcmcia)
+                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+            }
+
+            dev.Close();
+            return null;
+        }
+
+        /// <summary>
+        /// Get the media type for a device path using the Aaru libraries
+        /// </summary>
+        /// <param name="devicePath">Path to the device</param>
+        /// <returns>Aaru MediaType, null on error</returns>
+        private static Aaru.CommonTypes.MediaType? GetMediaType(string devicePath)
+        {
+            if (devicePath.Length == 2 &&
+               devicePath[1] == ':' &&
+               devicePath[0] != '/' &&
+               char.IsLetter(devicePath[0]))
+                devicePath = "\\\\.\\" + char.ToUpper(devicePath[0]) + ':';
+
+            var dev = Device.Create(devicePath, out _);
+            if (dev == null || dev.Error)
+                return null;
+
+            switch (dev.Type)
+            {
+                case DeviceType.ATAPI:
+                case DeviceType.SCSI:
+                    ScsiInfo scsiInfo = new ScsiInfo(dev);
+                    return scsiInfo?.MediaType;
+            }
+
+            return null;
+        }
+
+#endif
     }
 }
