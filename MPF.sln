@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.156
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF", "MPF\MPF.csproj", "{7B1B75EB-8940-466F-BD51-76471A57F9BE}"
 EndProject
@@ -28,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.Core", "MPF.Core\MPF.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.Modules", "MPF.Modules\MPF.Modules.csproj", "{8A4254BD-552F-4238-B8EB-D59AACD768B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPF.UI.Core", "MPF.UI.Core\MPF.UI.Core.csproj", "{EA3768DB-694A-4653-82E4-9FF71B8963F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPF.UI.Core", "MPF.UI.Core\MPF.UI.Core.csproj", "{EA3768DB-694A-4653-82E4-9FF71B8963F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

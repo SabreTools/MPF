@@ -76,6 +76,8 @@
 - Remove .NET Core 3.1 entirely
 - Add filesystem logging for .NET 6
 - Avoid whitespace changes for PVD, Header, and Cuesheet
+- Sync to newest CICM
+- Update solution file for VS2022
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
