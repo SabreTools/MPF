@@ -150,6 +150,8 @@ namespace MPF.Core.Data
             {
                 // No-op
             }
+#else
+            // TODO: Add implementation of finding all drives using Aaru.Devices
 #endif
 
             // Order the drives by drive letter
@@ -163,11 +165,6 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="drive"></param>
         /// <returns></returns>
-        /// <remarks>
-        /// This may eventually be replaced by Aaru.Devices being able to be about 10x more accurate.
-        /// This will also end up making it so that IMAPI2 is no longer necessary. Unfortunately, that
-        /// will only work for .NET Core 3.1 and beyond.
-        /// </remarks>
         public (MediaType?, string) GetMediaType()
         {
             // Take care of the non-optical stuff first
@@ -249,15 +246,15 @@ namespace MPF.Core.Data
                 else
                     return (MediaType.BluRay, $"Detected filesystem: {this.DriveFormat}");
 
-                // TODO: In order to get the disc type, Aaru.Core will need to be included as a
-                // package. Unfortunately, it currently has a conflict with one of the required libraries:
-                // System.Text.Encoding.CodePages (BOS uses >= 5.0.0, DotNetZip uses >= 4.5.0 && < 5.0.0)
-
-                var device = new AaruDevices.Device(this.Name);
+                // Create an Aaru device from the current path
+                var device = AaruDevices.Device.Create(this.Name, out _);
                 if (device.Error)
                     return (null, "Could not open device");
                 else if (device.Type != DeviceType.ATAPI && device.Type != DeviceType.SCSI)
                     return (null, "Device does not support media type detection");
+
+                // TODO: Use the current device and get the media type from it
+
             }
             catch (Exception ex)
             {
@@ -451,6 +448,10 @@ namespace MPF.Core.Data
             //    return RedumpSystem.MicrosoftXbox360; // Also for Xbox One?
             //if (this.VolumeLabel.Equals("DVD_ROM", StringComparison.OrdinalIgnoreCase))
             //    return RedumpSystem.MicrosoftXbox360;
+
+            // Sega Mega-CD / Sega-CD
+            if (this.VolumeLabel.Equals("Sega_CD", StringComparison.OrdinalIgnoreCase))
+                return RedumpSystem.SegaMegaCDSegaCD;
 
             // Sony PlayStation 3
             if (this.VolumeLabel.Equals("PS3VOLUME", StringComparison.OrdinalIgnoreCase))

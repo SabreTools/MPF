@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Reflection;
 using MPF.Core.Data;
 using Newtonsoft.Json.Linq;
@@ -171,7 +170,8 @@ namespace MPF.Core.Utilities
         /// </summary>
         private static (string tag, string url) GetRemoteVersionAndUrl()
         {
-            using (WebClient wc = new WebClient())
+#if NETFRAMEWORK
+            using (System.Net.WebClient wc = new System.Net.WebClient())
             {
                 wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
 
@@ -184,6 +184,21 @@ namespace MPF.Core.Utilities
 
                 return (latestTag, releaseUrl);
             }
+#else
+            using (System.Net.Http.HttpClient hc = new System.Net.Http.HttpClient())
+            {
+                // TODO: Figure out a better way than having this hardcoded...
+                string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
+                var message = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
+                message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0");
+                string latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
+                string latestTag = latestReleaseJson["tag_name"].ToString();
+                string releaseUrl = latestReleaseJson["html_url"].ToString();
+
+                return (latestTag, releaseUrl);
+            }
+#endif
         }
 
         #endregion

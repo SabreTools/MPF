@@ -26,10 +26,6 @@
     <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
-    <ProjectReference Include="..\CICMMetadata\CICMMetadataEditor\CICMMetadataEditor\CICMMetadataEditor.csproj" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
@@ -38,10 +34,5 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'!='net48'">
-    <PackageReference Include="Aaru.Devices" Version="5.3.1" />
-  </ItemGroup>
-
 
 </Project>

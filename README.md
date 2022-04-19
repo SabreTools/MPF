@@ -36,9 +36,10 @@ A list of all changes in each stable release and current WIP builds can now be f
 
 MPF uses some external libraries to assist with additional information gathering after the dumping process.
 
+- **Aaru** - Device and media type retrieval - [GitHub](https://github.com/aaru-dps/Aaru)
 - **BurnOutSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/BurnOutSharp)
-- **WPFCustomMessageBox.thabse** - Custom message boxes in UI - [GitHub](https://github.com/thabse/WPFCustomMessageBox)
 - **UnshieldSharp** - Protection scanning - [GitHub](https://github.com/mnadareski/UnshieldSharp)
+- **WPFCustomMessageBox.thabse** - Custom message boxes in UI - [GitHub](https://github.com/thabse/WPFCustomMessageBox)
 
 ## Contributors
 

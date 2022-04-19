@@ -73,6 +73,53 @@ namespace MPF.Core.Converters
                     return null;
             }
         }
+#else
+        /// <summary>
+        /// Convert Aaru media type to a MediaType
+        /// </summary>
+        /// <param name="type">Aaru.CommonTypes.MediaType value to check</param>
+        /// <returns>MediaType if possible, null on error</returns>
+        public static MediaType? MediaTypeToMediaType(this Aaru.CommonTypes.MediaType type)
+        {
+            return (int)type switch
+            {
+                // Generics
+                >= 10 and <= 39 => MediaType.CDROM,
+                >= 40 and <= 50 => MediaType.DVD,
+                >= 51 and <= 59 => MediaType.HDDVD,
+                >= 60 and <= 69 => MediaType.BluRay,
+
+                // Specialty
+                112 => MediaType.CDROM,
+                113 => MediaType.CDROM,
+                114 => MediaType.DVD,
+                115 => MediaType.DVD,
+                116 => MediaType.BluRay,
+                117 => MediaType.BluRay,
+                118 => MediaType.UMD,
+                120 => MediaType.BluRay,
+                150 => MediaType.CDROM,
+                151 => MediaType.CDROM,
+                152 => MediaType.GDROM,
+                153 => MediaType.GDROM,
+                155 => MediaType.CDROM, // MilCD... is this GD-ROM?
+                171 => MediaType.CDROM,
+                172 => MediaType.CDROM,
+                173 => MediaType.CDROM,
+                174 => MediaType.CDROM,
+                175 => MediaType.CDROM,
+                176 => MediaType.CDROM,
+                177 => MediaType.CDROM,
+                178 => MediaType.DVD,
+                179 => MediaType.CDROM,
+                453 => MediaType.NintendoGameCubeGameDisc,
+                463 => MediaType.NintendoWiiOpticalDisc,
+                464 => MediaType.NintendoWiiUOpticalDisc,
+                >= 770 and <= 799 => MediaType.BluRay,
+
+                _ => null,
+            };
+        }
 #endif
 
         #endregion

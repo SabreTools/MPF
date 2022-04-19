@@ -45,19 +45,20 @@
     <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
+    <ProjectReference Include="..\Aaru\CICMMetadata\CICMMetadataEditor\CICMMetadataEditor\CICMMetadataEditor.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+    <ProjectReference Include="..\Aaru\Aaru.CommonTypes\Aaru.CommonTypes.csproj" />
+    <ProjectReference Include="..\Aaru\Aaru.Devices\Aaru.Devices.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)'!='net48'">
-    <PackageReference Include="Aaru.Devices" Version="5.3.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Management" />
   </ItemGroup>
 
 </Project>
