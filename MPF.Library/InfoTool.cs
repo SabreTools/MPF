@@ -1059,13 +1059,19 @@ namespace MPF.Library
             for (int i = 0; i < indent; i++)
                 prefix += "\t";
 
-            // Convert to tabs
-            value = value.Replace("<tab>", "\t");
-            value = value.Replace("<TAB>", "\t");
-            value = value.Replace("   ", "\t");
+            // Skip fields that need to keep internal whitespace intact
+            if (key != "Primary Volume Descriptor (PVD)"
+                && key != "Header"
+                && key != "Cuesheet")
+            {
+                // Convert to tabs
+                value = value.Replace("<tab>", "\t");
+                value = value.Replace("<TAB>", "\t");
+                value = value.Replace("   ", "\t");
 
-            // Sanitize whitespace around tabs
-            value = Regex.Replace(value, @"\s*\t\s*", @"\t");
+                // Sanitize whitespace around tabs
+                value = Regex.Replace(value, @"\s*\t\s*", @"\t");
+            }
 
             // If the value contains a newline
             value = value.Replace("\r\n", "\n");
