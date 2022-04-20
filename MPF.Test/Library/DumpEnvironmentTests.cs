@@ -18,9 +18,11 @@ namespace MPF.Test.Library
         public void ParametersValidTest(string parameters, char letter, bool isFloppy, MediaType? mediaType, bool expected)
         {
             var options = new Options() { InternalProgram = InternalProgram.DiscImageCreator };
+
+            // TODO: This relies on creating real objects for the drive. Can we mock this out instead?
             var drive = isFloppy
-                ? new Drive(InternalDriveType.Floppy, new DriveInfo(letter.ToString()))
-                : new Drive(InternalDriveType.Optical, new DriveInfo(letter.ToString()));
+                ? Drive.Create(InternalDriveType.Floppy, letter.ToString())
+                : Drive.Create(InternalDriveType.Optical, letter.ToString());
 
             var env = new DumpEnvironment(options, string.Empty, string.Empty, drive, RedumpSystem.IBMPCcompatible, mediaType, parameters);
 

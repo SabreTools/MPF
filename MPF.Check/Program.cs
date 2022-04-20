@@ -53,7 +53,7 @@ namespace MPF.Check
                 // Now populate an environment
                 Drive drive = null;
                 if (!string.IsNullOrWhiteSpace(path))
-                    drive = new Drive(null, new DriveInfo(path));
+                    drive = Drive.Create(null, path);
 
                 var env = new DumpEnvironment(options, "", filepath, drive, knownSystem, mediaType, null);
 

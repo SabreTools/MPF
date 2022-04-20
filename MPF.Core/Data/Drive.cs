@@ -23,10 +23,11 @@ namespace MPF.Core.Data
     /// <remarks>
     /// TODO: This needs to be less Windows-centric. Devices do not always have a single letter that can be used.
     /// TODO: Can the Aaru models be used instead of the ones I've created here?
-    /// TODO: Reduce reliance on the DriveInfo object, if possible
     /// </remarks>
     public class Drive
     {
+        #region Fields
+
         /// <summary>
         /// Represents drive type
         /// </summary>
@@ -35,46 +36,32 @@ namespace MPF.Core.Data
         /// <summary>
         /// Drive partition format
         /// </summary>
-        public string DriveFormat => driveInfo?.DriveFormat;
-
-        /// <summary>
-        /// Windows drive letter
-        /// </summary>
-        public char Letter => driveInfo?.Name[0] ?? '\0';
+        public string DriveFormat { get; private set; } = null;
 
         /// <summary>
         /// Windows drive path
         /// </summary>
-        public string Name => driveInfo?.Name;
+        public string Name { get; private set; } = null;
 
         /// <summary>
         /// Represents if Windows has marked the drive as active
         /// </summary>
-        public bool MarkedActive => driveInfo?.IsReady ?? false;
+        public bool MarkedActive { get; private set; } = false;
 
         /// <summary>
         /// Represents the total size of the drive
         /// </summary>
-        public long TotalSize => driveInfo?.TotalSize ?? default;
+        public long TotalSize { get; private set; } = default;
 
         /// <summary>
         /// Media label as read by Windows
         /// </summary>
         /// <remarks>The try/catch is needed because Windows will throw an exception if the drive is not marked as active</remarks>
-        public string VolumeLabel
-        {
-            get
-            {
-                try
-                {
-                    return driveInfo?.VolumeLabel;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-        }
+        public string VolumeLabel { get; private set; } = null;
+
+        #endregion
+
+        #region Derived Fields
 
         /// <summary>
         /// Media label as read by Windows, formatted to avoid odd outputs
@@ -84,12 +71,12 @@ namespace MPF.Core.Data
             get
             {
                 string volumeLabel = Template.DiscNotDetected;
-                if (driveInfo.IsReady)
+                if (this.MarkedActive)
                 {
-                    if (string.IsNullOrWhiteSpace(driveInfo.VolumeLabel))
+                    if (string.IsNullOrWhiteSpace(this.VolumeLabel))
                         volumeLabel = "track";
                     else
-                        volumeLabel = driveInfo.VolumeLabel;
+                        volumeLabel = this.VolumeLabel;
                 }
 
                 foreach (char c in Path.GetInvalidFileNameChars())
@@ -100,15 +87,71 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// DriveInfo object representing the drive, if possible
+        /// Windows drive letter
         /// </summary>
-        private DriveInfo driveInfo;
+        public char Letter => this.Name == null || this.Name.Length == 0 ? '\0' : this.Name[0];
 
-        public Drive(InternalDriveType? driveType, DriveInfo driveInfo)
+        #endregion
+
+        /// <summary>
+        /// Protected constructor
+        /// </summary>
+        protected Drive() { }
+
+        /// <summary>
+        /// Create a new Drive object from a drive type and device path
+        /// </summary>
+        /// <param name="driveType">InternalDriveType value representing the drive type</param>
+        /// <param name="devicePath">Path to the device according to the local machine</param>
+        public static Drive Create(InternalDriveType? driveType, string devicePath)
         {
-            this.InternalDriveType = driveType;
-            this.driveInfo = driveInfo;
+            // Create a new, empty drive object
+            var drive = new Drive()
+            {
+                InternalDriveType = driveType,
+            };
+
+            // If we have an invalid device path, return null
+            if (string.IsNullOrWhiteSpace(devicePath))
+                return null;
+
+            // Sanitize a Windows-formatted long device path
+            if (devicePath.StartsWith("\\\\.\\"))
+                devicePath = devicePath.Substring("\\\\.\\".Length);
+
+            // Create and validate the drive info object
+            var driveInfo = new DriveInfo(devicePath);
+            if (driveInfo == null || driveInfo == default)
+                return null;
+
+            // Fill in the rest of the data
+            drive.PopulateFromDriveInfo(driveInfo);
+
+            return drive;
         }
+
+        /// <summary>
+        /// Populate all fields from a DriveInfo object
+        /// </summary>
+        /// <param name="driveInfo">DriveInfo object to populate from</param>
+        private void PopulateFromDriveInfo(DriveInfo driveInfo)
+        {
+            // If we have an invalid DriveInfo, just return
+            if (driveInfo == null || driveInfo == default)
+                return;
+
+            // Populate the data fields
+            this.Name = driveInfo.Name;
+            this.MarkedActive = driveInfo.IsReady;
+            if (this.MarkedActive)
+            {
+                this.DriveFormat = driveInfo.DriveFormat;
+                this.TotalSize = driveInfo.TotalSize;
+                this.VolumeLabel = driveInfo.VolumeLabel;
+            }
+        }
+
+        #region Public Functionality
 
         /// <summary>
         /// Create a list of active drives matched to their volume labels
@@ -343,7 +386,7 @@ namespace MPF.Core.Data
         public byte[] ReadSector(long num, int size = 2048)
         {
             // Missing drive leter is not supported
-            if (string.IsNullOrEmpty(this.driveInfo?.Name))
+            if (string.IsNullOrEmpty(this.Name))
                 return null;
 
             // We don't support negative sectors
@@ -380,7 +423,14 @@ namespace MPF.Core.Data
         /// Refresh the current drive information based on path
         /// </summary>
         public void RefreshDrive()
-            => this.driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d?.Name == this.Name);
+        {
+            var driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d?.Name == this.Name);
+            this.PopulateFromDriveInfo(driveInfo);
+        }
+
+        #endregion
+
+        #region Helpers
 
 #if NETFRAMEWORK
 
@@ -405,7 +455,7 @@ namespace MPF.Core.Data
             // Get all supported drive types
             var drives = DriveInfo.GetDrives()
                 .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
+                .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
                 .ToList();
 
             // Get the floppy drives and set the flag from removable
@@ -572,9 +622,9 @@ namespace MPF.Core.Data
                     var desc = ftr.Descriptors.First(d => d.Code == 0x0000);
                     bool isOptical = IsOptical(desc.Data);
                     if (isOptical)
-                        return new Drive(Data.InternalDriveType.Optical, new DriveInfo(windowsLocalDevicePath));
+                        return Create(Data.InternalDriveType.Optical, windowsLocalDevicePath);
                     else if (!ignoreFixedDrives)
-                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
+                        return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
                 }
             }
 
@@ -583,20 +633,20 @@ namespace MPF.Core.Data
                 switch (dev.Type)
                 {
                     case DeviceType.MMC:
-                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
+                        return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
 
                     case DeviceType.SecureDigital:
-                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
+                        return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
                 }
 
                 if (dev.IsUsb)
-                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
+                    return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
 
                 if (dev.IsFireWire)
-                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
+                    return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
 
                 if (dev.IsPcmcia)
-                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
+                    return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
             }
 
             dev.Close();
@@ -744,5 +794,7 @@ namespace MPF.Core.Data
         }
 
 #endif
+
+        #endregion
     }
 }
