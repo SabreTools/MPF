@@ -81,6 +81,7 @@
 - Add Aaru as a submodule for .NET 6
 - Multisession is multi-line
 - Use Aaru for media type retrival (.NET 6)
+- Fix CD-R multisession info
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

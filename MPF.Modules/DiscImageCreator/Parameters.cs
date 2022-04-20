@@ -2876,7 +2876,7 @@ namespace MPF.Modules.DiscImageCreator
                     
                     // Read the second session lead-in, if it exists
                     string secondSessionLeadInLengthString = null;
-                    if (line.StartsWith("Lead-in length"))
+                    while (line.StartsWith("Lead-in length"))
                     {
                         secondSessionLeadInLengthString = line.Substring("Lead-in length of 2nd session: ".Length);
                         line = sr.ReadLine().Trim();
