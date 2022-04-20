@@ -12,7 +12,6 @@ using IMAPI2;
 using Aaru.CommonTypes.Enums;
 using Aaru.Core.Media.Info;
 using Aaru.Decoders.SCSI.MMC;
-using Aaru.Decoders.SCSI.SSC;
 using Aaru.Devices;
 #endif
 
@@ -114,95 +113,16 @@ namespace MPF.Core.Data
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives = drives.OrderBy(i => i.Letter).ToList();
+            drives = drives?.OrderBy(i => i.Letter)?.ToList();
             return drives;
         }
 
         /// <summary>
         /// Get the current media type from drive letter
         /// </summary>
-        /// <param name="drive"></param>
         /// <returns></returns>
         public (MediaType?, string) GetMediaType()
-        {
-            // Take care of the non-optical stuff first
-            // TODO: See if any of these can be more granular, like Optical is
-            if (this.InternalDriveType == Data.InternalDriveType.Floppy)
-                return (MediaType.FloppyDisk, null);
-            else if (this.InternalDriveType == Data.InternalDriveType.HardDisk)
-                return (MediaType.HardDisk, null);
-            else if (this.InternalDriveType == Data.InternalDriveType.Removable)
-                return (MediaType.FlashDrive, null);
-
-#if NETFRAMEWORK
-            // Get the current drive information
-            string deviceId = null;
-            bool loaded = false;
-            try
-            {
-                // Get the device ID first
-                var searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{this.Letter}:\'");
-
-                foreach (ManagementObject queryObj in searcher.Get())
-                {
-                    deviceId = (string)queryObj["DeviceID"];
-                    loaded = (bool)queryObj["MediaLoaded"];
-                }
-
-                // If we got no valid device, we don't care and just return
-                if (deviceId == null)
-                    return (null, "Device could not be found");
-                else if (!loaded)
-                    return (null, "Device is not reporting media loaded");
-
-                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-                deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
-                string id = null;
-                foreach (var disc in discMaster)
-                {
-                    if (disc.ToString().Contains(deviceId))
-                        id = disc.ToString();
-                }
-
-                // If we couldn't find the drive, we don't care and return
-                if (id == null)
-                    return (null, "Device ID could not be found");
-
-                // Create the required objects for reading from the drive
-                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-                recorder.InitializeDiscRecorder(id);
-                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-
-                // If the recorder is not supported, just return
-                if (!dataWriter.IsRecorderSupported(recorder))
-                    return (null, "IMAPI2 recorder not supported");
-
-                // Otherwise, set the recorder to get information from
-                dataWriter.Recorder = recorder;
-
-                var media = dataWriter.CurrentPhysicalMediaType;
-                return (media.IMAPIToMediaType(), null);
-            }
-            catch (Exception ex)
-            {
-                return (null, ex.Message);
-            }
-#else
-            try
-            {
-                // TODO: Get the device type for devices with set media types
-                // TODO: Follow same pattern as GetDriveList and call the same named helper
-                var aaruMediaType = GetMediaType(this.Name);
-                return (EnumConverter.MediaTypeToMediaType(aaruMediaType), null);
-            }
-            catch (Exception ex)
-            {
-                return (null, ex.Message);
-            }
-#endif
-        }
+            => GetMediaType(this.Name, this.InternalDriveType);
 
         /// <summary>
         /// Get the current system from drive
@@ -509,6 +429,81 @@ namespace MPF.Core.Data
             return drives;
         }
 
+        /// <summary>
+        /// Get the media type for a device path using the Aaru libraries
+        /// </summary>
+        /// <param name="devicePath">Path to the device</param>
+        /// <param name="internalDriveType">Current internal drive type</param>
+        /// <returns>MediaType, null on error</returns>
+        private static (MediaType?, string) GetMediaType(string devicePath, InternalDriveType? internalDriveType)
+        {
+            char driveLetter = devicePath == null || !devicePath.Any() ? '\0' : devicePath[0];
+
+            // Take care of the non-optical stuff first
+            // TODO: See if any of these can be more granular, like Optical is
+            if (internalDriveType == Data.InternalDriveType.Floppy)
+                return (MediaType.FloppyDisk, null);
+            else if (internalDriveType == Data.InternalDriveType.HardDisk)
+                return (MediaType.HardDisk, null);
+            else if (internalDriveType == Data.InternalDriveType.Removable)
+                return (MediaType.FlashDrive, null);
+
+            // Get the current drive information
+            string deviceId = null;
+            bool loaded = false;
+            try
+            {
+                // Get the device ID first
+                var searcher = new ManagementObjectSearcher(
+                    "root\\CIMV2",
+                    $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{driveLetter}:\'");
+
+                foreach (ManagementObject queryObj in searcher.Get())
+                {
+                    deviceId = (string)queryObj["DeviceID"];
+                    loaded = (bool)queryObj["MediaLoaded"];
+                }
+
+                // If we got no valid device, we don't care and just return
+                if (deviceId == null)
+                    return (null, "Device could not be found");
+                else if (!loaded)
+                    return (null, "Device is not reporting media loaded");
+
+                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+                deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
+                string id = null;
+                foreach (var disc in discMaster)
+                {
+                    if (disc.ToString().Contains(deviceId))
+                        id = disc.ToString();
+                }
+
+                // If we couldn't find the drive, we don't care and return
+                if (id == null)
+                    return (null, "Device ID could not be found");
+
+                // Create the required objects for reading from the drive
+                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                recorder.InitializeDiscRecorder(id);
+                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+
+                // If the recorder is not supported, just return
+                if (!dataWriter.IsRecorderSupported(recorder))
+                    return (null, "IMAPI2 recorder not supported");
+
+                // Otherwise, set the recorder to get information from
+                dataWriter.Recorder = recorder;
+
+                var media = dataWriter.CurrentPhysicalMediaType;
+                return (media.IMAPIToMediaType(), null);
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message);
+            }
+        }
+
 #else
 
         /// <summary>
@@ -607,8 +602,12 @@ namespace MPF.Core.Data
         /// Get the media type for a device path using the Aaru libraries
         /// </summary>
         /// <param name="devicePath">Path to the device</param>
-        /// <returns>Aaru MediaType, null on error</returns>
-        private static Aaru.CommonTypes.MediaType? GetMediaType(string devicePath)
+        /// <param name="internalDriveType">Current internal drive type</param>
+        /// <returns>MediaType, null on error</returns>
+        /// <remarks>
+        /// TODO: Get the device type for devices with set media types
+        /// </remarks>
+        private static (MediaType?, string) GetMediaType(string devicePath, InternalDriveType? internalDriveType)
         {
             if (devicePath.Length == 2 &&
                devicePath[1] == ':' &&
@@ -618,17 +617,21 @@ namespace MPF.Core.Data
 
             var dev = Device.Create(devicePath, out _);
             if (dev == null || dev.Error)
-                return null;
+                return (null, "Device could not be accessed");
 
             switch (dev.Type)
             {
                 case DeviceType.ATAPI:
                 case DeviceType.SCSI:
                     ScsiInfo scsiInfo = new ScsiInfo(dev);
-                    return scsiInfo?.MediaType;
+                    var mediaType = EnumConverter.MediaTypeToMediaType(scsiInfo?.MediaType);
+                    if (mediaType == null)
+                        return (mediaType, "Could not determine media type");
+                    else
+                        return (mediaType, null);
             }
 
-            return null;
+            return (null, "Device does not support media type finding");
         }
 
         /// <summary>
