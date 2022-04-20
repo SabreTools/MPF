@@ -1558,6 +1558,8 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add(Path.Combine(parentDirectory, "DMI.bin"));
                     if (File.Exists(Path.Combine(parentDirectory, "PFI.bin")))
                         logFiles.Add(Path.Combine(parentDirectory, "PFI.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, "PIC.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, "PIC.bin"));
                     if (File.Exists(Path.Combine(parentDirectory, "SS.bin")))
                         logFiles.Add(Path.Combine(parentDirectory, "SS.bin"));
 

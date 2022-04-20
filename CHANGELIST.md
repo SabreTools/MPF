@@ -87,6 +87,7 @@
 - Simplify IsOptical (.NET 6)
 - Reorganize GetMediaType
 - Possibly fix tab regex replacement
+- Add PIC.bin to log zip
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
