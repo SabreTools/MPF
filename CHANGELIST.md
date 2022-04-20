@@ -88,6 +88,7 @@
 - Reorganize GetMediaType
 - Possibly fix tab regex replacement
 - Add PIC.bin to log zip
+- Organize projects in solution
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
