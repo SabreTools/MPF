@@ -528,6 +528,9 @@ namespace MPF.Core.Data
                 if (deviceInfo.Path == null)
                     continue;
 
+                if (!deviceInfo.Supported)
+                    continue;
+
                 var drive = GetDriveFromDevice(deviceInfo.Path, ignoreFixedDrives);
                 if (drive == null)
                     continue;
@@ -552,11 +555,13 @@ namespace MPF.Core.Data
                char.IsLetter(devicePath[0]))
                 devicePath = "\\\\.\\" + char.ToUpper(devicePath[0]) + ':';
 
+            string windowsLocalDevicePath = devicePath;
+            if (windowsLocalDevicePath.StartsWith("\\\\.\\"))
+                windowsLocalDevicePath = windowsLocalDevicePath.Substring("\\\\.\\".Length);
+
             var dev = Device.Create(devicePath, out _);
             if (dev == null || dev.Error)
                 return null;
-
-            // TODO: Narrow down devices to "readable" ones
 
             var devInfo = new Aaru.Core.Devices.Info.DeviceInfo(dev);
             if (devInfo.MmcConfiguration != null)
@@ -567,9 +572,9 @@ namespace MPF.Core.Data
                     var desc = ftr.Descriptors.First(d => d.Code == 0x0000);
                     bool isOptical = IsOptical(desc.Data);
                     if (isOptical)
-                        return new Drive(Data.InternalDriveType.Optical, new DriveInfo(devicePath));
+                        return new Drive(Data.InternalDriveType.Optical, new DriveInfo(windowsLocalDevicePath));
                     else if (!ignoreFixedDrives)
-                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
                 }
             }
 
@@ -578,20 +583,20 @@ namespace MPF.Core.Data
                 switch (dev.Type)
                 {
                     case DeviceType.MMC:
-                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
 
                     case DeviceType.SecureDigital:
-                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
                 }
 
                 if (dev.IsUsb)
-                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
 
                 if (dev.IsFireWire)
-                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
 
                 if (dev.IsPcmcia)
-                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
+                    return new Drive(Data.InternalDriveType.Removable, new DriveInfo(windowsLocalDevicePath));
             }
 
             dev.Close();
@@ -631,66 +636,20 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="featureBytes">Bytes representing the field to check</param>
         /// <returns>True if the drive is optical, false otherwise</returns>
-        /// <remarks>
-        /// TODO: This should be more granular about getting supported media types instead of true/false
-        /// </remarks>
         private static bool IsOptical(byte[] featureBytes)
         {
-            Feature_0000? feature = Features.Decode_0000(featureBytes);
-
-            if (!feature.HasValue)
+            var supportedMediaTypes = OpticalMediaSupport(featureBytes);
+            if (supportedMediaTypes == null || !supportedMediaTypes.Any())
                 return false;
 
-            foreach (Profile prof in feature.Value.Profiles)
-            {
-                switch (prof.Number)
-                {
-                    // Values we don't care about for Optical
-                    case ProfileNumber.Reserved:
-                    case ProfileNumber.NonRemovable:
-                    case ProfileNumber.Removable:
-                    case ProfileNumber.MOErasable:
-                    case ProfileNumber.OpticalWORM:
-                    case ProfileNumber.ASMO:
-                    case ProfileNumber.Unconforming:
-                        break;
-
-                    // Every supported optical profile
-                    case ProfileNumber.CDROM:
-                    case ProfileNumber.CDR:
-                    case ProfileNumber.CDRW:
-                    case ProfileNumber.DVDROM:
-                    case ProfileNumber.DVDRSeq:
-                    case ProfileNumber.DVDRAM:
-                    case ProfileNumber.DVDRWRes:
-                    case ProfileNumber.DVDRWSeq:
-                    case ProfileNumber.DVDRDLSeq:
-                    case ProfileNumber.DVDRDLJump:
-                    case ProfileNumber.DVDRWDL:
-                    case ProfileNumber.DVDDownload:
-                    case ProfileNumber.DVDRWPlus:
-                    case ProfileNumber.DVDRPlus:
-                    case ProfileNumber.DDCDROM:
-                    case ProfileNumber.DDCDR:
-                    case ProfileNumber.DDCDRW:
-                    case ProfileNumber.DVDRWDLPlus:
-                    case ProfileNumber.DVDRDLPlus:
-                    case ProfileNumber.BDROM:
-                    case ProfileNumber.BDRSeq:
-                    case ProfileNumber.BDRRdm:
-                    case ProfileNumber.BDRE:
-                    case ProfileNumber.HDDVDROM:
-                    case ProfileNumber.HDDVDR:
-                    case ProfileNumber.HDDVDRAM:
-                    case ProfileNumber.HDDVDRW:
-                    case ProfileNumber.HDDVDRDL:
-                    case ProfileNumber.HDDVDRWDL:
-                    case ProfileNumber.HDBURNROM:
-                    case ProfileNumber.HDBURNR:
-                    case ProfileNumber.HDBURNRW:
-                        return true;
-                }
-            }
+            if (supportedMediaTypes.Contains(MediaType.CDROM))
+                return true;
+            else if (supportedMediaTypes.Contains(MediaType.DVD))
+                return true;
+            else if (supportedMediaTypes.Contains(MediaType.BluRay))
+                return true;
+            else if (supportedMediaTypes.Contains(MediaType.HDDVD))
+                return true;
 
             return false;
         }
@@ -746,11 +705,11 @@ namespace MPF.Core.Data
                         break;
 
                     // TODO: Add DDCD as media type
-                    //case ProfileNumber.DDCDROM:
-                    //case ProfileNumber.DDCDR:
-                    //case ProfileNumber.DDCDRW:
-                    //    supportedMediaTypes.Add(MediaType.DDCD);
-                    //    break;
+                    case ProfileNumber.DDCDROM:
+                    case ProfileNumber.DDCDR:
+                    case ProfileNumber.DDCDRW:
+                        supportedMediaTypes.Add(MediaType.DVD);
+                        break;
 
                     case ProfileNumber.BDROM:
                     case ProfileNumber.BDRSeq:
