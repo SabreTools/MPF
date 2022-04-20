@@ -83,6 +83,7 @@
 - Use Aaru for media type retrival (.NET 6)
 - Fix CD-R multisession info
 - Better get drive list (.NET 6)
+- Add optical media support method (.NET 6)
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

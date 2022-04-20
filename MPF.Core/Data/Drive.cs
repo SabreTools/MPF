@@ -695,6 +695,87 @@ namespace MPF.Core.Data
             return false;
         }
 
+        /// <summary>
+        /// Get supported media types for a drive
+        /// </summary>
+        /// <param name="featureBytes">Bytes representing the field to check</param>
+        /// <returns>List of supported media types, null on error</returns>
+        private static List<MediaType> OpticalMediaSupport(byte[] featureBytes)
+        {
+            Feature_0000? feature = Features.Decode_0000(featureBytes);
+
+            if (!feature.HasValue)
+                return null;
+
+            var supportedMediaTypes = new List<MediaType>();
+            foreach (Profile prof in feature.Value.Profiles)
+            {
+                switch (prof.Number)
+                {
+                    // Values we don't care about for Optical
+                    case ProfileNumber.Reserved:
+                    case ProfileNumber.NonRemovable:
+                    case ProfileNumber.Removable:
+                    case ProfileNumber.MOErasable:
+                    case ProfileNumber.OpticalWORM:
+                    case ProfileNumber.ASMO:
+                    case ProfileNumber.Unconforming:
+                        break;
+
+                    // Every supported optical profile
+                    case ProfileNumber.CDROM:
+                    case ProfileNumber.CDR:
+                    case ProfileNumber.CDRW:
+                        supportedMediaTypes.Add(MediaType.CDROM);
+                        break;
+
+                    case ProfileNumber.DVDROM:
+                    case ProfileNumber.DVDRSeq:
+                    case ProfileNumber.DVDRAM:
+                    case ProfileNumber.DVDRWRes:
+                    case ProfileNumber.DVDRWSeq:
+                    case ProfileNumber.DVDRDLSeq:
+                    case ProfileNumber.DVDRDLJump:
+                    case ProfileNumber.DVDRWDL:
+                    case ProfileNumber.DVDDownload:
+                    case ProfileNumber.DVDRWPlus:
+                    case ProfileNumber.DVDRPlus:
+                    case ProfileNumber.DVDRWDLPlus:
+                    case ProfileNumber.DVDRDLPlus:
+                        supportedMediaTypes.Add(MediaType.DVD);
+                        break;
+
+                    // TODO: Add DDCD as media type
+                    //case ProfileNumber.DDCDROM:
+                    //case ProfileNumber.DDCDR:
+                    //case ProfileNumber.DDCDRW:
+                    //    supportedMediaTypes.Add(MediaType.DDCD);
+                    //    break;
+
+                    case ProfileNumber.BDROM:
+                    case ProfileNumber.BDRSeq:
+                    case ProfileNumber.BDRRdm:
+                    case ProfileNumber.BDRE:
+                        supportedMediaTypes.Add(MediaType.BluRay);
+                        break;
+
+                    case ProfileNumber.HDDVDROM:
+                    case ProfileNumber.HDDVDR:
+                    case ProfileNumber.HDDVDRAM:
+                    case ProfileNumber.HDDVDRW:
+                    case ProfileNumber.HDDVDRDL:
+                    case ProfileNumber.HDDVDRWDL:
+                    case ProfileNumber.HDBURNROM:
+                    case ProfileNumber.HDBURNR:
+                    case ProfileNumber.HDBURNRW:
+                        supportedMediaTypes.Add(MediaType.HDDVD);
+                        break;
+                }
+            }
+
+            return supportedMediaTypes.Distinct().ToList();
+        }
+
 #endif
     }
 }
