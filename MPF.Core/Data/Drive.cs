@@ -20,6 +20,11 @@ namespace MPF.Core.Data
     /// <summary>
     /// Represents information for a single drive
     /// </summary>
+    /// <remarks>
+    /// TODO: This needs to be less Windows-centric. Devices do not always have a single letter that can be used.
+    /// TODO: Can the Aaru models be used instead of the ones I've created here?
+    /// TODO: Reduce reliance on the DriveInfo object, if possible
+    /// </remarks>
     public class Drive
     {
         /// <summary>
