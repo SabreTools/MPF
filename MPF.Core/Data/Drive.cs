@@ -11,6 +11,7 @@ using IMAPI2;
 #else
 using Aaru.CommonTypes.Enums;
 using Aaru.Core.Media.Info;
+using Aaru.Decoders.SCSI.MMC;
 using Aaru.Decoders.SCSI.SSC;
 using Aaru.Devices;
 #endif
@@ -110,56 +111,10 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
         /// <returns>Active drives, matched to labels, if possible</returns>
-        /// <remarks>
-        /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
-        /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
-        /// </remarks>
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
         {
-            var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
-            if (!ignoreFixedDrives)
-            {
-                desiredDriveTypes.Add(DriveType.Fixed);
-                desiredDriveTypes.Add(DriveType.Removable);
-            }
-
-            // Get all supported drive types
-            var drives = DriveInfo.GetDrives()
-                .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
-                .ToList();
-
-#if NETFRAMEWORK
-            // Get the floppy drives and set the flag from removable
-            try
-            {
-                ManagementObjectSearcher searcher =
-                    new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_LogicalDisk");
-
-                var collection = searcher.Get();
-                foreach (ManagementObject queryObj in collection)
-                {
-                    uint? mediaType = (uint?)queryObj["MediaType"];
-                    if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
-                    {
-                        char devId = queryObj["DeviceID"].ToString()[0];
-                        drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
-                    }
-                }
-            }
-            catch
-            {
-                // No-op
-            }
-#else
-            // TODO: Use this returned drive list once fixed
-            var driveList = GetDriveList(ignoreFixedDrives);
-#endif
-
-            // Order the drives by drive letter
+            var drives = GetDriveList(ignoreFixedDrives);
             drives = drives.OrderBy(i => i.Letter).ToList();
-
             return drives;
         }
 
@@ -238,6 +193,7 @@ namespace MPF.Core.Data
             try
             {
                 // TODO: Get the device type for devices with set media types
+                // TODO: Follow same pattern as GetDriveList and call the same named helper
                 var aaruMediaType = GetMediaType(this.Name);
                 return (EnumConverter.MediaTypeToMediaType(aaruMediaType), null);
             }
@@ -501,7 +457,59 @@ namespace MPF.Core.Data
         public void RefreshDrive()
             => this.driveInfo = DriveInfo.GetDrives().FirstOrDefault(d => d?.Name == this.Name);
 
-#if NET6_0_OR_GREATER
+#if NETFRAMEWORK
+
+        /// <summary>
+        /// Get all current attached Drives
+        /// </summary>
+        /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
+        /// <returns>List of drives, null on error</returns>
+        /// <remarks>
+        /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+        /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
+        /// </remarks>
+        private static List<Drive> GetDriveList(bool ignoreFixedDrives)
+        {
+            var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
+            if (!ignoreFixedDrives)
+            {
+                desiredDriveTypes.Add(DriveType.Fixed);
+                desiredDriveTypes.Add(DriveType.Removable);
+            }
+
+            // Get all supported drive types
+            var drives = DriveInfo.GetDrives()
+                .Where(d => desiredDriveTypes.Contains(d.DriveType))
+                .Select(d => new Drive(EnumConverter.ToInternalDriveType(d.DriveType), d))
+                .ToList();
+
+            // Get the floppy drives and set the flag from removable
+            try
+            {
+                ManagementObjectSearcher searcher =
+                    new ManagementObjectSearcher("root\\CIMV2",
+                    "SELECT * FROM Win32_LogicalDisk");
+
+                var collection = searcher.Get();
+                foreach (ManagementObject queryObj in collection)
+                {
+                    uint? mediaType = (uint?)queryObj["MediaType"];
+                    if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
+                    {
+                        char devId = queryObj["DeviceID"].ToString()[0];
+                        drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
+                    }
+                }
+            }
+            catch
+            {
+                // No-op
+            }
+
+            return drives;
+        }
+
+#else
 
         /// <summary>
         /// Get all devices attached converted to Drive objects
@@ -549,14 +557,19 @@ namespace MPF.Core.Data
                 return null;
 
             // TODO: Narrow down devices to "readable" ones
-            // TODO: Look at Prettify_0000 for optical disc drive support
 
             var devInfo = new Aaru.Core.Devices.Info.DeviceInfo(dev);
-            if (devInfo.MediumDensitySupport != null && devInfo.MediaTypeSupportHeader.HasValue)
+            if (devInfo.MmcConfiguration != null)
             {
-                foreach (DensitySupport.MediaTypeSupportDescriptor descriptor in devInfo.MediaTypeSupportHeader.Value.descriptors)
+                Features.SeparatedFeatures ftr = Features.Separate(devInfo.MmcConfiguration);
+                if (ftr.Descriptors != null && ftr.Descriptors.Any(d => d.Code == 0x0000))
                 {
-                    string mediumType = descriptor.name;
+                    var desc = ftr.Descriptors.First(d => d.Code == 0x0000);
+                    bool isOptical = IsOptical(desc.Data);
+                    if (isOptical)
+                        return new Drive(Data.InternalDriveType.Optical, new DriveInfo(devicePath));
+                    else if (!ignoreFixedDrives)
+                        return new Drive(Data.InternalDriveType.Removable, new DriveInfo(devicePath));
                 }
             }
 
@@ -611,6 +624,75 @@ namespace MPF.Core.Data
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Determine if a drive is optical or not
+        /// </summary>
+        /// <param name="featureBytes">Bytes representing the field to check</param>
+        /// <returns>True if the drive is optical, false otherwise</returns>
+        /// <remarks>
+        /// TODO: This should be more granular about getting supported media types instead of true/false
+        /// </remarks>
+        private static bool IsOptical(byte[] featureBytes)
+        {
+            Feature_0000? feature = Features.Decode_0000(featureBytes);
+
+            if (!feature.HasValue)
+                return false;
+
+            foreach (Profile prof in feature.Value.Profiles)
+            {
+                switch (prof.Number)
+                {
+                    // Values we don't care about for Optical
+                    case ProfileNumber.Reserved:
+                    case ProfileNumber.NonRemovable:
+                    case ProfileNumber.Removable:
+                    case ProfileNumber.MOErasable:
+                    case ProfileNumber.OpticalWORM:
+                    case ProfileNumber.ASMO:
+                    case ProfileNumber.Unconforming:
+                        break;
+
+                    // Every supported optical profile
+                    case ProfileNumber.CDROM:
+                    case ProfileNumber.CDR:
+                    case ProfileNumber.CDRW:
+                    case ProfileNumber.DVDROM:
+                    case ProfileNumber.DVDRSeq:
+                    case ProfileNumber.DVDRAM:
+                    case ProfileNumber.DVDRWRes:
+                    case ProfileNumber.DVDRWSeq:
+                    case ProfileNumber.DVDRDLSeq:
+                    case ProfileNumber.DVDRDLJump:
+                    case ProfileNumber.DVDRWDL:
+                    case ProfileNumber.DVDDownload:
+                    case ProfileNumber.DVDRWPlus:
+                    case ProfileNumber.DVDRPlus:
+                    case ProfileNumber.DDCDROM:
+                    case ProfileNumber.DDCDR:
+                    case ProfileNumber.DDCDRW:
+                    case ProfileNumber.DVDRWDLPlus:
+                    case ProfileNumber.DVDRDLPlus:
+                    case ProfileNumber.BDROM:
+                    case ProfileNumber.BDRSeq:
+                    case ProfileNumber.BDRRdm:
+                    case ProfileNumber.BDRE:
+                    case ProfileNumber.HDDVDROM:
+                    case ProfileNumber.HDDVDR:
+                    case ProfileNumber.HDDVDRAM:
+                    case ProfileNumber.HDDVDRW:
+                    case ProfileNumber.HDDVDRDL:
+                    case ProfileNumber.HDDVDRWDL:
+                    case ProfileNumber.HDBURNROM:
+                    case ProfileNumber.HDBURNR:
+                    case ProfileNumber.HDBURNRW:
+                        return true;
+                }
+            }
+
+            return false;
         }
 
 #endif
