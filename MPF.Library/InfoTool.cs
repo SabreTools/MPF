@@ -1070,7 +1070,7 @@ namespace MPF.Library
                 value = value.Replace("   ", "\t");
 
                 // Sanitize whitespace around tabs
-                value = Regex.Replace(value, @"\s*\t\s*", @"\t");
+                value = Regex.Replace(value, @"\s*\t\s*", "\t");
             }
 
             // If the value contains a newline

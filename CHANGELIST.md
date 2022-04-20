@@ -86,6 +86,7 @@
 - Add optical media support method (.NET 6)
 - Simplify IsOptical (.NET 6)
 - Reorganize GetMediaType
+- Possibly fix tab regex replacement
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
