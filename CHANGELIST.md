@@ -90,6 +90,7 @@
 - Add PIC.bin to log zip
 - Organize projects in solution
 - Implement Drive.Create for safety
+- Fix incomplete system name detection
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

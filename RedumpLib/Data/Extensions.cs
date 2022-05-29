@@ -1231,12 +1231,14 @@ namespace RedumpLib.Data
 
                 case "xboxbios":
                 case "xbox bios":
+                case "xbox-bios":
                 case "microsoftxboxbios":
                 case "microsoftxbox bios":
                 case "microsoft xbox bios":
                     return RedumpSystem.MicrosoftXboxBIOS;
                 case "gcbios":
                 case "gc bios":
+                case "gc-bios":
                 case "gamecubebios":
                 case "ngcbios":
                 case "ngc bios":
@@ -1247,6 +1249,7 @@ namespace RedumpLib.Data
                 case "ps1 bios":
                 case "psxbios":
                 case "psx bios":
+                case "psx-bios":
                 case "playstationbios":
                 case "playstation bios":
                 case "sonyps1bios":
@@ -1261,6 +1264,7 @@ namespace RedumpLib.Data
                     return RedumpSystem.SonyPlayStationBIOS;
                 case "ps2bios":
                 case "ps2 bios":
+                case "ps2-bios":
                 case "playstation2bios":
                 case "playstation2 bios":
                 case "playstation 2 bios":
@@ -1276,6 +1280,7 @@ namespace RedumpLib.Data
 
                 #region Consoles
 
+                case "ajcd":
                 case "jaguar":
                 case "jagcd":
                 case "jaguarcd":
@@ -1285,6 +1290,7 @@ namespace RedumpLib.Data
                 case "atarijaguarcd":
                 case "atari jaguar cd":
                     return RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem;
+                case "qis":
                 case "playdia":
                 case "playdiaqis":
                 case "playdiaquickinteractivesystem":
@@ -1328,20 +1334,24 @@ namespace RedumpLib.Data
                 case "fujitsufmtownsmarty":
                 case "fujitsu fm towns marty":
                     return RedumpSystem.FujitsuFMTownsMarty;
+                case "hvn":
                 case "videonow":
                 case "hasbrovideonow":
                 case "hasbro videonow":
                     return RedumpSystem.HasbroVideoNow;
+                case "hvnc":
                 case "videonowcolor":
                 case "videonow color":
                 case "hasbrovideonowcolor":
                 case "hasbro videonow color":
                     return RedumpSystem.HasbroVideoNowColor;
+                case "hvnjr":
                 case "videonowjr":
                 case "videonow jr":
                 case "hasbrovideonowjr":
                 case "hasbro videonow jr":
                     return RedumpSystem.HasbroVideoNowJr;
+                case "xvnxp":
                 case "videonowxp":
                 case "videonow xp":
                 case "hasbrovideonowxp":
@@ -1360,6 +1370,7 @@ namespace RedumpLib.Data
                 case "mattel fisherprice ixl":
                 case "mattel fisher-price ixl":
                     return RedumpSystem.MattelFisherPriceiXL;
+                case "hs":
                 case "hyperscan":
                 case "mattelhyperscan":
                 case "mattel hyperscan":
@@ -1401,6 +1412,7 @@ namespace RedumpLib.Data
                 case "microsoft xbox series x":
                 case "microsoft xbox series x and s":
                     return RedumpSystem.MicrosoftXboxSeriesXS;
+                case "pce":
                 case "pcecd":
                 case "pce-cd":
                 case "tgcd":
@@ -1496,6 +1508,7 @@ namespace RedumpLib.Data
                 case "segadreamcast":
                 case "sega dreamcast":
                     return RedumpSystem.SegaDreamcast;
+                case "ss":
                 case "saturn":
                 case "segasaturn":
                 case "sega saturn":
@@ -1605,6 +1618,7 @@ namespace RedumpLib.Data
                 #region Computers
 
                 case "acorn":
+                case "archcd":
                 case "archimedes":
                 case "acornarchimedes":
                 case "acorn archimedes":
@@ -1617,6 +1631,7 @@ namespace RedumpLib.Data
                 case "apple mac":
                 case "apple macintosh":
                     return RedumpSystem.AppleMacintosh;
+                case "acd":
                 case "amiga":
                 case "commodoreamiga":
                 case "commodore amiga":
@@ -1647,6 +1662,7 @@ namespace RedumpLib.Data
                 case "nec pc-98":
                     return RedumpSystem.NECPC98series;
                 case "x68k":
+                case "x68kcd":
                 case "x68000":
                 case "sharpx68k":
                 case "sharp x68k":
@@ -1718,6 +1734,7 @@ namespace RedumpLib.Data
                 case "ice pc":
                 case "ice pc-based hardware":
                     return RedumpSystem.ICEPCHardware;
+                case "ite":
                 case "iteagle":
                 case "eagle":
                 case "incredible technologies eagle":
@@ -1725,6 +1742,7 @@ namespace RedumpLib.Data
                 case "itpc":
                 case "incredible technologies pc-based systems":
                     return RedumpSystem.IncredibleTechnologiesVarious;
+                case "kea":
                 case "eamusement":
                 case "e-amusement":
                 case "konamieamusement":
@@ -1732,10 +1750,12 @@ namespace RedumpLib.Data
                 case "konamie-amusement":
                 case "konami e-amusement":
                     return RedumpSystem.KonamieAmusement;
+                case "kfb":
                 case "firebeat":
                 case "konamifirebeat":
                 case "konami firebeat":
                     return RedumpSystem.KonamiFireBeat;
+                case "ksgv":
                 case "gvsystem":
                 case "gv system":
                 case "konamigvsystem":
@@ -1745,6 +1765,7 @@ namespace RedumpLib.Data
                 case "konamisystemgv":
                 case "konami system gv":
                     return RedumpSystem.KonamiSystemGV;
+                case "km2":
                 case "konamim2":
                 case "konami m2":
                     return RedumpSystem.KonamiM2;
@@ -1757,11 +1778,13 @@ namespace RedumpLib.Data
                 case "konamipython2":
                 case "konami python 2":
                     return RedumpSystem.KonamiPython2;
+                case "ks573":
                 case "system573":
                 case "system 573":
                 case "konamisystem573":
                 case "konami system 573":
                     return RedumpSystem.KonamiSystem573;
+                case "kt":
                 case "twinkle":
                 case "konamitwinkle":
                 case "konami twinkle":
@@ -1794,6 +1817,7 @@ namespace RedumpLib.Data
                 case "meritindustriesmegatouchxl":
                 case "merit industries megatouch xl":
                     return RedumpSystem.MeritIndustriesMegaTouchXL;
+                case "ns246":
                 case "system246":
                 case "system 246":
                 case "namcosystem246":
@@ -1826,6 +1850,7 @@ namespace RedumpLib.Data
                 case "nintendo triforce":
                 case "namco / sega / nintendo triforce":
                     return RedumpSystem.NamcoSegaNintendoTriforce;
+                case "ns12":
                 case "system12":
                 case "system 12":
                 case "namcosystem12":
@@ -1857,6 +1882,7 @@ namespace RedumpLib.Data
                 case "nichibutsu xrs":
                 case "nichibutsu x-rate system":
                     return RedumpSystem.NichibutsuXRateSystem;
+                case "m2":
                 case "panasonicm2":
                 case "panasonic m2":
                     return RedumpSystem.PanasonicM2;
@@ -1900,10 +1926,12 @@ namespace RedumpLib.Data
                 case "seganu":
                 case "sega nu":
                     return RedumpSystem.SegaNu;
+                case "sre":
                 case "ringedge":
                 case "segaringedge":
                 case "sega ringedge":
                     return RedumpSystem.SegaRingEdge;
+                case "sre2":
                 case "ringedge2":
                 case "ringedge 2":
                 case "segaringedge2":
@@ -1946,6 +1974,7 @@ namespace RedumpLib.Data
                 case "audio":
                 case "audiocd":
                 case "audio cd":
+                case "audio-cd":
                     return RedumpSystem.AudioCD;
                 case "bdvideo":
                 case "bd-video":
@@ -1963,6 +1992,7 @@ namespace RedumpLib.Data
                     return RedumpSystem.DVDVideo;
                 case "enhancedcd":
                 case "enhanced cd":
+                case "enhanced-cd":
                 case "enhancedcdrom":
                 case "enhanced cdrom":
                 case "enhanced cd-rom":
@@ -1973,6 +2003,7 @@ namespace RedumpLib.Data
                 case "hddvd-video":
                 case "hd-dvd-video":
                     return RedumpSystem.HDDVDVideo;
+                case "navi21":
                 case "naviken":
                 case "naviken21":
                 case "naviken 2.1":
@@ -1987,7 +2018,9 @@ namespace RedumpLib.Data
                 case "photo":
                 case "photocd":
                 case "photo cd":
+                case "photo-cd":
                     return RedumpSystem.PhotoCD;
+                case "psxgs":
                 case "gameshark":
                 case "psgameshark":
                 case "ps gameshark":
@@ -2003,6 +2036,7 @@ namespace RedumpLib.Data
                 case "rainbowdisc":
                 case "rainbow disc":
                     return RedumpSystem.RainbowDisc;
+                case "sp21":
                 case "pl21":
                 case "prologue21":
                 case "prologue 21":
@@ -2018,6 +2052,7 @@ namespace RedumpLib.Data
                 case "taoiktv":
                 case "tao iktv":
                     return RedumpSystem.TaoiKTV;
+                case "ksite":
                 case "kisssite":
                 case "kiss-site":
                 case "tomykisssite":
