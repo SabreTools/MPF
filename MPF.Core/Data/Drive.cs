@@ -195,7 +195,7 @@ namespace MPF.Core.Data
             if (systemFromLabel != null)
                 return systemFromLabel;
 
-#region Consoles
+            #region Consoles
 
             // Microsoft Xbox 360
             try
@@ -270,9 +270,19 @@ namespace MPF.Core.Data
                 return RedumpSystem.VTechVFlashVSmilePro;
             }
 
-#endregion
+            #endregion
 
-#region Video Formats
+            #region Computers
+
+            // Sharp X68000
+            if (File.Exists(Path.Combine(drivePath, "COMMAND.X")))
+            {
+                return RedumpSystem.SharpX68000;
+            }
+
+            #endregion
+
+            #region Video Formats
 
             // BD-Video
             if (Directory.Exists(Path.Combine(drivePath, "BDMV")))
