@@ -312,6 +312,13 @@ namespace MPF.Library
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
 
+                case RedumpSystem.MicrosoftXboxOne:
+                    string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
+                    if (drive != null && Directory.Exists(xboxOneMsxcPath))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n", Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly));
+
+                    break;
+
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
@@ -2023,6 +2030,7 @@ namespace MPF.Library
             switch (siteCode)
             {
                 case SiteCode.Extras:
+                case SiteCode.Filename:
                 case SiteCode.Games:
                 case SiteCode.GameFootage:
                 case SiteCode.Multisession:
