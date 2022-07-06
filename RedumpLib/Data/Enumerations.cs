@@ -3537,6 +3537,10 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:X]", LongName = "<b>Extras</b>:")]
         Extras,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Filename</b>:", LongName = "<b>Filename</b>:")]
+        Filename,
+
         [HumanReadable(ShortName = "[T:FIID]", LongName = "<b>Fox Interactive ID</b>:")]
         FoxInteractiveID,
 

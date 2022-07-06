@@ -451,6 +451,8 @@ namespace MPF.UI.Core.ViewModels
                 // Read-Only Information
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.DMIHash))
                     Parent.DMIHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Filename))
+                    Parent.Filename.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.InternalSerialName))
                     Parent.InternalSerialName.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Multisession))
@@ -568,6 +570,7 @@ namespace MPF.UI.Core.ViewModels
 
             // Read-Only Information
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = Parent.DMIHash.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = Parent.Filename.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = Parent.Multisession.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = Parent.PFIHash.Text;

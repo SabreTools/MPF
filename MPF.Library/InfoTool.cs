@@ -2075,7 +2075,10 @@ namespace MPF.Library
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SSHash, tags[SiteCode.SSHash]));
             if (tags.ContainsKey(SiteCode.SSVersion))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.SSVersion, tags[SiteCode.SSVersion]));
-            
+
+            if (tags.ContainsKey(SiteCode.Filename))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Filename, tags[SiteCode.Filename]));
+
             if (tags.ContainsKey(SiteCode.BBFCRegistrationNumber))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.BBFCRegistrationNumber, tags[SiteCode.BBFCRegistrationNumber]));
             if (tags.ContainsKey(SiteCode.DiscHologramID))
