@@ -195,7 +195,21 @@ namespace MPF.Core.Data
             if (systemFromLabel != null)
                 return systemFromLabel;
 
+            // Get a list of files for quicker checking
             #region Consoles
+
+            // Bandai Playdia Quick Interactive System
+            try
+            {
+                List<string> files = Directory.EnumerateFiles(drivePath, "*", SearchOption.TopDirectoryOnly).ToList();
+
+                if (files.Any(f => f.EndsWith(".AJS", StringComparison.OrdinalIgnoreCase))
+                    && files.Any(f => f.EndsWith(".GLB", StringComparison.OrdinalIgnoreCase)))
+                {
+                    return RedumpSystem.BandaiPlaydiaQuickInteractiveSystem;
+                }
+            }
+            catch { }
 
             // Microsoft Xbox 360
             try
