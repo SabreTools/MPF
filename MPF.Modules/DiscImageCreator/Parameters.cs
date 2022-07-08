@@ -370,14 +370,14 @@ namespace MPF.Modules.DiscImageCreator
             string outputDirectory = Path.GetDirectoryName(basePath);
 
             // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(basePath + ".dat");
+            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");
 
             // Extract info based generically on MediaType
             switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "Disc has no PVD"; ;
+                    info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
                     if (this.System.IsAudio())
@@ -387,27 +387,27 @@ namespace MPF.Modules.DiscImageCreator
                     else
                     {
                         long errorCount = -1;
-                        if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                            errorCount = GetErrorCount(basePath + ".img_EdcEcc.txt");
-                        else if (File.Exists(basePath + ".img_EccEdc.txt"))
-                            errorCount = GetErrorCount(basePath + ".img_EccEdc.txt");
+                        if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                            errorCount = GetErrorCount($"{basePath}.img_EdcEcc.txt");
+                        else if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                            errorCount = GetErrorCount($"{basePath}.img_EccEdc.txt");
 
                         info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     }
 
-                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile(basePath + ".cue") ?? "";
-                    //var cueSheet = new CueSheet(basePath + ".cue"); // TODO: Do something with this
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? "";
+                    //var cueSheet = new CueSheet($"{basePath}.cue"); // TODO: Do something with this
 
                     // Audio CDs "all have an offset of 0" and should not be included
                     if (System != RedumpSystem.AudioCD)
                     {
-                        string cdWriteOffset = GetWriteOffset(basePath + "_disc.txt") ?? "";
+                        string cdWriteOffset = GetWriteOffset($"{basePath}_disc.txt") ?? "";
                         info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                         info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
                     }
 
                     // Attempt to get multisession data
-                    string cdMultiSessionInfo = GetMultisessionInformation(basePath + "_disc.txt");
+                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt");
                     if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
@@ -428,12 +428,12 @@ namespace MPF.Modules.DiscImageCreator
                     // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
                     {
-                        string layerbreak = GetLayerbreak(basePath + "_disc.txt", System.IsXGD()) ?? "";
+                        string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
                         info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     }
                     else if (this.Type == MediaType.BluRay)
                     {
-                        if (GetLayerbreak(Path.Combine(outputDirectory, "PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        if (GetLayerbreak(Path.Combine(outputDirectory, $"{basePath}_PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
@@ -447,11 +447,11 @@ namespace MPF.Modules.DiscImageCreator
                     }
 
                     // Read the PVD
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
+                    info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "";
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
-                        info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, "PIC.bin")) ?? "";
+                        info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, $"{basePath}_PIC.bin")) ?? "";
 
                     break;
             }
@@ -463,18 +463,18 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.EnhancedCD:
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.RainbowDisc:
-                    if (File.Exists(basePath + "_subIntention.txt"))
+                    if (File.Exists($"{basePath}_subIntention.txt"))
                     {
-                        FileInfo fi = new FileInfo(basePath + "_subIntention.txt");
+                        FileInfo fi = new FileInfo($"{basePath}_subIntention.txt");
                         if (fi.Length > 0)
-                            info.CopyProtection.SecuROMData = GetFullFile(basePath + "_subIntention.txt") ?? "";
+                            info.CopyProtection.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? "";
                     }
 
                     break;
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    info.CopyProtection.Protection = GetDVDProtection(basePath + "_CSSKey.txt", basePath + "_disc.txt") ?? "";
+                    info.CopyProtection.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? "";
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -490,7 +490,7 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    string xgd1XMID = GetXGD1XMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    string xgd1XMID = GetXGD1XMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
                     XgdInfo xgd1Info = new XgdInfo(xgd1XMID);
                     if (xgd1Info?.Initialized == true)
                     {
@@ -500,7 +500,7 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
 
-                    if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string xgd1SS, out string xgd1SSVer))
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string xgd1SS, out string xgd1SSVer))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
@@ -512,7 +512,7 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    string xgd23XeMID = GetXGD23XeMID(Path.Combine(outputDirectory, "DMI.bin"));
+                    string xgd23XeMID = GetXGD23XeMID(Path.Combine(outputDirectory, $"{basePath}_DMI.bin"));
                     XgdInfo xgd23Info = new XgdInfo(xgd23XeMID);
                     if (xgd23Info?.Initialized == true)
                     {
@@ -522,7 +522,7 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
                     }
 
-                    if (GetXGDAuxInfo(basePath + "_disc.txt", out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string xgd23SS, out string xgd23SSVer))
+                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string xgd23SS, out string xgd23SSVer))
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
@@ -536,7 +536,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -554,7 +554,7 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
-                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                    info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                     // Take only the last 16 lines for Sega CD
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -572,7 +572,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaChihiro:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -592,7 +592,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaDreamcast:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -612,7 +612,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaNaomi:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -632,7 +632,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaNaomi2:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -650,7 +650,7 @@ namespace MPF.Modules.DiscImageCreator
                     break;
 
                 case RedumpSystem.SegaSaturn:
-                    info.Extras.Header = GetSegaHeader(basePath + "_mainInfo.txt") ?? "";
+                    info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -676,10 +676,10 @@ namespace MPF.Modules.DiscImageCreator
                     }
 
                     bool? psEdcStatus = null;
-                    if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EdcEcc.txt");
-                    else if (File.Exists(basePath + ".img_EccEdc.txt"))
-                        psEdcStatus = GetPlayStationEDCStatus(basePath + ".img_EccEdc.txt");
+                    if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                        psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EdcEcc.txt");
+                    else if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                        psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EccEdc.txt");
 
                     if (psEdcStatus == true)
                         info.EDC.EDC = YesNo.Yes;
@@ -688,7 +688,7 @@ namespace MPF.Modules.DiscImageCreator
                     else
                         info.EDC.EDC = YesNo.NULL;
 
-                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected(basePath + "_disc.txt") ? YesNo.Yes : YesNo.No;
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt") ? YesNo.Yes : YesNo.No;
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -715,54 +715,56 @@ namespace MPF.Modules.DiscImageCreator
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
-                //if (File.Exists(basePath + ".c2"))
-                //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".c2"));
-                if (File.Exists(basePath + "_c2Error.txt"))
-                    info.Artifacts["c2Error"] = GetBase64(GetFullFile(basePath + "_c2Error.txt"));
-                if (File.Exists(basePath + ".ccd"))
-                    info.Artifacts["ccd"] = GetBase64(GetFullFile(basePath + ".ccd"));
-                if (File.Exists(basePath + "_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
-                    info.Artifacts["cmd"] = GetBase64(GetFullFile(basePath + "_cmd.txt"));
-                if (File.Exists(basePath + "_CSSKey.txt"))
-                    info.Artifacts["csskey"] = GetBase64(GetFullFile(basePath + "_CSSKey.txt"));
-                if (File.Exists(basePath + ".cue"))
-                    info.Artifacts["cue"] = GetBase64(GetFullFile(basePath + ".cue"));
-                if (File.Exists(basePath + ".dat"))
-                    info.Artifacts["dat"] = GetBase64(GetFullFile(basePath + ".dat"));
-                if (File.Exists(basePath + "_disc.txt"))
-                    info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
-                //if (File.Exists(Path.Combine(outputDirectory, "DMI.bin")))
-                //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "DMI.bin")));
-                if (File.Exists(basePath + "_drive.txt"))
-                    info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
-                if (File.Exists(basePath + "_img.cue"))
-                    info.Artifacts["img_cue"] = GetBase64(GetFullFile(basePath + "_img.cue"));
-                if (File.Exists(basePath + ".img_EdcEcc.txt"))
-                    info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EdcEcc.txt"));
-                if (File.Exists(basePath + ".img_EccEdc.txt"))
-                    info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile(basePath + ".img_EccEdc.txt"));
-                if (File.Exists(basePath + "_mainError.txt"))
-                    info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
-                if (File.Exists(basePath + "_mainInfo.txt"))
-                    info.Artifacts["mainInfo"] = GetBase64(GetFullFile(basePath + "_mainInfo.txt"));
-                //if (File.Exists(Path.Combine(outputDirectory, "PFI.bin")))
-                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "PFI.bin")));
-                //if (File.Exists(Path.Combine(outputDirectory, "SS.bin")))
-                //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, "SS.bin")));
-                if (File.Exists(basePath + ".sub"))
-                    info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".sub"));
-                if (File.Exists(basePath + "_subError.txt"))
-                    info.Artifacts["subError"] = GetBase64(GetFullFile(basePath + "_subError.txt"));
-                if (File.Exists(basePath + "_subInfo.txt"))
-                    info.Artifacts["subInfo"] = GetBase64(GetFullFile(basePath + "_subInfo.txt"));
-                if (File.Exists(basePath + "_subIntention.txt"))
-                    info.Artifacts["subIntention"] = GetBase64(GetFullFile(basePath + "_subIntention.txt"));
-                //if (File.Exists(basePath + "_sub.txt"))
-                //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_sub.txt"));
-                //if (File.Exists(basePath + "_subReadable.txt"))
-                //    info.Artifacts["subReadable"] = GetBase64(GetFullFile(basePath + "_subReadable.txt"));
-                if (File.Exists(basePath + "_volDesc.txt"))
-                    info.Artifacts["volDesc"] = GetBase64(GetFullFile(basePath + "_volDesc.txt"));
+                //if (File.Exists($"{basePath}.c2"))
+                //    info.Artifacts["c2"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.c2"));
+                if (File.Exists($"{basePath}_c2Error.txt"))
+                    info.Artifacts["c2Error"] = GetBase64(GetFullFile($"{basePath}_c2Error.txt"));
+                if (File.Exists($"{basePath}.ccd"))
+                    info.Artifacts["ccd"] = GetBase64(GetFullFile($"{basePath}.ccd"));
+                if (File.Exists($"{basePath}_cmd.txt")) // TODO: Figure out how to read in the timestamp-named file
+                    info.Artifacts["cmd"] = GetBase64(GetFullFile($"{basePath}_cmd.txt"));
+                if (File.Exists($"{basePath}_CSSKey.txt"))
+                    info.Artifacts["csskey"] = GetBase64(GetFullFile($"{basePath}_CSSKey.txt"));
+                if (File.Exists($"{basePath}.cue"))
+                    info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue"));
+                if (File.Exists($"{basePath}.dat"))
+                    info.Artifacts["dat"] = GetBase64(GetFullFile($"{basePath}.dat"));
+                if (File.Exists($"{basePath}_disc.txt"))
+                    info.Artifacts["disc"] = GetBase64(GetFullFile($"{basePath}_disc.txt"));
+                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_DMI.bin")))
+                //    info.Artifacts["dmi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_DMI.bin")));
+                if (File.Exists($"{basePath}_drive.txt"))
+                    info.Artifacts["drive"] = GetBase64(GetFullFile($"{basePath}_drive.txt"));
+                if (File.Exists($"{basePath}_img.cue"))
+                    info.Artifacts["img_cue"] = GetBase64(GetFullFile($"{basePath}_img.cue"));
+                if (File.Exists($"{basePath}.img_EdcEcc.txt"))
+                    info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile($"{basePath}.img_EdcEcc.txt"));
+                if (File.Exists($"{basePath}.img_EccEdc.txt"))
+                    info.Artifacts["img_EdcEcc"] = GetBase64(GetFullFile($"{basePath}.img_EccEdc.txt"));
+                if (File.Exists($"{basePath}_mainError.txt"))
+                    info.Artifacts["mainError"] = GetBase64(GetFullFile($"{basePath}_mainError.txt"));
+                if (File.Exists($"{basePath}_mainInfo.txt"))
+                    info.Artifacts["mainInfo"] = GetBase64(GetFullFile($"{basePath}_mainInfo.txt"));
+                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_PFI.bin")))
+                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_PFI.bin")));
+                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_PIC.bin")))
+                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_PFI.bin")));
+                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_SS.bin")))
+                //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_SS.bin")));
+                if (File.Exists($"{basePath}.sub"))
+                    info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.sub"));
+                if (File.Exists($"{basePath}_subError.txt"))
+                    info.Artifacts["subError"] = GetBase64(GetFullFile($"{basePath}_subError.txt"));
+                if (File.Exists($"{basePath}_subInfo.txt"))
+                    info.Artifacts["subInfo"] = GetBase64(GetFullFile($"{basePath}_subInfo.txt"));
+                if (File.Exists($"{basePath}_subIntention.txt"))
+                    info.Artifacts["subIntention"] = GetBase64(GetFullFile($"{basePath}_subIntention.txt"));
+                //if (File.Exists($"{basePath}_sub.txt"))
+                //    info.Artifacts["subReadable"] = GetBase64(GetFullFile($"{basePath}_sub.txt"));
+                //if (File.Exists($"{basePath}_subReadable.txt"))
+                //    info.Artifacts["subReadable"] = GetBase64(GetFullFile($"{basePath}_subReadable.txt"));
+                if (File.Exists($"{basePath}_volDesc.txt"))
+                    info.Artifacts["volDesc"] = GetBase64(GetFullFile($"{basePath}_volDesc.txt"));
             }
         }
 
@@ -1554,14 +1556,14 @@ namespace MPF.Modules.DiscImageCreator
                     if (File.Exists($"{basePath}_volDesc.txt"))
                         logFiles.Add($"{basePath}_volDesc.txt");
 
-                    if (File.Exists(Path.Combine(parentDirectory, "DMI.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, "DMI.bin"));
-                    if (File.Exists(Path.Combine(parentDirectory, "PFI.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, "PFI.bin"));
-                    if (File.Exists(Path.Combine(parentDirectory, "PIC.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, "PIC.bin"));
-                    if (File.Exists(Path.Combine(parentDirectory, "SS.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, "SS.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_DMI.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_DMI.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_PFI.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_PFI.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_PIC.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_PIC.bin"));
+                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_SS.bin")))
+                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_SS.bin"));
 
                     break;
 

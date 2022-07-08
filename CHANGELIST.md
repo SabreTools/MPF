@@ -96,6 +96,7 @@
 - Framework for XBONE filenames
 - Add files for XBONE
 - Update to DIC 20220707
+- Fix .bin file paths; update internal filename generation
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
