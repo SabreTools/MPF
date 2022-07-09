@@ -56,14 +56,14 @@ namespace RedumpLib.Data
         [HumanReadable(LongName = "BD-25")]
         BD25,
 
-        [HumanReadable(LongName = "BD-33")]
-        BD33,
+        //[HumanReadable(LongName = "BD-33")]
+        //BD33,
 
         [HumanReadable(LongName = "BD-50")]
         BD50,
 
-        [HumanReadable(LongName = "BD-66")]
-        BD66,
+        //[HumanReadable(LongName = "BD-66")]
+        //BD66,
 
         [HumanReadable(LongName = "BD-100")]
         BD100,

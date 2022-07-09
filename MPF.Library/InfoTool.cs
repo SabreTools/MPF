@@ -863,12 +863,12 @@ namespace MPF.Library
                         return $"{mediaType.LongName()}-128";
                     else if (layerbreak2 != default)
                         return $"{mediaType.LongName()}-100";
-                    else if (layerbreak != default && size > 53_687_063_712)
-                        return $"{mediaType.LongName()}-66";
+                    //else if (layerbreak != default && size > 53_687_063_712)
+                    //    return $"{mediaType.LongName()}-66";
                     else if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
-                    else if (size > 26_843_531_856)
-                        return $"{mediaType.LongName()}-33";
+                    //else if (size > 26_843_531_856)
+                    //    return $"{mediaType.LongName()}-33";
                     else
                         return $"{mediaType.LongName()}-25";
 
@@ -1149,21 +1149,21 @@ namespace MPF.Library
             switch (info.CommonDiscInfo.Media)
             {
                 case DiscType.BD25:
-                case DiscType.BD33:
+                //case DiscType.BD33:
                 case DiscType.BD50:
-                case DiscType.BD66:
+                //case DiscType.BD66:
                 case DiscType.BD100:
                 case DiscType.BD128:
                     if (info.SizeAndChecksums.Layerbreak3 != default)
                         info.CommonDiscInfo.Media = DiscType.BD128;
                     else if (info.SizeAndChecksums.Layerbreak2 != default)
                         info.CommonDiscInfo.Media = DiscType.BD100;
-                    else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 53_687_063_712)
-                        info.CommonDiscInfo.Media = DiscType.BD66;
+                    //else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 53_687_063_712)
+                    //    info.CommonDiscInfo.Media = DiscType.BD66;
                     else if (info.SizeAndChecksums.Layerbreak != default)
                         info.CommonDiscInfo.Media = DiscType.BD50;
-                    else if (info.SizeAndChecksums.Size > 26_843_531_856)
-                        info.CommonDiscInfo.Media = DiscType.BD33;
+                    //else if (info.SizeAndChecksums.Size > 26_843_531_856)
+                    //    info.CommonDiscInfo.Media = DiscType.BD33;
                     else
                         info.CommonDiscInfo.Media = DiscType.BD25;
                     break;

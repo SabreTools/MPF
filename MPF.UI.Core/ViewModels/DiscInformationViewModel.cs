@@ -654,9 +654,9 @@ namespace MPF.UI.Core.ViewModels
                 case DiscType.HDDVDSL:
                 case DiscType.HDDVDDL:
                 case DiscType.BD25:
-                case DiscType.BD33:
+                //case DiscType.BD33:
                 case DiscType.BD50:
-                case DiscType.BD66:
+                //case DiscType.BD66:
                 case DiscType.BD100:
                 case DiscType.BD128:
                 case DiscType.NintendoGameCubeGameDisc:
