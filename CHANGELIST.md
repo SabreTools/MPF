@@ -98,6 +98,7 @@
 - Update to DIC 20220707
 - Fix .bin file paths; update internal filename generation
 - Disable nonstandard BD-ROM sizes
+- Trim leading file paths for XBONE
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

@@ -315,7 +315,10 @@ namespace MPF.Library
                 case RedumpSystem.MicrosoftXboxOne:
                     string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
                     if (drive != null && Directory.Exists(xboxOneMsxcPath))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n", Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly));
+                    {
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
+                            Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                    }
 
                     break;
 
