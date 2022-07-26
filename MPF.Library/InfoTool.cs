@@ -97,7 +97,11 @@ namespace MPF.Library
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
+#if NET48 || NETSTANDARD2_1
                 FillFromRedump(options, info, resultProgress);
+#else
+                _ = await FillFromRedump(options, info, resultProgress);
+#endif
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
             if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
@@ -561,9 +565,9 @@ namespace MPF.Library
             }
         }
 
-        #endregion
+#endregion
 
-        #region Information Output
+#region Information Output
 
         /// <summary>
         /// Compress log files to save space
@@ -1134,9 +1138,9 @@ namespace MPF.Library
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
         }
 
-        #endregion
+#endregion
 
-        #region Normalization
+#region Normalization
 
         /// <summary>
         /// Adjust the disc type based on size and layerbreak information
@@ -1257,9 +1261,9 @@ namespace MPF.Library
             return (directory, filename);
         }
 
-        #endregion
+#endregion
 
-        #region Web Calls
+#region Web Calls
 
         /// <summary>
         /// Create a new SubmissionInfo object from a disc page
@@ -1444,11 +1448,19 @@ namespace MPF.Library
         /// <param name="wc">RedumpWebClient for making the connection</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="id">Redump disc ID to retrieve</param>
-        private static void FillFromId(RedumpWebClient wc, SubmissionInfo info, int id)
+#if NET48 || NETSTANDARD2_1
+        private static bool FillFromId(RedumpWebClient wc, SubmissionInfo info, int id)
         {
             string discData = wc.DownloadSingleSiteID(id);
             if (string.IsNullOrEmpty(discData))
-                return;
+                return false;
+#else
+        private async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id)
+        {
+            string discData = await wc.DownloadSingleSiteID(id);
+            if (string.IsNullOrEmpty(discData))
+                return false;
+#endif
 
             // Title, Disc Number/Letter, Disc Title
             var match = Constants.TitleRegex.Match(discData);
@@ -1736,6 +1748,8 @@ namespace MPF.Library
                 else
                     info.LastModified = null;
             }
+
+            return true;
         }
 
         /// <summary>
@@ -1744,25 +1758,37 @@ namespace MPF.Library
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-        private static void FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+#if NET48 || NETSTANDARD2_1
+        private static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+#else
+        private async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+#endif
         {
             // Set the current dumper based on username
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
             info.PartiallyMatchedIDs = new List<int>();
 
+#if NET48 || NETSTANDARD2_1
             using (RedumpWebClient wc = new RedumpWebClient())
+#else
+            using (RedumpHttpClient wc = new RedumpHttpClient())
+#endif
             {
                 // Login to Redump
+#if NET48 || NETSTANDARD2_1
                 bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
+#else
+                bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
+#endif
                 if (loggedIn == null)
                 {
                     resultProgress?.Report(Result.Failure("There was an unknown error connecting to Redump"));
-                    return;
+                    return false;
                 }
                 else if (loggedIn == false)
                 {
                     // Don't log the as a failure or error
-                    return;
+                    return false;
                 }
 
                 // Setup the full-track checks
@@ -1774,7 +1800,11 @@ namespace MPF.Library
                 string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
                 foreach (string hashData in splitData)
                 {
+#if NET48 || NETSTANDARD2_1
                     (bool singleFound, List<int> foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
+#else
+                    (bool singleFound, List<int> foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
+#endif
 
                     // Ensure that all tracks are found
                     allFound &= singleFound;
@@ -1806,19 +1836,28 @@ namespace MPF.Library
 
                 // Exit early if one failed or there are no matched IDs
                 if (!allFound || fullyMatchedIDs.Count == 0)
-                    return;
+                    return false;
 
                 // Find the first matched ID where the track count matches, we can grab a bunch of info from it
                 int totalMatchedIDsCount = fullyMatchedIDs.Count;
                 for (int i = 0; i < totalMatchedIDsCount; i++)
                 {
                     // Skip if the track count doesn't match
+#if NET48 || NETSTANDARD2_1
                     if (!ValidateTrackCount(wc, fullyMatchedIDs[i], splitData.Length))
                         continue;
+#else
+                    if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], splitData.Length))
+                        continue;
+#endif
 
                     // Fill in the fields from the existing ID
                     resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
+#if NET48 || NETSTANDARD2_1
                     FillFromId(wc, info, fullyMatchedIDs[i]);
+#else
+                    _ = await FillFromId(wc, info, fullyMatchedIDs[i]);
+#endif
                     resultProgress?.Report(Result.Success("Information filling complete!"));
 
                     // Set the fully matched ID to the current
@@ -1835,6 +1874,8 @@ namespace MPF.Library
                         info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
                 }
             }
+
+            return true;
         }
 
         /// <summary>
@@ -1873,7 +1914,11 @@ namespace MPF.Library
         /// <param name="wc">RedumpWebClient for making the connection</param>
         /// <param name="query">Query string to attempt to search for</param>
         /// <returns>All disc IDs for the given query, null on error</returns>
+#if NET48 || NETSTANDARD2_1
         private static List<int> ListSearchResults(RedumpWebClient wc, string query)
+#else
+        private async static Task<List<int>> ListSearchResults(RedumpHttpClient wc, string query)
+#endif
         {
             List<int> ids = new List<int>();
 
@@ -1894,7 +1939,11 @@ namespace MPF.Library
                 int pageNumber = 1;
                 while (true)
                 {
+#if NET48 || NETSTANDARD2_1
                     List<int> pageIds = wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+#else
+                    List<int> pageIds = await wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+#endif
                     ids.AddRange(pageIds);
                     if (pageIds.Count <= 1)
                         break;
@@ -1917,7 +1966,11 @@ namespace MPF.Library
         /// <param name="hashData">DAT-formatted hash data to parse out</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
+#if NET48 || NETSTANDARD2_1
         private static (bool, List<int>) ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
+#else
+        private async static Task<(bool, List<int>)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
+#endif
         {
             // If the line isn't parseable, we can't validate
             if (!GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
@@ -1927,7 +1980,11 @@ namespace MPF.Library
             }
 
             // Get all matching IDs for the track
+#if NET48 || NETSTANDARD2_1
             List<int> newIds = ListSearchResults(wc, sha1);
+#else
+            List<int> newIds = await ListSearchResults(wc, sha1);
+#endif
 
             // If we got null back, there was an error
             if (newIds == null)
@@ -1956,10 +2013,18 @@ namespace MPF.Library
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <param name="localCount">Local count of tracks for the current disc</param>
         /// <returns>True if the track count matches, false otherwise</returns>
+#if NET48 || NETSTANDARD2_1
         private static bool ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
+#else
+        private async static Task<bool> ValidateTrackCount(RedumpHttpClient wc, int id, int localCount)
+#endif
         {
             // If we can't pull the remote data, we can't match
+#if NET48 || NETSTANDARD2_1
             string discData = wc.DownloadSingleSiteID(id);
+#else
+            string discData = await wc.DownloadSingleSiteID(id);
+#endif
             if (string.IsNullOrEmpty(discData))
                 return false;
 
@@ -1978,9 +2043,9 @@ namespace MPF.Library
             return localCount == remoteCount;
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
 
         /// <summary>
         /// Format a single site tag to string
@@ -2208,6 +2273,6 @@ namespace MPF.Library
             return sorted;
         }
 
-        #endregion
+#endregion
     }
 }

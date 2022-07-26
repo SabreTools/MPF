@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using MPF.Core.Data;
@@ -187,20 +188,30 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Test Redump login credentials
         /// </summary>
-        private void TestRedumpLogin()
+#if NET48 || NETSTANDARD2_1
+        private bool? TestRedumpLogin()
+#else
+        private async Task<bool?> TestRedumpLogin()
+#endif
         {
+#if NET48 || NETSTANDARD2_1
             (bool? success, string message) = RedumpWebClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
+#else
+            (bool? success, string message) = await RedumpHttpClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
+#endif
             if (success == true)
                 CustomMessageBox.Show(Parent, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             else if (success == false)
                 CustomMessageBox.Show(Parent, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
             else
                 CustomMessageBox.Show(Parent, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            return success;
         }
 
-        #endregion
+#endregion
 
-        #region UI Functionality
+#region UI Functionality
 
         /// <summary>
         /// Create an open folder dialog box
@@ -229,9 +240,9 @@ namespace MPF.UI.ViewModels
         private System.Windows.Controls.TextBox TextBoxForPathSetting(string name) =>
             Parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
-        #endregion
+#endregion
 
-        #region Event Handlers
+#region Event Handlers
 
         /// <summary>
         /// Handler for generic Click event
@@ -254,9 +265,14 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
+#if NET48 || NETSTANDARD2_1
         private void OnRedumpTestClick(object sender, EventArgs e) =>
             TestRedumpLogin();
+#else
+        private async void OnRedumpTestClick(object sender, EventArgs e) =>
+            _ = await TestRedumpLogin();
+#endif
 
-        #endregion
+#endregion
     }
 }

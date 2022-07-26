@@ -1,19 +1,21 @@
-﻿#if NET48 || NETSTANDARD2_1
+﻿#if NET6_0
 
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using RedumpLib.Data;
 
 namespace RedumpLib.Web
 {
-    // https://stackoverflow.com/questions/1777221/using-cookiecontainer-with-webclient-class
-    public class RedumpWebClient : WebClient
+    public class RedumpHttpClient : HttpClient
     {
-        private readonly CookieContainer m_container = new CookieContainer();
+        #region Properties
 
         /// <summary>
         /// Determines if user is logged into Redump
@@ -25,65 +27,37 @@ namespace RedumpLib.Web
         /// </summary>
         public bool IsStaff { get; private set; } = false;
 
+        #endregion
+
         /// <summary>
-        /// Get the last downloaded filename, if possible
+        /// Constructor
         /// </summary>
-        /// <returns></returns>
-        public string GetLastFilename()
+        public RedumpHttpClient()
+            : base(new HttpClientHandler { UseCookies = true })
         {
-            // If the response headers are null or empty
-            if (ResponseHeaders == null || ResponseHeaders.Count == 0)
-                return null;
-
-            // If we don't have the response header we care about
-            string headerValue = ResponseHeaders.Get("Content-Disposition");
-            if (string.IsNullOrWhiteSpace(headerValue))
-                return null;
-
-            // Extract the filename from the value
-#if NETSTANDARD2_1
-            return headerValue[(headerValue.IndexOf("filename=") + 9)..].Replace("\"", "");
-#else
-            return headerValue.Substring(headerValue.IndexOf("filename=") + 9).Replace("\"", "");
-#endif
         }
 
-        /// <inheritdoc/>
-        protected override WebRequest GetWebRequest(Uri address)
-        {
-            WebRequest request = base.GetWebRequest(address);
-            if (request is HttpWebRequest webRequest)
-                webRequest.CookieContainer = m_container;
-
-            return request;
-        }
+        #region Credentials
 
         /// <summary>
         /// Validate supplied credentials
         /// </summary>
-        public static (bool?, string) ValidateCredentials(string username, string password)
+        public async static Task<(bool?, string)> ValidateCredentials(string username, string password)
         {
             // If options are invalid or we're missing something key, just return
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 return (false, null);
 
             // Try logging in with the supplied credentials otherwise
-#if NETSTANDARD2_1
-            using RedumpWebClient wc = new RedumpWebClient();
-#else
-            using (RedumpWebClient wc = new RedumpWebClient())
-            {
-#endif
-                bool? loggedIn = wc.Login(username, password);
-                if (loggedIn == true)
-                    return (true, "Redump username and password accepted!");
-                else if (loggedIn == false)
-                    return (false, "Redump username and password denied!");
-                else
-                    return (null, "An error occurred validating your credentials!");
-#if NET48
-            }
-#endif
+            using RedumpHttpClient httpClient = new();
+
+            bool? loggedIn = await httpClient.Login(username, password);
+            if (loggedIn == true)
+                return (true, "Redump username and password accepted!");
+            else if (loggedIn == false)
+                return (false, "Redump username and password denied!");
+            else
+                return (null, "An error occurred validating your credentials!");
         }
 
         /// <summary>
@@ -92,7 +66,7 @@ namespace RedumpLib.Web
         /// <param name="username">Redump username</param>
         /// <param name="password">Redump password</param>
         /// <returns>True if the user could be logged in, false otherwise, null on error</returns>
-        public bool? Login(string username, string password)
+        public async Task<bool?> Login(string username, string password)
         {
             // Credentials verification
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
@@ -119,15 +93,24 @@ namespace RedumpLib.Web
                 try
                 {
                     // Get the current token from the login page
-                    var loginPage = DownloadString(Constants.LoginUrl);
+                    var loginPage = await GetStringAsync(Constants.LoginUrl);
                     string token = Constants.TokenRegex.Match(loginPage).Groups[1].Value;
 
                     // Construct the login request
-                    Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    Encoding = Encoding.UTF8;
-                    var response = UploadString(Constants.LoginUrl, $"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0");
+                    var postContent = new StringContent($"form_sent=1&redirect_url=&csrf_token={token}&req_username={username}&req_password={password}&save_pass=0", Encoding.UTF8);
+                    postContent.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
 
-                    if (response.Contains("Incorrect username and/or password."))
+                    // Send the login request and get the result
+                    var response = await PostAsync(Constants.LoginUrl, postContent);
+                    string responseContent = await response?.Content?.ReadAsStringAsync();
+
+                    if (string.IsNullOrWhiteSpace(responseContent))
+                    {
+                        Console.WriteLine($"An error occurred while trying to log in on attempt {i}: No response");
+                        continue;
+                    }
+
+                    if (responseContent.Contains("Incorrect username and/or password."))
                     {
                         Console.WriteLine("Invalid credentials entered, continuing without logging in...");
                         return false;
@@ -138,7 +121,7 @@ namespace RedumpLib.Web
                     LoggedIn = true;
 
                     // If the user is a moderator or staff, set accordingly
-                    if (response.Contains("http://forum.redump.org/forum/9/staff/"))
+                    if (responseContent.Contains("http://forum.redump.org/forum/9/staff/"))
                         IsStaff = true;
 
                     return true;
@@ -153,6 +136,8 @@ namespace RedumpLib.Web
             return false;
         }
 
+        #endregion
+
         #region Single Page Helpers
 
         /// <summary>
@@ -160,24 +145,15 @@ namespace RedumpLib.Web
         /// </summary>
         /// <param name="url">Base URL to download using</param>
         /// <returns>List of IDs from the page, empty on error</returns>
-        public List<int> CheckSingleSitePage(string url)
+        public async Task<List<int>> CheckSingleSitePage(string url)
         {
-            List<int> ids = new List<int>();
-            string dumpsPage = string.Empty;
+            List<int> ids = new();
 
             // Try up to 3 times to retrieve the data
-            for (int i = 0; i < 3; i++)
-            {
-                try
-                {
-                    dumpsPage = DownloadString(url);
-                    break;
-                }
-                catch { }
-            }
+            string dumpsPage = await DownloadString(url, retries: 3);
 
             // If we have no dumps left
-            if (dumpsPage.Contains("No discs found."))
+            if (dumpsPage == null || dumpsPage.Contains("No discs found."))
                 return ids;
 
             // If we have a single disc page already
@@ -216,23 +192,13 @@ namespace RedumpLib.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="failOnSingle">True to return on first error, false otherwise</param>
         /// <returns>True if the page could be downloaded, false otherwise</returns>
-        public bool CheckSingleSitePage(string url, string outDir, bool failOnSingle)
+        public async Task<bool> CheckSingleSitePage(string url, string outDir, bool failOnSingle)
         {
-            string dumpsPage = string.Empty;
-
             // Try up to 3 times to retrieve the data
-            for (int i = 0; i < 3; i++)
-            {
-                try
-                {
-                    dumpsPage = DownloadString(url);
-                    break;
-                }
-                catch { }
-            }
+            string dumpsPage = await DownloadString(url, retries: 3);
 
             // If we have no dumps left
-            if (dumpsPage.Contains("No discs found."))
+            if (dumpsPage == null || dumpsPage.Contains("No discs found."))
                 return false;
 
             // If we have a single disc page already
@@ -241,7 +207,7 @@ namespace RedumpLib.Web
                 var value = Regex.Match(dumpsPage, @"/disc/(\d+)/sfv/").Groups[1].Value;
                 if (int.TryParse(value, out int id))
                 {
-                    bool downloaded = DownloadSingleSiteID(id, outDir, false);
+                    bool downloaded = await DownloadSingleSiteID(id, outDir, false);
                     if (!downloaded && failOnSingle)
                         return false;
                 }
@@ -257,7 +223,7 @@ namespace RedumpLib.Web
                 {
                     if (int.TryParse(match.Groups[1].Value, out int value))
                     {
-                        bool downloaded = DownloadSingleSiteID(value, outDir, false);
+                        bool downloaded = await DownloadSingleSiteID(value, outDir, false);
                         if (!downloaded && failOnSingle)
                             return false;
                     }
@@ -277,24 +243,15 @@ namespace RedumpLib.Web
         /// </summary>
         /// <param name="wc">RedumpWebClient to access the packs</param>
         /// <returns>List of IDs from the page, empty on error</returns>
-        public List<int> CheckSingleWIPPage(string url)
+        public async Task<List<int>> CheckSingleWIPPage(string url)
         {
-            List<int> ids = new List<int>();
-            string dumpsPage = string.Empty;
+            List<int> ids = new();
 
             // Try up to 3 times to retrieve the data
-            for (int i = 0; i < 3; i++)
-            {
-                try
-                {
-                    dumpsPage = DownloadString(url);
-                    break;
-                }
-                catch { }
-            }
+            string dumpsPage = await DownloadString(url, retries: 3);
 
             // If we have no dumps left
-            if (dumpsPage.Contains("No discs found."))
+            if (dumpsPage == null || dumpsPage.Contains("No discs found."))
                 return ids;
 
             // Otherwise, traverse each dump on the page
@@ -323,23 +280,13 @@ namespace RedumpLib.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="failOnSingle">True to return on first error, false otherwise</param>
         /// <returns>True if the page could be downloaded, false otherwise</returns>
-        public bool CheckSingleWIPPage(string url, string outDir, bool failOnSingle)
+        public async Task<bool> CheckSingleWIPPage(string url, string outDir, bool failOnSingle)
         {
-            string dumpsPage = string.Empty;
-
             // Try up to 3 times to retrieve the data
-            for (int i = 0; i < 3; i++)
-            {
-                try
-                {
-                    dumpsPage = DownloadString(url);
-                    break;
-                }
-                catch { }
-            }
+            string dumpsPage = await DownloadString(url, retries: 3);
 
             // If we have no dumps left
-            if (dumpsPage.Contains("No discs found."))
+            if (dumpsPage == null || dumpsPage.Contains("No discs found."))
                 return false;
 
             // Otherwise, traverse each dump on the page
@@ -350,7 +297,7 @@ namespace RedumpLib.Web
                 {
                     if (int.TryParse(match.Groups[2].Value, out int value))
                     {
-                        bool downloaded = DownloadSingleWIPID(value, outDir, false);
+                        bool downloaded = await DownloadSingleWIPID(value, outDir, false);
                         if (!downloaded && failOnSingle)
                             return false;
                     }
@@ -375,11 +322,11 @@ namespace RedumpLib.Web
         /// <param name="url">Base URL to download using</param>
         /// <param name="system">System to download packs for</param>
         /// <returns>Byte array containing the downloaded pack, null on error</returns>
-        public byte[] DownloadSinglePack(string url, RedumpSystem? system)
+        public async Task<byte[]> DownloadSinglePack(string url, RedumpSystem? system)
         {
             try
             {
-                return DownloadData(string.Format(url, system.ShortName()));
+                return await GetByteArrayAsync(string.Format(url, system.ShortName()));
             }
             catch (Exception ex)
             {
@@ -395,7 +342,7 @@ namespace RedumpLib.Web
         /// <param name="system">System to download packs for</param>
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="subfolder">Named subfolder for the pack, used optionally</param>
-        public void DownloadSinglePack(string url, RedumpSystem? system, string outDir, string subfolder)
+        public async Task<bool> DownloadSinglePack(string url, RedumpSystem? system, string outDir, string subfolder)
         {
             try
             {
@@ -404,12 +351,17 @@ namespace RedumpLib.Web
                     outDir = Environment.CurrentDirectory;
 
                 string tempfile = Path.Combine(outDir, "tmp" + Guid.NewGuid().ToString());
-                DownloadFile(string.Format(url, system.ShortName()), tempfile);
-                MoveOrDelete(tempfile, GetLastFilename(), outDir, subfolder);
+                string packUri = string.Format(url, system.ShortName());
+
+                // Make the call to get the pack
+                string remoteFileName = await DownloadFile(packUri, tempfile);
+                MoveOrDelete(tempfile, remoteFileName, outDir, subfolder);
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"An exception has occurred: {ex}");
+                return false;
             }
         }
 
@@ -418,26 +370,17 @@ namespace RedumpLib.Web
         /// </summary>
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <returns>String containing the page contents if successful, null on error</returns>
-        public string DownloadSingleSiteID(int id)
+        public async Task<string> DownloadSingleSiteID(int id)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = string.Empty;
-
                 // Try up to 3 times to retrieve the data
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
-                        discPage = DownloadString(string.Format(Constants.DiscPageUrl, +id));
-                        break;
-                    }
-                    catch { }
-                }
+                string discPageUri = string.Format(Constants.DiscPageUrl, +id);
+                string discPage = await DownloadString(discPageUri, retries: 3);
 
-                if (discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
+                if (discPage == null || discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
                 {
                     Console.WriteLine($"ID {paddedId} could not be found!");
                     return null;
@@ -460,7 +403,7 @@ namespace RedumpLib.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="rename">True to rename deleted entries, false otherwise</param>
         /// <returns>True if all data was downloaded, false otherwise</returns>
-        public bool DownloadSingleSiteID(int id, string outDir, bool rename)
+        public async Task<bool> DownloadSingleSiteID(int id, string outDir, bool rename)
         {
             // If no output directory is defined, use the current directory instead
             if (string.IsNullOrWhiteSpace(outDir))
@@ -471,20 +414,11 @@ namespace RedumpLib.Web
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = string.Empty;
-
                 // Try up to 3 times to retrieve the data
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
-                        discPage = DownloadString(string.Format(Constants.DiscPageUrl, +id));
-                        break;
-                    }
-                    catch { }
-                }
+                string discPageUri = string.Format(Constants.DiscPageUrl, +id);
+                string discPage = await DownloadString(discPageUri, retries: 3);
 
-                if (discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
+                if (discPage == null || discPage.Contains($"Disc with ID \"{id}\" doesn't exist"))
                 {
                     try
                     {
@@ -532,50 +466,50 @@ namespace RedumpLib.Web
 
                 // View Edit History
                 if (discPage.Contains($"<a href=\"/disc/{id}/changes/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.ChangesExt, Path.Combine(paddedIdDir, "changes.html"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.ChangesExt, Path.Combine(paddedIdDir, "changes.html"));
 
                 // CUE
                 if (discPage.Contains($"<a href=\"/disc/{id}/cue/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.CueExt, Path.Combine(paddedIdDir, paddedId + ".cue"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.CueExt, Path.Combine(paddedIdDir, paddedId + ".cue"));
 
                 // Edit disc
                 if (discPage.Contains($"<a href=\"/disc/{id}/edit/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.EditExt, Path.Combine(paddedIdDir, "edit.html"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.EditExt, Path.Combine(paddedIdDir, "edit.html"));
 
                 // GDI
                 if (discPage.Contains($"<a href=\"/disc/{id}/gdi/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.GdiExt, Path.Combine(paddedIdDir, paddedId + ".gdi"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.GdiExt, Path.Combine(paddedIdDir, paddedId + ".gdi"));
 
                 // KEYS
                 if (discPage.Contains($"<a href=\"/disc/{id}/key/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.KeyExt, Path.Combine(paddedIdDir, paddedId + ".key"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.KeyExt, Path.Combine(paddedIdDir, paddedId + ".key"));
 
                 // LSD
                 if (discPage.Contains($"<a href=\"/disc/{id}/lsd/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.LsdExt, Path.Combine(paddedIdDir, paddedId + ".lsd"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.LsdExt, Path.Combine(paddedIdDir, paddedId + ".lsd"));
 
                 // MD5
                 if (discPage.Contains($"<a href=\"/disc/{id}/md5/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.Md5Ext, Path.Combine(paddedIdDir, paddedId + ".md5"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.Md5Ext, Path.Combine(paddedIdDir, paddedId + ".md5"));
 
                 // Review WIP entry
                 if (Constants.NewDiscRegex.IsMatch(discPage))
                 {
                     var match = Constants.NewDiscRegex.Match(discPage);
-                    DownloadFile(string.Format(Constants.WipDiscPageUrl, match.Groups[2].Value), Path.Combine(paddedIdDir, "newdisc.html"));
+                    _ = await DownloadFile(string.Format(Constants.WipDiscPageUrl, match.Groups[2].Value), Path.Combine(paddedIdDir, "newdisc.html"));
                 }
 
                 // SBI
                 if (discPage.Contains($"<a href=\"/disc/{id}/sbi/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.SbiExt, Path.Combine(paddedIdDir, paddedId + ".sbi"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.SbiExt, Path.Combine(paddedIdDir, paddedId + ".sbi"));
 
                 // SFV
                 if (discPage.Contains($"<a href=\"/disc/{id}/sfv/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.SfvExt, Path.Combine(paddedIdDir, paddedId + ".sfv"));
+                    await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.SfvExt, Path.Combine(paddedIdDir, paddedId + ".sfv"));
 
                 // SHA1
                 if (discPage.Contains($"<a href=\"/disc/{id}/sha1/\""))
-                    DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.Sha1Ext, Path.Combine(paddedIdDir, paddedId + ".sha1"));
+                    _ = await DownloadFile(string.Format(Constants.DiscPageUrl, +id) + Constants.Sha1Ext, Path.Combine(paddedIdDir, paddedId + ".sha1"));
 
                 // HTML (Last in case of errors)
                 using (var discStreamWriter = File.CreateText(Path.Combine(paddedIdDir, "disc.html")))
@@ -598,26 +532,17 @@ namespace RedumpLib.Web
         /// </summary>
         /// <param name="id">Redump WIP disc ID to retrieve</param>
         /// <returns>String containing the page contents if successful, null on error</returns>
-        public string DownloadSingleWIPID(int id)
+        public async Task<string> DownloadSingleWIPID(int id)
         {
             string paddedId = id.ToString().PadLeft(5, '0');
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = string.Empty;
-
                 // Try up to 3 times to retrieve the data
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
-                        discPage = DownloadString(string.Format(Constants.WipDiscPageUrl, +id));
-                        break;
-                    }
-                    catch { }
-                }
+                string discPageUri = string.Format(Constants.WipDiscPageUrl, +id);
+                string discPage = await DownloadString(discPageUri, retries: 3);
 
-                if (discPage.Contains($"WIP disc with ID \"{id}\" doesn't exist"))
+                if (discPage == null || discPage.Contains($"WIP disc with ID \"{id}\" doesn't exist"))
                 {
                     Console.WriteLine($"ID {paddedId} could not be found!");
                     return null;
@@ -640,7 +565,7 @@ namespace RedumpLib.Web
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="rename">True to rename deleted entries, false otherwise</param>
         /// <returns>True if all data was downloaded, false otherwise</returns>
-        public bool DownloadSingleWIPID(int id, string outDir, bool rename)
+        public async Task<bool> DownloadSingleWIPID(int id, string outDir, bool rename)
         {
             // If no output directory is defined, use the current directory instead
             if (string.IsNullOrWhiteSpace(outDir))
@@ -651,20 +576,11 @@ namespace RedumpLib.Web
             Console.WriteLine($"Processing ID: {paddedId}");
             try
             {
-                string discPage = string.Empty;
-
                 // Try up to 3 times to retrieve the data
-                for (int i = 0; i < 3; i++)
-                {
-                    try
-                    {
-                        discPage = DownloadString(string.Format(Constants.WipDiscPageUrl, +id));
-                        break;
-                    }
-                    catch { }
-                }
+                string discPageUri = string.Format(Constants.WipDiscPageUrl, +id);
+                string discPage = await DownloadString(discPageUri, retries: 3);
 
-                if (discPage.Contains($"WIP disc with ID \"{id}\" doesn't exist"))
+                if (discPage == null || discPage.Contains($"WIP disc with ID \"{id}\" doesn't exist"))
                 {
                     try
                     {
@@ -736,7 +652,7 @@ namespace RedumpLib.Web
         /// <param name="url">Base URL to download using</param>
         /// <param name="system">Systems to download packs for</param>
         /// <param name="title">Name of the pack that is downloading</param>
-        public Dictionary<RedumpSystem, byte[]> DownloadPacks(string url, RedumpSystem?[] systems, string title)
+        public async Task<Dictionary<RedumpSystem, byte[]>> DownloadPacks(string url, RedumpSystem?[] systems, string title)
         {
             var packsDictionary = new Dictionary<RedumpSystem, byte[]>();
 
@@ -757,7 +673,7 @@ namespace RedumpLib.Web
                     continue;
 
                 Console.Write($"\r{longName}{new string(' ', Console.BufferWidth - longName.Length - 1)}");
-                byte[] pack = DownloadSinglePack(url, system);
+                byte[] pack = await DownloadSinglePack(url, system);
                 if (pack != null)
                     packsDictionary.Add(system.Value, pack);
             }
@@ -772,11 +688,11 @@ namespace RedumpLib.Web
         /// Download a set of packs
         /// </summary> 
         /// <param name="url">Base URL to download using</param>
-        /// <param name="system">Systems to download packs for</param>
+        /// <param name="systems">Systems to download packs for</param>
         /// <param name="title">Name of the pack that is downloading</param>
         /// <param name="outDir">Output directory to save data to</param>
         /// <param name="subfolder">Named subfolder for the pack, used optionally</param>
-        public void DownloadPacks(string url, RedumpSystem?[] systems, string title, string outDir, string subfolder)
+        public async Task<bool> DownloadPacks(string url, RedumpSystem?[] systems, string title, string outDir, string subfolder)
         {
             Console.WriteLine($"Downloading {title}");
             foreach (var system in systems)
@@ -795,11 +711,62 @@ namespace RedumpLib.Web
                     continue;
 
                 Console.Write($"\r{longName}{new string(' ', Console.BufferWidth - longName.Length - 1)}");
-                DownloadSinglePack(url, system, outDir, subfolder);
+                await DownloadSinglePack(url, system, outDir, subfolder);
             }
 
             Console.Write($"\rComplete!{new string(' ', Console.BufferWidth - 10)}");
             Console.WriteLine();
+            return true;
+        }
+
+        /// <summary>
+        /// Download from a URI to a local file
+        /// </summary>
+        /// <param name="uri">Remote URI to retrieve</param>
+        /// <param name="fileName">Filename to write to</param>
+        /// <returns>The remote filename from the URI, null on error</returns>
+        private async Task<string> DownloadFile(string uri, string fileName)
+        {
+            // Make the call to get the file
+            var response = await GetAsync(uri);
+            if (response?.Content?.Headers == null || !response.IsSuccessStatusCode)
+            {
+                Console.WriteLine($"Could not download {uri}");
+                return null;
+            }
+
+            // Copy the data to a local temp file
+            using (var responseStream = await response.Content.ReadAsStreamAsync())
+            using (var tempFileStream = File.OpenWrite(fileName))
+            {
+                responseStream.CopyTo(tempFileStream);
+            }
+
+            return response.Content.Headers.ContentDisposition?.FileName?.Replace("\"", "");
+        }
+
+        /// <summary>
+        /// Download from a URI to a string
+        /// </summary>
+        /// <param name="uri">Remote URI to retrieve</param>
+        /// <param name="retries">Number of times to retry on error</param>
+        /// <returns>String from the URI, null on error</returns>
+        private async Task<string> DownloadString(string uri, int retries = 3)
+        {
+            // Only retry a positive number of times
+            if (retries <= 0)
+                return null;
+
+            for (int i = 0; i < retries; i++)
+            {
+                try
+                {
+                    return await GetStringAsync(uri);
+                }
+                catch { }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -811,23 +778,27 @@ namespace RedumpLib.Web
         /// <param name="subfolder">Optional subfolder to append to the path</param>
         private static void MoveOrDelete(string tempfile, string newfile, string outDir, string subfolder)
         {
-            if (!string.IsNullOrWhiteSpace(newfile))
+            // If we don't have a file to move to, just delete the temp file
+            if (string.IsNullOrWhiteSpace(newfile))
             {
-                if (!string.IsNullOrWhiteSpace(subfolder))
-                {
-                    if (!Directory.Exists(Path.Combine(outDir, subfolder)))
-                        Directory.CreateDirectory(Path.Combine(outDir, subfolder));
-
-                    newfile = Path.Combine(subfolder, newfile);
-                }
-
-                if (File.Exists(Path.Combine(outDir, newfile)))
-                    File.Delete(tempfile);
-                else
-                    File.Move(tempfile, Path.Combine(outDir, newfile));
-            }
-            else
                 File.Delete(tempfile);
+                return;
+            }
+
+            // If we have a subfolder, create it and update the newfile name
+            if (!string.IsNullOrWhiteSpace(subfolder))
+            {
+                if (!Directory.Exists(Path.Combine(outDir, subfolder)))
+                    Directory.CreateDirectory(Path.Combine(outDir, subfolder));
+
+                newfile = Path.Combine(subfolder, newfile);
+            }
+
+            // If the file already exists, don't overwrite it
+            if (File.Exists(Path.Combine(outDir, newfile)))
+                File.Delete(tempfile);
+            else
+                File.Move(tempfile, Path.Combine(outDir, newfile));
         }
 
         #endregion

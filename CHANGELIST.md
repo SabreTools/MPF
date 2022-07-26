@@ -99,6 +99,7 @@
 - Fix .bin file paths; update internal filename generation
 - Disable nonstandard BD-ROM sizes
 - Trim leading file paths for XBONE
+- Give .NET 6 priority for web calls
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

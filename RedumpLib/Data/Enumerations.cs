@@ -79,10 +79,10 @@ namespace RedumpLib.Data
 
         [HumanReadable(LongName = "DVD-9")]
         DVD9,
-        
+
         [HumanReadable(LongName = "GD-ROM")]
         GDROM,
-        
+
         [HumanReadable(LongName = "HD-DVD SL")]
         HDDVDSL,
 
@@ -91,22 +91,22 @@ namespace RedumpLib.Data
 
         [HumanReadable(LongName = "MIL-CD")]
         MILCD,
-        
+
         [HumanReadable(LongName = "Nintendo GameCube Game Disc")]
         NintendoGameCubeGameDisc,
-        
+
         [HumanReadable(LongName = "Nintendo Wii Optical Disc SL")]
         NintendoWiiOpticalDiscSL,
 
         [HumanReadable(LongName = "Nintendo Wii Optical Disc DL")]
         NintendoWiiOpticalDiscDL,
-        
+
         [HumanReadable(LongName = "Nintendo Wii U Optical Disc SL")]
         NintendoWiiUOpticalDiscSL,
-        
+
         [HumanReadable(LongName = "UMD SL")]
         UMDSL,
-        
+
         [HumanReadable(LongName = "UMD DL")]
         UMDDL,
     }
@@ -492,7 +492,7 @@ namespace RedumpLib.Data
         [Language(LongName = "Erzya", ThreeLetterCode = "myv")]
         Erzya,
 
-        [Language(LongName = "Esperanto", TwoLetterCode="eo", ThreeLetterCode = "epo")]
+        [Language(LongName = "Esperanto", TwoLetterCode = "eo", ThreeLetterCode = "epo")]
         Esperanto,
 
         [Language(LongName = "Estonian", TwoLetterCode = "et", ThreeLetterCode = "est")]
@@ -1113,7 +1113,7 @@ namespace RedumpLib.Data
         // Ossetian; Ossetic
         [Language(LongName = "Ossetian", TwoLetterCode = "os", ThreeLetterCode = "oss")]
         Ossetian,
-        
+
         #endregion
 
         #region P
@@ -1774,7 +1774,7 @@ namespace RedumpLib.Data
 
         [HumanReadable(LongName = "Language selector")]
         LanguageSelector,
-        
+
         [HumanReadable(LongName = "Options menu")]
         OptionsMenu,
     }
@@ -2224,7 +2224,7 @@ namespace RedumpLib.Data
 
         [System(Category = SystemCategory.Computer, LongName = "IBM PC compatible", ShortName = "pc", HasCues = true, HasDat = true, HasLsd = true, HasSbi = true)]
         IBMPCcompatible,
-        
+
         [System(Category = SystemCategory.Computer, LongName = "NEC PC-88 series", ShortName = "pc-88", HasCues = true, HasDat = true)]
         NECPC88series,
 
@@ -2396,7 +2396,7 @@ namespace RedumpLib.Data
 
         [System(Category = SystemCategory.Arcade, LongName = "TAB-Austria Quizard", ShortName = "quizard", HasCues = true, HasDat = true)]
         TABAustriaQuizard,
-        
+
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Tsunami TsuMo Multi-Game Motion System")]
         TsunamiTsuMoMultiGameMotionSystem,
 

@@ -67,7 +67,7 @@ namespace RedumpLib.Data
 
         [JsonProperty(PropertyName = "artifacts", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Dictionary<string, string> Artifacts { get; set; } = new Dictionary<string, string>();
-    
+
         public object Clone()
         {
             return new SubmissionInfo

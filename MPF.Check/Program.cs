@@ -33,7 +33,11 @@ namespace MPF.Check
             protectionProgress.ProgressChanged += ProgressUpdated;
 
             // Validate the supplied credentials
+#if NET48 || NETSTANDARD2_1
             (bool? _, string message) = RedumpWebClient.ValidateCredentials(options?.RedumpUsername, options?.RedumpPassword);
+#else
+            (bool? _, string message) = RedumpHttpClient.ValidateCredentials(options?.RedumpUsername, options?.RedumpPassword).ConfigureAwait(false).GetAwaiter().GetResult();
+#endif
             if (!string.IsNullOrWhiteSpace(message))
                 Console.WriteLine(message);
 

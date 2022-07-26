@@ -12,7 +12,7 @@ namespace RedumpLib.Data
     {
         #region Cross-Enumeration
 
-       /// <summary>
+        /// <summary>
         /// Get a list of valid MediaTypes for a given RedumpSystem
         /// </summary>
         /// <param name="system">RedumpSystem value to check</param>
@@ -2072,7 +2072,7 @@ namespace RedumpLib.Data
         }
 
         #endregion
-    
+
         #region System Category
 
         /// <summary>
