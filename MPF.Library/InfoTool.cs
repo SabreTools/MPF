@@ -2132,6 +2132,8 @@ namespace MPF.Library
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.AlternativeTitle, tags[SiteCode.AlternativeTitle]));
             if (tags.ContainsKey(SiteCode.AlternativeForeignTitle))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.AlternativeForeignTitle, tags[SiteCode.AlternativeForeignTitle]));
+            if (tags.ContainsKey(SiteCode.InternalName))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.InternalName, tags[SiteCode.InternalName]));
             if (tags.ContainsKey(SiteCode.InternalSerialName))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.InternalSerialName, tags[SiteCode.InternalSerialName]));
             if (tags.ContainsKey(SiteCode.VolumeLabel))

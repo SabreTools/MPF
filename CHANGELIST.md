@@ -105,6 +105,7 @@
 - Update to BurnOutSharp 2.3.1 (nw)
 - Fix serial parsing for Dreamcast
 - Fix missing parenthesis
+- Add internal name for Cleanrip outputs
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

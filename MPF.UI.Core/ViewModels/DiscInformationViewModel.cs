@@ -302,6 +302,8 @@ namespace MPF.UI.Core.ViewModels
                 Parent.EDC.Text = SubmissionInfo.EDC.EDC.LongName();
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.Header))
                 Parent.Header.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalName) != true)
+                Parent.InternalName.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalSerialName) != true)
                 Parent.InternalSerialName.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CopyProtection?.LibCrypt == null)
@@ -453,6 +455,8 @@ namespace MPF.UI.Core.ViewModels
                     Parent.DMIHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Filename))
                     Parent.Filename.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.InternalName))
+                    Parent.InternalName.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.InternalSerialName))
                     Parent.InternalSerialName.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.Multisession))
@@ -571,6 +575,7 @@ namespace MPF.UI.Core.ViewModels
             // Read-Only Information
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = Parent.DMIHash.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = Parent.Filename.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = Parent.InternalName.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = Parent.Multisession.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = Parent.PFIHash.Text;

@@ -84,10 +84,11 @@ namespace MPF.Modules.CleanRip
                     if (File.Exists(basePath + ".bca"))
                         info.Extras.BCA = GetBCA(basePath + ".bca");
 
-                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion))
+                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion, out string gcName))
                     {
                         info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
                         info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = gcName ?? string.Empty;
                     }
 
                     break;
@@ -204,8 +205,9 @@ namespace MPF.Modules.CleanRip
         /// <param name="dumpinfo">Path to discinfo file</param>
         /// <param name="region">Output region, if possible</param>
         /// <param name="version">Output internal version of the game</param>
+        /// <param name="name">Output internal name of the game</param>
         /// <returns></returns>
-        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version)
+        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version, out string name)
         {
             region = null; version = null;
 
@@ -227,11 +229,15 @@ namespace MPF.Modules.CleanRip
                         string line = sr.ReadLine().Trim();
                         if (line.StartsWith("Version"))
                         {
-                            version = line.Substring(9);
+                            version = line.Substring("Version: ".Length);
+                        }
+                        else if (line.StartsWith("Internal Name"))
+                        {
+                            name = line.Substring("Internal Name: ".Length);
                         }
                         else if (line.StartsWith("Filename"))
                         {
-                            string serial = line.Substring(10);
+                            string serial = line.Substring("Filename: ".Length);
 
                             // char gameType = serial[0];
                             // string gameid = serial[1] + serial[2];

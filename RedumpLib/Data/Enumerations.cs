@@ -3557,6 +3557,10 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:GTID]", LongName = "<b>GT Interactive ID</b>:")]
         GTInteractiveID,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Internal Name</b>:", LongName = "<b>Internal Name</b>:")]
+        InternalName,
+
         [HumanReadable(ShortName = "[T:ISN]", LongName = "<b>Internal Serial</b>:")]
         InternalSerialName,
 
