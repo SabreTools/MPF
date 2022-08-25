@@ -107,6 +107,7 @@
 - Fix missing parenthesis
 - Add internal name for Cleanrip outputs
 - Fix psxt001z namespace
+- Fix missing assignment
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

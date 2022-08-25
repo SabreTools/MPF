@@ -209,7 +209,7 @@ namespace MPF.Modules.CleanRip
         /// <returns></returns>
         private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version, out string name)
         {
-            region = null; version = null;
+            region = null; version = null; name = null;
 
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dumpinfo))
