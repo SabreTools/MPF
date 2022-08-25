@@ -212,7 +212,7 @@ namespace MPF.Core.Data
             catch { }
 
             // Mattel Fisher-Price iXL
-            if (File.Exists(Path.Combine(drivePath, "iXL", "iXLUpdater.exe"))
+            if (File.Exists(Path.Combine(drivePath, "iXL", "iXLUpdater.exe")))
             {
                 return RedumpSystem.MattelFisherPriceiXL;
             }
