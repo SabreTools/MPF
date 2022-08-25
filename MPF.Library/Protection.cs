@@ -26,13 +26,13 @@ namespace MPF.Library
             {
                 var found = await Task.Run(() =>
                 {
-                    var scanner = new Scanner(progress)
-                    {
-                        IncludeDebug = options.IncludeDebugProtectionInformation,
-                        ScanAllFiles = options.ForceScanningForProtection,
-                        ScanArchives = options.ScanArchivesForProtection,
-                        ScanPackers = options.ScanPackersForProtection,
-                    };
+                    // TODO: Remove options.ForceScanningForProtection
+                    var scanner = new Scanner(
+                        options.ScanArchivesForProtection,
+                        options.ScanPackersForProtection,
+                        options.IncludeDebugProtectionInformation,
+                        progress);
+
                     return scanner.GetProtections(path);
                 });
 
