@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using BurnOutSharp.External.psxt001z;
 using BurnOutSharp.ProtectionType;
 using MPF.Core.Data;
+using psxt001z;
 
 namespace MPF.Library
 {
