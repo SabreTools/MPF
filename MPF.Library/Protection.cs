@@ -98,7 +98,7 @@ namespace MPF.Library
                         try
                         {
                             byte[] fileContent = File.ReadAllBytes(file);
-                            string protection = antiModchip.CheckContents(file, fileContent, false, null, null);
+                            string protection = antiModchip.CheckContents(file, fileContent, false);
                             if (!string.IsNullOrWhiteSpace(protection))
                                 return true;
                         }
