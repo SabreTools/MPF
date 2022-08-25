@@ -103,6 +103,7 @@
 - Update to BurnOutSharp 2.3.0 (nw)
 - Add Mattel Fisher-Price iXL detection
 - Update to BurnOutSharp 2.3.1 (nw)
+- Fix serial parsing for Dreamcast
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
