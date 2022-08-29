@@ -110,6 +110,7 @@
 - Fix missing assignment
 - Update to new constructor
 - Update PSX content check
+- Update Aaru submodule to latest devel
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
