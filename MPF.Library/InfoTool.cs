@@ -237,6 +237,7 @@ namespace MPF.Library
                 case RedumpSystem.PalmOS:
                 case RedumpSystem.PocketPC:
                 case RedumpSystem.RainbowDisc:
+                case RedumpSystem.SonyElectricBook:
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
                     (string protectionString, Dictionary<string, List<string>> fullProtections) = await GetCopyProtection(drive, options, protectionProgress);
                     info.CopyProtection.Protection = protectionString;

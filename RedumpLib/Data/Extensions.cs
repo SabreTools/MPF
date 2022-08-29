@@ -673,6 +673,11 @@ namespace RedumpLib.Data
                     types.Add(MediaType.CDROM);
                     break;
 
+                // UNKNOWN
+                case RedumpSystem.SonyElectricBook:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://en.wikipedia.org/wiki/Super_Audio_CD
                 case RedumpSystem.SuperAudioCD:
                     types.Add(MediaType.CDROM);
@@ -2044,6 +2049,10 @@ namespace RedumpLib.Data
                 case "sega prologue21":
                 case "sega prologue 21":
                     return RedumpSystem.SegaPrologue21MultimediaKaraokeSystem;
+                case "electricbook":
+                case "sonyelectricbook":
+                case "sony electric book":
+                    return RedumpSystem.SonyElectricBook;
                 case "sacd":
                 case "superaudiocd":
                 case "super audio cd":
