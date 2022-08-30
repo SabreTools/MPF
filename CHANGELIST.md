@@ -113,6 +113,7 @@
 - Update Aaru submodule to latest devel
 - Add Sony Electronic Book system
 - Verify GD-ROM outputs, finally
+- Electronic not Electric
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

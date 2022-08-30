@@ -468,7 +468,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.EnhancedCD:
                 case RedumpSystem.IBMPCcompatible:
                 case RedumpSystem.RainbowDisc:
-                case RedumpSystem.SonyElectricBook:
+                case RedumpSystem.SonyElectronicBook:
                     if (File.Exists($"{basePath}_subIntention.txt"))
                     {
                         FileInfo fi = new FileInfo($"{basePath}_subIntention.txt");

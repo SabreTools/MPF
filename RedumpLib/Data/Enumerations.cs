@@ -2446,8 +2446,8 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Other, LongName = "Sega Prologue 21 Multimedia Karaoke System", ShortName = "sp21", HasCues = true, HasDat = true)]
         SegaPrologue21MultimediaKaraokeSystem,
 
-        [System(Category = SystemCategory.Other, Available = false, LongName = "Sony Electric Book")]
-        SonyElectricBook,
+        [System(Category = SystemCategory.Other, Available = false, LongName = "Sony Electronic Book")]
+        SonyElectronicBook,
 
         [System(Category = SystemCategory.Other, Available = false, LongName = "Super Audio CD")]
         SuperAudioCD,
