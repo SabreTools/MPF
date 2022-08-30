@@ -230,7 +230,7 @@ namespace MPF.Modules.DiscImageCreator
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                case MediaType.GDROM:
                     if (!File.Exists($"{basePath}.cue"))
                         missingFiles.Add($"{basePath}.cue");
                     if (!File.Exists($"{basePath}.img") && !File.Exists($"{basePath}.imgtmp"))
@@ -245,8 +245,13 @@ namespace MPF.Modules.DiscImageCreator
 
                     if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
                     {
-                        if (!File.Exists($"{basePath}.ccd"))
-                            missingFiles.Add($"{basePath}.ccd");
+                        // GD-ROM and GD-R don't output this for the HD area
+                        if (this.Type != MediaType.GDROM)
+                        {
+                            if (!File.Exists($"{basePath}.ccd"))
+                                missingFiles.Add($"{basePath}.ccd");
+                        }
+                        
                         if (!File.Exists($"{basePath}.dat"))
                             missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
@@ -1487,7 +1492,7 @@ namespace MPF.Modules.DiscImageCreator
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                case MediaType.GDROM:
                     if (File.Exists($"{basePath}.c2"))
                         logFiles.Add($"{basePath}.c2");
                     if (File.Exists($"{basePath}_c2Error.txt"))

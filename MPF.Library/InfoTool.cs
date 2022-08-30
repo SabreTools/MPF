@@ -115,7 +115,7 @@ namespace MPF.Library
             switch (mediaType)
             {
                 case MediaType.CDROM:
-                case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                case MediaType.GDROM:
                     info.CommonDiscInfo.Layer0MasteringRing = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
