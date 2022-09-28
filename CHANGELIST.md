@@ -122,6 +122,7 @@
 - Add Redumper command support and reset
 - Add Redumper dumping command
 - Add Redumper command validation
+- Add Redumper command generation
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

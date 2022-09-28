@@ -179,7 +179,255 @@ namespace MPF.Modules.Redumper
         {
             List<string> parameters = new List<string>();
 
-            // TODO: Fill out
+            if (BaseCommand == null)
+                BaseCommand = CommandStrings.NONE;
+
+            if (!string.IsNullOrWhiteSpace(BaseCommand))
+                parameters.Add(BaseCommand);
+            else
+                return null;
+
+            // Audio Silence Threshold
+            if (IsFlagSupported(FlagStrings.AudioSilenceThreshold))
+            {
+                if (this[FlagStrings.AudioSilenceThreshold] == true)
+                {
+                    if (AudioSilenceThresholdValue != null && AudioSilenceThresholdValue >= 0)
+                        parameters.Add($"{FlagStrings.AudioSilenceThreshold}={AudioSilenceThresholdValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // CD-i Correct Offset
+            if (IsFlagSupported(FlagStrings.CDiCorrectOffset))
+            {
+                if (this[FlagStrings.CDiCorrectOffset] == true)
+                    parameters.Add(FlagStrings.CDiCorrectOffset);
+            }
+
+            // CD-i Ready Normalize
+            if (IsFlagSupported(FlagStrings.CDiReadyNormalize))
+            {
+                if (this[FlagStrings.CDiReadyNormalize] == true)
+                    parameters.Add(FlagStrings.CDiReadyNormalize);
+            }
+
+            // Descramble New
+            if (IsFlagSupported(FlagStrings.DescrambleNew))
+            {
+                if (this[FlagStrings.DescrambleNew] == true)
+                    parameters.Add(FlagStrings.DescrambleNew);
+            }
+
+            // Drive
+            if (IsFlagSupported(FlagStrings.Drive))
+            {
+                if (this[FlagStrings.Drive] == true)
+                {
+                    if (DriveValue != null)
+                        parameters.Add($"{FlagStrings.Drive}={DriveValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // ForceOffset
+            if (IsFlagSupported(FlagStrings.ForceOffset))
+            {
+                if (this[FlagStrings.ForceOffset] == true)
+                {
+                    if (ForceOffsetValue != null)
+                        parameters.Add($"{FlagStrings.ForceOffset}={ForceOffsetValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Force QTOC
+            if (IsFlagSupported(FlagStrings.ForceQTOC))
+            {
+                if (this[FlagStrings.ForceQTOC] == true)
+                    parameters.Add(FlagStrings.ForceQTOC);
+            }
+
+            // Force Split
+            if (IsFlagSupported(FlagStrings.ForceSplit))
+            {
+                if (this[FlagStrings.ForceSplit] == true)
+                    parameters.Add(FlagStrings.ForceSplit);
+            }
+
+            // Force TOC
+            if (IsFlagSupported(FlagStrings.ForceTOC))
+            {
+                if (this[FlagStrings.ForceTOC] == true)
+                    parameters.Add(FlagStrings.ForceTOC);
+            }
+
+            // Help
+            if (IsFlagSupported(FlagStrings.HelpLong))
+            {
+                if (this[FlagStrings.HelpLong] == true)
+                    parameters.Add(FlagStrings.HelpLong);
+            }
+
+            // ISO9660 Trim
+            if (IsFlagSupported(FlagStrings.ISO9660Trim))
+            {
+                if (this[FlagStrings.ISO9660Trim] == true)
+                    parameters.Add(FlagStrings.ISO9660Trim);
+            }
+
+            // Image Name
+            if (IsFlagSupported(FlagStrings.ImageName))
+            {
+                if (this[FlagStrings.ImageName] == true)
+                {
+                    if (!string.IsNullOrWhiteSpace(ImageNameValue))
+                        parameters.Add($"{FlagStrings.ImageName}={ImageNameValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Image Path
+            if (IsFlagSupported(FlagStrings.ImagePath))
+            {
+                if (this[FlagStrings.ImagePath] == true)
+                {
+                    if (!string.IsNullOrWhiteSpace(ImagePathValue))
+                        parameters.Add($"{FlagStrings.ImagePath}={ImagePathValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Leave Unchanged
+            if (IsFlagSupported(FlagStrings.LeaveUnchanged))
+            {
+                if (this[FlagStrings.LeaveUnchanged] == true)
+                    parameters.Add(FlagStrings.LeaveUnchanged);
+            }
+
+            // Overwrite
+            if (IsFlagSupported(FlagStrings.Overwrite))
+            {
+                if (this[FlagStrings.Overwrite] == true)
+                    parameters.Add(FlagStrings.Overwrite);
+            }
+
+            // Refine Subchannel
+            if (IsFlagSupported(FlagStrings.RefineSubchannel))
+            {
+                if (this[FlagStrings.RefineSubchannel] == true)
+                    parameters.Add(FlagStrings.RefineSubchannel);
+            }
+
+            // Retries
+            if (IsFlagSupported(FlagStrings.Retries))
+            {
+                if (this[FlagStrings.Retries] == true)
+                {
+                    if (RetriesValue != null && RetriesValue >= 0)
+                        parameters.Add($"{FlagStrings.Retries}={RetriesValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Ring Size
+            if (IsFlagSupported(FlagStrings.RingSize))
+            {
+                if (this[FlagStrings.RingSize] == true)
+                {
+                    if (RingSizeValue != null && RingSizeValue >= 0)
+                        parameters.Add($"{FlagStrings.RingSize}={RingSizeValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Skip
+            if (IsFlagSupported(FlagStrings.Skip))
+            {
+                if (this[FlagStrings.Skip] == true)
+                {
+                    if (SkipValue != null && SkipValue >= 0))
+                        parameters.Add($"{FlagStrings.Skip}={SkipValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Skip Fill
+            if (IsFlagSupported(FlagStrings.SkipFill))
+            {
+                if (this[FlagStrings.SkipFill] == true)
+                {
+                    if (SkipFillValue != null && SkipFillValue >= 0)
+                        parameters.Add($"{FlagStrings.SkipFill}={SkipFillValue:x}");
+                    else
+                        return null;
+                }
+            }
+
+            // Skip Lead-In
+            if (IsFlagSupported(FlagStrings.SkipLeadIn))
+            {
+                if (this[FlagStrings.SkipLeadIn] == true)
+                    parameters.Add(FlagStrings.SkipLeadIn);
+            }
+
+            // Skip Size
+            if (IsFlagSupported(FlagStrings.SkipSize))
+            {
+                if (this[FlagStrings.SkipSize] == true)
+                {
+                    if (SkipSizeValue != null && SkipSizeValue >= 0)
+                        parameters.Add($"{FlagStrings.SkipSize}={SkipSizeValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Speed
+            if (IsFlagSupported(FlagStrings.Speed))
+            {
+                if (this[FlagStrings.Speed] == true)
+                {
+                    if (SpeedValue != null && SkipSizeValue >= 1)
+                        parameters.Add($"{FlagStrings.Speed}={SpeedValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Stop LBA
+            if (IsFlagSupported(FlagStrings.StopLBA))
+            {
+                if (this[FlagStrings.StopLBA] == true)
+                {
+                    if (StopLBAValue != null)
+                        parameters.Add($"{FlagStrings.StopLBA}={StopLBAValue}");
+                    else
+                        return null;
+                }
+            }
+
+            // Unsupported
+            if (IsFlagSupported(FlagStrings.Unsupported))
+            {
+                if (this[FlagStrings.Unsupported] == true)
+                    parameters.Add(FlagStrings.Unsupported);
+            }
+
+            // Verbose
+            if (IsFlagSupported(FlagStrings.Verbose))
+            {
+                if (this[FlagStrings.Verbose] == true)
+                    parameters.Add(FlagStrings.Verbose);
+            }
 
             return string.Join(" ", parameters);
         }
