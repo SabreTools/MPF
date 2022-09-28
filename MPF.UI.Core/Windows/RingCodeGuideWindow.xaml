@@ -80,7 +80,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Image Grid.Row="0" Source="/Images/ring-code-guide-1-layer.png"
+                        <Image Grid.Row="0" Source="../Images/ring-code-guide-1-layer.png"
                                HorizontalAlignment="Center" Stretch="Fill" Width="500" Height="500"
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
@@ -121,7 +121,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <Image Grid.Row="0" Source="/Images/ring-code-guide-2-layer.png"
+                        <Image Grid.Row="0" Source="../Images/ring-code-guide-2-layer.png"
                                HorizontalAlignment="Center" Stretch="Fill" Width="475" Height="500"
                                RenderOptions.BitmapScalingMode="HighQuality" />
                         <Label Grid.Row="1">
