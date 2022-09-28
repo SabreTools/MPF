@@ -125,6 +125,7 @@
 - Add Redumper command generation
 - Create Redumper extensions class
 - Minor Redumper cleanup
+- Add important Redumper note
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
