@@ -22,6 +22,7 @@
         Aaru,
         DD,
         DiscImageCreator,
+        Redumper,
 
         // Verification support only
         CleanRip,

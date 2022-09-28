@@ -115,6 +115,7 @@
 - Verify GD-ROM outputs, finally
 - Electronic not Electric
 - Fix ringcode guide images
+- Add skeleton for Redumper
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

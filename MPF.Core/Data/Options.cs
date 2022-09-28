@@ -40,6 +40,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Path to Redumper
+        /// </summary>
+        public string RedumperPath
+        {
+            get { return GetStringSetting(_settings, "RedumperPath", "Programs\\RedumperPath\\redumper.exe"); }
+            set { _settings["RedumperPath"] = value; }
+        }
+
+        /// <summary>
         /// Currently selected dumping program
         /// </summary>
         public InternalProgram InternalProgram

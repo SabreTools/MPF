@@ -185,6 +185,8 @@ namespace MPF.Core.Converters
                     return "dd";
                 case InternalProgram.DiscImageCreator:
                     return "DiscImageCreator";
+                case InternalProgram.Redumper:
+                    return "Redumper";
 
                 #endregion
 
@@ -233,6 +235,9 @@ namespace MPF.Core.Converters
                     return InternalProgram.DiscImageCreator;
                 case "dd":
                     return InternalProgram.DD;
+                case "rd:":
+                case "redumper":
+                    return InternalProgram.Redumper;
 
                 // Verification support only
                 case "cleanrip":

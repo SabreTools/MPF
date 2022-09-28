@@ -164,6 +164,10 @@ namespace MPF.Library
                     this.Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
 
+                case InternalProgram.Redumper:
+                    this.Parameters = new Modules.DD.Parameters(parameters) { ExecutablePath = Options.RedumperPath };
+                    break;
+
                 // Verification support only
                 case InternalProgram.CleanRip:
                     this.Parameters = new Modules.CleanRip.Parameters(parameters) { ExecutablePath = null };
@@ -216,6 +220,10 @@ namespace MPF.Library
 
                     case InternalProgram.DiscImageCreator:
                         Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        break;
+
+                    case InternalProgram.Redumper:
+                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
                         break;
 
                     // This should never happen, but it needs a fallback
