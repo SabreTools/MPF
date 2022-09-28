@@ -372,9 +372,11 @@ namespace MPF.Modules.Redumper
         {
             switch (this.BaseCommand)
             {
-                // TODO: Fill out
-                default:
+                case CommandStrings.CD:
+                case CommandStrings.Dump:
                     return true;
+                default:
+                    return false;
             }
         }
 

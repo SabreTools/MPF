@@ -120,6 +120,7 @@
 - Add Redumper constants
 - Add Redumper parameter values
 - Add Redumper command support and reset
+- Add Redumper dumping command
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
