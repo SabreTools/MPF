@@ -1451,6 +1451,7 @@ namespace MPF.Modules.DiscImageCreator
                 [CommandStrings.XBOX] = new List<string>()
                 {
                     FlagStrings.DisableBeep,
+                    FlagStrings.DVDReread,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.NoSkipSS,
                 },
