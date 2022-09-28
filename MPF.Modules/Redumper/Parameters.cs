@@ -615,7 +615,7 @@ namespace MPF.Modules.Redumper
         }
 
         /// <inheritdoc/>
-        public override string GetDefaultExtension(MediaType? mediaType) => ".bin"; // TODO: Fill out
+        public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
