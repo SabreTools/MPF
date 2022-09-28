@@ -932,6 +932,83 @@ namespace MPF.Modules
         }
 
         /// <summary>
+        /// Process a byte parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="flagString">Flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
+        protected byte? ProcessUInt8Parameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+            => ProcessUInt8Parameter(parts, null, flagString, ref i, missingAllowed);
+
+        /// <summary>
+        /// Process a byte parameter
+        /// </summary>
+        /// <param name="parts">List of parts to be referenced</param>
+        /// <param name="shortFlagString">Short flag string, if available</param>
+        /// <param name="longFlagString">Long flag string, if available</param>
+        /// <param name="i">Reference to the position in the parts</param>
+        /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
+        /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
+        protected byte? ProcessUInt8Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+        {
+            if (parts == null)
+                return null;
+
+            if (parts[i] == shortFlagString || parts[i] == longFlagString)
+            {
+                if (!IsFlagSupported(longFlagString))
+                {
+                    return null;
+                }
+                else if (!DoesExist(parts, i + 1))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (IsFlagSupported(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+                else if (!IsValidInt8(parts[i + 1]))
+                {
+                    if (missingAllowed)
+                        this[longFlagString] = true;
+
+                    return null;
+                }
+
+                this[longFlagString] = true;
+                i++;
+
+                (string value, long factor) = ExtractFactorFromValue(parts[i]);
+                return (byte)(byte.Parse(value) * factor);
+            }
+            else if (parts[i].StartsWith(shortFlagString + "=") || parts[i].StartsWith(longFlagString + "="))
+            {
+                if (!IsFlagSupported(longFlagString))
+                    return null;
+
+                string[] commandParts = parts[i].Split('=');
+                if (commandParts.Length != 2)
+                    return null;
+
+                string valuePart = commandParts[1];
+
+                (string value, long factor) = ExtractFactorFromValue(valuePart);
+                return (byte)(byte.Parse(value) * factor);
+            }
+
+            return Byte.MinValue;
+        }
+
+        /// <summary>
         /// Get yhe trimmed value and multiplication factor from a value
         /// </summary>
         /// <param name="value">String value to treat as suffixed number</param>
