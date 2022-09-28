@@ -185,7 +185,183 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override Dictionary<string, List<string>> GetCommandSupport()
         {
-            return new Dictionary<string, List<string>>();
+            // TODO: Figure out actual support for each flag
+            return new Dictionary<string, List<string>>()
+            {
+                [CommandStrings.NONE] = new List<string>()
+                {
+                    FlagStrings.HelpLong,
+                    FlagStrings.HelpShort,
+                },
+                [CommandStrings.CD] = new List<string>()
+                {
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CDiCorrectOffset,
+                    FlagStrings.CDiReadyNormalize,
+                    FlagStrings.DescrambleNew,
+                    FlagStrings.Drive,
+                    FlagStrings.ForceOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.ForceSplit,
+                    FlagStrings.ForceTOC,
+                    FlagStrings.ISO9660Trim,
+                    FlagStrings.ImageName,
+                    FlagStrings.ImagePath,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.Overwrite,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Retries,
+                    FlagStrings.RingSize,
+                    FlagStrings.Skip,
+                    FlagStrings.SkipFill,
+                    FlagStrings.SkipLeadIn,
+                    FlagStrings.SkipSize,
+                    FlagStrings.Speed,
+                    FlagStrings.StopLBA,
+                    FlagStrings.Unsupported,
+                    FlagStrings.Verbose,
+                },
+                [CommandStrings.Dump] = new List<string>()
+                {
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CDiCorrectOffset,
+                    FlagStrings.CDiReadyNormalize,
+                    FlagStrings.DescrambleNew,
+                    FlagStrings.Drive,
+                    FlagStrings.ForceOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.ForceSplit,
+                    FlagStrings.ForceTOC,
+                    FlagStrings.ISO9660Trim,
+                    FlagStrings.ImageName,
+                    FlagStrings.ImagePath,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.Overwrite,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Retries,
+                    FlagStrings.RingSize,
+                    FlagStrings.Skip,
+                    FlagStrings.SkipFill,
+                    FlagStrings.SkipLeadIn,
+                    FlagStrings.SkipSize,
+                    FlagStrings.Speed,
+                    FlagStrings.StopLBA,
+                    FlagStrings.Unsupported,
+                    FlagStrings.Verbose,
+                },
+                [CommandStrings.Info] = new List<string>()
+                {
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CDiCorrectOffset,
+                    FlagStrings.CDiReadyNormalize,
+                    FlagStrings.DescrambleNew,
+                    FlagStrings.Drive,
+                    FlagStrings.ForceOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.ForceSplit,
+                    FlagStrings.ForceTOC,
+                    FlagStrings.ISO9660Trim,
+                    FlagStrings.ImageName,
+                    FlagStrings.ImagePath,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.Overwrite,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Retries,
+                    FlagStrings.RingSize,
+                    FlagStrings.Skip,
+                    FlagStrings.SkipFill,
+                    FlagStrings.SkipLeadIn,
+                    FlagStrings.SkipSize,
+                    FlagStrings.Speed,
+                    FlagStrings.StopLBA,
+                    FlagStrings.Unsupported,
+                    FlagStrings.Verbose,
+                },
+                [CommandStrings.Protection] = new List<string>()
+                {
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CDiCorrectOffset,
+                    FlagStrings.CDiReadyNormalize,
+                    FlagStrings.DescrambleNew,
+                    FlagStrings.Drive,
+                    FlagStrings.ForceOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.ForceSplit,
+                    FlagStrings.ForceTOC,
+                    FlagStrings.ISO9660Trim,
+                    FlagStrings.ImageName,
+                    FlagStrings.ImagePath,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.Overwrite,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Retries,
+                    FlagStrings.RingSize,
+                    FlagStrings.Skip,
+                    FlagStrings.SkipFill,
+                    FlagStrings.SkipLeadIn,
+                    FlagStrings.SkipSize,
+                    FlagStrings.Speed,
+                    FlagStrings.StopLBA,
+                    FlagStrings.Unsupported,
+                    FlagStrings.Verbose,
+                },
+                [CommandStrings.Refine] = new List<string>()
+                {
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CDiCorrectOffset,
+                    FlagStrings.CDiReadyNormalize,
+                    FlagStrings.DescrambleNew,
+                    FlagStrings.Drive,
+                    FlagStrings.ForceOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.ForceSplit,
+                    FlagStrings.ForceTOC,
+                    FlagStrings.ISO9660Trim,
+                    FlagStrings.ImageName,
+                    FlagStrings.ImagePath,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.Overwrite,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Retries,
+                    FlagStrings.RingSize,
+                    FlagStrings.Skip,
+                    FlagStrings.SkipFill,
+                    FlagStrings.SkipLeadIn,
+                    FlagStrings.SkipSize,
+                    FlagStrings.Speed,
+                    FlagStrings.StopLBA,
+                    FlagStrings.Unsupported,
+                    FlagStrings.Verbose,
+                },
+                [CommandStrings.Split] = new List<string>()
+                {
+                    FlagStrings.AudioSilenceThreshold,
+                    FlagStrings.CDiCorrectOffset,
+                    FlagStrings.CDiReadyNormalize,
+                    FlagStrings.DescrambleNew,
+                    FlagStrings.Drive,
+                    FlagStrings.ForceOffset,
+                    FlagStrings.ForceQTOC,
+                    FlagStrings.ForceSplit,
+                    FlagStrings.ForceTOC,
+                    FlagStrings.ISO9660Trim,
+                    FlagStrings.ImageName,
+                    FlagStrings.ImagePath,
+                    FlagStrings.LeaveUnchanged,
+                    FlagStrings.Overwrite,
+                    FlagStrings.RefineSubchannel,
+                    FlagStrings.Retries,
+                    FlagStrings.RingSize,
+                    FlagStrings.Skip,
+                    FlagStrings.SkipFill,
+                    FlagStrings.SkipLeadIn,
+                    FlagStrings.SkipSize,
+                    FlagStrings.Speed,
+                    FlagStrings.StopLBA,
+                    FlagStrings.Unsupported,
+                    FlagStrings.Verbose,
+                },
+            };
         }
 
         /// <inheritdoc/>
@@ -205,9 +381,22 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         protected override void ResetValues()
         {
-            BaseCommand = string.Empty; // TODO: Fill out
+            BaseCommand = CommandStrings.NONE;
 
             flags = new Dictionary<string, bool?>();
+
+            AudioSilenceThresholdValue = null;
+            DriveValue = null;
+            ForceFoffsetValue = null;
+            ImageNameValue = null;
+            ImagePathValue = null;
+            RetriesValue = null;
+            RingSizeValue = null;
+            SkipValue = null;
+            SkipFillValue = null;
+            SkipSizeValue = null;
+            SpeedValue = null;
+            StopLBAValue = null;
         }
 
         /// <inheritdoc/>

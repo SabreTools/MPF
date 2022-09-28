@@ -119,6 +119,7 @@
 - Download Redumper with AppVeyor
 - Add Redumper constants
 - Add Redumper parameter values
+- Add Redumper command support and reset
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
