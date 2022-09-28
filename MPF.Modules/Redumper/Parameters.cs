@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using MPF.Core.Data;
 using RedumpLib.Data;
@@ -353,7 +351,7 @@ namespace MPF.Modules.Redumper
             {
                 if (this[FlagStrings.Skip] == true)
                 {
-                    if (SkipValue != null && SkipValue >= 0))
+                    if (!string.IsNullOrWhiteSpace(SkipValue))
                         parameters.Add($"{FlagStrings.Skip}={SkipValue}");
                     else
                         return null;
@@ -616,6 +614,16 @@ namespace MPF.Modules.Redumper
 
         /// <inheritdoc/>
         public override string GetDefaultExtension(MediaType? mediaType) => Converters.Extension(mediaType);
+
+        /// <inheritdoc/>
+        public override List<string> GetLogFilePaths(string basePath)
+        {
+            List<string> logFiles = new List<string>();
+
+            // TODO: Determine output logfiles for Redumper
+
+            return logFiles;
+        }
 
         /// <inheritdoc/>
         public override bool IsDumpingCommand()
