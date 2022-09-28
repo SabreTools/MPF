@@ -117,6 +117,7 @@
 - Fix ringcode guide images
 - Add skeleton for Redumper
 - Download Redumper with AppVeyor
+- Add Redumper constants
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
