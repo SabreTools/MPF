@@ -438,7 +438,7 @@ namespace MPF.Modules.DiscImageCreator
                     }
                     else if (this.Type == MediaType.BluRay)
                     {
-                        if (GetLayerbreak(Path.Combine(outputDirectory, $"{basePath}_PIC.bin"), out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
@@ -456,7 +456,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
-                        info.Extras.PIC = GetPIC(Path.Combine(outputDirectory, $"{basePath}_PIC.bin")) ?? "";
+                        info.Extras.PIC = GetPIC($"{basePath}_PIC.bin") ?? "";
 
                     break;
             }
@@ -751,12 +751,12 @@ namespace MPF.Modules.DiscImageCreator
                     info.Artifacts["mainError"] = GetBase64(GetFullFile($"{basePath}_mainError.txt"));
                 if (File.Exists($"{basePath}_mainInfo.txt"))
                     info.Artifacts["mainInfo"] = GetBase64(GetFullFile($"{basePath}_mainInfo.txt"));
-                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_PFI.bin")))
-                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_PFI.bin")));
-                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_PIC.bin")))
-                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_PFI.bin")));
-                //if (File.Exists(Path.Combine(outputDirectory, $"{basePath}_SS.bin")))
-                //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes(Path.Combine(outputDirectory, $"{basePath}_SS.bin")));
+                //if (File.Exists($"{basePath}_PFI.bin"))
+                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin"));
+                //if (File.Exists($"{basePath}_PIC.bin"))
+                //    info.Artifacts["pfi"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_PFI.bin"));
+                //if (File.Exists($"{basePath}_SS.bin"))
+                //    info.Artifacts["ss"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}_SS.bin"));
                 if (File.Exists($"{basePath}.sub"))
                     info.Artifacts["sub"] = Convert.ToBase64String(File.ReadAllBytes($"{basePath}.sub"));
                 if (File.Exists($"{basePath}_subError.txt"))
@@ -1563,14 +1563,14 @@ namespace MPF.Modules.DiscImageCreator
                     if (File.Exists($"{basePath}_volDesc.txt"))
                         logFiles.Add($"{basePath}_volDesc.txt");
 
-                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_DMI.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_DMI.bin"));
-                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_PFI.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_PFI.bin"));
-                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_PIC.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_PIC.bin"));
-                    if (File.Exists(Path.Combine(parentDirectory, $"{basePath}_SS.bin")))
-                        logFiles.Add(Path.Combine(parentDirectory, $"{basePath}_SS.bin"));
+                    if (File.Exists($"{basePath}_DMI.bin"))
+                        logFiles.Add($"{basePath}_DMI.bin");
+                    if (File.Exists($"{basePath}_PFI.bin"))
+                        logFiles.Add($"{basePath}_PFI.bin");
+                    if (File.Exists($"{basePath}_PIC.bin"))
+                        logFiles.Add($"{basePath}_PIC.bin");
+                    if (File.Exists($"{basePath}_SS.bin"))
+                        logFiles.Add($"{basePath}_SS.bin");
 
                     break;
 

@@ -127,6 +127,7 @@
 - Minor Redumper cleanup
 - Add important Redumper note
 - Update to DIC 20220909
+- Possibly fix PIC parsing
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
