@@ -296,6 +296,23 @@ namespace MPF.Core.Data
             }
             catch { }
 
+            // Sony PlayStation 4
+            // There are more possible paths that could be checked.
+            //  There are some entries that can be found on most PS4 discs:
+            //    "/app/GAME_SERIAL/app.pkg"
+            //    "/bd/param.sfo"
+            //    "/license/rif"
+            // There are also extra files that can be found on some discs:
+            //    "/patch/GAME_SERIAL/patch.pkg" can be found in Redump entry 66816.
+            //        Originally on disc as "/patch/CUSA11302/patch.pkg".
+            //        Is used as an on-disc update for the base game app without needing to get update from the internet.
+            //    "/addcont/GAME_SERIAL/CONTENT_ID/ac.pkg" can be found in Redump entry 97619.
+            //        Originally on disc as "/addcont/CUSA00288/FFXIVEXPS400001A/ac.pkg".
+            if (File.Exists(Path.Combine(drivePath, "PS4", "UPDATE", "PS4UPDATE.PUP")))
+            {
+                return RedumpSystem.SonyPlayStation4;
+            }
+
             // V.Tech V.Flash / V.Smile Pro
             if (File.Exists(Path.Combine(drivePath, "0SYSTEM")))
             {
