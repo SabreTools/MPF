@@ -291,7 +291,7 @@ namespace MPF.Core.Data
                     || Directory.Exists(Path.Combine(drivePath, "PS3_UPDATE"))
                     || File.Exists(Path.Combine(drivePath, "PS3_DISC.SFB")))
                 {
-                    return RedumpSystem.MicrosoftXbox360;
+                    return RedumpSystem.SonyPlayStation3;
                 }
             }
             catch { }
