@@ -284,6 +284,18 @@ namespace MPF.Core.Data
                 return RedumpSystem.SonyPlayStation;
             }
 
+            // Sony PlayStation 3
+            try
+            {
+                if (Directory.Exists(Path.Combine(drivePath, "PS3_GAME"))
+                    || Directory.Exists(Path.Combine(drivePath, "PS3_UPDATE"))
+                    || File.Exists(Path.Combine(drivePath, "PS3_DISC.SFB")))
+                {
+                    return RedumpSystem.MicrosoftXbox360;
+                }
+            }
+            catch { }
+
             // V.Tech V.Flash / V.Smile Pro
             if (File.Exists(Path.Combine(drivePath, "0SYSTEM")))
             {

@@ -128,6 +128,7 @@
 - Add important Redumper note
 - Update to DIC 20220909
 - Possibly fix PIC parsing
+- Add PS3 folder/file checks for detection
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

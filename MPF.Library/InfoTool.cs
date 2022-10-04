@@ -566,9 +566,9 @@ namespace MPF.Library
             }
         }
 
-#endregion
+        #endregion
 
-#region Information Output
+        #region Information Output
 
         /// <summary>
         /// Compress log files to save space
@@ -1139,9 +1139,9 @@ namespace MPF.Library
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
         }
 
-#endregion
+        #endregion
 
-#region Normalization
+        #region Normalization
 
         /// <summary>
         /// Adjust the disc type based on size and layerbreak information
@@ -1262,9 +1262,9 @@ namespace MPF.Library
             return (directory, filename);
         }
 
-#endregion
+        #endregion
 
-#region Web Calls
+        #region Web Calls
 
         /// <summary>
         /// Create a new SubmissionInfo object from a disc page
@@ -1287,7 +1287,7 @@ namespace MPF.Library
             try
             {
                 // Load the current disc page into an XML document
-                XmlDocument redumpPage = new XmlDocument() {PreserveWhitespace = true};
+                XmlDocument redumpPage = new XmlDocument() { PreserveWhitespace = true };
                 redumpPage.LoadXml(discData);
 
                 // If the current page isn't valid, we can't parse it
@@ -2044,9 +2044,9 @@ namespace MPF.Library
             return localCount == remoteCount;
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
 
         /// <summary>
         /// Format a single site tag to string
@@ -2250,7 +2250,7 @@ namespace MPF.Library
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Games, tags[SiteCode.Games]));
             if (tags.ContainsKey(SiteCode.NetYarozeGames))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.NetYarozeGames, tags[SiteCode.NetYarozeGames]));
-            
+
             // Demos
             if (tags.ContainsKey(SiteCode.PlayableDemos))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.PlayableDemos, tags[SiteCode.PlayableDemos]));
@@ -2276,6 +2276,6 @@ namespace MPF.Library
             return sorted;
         }
 
-#endregion
+        #endregion
     }
 }
