@@ -793,7 +793,15 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private void BrowseFolder()
         {
-            WinForms.FolderBrowserDialog folderDialog = new WinForms.FolderBrowserDialog { ShowNewFolderButton = false, SelectedPath = System.AppDomain.CurrentDomain.BaseDirectory };
+            string currentPath = App.Options.DefaultOutputPath;
+            if (string.IsNullOrWhiteSpace(currentPath) || !Directory.Exists(currentPath))
+                currentPath = System.AppDomain.CurrentDomain.BaseDirectory;
+
+            WinForms.FolderBrowserDialog folderDialog = new WinForms.FolderBrowserDialog
+            {
+                ShowNewFolderButton = false,
+                SelectedPath = currentPath,
+            };
             WinForms.DialogResult result = folderDialog.ShowDialog();
 
             if (result == WinForms.DialogResult.OK)
