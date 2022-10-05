@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MPF.Core.Converters;
 using MPF.Core.Data;
 using RedumpLib.Data;
 
@@ -127,6 +128,9 @@ namespace MPF.Modules.Redumper
         {
             // TODO: Fill in submission info specifics for Redumper
             string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // TODO: Determine if there's a Redumper version anywhere
+            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             switch (this.Type)
             {

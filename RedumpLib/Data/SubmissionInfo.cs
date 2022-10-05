@@ -12,7 +12,7 @@ namespace RedumpLib.Data
         /// Version of the current schema
         /// </summary>
         [JsonProperty(PropertyName = "schema_version", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int SchemaVersion { get; set; } = 1;
+        public int SchemaVersion { get; set; } = 2;
 
         /// <summary>
         /// Fully matched Redump ID
@@ -105,6 +105,10 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_media", Required = Required.AllowNull)]
         [JsonConverter(typeof(DiscTypeConverter))]
         public DiscType? Media { get; set; }
+
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_dumping_program", Required = Required.AllowNull)]
+        public string DumpingProgram { get; set; }
 
         [JsonProperty(PropertyName = "d_title", Required = Required.AllowNull)]
         public string Title { get; set; }
@@ -233,6 +237,7 @@ namespace RedumpLib.Data
             {
                 System = this.System,
                 Media = this.Media,
+                DumpingProgram = this.DumpingProgram,
                 Title = this.Title,
                 ForeignTitleNonLatin = this.ForeignTitleNonLatin,
                 DiscNumberLetter = this.DiscNumberLetter,

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MPF.Core.Converters;
 using MPF.Core.Data;
 using RedumpLib.Data;
 
@@ -79,6 +80,9 @@ namespace MPF.Modules.DD
         {
             // TODO: Fill in submission info specifics for DD
             string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // TODO: Determine if there's a DD version anywhere
+            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             switch (this.Type)
             {

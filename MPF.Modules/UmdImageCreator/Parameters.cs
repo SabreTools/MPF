@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MPF.Core.Converters;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using RedumpLib.Data;
 
 namespace MPF.Modules.UmdImageCreator
@@ -62,6 +64,9 @@ namespace MPF.Modules.UmdImageCreator
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
+            // TODO: Determine if there's a UMDImageCreator version anywhere
+            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+
             // Extract info based generically on MediaType
             switch (this.Type)
             {

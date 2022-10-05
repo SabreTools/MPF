@@ -660,6 +660,7 @@ namespace MPF.Library
                         info.SizeAndChecksums.Layerbreak2,
                         info.SizeAndChecksums.Layerbreak3),
                     1);
+                AddIfExists(output, Template.DumpingProgramField, info.CommonDiscInfo.DumpingProgram, 1);
                 AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
                 AddIfExists(output, Template.FullyMatchingIDField, info.FullyMatchedID?.ToString(), 1);
                 AddIfExists(output, Template.PartiallyMatchingIDsField, info.PartiallyMatchedIDs, 1);

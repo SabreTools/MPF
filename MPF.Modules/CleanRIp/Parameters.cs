@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MPF.Core.Converters;
 using MPF.Core.Data;
 using RedumpLib.Data;
 
@@ -60,6 +61,8 @@ namespace MPF.Modules.CleanRip
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
+            // TODO: Determine if there's a CleanRip version anywhere
+            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
             info.TracksAndWriteOffsets.ClrMameProData = GetCleanripDatfile(basePath + ".iso", basePath + "-dumpinfo.txt");
             
             // Get the individual hash data, as per internal

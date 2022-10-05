@@ -60,6 +60,7 @@ namespace MPF.Core.Data
         public const string DiscTitleField = "Disc Title";
         public const string SystemField = "System";
         public const string MediaTypeField = "Media Type";
+        public const string DumpingProgramField = "Dumping Program";
         public const string CategoryField = "Category";
         public const string RegionField = "Region";
         public const string LanguagesField = "Languages";

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.CueSheets;
@@ -373,6 +374,9 @@ namespace MPF.Modules.DiscImageCreator
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // TODO: Get the DiscImageCreator version
+            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");
