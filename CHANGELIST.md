@@ -130,6 +130,7 @@
 - Possibly fix PIC parsing
 - Add PS3 folder/file checks for detection
 - Use default directory for folder browsing, if possible
+- Add unused command filename parser
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

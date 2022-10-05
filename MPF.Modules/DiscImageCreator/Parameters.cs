@@ -2403,6 +2403,34 @@ namespace MPF.Modules.DiscImageCreator
         #region Private Extra Methods
 
         /// <summary>
+        /// Get the command file path and extract the version from it
+        /// </summary>
+        /// <param name="basePath">Base filename and path to use for checking</param>
+        /// <returns>Tuple of file path and version as strings, both null on error</returns>
+        private static (string, string) GetCommandFilePathAndVersion(string basePath)
+        {
+            // If we have an invalid base path, we can do nothing
+            if (string.IsNullOrWhiteSpace(basePath))
+                return (null, null);
+
+            // Generate the matching regex based on the base path
+            string basePathFileName = Path.GetFileName(basePath);
+            Regex cmdFilenameRegex = new Regex(Regex.Escape(basePathFileName) + @"_(\d{8})T\d{6}\.txt");
+
+            // Find the first match for the command file
+            string parentDirectory = Path.GetDirectoryName(basePath);
+            var currentFiles = Directory.GetFiles(parentDirectory);
+            string commandPath = currentFiles.FirstOrDefault(f => cmdFilenameRegex.IsMatch(f));
+            if (string.IsNullOrWhiteSpace(commandPath))
+                return (null, null);
+
+            // Extract the version string
+            var match = cmdFilenameRegex.Match(commandPath);
+            string version = match.Groups[1].Value;
+            return (commandPath, version);
+        }
+
+        /// <summary>
         /// Set the DIC command to be used for a given system and media type
         /// </summary>
         /// <param name="system">RedumpSystem value to check</param>
