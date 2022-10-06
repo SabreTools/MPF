@@ -132,6 +132,7 @@
 - Use default directory for folder browsing, if possible
 - Add unused command filename parser
 - Add initial framework for reporting dumping program
+- Report specific DIC version, if possible
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

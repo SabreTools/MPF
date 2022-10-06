@@ -375,8 +375,9 @@ namespace MPF.Modules.DiscImageCreator
         {
             string outputDirectory = Path.GetDirectoryName(basePath);
 
-            // TODO: Get the DiscImageCreator version
-            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            // Get the dumping program and version
+            (_, string dicVersion) = GetCommandFilePathAndVersion(basePath);
+            info.CommonDiscInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
 
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");
@@ -1489,9 +1490,7 @@ namespace MPF.Modules.DiscImageCreator
         /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
-            string parentDirectory = Path.GetDirectoryName(basePath);
-            var currentFiles = Directory.GetFiles(parentDirectory);
-            string cmdPath = currentFiles.FirstOrDefault(f => Regex.IsMatch(f, @"\d{8}T\d{6}"));
+            (string cmdPath, _) = GetCommandFilePathAndVersion(basePath);
 
             List<string> logFiles = new List<string>();
             switch (this.Type)
