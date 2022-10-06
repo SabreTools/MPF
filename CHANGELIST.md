@@ -134,6 +134,7 @@
 - Add initial framework for reporting dumping program
 - Report specific DIC version, if possible
 - Add dumping info section skeleton
+- Update Aaru submodules
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
