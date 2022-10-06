@@ -81,6 +81,7 @@ namespace RedumpLib.Data
                 Added = this.Added,
                 LastModified = this.LastModified,
                 CommonDiscInfo = this.CommonDiscInfo?.Clone() as CommonDiscInfoSection,
+                DumpingInfo = this.DumpingInfo?.Clone() as DumpingInfoSection,
                 VersionAndEditions = this.VersionAndEditions?.Clone() as VersionAndEditionsSection,
                 EDC = this.EDC?.Clone() as EDCSection,
                 ParentCloneRelationship = this.ParentCloneRelationship?.Clone() as ParentCloneRelationshipSection,
@@ -108,10 +109,6 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_media", Required = Required.AllowNull)]
         [JsonConverter(typeof(DiscTypeConverter))]
         public DiscType? Media { get; set; }
-
-        // Name not defined by Redump
-        [JsonProperty(PropertyName = "d_dumping_program", Required = Required.AllowNull)]
-        public string DumpingProgram { get; set; }
 
         [JsonProperty(PropertyName = "d_title", Required = Required.AllowNull)]
         public string Title { get; set; }
@@ -240,7 +237,6 @@ namespace RedumpLib.Data
             {
                 System = this.System,
                 Media = this.Media,
-                DumpingProgram = this.DumpingProgram,
                 Title = this.Title,
                 ForeignTitleNonLatin = this.ForeignTitleNonLatin,
                 DiscNumberLetter = this.DiscNumberLetter,
@@ -287,13 +283,17 @@ namespace RedumpLib.Data
     /// </summary>
     public class DumpingInfoSection : ICloneable
     {
-        // TODO: Add properties here
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_dumping_program", Required = Required.AllowNull)]
+        public string DumpingProgram { get; set; }
+
+        // TODO: Add dumping hardware properties here
 
         public object Clone()
         {
             return new DumpingInfoSection
             {
-                // TODO: Add properties here
+                DumpingProgram = this.DumpingProgram,
             };
         }
     }

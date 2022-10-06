@@ -130,7 +130,7 @@ namespace MPF.Modules.Redumper
             string outputDirectory = Path.GetDirectoryName(basePath);
 
             // TODO: Determine if there's a Redumper version anywhere
-            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             switch (this.Type)
             {

@@ -377,7 +377,7 @@ namespace MPF.Modules.DiscImageCreator
 
             // Get the dumping program and version
             (_, string dicVersion) = GetCommandFilePathAndVersion(basePath);
-            info.CommonDiscInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
+            info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
 
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");

@@ -51,7 +51,6 @@ namespace MPF.Test.RedumpLib
                 {
                     System = RedumpSystem.IBMPCcompatible,
                     Media = DiscType.CD,
-                    DumpingProgram = "DiscImageCreator 20500101",
                     Title = "Game Title",
                     ForeignTitleNonLatin = "Foreign Game Title",
                     DiscNumberLetter = "1",
@@ -91,6 +90,11 @@ namespace MPF.Test.RedumpLib
                     {
                         [SiteCode.PlayableDemos] = "Game Demo 1",
                     },
+                },
+
+                DumpingInfo = new DumpingInfoSection()
+                {
+                    DumpingProgram = "DiscImageCreator 20500101",
                 },
 
                 VersionAndEditions = new VersionAndEditionsSection()

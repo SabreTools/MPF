@@ -660,7 +660,6 @@ namespace MPF.Library
                         info.SizeAndChecksums.Layerbreak2,
                         info.SizeAndChecksums.Layerbreak3),
                     1);
-                AddIfExists(output, Template.DumpingProgramField, info.CommonDiscInfo.DumpingProgram, 1);
                 AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
                 AddIfExists(output, Template.FullyMatchingIDField, info.FullyMatchedID?.ToString(), 1);
                 AddIfExists(output, Template.PartiallyMatchingIDsField, info.PartiallyMatchedIDs, 1);
@@ -750,6 +749,10 @@ namespace MPF.Library
                 AddIfExists(output, Template.ErrorCountField, info.CommonDiscInfo.ErrorsCount, 1);
                 AddIfExists(output, Template.CommentsField, info.CommonDiscInfo.Comments.Trim(), 1);
                 AddIfExists(output, Template.ContentsField, info.CommonDiscInfo.Contents.Trim(), 1);
+
+                // Dumping Info section
+                output.Add(""); output.Add("Dumping Info:");
+                AddIfExists(output, Template.DumpingProgramField, info.DumpingInfo.DumpingProgram, 1);
 
                 // Version and Editions section
                 output.Add(""); output.Add("Version and Editions:");

@@ -293,7 +293,6 @@ namespace MPF.UI.ViewModels
                 {
                     System = RedumpSystem.IBMPCcompatible,
                     Media = DiscType.BD128,
-                    DumpingProgram = "DiscImageCreator 20500101",
                     Title = "Game Title",
                     ForeignTitleNonLatin = "Foreign Game Title",
                     DiscNumberLetter = "1",
@@ -333,6 +332,11 @@ namespace MPF.UI.ViewModels
                     {
                         [SiteCode.PlayableDemos] = "Game Demo 1",
                     },
+                },
+
+                DumpingInfo = new DumpingInfoSection()
+                {
+                    DumpingProgram = "DiscImageCreator 20500101",
                 },
 
                 VersionAndEditions = new VersionAndEditionsSection()
