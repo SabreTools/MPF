@@ -135,6 +135,7 @@
 - Report specific DIC version, if possible
 - Add dumping info section skeleton
 - Update Aaru submodules
+- Fix missing info reference change
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

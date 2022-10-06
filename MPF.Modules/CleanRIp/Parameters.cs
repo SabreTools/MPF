@@ -62,7 +62,7 @@ namespace MPF.Modules.CleanRip
         public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Determine if there's a CleanRip version anywhere
-            info.CommonDiscInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
             info.TracksAndWriteOffsets.ClrMameProData = GetCleanripDatfile(basePath + ".iso", basePath + "-dumpinfo.txt");
             
             // Get the individual hash data, as per internal
