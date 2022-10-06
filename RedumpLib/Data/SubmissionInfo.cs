@@ -41,6 +41,9 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "common_disc_info", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public CommonDiscInfoSection CommonDiscInfo { get; set; } = new CommonDiscInfoSection();
 
+        [JsonProperty(PropertyName = "dumping_info", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DumpingInfoSection DumpingInfo { get; set; } = new DumpingInfoSection();
+
         [JsonProperty(PropertyName = "versions_and_editions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public VersionAndEditionsSection VersionAndEditions { get; set; } = new VersionAndEditionsSection();
 
@@ -275,6 +278,22 @@ namespace RedumpLib.Data
                 CommentsSpecialFields = this.CommentsSpecialFields?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
                 Contents = this.Contents,
                 ContentsSpecialFields = this.ContentsSpecialFields?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+            };
+        }
+    }
+
+    /// <summary>
+    /// Dumping info section for moderation
+    /// </summary>
+    public class DumpingInfoSection : ICloneable
+    {
+        // TODO: Add properties here
+
+        public object Clone()
+        {
+            return new DumpingInfoSection
+            {
+                // TODO: Add properties here
             };
         }
     }
