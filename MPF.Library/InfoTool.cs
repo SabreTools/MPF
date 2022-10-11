@@ -588,14 +588,8 @@ namespace MPF.Library
             var files = parameters.GetLogFilePaths(combinedBase);
 
             // Add on generated log files if they exist
-            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
-                files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
-            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
-                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
-            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
-                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
-            if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
-                files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+            var mpfFiles = GetGeneratedFilePaths(outputDirectory);
+            files.AddRange(mpfFiles);
 
             if (!files.Any())
                 return true;
@@ -620,6 +614,10 @@ namespace MPF.Library
                 {
                     string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                     zf.CreateEntryFromFile(file, entryName);
+
+                    // If the file is MPF-specific, don't delete
+                    if (mpfFiles.Contains(file))
+                        continue;
 
                     try
                     {
@@ -1152,6 +1150,27 @@ namespace MPF.Library
                 return;
 
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
+        }
+
+        /// <summary>
+        /// Generate a list of all MPF-specific log files generated
+        /// </summary>
+        /// <param name="outputDirectory">Output folder to write to</param>
+        /// <returns>List of all log file paths, empty otherwise</returns>
+        private static List<string> GetGeneratedFilePaths(string outputDirectory)
+        {
+            List<string> files = new List<string>();
+
+            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
+                files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
+            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
+                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
+            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
+                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
+            if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
+                files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+
+            return files;
         }
 
         #endregion
