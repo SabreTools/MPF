@@ -302,7 +302,7 @@ namespace MPF.Core.Data
         /// </summary>
         public bool OutputSeparateProtectionFile
         {
-            get { return GetBooleanSetting(_settings, "OutputSeparateProtectionFile", false); }
+            get { return GetBooleanSetting(_settings, "OutputSeparateProtectionFile", true); }
             set { _settings["OutputSeparateProtectionFile"] = value.ToString(); }
         }
 
