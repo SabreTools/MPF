@@ -137,6 +137,7 @@
 - Update Aaru submodules
 - Fix missing info reference change
 - Enable separated protection info output by default
+- Try adding MPF logs to zip
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

@@ -586,6 +586,17 @@ namespace MPF.Library
 
             // Get the list of log files from the parameters object
             var files = parameters.GetLogFilePaths(combinedBase);
+
+            // Add on generated log files if they exist
+            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
+                files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
+            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
+                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
+            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
+                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
+            if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
+                files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+
             if (!files.Any())
                 return true;
 
