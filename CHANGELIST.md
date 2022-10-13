@@ -139,6 +139,7 @@
 - Enable separated protection info output by default
 - Try adding MPF logs to zip
 - Create MPF log helper and filter for deletion
+- Fix missing info in Aaru
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.CueSheets;
 using RedumpLib.Data;
@@ -195,6 +196,9 @@ namespace MPF.Modules.Aaru
         {
             // TODO: Fill in submission info specifics for Aaru
             string outputDirectory = Path.GetDirectoryName(basePath);
+
+            // TODO: Determine if there's an Aaru version anywhere
+            info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar(basePath + ".cicm.xml");
