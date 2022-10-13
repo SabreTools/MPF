@@ -3003,10 +3003,10 @@ namespace MPF.Modules.Aaru
                     // Store the first instance of each value
                     if (string.IsNullOrEmpty(manufacturer) && !string.IsNullOrEmpty(hardware.Manufacturer))
                         manufacturer = hardware.Manufacturer;
-                    else if (string.IsNullOrEmpty(model) && !string.IsNullOrEmpty(hardware.Model))
-                        model = hardware.Manufacturer;
-                    else if (string.IsNullOrEmpty(firmware) && !string.IsNullOrEmpty(hardware.Firmware))
-                        firmware = hardware.Manufacturer;
+                    if (string.IsNullOrEmpty(model) && !string.IsNullOrEmpty(hardware.Model))
+                        model = hardware.Model;
+                    if (string.IsNullOrEmpty(firmware) && !string.IsNullOrEmpty(hardware.Firmware))
+                        firmware = hardware.Firmware;
                 }
             }
 

@@ -141,6 +141,7 @@
 - Create MPF log helper and filter for deletion
 - Fix missing info in Aaru
 - Add hardware info to DIC and Aaru
+- Fix hardware info
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

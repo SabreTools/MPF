@@ -2772,20 +2772,17 @@ namespace MPF.Modules.DiscImageCreator
                         if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
                         {
                             // VendorId: <manufacturer>
-                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            manufacturer = split[1];
+                            manufacturer = line.Substring("VendorId: ".Length);
                         }
                         else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
                         {
                             // ProductId: <model>
-                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            model = split[1];
+                            model = line.Substring("ProductId: ".Length);
                         }
                         else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
                         {
                             // ProductRevisionLevel: <firmware>
-                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            firmware = split[1];
+                            firmware = line.Substring("ProductRevisionLevel: ".Length);
                         }
 
                         line = sr.ReadLine();
