@@ -337,6 +337,9 @@ namespace MPF.UI.ViewModels
                 DumpingInfo = new DumpingInfoSection()
                 {
                     DumpingProgram = "DiscImageCreator 20500101",
+                    Manufacturer = "ATAPI",
+                    Model = "Optical Drive",
+                    Firmware = "1.23",
                 },
 
                 VersionAndEditions = new VersionAndEditionsSection()

@@ -762,6 +762,9 @@ namespace MPF.Library
                 // Dumping Info section
                 output.Add(""); output.Add("Dumping Info:");
                 AddIfExists(output, Template.DumpingProgramField, info.DumpingInfo.DumpingProgram, 1);
+                AddIfExists(output, Template.DumpingDriveManufacturer, info.DumpingInfo.Manufacturer, 1);
+                AddIfExists(output, Template.DumpingDriveModel, info.DumpingInfo.Model, 1);
+                AddIfExists(output, Template.DumpingDriveFirmware, info.DumpingInfo.Firmware, 1);
 
                 // Version and Editions section
                 output.Add(""); output.Add("Version and Editions:");

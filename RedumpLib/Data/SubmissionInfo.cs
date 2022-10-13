@@ -287,13 +287,26 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_dumping_program", Required = Required.AllowNull)]
         public string DumpingProgram { get; set; }
 
-        // TODO: Add dumping hardware properties here
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_drive_manufacturer", Required = Required.AllowNull)]
+        public string Manufacturer { get; set; }
+
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_drive_model", Required = Required.AllowNull)]
+        public string Model { get; set; }
+
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_drive_firmware", Required = Required.AllowNull)]
+        public string Firmware { get; set; }
 
         public object Clone()
         {
             return new DumpingInfoSection
             {
                 DumpingProgram = this.DumpingProgram,
+                Manufacturer = this.Manufacturer,
+                Model = this.Model,
+                Firmware = this.Firmware,
             };
         }
     }

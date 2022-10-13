@@ -379,6 +379,14 @@ namespace MPF.Modules.DiscImageCreator
             (_, string dicVersion) = GetCommandFilePathAndVersion(basePath);
             info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
 
+            // Fill in the hardware data
+            if (GetHardwareInfo($"{basePath}_drive.txt", out string manufacturer, out string model, out string firmware))
+            {
+                info.DumpingInfo.Manufacturer = manufacturer;
+                info.DumpingInfo.Model = model;
+                info.DumpingInfo.Firmware = firmware;
+            }
+
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");
 
@@ -2733,6 +2741,63 @@ namespace MPF.Modules.DiscImageCreator
             {
                 // We don't care what the error is
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Get hardware information from the input file, if possible
+        /// </summary>
+        /// <param name="drive">_drive.txt file location</param>
+        /// <returns>True if hardware info was set, false otherwise</returns>
+        private static bool GetHardwareInfo(string drive, out string manufacturer, out string model, out string firmware)
+        {
+            // Set the default values
+            manufacturer = null; model = null; firmware = null;
+
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(drive))
+                return false;
+
+            using (StreamReader sr = File.OpenText(drive))
+            {
+                try
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        // Trim the line for later use
+                        line = line.Trim();
+
+                        // Only take the first instance of each value
+                        if (string.IsNullOrEmpty(manufacturer) && line.StartsWith("VendorId"))
+                        {
+                            // VendorId: <manufacturer>
+                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                            manufacturer = split[1];
+                        }
+                        else if (string.IsNullOrEmpty(model) && line.StartsWith("ProductId"))
+                        {
+                            // ProductId: <model>
+                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                            model = split[1];
+                        }
+                        else if (string.IsNullOrEmpty(firmware) && line.StartsWith("ProductRevisionLevel"))
+                        {
+                            // ProductRevisionLevel: <firmware>
+                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                            firmware = split[1];
+                        }
+
+                        line = sr.ReadLine();
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
             }
         }
 
