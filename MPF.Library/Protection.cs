@@ -202,7 +202,18 @@ namespace MPF.Library
             // SafeCast
             // TODO: Figure this one out
 
+            // Cactus Data Shield / SafeDisc
+            if (foundProtections.Any(p => p == "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)"))
+            {
+                foundProtections = foundProtections
+                    .Where(p => p != "Cactus Data Shield 300 (Confirm presence of other CDS-300 files)");
+
+                if (foundProtections.Any(p => !p.StartsWith("SafeDisc")))
+                    foundProtections = foundProtections.Append("Cactus Data Shield 300");
+            }
+
             // SafeDisc
+            // TODO: Update based on new internal naming schemes
             if (foundProtections.Any(p => p.StartsWith("SafeDisc")))
             {
                 if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}")))
