@@ -577,7 +577,7 @@ namespace MPF.Library
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="parameters">Parameters object to use to derive log file paths</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
-        public static bool CompressLogFiles(string outputDirectory, string outputFilename, BaseParameters parameters)
+        public static (bool, string) CompressLogFiles(string outputDirectory, string outputFilename, BaseParameters parameters)
         {
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
@@ -592,7 +592,7 @@ namespace MPF.Library
             files.AddRange(mpfFiles);
 
             if (!files.Any())
-                return true;
+                return (true, "No files to compress!");
 
             // If the file already exists, we want to delete the old one
             try
@@ -602,7 +602,7 @@ namespace MPF.Library
             }
             catch
             {
-                return false;
+                return (false, "Could not delete old archive!");
             }
 
             // Add the log files to the archive and delete the uncompressed file after
@@ -626,11 +626,11 @@ namespace MPF.Library
                     catch { }
                 }
 
-                return true;
+                return (true, "Compression complete!");
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                return (false, $"Compression could not complete: {ex}");
             }
             finally
             {

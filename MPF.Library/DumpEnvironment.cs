@@ -407,11 +407,11 @@ namespace MPF.Library
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
-                success = InfoTool.CompressLogFiles(this.OutputDirectory, this.OutputFilename, this.Parameters);
-                if (success)
-                    resultProgress?.Report(Result.Success("Compression complete!"));
+                (bool compressSuccess, string statement) = InfoTool.CompressLogFiles(this.OutputDirectory, this.OutputFilename, this.Parameters);
+                if (compressSuccess)
+                    resultProgress?.Report(Result.Success(statement));
                 else
-                    resultProgress?.Report(Result.Failure("Compression could not complete!"));
+                    resultProgress?.Report(Result.Failure(statement));
             }
 
             resultProgress?.Report(Result.Success("Submission information process complete!"));
