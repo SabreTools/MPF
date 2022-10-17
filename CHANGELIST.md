@@ -150,6 +150,7 @@
 - Remove deprecated protection setting
 - Update BurnOutSharp to 2.3.4
 - Add compression result reason to log
+- Add System.Memory package to MPF.Library
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
