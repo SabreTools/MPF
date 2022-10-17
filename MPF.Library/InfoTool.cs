@@ -1184,9 +1184,13 @@ namespace MPF.Library
         /// Adjust a disc title so that it will be processed correctly by Redump
         /// </summary>
         /// <param name="title">Existing title to potentially reformat</param>
+        /// <param name="language">Language to use for assuming articles</param>
         /// <returns>The reformatted title</returns>
-        /// <remarks>TODO: Limit normalization by language</remarks>
-        public static string NormalizeDiscTitle(string title)
+        /// <remarks>
+        /// If the language of the title is unknown or if it's multilingual,
+        /// pass in Language.English for standardized coverage.
+        /// </remarks>
+        public static string NormalizeDiscTitle(string title, Language language)
         {
             // If we have an invalid title, just return it as-is
             if (string.IsNullOrWhiteSpace(title))
@@ -1200,142 +1204,311 @@ namespace MPF.Library
                 return title;
 
             // Determine if we have a definite or indefinite article as the first item
-            switch (splitTitle[0].ToLowerInvariant())
+            string firstItem = splitTitle[0];
+            switch (firstItem.ToLowerInvariant())
             {
                 // Latin script articles
-                case "'n":      // Manx, Quenya
-                case "a":       // English, Hungarian, Portuguese, Scots
-                case "a'":      // English, Hungarian, Irish, Scottish Gaelic
-                case "al":      // Breton
-                case "am":      // Scottish Gaelic
-                case "an":      // Breton, Cornish, English, Irish, Scottish Gaelic
-                case "anek":    // Nepali
-                case "ar":      // Breton
-                case "az":      // Hungarian
-                case "ān":      // Persian
-                case "as":      // Portuguese
-                case "d'":      // Luxembourgish
-                case "das":     // German
-                case "dat":     // Luxembourgish
-                case "de":      // Dutch
-                case "déi":     // Luxembourgish
-                case "dem":     // German, Luxembourgish
-                case "den":     // Dutch, German, Luxembourgish
-                case "der":     // Dutch, German, Luxembourgish
-                case "des":     // Dutch, French, German
-                case "die":     // Afrikaans, German
-                case "e":       // Papiamento
-                case "een":     // Dutch
-                case "egy":     // Hungarian
-                case "ei":      // Norwegian
-                case "ein":     // German, Norwegian
-                case "eine":    // German
-                case "einem":   // German
-                case "einen":   // German
-                case "einer":   // German
-                case "eines":   // German
-                case "eit":     // Norwegian
-                case "ek":      // Nepali
-                case "el":      // Arabic, Catalan, Spanish
-                case "els":     // Catalan
-                case "en":      // Danish, Luxembourgish, Norwegian, Sindarin, Swedish
-                case "eng":     // Luxembourgish
-                case "engem":   // Luxembourgish
-                case "enger":   // Luxembourgish
-                case "es":      // Catalan
-                case "et":      // Danish, Norwegian
-                case "ett":     // Swedish
-                case "euta":    // Nepali
-                case "euti":    // Nepali
-                case "gli":     // Italian
-                case "he":      // Hawaiian, Māori
-                case "het":     // Dutch
-                case "i":       // Italian, Khasi, Quenya, Sindarin
-                case "il":      // Italian
-                case "in":      // Persian, Quenya, Sindarin
-                case "ka":      // Hawaiian, Khasi
-                case "ke":      // Hawaiian
-                case "ki":      // Khasi
-                case "kunai":   // Nepali
-                case "l'":      // Catalan, French, Italian
-                case "la":      // Catalan, Esperanto, French, Italian, Spanish
-                case "las":     // Spanish
-                case "le":      // French, Interlingua, Italian
-                case "les":     // Catalan, French
-                case "lo":      // Catalan, Italian, Spanish
-                case "los":     // Catalan, Spanish
-                case "na":      // Irish, Scottish Gaelic
-                case "nam":     // Scottish Gaelic
-                case "nan":     // Scottish Gaelic
-                case "nā":      // Hawaiian
-                case "ngā":     // Māori
-                case "niște":   // Romanian
-                case "ny":      // Manx
-                case "o":       // Portuguese, Romanian
-                case "os":      // Portuguese
-                case "sa":      // Catalan
-                case "sang":    // Malay
-                case "se":      // Finnish
-                case "ses":     // Catalan
-                case "si":      // Malay
-                case "te":      // Māori
-                case "the":     // English, Scots
-                case "u":       // Khasi
-                case "ul":      // Breton
-                case "um":      // Portuguese
-                case "uma":     // Portuguese
-                case "umas":    // Portuguese
-                case "un":      // Breton, Catalan, French, Interlingua, Italian, Papiamento, Romanian, Spanish
-                case "un'":     // Italian
-                case "una":     // Catalan, Italian
-                case "unas":    // Spanish
-                case "une":     // French
-                case "uno":     // Italian
-                case "unos":    // Spanish
-                case "uns":     // Catalan, Portuguese
-                case "unei":    // Romanian
-                case "unes":    // Catalan
-                case "unor":    // Romanian
-                case "unui":    // Romanian
-                case "ur":      // Breton
-                case "y":       // Manx, Welsh
-                case "yaow":    // Pashto
-                case "yaowə":   // Pashto
-                case "yaowa":   // Pashto
-                case "yaowey":  // Pashto
-                case "ye":      // Persian
-                case "yek":     // Persian
-                case "yn":      // Manx
-                case "yr":      // Welsh
+                case "'n"
+                    when language is Language.Manx:
+                case "a"
+                    when language is Language.English
+                        || language is Language.Hungarian
+                        || language is Language.Portuguese
+                        || language is Language.Scots:
+                case "a'"
+                    when language is Language.English
+                        || language is Language.Hungarian
+                        || language is Language.Irish
+                        || language is Language.Gaelic:     // Scottish Gaelic
+                case "al"
+                    when language is Language.Breton:
+                case "am"
+                    when language is Language.Gaelic:       // Scottish Gaelic
+                case "an"
+                    when language is Language.Breton
+                        || language is Language.Cornish
+                        || language is Language.English
+                        || language is Language.Irish
+                        || language is Language.Gaelic:     // Scottish Gaelic
+                case "anek"
+                    when language is Language.Nepali:
+                case "ar"
+                    when language is Language.Breton:
+                case "az"
+                    when language is Language.Hungarian:
+                case "ān"
+                    when language is Language.Persian:
+                case "as"
+                    when language is Language.Portuguese:
+                case "d'"
+                    when language is Language.Luxembourgish:
+                case "das"
+                    when language is Language.German:
+                case "dat"
+                    when language is Language.Luxembourgish:
+                case "de"
+                    when language is Language.Dutch:
+                case "déi"
+                    when language is Language.Luxembourgish:
+                case "dem"
+                    when language is Language.German
+                        || language is Language.Luxembourgish:
+                case "den"
+                    when language is Language.Dutch
+                        || language is Language.German
+                        || language is Language.Luxembourgish:
+                case "der"
+                    when language is Language.Dutch
+                        || language is Language.German
+                        || language is Language.Luxembourgish:
+                case "des"
+                    when language is Language.Dutch
+                        || language is Language.French
+                        || language is Language.German:
+                case "die"
+                    when language is Language.Afrikaans
+                        || language is Language.German:
+                case "e"
+                    when language is Language.Papiamento:
+                case "een"
+                    when language is Language.Dutch:
+                case "egy"
+                    when language is Language.Hungarian:
+                case "ei"
+                    when language is Language.Norwegian:
+                case "ein"
+                    when language is Language.German
+                        || language is Language.Norwegian:
+                case "eine"
+                    when language is Language.German:
+                case "einem"
+                    when language is Language.German:
+                case "einen"
+                    when language is Language.German:
+                case "einer"
+                    when language is Language.German:
+                case "eines"
+                    when language is Language.German:
+                case "eit"
+                    when language is Language.Norwegian:
+                case "ek"
+                    when language is Language.Nepali:
+                case "el"
+                    when language is Language.Arabic
+                        || language is Language.Catalan
+                        || language is Language.Spanish:
+                case "els"
+                    when language is Language.Catalan:
+                case "en"
+                    when language is Language.Danish
+                        || language is Language.Luxembourgish
+                        || language is Language.Norwegian
+                        || language is Language.Swedish:
+                case "eng"
+                    when language is Language.Luxembourgish:
+                case "engem"
+                    when language is Language.Luxembourgish:
+                case "enger"
+                    when language is Language.Luxembourgish:
+                case "es"
+                    when language is Language.Catalan:
+                case "et"
+                    when language is Language.Danish
+                        || language is Language.Norwegian:
+                case "ett"
+                    when language is Language.Swedish:
+                case "euta"
+                    when language is Language.Nepali:
+                case "euti"
+                    when language is Language.Nepali:
+                case "gli"
+                    when language is Language.Italian:
+                case "he"
+                    when language is Language.Hawaiian
+                        || language is Language.Maori:
+                case "het"
+                    when language is Language.Dutch:
+                case "i"
+                    when language is Language.Italian
+                        || language is Language.Khasi:
+                case "il"
+                    when language is Language.Italian:
+                case "in"
+                    when language is Language.Persian:
+                case "ka"
+                    when language is Language.Hawaiian
+                        || language is Language.Khasi:
+                case "ke"
+                    when language is Language.Hawaiian:
+                case "ki"
+                    when language is Language.Khasi:
+                case "kunai"
+                    when language is Language.Nepali:
+                case "l'"
+                    when language is Language.Catalan
+                        || language is Language.French
+                        || language is Language.Italian:
+                case "la"
+                    when language is Language.Catalan
+                        || language is Language.Esperanto
+                        || language is Language.French
+                        || language is Language.Italian
+                        || language is Language.Spanish:
+                case "las"
+                    when language is Language.Spanish:
+                case "le"
+                    when language is Language.French
+                        || language is Language.Interlingua
+                        || language is Language.Italian:
+                case "les"
+                    when language is Language.Catalan
+                        || language is Language.French:
+                case "lo"
+                    when language is Language.Catalan
+                        || language is Language.Italian
+                        || language is Language.Spanish:
+                case "los"
+                    when language is Language.Catalan
+                        || language is Language.Spanish:
+                case "na"
+                    when language is Language.Irish
+                        || language is Language.Gaelic:     // Scottish Gaelic
+                case "nam"
+                    when language is Language.Gaelic:       // Scottish Gaelic
+                case "nan"
+                    when language is Language.Gaelic:       // Scottish Gaelic
+                case "nā"
+                    when language is Language.Hawaiian:
+                case "ngā"
+                    when language is Language.Maori:
+                case "niște"
+                    when language is Language.Romanian:
+                case "ny"
+                    when language is Language.Manx:
+                case "o"
+                    when language is Language.Portuguese
+                        || language is Language.Romanian:
+                case "os"
+                    when language is Language.Portuguese:
+                case "sa"
+                    when language is Language.Catalan:
+                case "sang"
+                    when language is Language.Malay:
+                case "se"
+                    when language is Language.Finnish:
+                case "ses"
+                    when language is Language.Catalan:
+                case "si"
+                    when language is Language.Malay:
+                case "te"
+                    when language is Language.Maori:
+                case "the"
+                    when language is Language.English
+                        || language is Language.Scots:
+                case "u"
+                    when language is Language.Khasi:
+                case "ul"
+                    when language is Language.Breton:
+                case "um"
+                    when language is Language.Portuguese:
+                case "uma"
+                    when language is Language.Portuguese:
+                case "umas"
+                    when language is Language.Portuguese:
+                case "un"
+                    when language is Language.Breton
+                        || language is Language.Catalan
+                        || language is Language.French
+                        || language is Language.Interlingua
+                        || language is Language.Italian
+                        || language is Language.Papiamento
+                        || language is Language.Romanian
+                        || language is Language.Spanish:
+                case "un'"
+                    when language is Language.Italian:
+                case "una"
+                    when language is Language.Catalan
+                        || language is Language.Italian:
+                case "unas"
+                    when language is Language.Spanish:
+                case "une"
+                    when language is Language.French:
+                case "uno"
+                    when language is Language.Italian:
+                case "unos"
+                    when language is Language.Spanish:
+                case "uns"
+                    when language is Language.Catalan
+                        || language is Language.Portuguese:
+                case "unei"
+                    when language is Language.Romanian:
+                case "unes"
+                    when language is Language.Catalan:
+                case "unor"
+                    when language is Language.Romanian:
+                case "unui"
+                    when language is Language.Romanian:
+                case "ur"
+                    when language is Language.Breton:
+                case "y"
+                    when language is Language.Manx
+                        || language is Language.Welsh:
+                case "ye"
+                    when language is Language.Persian:
+                case "yek"
+                    when language is Language.Persian:
+                case "yn"
+                    when language is Language.Manx:
+                case "yr"
+                    when language is Language.Welsh:
 
                 // Non-latin script articles
-                case "ο":       // Greek
-                case "η":       // Greek
-                case "το":      // Greek
-                case "οι":      // Greek
-                case "τα":      // Greek
-                case "ένας":    // Greek
-                case "μια":     // Greek
-                case "ένα":     // Greek
-                case "еден":    // Macedonian
-                case "една":    // Macedonian
-                case "едно":    // Macedonian
-                case "едни":    // Macedonian
-                case "एउटा":     // Nepali
-                case "एउटी":     // Nepali
-                case "एक":      // Nepali
-                case "अनेक":    // Nepali
-                case "कुनै":     // Nepali
-                case "يوې":     // Pashto
-                case "يوه":     // Pashto
-                case "يوهٔ":     // Pashto
-                case "يو":      // Pashto
-                case "דער":     // Yiddish
-                case "די":      // Yiddish
-                case "דאָס":     // Yiddish
-                case "דעם":     // Yiddish
-                case "אַ":       // Yiddish
-                case "אַן":      // Yiddish
+                case "ο"
+                    when language is Language.Greek:
+                case "η"
+                    when language is Language.Greek:
+                case "το"
+                    when language is Language.Greek:
+                case "οι"
+                    when language is Language.Greek:
+                case "τα"
+                    when language is Language.Greek:
+                case "ένας"
+                    when language is Language.Greek:
+                case "μια"
+                    when language is Language.Greek:
+                case "ένα"
+                    when language is Language.Greek:
+                case "еден"
+                    when language is Language.Macedonian:
+                case "една"
+                    when language is Language.Macedonian:
+                case "едно"
+                    when language is Language.Macedonian:
+                case "едни"
+                    when language is Language.Macedonian:
+                case "एउटा"
+                    when language is Language.Nepali:
+                case "एउटी"
+                    when language is Language.Nepali:
+                case "एक"
+                    when language is Language.Nepali:
+                case "अनेक"
+                    when language is Language.Nepali:
+                case "कुनै"
+                    when language is Language.Nepali:
+                case "דער"
+                    when language is Language.Yiddish:
+                case "די"
+                    when language is Language.Yiddish:
+                case "דאָס"
+                    when language is Language.Yiddish:
+                case "דעם"
+                    when language is Language.Yiddish:
+                case "אַ"
+                    when language is Language.Yiddish:
+                case "אַן"
+                    when language is Language.Yiddish:
 
                 // Seen by Redump, unknown origin
                 case "du":
@@ -1346,21 +1519,29 @@ namespace MPF.Library
                     return title;
             }
 
-            // Either insert the item last or if we have a `:` or `-`
-            StringBuilder newTitle = new StringBuilder();
+            // Insert the first item if we have a `:` or `-`
+            bool itemInserted = false;
+            StringBuilder newTitleBuilder = new StringBuilder();
             for (int i = 1; i < splitTitle.Length; i++)
             {
                 string segment = splitTitle[i];
-
                 if (segment.EndsWith(":") || segment.EndsWith("-"))
-                    newTitle.Append($"{segment}, {splitTitle[0]}");
-                else if (i == splitTitle.Length - 1)
-                    newTitle.Append($"{segment}, {splitTitle[0]}");
+                {
+                    itemInserted = true;
+                    newTitleBuilder.Append($"{segment}, {firstItem}");
+                }
                 else
-                    newTitle.Append($"{segment} ");
+                {
+                    newTitleBuilder.Append($"{segment} ");
+                }
             }
 
-            return newTitle.ToString().Trim();
+            // If we didn't insert the item yet, add it to the end
+            string newTitle = newTitleBuilder.ToString().Trim();
+            if (!itemInserted)
+                newTitle = $"{newTitle}, {firstItem}";
+
+            return newTitle;
         }
 
         /// <summary>

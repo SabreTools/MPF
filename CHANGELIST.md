@@ -144,6 +144,7 @@
 - Fix hardware info
 - Add specialized CDS/SafeDisc filter
 - Add unused article formatter
+- Add language filtering to formatter
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
