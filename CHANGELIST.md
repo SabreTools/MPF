@@ -143,6 +143,7 @@
 - Add hardware info to DIC and Aaru
 - Fix hardware info
 - Add specialized CDS/SafeDisc filter
+- Add unused article formatter
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
