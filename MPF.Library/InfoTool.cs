@@ -1184,6 +1184,35 @@ namespace MPF.Library
         /// Adjust a disc title so that it will be processed correctly by Redump
         /// </summary>
         /// <param name="title">Existing title to potentially reformat</param>
+        /// <param name="languages">Array of languages to use for assuming articles</param>
+        /// <returns>The reformatted title</returns>
+        public static string NormalizeDiscTitle(string title, Language[] languages)
+        {
+            // If we have no set languages, then assume English
+            if (languages == null || languages.Length == 0)
+                languages = new Language[] { Language.English };
+
+            // Loop through all of the given languages
+            foreach (var language in languages)
+            {
+                // If the new title is different, assume it was normalized and return it
+                string newTitle = NormalizeDiscTitle(title, language);
+                if (newTitle == title)
+                    return newTitle;
+            }
+
+            // If we didn't already try English, try it now
+            if (!languages.Contains(Language.English))
+                return NormalizeDiscTitle(title, Language.English);
+
+            // If all fails, then the title didn't need normalization
+            return title;
+        }
+
+        /// <summary>
+        /// Adjust a disc title so that it will be processed correctly by Redump
+        /// </summary>
+        /// <param name="title">Existing title to potentially reformat</param>
         /// <param name="language">Language to use for assuming articles</param>
         /// <returns>The reformatted title</returns>
         /// <remarks>
