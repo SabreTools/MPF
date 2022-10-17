@@ -450,15 +450,6 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Force scanning all files for protection
-        /// </summary>
-        public bool ForceScanningForProtection
-        {
-            get { return GetBooleanSetting(_settings, "ForceScanningForProtection", false); }
-            set { _settings["ForceScanningForProtection"] = value.ToString(); }
-        }
-
-        /// <summary>
         /// Include debug information with scan results
         /// </summary>
         public bool IncludeDebugProtectionInformation

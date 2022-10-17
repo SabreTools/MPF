@@ -26,7 +26,6 @@ namespace MPF.Library
             {
                 var found = await Task.Run(() =>
                 {
-                    // TODO: Remove options.ForceScanningForProtection
                     var scanner = new Scanner(
                         options.ScanArchivesForProtection,
                         options.ScanPackersForProtection,

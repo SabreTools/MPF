@@ -147,6 +147,7 @@
 - Add language filtering to formatter
 - Add multi-language helper for filter
 - Update Nuget packages
+- Remove deprecated protection setting
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
