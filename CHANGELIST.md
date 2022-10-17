@@ -148,6 +148,7 @@
 - Add multi-language helper for filter
 - Update Nuget packages
 - Remove deprecated protection setting
+- Update BurnOutSharp to 2.3.4
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
