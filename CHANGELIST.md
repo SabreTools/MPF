@@ -146,6 +146,7 @@
 - Add unused article formatter
 - Add language filtering to formatter
 - Add multi-language helper for filter
+- Update Nuget packages
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
