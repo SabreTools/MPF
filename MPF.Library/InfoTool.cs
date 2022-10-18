@@ -819,7 +819,11 @@ namespace MPF.Library
                     output.Add(""); output.Add("Tracks and Write Offsets:");
                     AddIfExists(output, Template.DATField, info.TracksAndWriteOffsets.ClrMameProData + "\n", 1);
                     AddIfExists(output, Template.CuesheetField, info.TracksAndWriteOffsets.Cuesheet, 1);
-                    AddIfExists(output, Template.WriteOffsetField, info.TracksAndWriteOffsets.OtherWriteOffsets, 1);
+                    string offset = info.TracksAndWriteOffsets.OtherWriteOffsets;
+                    if (!offset.StartsWith("-"))
+                        offset = $"+{offset}";
+
+                    AddIfExists(output, Template.WriteOffsetField, offset, 1);
                 }
                 // Size & Checksum section
                 else
