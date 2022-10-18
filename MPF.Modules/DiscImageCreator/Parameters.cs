@@ -517,7 +517,7 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.XMID;
                         info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? "";
-                        info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
+                        //info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
 
@@ -539,7 +539,7 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.XMID;
                         info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? "";
-                        info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
+                        //info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
                     }
 
