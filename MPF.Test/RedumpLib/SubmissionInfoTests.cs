@@ -92,14 +92,6 @@ namespace MPF.Test.RedumpLib
                     },
                 },
 
-                DumpingInfo = new DumpingInfoSection()
-                {
-                    DumpingProgram = "DiscImageCreator 20500101",
-                    Manufacturer = "ATAPI",
-                    Model = "Optical Drive",
-                    Firmware = "1.23",
-                },
-
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
                     Version = "Original",
@@ -163,6 +155,14 @@ namespace MPF.Test.RedumpLib
                     CRC32 = "CRC32",
                     MD5 = "MD5",
                     SHA1 = "SHA1",
+                },
+
+                DumpingInfo = new DumpingInfoSection()
+                {
+                    DumpingProgram = "DiscImageCreator 20500101",
+                    Manufacturer = "ATAPI",
+                    Model = "Optical Drive",
+                    Firmware = "1.23",
                 },
 
                 Artifacts = new Dictionary<string, string>()

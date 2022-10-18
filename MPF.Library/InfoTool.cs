@@ -759,13 +759,6 @@ namespace MPF.Library
                 AddIfExists(output, Template.CommentsField, info.CommonDiscInfo.Comments.Trim(), 1);
                 AddIfExists(output, Template.ContentsField, info.CommonDiscInfo.Contents.Trim(), 1);
 
-                // Dumping Info section
-                output.Add(""); output.Add("Dumping Info:");
-                AddIfExists(output, Template.DumpingProgramField, info.DumpingInfo.DumpingProgram, 1);
-                AddIfExists(output, Template.DumpingDriveManufacturer, info.DumpingInfo.Manufacturer, 1);
-                AddIfExists(output, Template.DumpingDriveModel, info.DumpingInfo.Model, 1);
-                AddIfExists(output, Template.DumpingDriveFirmware, info.DumpingInfo.Firmware, 1);
-
                 // Version and Editions section
                 output.Add(""); output.Add("Version and Editions:");
                 AddIfExists(output, Template.VersionField, info.VersionAndEditions.Version, 1);
@@ -838,6 +831,13 @@ namespace MPF.Library
                     AddIfExists(output, Template.MD5Field, info.SizeAndChecksums.MD5, 1);
                     AddIfExists(output, Template.SHA1Field, info.SizeAndChecksums.SHA1, 1);
                 }
+
+                // Dumping Info section
+                output.Add(""); output.Add("Dumping Info:");
+                AddIfExists(output, Template.DumpingProgramField, info.DumpingInfo.DumpingProgram, 1);
+                AddIfExists(output, Template.DumpingDriveManufacturer, info.DumpingInfo.Manufacturer, 1);
+                AddIfExists(output, Template.DumpingDriveModel, info.DumpingInfo.Model, 1);
+                AddIfExists(output, Template.DumpingDriveFirmware, info.DumpingInfo.Firmware, 1);
 
                 // Make sure there aren't any instances of two blank lines in a row
                 string last = null;

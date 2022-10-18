@@ -153,6 +153,7 @@
 - Add System.Memory package to MPF.Library
 - Add CodePages package to MPF.Library
 - Remove extraneous packages
+- Change location of dumping info
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

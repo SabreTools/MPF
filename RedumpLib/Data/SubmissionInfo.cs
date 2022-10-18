@@ -41,9 +41,6 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "common_disc_info", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public CommonDiscInfoSection CommonDiscInfo { get; set; } = new CommonDiscInfoSection();
 
-        [JsonProperty(PropertyName = "dumping_info", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public DumpingInfoSection DumpingInfo { get; set; } = new DumpingInfoSection();
-
         [JsonProperty(PropertyName = "versions_and_editions", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public VersionAndEditionsSection VersionAndEditions { get; set; } = new VersionAndEditionsSection();
 
@@ -68,6 +65,9 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "size_and_checksums", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public SizeAndChecksumsSection SizeAndChecksums { get; set; } = new SizeAndChecksumsSection();
 
+        [JsonProperty(PropertyName = "dumping_info", DefaultValueHandling = DefaultValueHandling.Ignore)]
+        public DumpingInfoSection DumpingInfo { get; set; } = new DumpingInfoSection();
+
         [JsonProperty(PropertyName = "artifacts", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public Dictionary<string, string> Artifacts { get; set; } = new Dictionary<string, string>();
 
@@ -81,7 +81,6 @@ namespace RedumpLib.Data
                 Added = this.Added,
                 LastModified = this.LastModified,
                 CommonDiscInfo = this.CommonDiscInfo?.Clone() as CommonDiscInfoSection,
-                DumpingInfo = this.DumpingInfo?.Clone() as DumpingInfoSection,
                 VersionAndEditions = this.VersionAndEditions?.Clone() as VersionAndEditionsSection,
                 EDC = this.EDC?.Clone() as EDCSection,
                 ParentCloneRelationship = this.ParentCloneRelationship?.Clone() as ParentCloneRelationshipSection,
@@ -90,6 +89,7 @@ namespace RedumpLib.Data
                 DumpersAndStatus = this.DumpersAndStatus?.Clone() as DumpersAndStatusSection,
                 TracksAndWriteOffsets = this.TracksAndWriteOffsets?.Clone() as TracksAndWriteOffsetsSection,
                 SizeAndChecksums = this.SizeAndChecksums?.Clone() as SizeAndChecksumsSection,
+                DumpingInfo = this.DumpingInfo?.Clone() as DumpingInfoSection,
                 Artifacts = this.Artifacts?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
             };
         }
@@ -274,39 +274,6 @@ namespace RedumpLib.Data
                 CommentsSpecialFields = this.CommentsSpecialFields?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
                 Contents = this.Contents,
                 ContentsSpecialFields = this.ContentsSpecialFields?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
-            };
-        }
-    }
-
-    /// <summary>
-    /// Dumping info section for moderation
-    /// </summary>
-    public class DumpingInfoSection : ICloneable
-    {
-        // Name not defined by Redump
-        [JsonProperty(PropertyName = "d_dumping_program", Required = Required.AllowNull)]
-        public string DumpingProgram { get; set; }
-
-        // Name not defined by Redump
-        [JsonProperty(PropertyName = "d_drive_manufacturer", Required = Required.AllowNull)]
-        public string Manufacturer { get; set; }
-
-        // Name not defined by Redump
-        [JsonProperty(PropertyName = "d_drive_model", Required = Required.AllowNull)]
-        public string Model { get; set; }
-
-        // Name not defined by Redump
-        [JsonProperty(PropertyName = "d_drive_firmware", Required = Required.AllowNull)]
-        public string Firmware { get; set; }
-
-        public object Clone()
-        {
-            return new DumpingInfoSection
-            {
-                DumpingProgram = this.DumpingProgram,
-                Manufacturer = this.Manufacturer,
-                Model = this.Model,
-                Firmware = this.Firmware,
             };
         }
     }
@@ -550,6 +517,39 @@ namespace RedumpLib.Data
                 CRC32 = this.CRC32,
                 MD5 = this.MD5,
                 SHA1 = this.SHA1,
+            };
+        }
+    }
+
+    /// <summary>
+    /// Dumping info section for moderation
+    /// </summary>
+    public class DumpingInfoSection : ICloneable
+    {
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_dumping_program", Required = Required.AllowNull)]
+        public string DumpingProgram { get; set; }
+
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_drive_manufacturer", Required = Required.AllowNull)]
+        public string Manufacturer { get; set; }
+
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_drive_model", Required = Required.AllowNull)]
+        public string Model { get; set; }
+
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_drive_firmware", Required = Required.AllowNull)]
+        public string Firmware { get; set; }
+
+        public object Clone()
+        {
+            return new DumpingInfoSection
+            {
+                DumpingProgram = this.DumpingProgram,
+                Manufacturer = this.Manufacturer,
+                Model = this.Model,
+                Firmware = this.Firmware,
             };
         }
     }
