@@ -449,20 +449,22 @@ namespace MPF.Modules.DiscImageCreator
                         string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
                         info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     }
-                    else if (this.Type == MediaType.BluRay)
-                    {
-                        if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
-                        {
-                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+                    // TODO: Re-enable this block once Redump accepts layerbreaks for Blu-ray discs
+                    //else if (this.Type == MediaType.BluRay)
+                    //{
+                    //    if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                    //    {
+                    //        if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                    //            info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
-                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
-                        }
-                    }
+                    //        if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                    //            info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+
+                    //        if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                    //            info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
+                    //    }
+                    //}
 
                     // Read the PVD
                     info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "";

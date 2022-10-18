@@ -156,6 +156,7 @@
 - Change location of dumping info
 - Add MS ZipFile package to MPF.Library
 - Add + to positive offsets
+- Disable layerbreak generation for BD
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
