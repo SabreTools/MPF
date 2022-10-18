@@ -471,7 +471,9 @@ namespace MPF.Modules.DiscImageCreator
                     //}
 
                     // Read the PVD
-                    info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "";
+                    // TODO: Remove this if-statement once Redump accepts XGD PVDs again
+                    if (System != RedumpSystem.MicrosoftXbox)
+                        info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "";
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
