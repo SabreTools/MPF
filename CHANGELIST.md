@@ -158,6 +158,7 @@
 - Add + to positive offsets
 - Disable layerbreak generation for BD
 - Disable XGD version reporting
+- Disable XGD layerbreak reporting
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

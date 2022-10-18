@@ -446,8 +446,12 @@ namespace MPF.Modules.DiscImageCreator
                     // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
                     {
-                        string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
-                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        // TODO: Remove this if-statement once Redump accepts XGD layerbreaks again
+                        if (!System.IsXGD())
+                        {
+                            string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
+                            info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
+                        }
                     }
 
                     // TODO: Re-enable this block once Redump accepts layerbreaks for Blu-ray discs
@@ -517,6 +521,7 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.XMID;
                         info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? "";
+                        // TODO: Re-enable this line when proper XGD1 versions are supported by Redump again
                         //info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
@@ -539,6 +544,7 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.XMID;
                         info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? "";
+                        // TODO: Re-enable this line when proper XGD2/3 versions are supported by Redump again
                         //info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
                     }
