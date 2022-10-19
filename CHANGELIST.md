@@ -162,6 +162,7 @@
 - Disable XGD1 PVD reporting
 - Put Redump limitations behind existing flag
 - Add framework for reported disc type
+- Add disc type parsing for Aaru and DIC
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

@@ -387,6 +387,10 @@ namespace MPF.Modules.DiscImageCreator
                 info.DumpingInfo.Firmware = firmware;
             }
 
+            // Fill in the disc type data
+            if (GetDiscType($"{basePath}_disc.txt", out string discTypeOrBookType))
+                info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
+
             // Fill in the hash data
             info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");
 
@@ -2554,6 +2558,55 @@ namespace MPF.Modules.DiscImageCreator
                 {
                     // We don't care what the exception is right now
                     return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get reported disc type information, if possible
+        /// </summary>
+        /// <param name="drive">_disc.txt file location</param>
+        /// <returns>True if disc type info was set, false otherwise</returns>
+        private static bool GetDiscType(string drive, out string discTypeOrBookType)
+        {
+            // Set the default values
+            discTypeOrBookType = null;
+
+            // If the file doesn't exist, we can't get the info
+            if (!File.Exists(drive))
+                return false;
+
+            using (StreamReader sr = File.OpenText(drive))
+            {
+                try
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        // Trim the line for later use
+                        line = line.Trim();
+
+                        // Only take the first instance of each value
+                        if (string.IsNullOrEmpty(discTypeOrBookType) && line.StartsWith("DiscType"))
+                        {
+                            // DiscType: <discType>
+                            discTypeOrBookType = line.Substring("DiscType: ".Length);
+                        }
+                        else if (string.IsNullOrEmpty(discTypeOrBookType) && line.StartsWith("BookType"))
+                        {
+                            // BookType: <discType>
+                            discTypeOrBookType = line.Substring("BookType: ".Length);
+                        }
+
+                        line = sr.ReadLine();
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
                 }
             }
         }
