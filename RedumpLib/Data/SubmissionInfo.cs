@@ -542,6 +542,10 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_drive_firmware", Required = Required.AllowNull)]
         public string Firmware { get; set; }
 
+        // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_reported_disc_type", Required = Required.AllowNull)]
+        public string ReportedDiscType { get; set; }
+
         public object Clone()
         {
             return new DumpingInfoSection
@@ -550,6 +554,7 @@ namespace RedumpLib.Data
                 Manufacturer = this.Manufacturer,
                 Model = this.Model,
                 Firmware = this.Firmware,
+                ReportedDiscType = this.ReportedDiscType,
             };
         }
     }

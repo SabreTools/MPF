@@ -842,6 +842,7 @@ namespace MPF.Library
                 AddIfExists(output, Template.DumpingDriveManufacturer, info.DumpingInfo.Manufacturer, 1);
                 AddIfExists(output, Template.DumpingDriveModel, info.DumpingInfo.Model, 1);
                 AddIfExists(output, Template.DumpingDriveFirmware, info.DumpingInfo.Firmware, 1);
+                AddIfExists(output, Template.ReportedDiscType, info.DumpingInfo.ReportedDiscType, 1);
 
                 // Make sure there aren't any instances of two blank lines in a row
                 string last = null;

@@ -86,6 +86,7 @@ namespace MPF.Core.Data
         public const string DumpingDriveManufacturer = "Manufacturer";
         public const string DumpingDriveModel = "Model";
         public const string DumpingDriveFirmware = "Firmware";
+        public const string ReportedDiscType = "Reported Disc Type";
         public const string PVDField = "Primary Volume Descriptor (PVD)";
         public const string DATField = "DAT";
         public const string SizeField = "Size";

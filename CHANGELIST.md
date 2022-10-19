@@ -161,6 +161,7 @@
 - Disable XGD layerbreak reporting
 - Disable XGD1 PVD reporting
 - Put Redump limitations behind existing flag
+- Add framework for reported disc type
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

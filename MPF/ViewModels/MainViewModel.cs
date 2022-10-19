@@ -405,6 +405,7 @@ namespace MPF.UI.ViewModels
                     Manufacturer = "ATAPI",
                     Model = "Optical Drive",
                     Firmware = "1.23",
+                    ReportedDiscType = "CD-R",
                 },
 
                 Artifacts = new Dictionary<string, string>()
