@@ -184,7 +184,7 @@
 
                                 <CheckBox VerticalAlignment="Center" Content="Enable Redump Compatibility"
                                      IsChecked="{Binding Options.EnableRedumpCompatibility}"
-                                     ToolTip="Enable limiting region and language lists to only those supported by Redump" Margin="0,4"
+                                     ToolTip="Enable limiting outputs to only those supported by Redump" Margin="0,4"
                                      />
 
                                 <CheckBox VerticalAlignment="Center" Content="Show Eject Reminder"

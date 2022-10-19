@@ -192,7 +192,7 @@ namespace MPF.Modules.Aaru
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Fill in submission info specifics for Aaru
             string outputDirectory = Path.GetDirectoryName(basePath);

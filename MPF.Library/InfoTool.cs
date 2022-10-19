@@ -93,7 +93,7 @@ namespace MPF.Library
             };
 
             // Get specific tool output handling
-            parameters.GenerateSubmissionInfo(info, combinedBase, drive, options.IncludeArtifacts);
+            parameters.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)

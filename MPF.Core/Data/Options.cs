@@ -334,7 +334,7 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Limit language and region selections to Redump-supported only
+        /// Limit outputs to Redump-supported values only
         /// </summary>
         public bool EnableRedumpCompatibility
         {

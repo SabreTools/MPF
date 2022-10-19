@@ -62,7 +62,7 @@ namespace MPF.Modules.UmdImageCreator
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Determine if there's a UMDImageCreator version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);

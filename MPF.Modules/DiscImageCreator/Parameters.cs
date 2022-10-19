@@ -371,7 +371,7 @@ namespace MPF.Modules.DiscImageCreator
         }
 
         /// <inheritdoc/>
-        public override void GenerateSubmissionInfo(SubmissionInfo info, string basePath, Drive drive, bool includeArtifacts)
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
             string outputDirectory = Path.GetDirectoryName(basePath);
 
@@ -446,33 +446,30 @@ namespace MPF.Modules.DiscImageCreator
                     // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
                     {
-                        // TODO: Remove this if-statement once Redump accepts XGD layerbreaks again
-                        if (!System.IsXGD())
+                        if (!options.EnableRedumpCompatibility || !System.IsXGD())
                         {
                             string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
                             info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                         }
                     }
 
-                    // TODO: Re-enable this block once Redump accepts layerbreaks for Blu-ray discs
-                    //else if (this.Type == MediaType.BluRay)
-                    //{
-                    //    if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
-                    //    {
-                    //        if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
-                    //            info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
+                    else if (!options.EnableRedumpCompatibility && this.Type == MediaType.BluRay)
+                    {
+                        if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        {
+                            if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
 
-                    //        if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
-                    //            info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
+                            if (layerbreak2 != null && layerbreak2 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak2 = layerbreak2.Value;
 
-                    //        if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
-                    //            info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
-                    //    }
-                    //}
+                            if (layerbreak3 != null && layerbreak3 * 2048 < info.SizeAndChecksums.Size)
+                                info.SizeAndChecksums.Layerbreak3 = layerbreak3.Value;
+                        }
+                    }
 
                     // Read the PVD
-                    // TODO: Remove this if-statement once Redump accepts XGD PVDs again
-                    if (System != RedumpSystem.MicrosoftXbox)
+                    if (!options.EnableRedumpCompatibility || System != RedumpSystem.MicrosoftXbox)
                         info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "";
 
                     // Bluray-specific options
@@ -523,8 +520,8 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.XMID;
                         info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? "";
-                        // TODO: Re-enable this line when proper XGD1 versions are supported by Redump again
-                        //info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
+                        if (!options.EnableRedumpCompatibility)
+                            info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
 
@@ -546,8 +543,8 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.XMID;
                         info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? "";
-                        // TODO: Re-enable this line when proper XGD2/3 versions are supported by Redump again
-                        //info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
+                        if (!options.EnableRedumpCompatibility)
+                            info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
                     }
 
