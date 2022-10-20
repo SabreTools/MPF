@@ -2586,12 +2586,16 @@ namespace MPF.Modules.DiscImageCreator
                         // Trim the line for later use
                         line = line.Trim();
 
-                        // Only take the first instance of each value
-                        if (string.IsNullOrEmpty(discTypeOrBookType) && line.StartsWith("DiscType"))
+                        
+                        if (line.StartsWith("DiscType"))
                         {
                             // DiscType: <discType>
-                            discTypeOrBookType = line.Substring("DiscType: ".Length);
+                            if (string.IsNullOrEmpty(discTypeOrBookType))
+                                discTypeOrBookType = line.Substring("DiscType: ".Length);
+                            else
+                                discTypeOrBookType += $", {line.Substring("DiscType: ".Length)}";
                         }
+                        // Only take the first instance for anything that's not a CD
                         else if (string.IsNullOrEmpty(discTypeOrBookType) && line.StartsWith("BookType"))
                         {
                             // BookType: <discType>
