@@ -300,6 +300,8 @@ namespace MPF.UI.Core.ViewModels
                 Parent.EDC.Visibility = Visibility.Collapsed;
             else
                 Parent.EDC.Text = SubmissionInfo.EDC.EDC.LongName();
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Filename) != true)
+                Parent.Filename.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.Header))
                 Parent.Header.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalName) != true)
