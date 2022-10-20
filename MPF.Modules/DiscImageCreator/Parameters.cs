@@ -2586,8 +2586,8 @@ namespace MPF.Modules.DiscImageCreator
                         // Trim the line for later use
                         line = line.Trim();
 
-                        
-                        if (line.StartsWith("DiscType"))
+                        // Concatenate all found values for each possible line type
+                        if (line.StartsWith("DiscType:"))
                         {
                             // DiscType: <discType>
                             if (string.IsNullOrEmpty(discTypeOrBookType))
@@ -2595,11 +2595,29 @@ namespace MPF.Modules.DiscImageCreator
                             else
                                 discTypeOrBookType += $", {line.Substring("DiscType: ".Length)}";
                         }
-                        // Only take the first instance for anything that's not a CD
-                        else if (string.IsNullOrEmpty(discTypeOrBookType) && line.StartsWith("BookType"))
+                        else if (line.StartsWith("DiscTypeIdentifier:"))
+                        {
+                            // DiscType: <discType>
+                            if (string.IsNullOrEmpty(discTypeOrBookType))
+                                discTypeOrBookType = line.Substring("DiscTypeIdentifier: ".Length);
+                            else
+                                discTypeOrBookType += $", {line.Substring("DiscTypeIdentifier: ".Length)}";
+                        }
+                        else if (line.StartsWith("DiscTypeSpecific:"))
+                        {
+                            // DiscType: <discType>
+                            if (string.IsNullOrEmpty(discTypeOrBookType))
+                                discTypeOrBookType = line.Substring("DiscTypeSpecific: ".Length);
+                            else
+                                discTypeOrBookType += $", {line.Substring("DiscTypeSpecific: ".Length)}";
+                        }
+                        else if (line.StartsWith("BookType:"))
                         {
                             // BookType: <discType>
-                            discTypeOrBookType = line.Substring("BookType: ".Length);
+                            if (string.IsNullOrEmpty(discTypeOrBookType))
+                                discTypeOrBookType = line.Substring("BookType: ".Length);
+                            else
+                                discTypeOrBookType += $", {line.Substring("BookType: ".Length)}";
                         }
 
                         line = sr.ReadLine();
