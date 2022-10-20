@@ -375,18 +375,18 @@ namespace MPF.Library
 
             // Write the text output
             resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
-            bool success = InfoTool.WriteOutputData(this.OutputDirectory, formattedValues);
-            if (success)
-                resultProgress?.Report(Result.Success("Writing complete!"));
+            (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(this.OutputDirectory, formattedValues);
+            if (txtSuccess)
+                resultProgress?.Report(Result.Success(txtResult));
             else
-                resultProgress?.Report(Result.Failure("Writing could not complete!"));
+                resultProgress?.Report(Result.Failure(txtResult));
 
             // Write the copy protection output
             if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
             {
                 resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
-                success = InfoTool.WriteProtectionData(this.OutputDirectory, submissionInfo);
-                if (success)
+                bool scanSuccess = InfoTool.WriteProtectionData(this.OutputDirectory, submissionInfo);
+                if (scanSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
                     resultProgress?.Report(Result.Failure("Writing could not complete!"));
@@ -396,8 +396,8 @@ namespace MPF.Library
             if (Options.OutputSubmissionJSON)
             {
                 resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(Options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
-                success = InfoTool.WriteOutputData(this.OutputDirectory, submissionInfo, Options.IncludeArtifacts);
-                if (success)
+                bool jsonSuccess = InfoTool.WriteOutputData(this.OutputDirectory, submissionInfo, Options.IncludeArtifacts);
+                if (jsonSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
                     resultProgress?.Report(Result.Failure("Writing could not complete!"));
@@ -407,11 +407,11 @@ namespace MPF.Library
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
-                (bool compressSuccess, string statement) = InfoTool.CompressLogFiles(this.OutputDirectory, this.OutputFilename, this.Parameters);
+                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(this.OutputDirectory, this.OutputFilename, this.Parameters);
                 if (compressSuccess)
-                    resultProgress?.Report(Result.Success(statement));
+                    resultProgress?.Report(Result.Success(compressResult));
                 else
-                    resultProgress?.Report(Result.Failure(statement));
+                    resultProgress?.Report(Result.Failure(compressResult));
             }
 
             resultProgress?.Report(Result.Success("Submission information process complete!"));

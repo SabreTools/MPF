@@ -165,6 +165,7 @@
 - Add disc type parsing for Aaru and DIC
 - Fix multiple DiscType for DIC
 - Fix multiple DiscType* for DIC
+- Add logging to !submissionInfo writing failure
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

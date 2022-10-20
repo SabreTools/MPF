@@ -975,11 +975,11 @@ namespace MPF.Library
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="lines">Preformatted list of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
-        public static bool WriteOutputData(string outputDirectory, List<string> lines)
+        public static (bool, string) WriteOutputData(string outputDirectory, List<string> lines)
         {
             // Check to see if the inputs are valid
             if (lines == null)
-                return false;
+                return (false, "No formatted data found to write!");
 
             // Now write out to a generic file
             try
@@ -987,16 +987,17 @@ namespace MPF.Library
                 using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
+                    {
                         sw.WriteLine(line);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // We don't care what the error is right now
-                return false;
+                return (false, $"Writing could not complete: {ex}");
             }
 
-            return true;
+            return (true, "Writing complete!");
         }
 
         /// <summary>
