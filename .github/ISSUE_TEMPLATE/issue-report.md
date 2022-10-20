@@ -10,7 +10,7 @@ assignees: mnadareski
 **Before You Submit**
 - Remember to try the [latest WIP build](https://ci.appveyor.com/project/mnadareski/mpf/build/artifacts) to see if the issue has already been addressed.
 - Is it copy protection related? If so, report the issue [here](https://github.com/mnadareski/BurnOutSharp/issues) instead.
-- .NET Core 3.1 and .NET 5.0 have known issues, please try using another build to reproduce the error
+- .NET 6.0 has known issues, please try using another build to reproduce the error
 - Check multiple discs to help narrow down the issue
 - Check the Options to see if changing any of those affects your issue.
 
@@ -25,9 +25,8 @@ What version are you using?
 **Build**
 What runtime version are you using?
 
-- [ ] .NET Framework 4.7.2 running on (Operating System)
 - [ ] .NET Framework 4.8 running on (Operating System)
-- [ ] .NET Core 3.1 running on (Operating System)
+- [ ] .NET 6.0 running on (Operating System)
 
 **Describe the issue**
 A clear and concise description of what the bug is.

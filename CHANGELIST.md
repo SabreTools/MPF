@@ -167,6 +167,7 @@
 - Fix multiple DiscType* for DIC
 - Add logging to !submissionInfo writing failure
 - Add logging to !submissionInfo formatting failure
+- Update issue templates to be more accurate
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
