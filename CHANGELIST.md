@@ -168,6 +168,7 @@
 - Add logging to !submissionInfo writing failure
 - Add logging to !submissionInfo formatting failure
 - Update issue templates to be more accurate
+- Fix NRE with offsets
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
