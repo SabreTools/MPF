@@ -643,11 +643,11 @@ namespace MPF.Library
         /// </summary>
         /// <param name="info">Information object that should contain normalized values</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
-        public static List<string> FormatOutputData(SubmissionInfo info)
+        public static (List<string>, string) FormatOutputData(SubmissionInfo info)
         {
             // Check to see if the inputs are valid
             if (info == null)
-                return null;
+                return (null, "Submission information was missing");
 
             try
             {
@@ -859,12 +859,11 @@ namespace MPF.Library
                     }
                 }
 
-                return output;
+                return (output, "Formatting complete!");
             }
-            catch
+            catch (Exception ex)
             {
-                // We don't care what the error is
-                return null;
+                return (null, $"Error formatting submission info: {ex}");
             }
         }
 
