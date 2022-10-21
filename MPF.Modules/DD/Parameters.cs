@@ -128,6 +128,7 @@ namespace MPF.Modules.DD
 
                 case RedumpSystem.SonyPlayStation4:
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? "";
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
