@@ -171,7 +171,7 @@
 - Fix NRE with offsets
 - Fix readonly Filename info display
 - Fix layerbreak-based checks
-- Add PS4 version finding (tjanas)
+- Add PS4 serial finding (tjanas)
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
