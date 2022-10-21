@@ -456,8 +456,7 @@ namespace MPF.Modules.DiscImageCreator
                             info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                         }
                     }
-
-                    else if (!options.EnableRedumpCompatibility && this.Type == MediaType.BluRay)
+                    else if (this.Type == MediaType.BluRay)
                     {
                         if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {

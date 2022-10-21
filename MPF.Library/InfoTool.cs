@@ -642,8 +642,9 @@ namespace MPF.Library
         /// Format the output data in a human readable way, separating each printed line into a new item in the list
         /// </summary>
         /// <param name="info">Information object that should contain normalized values</param>
+        /// <param name="options">Options object representing user-defined options</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
-        public static (List<string>, string) FormatOutputData(SubmissionInfo info)
+        public static (List<string>, string) FormatOutputData(SubmissionInfo info, Options options)
         {
             // Check to see if the inputs are valid
             if (info == null)
@@ -829,7 +830,17 @@ namespace MPF.Library
                 else
                 {
                     output.Add(""); output.Add("Size & Checksum:");
-                    AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
+
+                    // Gross hack because of automatic layerbreaks in Redump
+                    if ((info.CommonDiscInfo.Media != DiscType.BD25
+                            && info.CommonDiscInfo.Media != DiscType.BD50
+                            && info.CommonDiscInfo.Media != DiscType.BD100
+                            && info.CommonDiscInfo.Media != DiscType.BD128)
+                        || (!options.EnableRedumpCompatibility))
+                    {
+                        AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
+                    }
+
                     AddIfExists(output, Template.SizeField, info.SizeAndChecksums.Size.ToString(), 1);
                     AddIfExists(output, Template.CRC32Field, info.SizeAndChecksums.CRC32, 1);
                     AddIfExists(output, Template.MD5Field, info.SizeAndChecksums.MD5, 1);

@@ -370,7 +370,7 @@ namespace MPF.Library
 
             // Format the information for the text output
             resultProgress?.Report(Result.Success("Formatting information..."));
-            (List<string> formattedValues, string formatResult) = InfoTool.FormatOutputData(submissionInfo);
+            (List<string> formattedValues, string formatResult) = InfoTool.FormatOutputData(submissionInfo, this.Options);
             if (formattedValues == null)
                 resultProgress?.Report(Result.Success(formatResult));
             else
