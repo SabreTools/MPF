@@ -172,6 +172,7 @@
 - Fix readonly Filename info display
 - Fix layerbreak-based checks
 - Add PS4 serial finding (tjanas)
+- Add unused notification method
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again

@@ -72,6 +72,85 @@ namespace MPF.Core.Utilities
 
         #endregion
 
+        #region Notification
+
+        /// <summary>
+        /// Duration to play a single tone
+        /// </summary>
+        private const int durationMs = 200;
+
+        /// <summary>
+        /// Frequency representing C(4)
+        /// </summary>
+        private const int noteC4 = 262;
+
+        /// <summary>
+        /// Frequency representing D(4)
+        /// </summary>
+        private const int noteD4 = 294;
+
+        /// <summary>
+        /// Frequency representing E(4)
+        /// </summary>
+        private const int noteE4 = 330;
+
+        /// <summary>
+        /// Frequency representing F(4)
+        /// </summary>
+        private const int noteF4 = 349;
+
+        /// <summary>
+        /// Frequency representing G(4)
+        /// </summary>
+        private const int noteG4 = 392;
+
+        /// <summary>
+        /// Frequency representing A(5)
+        /// </summary>
+        private const int noteA5 = 440;
+
+        /// <summary>
+        /// Frequency representing B(5)
+        /// </summary>
+        private const int noteB5 = 494;
+
+        /// <summary>
+        /// Frequency representing C(5)
+        /// </summary>
+        private const int noteC5 = 523;
+
+        /// <summary>
+        /// Output a series of beeps for success or failure, similar to DiscImageCreator
+        /// </summary>
+        /// <param name="success">True if the upward series should play, false otherwise</param>
+        public static void SoundBeep(bool success)
+        {
+            if (success)
+            {
+                Console.Beep(noteC4, durationMs);
+                Console.Beep(noteD4, durationMs);
+                Console.Beep(noteE4, durationMs);
+                Console.Beep(noteF4, durationMs);
+                Console.Beep(noteG4, durationMs);
+                Console.Beep(noteA5, durationMs);
+                Console.Beep(noteB5, durationMs);
+                Console.Beep(noteC5, durationMs);
+            }
+            else
+            {
+                Console.Beep(noteC5, durationMs);
+                Console.Beep(noteB5, durationMs);
+                Console.Beep(noteA5, durationMs);
+                Console.Beep(noteG4, durationMs);
+                Console.Beep(noteF4, durationMs);
+                Console.Beep(noteE4, durationMs);
+                Console.Beep(noteD4, durationMs);
+                Console.Beep(noteC4, durationMs);
+            }
+        }
+
+        #endregion
+
         #region Support
 
         /// <summary>
