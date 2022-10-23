@@ -383,6 +383,7 @@ namespace MPF.Modules.Aaru
 
                 case RedumpSystem.SonyPlayStation5:
                     info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? "";
                     break;
             }
 
