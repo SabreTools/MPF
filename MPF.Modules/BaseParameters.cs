@@ -1397,6 +1397,43 @@ namespace MPF.Modules
         }
 
         /// <summary>
+        /// Get the internal serial from a PlayStation 5 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+        protected static string GetPlayStation5Serial(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find param.json, we don't have a PlayStation 5 disc
+            string paramJsonPath = Path.Combine(drivePath, "bd", "param.json");
+            if (!File.Exists(paramJsonPath))
+                return null;
+
+            // Let's try reading param.json to find the serial in the unencrypted JSON
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                {
+                    br.BaseStream.Seek(0x82E, SeekOrigin.Begin);
+                    return new string(br.ReadChars(9));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get the version from a PlayStation 5 disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
