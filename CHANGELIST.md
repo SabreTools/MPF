@@ -174,6 +174,7 @@
 - Add PS4 serial finding (tjanas)
 - Add unused notification method
 - Move to unused Chime class
+- Add PS5 serial finding (tjanas)
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
