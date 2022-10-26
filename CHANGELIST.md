@@ -175,6 +175,7 @@
 - Add unused notification method
 - Move to unused Chime class
 - Add PS5 serial finding (tjanas)
+- Fix offset formatting (fuzz6001)
 
 ### 2.3 (2022-02-05)
 - Start overhauling Redump information pulling, again
