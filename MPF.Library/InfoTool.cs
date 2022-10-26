@@ -821,8 +821,8 @@ namespace MPF.Library
                     AddIfExists(output, Template.DATField, info.TracksAndWriteOffsets.ClrMameProData + "\n", 1);
                     AddIfExists(output, Template.CuesheetField, info.TracksAndWriteOffsets.Cuesheet, 1);
                     string offset = info.TracksAndWriteOffsets.OtherWriteOffsets;
-                    if (offset?.StartsWith("-") == false)
-                        offset = $"+{offset}";
+                    if (Int32.TryParse(offset, out int i))
+                        offset = i.ToString("+#;-#;0");
 
                     AddIfExists(output, Template.WriteOffsetField, offset, 1);
                 }
