@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.4 (2022-10-26)
 - Update to DIC 20211001
 - Fix Redump disc title pulling
 - Add /mr default flag options

@@ -10,7 +10,7 @@
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2022</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
-    <Version>2.3</Version>
+    <Version>2.4</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <IncludeSource>true</IncludeSource>
