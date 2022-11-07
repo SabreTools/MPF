@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.Core.Utilities;
 using RedumpLib.Data;
 
 namespace MPF.Modules.UmdImageCreator
@@ -43,6 +42,8 @@ namespace MPF.Modules.UmdImageCreator
                     {
                         if (!File.Exists($"{basePath}_disc.txt"))
                             missingFiles.Add($"{basePath}_disc.txt");
+                        if (!File.Exists($"{basePath}_drive.txt"))
+                            missingFiles.Add($"{basePath}_drive.txt");
                         if (!File.Exists($"{basePath}_mainError.txt"))
                             missingFiles.Add($"{basePath}_mainError.txt");
                         if (!File.Exists($"{basePath}_mainInfo.txt"))
@@ -100,6 +101,8 @@ namespace MPF.Modules.UmdImageCreator
             {
                 if (File.Exists(basePath + "_disc.txt"))
                     info.Artifacts["disc"] = GetBase64(GetFullFile(basePath + "_disc.txt"));
+                if (File.Exists(basePath + "_drive.txt"))
+                    info.Artifacts["drive"] = GetBase64(GetFullFile(basePath + "_drive.txt"));
                 if (File.Exists(basePath + "_mainError.txt"))
                     info.Artifacts["mainError"] = GetBase64(GetFullFile(basePath + "_mainError.txt"));
                 if (File.Exists(basePath + "_mainInfo.txt"))
@@ -118,6 +121,8 @@ namespace MPF.Modules.UmdImageCreator
                 case MediaType.UMD:
                     if (File.Exists($"{basePath}_disc.txt"))
                         logFiles.Add($"{basePath}_disc.txt");
+                    if (File.Exists($"{basePath}_drive.txt"))
+                        logFiles.Add($"{basePath}_drive.txt");
                     if (File.Exists($"{basePath}_mainError.txt"))
                         logFiles.Add($"{basePath}_mainError.txt");
                     if (File.Exists($"{basePath}_mainInfo.txt"))

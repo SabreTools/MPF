@@ -1,3 +1,6 @@
+### WIP (xxxx-xx-xx)
+- Add _drive file to zip for UIC
+
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
 - Fix Redump disc title pulling
