@@ -1400,6 +1400,7 @@ namespace RedumpLib.Data
                 case "microsoft xbox one":
                     return RedumpSystem.MicrosoftXboxOne;
                 case "xbs":
+                case "xboxsx":
                 case "xbseries":
                 case "xbseriess":
                 case "xbseriesx":
