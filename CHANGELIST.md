@@ -1,5 +1,6 @@
 ### WIP (xxxx-xx-xx)
 - Add _drive file to zip for UIC
+- Add Xbox Series X and PS5 to list, fix Acorn
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
