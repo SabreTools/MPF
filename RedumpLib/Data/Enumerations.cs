@@ -1975,7 +1975,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox One", ShortName = "xboxone", IsBanned = true, HasDat = true)]
         MicrosoftXboxOne,
 
-        [System(Category = SystemCategory.DiscBasedConsole, Available = false, LongName = "Microsoft Xbox Series X/S")]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox Series X", ShortName = "xboxsx", IsBanned = true)]
         MicrosoftXboxSeriesXS,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Memorex Visual Information System", ShortName = "vis", HasCues = true, HasDat = true)]
@@ -2035,7 +2035,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 4", ShortName = "ps4", IsBanned = true, HasDat = true)]
         SonyPlayStation4,
 
-        [System(Category = SystemCategory.DiscBasedConsole, Available = false, LongName = "Sony PlayStation 5")]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 5", ShortName = "ps5", IsBanned = true)]
         SonyPlayStation5,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation Portable", ShortName = "psp", HasDat = true)]
@@ -2210,7 +2210,7 @@ namespace RedumpLib.Data
 
         #region Computers
 
-        [System(Category = SystemCategory.Computer, LongName = "Acorn Archimedes", ShortName = "archcd", HasCues = true, HasDat = true)]
+        [System(Category = SystemCategory.Computer, LongName = "Acorn Archimedes", ShortName = "arch", HasCues = true, HasDat = true)]
         AcornArchimedes,
 
         [System(Category = SystemCategory.Computer, LongName = "Apple Macintosh", ShortName = "mac", HasCues = true, HasDat = true)]
