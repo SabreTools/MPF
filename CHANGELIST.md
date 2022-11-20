@@ -3,6 +3,7 @@
 - Add Xbox Series X and PS5 to list, fix Acorn
 - Add Xbox Series X short name to list
 - Remove windows from test target
+- Remove .NET 6.0 from tests, add TODO
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
