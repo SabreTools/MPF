@@ -4,6 +4,7 @@
 - Add Xbox Series X short name to list
 - Remove windows from test target
 - Remove .NET 6.0 from tests, add TODO
+- Add .NET 6.0 to tests, remove msbuild args
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001

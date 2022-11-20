@@ -12,12 +12,6 @@ image: Visual Studio 2022
 environment:
   EnableNuGetPackageRestore: true
 
-# msbuild configuration
-platform:
-- Any CPU
-configuration:
-- Debug
-
 # install dependencies
 install:
 - ps: appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe

@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- TODO: Add .NET 6.0 back here when AppVeyor fixed -->
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
     <PlatformTarget>x86</PlatformTarget>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
