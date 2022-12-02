@@ -146,6 +146,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Default HD-DVD dumping speed
+        /// </summary>
+        public int PreferredDumpSpeedHDDVD
+        {
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedHDDVD", 24); }
+            set { _settings["PreferredDumpSpeedHDDVD"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default BD dumping speed
         /// </summary>
         public int PreferredDumpSpeedBD

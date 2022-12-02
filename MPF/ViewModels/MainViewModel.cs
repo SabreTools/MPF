@@ -1176,10 +1176,12 @@ namespace MPF.UI.ViewModels
                     speed = App.Options.PreferredDumpSpeedCD;
                     break;
                 case MediaType.DVD:
-                case MediaType.HDDVD:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     speed = App.Options.PreferredDumpSpeedDVD;
+                    break;
+                case MediaType.HDDVD:
+                    speed = App.Options.PreferredDumpSpeedHDDVD;
                     break;
                 case MediaType.BluRay:
                     speed = App.Options.PreferredDumpSpeedBD;

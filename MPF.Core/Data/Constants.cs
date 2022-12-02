@@ -19,6 +19,7 @@ namespace MPF.Core.Data
         // Private lists of known drive speed ranges
         private static IReadOnlyList<int> CD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
         private static IReadOnlyList<int> DVD { get; } = CD.Where(s => s <= 24).ToList();
+        private static IReadOnlyList<int> HDDVD { get; } = CD.Where(s => s <= 24).ToList();
         private static IReadOnlyList<int> BD { get; } = CD.Where(s => s <= 16).ToList();
         private static IReadOnlyList<int> Unknown { get; } = new List<int> { 1 };
 
@@ -35,10 +36,11 @@ namespace MPF.Core.Data
                 case MediaType.GDROM:
                     return CD;
                 case MediaType.DVD:
-                case MediaType.HDDVD:
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     return DVD;
+                case MediaType.HDDVD:
+                    return HDDVD;
                 case MediaType.BluRay:
                     return BD;
                 default:
