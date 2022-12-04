@@ -732,6 +732,11 @@ namespace MPF.Modules.DiscImageCreator
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
                     break;
 
+                case RedumpSystem.SonyPlayStation3:
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? "";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? "";
+                    break;
+
                 case RedumpSystem.SonyPlayStation4:
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? "";

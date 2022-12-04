@@ -1323,6 +1323,80 @@ namespace MPF.Modules
         }
 
         /// <summary>
+        /// Get the internal serial from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Internal disc serial if possible, null on error</returns>
+        protected static string GetPlayStation3Serial(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find PARAM.SFO, we don't have a PlayStation 3 disc
+            string paramSfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading PARAM.SFO to find the serial at the end of the file
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x18, SeekOrigin.End);
+                    return new string(br.ReadChars(9));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the version from a PlayStation 3 disc, if possible
+        /// </summary>
+        /// <param name="driveLetter">Drive letter to use to check</param>
+        /// <returns>Game version if possible, null on error</returns>
+        protected static string GetPlayStation3Version(char? driveLetter)
+        {
+            // If there's no drive letter, we can't do this part
+            if (driveLetter == null)
+                return null;
+
+            // If the folder no longer exists, we can't do this part
+            string drivePath = driveLetter + ":\\";
+            if (!Directory.Exists(drivePath))
+                return null;
+
+            // If we can't find PARAM.SFO, we don't have a PlayStation 3 disc
+            string paramSfoPath = Path.Combine(drivePath, "PS3_GAME", "PARAM.SFO");
+            if (!File.Exists(paramSfoPath))
+                return null;
+
+            // Let's try reading PARAM.SFO to find the version at the end of the file
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                {
+                    br.BaseStream.Seek(-0x08, SeekOrigin.End);
+                    return new string(br.ReadChars(5));
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get the internal serial from a PlayStation 4 disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
