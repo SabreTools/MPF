@@ -20,6 +20,7 @@
     <NrtRevisionFormat>$(Version)-{chash:8}</NrtRevisionFormat>
     <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
     <NrtShowRevision>false</NrtShowRevision>
+    <UserSecretsId>27abb4ca-bf7a-431e-932f-49153303d5ff</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
