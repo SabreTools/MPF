@@ -48,19 +48,18 @@ namespace MPF.Test.Library
         }
 
         [Theory]
-        [InlineData(null, null, null, null)]
-        [InlineData(" ", "", " ", "")]
-        [InlineData("super", "blah.bin", "super", "blah.bin")]
-        [InlineData("super\\hero", "blah.bin", "super\\hero", "blah.bin")]
-        [InlineData("super.hero", "blah.bin", "super.hero", "blah.bin")]
-        [InlineData("superhero", "blah.rev.bin", "superhero", "blah.rev.bin")]
-        [InlineData("super&hero", "blah.bin", "super&hero", "blah.bin")]
-        [InlineData("superhero", "blah&foo.bin", "superhero", "blah&foo.bin")]
-        public void NormalizeOutputPathsTest(string outputDirectory, string outputFilename, string expectedOutputDirectory, string expectedOutputFilename)
+        [InlineData(null, null)]
+        [InlineData(" ", " ")]
+        [InlineData("super\\blah.bin", "super\\blah.bin")]
+        [InlineData("super\\hero\\blah.bin", "super\\hero\\blah.bin")]
+        [InlineData("super.hero\\blah.bin", "super.hero\\blah.bin")]
+        [InlineData("superhero\\blah.rev.bin", "superhero\\blah.rev.bin")]
+        [InlineData("super&hero\\blah.bin", "super&hero\\blah.bin")]
+        [InlineData("superhero\\blah&foo.bin", "superhero\\blah&foo.bin")]
+        public void NormalizeOutputPathsTest(string outputPath, string expectedPath)
         {
-            (string actualOutputDirectory, string actualOutputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename);
-            Assert.Equal(expectedOutputDirectory, actualOutputDirectory);
-            Assert.Equal(expectedOutputFilename, actualOutputFilename);
+            string actualPath = InfoTool.NormalizeOutputPaths(outputPath);
+            Assert.Equal(expectedPath, actualPath);
         }
 
         [Fact]

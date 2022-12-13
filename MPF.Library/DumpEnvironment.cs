@@ -19,14 +19,9 @@ namespace MPF.Library
         #region Output paths
 
         /// <summary>
-        /// Base output directory to write files to
+        /// Base output file path to write files to
         /// </summary>
-        public string OutputDirectory { get; private set; }
-
-        /// <summary>
-        /// Base output filename for output
-        /// </summary>
-        public string OutputFilename { get; private set; }
+        public string OutputPath { get; private set; }
 
         #endregion
 
@@ -87,15 +82,13 @@ namespace MPF.Library
         /// Constructor for a full DumpEnvironment object from user information
         /// </summary>
         /// <param name="options"></param>
-        /// <param name="outputDirectory"></param>
-        /// <param name="outputFilename"></param>
+        /// <param name="outputPath"></param>
         /// <param name="drive"></param>
         /// <param name="system"></param>
         /// <param name="type"></param>
         /// <param name="parameters"></param>
         public DumpEnvironment(Options options,
-            string outputDirectory,
-            string outputFilename,
+            string outputPath,
             Drive drive,
             RedumpSystem? system,
             MediaType? type,
@@ -105,7 +98,7 @@ namespace MPF.Library
             this.Options = options;
 
             // Output paths
-            (this.OutputDirectory, this.OutputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(outputPath);
 
             // UI information
             this.Drive = drive;
@@ -127,20 +120,26 @@ namespace MPF.Library
             if (this.Parameters.InternalProgram != InternalProgram.DiscImageCreator)
                 return;
 
-            // Replace all instances in the output directory
-            this.OutputDirectory = this.OutputDirectory.Replace('.', '_');
+            try
+            {
+                // Replace all instances in the output directory
+                string outputDirectory = Path.GetDirectoryName(this.OutputPath);
+                outputDirectory = outputDirectory.Replace(".", "_");
 
-            // Currently, only periods in directories matter
-            // Leave the following code commented in case filename handling breaks again
+                // Replace all instances in the output filename
+                string outputFilename = Path.GetFileNameWithoutExtension(this.OutputPath);
+                outputFilename = outputFilename.Replace(".", "_");
 
-            // Replace all instances in the output filename, except the extension
-            //string tempFilename = Path.GetFileNameWithoutExtension(this.OutputFilename)
-            //    .Replace('.', '_');
-            //string tempExtension = Path.GetExtension(this.OutputFilename)?.TrimStart('.');
-            //this.OutputFilename = $"{tempFilename}.{tempExtension}";
+                // Get the extension for recreating the path
+                string outputExtension = Path.GetExtension(this.OutputPath).TrimStart('.');
 
-            // Assign the path to the filename as well for dumping
-            ((Modules.DiscImageCreator.Parameters)this.Parameters).Filename = Path.Combine(this.OutputDirectory, this.OutputFilename);
+                // Rebuild the output path
+                this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
+
+                // Assign the path to the filename as well for dumping
+                ((Modules.DiscImageCreator.Parameters)this.Parameters).Filename = this.OutputPath;
+            }
+            catch { }
         }
 
         /// <summary>
@@ -207,28 +206,27 @@ namespace MPF.Library
                     return null;
 
                 // Set the proper parameters
-                string filename = OutputDirectory + Path.DirectorySeparatorChar + OutputFilename;
                 switch (Options.InternalProgram)
                 {
                     case InternalProgram.Aaru:
-                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DD:
-                        Parameters = new Modules.DD.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.DD.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DiscImageCreator:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.Redumper:
-                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.Redumper.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
                         break;
 
                     // This should never happen, but it needs a fallback
                     default:
-                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, filename, driveSpeed, Options);
+                        Parameters = new Modules.DiscImageCreator.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
                         break;
                 }
 
@@ -280,7 +278,7 @@ namespace MPF.Library
 
             // Execute internal tool
             progress?.Report(Result.Success($"Executing {Options.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
-            Directory.CreateDirectory(OutputDirectory);
+            Directory.CreateDirectory(Path.GetDirectoryName(this.OutputPath));
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             progress?.Report(Result.Success($"{Options.InternalProgram} has finished!"));
 
@@ -313,8 +311,12 @@ namespace MPF.Library
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
+            // Get the output directory and filename separately
+            string outputDirectory = Path.GetDirectoryName(this.OutputPath);
+            string outputFilename = Path.GetFileName(this.OutputPath);
+
             // Check to make sure that the output had all the correct files
-            (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(this.OutputDirectory, this.OutputFilename, this.Parameters, false);
+            (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, this.Parameters, false);
             if (!foundFiles)
             {
                 resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
@@ -324,8 +326,7 @@ namespace MPF.Library
             // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
             SubmissionInfo submissionInfo = await InfoTool.ExtractOutputInformation(
-                this.OutputDirectory,
-                this.OutputFilename,
+                this.OutputPath,
                 this.Drive,
                 this.System,
                 this.Type,
@@ -378,7 +379,7 @@ namespace MPF.Library
 
             // Write the text output
             resultProgress?.Report(Result.Success("Writing information to !submissionInfo.txt..."));
-            (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(this.OutputDirectory, formattedValues);
+            (bool txtSuccess, string txtResult) = InfoTool.WriteOutputData(outputDirectory, formattedValues);
             if (txtSuccess)
                 resultProgress?.Report(Result.Success(txtResult));
             else
@@ -388,7 +389,7 @@ namespace MPF.Library
             if (Options.ScanForProtection && Options.OutputSeparateProtectionFile)
             {
                 resultProgress?.Report(Result.Success("Writing protection to !protectionInfo.txt..."));
-                bool scanSuccess = InfoTool.WriteProtectionData(this.OutputDirectory, submissionInfo);
+                bool scanSuccess = InfoTool.WriteProtectionData(outputDirectory, submissionInfo);
                 if (scanSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
@@ -399,7 +400,7 @@ namespace MPF.Library
             if (Options.OutputSubmissionJSON)
             {
                 resultProgress?.Report(Result.Success($"Writing information to !submissionInfo.json{(Options.IncludeArtifacts ? ".gz" : string.Empty)}..."));
-                bool jsonSuccess = InfoTool.WriteOutputData(this.OutputDirectory, submissionInfo, Options.IncludeArtifacts);
+                bool jsonSuccess = InfoTool.WriteOutputData(outputDirectory, submissionInfo, Options.IncludeArtifacts);
                 if (jsonSuccess)
                     resultProgress?.Report(Result.Success("Writing complete!"));
                 else
@@ -410,7 +411,7 @@ namespace MPF.Library
             if (Options.CompressLogFiles)
             {
                 resultProgress?.Report(Result.Success("Compressing log files..."));
-                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(this.OutputDirectory, this.OutputFilename, this.Parameters);
+                (bool compressSuccess, string compressResult) = InfoTool.CompressLogFiles(outputDirectory, outputFilename, this.Parameters);
                 if (compressSuccess)
                     resultProgress?.Report(Result.Success(compressResult));
                 else
@@ -491,12 +492,11 @@ namespace MPF.Library
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            (OutputDirectory, OutputFilename) = InfoTool.NormalizeOutputPaths(OutputDirectory, OutputFilename);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(this.OutputPath);
 
             // Validate that the output path isn't on the dumping drive
-            string fullOutputPath = Path.GetFullPath(Path.Combine(OutputDirectory, OutputFilename));
-            if (fullOutputPath[0] == Drive.Letter)
-                return Result.Failure($"Error! Cannot output to same drive that is being dumped!");
+            if (this.OutputPath[0] == Drive.Letter)
+                return Result.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
             if (!File.Exists(Parameters.ExecutablePath))
@@ -505,7 +505,7 @@ namespace MPF.Library
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath);
             if (fullExecutablePath[0] == Drive.Letter)
-                return Result.Failure("$Error! Cannot dump same drive that executable resides on!");
+                return Result.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
             return Tools.GetSupportStatus(System, Type);

@@ -59,7 +59,7 @@ namespace MPF.Check
                 if (!string.IsNullOrWhiteSpace(path))
                     drive = Drive.Create(null, path);
 
-                var env = new DumpEnvironment(options, "", filepath, drive, knownSystem, mediaType, null);
+                var env = new DumpEnvironment(options, filepath, drive, knownSystem, mediaType, null);
 
                 // Finally, attempt to do the output dance
                 var result = env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress).ConfigureAwait(false).GetAwaiter().GetResult();
