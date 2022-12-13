@@ -169,6 +169,41 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
+            List<string> missingFiles = new List<string>();
+
+            string outputDirectory = Path.GetDirectoryName(basePath);
+            var currentFiles = Directory.GetFiles(outputDirectory);
+
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    string fulltoc = currentFiles.FirstOrDefault(f => f.EndsWith(".fulltoc"));
+                    if (fulltoc == null && !File.Exists(fulltoc))
+                        missingFiles.Add(fulltoc);
+
+                    string log = currentFiles.FirstOrDefault(f => f.EndsWith(".log"));
+                    if (log == null && !File.Exists(log))
+                        missingFiles.Add(log);
+
+                    string scram = currentFiles.FirstOrDefault(f => f.EndsWith(".scram"));
+                    if (scram == null && !File.Exists(scram))
+                        missingFiles.Add(scram);
+
+                    string state = currentFiles.FirstOrDefault(f => f.EndsWith(".state"));
+                    if (state == null && !File.Exists(state))
+                        missingFiles.Add(state);
+
+                    string subcode = currentFiles.FirstOrDefault(f => f.EndsWith(".subcode"));
+                    if (subcode == null && !File.Exists(subcode))
+                        missingFiles.Add(subcode);
+
+                    string toc = currentFiles.FirstOrDefault(f => f.EndsWith(".toc"));
+                    if (toc == null && !File.Exists(toc))
+                        missingFiles.Add(toc);
+
+                    break;
+            }
+            
             // TODO: Fill out
             return (true, new List<string>());
         }
@@ -176,15 +211,27 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
-            // TODO: Fill in submission info specifics for Redumper
             string outputDirectory = Path.GetDirectoryName(basePath);
+            var currentFiles = Directory.GetFiles(outputDirectory);
+            string logPath = currentFiles.FirstOrDefault(f => f.EndsWith(".log"));
 
             // TODO: Determine if there's a Redumper version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             switch (this.Type)
             {
-                // Determine type-specific differences
+                case MediaType.CDROM:
+                    info.Extras.PVD = GetPVD(logPath) ?? "Disc has no PVD"; ;
+                    info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(logPath);
+                    info.TracksAndWriteOffsets.Cuesheet = GetCuesheet(logPath) ?? "";
+
+                    string cdWriteOffset = GetWriteOffset(logPath) ?? "";
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
+
+                    long errorCount = GetErrorCount(logPath);
+                    info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+                    break;
             }
 
             switch (this.System)
@@ -512,7 +559,40 @@ namespace MPF.Modules.Redumper
         {
             List<string> logFiles = new List<string>();
 
-            // TODO: Determine output logfiles for Redumper
+            string outputDirectory = Path.GetDirectoryName(basePath);
+            var currentFiles = Directory.GetFiles(outputDirectory);
+
+
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    string fulltoc = currentFiles.FirstOrDefault(f => f.EndsWith(".fulltoc"));
+                    if (fulltoc != null && File.Exists(fulltoc))
+                        logFiles.Add(fulltoc);
+
+                    string log = currentFiles.FirstOrDefault(f => f.EndsWith(".log"));
+                    if (log != null && File.Exists(log))
+                        logFiles.Add(log);
+
+                    // Equivlant of .scm
+                    // string scram = currentFiles.FirstOrDefault(f => f.EndsWith(".scram"));
+                    // if (scram != null && File.Exists(scram))
+                    //     logFiles.Add(scram);
+
+                    string state = currentFiles.FirstOrDefault(f => f.EndsWith(".state"));
+                    if (state != null && File.Exists(state))
+                        logFiles.Add(state);
+
+                    string subcode = currentFiles.FirstOrDefault(f => f.EndsWith(".subcode"));
+                    if (subcode != null && File.Exists(subcode))
+                        logFiles.Add(subcode);
+
+                    string toc = currentFiles.FirstOrDefault(f => f.EndsWith(".toc"));
+                    if (toc != null && File.Exists(toc))
+                        logFiles.Add(toc);
+
+                    break;
+            }
 
             return logFiles;
         }
@@ -756,6 +836,205 @@ namespace MPF.Modules.Redumper
             }
 
             return true;
+        }
+
+        #endregion
+
+        #region Information Extraction Methods
+
+        /// <summary>
+        /// Get the cuesheet from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Newline-delimited cuesheet if possible, null on error</returns>
+        private static string GetCuesheet(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the dat line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("CUE ["));
+                    if (sr.EndOfStream)
+                        return null;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string cueString = "", line = sr.ReadLine().Trim();
+                    while (!string.IsNullOrWhiteSpace(line))
+                    {
+                        cueString += line + "\n";
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return cueString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the datfile from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Newline-delimited datfile if possible, null on error</returns>
+        private static string GetDatfile(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the dat line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("dat:"));
+                    if (sr.EndOfStream)
+                        return null;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string datString = "", line = sr.ReadLine().Trim();
+                    while (line.StartsWith("<rom"))
+                    {
+                        datString += line + "\n";
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return datString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the detected error count from the input files, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Error count if possible, -1 on error</returns>
+        private static long GetErrorCount(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(path: log))
+                return -1;
+
+            // First line of defense is the EdcEcc error file
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the errors line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("media errors:"));
+                    if (sr.EndOfStream)
+                        return 0;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string line = sr.ReadLine().Trim();
+                    if (line.StartsWith("SCSI/C2:"))
+                    {
+                        string errorCountString = line.Substring("SCSI/C2: ".Length).Trim();
+                        if (long.TryParse(errorCountString, out long errorCount))
+                            return errorCount;
+                        else
+                            return -1;
+                    }
+
+                    // Having an error section but no count is an error
+                    return -1;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the PVD from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Newline-delimited PVD if possible, null on error</returns>
+        private static string GetPVD(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the dat line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("PVD:"));
+                    if (sr.EndOfStream)
+                        return null;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string pvdString = "", line = sr.ReadLine().Trim();
+                    while (line.StartsWith("03"))
+                    {
+                        pvdString += line + "\n";
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return pvdString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the write offset from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Sample write offset if possible, null on error</returns>
+        private static string GetWriteOffset(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the offset lines
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("detecting offset"));
+                    if (sr.EndOfStream)
+                        return null;
+
+                    sr.ReadLine(); // * disc detected
+
+                    // Now read the offset
+                    string line = sr.ReadLine();
+                    if (line.StartsWith("disc write offset:"))
+                        return line.Substring("disc write offset: ".Length).Trim();
+
+                    // We couldn't detect it then
+                    return null;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
         }
 
         #endregion
