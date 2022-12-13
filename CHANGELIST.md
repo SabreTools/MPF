@@ -7,7 +7,8 @@
 - Add .NET 6.0 to tests, remove msbuild args
 - Add HD-DVD to speed definitions
 - Add PS3 internal serial and version parsing (tjanas)
--  Update Nuget packages to newest stable
+- Update Nuget packages to newest stable
+- Simplify path selection in UI
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
