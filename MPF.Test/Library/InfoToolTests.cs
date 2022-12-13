@@ -51,7 +51,7 @@ namespace MPF.Test.Library
         [InlineData(null, null)]
         [InlineData(" ", " ")]
         [InlineData("super\\blah.bin", "super\\blah.bin")]
-        [InlineData("super\\hero\\blah.bin", "super\\hero\\\blah.bin")]
+        [InlineData("super\\hero\\blah.bin", "super\\hero\\blah.bin")]
         [InlineData("super.hero\\blah.bin", "super.hero\\blah.bin")]
         [InlineData("superhero\\blah.rev.bin", "superhero\\blah.rev.bin")]
         [InlineData("super&hero\\blah.bin", "super&hero\\blah.bin")]

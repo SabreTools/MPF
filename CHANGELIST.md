@@ -9,6 +9,7 @@
 - Add PS3 internal serial and version parsing (tjanas)
 - Update Nuget packages to newest stable
 - Simplify path selection in UI
+- Fix broken normalization test
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
