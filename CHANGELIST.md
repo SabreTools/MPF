@@ -15,6 +15,7 @@
 - Add new parameter and mode validation
 - Add redumper to the UI
 - Update redumper to build 81
+- Fix incorrect naming in Options window
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001

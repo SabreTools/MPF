@@ -110,8 +110,8 @@
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Redumper Path" />
-                        <TextBox x:Name="DDPathTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
-                        <Button x:Name="DDPathButton" Grid.Row="3" Grid.Column="2" Height="22" Width="22" Content="..."
+                        <TextBox x:Name="RedumperPathTextBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
+                        <Button x:Name="RedumperPathButton" Grid.Row="3" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Dumping Program" />
