@@ -1195,6 +1195,10 @@ namespace MPF.UI.ViewModels
                 // Disable all UI elements apart from dumping button
                 DisableAllUIElements();
 
+                // Refresh the drive, if it wasn't null
+                if (Env.Drive != null)
+                    Env.Drive.RefreshDrive();
+
                 // Output to the label and log
                 App.Instance.StatusLabel.Text = "Starting dumping process... Please wait!";
                 App.Logger.LogLn("Starting dumping process... Please wait!");
