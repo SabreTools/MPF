@@ -17,6 +17,7 @@
 - Update redumper to build 81
 - Fix incorrect naming in Options window
 - Initial attempt at parsing redumper outputs
+- Update README
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
