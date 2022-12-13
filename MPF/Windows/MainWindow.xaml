@@ -119,7 +119,6 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
@@ -136,16 +135,13 @@
                     </ComboBox>
                     <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="OutputFilenameLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Filename"/>
-                    <TextBox x:Name="OutputFilenameTextBox" Grid.Row="1" Grid.Column="1" Height="22" VerticalContentAlignment="Center" />
-
-                    <Label x:Name="OutputDirectoryLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Output Directory"/>
-                    <TextBox x:Name="OutputDirectoryTextBox" Grid.Row="2" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-                    <Button x:Name="OutputDirectoryBrowseButton" Grid.Row="2" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
+                    <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Path"/>
+                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                    <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
                             Style="{DynamicResource CustomButtonStyle}"/>
 
-                    <Label x:Name="DriveLetterLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
-                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}">
+                    <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
+                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Letter}" />
@@ -153,12 +149,12 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <Label x:Name="DriveSpeedLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
-                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
+                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
-                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
-                    <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" />
+                    <Label x:Name="ParametersLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
+                    <TextBox x:Name="ParametersTextBox" Grid.Row="4" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
+                    <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" />
                 </Grid>
             </GroupBox>
 

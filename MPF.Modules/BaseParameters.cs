@@ -242,7 +242,7 @@ namespace MPF.Modules
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
         /// <returns>True if the parameters were set correctly, false otherwise</returns>
-        protected virtual bool ValidateAndSetParameters(string parameters) => true;
+        protected virtual bool ValidateAndSetParameters(string parameters) => !string.IsNullOrWhiteSpace(parameters);
 
         #endregion
 

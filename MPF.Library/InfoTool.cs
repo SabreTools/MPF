@@ -26,8 +26,7 @@ namespace MPF.Library
         /// <summary>
         /// Extract all of the possible information from a given input combination
         /// </summary>
-        /// <param name="outputDirectory">Output folder to write to</param>
-        /// <param name="outputFilename">Output filename to use as the base path</param>
+        /// <param name="outputPath">Output path to write to</param>
         /// <param name="drive">Drive object representing the current drive</param>
         /// <param name="system">Currently selected system</param>
         /// <param name="mediaType">Currently selected media type</param>
@@ -37,8 +36,7 @@ namespace MPF.Library
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
         public static async Task<SubmissionInfo> ExtractOutputInformation(
-            string outputDirectory,
-            string outputFilename,
+            string outputPath,
             Drive drive,
             RedumpSystem? system,
             MediaType? mediaType,
@@ -50,6 +48,10 @@ namespace MPF.Library
             // Ensure the current disc combination should exist
             if (!system.MediaTypes().Contains(mediaType))
                 return null;
+
+            // Split the output path for easier use
+            string outputDirectory = Path.GetDirectoryName(outputPath);
+            string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
             (bool foundFiles, List<string> missingFiles) = FoundAllFiles(outputDirectory, outputFilename, parameters, false);
@@ -1655,57 +1657,31 @@ namespace MPF.Library
         /// <summary>
         /// Normalize a split set of paths
         /// </summary>
-        /// <param name="directory">Directory name to normalize</param>
-        /// <param name="filename">Filename to normalize</param>
-        public static (string, string) NormalizeOutputPaths(string directory, string filename)
+        /// <param name="path">Path value to normalize</param>
+        public static string NormalizeOutputPaths(string path)
         {
+            // The easy way
             try
             {
-                // Cache if we had a directory separator or not
-                bool endedWithDirectorySeparator = directory.EndsWith(Path.DirectorySeparatorChar.ToString())
-                    || directory.EndsWith(Path.AltDirectorySeparatorChar.ToString());
+                // Trim quotes from the path
+                path = path.Trim('"');
 
-                // Combine the path to make things separate easier
-                string combinedPath = Path.Combine(directory, filename);
+                // Try getting the combined path and returning that directly
+                string fullPath = Path.GetFullPath(path);
+                string fullDirectory = Path.GetDirectoryName(fullPath);
+                string fullFile = Path.GetFileName(fullPath);
 
-                // If we have have a blank path, just return
-                if (string.IsNullOrWhiteSpace(combinedPath))
-                    return (directory, filename);
-
-                // Now get the normalized paths
-                directory = Path.GetDirectoryName(combinedPath);
-                filename = Path.GetFileName(combinedPath);
-
-                // Take care of extra path characters
-                directory = new StringBuilder(directory)
-                    .Replace(':', '_', 0, directory.LastIndexOf(':') == -1 ? 0 : directory.LastIndexOf(':'))
-                    .ToString();
-
-                // Sanitize the directory path
-                directory = directory.Replace('?', '_');
+                // Remove invalid path characters
                 foreach (char c in Path.GetInvalidPathChars())
-                    directory = directory.Replace(c, '_');
+                    fullDirectory = fullDirectory.Replace(c, '_');
 
-                // Sanitize the filename
-                filename = filename.Replace('?', '_');
+                // Remove invalid filename characters
                 foreach (char c in Path.GetInvalidFileNameChars())
-                    filename = filename.Replace(c, '_');
-
-                // If we had a directory separator at the end before, add it again
-                if (endedWithDirectorySeparator)
-                    directory += Path.DirectorySeparatorChar;
-
-                // If we have a root directory, sanitize
-                if (Directory.Exists(directory))
-                {
-                    var possibleRootDir = new DirectoryInfo(directory);
-                    if (possibleRootDir.Parent == null)
-                        directory = directory.Replace($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}");
-                }
+                    fullFile = fullFile.Replace(c, '_');
             }
             catch { }
 
-            return (directory, filename);
+            return path;
         }
 
         #endregion

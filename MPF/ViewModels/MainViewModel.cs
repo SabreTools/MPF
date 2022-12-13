@@ -60,11 +60,6 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private bool _canExecuteSelectionChanged = false;
 
-        /// <summary>
-        /// Indicates if TextChanged events can be executed
-        /// </summary>
-        private bool _canExecuteTextChanged = false;
-
         #endregion
 
         /// <summary>
@@ -249,11 +244,11 @@ namespace MPF.UI.ViewModels
         public void ExitApplication() => Application.Current.Shutdown();
 
         /// <summary>
-        /// Set the output directory from a dialog box
+        /// Set the output path from a dialog box
         /// </summary>
-        public void SetOutputDirectory()
+        public void SetOutputPath()
         {
-            BrowseFolder();
+            BrowseFile();
             EnsureDiscInformation();
         }
 
@@ -572,7 +567,7 @@ namespace MPF.UI.ViewModels
             App.Instance.EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
             App.Instance.MediaScanButton.Click += MediaScanButtonClick;
             App.Instance.UpdateVolumeLabel.Click += UpdateVolumeLabelClick;
-            App.Instance.OutputDirectoryBrowseButton.Click += OutputDirectoryBrowseButtonClick;
+            App.Instance.OutputPathBrowseButton.Click += OutputPathBrowseButtonClick;
             App.Instance.StartStopButton.Click += StartStopButtonClick;
 
             // User Area SelectionChanged
@@ -580,10 +575,6 @@ namespace MPF.UI.ViewModels
             App.Instance.MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
             App.Instance.DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             App.Instance.DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-
-            // User Area TextChanged
-            App.Instance.OutputFilenameTextBox.TextChanged += OutputFilenameTextBoxTextChanged;
-            App.Instance.OutputDirectoryTextBox.TextChanged += OutputDirectoryTextBoxTextChanged;
         }
 
         /// <summary>
@@ -592,7 +583,6 @@ namespace MPF.UI.ViewModels
         private void EnableEventHandlers()
         {
             _canExecuteSelectionChanged = true;
-            EnablePathEventHandlers();
         }
 
         /// <summary>
@@ -601,23 +591,6 @@ namespace MPF.UI.ViewModels
         private void DisableEventHandlers()
         {
             _canExecuteSelectionChanged = false;
-            DisablePathEventHandlers();
-        }
-
-        /// <summary>
-        /// Enable path textbox event handlers
-        /// </summary>
-        private void EnablePathEventHandlers()
-        {
-            _canExecuteTextChanged = true;
-        }
-
-        /// <summary>
-        /// Disable path textbox event handlers
-        /// </summary>
-        private void DisablePathEventHandlers()
-        {
-            _canExecuteTextChanged = false;
         }
 
         /// <summary>
@@ -628,9 +601,8 @@ namespace MPF.UI.ViewModels
             App.Instance.OptionsMenuItem.IsEnabled = false;
             App.Instance.SystemTypeComboBox.IsEnabled = false;
             App.Instance.MediaTypeComboBox.IsEnabled = false;
-            App.Instance.OutputFilenameTextBox.IsEnabled = false;
-            App.Instance.OutputDirectoryTextBox.IsEnabled = false;
-            App.Instance.OutputDirectoryBrowseButton.IsEnabled = false;
+            App.Instance.OutputPathTextBox.IsEnabled = false;
+            App.Instance.OutputPathBrowseButton.IsEnabled = false;
             App.Instance.DriveLetterComboBox.IsEnabled = false;
             App.Instance.DriveSpeedComboBox.IsEnabled = false;
             App.Instance.EnableParametersCheckBox.IsEnabled = false;
@@ -648,9 +620,8 @@ namespace MPF.UI.ViewModels
             App.Instance.OptionsMenuItem.IsEnabled = true;
             App.Instance.SystemTypeComboBox.IsEnabled = true;
             App.Instance.MediaTypeComboBox.IsEnabled = true;
-            App.Instance.OutputFilenameTextBox.IsEnabled = true;
-            App.Instance.OutputDirectoryTextBox.IsEnabled = true;
-            App.Instance.OutputDirectoryBrowseButton.IsEnabled = true;
+            App.Instance.OutputPathTextBox.IsEnabled = true;
+            App.Instance.OutputPathBrowseButton.IsEnabled = true;
             App.Instance.DriveLetterComboBox.IsEnabled = true;
             App.Instance.DriveSpeedComboBox.IsEnabled = true;
             App.Instance.EnableParametersCheckBox.IsEnabled = true;
@@ -798,24 +769,37 @@ namespace MPF.UI.ViewModels
         #region Helpers
 
         /// <summary>
-        /// Browse for an output folder
+        /// Browse for an output file path
         /// </summary>
-        private void BrowseFolder()
+        private void BrowseFile()
         {
-            string currentPath = App.Options.DefaultOutputPath;
-            if (string.IsNullOrWhiteSpace(currentPath) || !Directory.Exists(currentPath))
-                currentPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            // Get the current path, if possible
+            string currentPath = App.Instance.OutputPathTextBox.Text;
+            if (string.IsNullOrWhiteSpace(currentPath))
+                currentPath = Path.Combine(App.Options.DefaultOutputPath, "track.bin");
+            if (string.IsNullOrWhiteSpace(currentPath))
+                currentPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "track.bin");
 
-            WinForms.FolderBrowserDialog folderDialog = new WinForms.FolderBrowserDialog
+            // Get the full path
+            currentPath = Path.GetFullPath(currentPath);
+
+            // Get the directory
+            string directory = Path.GetDirectoryName(currentPath);
+            Directory.CreateDirectory(directory);
+
+            // Get the filename
+            string filename = Path.GetFileName(currentPath);
+
+            WinForms.FileDialog fileDialog = new WinForms.SaveFileDialog
             {
-                ShowNewFolderButton = false,
-                SelectedPath = currentPath,
+                FileName = filename,
+                InitialDirectory = directory,
             };
-            WinForms.DialogResult result = folderDialog.ShowDialog();
+            WinForms.DialogResult result = fileDialog.ShowDialog();
 
             if (result == WinForms.DialogResult.OK)
             {
-                App.Instance.OutputDirectoryTextBox.Text = folderDialog.SelectedPath;
+                App.Instance.OutputPathTextBox.Text = fileDialog.FileName;
             }
         }
 
@@ -881,39 +865,12 @@ namespace MPF.UI.ViewModels
         /// <returns>Filled DumpEnvironment instance</returns>
         private DumpEnvironment DetermineEnvironment()
         {
-            // Populate the new environment
-            var env = new DumpEnvironment(App.Options,
-                App.Instance.OutputDirectoryTextBox.Text,
-                App.Instance.OutputFilenameTextBox.Text,
+            return new DumpEnvironment(App.Options,
+                App.Instance.OutputPathTextBox.Text,
                 App.Instance.DriveLetterComboBox.SelectedItem as Drive,
                 App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem,
                 App.Instance.MediaTypeComboBox.SelectedItem as Element<MediaType>,
                 App.Instance.ParametersTextBox.Text);
-
-            // Disable automatic reprocessing of the textboxes until we're done
-            DisablePathEventHandlers();
-
-            // Save the current cursor positions
-            int outputDirectorySelectionStart = App.Instance.OutputDirectoryTextBox.SelectionStart;
-            int outputFilenameSelectionStart = App.Instance.OutputFilenameTextBox.SelectionStart;
-
-            // Set the new text
-            App.Instance.OutputDirectoryTextBox.Text = env.OutputDirectory;
-            App.Instance.OutputFilenameTextBox.Text = env.OutputFilename;
-
-            // Set the cursor position back to where it was
-            App.Instance.OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
-            App.Instance.OutputDirectoryTextBox.SelectionLength = 0;
-            App.Instance.OutputFilenameTextBox.SelectionStart = outputFilenameSelectionStart;
-            App.Instance.OutputFilenameTextBox.SelectionLength = 0;
-
-            // Re-enable automatic reprocessing of textboxes
-            EnablePathEventHandlers();
-
-            // Ensure the UI gets updated
-            App.Instance.UpdateLayout();
-
-            return env;
         }
 
         /// <summary>
@@ -991,33 +948,25 @@ namespace MPF.UI.ViewModels
             // Get the extension for the file for the next two statements
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
-            // Disable automatic reprocessing of the textboxes until we're done
-            DisablePathEventHandlers();
+            // Set the output filename, if it's not already
+            if (string.IsNullOrEmpty(App.Instance.OutputPathTextBox.Text))
+            {
+                string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
+                string directory = App.Options.DefaultOutputPath;
+                string filename = $"{label}{extension ?? ".bin"}";
 
-            // Save the current cursor positions
-            int outputDirectorySelectionStart = App.Instance.OutputDirectoryTextBox.SelectionStart;
-            int outputFilenameSelectionStart = App.Instance.OutputFilenameTextBox.SelectionStart;
+                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+            }
 
-            // Set the output filename, if we changed drives or it's not already
-            if (driveChanged || string.IsNullOrEmpty(App.Instance.OutputFilenameTextBox.Text))
-                App.Instance.OutputFilenameTextBox.Text = (drive?.FormattedVolumeLabel ?? systemType.LongName()) + (extension ?? ".bin");
+            // Set the output filename, if we changed drives
+            else if (driveChanged)
+            {
+                string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
+                string directory = Path.GetDirectoryName(App.Instance.OutputPathTextBox.Text);
+                string filename = $"{label}{extension ?? ".bin"}";
 
-            // If the extension for the file changed, update that automatically
-            else if (Path.GetExtension(App.Instance.OutputFilenameTextBox.Text) != extension)
-                App.Instance.OutputFilenameTextBox.Text = Path.GetFileNameWithoutExtension(App.Instance.OutputFilenameTextBox.Text) + (extension ?? ".bin");
-
-            // Set the output directory, if we changed drives or it's not already
-            if (driveChanged || string.IsNullOrEmpty(App.Instance.OutputDirectoryTextBox.Text))
-                App.Instance.OutputDirectoryTextBox.Text = Path.Combine(App.Options.DefaultOutputPath, Path.GetFileNameWithoutExtension(App.Instance.OutputFilenameTextBox.Text) ?? string.Empty);
-
-            // Set the cursor position back to where it was
-            App.Instance.OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
-            App.Instance.OutputDirectoryTextBox.SelectionLength = 0;
-            App.Instance.OutputFilenameTextBox.SelectionStart = outputFilenameSelectionStart;
-            App.Instance.OutputFilenameTextBox.SelectionLength = 0;
-
-            // Re-enable automatic reprocessing of textboxes
-            EnablePathEventHandlers();
+                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+            }
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
@@ -1047,34 +996,9 @@ namespace MPF.UI.ViewModels
             else
                 Env.Parameters.Speed = App.Instance.DriveSpeedComboBox.SelectedValue as int?;
 
-            // Disable automatic reprocessing of the textboxes until we're done
-            DisablePathEventHandlers();
-
-            // Save the current cursor positions
-            int outputDirectorySelectionStart = App.Instance.OutputDirectoryTextBox.SelectionStart;
-            int outputFilenameSelectionStart = App.Instance.OutputFilenameTextBox.SelectionStart;
-
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
-            string outputDirectory = Path.GetDirectoryName(trimmedPath);
-            string outputFilename = Path.GetFileName(trimmedPath);
-            (outputDirectory, outputFilename) = InfoTool.NormalizeOutputPaths(outputDirectory, outputFilename);
-            if (!string.IsNullOrWhiteSpace(outputDirectory))
-                App.Instance.OutputDirectoryTextBox.Text = outputDirectory;
-            else
-                outputDirectory = App.Instance.OutputDirectoryTextBox.Text;
-            if (!string.IsNullOrWhiteSpace(outputFilename))
-                App.Instance.OutputFilenameTextBox.Text = outputFilename;
-            else
-                outputFilename = App.Instance.OutputFilenameTextBox.Text;
-
-            // Set the cursor position back to where it was
-            App.Instance.OutputDirectoryTextBox.SelectionStart = outputDirectorySelectionStart;
-            App.Instance.OutputDirectoryTextBox.SelectionLength = 0;
-            App.Instance.OutputFilenameTextBox.SelectionStart = outputFilenameSelectionStart;
-            App.Instance.OutputFilenameTextBox.SelectionLength = 0;
-
-            // Re-enable automatic reprocessing of textboxes
-            EnablePathEventHandlers();
+            trimmedPath = InfoTool.NormalizeOutputPaths(trimmedPath);
+            App.Instance.OutputPathTextBox.Text = trimmedPath;
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
@@ -1330,6 +1254,14 @@ namespace MPF.UI.ViewModels
         /// <returns>True if dumping should start, false otherwise</returns>
         private bool ValidateBeforeDumping()
         {
+            // Validate that we have an output path of any sort
+            if (string.IsNullOrWhiteSpace(Env.OutputPath))
+            {
+                MessageBoxResult mbresult = CustomMessageBox.Show("No output path was provided so dumping cannot continue.", "Missing Path", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                App.Logger.LogLn("Dumping aborted!");
+                return false;
+            }
+
             // Validate that the user explicitly wants an inactive drive to be considered for dumping
             if (!Env.Drive.MarkedActive)
             {
@@ -1345,8 +1277,12 @@ namespace MPF.UI.ViewModels
                 }
             }
 
+            // Pre-split the output path
+            string outputDirectory = Path.GetDirectoryName(Env.OutputPath);
+            string outputFilename = Path.GetFileName(Env.OutputPath);
+
             // If a complete dump already exists
-            (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(Env.OutputDirectory, Env.OutputFilename, Env.Parameters, true);
+            (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, Env.Parameters, true);
             if (foundFiles)
             {
                 MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
@@ -1359,7 +1295,7 @@ namespace MPF.UI.ViewModels
 
             // Validate that at least some space exists
             // TODO: Tie this to the size of the disc, type of disc, etc.
-            string fullPath = Path.GetFullPath(Env.OutputDirectory);
+            string fullPath = Path.GetFullPath(outputDirectory);
             var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath));
             if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30))
             {
@@ -1514,28 +1450,10 @@ namespace MPF.UI.ViewModels
         }
 
         /// <summary>
-        /// Handler for OutputDirectoryBrowseButton Click event
+        /// Handler for OutputPathBrowseButton Click event
         /// </summary>
-        private void OutputDirectoryBrowseButtonClick(object sender, RoutedEventArgs e) =>
-            SetOutputDirectory();
-
-        /// <summary>
-        /// Handler for OutputFilenameTextBox TextInput event
-        /// </summary>
-        private void OutputDirectoryTextBoxTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (_canExecuteTextChanged)
-                EnsureDiscInformation();
-        }
-
-        /// <summary>
-        /// Handler for OutputFilenameTextBox TextInput event
-        /// </summary>
-        private void OutputFilenameTextBoxTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (_canExecuteTextChanged)
-                EnsureDiscInformation();
-        }
+        private void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e) =>
+            SetOutputPath();
 
         /// <summary>
         /// Handler for StartStopButton Click event

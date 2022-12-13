@@ -24,7 +24,7 @@ namespace MPF.Test.Library
                 ? Drive.Create(InternalDriveType.Floppy, letter.ToString())
                 : Drive.Create(InternalDriveType.Optical, letter.ToString());
 
-            var env = new DumpEnvironment(options, string.Empty, string.Empty, drive, RedumpSystem.IBMPCcompatible, mediaType, parameters);
+            var env = new DumpEnvironment(options, string.Empty, drive, RedumpSystem.IBMPCcompatible, mediaType, parameters);
 
             bool actual = env.ParametersValid();
             Assert.Equal(expected, actual);
