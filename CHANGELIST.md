@@ -11,6 +11,9 @@
 - Simplify path selection in UI
 - Fix broken normalization test
 - Update drive info before dumping
+- Update redumper strings
+- Add new parameter and mode validation
+- Add redumper to the UI
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001

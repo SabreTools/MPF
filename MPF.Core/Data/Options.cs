@@ -295,6 +295,19 @@ namespace MPF.Core.Data
 
         #endregion
 
+        #region Redumper
+
+        /// <summary>
+        /// Default number of rereads
+        /// </summary>
+        public int RedumperRereadCount
+        {
+            get { return GetInt32Setting(_settings, "RedumperRereadCount", 20); }
+            set { _settings["RedumperRereadCount"] = value.ToString(); }
+        }
+
+        #endregion
+
         #region Extra Dumping Options
 
         /// <summary>

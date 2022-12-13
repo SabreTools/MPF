@@ -563,7 +563,23 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
         {
-            // TODO: Fill out
+            // If we don't have a CD, we can't dump using redumper
+            if (this.Type != MediaType.CDROM)
+                return;
+
+            BaseCommand = CommandStrings.NONE;
+            ModeValues = new List<string> { CommandStrings.CD };
+
+            DriveValue = driveLetter.ToString();
+            SpeedValue = driveSpeed;
+            if (!string.IsNullOrWhiteSpace(filename))
+            {
+                ImagePathValue = Path.GetDirectoryName(filename);
+                ImageNameValue = Path.GetFileName(filename);
+            }
+
+            this[FlagStrings.Retries] = true;
+            RetriesValue = options.RedumperRereadCount;
         }
 
         /// <inheritdoc/>
