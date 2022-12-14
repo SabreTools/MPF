@@ -420,13 +420,10 @@ namespace MPF.Modules.DiscImageCreator
                     info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? "";
                     //var cueSheet = new CueSheet($"{basePath}.cue"); // TODO: Do something with this
 
-                    // Audio CDs "all have an offset of 0" and should not be included
-                    if (System != RedumpSystem.AudioCD)
-                    {
-                        string cdWriteOffset = GetWriteOffset($"{basePath}_disc.txt") ?? "";
-                        info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
-                        info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
-                    }
+                    // Attempt to get the write offset
+                    string cdWriteOffset = GetWriteOffset($"{basePath}_disc.txt") ?? "";
+                    info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
+                    info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt");
