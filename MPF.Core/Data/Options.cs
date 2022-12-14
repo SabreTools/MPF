@@ -44,7 +44,7 @@ namespace MPF.Core.Data
         /// </summary>
         public string RedumperPath
         {
-            get { return GetStringSetting(_settings, "RedumperPath", "Programs\\RedumperPath\\redumper.exe"); }
+            get { return GetStringSetting(_settings, "RedumperPath", "Programs\\Redumper\\redumper.exe"); }
             set { _settings["RedumperPath"] = value; }
         }
 

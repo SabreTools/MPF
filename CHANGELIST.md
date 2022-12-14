@@ -22,6 +22,7 @@
 - Add missing redumper output file
 - Force a filename for redumper
 - Fix incorrect SetParameters
+- Fix a couple redumper things
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
