@@ -164,7 +164,7 @@ namespace MPF.Library
                     break;
 
                 case InternalProgram.Redumper:
-                    this.Parameters = new Modules.DD.Parameters(parameters) { ExecutablePath = Options.RedumperPath };
+                    this.Parameters = new Modules.Redumper.Parameters(parameters) { ExecutablePath = Options.RedumperPath };
                     break;
 
                 // Verification support only
