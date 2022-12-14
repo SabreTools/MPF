@@ -566,6 +566,10 @@ namespace MPF.Modules.Redumper
             switch (this.Type)
             {
                 case MediaType.CDROM:
+                    string cdtext = currentFiles.FirstOrDefault(f => f.EndsWith(".cdtext"));
+                    if (cdtext != null && File.Exists(cdtext))
+                        logFiles.Add(cdtext);
+
                     string fulltoc = currentFiles.FirstOrDefault(f => f.EndsWith(".fulltoc"));
                     if (fulltoc != null && File.Exists(fulltoc))
                         logFiles.Add(fulltoc);
