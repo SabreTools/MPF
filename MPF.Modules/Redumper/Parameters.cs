@@ -171,65 +171,46 @@ namespace MPF.Modules.Redumper
         {
             List<string> missingFiles = new List<string>();
 
-            string outputDirectory = Path.GetDirectoryName(basePath);
-            var currentFiles = Directory.GetFiles(outputDirectory);
-
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    string fulltoc = currentFiles.FirstOrDefault(f => f.EndsWith(".fulltoc"));
-                    if (fulltoc == null && !File.Exists(fulltoc))
-                        missingFiles.Add(fulltoc);
-
-                    string log = currentFiles.FirstOrDefault(f => f.EndsWith(".log"));
-                    if (log == null && !File.Exists(log))
-                        missingFiles.Add(log);
-
-                    string scram = currentFiles.FirstOrDefault(f => f.EndsWith(".scram"));
-                    if (scram == null && !File.Exists(scram))
-                        missingFiles.Add(scram);
-
-                    string state = currentFiles.FirstOrDefault(f => f.EndsWith(".state"));
-                    if (state == null && !File.Exists(state))
-                        missingFiles.Add(state);
-
-                    string subcode = currentFiles.FirstOrDefault(f => f.EndsWith(".subcode"));
-                    if (subcode == null && !File.Exists(subcode))
-                        missingFiles.Add(subcode);
-
-                    string toc = currentFiles.FirstOrDefault(f => f.EndsWith(".toc"));
-                    if (toc == null && !File.Exists(toc))
-                        missingFiles.Add(toc);
+                    if (!File.Exists($"{basePath}.fulltoc"))
+                        missingFiles.Add($"{basePath}.fulltoc");
+                    if (!File.Exists($"{basePath}.log"))
+                        missingFiles.Add($"{basePath}.log");
+                    if (!File.Exists($"{basePath}.scram") && !File.Exists($"{basePath}.scrap"))
+                        missingFiles.Add($"{basePath}.scram");
+                    if (!File.Exists($"{basePath}.state"))
+                        missingFiles.Add($"{basePath}.state");
+                    if (!File.Exists($"{basePath}.subcode"))
+                        missingFiles.Add($"{basePath}.subcode");
+                    if (!File.Exists($"{basePath}.toc"))
+                        missingFiles.Add($"{basePath}.toc");
 
                     break;
             }
             
-            // TODO: Fill out
             return (true, new List<string>());
         }
 
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
-            string outputDirectory = Path.GetDirectoryName(basePath);
-            var currentFiles = Directory.GetFiles(outputDirectory);
-            string logPath = currentFiles.FirstOrDefault(f => f.EndsWith(".log"));
-
             // TODO: Determine if there's a Redumper version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
 
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    info.Extras.PVD = GetPVD(logPath) ?? "Disc has no PVD"; ;
-                    info.TracksAndWriteOffsets.ClrMameProData = GetDatfile(logPath);
-                    info.TracksAndWriteOffsets.Cuesheet = GetCuesheet(logPath) ?? "";
+                    info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD"; ;
+                    info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? "";
 
-                    string cdWriteOffset = GetWriteOffset(logPath) ?? "";
+                    string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? "";
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
-                    long errorCount = GetErrorCount(logPath);
+                    long errorCount = GetErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     break;
             }
@@ -559,42 +540,25 @@ namespace MPF.Modules.Redumper
         {
             List<string> logFiles = new List<string>();
 
-            string outputDirectory = Path.GetDirectoryName(basePath);
-            var currentFiles = Directory.GetFiles(outputDirectory);
-
-
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    string cdtext = currentFiles.FirstOrDefault(f => f.EndsWith(".cdtext"));
-                    if (cdtext != null && File.Exists(cdtext))
-                        logFiles.Add(cdtext);
-
-                    string fulltoc = currentFiles.FirstOrDefault(f => f.EndsWith(".fulltoc"));
-                    if (fulltoc != null && File.Exists(fulltoc))
-                        logFiles.Add(fulltoc);
-
-                    string log = currentFiles.FirstOrDefault(f => f.EndsWith(".log"));
-                    if (log != null && File.Exists(log))
-                        logFiles.Add(log);
-
-                    // Equivlant of .scm
-                    // string scram = currentFiles.FirstOrDefault(f => f.EndsWith(".scram"));
-                    // if (scram != null && File.Exists(scram))
-                    //     logFiles.Add(scram);
-
-                    string state = currentFiles.FirstOrDefault(f => f.EndsWith(".state"));
-                    if (state != null && File.Exists(state))
-                        logFiles.Add(state);
-
-                    string subcode = currentFiles.FirstOrDefault(f => f.EndsWith(".subcode"));
-                    if (subcode != null && File.Exists(subcode))
-                        logFiles.Add(subcode);
-
-                    string toc = currentFiles.FirstOrDefault(f => f.EndsWith(".toc"));
-                    if (toc != null && File.Exists(toc))
-                        logFiles.Add(toc);
-
+                    if (File.Exists($"{basePath}.cdtext"))
+                        logFiles.Add($"{basePath}.cdtext");
+                    if (File.Exists($"{basePath}.fulltoc"))
+                        logFiles.Add($"{basePath}.fulltoc");
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
+                    // if (File.Exists($"{basePath}.scram"))
+                    //     logFiles.Add($"{basePath}.scram");
+                    // if (File.Exists($"{basePath}.scrap"))
+                    //     logFiles.Add($"{basePath}.scrap");
+                    if (File.Exists($"{basePath}.state"))
+                        logFiles.Add($"{basePath}.state");
+                    if (File.Exists($"{basePath}.subcode"))
+                        logFiles.Add($"{basePath}.subcode");
+                    if (File.Exists($"{basePath}.toc"))
+                        logFiles.Add($"{basePath}.toc");
                     break;
             }
 
@@ -656,10 +620,17 @@ namespace MPF.Modules.Redumper
 
             DriveValue = driveLetter.ToString();
             SpeedValue = driveSpeed;
+
+            // Set the output paths
             if (!string.IsNullOrWhiteSpace(filename))
             {
-                ImagePathValue = Path.GetDirectoryName(filename);
-                ImageNameValue = Path.GetFileName(filename);
+                string imagePath = Path.GetDirectoryName(filename);
+                if (!string.IsNullOrWhiteSpace(imagePath))
+                    ImagePathValue = imagePath;
+
+                string imageName = Path.GetFileName(filename);
+                if (!string.IsNullOrWhiteSpace(imageName))
+                    ImageNameValue = imageName;
             }
 
             this[FlagStrings.Retries] = true;
@@ -838,6 +809,10 @@ namespace MPF.Modules.Redumper
 
                 #endregion
             }
+
+            // If the image name was not set, set it with a default value
+            if (string.IsNullOrWhiteSpace(this.ImageNameValue))
+                this.ImagePathValue = "track.bin";
 
             return true;
         }
