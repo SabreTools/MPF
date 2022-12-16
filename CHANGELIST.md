@@ -24,6 +24,7 @@
 - Fix incorrect SetParameters
 - Fix a couple redumper things
 - Update AppVeyor version
+- Output security sectors to info
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001

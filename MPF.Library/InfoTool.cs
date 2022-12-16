@@ -780,7 +780,7 @@ namespace MPF.Library
                 // AddIfExists(output, Template.RegionalParentField, info.RegionalParent.ToString());
 
                 // Extras section
-                if (info.Extras.PVD != null || info.Extras.PIC != null || info.Extras.BCA != null)
+                if (info.Extras.PVD != null || info.Extras.PIC != null || info.Extras.BCA != null || info.Extras.SecuritySectorRanges != null)
                 {
                     output.Add(""); output.Add("Extras:");
                     AddIfExists(output, Template.PVDField, info.Extras.PVD?.Trim(), 1);
