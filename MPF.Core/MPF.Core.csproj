@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
-    <PlatformTarget>x86</PlatformTarget>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2022</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
