@@ -834,11 +834,9 @@ namespace MPF.Library
                     output.Add(""); output.Add("Size & Checksum:");
 
                     // Gross hack because of automatic layerbreaks in Redump
-                    if ((info.CommonDiscInfo.Media != DiscType.BD25
-                            && info.CommonDiscInfo.Media != DiscType.BD50
-                            && info.CommonDiscInfo.Media != DiscType.BD100
-                            && info.CommonDiscInfo.Media != DiscType.BD128)
-                        || (!options.EnableRedumpCompatibility))
+                    if (!options.EnableRedumpCompatibility
+                        || (info.CommonDiscInfo.Media.ToMediaType() != MediaType.BluRay
+                            && !info.CommonDiscInfo.System.IsXGD()))
                     {
                         AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
                     }

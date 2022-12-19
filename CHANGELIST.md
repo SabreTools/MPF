@@ -26,6 +26,7 @@
 - Update AppVeyor version
 - Output security sectors to info
 - Remove x86 requirement for build
+- Fix XGD media type outputs
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001

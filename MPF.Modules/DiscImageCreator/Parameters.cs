@@ -447,11 +447,8 @@ namespace MPF.Modules.DiscImageCreator
                     // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
                     {
-                        if (!options.EnableRedumpCompatibility || !System.IsXGD())
-                        {
-                            string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
-                            info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
-                        }
+                        string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
+                        info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     }
                     else if (this.Type == MediaType.BluRay)
                     {
