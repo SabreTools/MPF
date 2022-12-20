@@ -235,7 +235,7 @@ namespace MPF.Core.Converters
                     return InternalProgram.DiscImageCreator;
                 case "dd":
                     return InternalProgram.DD;
-                case "rd:":
+                case "rd":
                 case "redumper":
                     return InternalProgram.Redumper;
 
