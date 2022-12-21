@@ -902,7 +902,7 @@ namespace MPF.Modules.Redumper
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Error count if possible, -1 on error</returns>
-        private static long GetErrorCount(string log)
+        public static long GetErrorCount(string log)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(path: log))
@@ -913,24 +913,34 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // Fast forward to the errors line
-                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("media errors:"));
+                    // Fast forward to the errors lines
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("data errors"));
                     if (sr.EndOfStream)
                         return 0;
 
                     // Now that we're at the relevant entries, read each line in and concatenate
-                    string line = sr.ReadLine().Trim();
-                    if (line.StartsWith("SCSI/C2:"))
+                    long errorCount = 0;
+                    while (!sr.EndOfStream)
                     {
-                        string errorCountString = line.Substring("SCSI/C2: ".Length).Trim();
-                        if (long.TryParse(errorCountString, out long errorCount))
-                            return errorCount;
+                        // Skip forward to the "redump" line
+                        string line;
+                        while (!(line = sr.ReadLine().Trim()).StartsWith("redump"));
+
+                        // redump: <error count>
+                        string[] parts = line.Split(' ');
+                        if (long.TryParse(parts[1], out long redump))
+                            errorCount += redump;
                         else
                             return -1;
+
+                        if (!sr.EndOfStream)
+                            sr.ReadLine(); // Empty line
+
+                        if (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("data errors"))
+                            break;
                     }
 
-                    // Having an error section but no count is an error
-                    return -1;
+                    return errorCount;
                 }
                 catch
                 {
