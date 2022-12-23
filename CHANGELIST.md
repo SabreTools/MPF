@@ -29,6 +29,7 @@
 - Fix XGD media type outputs
 - Fix typo in ToInternalProgram
 - Fix redumper error count parsing
+- Update to Aaru v5.3.2 LTS
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
