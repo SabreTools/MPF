@@ -14,8 +14,16 @@ namespace MPF.Core.Utilities
         /// </summary>
         public static (Options, string, int) LoadFromArguments(string[] args, int startIndex = 0)
         {
-            // Create the output values
-            var options = new Options();
+            // Create the output values with defaults
+            var options = new Options()
+            {
+                RedumpUsername = null,
+                RedumpPassword = null,
+                InternalProgram = InternalProgram.NONE,
+                OutputSubmissionJSON = false,
+                CompressLogFiles = false,
+            };
+
             string parsedPath = null;
 
             // These values require multiple parts to be active
