@@ -29,6 +29,9 @@ namespace MPF.Core.Utilities
             if (startIndex < 0 || startIndex >= args.Length)
                 return (options, null, startIndex);
 
+            // Disable log files compression default for MPF.Check
+            options.CompressLogFiles = false;
+
             // Loop through the arguments and parse out values
             for (; startIndex < args.Length; startIndex++)
             {
