@@ -430,14 +430,32 @@ namespace MPF.UI.ViewModels
         {
             if (App.Instance.EnableParametersCheckBox.IsChecked == true)
             {
+                App.Instance.SystemTypeComboBox.IsEnabled = false;
+                App.Instance.MediaTypeComboBox.IsEnabled = false;
+                
                 App.Instance.OutputPathTextBox.IsEnabled = false;
+                App.Instance.OutputPathBrowseButton.IsEnabled = false;
+
+                App.Instance.MediaScanButton.IsEnabled = false;
+                App.Instance.UpdateVolumeLabel.IsEnabled = false;
+                App.Instance.CopyProtectScanButton.IsEnabled = false;
+
                 App.Instance.ParametersTextBox.IsEnabled = true;
             }
             else
             {
                 App.Instance.ParametersTextBox.IsEnabled = false;
                 ProcessCustomParameters();
+
+                App.Instance.SystemTypeComboBox.IsEnabled = true;
+                App.Instance.MediaTypeComboBox.IsEnabled = true;
+                
                 App.Instance.OutputPathTextBox.IsEnabled = true;
+                App.Instance.OutputPathBrowseButton.IsEnabled = true;
+
+                App.Instance.MediaScanButton.IsEnabled = true;
+                App.Instance.UpdateVolumeLabel.IsEnabled = true;
+                App.Instance.CopyProtectScanButton.IsEnabled = true;
             }
         }
 
