@@ -1008,12 +1008,13 @@ namespace MPF.Modules.Redumper
                     if (sr.EndOfStream)
                         return null;
 
-                    sr.ReadLine(); // * disc detected
-
-                    // Now read the offset
-                    string line = sr.ReadLine();
-                    if (line.StartsWith("disc write offset:"))
-                        return line.Substring("disc write offset: ".Length).Trim();
+                    // We skip during detection and get the write offset
+                    string line;
+                    while (!sr.EndOfStream && !(line = sr.ReadLine().TrimStart()).StartsWith("detection complete"))
+                    {
+                        if (line.StartsWith("disc write offset:"))
+                            return line.Substring("disc write offset: ".Length).Trim();
+                    }
 
                     // We couldn't detect it then
                     return null;
