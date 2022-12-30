@@ -430,12 +430,14 @@ namespace MPF.UI.ViewModels
         {
             if (App.Instance.EnableParametersCheckBox.IsChecked == true)
             {
+                App.Instance.OutputPathTextBox.IsEnabled = false;
                 App.Instance.ParametersTextBox.IsEnabled = true;
             }
             else
             {
                 App.Instance.ParametersTextBox.IsEnabled = false;
                 ProcessCustomParameters();
+                App.Instance.OutputPathTextBox.IsEnabled = true;
             }
         }
 
@@ -575,6 +577,9 @@ namespace MPF.UI.ViewModels
             App.Instance.MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
             App.Instance.DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             App.Instance.DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+
+            // User Area TextChanged
+            App.Instance.OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
         }
 
         /// <summary>
@@ -785,7 +790,6 @@ namespace MPF.UI.ViewModels
 
             // Get the directory
             string directory = Path.GetDirectoryName(currentPath);
-            Directory.CreateDirectory(directory);
 
             // Get the filename
             string filename = Path.GetFileName(currentPath);
@@ -955,7 +959,10 @@ namespace MPF.UI.ViewModels
                 string directory = App.Options.DefaultOutputPath;
                 string filename = $"{label}{extension ?? ".bin"}";
 
-                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+                if (directory.EndsWith(label))
+                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, filename);
+                else
+                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
             // Set the output filename, if we changed drives
@@ -965,7 +972,10 @@ namespace MPF.UI.ViewModels
                 string directory = Path.GetDirectoryName(App.Instance.OutputPathTextBox.Text);
                 string filename = $"{label}{extension ?? ".bin"}";
 
-                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+                if (directory.EndsWith(label))
+                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, filename);
+                else
+                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
             // Ensure the UI gets updated
@@ -1458,6 +1468,12 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e) =>
             SetOutputPath();
+
+        /// <summary>
+        /// Handler for OutputPathTextBox TextChanged event
+        /// </summary>
+        private void OutputPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
+            => EnsureDiscInformation();
 
         /// <summary>
         /// Handler for StartStopButton Click event
