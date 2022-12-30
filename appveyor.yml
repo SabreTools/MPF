@@ -54,13 +54,15 @@ after_build:
 #- mkdir MPF\bin\Debug\net6.0\Programs\Subdump
 #- mv MPF\bin\Debug\net6.0\subdump_fua_0x28.exe MPF\bin\Debug\net6.0\Programs\Subdump\subdump.exe
 
-- cd MPF\bin\Debug
-- 7z a MPF_net48.zip net48\*
-#- 7z a MPF_net6.0.zip net6.0\*
+- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net48
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net48.zip *
+#- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0
+#- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0.zip *
 
-- cd ..\..\..\MPF.Check\bin\Debug
-- 7z a MPF-Check_net48.zip net48\*
-#- 7z a MPF-Check_net6.0.zip net6.0\*
+- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net48
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net48.zip *
+#- cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0
+#- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0.zip *
 
 # success/failure tracking
 on_success:
@@ -72,12 +74,12 @@ on_failure:
 
 # artifact linking
 artifacts:
-- path: MPF\bin\Debug\MPF_net48.zip
+- path: MPF_net48.zip
   name: MPF (WPF UI) (.NET Framework 4.8)
-#- path: MPF\bin\Debug\MPF_net6.0.zip
+#- path: MPF_net6.0.zip
 #  name: MPF (WPF UI) (.NET 6.0)
 
-- path: MPF.Check\bin\Debug\MPF-Check_net48.zip
+- path: MPF.Check_net48.zip
   name: MPF Check (.NET Framework 4.8)
-#- path: MPF.Check\bin\Debug\MPF-Check_net6.0.zip
+#- path: MPF.Check_net6.0.zip
 #  name: MPF Check (.NET 6.0)

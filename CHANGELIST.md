@@ -31,6 +31,7 @@
 - Fix redumper error count parsing
 - Update to Aaru v5.3.2 LTS
 - Update options loader with sane defaults
+- Fix AppVeyor pathing
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
