@@ -25,7 +25,7 @@ before_build:
 # build step
 build_script:
   - dotnet restore
-  - dotnet build MPF\MPF.csproj --framework net48
+  - msbuild MPF\MPF.csproj -property:TargetFramework=net48 
   #- dotnet build MPF\MPF.csproj --framework net6.0
   - dotnet build MPF.Check\MPF.Check.csproj --framework net48
   - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime win-x86 --self-contained true -p:PublishSingleFile=true
