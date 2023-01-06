@@ -28,7 +28,9 @@ namespace MPF.Library
                 {
                     var scanner = new Scanner(
                         options.ScanArchivesForProtection,
+                        scanContents: true, // Hardcoded value to avoid issues
                         options.ScanPackersForProtection,
+                        scanPaths: true, // Hardcoded value to avoid issues
                         options.IncludeDebugProtectionInformation,
                         progress);
 
