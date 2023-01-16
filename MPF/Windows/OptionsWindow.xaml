@@ -168,7 +168,7 @@
                                     ToolTip="Enable automatic checking for copy protection on dumped media" Margin="0,4,0,0"
                                     />
 
-                                <CheckBox VerticalAlignment="Center" Content="Protection File"
+                                <CheckBox VerticalAlignment="Center" Content="Output Protection File"
                                     IsChecked="{Binding Options.OutputSeparateProtectionFile}" IsEnabled="{Binding Options.ScanForProtection}"
                                     ToolTip="Output protection information to a separate file" Margin="0,4,0,0"
                                     />
