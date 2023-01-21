@@ -850,7 +850,7 @@ namespace MPF.UI.ViewModels
             // If the drive is marked active, try to read from it
             else if (drive.MarkedActive)
             {
-                App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter}.. ");
+                App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}].. ");
                 (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType();
 
                 // If we got an error message, post it to the log

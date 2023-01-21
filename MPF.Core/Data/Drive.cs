@@ -491,6 +491,18 @@ namespace MPF.Core.Data
 
         #region Helpers
 
+        /// <summary>
+        /// Get the media type for a device path
+        /// </summary>
+        /// <returns>MediaType, null on error</returns>
+        private (MediaType?, string) GetMediaTypeFromFilesystemName()
+        {
+            switch (this.DriveFormat)
+            {
+                default: return (null, $"Unrecognized format: {this.DriveFormat}");
+            }
+        }
+
 #if NETFRAMEWORK
 
         /// <summary>
