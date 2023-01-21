@@ -38,6 +38,7 @@
 - More strict when custom parameters editing
 - Use msbuild for .NET Framework 4.8
 - Update nuget packages
+- ReadAllText not ReadAllLines
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001

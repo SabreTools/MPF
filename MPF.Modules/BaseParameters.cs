@@ -344,7 +344,7 @@ namespace MPF.Modules
                 return BitConverter.ToString(bytes).Replace("-", string.Empty);
             }
 
-            return string.Join("\n", File.ReadAllLines(filename));
+            return File.ReadAllText(filename);
         }
 
         /// <summary>
