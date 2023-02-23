@@ -977,23 +977,30 @@ namespace MPF.UI.ViewModels
                 string directory = App.Options.DefaultOutputPath;
                 string filename = $"{label}{extension ?? ".bin"}";
 
-                if (directory.EndsWith(label))
-                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, filename);
-                else
-                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+                // If the path ends with the label already
+                if (directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
+                    directory = Path.GetDirectoryName(directory);
+
+                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
             // Set the output filename, if we changed drives
             else if (driveChanged)
             {
                 string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
+                string oldFilename = Path.GetFileNameWithoutExtension(App.Instance.OutputPathTextBox.Text);
                 string directory = Path.GetDirectoryName(App.Instance.OutputPathTextBox.Text);
                 string filename = $"{label}{extension ?? ".bin"}";
 
-                if (directory.EndsWith(label))
-                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, filename);
-                else
-                    App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+                // If the previous path included the label
+                if (directory.EndsWith(oldFilename, StringComparison.OrdinalIgnoreCase))
+                    directory = Path.GetDirectoryName(directory);
+
+                // If the path ends with the label already
+                if (directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
+                    directory = Path.GetDirectoryName(directory);
+
+                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
             // Ensure the UI gets updated
