@@ -900,11 +900,11 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private void DetermineSystemType()
         {
-            if (!App.Instance.DriveLetterComboBox.Any())
+            if (Drives == null || Drives.Count == 0 || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
             {
                 App.Logger.VerboseLog("Skipping system type detection because no valid drives found!");
             }
-            else if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
+            else if (!App.Options.SkipSystemDetection)
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Drives[App.Instance.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(App.Options.DefaultSystem) ?? App.Options.DefaultSystem;

@@ -55,6 +55,7 @@
 - Reformat CICM for old .NET versions
 - Attempt to handle no drives
 - Handle no drives better
+- Handle no drives betterer
 
 ### 2.4 (2022-10-26)
 
