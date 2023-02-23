@@ -46,6 +46,7 @@
 - Fix relative paths for DIC
 - Add nicer failure message
 - Update to DIC 20230201
+- Use relative path output for DIC
 
 ### 2.4 (2022-10-26)
 

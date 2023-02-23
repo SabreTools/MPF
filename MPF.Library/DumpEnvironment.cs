@@ -126,15 +126,15 @@ namespace MPF.Library
                 string outputPath = InfoTool.NormalizeOutputPaths(this.OutputPath);
 
                 // Replace all instances in the output directory
-                string outputDirectory = Path.GetDirectoryName(this.OutputPath);
+                string outputDirectory = Path.GetDirectoryName(outputPath);
                 outputDirectory = outputDirectory.Replace(".", "_");
 
                 // Replace all instances in the output filename
-                string outputFilename = Path.GetFileNameWithoutExtension(this.OutputPath);
+                string outputFilename = Path.GetFileNameWithoutExtension(outputPath);
                 outputFilename = outputFilename.Replace(".", "_");
 
                 // Get the extension for recreating the path
-                string outputExtension = Path.GetExtension(this.OutputPath).TrimStart('.');
+                string outputExtension = Path.GetExtension(outputPath).TrimStart('.');
 
                 // Rebuild the output path
                 this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
