@@ -56,6 +56,7 @@
 - Attempt to handle no drives
 - Handle no drives better
 - Handle no drives betterer
+- Packaging requires `-windows` for framework
 
 ### 2.4 (2022-10-26)
 
