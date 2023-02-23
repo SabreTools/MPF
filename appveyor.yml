@@ -51,9 +51,9 @@ after_build:
 #- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0\Programs\DD *
 
 # DiscImageCreator
-- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/9536254/DiscImageCreator_20220909.zip
-- 7z e DiscImageCreator_20220909.zip -oMPF\bin\Debug\net48\Programs\Creator Release_ANSI\*
-#- 7z e DiscImageCreator_20220909.zip -oMPF\bin\Debug\net6.0\Programs\Creator Release_ANSI\*
+- ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/10555765/DiscImageCreator_20230201.zip
+- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net48\Programs\Creator Release_ANSI\*
+#- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0\Programs\Creator Release_ANSI\*
 
 # Redumper
 - ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_81/redumper-2022.12.13_build81-win64.zip

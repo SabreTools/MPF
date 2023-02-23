@@ -1001,6 +1001,13 @@ namespace MPF.Modules.DiscImageCreator
                     parameters.Add(FlagStrings.D8Opcode);
             }
 
+            // DAT Expand
+            if (IsFlagSupported(FlagStrings.DatExpand))
+            {
+                if (this[FlagStrings.DatExpand] == true)
+                    parameters.Add(FlagStrings.DatExpand);
+            }
+
             // Disable Beep
             if (IsFlagSupported(FlagStrings.DisableBeep))
             {
@@ -1297,6 +1304,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
                     FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.MultiSession,
@@ -1313,6 +1321,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.BluRay] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.DVDReread,
                     FlagStrings.ForceUnitAccess,
@@ -1331,6 +1340,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
                     FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ExtractMicroSoftCabFile,
                     FlagStrings.ForceUnitAccess,
@@ -1357,6 +1367,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
                     FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.MultiSession,
@@ -1374,6 +1385,7 @@ namespace MPF.Modules.DiscImageCreator
                 [CommandStrings.DigitalVideoDisc] = new List<string>()
                 {
                     FlagStrings.CopyrightManagementInformation,
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.DVDReread,
                     FlagStrings.Fix,
@@ -1383,11 +1395,13 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.Resume,
                     FlagStrings.Reverse,
                     FlagStrings.ScanFileProtect,
+                    FlagStrings.SkipSector,
                     FlagStrings.UseAnchorVolumeDescriptorPointer,
                 },
 
                 [CommandStrings.Disk] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                 },
 
                 [CommandStrings.DriveSpeed] = new List<string>()
@@ -1400,6 +1414,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.Floppy] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                 },
 
                 [CommandStrings.GDROM] = new List<string>()
@@ -1407,6 +1422,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
                     FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.NoFixSubP,
@@ -1429,6 +1445,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.SACD] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                 },
 
@@ -1450,6 +1467,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.BEOpcode,
                     FlagStrings.C2Opcode,
                     FlagStrings.D8Opcode,
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.MultiSession,
@@ -1474,6 +1492,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.XBOX] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.DVDReread,
                     FlagStrings.ForceUnitAccess,
@@ -1482,6 +1501,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.XBOXSwap] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.NoSkipSS,
@@ -1489,6 +1509,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.XGD2Swap] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.NoSkipSS,
@@ -1496,6 +1517,7 @@ namespace MPF.Modules.DiscImageCreator
 
                 [CommandStrings.XGD3Swap] = new List<string>()
                 {
+                    FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.NoSkipSS,
@@ -2267,6 +2289,9 @@ namespace MPF.Modules.DiscImageCreator
 
                     // D8 Opcode
                     ProcessFlagParameter(parts, FlagStrings.D8Opcode, ref i);
+
+                    // DAT Expand
+                    ProcessFlagParameter(parts, FlagStrings.DatExpand, ref i);
 
                     // Disable Beep
                     ProcessFlagParameter(parts, FlagStrings.DisableBeep, ref i);

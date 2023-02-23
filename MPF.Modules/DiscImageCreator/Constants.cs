@@ -44,6 +44,7 @@ namespace MPF.Modules.DiscImageCreator
         public const string C2Opcode = "/c2";
         public const string CopyrightManagementInformation = "/c";
         public const string D8Opcode = "/d8";
+        public const string DatExpand = "/d";
         public const string DisableBeep = "/q";
         public const string DVDReread = "/rr";
         public const string ExtractMicroSoftCabFile = "/mscf";

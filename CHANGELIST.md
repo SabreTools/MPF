@@ -45,6 +45,7 @@
 - Be smarter about old paths
 - Fix relative paths for DIC
 - Add nicer failure message
+- Update to DIC 20230201
 
 ### 2.4 (2022-10-26)
 
