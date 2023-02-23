@@ -122,6 +122,9 @@ namespace MPF.Library
 
             try
             {
+                // Normalize the output path
+                string outputPath = InfoTool.NormalizeOutputPaths(this.OutputPath);
+
                 // Replace all instances in the output directory
                 string outputDirectory = Path.GetDirectoryName(this.OutputPath);
                 outputDirectory = outputDirectory.Replace(".", "_");

@@ -41,6 +41,8 @@
 - ReadAllText not ReadAllLines
 - Add drive format (fs) to log
 - Go back to pre .NET 7 Aaru
+- Be smarter about old paths
+- Fix relative paths for DIC
 
 ### 2.4 (2022-10-26)
 - Update to DIC 20211001
