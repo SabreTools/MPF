@@ -50,6 +50,8 @@
 - Remove usage of Aaru
 - Remove Aaru as submodule
 - Fix Aaru removal
+- Enable .NET 6 Windows builds
+- Update Redumper to build_106
 
 ### 2.4 (2022-10-26)
 
