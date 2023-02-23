@@ -8,11 +8,6 @@ using RedumpLib.Data;
 #if NETFRAMEWORK
 using System.Management;
 using IMAPI2;
-#else
-using Aaru.CommonTypes.Enums;
-using Aaru.Core.Media.Info;
-using Aaru.Decoders.SCSI.MMC;
-using Aaru.Devices;
 #endif
 
 namespace MPF.Core.Data
@@ -379,7 +374,7 @@ namespace MPF.Core.Data
             }
             catch { }
 
-#endregion
+            #endregion
 
             // Default return
             return defaultValue;
@@ -639,88 +634,6 @@ namespace MPF.Core.Data
         /// <returns>List of drives, null on error</returns>
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
         {
-            DeviceInfo[] deviceInfos = Device.ListDevices();
-            if (deviceInfos == null)
-                return null;
-
-            var drives = new List<Drive>();
-            foreach (DeviceInfo deviceInfo in deviceInfos)
-            {
-                if (deviceInfo.Path == null)
-                    continue;
-
-                if (!deviceInfo.Supported)
-                    continue;
-
-                var drive = GetDriveFromDevice(deviceInfo.Path, ignoreFixedDrives);
-                if (drive == null)
-                    continue;
-
-                drives.Add(drive);
-            }
-
-            return drives;
-        }
-
-        /// <summary>
-        /// Generate a Drive object from a single device
-        /// </summary>
-        /// <param name="devicePath">Path to the device</param>
-        /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
-        /// <returns>Drive object for the device, null on error</returns>
-        private static Drive GetDriveFromDevice(string devicePath, bool ignoreFixedDrives)
-        {
-            if (devicePath.Length == 2 &&
-               devicePath[1] == ':' &&
-               devicePath[0] != '/' &&
-               char.IsLetter(devicePath[0]))
-                devicePath = "\\\\.\\" + char.ToUpper(devicePath[0]) + ':';
-
-            string windowsLocalDevicePath = devicePath;
-            if (windowsLocalDevicePath.StartsWith("\\\\.\\"))
-                windowsLocalDevicePath = windowsLocalDevicePath.Substring("\\\\.\\".Length);
-
-            var dev = Device.Create(devicePath, out _);
-            if (dev == null || dev.Error)
-                return null;
-
-            var devInfo = new Aaru.Core.Devices.Info.DeviceInfo(dev);
-            if (devInfo.MmcConfiguration != null)
-            {
-                Features.SeparatedFeatures ftr = Features.Separate(devInfo.MmcConfiguration);
-                if (ftr.Descriptors != null && ftr.Descriptors.Any(d => d.Code == 0x0000))
-                {
-                    var desc = ftr.Descriptors.First(d => d.Code == 0x0000);
-                    bool isOptical = IsOptical(desc.Data);
-                    if (isOptical)
-                        return Create(Data.InternalDriveType.Optical, windowsLocalDevicePath);
-                    else if (!ignoreFixedDrives)
-                        return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
-                }
-            }
-
-            if (!ignoreFixedDrives)
-            {
-                switch (dev.Type)
-                {
-                    case DeviceType.MMC:
-                        return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
-
-                    case DeviceType.SecureDigital:
-                        return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
-                }
-
-                if (dev.IsUsb)
-                    return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
-
-                if (dev.IsFireWire)
-                    return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
-
-                if (dev.IsPcmcia)
-                    return Create(Data.InternalDriveType.Removable, windowsLocalDevicePath);
-            }
-
-            dev.Close();
             return null;
         }
 
@@ -730,138 +643,9 @@ namespace MPF.Core.Data
         /// <param name="devicePath">Path to the device</param>
         /// <param name="internalDriveType">Current internal drive type</param>
         /// <returns>MediaType, null on error</returns>
-        /// <remarks>
-        /// TODO: Get the device type for devices with set media types
-        /// </remarks>
         private static (MediaType?, string) GetMediaType(string devicePath, InternalDriveType? internalDriveType)
         {
-            if (devicePath.Length == 2 &&
-               devicePath[1] == ':' &&
-               devicePath[0] != '/' &&
-               char.IsLetter(devicePath[0]))
-                devicePath = "\\\\.\\" + char.ToUpper(devicePath[0]) + ':';
-
-            var dev = Device.Create(devicePath, out _);
-            if (dev == null || dev.Error)
-                return (null, "Device could not be accessed");
-
-            switch (dev.Type)
-            {
-                case DeviceType.ATAPI:
-                case DeviceType.SCSI:
-                    ScsiInfo scsiInfo = new ScsiInfo(dev);
-                    var mediaType = EnumConverter.MediaTypeToMediaType(scsiInfo?.MediaType);
-                    if (mediaType == null)
-                        return (mediaType, "Could not determine media type");
-                    else
-                        return (mediaType, null);
-            }
-
             return (null, "Device does not support media type finding");
-        }
-
-        /// <summary>
-        /// Determine if a drive is optical or not
-        /// </summary>
-        /// <param name="featureBytes">Bytes representing the field to check</param>
-        /// <returns>True if the drive is optical, false otherwise</returns>
-        private static bool IsOptical(byte[] featureBytes)
-        {
-            var supportedMediaTypes = OpticalMediaSupport(featureBytes);
-            if (supportedMediaTypes == null || !supportedMediaTypes.Any())
-                return false;
-
-            if (supportedMediaTypes.Contains(MediaType.CDROM))
-                return true;
-            else if (supportedMediaTypes.Contains(MediaType.DVD))
-                return true;
-            else if (supportedMediaTypes.Contains(MediaType.BluRay))
-                return true;
-            else if (supportedMediaTypes.Contains(MediaType.HDDVD))
-                return true;
-
-            return false;
-        }
-
-        /// <summary>
-        /// Get supported media types for a drive
-        /// </summary>
-        /// <param name="featureBytes">Bytes representing the field to check</param>
-        /// <returns>List of supported media types, null on error</returns>
-        private static List<MediaType> OpticalMediaSupport(byte[] featureBytes)
-        {
-            Feature_0000? feature = Features.Decode_0000(featureBytes);
-
-            if (!feature.HasValue)
-                return null;
-
-            var supportedMediaTypes = new List<MediaType>();
-            foreach (Profile prof in feature.Value.Profiles)
-            {
-                switch (prof.Number)
-                {
-                    // Values we don't care about for Optical
-                    case ProfileNumber.Reserved:
-                    case ProfileNumber.NonRemovable:
-                    case ProfileNumber.Removable:
-                    case ProfileNumber.MOErasable:
-                    case ProfileNumber.OpticalWORM:
-                    case ProfileNumber.ASMO:
-                    case ProfileNumber.Unconforming:
-                        break;
-
-                    // Every supported optical profile
-                    case ProfileNumber.CDROM:
-                    case ProfileNumber.CDR:
-                    case ProfileNumber.CDRW:
-                        supportedMediaTypes.Add(MediaType.CDROM);
-                        break;
-
-                    case ProfileNumber.DVDROM:
-                    case ProfileNumber.DVDRSeq:
-                    case ProfileNumber.DVDRAM:
-                    case ProfileNumber.DVDRWRes:
-                    case ProfileNumber.DVDRWSeq:
-                    case ProfileNumber.DVDRDLSeq:
-                    case ProfileNumber.DVDRDLJump:
-                    case ProfileNumber.DVDRWDL:
-                    case ProfileNumber.DVDDownload:
-                    case ProfileNumber.DVDRWPlus:
-                    case ProfileNumber.DVDRPlus:
-                    case ProfileNumber.DVDRWDLPlus:
-                    case ProfileNumber.DVDRDLPlus:
-                        supportedMediaTypes.Add(MediaType.DVD);
-                        break;
-
-                    // TODO: Add DDCD as media type
-                    case ProfileNumber.DDCDROM:
-                    case ProfileNumber.DDCDR:
-                    case ProfileNumber.DDCDRW:
-                        supportedMediaTypes.Add(MediaType.DVD);
-                        break;
-
-                    case ProfileNumber.BDROM:
-                    case ProfileNumber.BDRSeq:
-                    case ProfileNumber.BDRRdm:
-                    case ProfileNumber.BDRE:
-                        supportedMediaTypes.Add(MediaType.BluRay);
-                        break;
-
-                    case ProfileNumber.HDDVDROM:
-                    case ProfileNumber.HDDVDR:
-                    case ProfileNumber.HDDVDRAM:
-                    case ProfileNumber.HDDVDRW:
-                    case ProfileNumber.HDDVDRDL:
-                    case ProfileNumber.HDDVDRWDL:
-                    case ProfileNumber.HDBURNROM:
-                    case ProfileNumber.HDBURNR:
-                    case ProfileNumber.HDBURNRW:
-                        supportedMediaTypes.Add(MediaType.HDDVD);
-                        break;
-                }
-            }
-
-            return supportedMediaTypes.Distinct().ToList();
         }
 
 #endif
