@@ -52,6 +52,7 @@
 - Fix Aaru removal
 - Enable .NET 6 Windows builds
 - Update Redumper to build_106
+- Reformat CICM for old .NET versions
 
 ### 2.4 (2022-10-26)
 
