@@ -1,4 +1,5 @@
 ### WIP (xxxx-xx-xx)
+
 - Add _drive file to zip for UIC
 - Add Xbox Series X and PS5 to list, fix Acorn
 - Add Xbox Series X short name to list
@@ -43,8 +44,10 @@
 - Go back to pre .NET 7 Aaru
 - Be smarter about old paths
 - Fix relative paths for DIC
+- Add nicer failure message
 
 ### 2.4 (2022-10-26)
+
 - Update to DIC 20211001
 - Fix Redump disc title pulling
 - Add /mr default flag options
@@ -224,6 +227,7 @@
 - Fix offset formatting (fuzz6001)
 
 ### 2.3 (2022-02-05)
+
 - Start overhauling Redump information pulling, again
 - Add internal structure for special site codes
 - Add new tabs for special site information
@@ -308,6 +312,7 @@
 - Adjust paths for DIC just before dumping
 
 ### 2.2 (2021-12-30)
+
 - Fix Saturn header finding
 - Add Pocket PC support
 - Add HD-DVD-Video support
@@ -359,6 +364,7 @@
 - Add safety around volume labels
 
 ### 2.1 (2021-07-22)
+
 - Enum, no more
 - Sony works backward
 - Add experimental dark mode
@@ -388,6 +394,7 @@
 - Update to BurnOutSharp 1.7.0
 
 ### 2.0 (2021-04-23)
+
 - Rename DICUI to Media Preservation Frontend (MPF)
 - Add handling for BEh drive _mainInfo.txt changes
 - Fix multiline regex fields during info pulling
@@ -442,6 +449,7 @@
 - Update to BurnOutSharp 1.6.1
 
 ### 1.18 (2020-11-10)
+
 - Add more information extraction and generation for Aaru
 - Remove instances of CD Check from copy protection (again, sorry)
 - Fix multiline submission info outputs
@@ -466,6 +474,7 @@
 - Added HD-DVD-Video detection
 
 ### 1.17.1 (2020-09-14)
+
 - Shuffled some shared, internal UI variables
 - Synced WPF and Avalonia UI internals
 - Made the disc information window less prone to bugs
@@ -473,6 +482,7 @@
 - Added support for old(?) DIC flags: `/fix` and `/re`
 
 ### 1.17 (2020-09-12)
+
 - Updated to Aaru version 5.1
 - Updated to BurnOutSharp version 1.4.0
 - Updated to DIC version 20200716

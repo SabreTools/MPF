@@ -58,6 +58,7 @@ namespace MPF.Library
             if (!foundFiles)
             {
                 resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
+                resultProgress.Report(Result.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
                 return null;
             }
 
