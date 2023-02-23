@@ -967,7 +967,7 @@ namespace MPF.UI.ViewModels
         /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
         public void GetOutputNames(bool driveChanged)
         {
-            if (!App.Instance.DriveLetterComboBox.Any() || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
+            if (Drives == null || Drives.Count == 0 || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
             {
                 App.Logger.VerboseLog("Skipping output name building because no valid drives found!");
                 return;
@@ -1172,9 +1172,10 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private bool ShouldEnableDumpingButton()
         {
-            return App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem != null
-                && Drives != null
+            return Drives != null
                 && Drives.Count > 0
+                && App.Instance.SystemTypeComboBox.SelectedIndex > -1
+                && App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem != null
                 && !string.IsNullOrEmpty(App.Instance.ParametersTextBox.Text);
         }
 

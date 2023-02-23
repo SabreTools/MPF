@@ -54,6 +54,7 @@
 - Update Redumper to build_106
 - Reformat CICM for old .NET versions
 - Attempt to handle no drives
+- Handle no drives better
 
 ### 2.4 (2022-10-26)
 
