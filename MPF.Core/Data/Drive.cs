@@ -634,7 +634,7 @@ namespace MPF.Core.Data
         /// <returns>List of drives, null on error</returns>
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
         {
-            return null;
+            return new List<Drive>();
         }
 
         /// <summary>

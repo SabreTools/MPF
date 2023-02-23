@@ -896,11 +896,15 @@ namespace MPF.UI.ViewModels
         }
 
         /// <summary>
-        /// Determine and set the current system type, if Allowed
+        /// Determine and set the current system type, if allowed
         /// </summary>
         private void DetermineSystemType()
         {
-            if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
+            if (!App.Instance.DriveLetterComboBox.Any())
+            {
+                App.Logger.VerboseLog("Skipping system type detection because no valid drives found!");
+            }
+            else if (!App.Options.SkipSystemDetection && App.Instance.DriveLetterComboBox.SelectedIndex > -1)
             {
                 App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Drives[App.Instance.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(App.Options.DefaultSystem) ?? App.Options.DefaultSystem;
@@ -963,6 +967,12 @@ namespace MPF.UI.ViewModels
         /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
         public void GetOutputNames(bool driveChanged)
         {
+            if (!App.Instance.DriveLetterComboBox.Any() || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
+            {
+                App.Logger.VerboseLog("Skipping output name building because no valid drives found!");
+                return;
+            }
+
             Drive drive = App.Instance.DriveLetterComboBox.SelectedItem as Drive;
             RedumpSystem? systemType = App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
             MediaType? mediaType = App.Instance.MediaTypeComboBox.SelectedItem as Element<MediaType>;
