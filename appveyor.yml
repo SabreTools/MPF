@@ -15,8 +15,6 @@ environment:
 # install dependencies
 install:
 - ps: appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-- cd %APPVEYOR_BUILD_FOLDER%
-- git submodule update --init --recursive
 
 # pre-build script
 before_build:

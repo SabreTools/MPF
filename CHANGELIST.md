@@ -48,6 +48,7 @@
 - Update to DIC 20230201
 - Use relative path output for DIC
 - Remove usage of Aaru
+- Remove Aaru as submodule
 
 ### 2.4 (2022-10-26)
 
