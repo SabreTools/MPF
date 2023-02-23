@@ -44,34 +44,34 @@ after_build:
 # Aaru
 - ps: appveyor DownloadFile https://github.com/aaru-dps/Aaru/releases/download/v5.3.2/aaru-5.3.2_windows_x64.zip
 - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net48\Programs\Aaru *
-- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0\win-x64\publish\Programs\Aaru *
-- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0\win-x86\publish\Programs\Aaru *
-#- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0\linux-x64\publish\Programs\Aaru *
-#- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0\osx-x64\publish\Programs\Aaru *
+- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Aaru *
+- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\win-x86\publish\Programs\Aaru *
+#- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\linux-x64\publish\Programs\Aaru *
+#- 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\osx-x64\publish\Programs\Aaru *
 
 # dd for Windows
 - ps: appveyor DownloadFile http://www.chrysocome.net/downloads/8ab730cd2a29e76ddd89be1f99357942/dd-0.6beta3.zip
 - 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net48\Programs\DD *
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0\win-x64\publish\Programs\DD *
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0\win-x86\publish\Programs\DD *
-#- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0\linux-x64\publish\Programs\DD *
-#- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0\osx-x64\publish\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\DD *
+- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\win-x86\publish\Programs\DD *
+#- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\linux-x64\publish\Programs\DD *
+#- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\osx-x64\publish\Programs\DD *
 
 # DiscImageCreator
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/10555765/DiscImageCreator_20230201.zip
 - 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net48\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0\win-x64\publish\Programs\Creator Release_ANSI\*
-- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0\win-x86\publish\Programs\Creator Release_ANSI\*
-#- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0\linux-x64\publish\Programs\Creator Release_ANSI\*
-#- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0\osx-x64\publish\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0-windows\win-x86\publish\Programs\Creator Release_ANSI\*
+#- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0-windows\linux-x64\publish\Programs\Creator Release_ANSI\*
+#- 7z e DiscImageCreator_20230201.zip -oMPF\bin\Debug\net6.0-windows\osx-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
 - ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_106/redumper-2023.02.19_build106-win64.zip
 - 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net48\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
-- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0\win-x64\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
-- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0\win-x86\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
-#- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0\linux-x64\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
-#- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0\osx-x64\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
+- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
+- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x86\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
+#- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0-windows\linux-x64\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
+#- 7z e redumper-2023.02.19_build106-win64.zip -oMPF\bin\Debug\net6.0-windows\osx-x64\publish\Programs\Redumper redumper-2023.02.19_build106-win64\bin\*
 
 # Subdump
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
@@ -79,19 +79,19 @@ after_build:
 - mkdir MPF\bin\Debug\net48\Programs\Subdump
 - mv MPF\bin\Debug\net48\subdump_fua_0x28.exe MPF\bin\Debug\net48\Programs\Subdump\subdump.exe
 #- 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0 *
-#- mkdir MPF\bin\Debug\net6.0\Programs\Subdump
-#- mv MPF\bin\Debug\net6.0\subdump_fua_0x28.exe MPF\bin\Debug\net6.0\Programs\Subdump\subdump.exe
+#- mkdir MPF\bin\Debug\net6.0-windows\Programs\Subdump
+#- mv MPF\bin\Debug\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net6.0-windows\Programs\Subdump\subdump.exe
 
 # MPF
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net48
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net48.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0\win-x86\publish\
+- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\win-x86\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_win-x86.zip *
-- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0\win-x64\publish\
+- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\win-x64\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_win-x64.zip *
-#- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0\linux-x64\publish\
+#- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\linux-x64\publish\
 #- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_linux-x64.zip *
-#- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0\osx-x64\publish\
+#- cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\osx-x64\publish\
 #- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_osx-x64.zip *
 
 # MPF.Check

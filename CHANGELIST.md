@@ -57,6 +57,7 @@
 - Handle no drives better
 - Handle no drives betterer
 - Packaging requires `-windows` for framework
+- Fix other `-windows` places for .NET 6
 
 ### 2.4 (2022-10-26)
 
