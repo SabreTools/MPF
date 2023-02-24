@@ -59,6 +59,7 @@
 - Packaging requires `-windows` for framework
 - Fix other `-windows` places for .NET 6
 - Fix typo in DICMultiSectorReadValue
+- Semi-unify drive finding
 
 ### 2.4 (2022-10-26)
 

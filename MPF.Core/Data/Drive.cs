@@ -498,8 +498,6 @@ namespace MPF.Core.Data
             }
         }
 
-#if NETFRAMEWORK
-
         /// <summary>
         /// Get all current attached Drives
         /// </summary>
@@ -524,6 +522,8 @@ namespace MPF.Core.Data
                 .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
                 .ToList();
 
+            #if NETFRAMEWORK
+
             // Get the floppy drives and set the flag from removable
             try
             {
@@ -547,8 +547,12 @@ namespace MPF.Core.Data
                 // No-op
             }
 
+            #endif
+
             return drives;
         }
+
+#if NETFRAMEWORK
 
         /// <summary>
         /// Get the media type for a device path using the Aaru libraries
@@ -626,16 +630,6 @@ namespace MPF.Core.Data
         }
 
 #else
-
-        /// <summary>
-        /// Get all devices attached converted to Drive objects
-        /// </summary>
-        /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
-        /// <returns>List of drives, null on error</returns>
-        private static List<Drive> GetDriveList(bool ignoreFixedDrives)
-        {
-            return new List<Drive>();
-        }
 
         /// <summary>
         /// Get the media type for a device path using the Aaru libraries
