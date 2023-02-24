@@ -212,6 +212,9 @@ namespace MPF.Modules.Redumper
 
                     long errorCount = GetErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
+
+                    string universalHash = GetUniversalHash($"{basePath}.log") ?? "";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
                     break;
             }
 
@@ -979,6 +982,41 @@ namespace MPF.Modules.Redumper
                     }
 
                     return pvdString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the universal hash from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Universal hash if possible, null on error</returns>
+        private static string GetUniversalHash(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // We skip during detection and get the write offset
+                    string line;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("Universal Hash"))
+                            return line.Substring("Universal Hash (SHA-1): ".Length).Trim();
+                    }
+
+                    // We couldn't detect it then
+                    return null;
                 }
                 catch
                 {

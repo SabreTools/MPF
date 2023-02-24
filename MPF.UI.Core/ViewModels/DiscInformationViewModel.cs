@@ -330,6 +330,8 @@ namespace MPF.UI.Core.ViewModels
                 Parent.SecuritySectorRanges.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.SSVersion) != true)
                 Parent.SSVersion.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.UniversalHash) != true)
+                Parent.UniversalHash.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.VolumeLabel) != true)
                 Parent.VolumeLabel.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.XeMID) != true)
@@ -469,6 +471,8 @@ namespace MPF.UI.Core.ViewModels
                     Parent.SSHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SSVersion))
                     Parent.SSVersion.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.UniversalHash))
+                    Parent.UniversalHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VolumeLabel))
                     Parent.VolumeLabel.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.XeMID))
@@ -583,6 +587,7 @@ namespace MPF.UI.Core.ViewModels
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = Parent.PFIHash.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = Parent.SSHash.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = Parent.SSVersion.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = Parent.UniversalHash.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = Parent.VolumeLabel.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = Parent.XeMID.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = Parent.XMID.Text;

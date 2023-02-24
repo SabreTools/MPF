@@ -62,6 +62,7 @@
 - Semi-unify drive finding
 - Introduce cross-platform MMI
 - Remove System.Management
+- Add Redumper Universal Hash support
 
 ### 2.4 (2022-10-26)
 
