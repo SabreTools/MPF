@@ -60,6 +60,7 @@
 - Fix other `-windows` places for .NET 6
 - Fix typo in DICMultiSectorReadValue
 - Semi-unify drive finding
+- Introduce cross-platform MMI
 
 ### 2.4 (2022-10-26)
 

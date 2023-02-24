@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Management.Infrastructure;
+using Microsoft.Management.Infrastructure.Generic;
 using MPF.Core.Converters;
 using MPF.Core.Utilities;
 using RedumpLib.Data;
@@ -211,7 +213,7 @@ namespace MPF.Core.Data
             {
                 return RedumpSystem.MattelFisherPriceiXL;
             }
-            
+
             // Microsoft Xbox 360
             try
             {
@@ -522,22 +524,18 @@ namespace MPF.Core.Data
                 .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
                 .ToList();
 
-            #if NETFRAMEWORK
-
-            // Get the floppy drives and set the flag from removable
             try
             {
-                ManagementObjectSearcher searcher =
-                    new ManagementObjectSearcher("root\\CIMV2",
-                    "SELECT * FROM Win32_LogicalDisk");
+                CimSession session = CimSession.Create(null);
+                var collection = session.QueryInstances("root\\CIMV2", "WQL", "SELECT * FROM Win32_LogicalDisk");
 
-                var collection = searcher.Get();
-                foreach (ManagementObject queryObj in collection)
+                foreach (CimInstance instance in collection)
                 {
-                    uint? mediaType = (uint?)queryObj["MediaType"];
+                    CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
+                    uint? mediaType = properties["MediaType"]?.Value as uint?;
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
-                        char devId = queryObj["DeviceID"].ToString()[0];
+                        char devId = (properties["Caption"].Value as string)[0];
                         drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
                     }
                 }
@@ -546,8 +544,6 @@ namespace MPF.Core.Data
             {
                 // No-op
             }
-
-            #endif
 
             return drives;
         }
