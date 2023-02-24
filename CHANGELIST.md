@@ -65,6 +65,7 @@
 - Add Redumper Universal Hash support
 - Fix Redumper write offset support
 - Add Redumper non-zero data start
+- Use media size for type detection on .NET 6
 
 ### 2.4 (2022-10-26)
 

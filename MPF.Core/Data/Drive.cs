@@ -166,7 +166,83 @@ namespace MPF.Core.Data
         /// </summary>
         /// <returns></returns>
         public (MediaType?, string) GetMediaType()
-            => GetMediaType(this.Name, this.InternalDriveType);
+        {
+            // Take care of the non-optical stuff first
+            // TODO: See if any of these can be more granular, like Optical is
+            if (this.InternalDriveType == Data.InternalDriveType.Floppy)
+                return (MediaType.FloppyDisk, null);
+            else if (this.InternalDriveType == Data.InternalDriveType.HardDisk)
+                return (MediaType.HardDisk, null);
+            else if (this.InternalDriveType == Data.InternalDriveType.Removable)
+                return (MediaType.FlashDrive, null);
+#if NET6_0_OR_GREATER
+            else
+                return GetMediaTypeFromSize();
+#endif
+
+            // Get the current drive information
+            string deviceId = null;
+            bool loaded = false;
+            try
+            {
+                // Get the device ID first
+                CimSession session = CimSession.Create(null);
+                var collection = session.QueryInstances("root\\CIMV2", "WQL", $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{this.Letter}:\'");
+
+                foreach (CimInstance instance in collection)
+                {
+                    CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
+                    deviceId = (string)properties["DeviceID"]?.Value;
+                    loaded = (bool)properties["MediaLoaded"]?.Value;
+                }
+
+                // If we got no valid device, we don't care and just return
+                if (deviceId == null)
+                    return (null, "Device could not be found");
+                else if (!loaded)
+                    return (null, "Device is not reporting media loaded");
+
+#if NETFRAMEWORK
+
+                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
+                deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
+                string id = null;
+                foreach (var disc in discMaster)
+                {
+                    if (disc.ToString().Contains(deviceId))
+                        id = disc.ToString();
+                }
+
+                // If we couldn't find the drive, we don't care and return
+                if (id == null)
+                    return (null, "Device ID could not be found");
+
+                // Create the required objects for reading from the drive
+                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
+                recorder.InitializeDiscRecorder(id);
+                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
+
+                // If the recorder is not supported, just return
+                if (!dataWriter.IsRecorderSupported(recorder))
+                    return (null, "IMAPI2 recorder not supported");
+
+                // Otherwise, set the recorder to get information from
+                dataWriter.Recorder = recorder;
+
+                var media = dataWriter.CurrentPhysicalMediaType;
+                return (media.IMAPIToMediaType(), null);
+
+#else
+
+                return (null, "IMAPI2 recorder not supported");
+
+#endif
+            }
+            catch (Exception ex)
+            {
+                return (null, ex.Message);
+            }
+        }
 
         /// <summary>
         /// Get the current system from drive
@@ -488,17 +564,17 @@ namespace MPF.Core.Data
         #region Helpers
 
         /// <summary>
-        /// Get the media type for a device path
+        /// Get the media type for a device path based on size
         /// </summary>
         /// <returns>MediaType, null on error</returns>
-        private (MediaType?, string) GetMediaTypeFromFilesystemName()
+        private (MediaType?, string) GetMediaTypeFromSize()
         {
-            switch (this.DriveFormat)
-            {
-                case "CDFS": return (MediaType.CDROM, null);
-                case "UDF": return (MediaType.DVD, null); // TODO: UDF is not specific enough
-                default: return (null, $"Unrecognized format: {this.DriveFormat}");
-            }
+            if (this.TotalSize >= 0 && this.TotalSize < 800_000_000 && this.DriveFormat == "CDFS")
+                return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 400_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
+                return (MediaType.DVD, null);
+            else
+                return (MediaType.BluRay, null);
         }
 
         /// <summary>
@@ -550,93 +626,6 @@ namespace MPF.Core.Data
             }
 
             return drives;
-        }
-
-        /// <summary>
-        /// Get the media type for a device path using the Aaru libraries
-        /// </summary>
-        /// <param name="devicePath">Path to the device</param>
-        /// <param name="internalDriveType">Current internal drive type</param>
-        /// <returns>MediaType, null on error</returns>
-        private static (MediaType?, string) GetMediaType(string devicePath, InternalDriveType? internalDriveType)
-        {
-            char driveLetter = devicePath == null || !devicePath.Any() ? '\0' : devicePath[0];
-
-            // Take care of the non-optical stuff first
-            // TODO: See if any of these can be more granular, like Optical is
-            if (internalDriveType == Data.InternalDriveType.Floppy)
-                return (MediaType.FloppyDisk, null);
-            else if (internalDriveType == Data.InternalDriveType.HardDisk)
-                return (MediaType.HardDisk, null);
-            else if (internalDriveType == Data.InternalDriveType.Removable)
-                return (MediaType.FlashDrive, null);
-#if NET6_0_OR_GREATER
-            else
-                return Create(internalDriveType, devicePath).GetMediaTypeFromFilesystemName();
-#endif
-
-            // Get the current drive information
-            string deviceId = null;
-            bool loaded = false;
-            try
-            {
-                // Get the device ID first
-                CimSession session = CimSession.Create(null);
-                var collection = session.QueryInstances("root\\CIMV2", "WQL", $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{driveLetter}:\'");
-
-                foreach (CimInstance instance in collection)
-                {
-                    CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
-                    deviceId = (string)properties["DeviceID"]?.Value;
-                    loaded = (bool)properties["MediaLoaded"]?.Value;
-                }
-
-                // If we got no valid device, we don't care and just return
-                if (deviceId == null)
-                    return (null, "Device could not be found");
-                else if (!loaded)
-                    return (null, "Device is not reporting media loaded");
-
-#if NETFRAMEWORK
-
-                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-                deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
-                string id = null;
-                foreach (var disc in discMaster)
-                {
-                    if (disc.ToString().Contains(deviceId))
-                        id = disc.ToString();
-                }
-
-                // If we couldn't find the drive, we don't care and return
-                if (id == null)
-                    return (null, "Device ID could not be found");
-
-                // Create the required objects for reading from the drive
-                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-                recorder.InitializeDiscRecorder(id);
-                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-
-                // If the recorder is not supported, just return
-                if (!dataWriter.IsRecorderSupported(recorder))
-                    return (null, "IMAPI2 recorder not supported");
-
-                // Otherwise, set the recorder to get information from
-                dataWriter.Recorder = recorder;
-
-                var media = dataWriter.CurrentPhysicalMediaType;
-                return (media.IMAPIToMediaType(), null);
-
-#else
-
-                return (null, "IMAPI2 recorder not supported");
-
-#endif
-            }
-            catch (Exception ex)
-            {
-                return (null, ex.Message);
-            }
         }
 
         #endregion
