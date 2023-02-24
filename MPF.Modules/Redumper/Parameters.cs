@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -1006,7 +1006,7 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // We skip during detection and get the write offset
+                    // If we find the universal hash line, return the hash only
                     string line;
                     while (!sr.EndOfStream)
                     {
@@ -1046,11 +1046,12 @@ namespace MPF.Modules.Redumper
                     if (sr.EndOfStream)
                         return null;
 
-                    // We skip during detection and get the write offset
+                    // If we find the disc write offset line, return the offset
                     string line;
-                    while (!sr.EndOfStream && !(line = sr.ReadLine().TrimStart()).StartsWith("detection complete"))
+                    while (!sr.EndOfStream)
                     {
-                        if (line.StartsWith("disc write offset:"))
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("disc write offset"))
                             return line.Substring("disc write offset: ".Length).Trim();
                     }
 
