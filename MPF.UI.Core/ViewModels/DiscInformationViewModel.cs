@@ -322,6 +322,8 @@ namespace MPF.UI.Core.ViewModels
                 Parent.PVD.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Multisession) != true)
                 Parent.Multisession.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.RingNonZeroDataStart) != true)
+                Parent.RingNonZeroDataStart.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.SecuROMData))
                 Parent.SecuROMData.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.SSHash) != true)
@@ -467,6 +469,8 @@ namespace MPF.UI.Core.ViewModels
                     Parent.Multisession.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PFIHash))
                     Parent.PFIHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash];
+                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.RingNonZeroDataStart))
+                    Parent.RingNonZeroDataStart.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SSHash))
                     Parent.SSHash.Text = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash];
                 if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.SSVersion))
@@ -585,6 +589,7 @@ namespace MPF.UI.Core.ViewModels
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = Parent.InternalSerialName.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = Parent.Multisession.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = Parent.PFIHash.Text;
+            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = Parent.RingNonZeroDataStart.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = Parent.SSHash.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = Parent.SSVersion.Text;
             SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = Parent.UniversalHash.Text;

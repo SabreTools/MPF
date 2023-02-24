@@ -215,6 +215,10 @@ namespace MPF.Modules.Redumper
 
                     string universalHash = GetUniversalHash($"{basePath}.log") ?? "";
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+
+                    string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? "";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+
                     break;
             }
 
@@ -949,6 +953,41 @@ namespace MPF.Modules.Redumper
                 {
                     // We don't care what the exception is right now
                     return -1;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the non-zero dta start from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Non-zero dta start if possible, null on error</returns>
+        private static string GetRingNonZeroDataStart(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // If we find the universal hash line, return the hash only
+                    string line;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("non-zero data sample range"))
+                            return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
+                    }
+
+                    // We couldn't detect it then
+                    return null;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
                 }
             }
         }

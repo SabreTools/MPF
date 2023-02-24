@@ -2564,6 +2564,8 @@ namespace MPF.Library
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.Multisession, tags[SiteCode.Multisession]));
             if (tags.ContainsKey(SiteCode.UniversalHash))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.UniversalHash, tags[SiteCode.UniversalHash]));
+            if (tags.ContainsKey(SiteCode.RingNonZeroDataStart))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.RingNonZeroDataStart, tags[SiteCode.RingNonZeroDataStart]));
 
             if (tags.ContainsKey(SiteCode.XMID))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.XMID, tags[SiteCode.XMID]));

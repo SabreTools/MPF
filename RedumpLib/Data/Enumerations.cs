@@ -3630,6 +3630,10 @@ namespace RedumpLib.Data
         [HumanReadable(ShortName = "[T:PPN]", LongName = "<b>PPN</b>:")]
         PPN,
 
+        // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>Ring non-zero data start</b>:", LongName = "<b>Ring non-zero data start</b>:")]
+        RingNonZeroDataStart,
+
         [HumanReadable(ShortName = "[T:RD]", LongName = "<b>Rolling Demos</b>:")]
         RollingDemos,
 

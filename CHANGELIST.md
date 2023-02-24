@@ -64,6 +64,7 @@
 - Remove System.Management
 - Add Redumper Universal Hash support
 - Fix Redumper write offset support
+- Add Redumper non-zero data start
 
 ### 2.4 (2022-10-26)
 
