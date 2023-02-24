@@ -231,7 +231,7 @@ namespace MPF.Core.Data
         public int DICMultiSectorReadValue
         {
             get { return GetInt32Setting(_settings, "DICMultiSectorReadValue", 0); }
-            set { _settings["DICMultiSectorRead"] = value.ToString(); }
+            set { _settings["DICMultiSectorReadValue"] = value.ToString(); }
         }
 
         /// <summary>

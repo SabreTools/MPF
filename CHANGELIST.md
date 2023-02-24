@@ -58,6 +58,7 @@
 - Handle no drives betterer
 - Packaging requires `-windows` for framework
 - Fix other `-windows` places for .NET 6
+- Fix typo in DICMultiSectorReadValue
 
 ### 2.4 (2022-10-26)
 
