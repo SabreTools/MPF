@@ -8,7 +8,6 @@ using MPF.Core.Converters;
 using MPF.Core.Utilities;
 using RedumpLib.Data;
 #if NETFRAMEWORK
-using System.Management;
 using IMAPI2;
 #endif
 
@@ -548,8 +547,6 @@ namespace MPF.Core.Data
             return drives;
         }
 
-#if NETFRAMEWORK
-
         /// <summary>
         /// Get the media type for a device path using the Aaru libraries
         /// </summary>
@@ -575,14 +572,14 @@ namespace MPF.Core.Data
             try
             {
                 // Get the device ID first
-                var searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{driveLetter}:\'");
+                CimSession session = CimSession.Create(null);
+                var collection = session.QueryInstances("root\\CIMV2", "WQL", $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{driveLetter}:\'");
 
-                foreach (ManagementObject queryObj in searcher.Get())
+                foreach (CimInstance instance in collection)
                 {
-                    deviceId = (string)queryObj["DeviceID"];
-                    loaded = (bool)queryObj["MediaLoaded"];
+                    CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
+                    deviceId = (string)properties["DeviceID"]?.Value;
+                    loaded = (bool)properties["MediaLoaded"]?.Value;
                 }
 
                 // If we got no valid device, we don't care and just return
@@ -590,6 +587,8 @@ namespace MPF.Core.Data
                     return (null, "Device could not be found");
                 else if (!loaded)
                     return (null, "Device is not reporting media loaded");
+
+                #if NETFRAMEWORK
 
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
                 deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
@@ -618,27 +617,16 @@ namespace MPF.Core.Data
 
                 var media = dataWriter.CurrentPhysicalMediaType;
                 return (media.IMAPIToMediaType(), null);
+
+                #endif
+
+                return (null, "IMAPI2 recorder not supported");
             }
             catch (Exception ex)
             {
                 return (null, ex.Message);
             }
         }
-
-#else
-
-        /// <summary>
-        /// Get the media type for a device path using the Aaru libraries
-        /// </summary>
-        /// <param name="devicePath">Path to the device</param>
-        /// <param name="internalDriveType">Current internal drive type</param>
-        /// <returns>MediaType, null on error</returns>
-        private static (MediaType?, string) GetMediaType(string devicePath, InternalDriveType? internalDriveType)
-        {
-            return (null, "Device does not support media type finding");
-        }
-
-#endif
 
         #endregion
     }

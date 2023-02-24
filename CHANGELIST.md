@@ -61,6 +61,7 @@
 - Fix typo in DICMultiSectorReadValue
 - Semi-unify drive finding
 - Introduce cross-platform MMI
+- Remove System.Management
 
 ### 2.4 (2022-10-26)
 
