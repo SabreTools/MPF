@@ -495,6 +495,8 @@ namespace MPF.Core.Data
         {
             switch (this.DriveFormat)
             {
+                case "CDFS": return (MediaType.CDROM, null);
+                case "UDF": return (MediaType.DVD, null); // TODO: UDF is not specific enough
                 default: return (null, $"Unrecognized format: {this.DriveFormat}");
             }
         }
@@ -516,6 +518,9 @@ namespace MPF.Core.Data
                 desiredDriveTypes.Add(DriveType.Fixed);
                 desiredDriveTypes.Add(DriveType.Removable);
             }
+
+            // TODO: Reduce reliance on `DriveInfo`
+            // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
             // Get all supported drive types
             var drives = DriveInfo.GetDrives()
@@ -565,6 +570,10 @@ namespace MPF.Core.Data
                 return (MediaType.HardDisk, null);
             else if (internalDriveType == Data.InternalDriveType.Removable)
                 return (MediaType.FlashDrive, null);
+#if NET6_0_OR_GREATER
+            else
+                return Create(internalDriveType, devicePath).GetMediaTypeFromFilesystemName();
+#endif
 
             // Get the current drive information
             string deviceId = null;
@@ -588,7 +597,7 @@ namespace MPF.Core.Data
                 else if (!loaded)
                     return (null, "Device is not reporting media loaded");
 
-                #if NETFRAMEWORK
+#if NETFRAMEWORK
 
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
                 deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
@@ -618,9 +627,11 @@ namespace MPF.Core.Data
                 var media = dataWriter.CurrentPhysicalMediaType;
                 return (media.IMAPIToMediaType(), null);
 
-                #endif
+#else
 
                 return (null, "IMAPI2 recorder not supported");
+
+#endif
             }
             catch (Exception ex)
             {
