@@ -471,7 +471,17 @@ namespace MPF.Modules.DiscImageCreator
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
-                        info.Extras.PIC = GetPIC($"{basePath}_PIC.bin") ?? "";
+                    {
+                        int trimLength = -1;
+                        switch (this.System)
+                        {
+                            case RedumpSystem.SonyPlayStation3:
+                                trimLength = 264;
+                                break;
+                        }
+
+                        info.Extras.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? "";
+                    }
 
                     break;
             }
@@ -3140,9 +3150,10 @@ namespace MPF.Modules.DiscImageCreator
         /// Get the hex contents of the PIC file
         /// </summary>
         /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
+        /// <param name="trimLength">Number of characters to trim the PIC to, if -1, ignored</param>
         /// <returns>PIC data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        private static string GetPIC(string picPath)
+        private static string GetPIC(string picPath, int trimLength = -1)
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(picPath))
@@ -3151,6 +3162,9 @@ namespace MPF.Modules.DiscImageCreator
             try
             {
                 string hex = GetFullFile(picPath, true);
+                if (trimLength > -1)
+                    hex = hex.Substring(0, trimLength);
+
                 return Regex.Replace(hex, ".{32}", "$0\n");
             }
             catch
