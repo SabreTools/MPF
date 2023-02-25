@@ -161,8 +161,15 @@ namespace MPF.Core.Utilities
         /// </summary>
         public static string GetCurrentVersion()
         {
-            var assemblyVersion = Attribute.GetCustomAttribute(Assembly.GetEntryAssembly(), typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
-            return assemblyVersion.InformationalVersion;
+            try
+            {
+                var assemblyVersion = Attribute.GetCustomAttribute(Assembly.GetEntryAssembly(), typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
+                return assemblyVersion.InformationalVersion;
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
         }
 
         /// <summary>

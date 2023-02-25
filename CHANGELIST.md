@@ -69,6 +69,7 @@
 - Trim PIC for PS3
 - Get the version of redumper (fuzz6001)
 - Update VSCode config files
+- Can't publish single file for UI
 
 ### 2.4 (2022-10-26)
 
