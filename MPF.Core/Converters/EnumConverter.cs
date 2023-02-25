@@ -136,7 +136,7 @@ namespace MPF.Core.Converters
                 case InternalProgram.DiscImageCreator:
                     return "DiscImageCreator";
                 case InternalProgram.Redumper:
-                    return "Redumper";
+                    return "redumper";
 
                 #endregion
 

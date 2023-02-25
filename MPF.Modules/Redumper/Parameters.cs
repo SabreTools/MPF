@@ -196,8 +196,8 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
-            // TODO: Determine if there's a Redumper version anywhere
-            info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            // Get the dumping program and version
+            info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
 
             switch (this.Type)
             {
@@ -1096,6 +1096,47 @@ namespace MPF.Modules.Redumper
 
                     // We couldn't detect it then
                     return null;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the version. if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Version if possible, null on error</returns>
+        private static string GetVersion(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            // Samples:
+            // redumper v2022.10.28 [Oct 28 2022, 05:41:43] (print usage: --help,-h)
+            // redumper v2022.12.22 build_87 [Dec 22 2022, 01:56:26]
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Skip first line (dump date)
+                    sr.ReadLine();
+
+                    // Generate regex
+                    // Permissive
+                    var regex = new Regex(@"^redumper (v.+) \[.+\]");
+                    // Strict
+                    //var regex = new Regex(@"^redumper (v\d{4}\.\d{2}\.\d{2}(| build_\d+)) \[.+\]");
+
+                    // Extract the version string
+                    var match = regex.Match(sr.ReadLine().Trim());
+                    var version = match.Groups[1].Value;
+                    return string.IsNullOrWhiteSpace(version) ? null : version;
                 }
                 catch
                 {
