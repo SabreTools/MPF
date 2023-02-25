@@ -67,6 +67,7 @@
 - Add Redumper non-zero data start
 - Use media size for type detection on .NET 6
 - Trim PIC for PS3
+- Get the version of redumper (fuzz6001)
 
 ### 2.4 (2022-10-26)
 
