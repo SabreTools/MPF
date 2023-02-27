@@ -1532,7 +1532,10 @@ namespace MPF.UI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+            {
+                Env = DetermineEnvironment();
+                GetOutputNames(true);
+            }
         }
 
         #endregion
