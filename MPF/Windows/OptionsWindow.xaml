@@ -254,7 +254,7 @@
                                     Ticks="{Binding Source={x:Static local:Constants.SpeedsForHDDVDAsCollection}}"
                                     Value="{Binding Options.PreferredDumpSpeedHDDVD}"  />
                                 <TextBox x:Name="DumpSpeedHDDVDTextBox" Grid.Row="2" Grid.Column="2" Width="22" Height="22" TextAlignment="Center" IsReadOnly="True" IsReadOnlyCaretVisible="False" VerticalAlignment="Center"
-                                   Text="{Binding ElementName=DumpSpeedDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
+                                   Text="{Binding ElementName=DumpSpeedHDDVDSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Background="LightGray" Foreground="Gray"/>
 
                                 <Label Grid.Row="3" Grid.Column="0" Content="BD" />
                                 <Slider x:Name="DumpSpeedBDSlider" Grid.Row="3" Grid.Column="1" Minimum="1" Maximum="16" IsSnapToTickEnabled="True" TickPlacement="BottomRight"
