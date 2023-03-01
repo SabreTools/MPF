@@ -70,6 +70,7 @@
 - Get the version of redumper (fuzz6001)
 - Update VSCode config files
 - Can't publish single file for UI
+- Handle missing extension gracefully
 
 ### 2.4 (2022-10-26)
 

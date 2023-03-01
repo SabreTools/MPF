@@ -137,7 +137,10 @@ namespace MPF.Library
                 string outputExtension = Path.GetExtension(outputPath).TrimStart('.');
 
                 // Rebuild the output path
-                this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
+                if (!string.IsNullOrWhiteSpace(outputExtension))
+                    this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
+                else
+                    this.OutputPath = Path.Combine(outputDirectory, outputFilename);
 
                 // Assign the path to the filename as well for dumping
                 ((Modules.DiscImageCreator.Parameters)this.Parameters).Filename = this.OutputPath;
