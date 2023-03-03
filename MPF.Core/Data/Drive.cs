@@ -145,6 +145,12 @@ namespace MPF.Core.Data
                 this.TotalSize = driveInfo.TotalSize;
                 this.VolumeLabel = driveInfo.VolumeLabel;
             }
+            else
+            {
+                this.DriveFormat = string.Empty;
+                this.TotalSize = default;
+                this.VolumeLabel = string.Empty;
+            }
         }
 
         #region Public Functionality

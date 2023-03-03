@@ -72,6 +72,7 @@
 - Can't publish single file for UI
 - Handle missing extension gracefully
 - Fix incorrect option slider display
+- Handle undetected discs on refresh
 
 ### 2.4 (2022-10-26)
 
