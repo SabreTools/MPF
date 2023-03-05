@@ -573,11 +573,41 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Performs a fast update of the output path while skipping disc checks
         /// </summary>
-        private void FastUpdateLabel()
+        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
+        private void FastUpdateLabel(bool removeEventHandlers)
         {
+            // Disable the dumping button
+            App.Instance.StartStopButton.IsEnabled = false;
+
+            // Safely uncheck the parameters box, just in case
+            if (App.Instance.EnableParametersCheckBox.IsChecked == true)
+            {
+                App.Instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
+                App.Instance.EnableParametersCheckBox.IsChecked = false;
+                App.Instance.ParametersTextBox.IsEnabled = false;
+                App.Instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+            }
+
+            // Set the UI color scheme according to the options
+            if (App.Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                DisableDarkMode();
+
+            // Force the UI to reload after applying the theme
+            App.Instance.UpdateLayout();
+
+            // Remove event handlers to ensure ordering
+            if (removeEventHandlers)
+                DisableEventHandlers();
+
+            // Refresh the drive info
+            Drive drive = App.Instance.DriveLetterComboBox.SelectedItem as Drive;
+            drive.RefreshDrive();
+
             // Set the initial environment and UI values
             Env = DetermineEnvironment();
-            GetOutputNames(true);
+            GetOutputNames(true, true);
             EnsureDiscInformation();
 
             // Enable event handlers
@@ -982,7 +1012,7 @@ namespace MPF.UI.ViewModels
         /// Get the default output directory name from the currently selected drive
         /// </summary>
         /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
-        public void GetOutputNames(bool driveChanged)
+        public void GetOutputNames(bool driveChanged, bool forceUpdate = false)
         {
             if (Drives == null || Drives.Count == 0 || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
             {
@@ -998,7 +1028,7 @@ namespace MPF.UI.ViewModels
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
             // Set the output filename, if it's not already
-            if (string.IsNullOrEmpty(App.Instance.OutputPathTextBox.Text))
+            if (string.IsNullOrEmpty(App.Instance.OutputPathTextBox.Text) || forceUpdate)
             {
                 string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
                 string directory = App.Options.DefaultOutputPath;
@@ -1549,10 +1579,12 @@ namespace MPF.UI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
+            {
                 if (App.Options.FastUpdateLabel)
-                    FastUpdateLabel();
+                    FastUpdateLabel(removeEventHandlers: true);
                 else
                     InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+            }
         }
 
         #endregion
