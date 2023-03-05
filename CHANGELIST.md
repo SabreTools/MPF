@@ -73,6 +73,7 @@
 - Handle missing extension gracefully
 - Fix incorrect option slider display
 - Handle undetected discs on refresh
+- Originally intended behaviour of the Update Label button (IcySon55)
 
 ### 2.4 (2022-10-26)
 
