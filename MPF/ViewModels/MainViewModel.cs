@@ -588,26 +588,16 @@ namespace MPF.UI.ViewModels
                 App.Instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
             }
 
-            // Set the UI color scheme according to the options
-            if (App.Options.EnableDarkMode)
-                EnableDarkMode();
-            else
-                DisableDarkMode();
-
-            // Force the UI to reload after applying the theme
-            App.Instance.UpdateLayout();
-
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
                 DisableEventHandlers();
 
             // Refresh the drive info
-            Drive drive = App.Instance.DriveLetterComboBox.SelectedItem as Drive;
-            drive.RefreshDrive();
+            (App.Instance.DriveLetterComboBox.SelectedItem as Drive)?.RefreshDrive();
 
             // Set the initial environment and UI values
             Env = DetermineEnvironment();
-            GetOutputNames(true, true);
+            GetOutputNames(true);
             EnsureDiscInformation();
 
             // Enable event handlers
@@ -1012,7 +1002,7 @@ namespace MPF.UI.ViewModels
         /// Get the default output directory name from the currently selected drive
         /// </summary>
         /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
-        public void GetOutputNames(bool driveChanged, bool forceUpdate = false)
+        public void GetOutputNames(bool driveChanged)
         {
             if (Drives == null || Drives.Count == 0 || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
             {
@@ -1028,7 +1018,7 @@ namespace MPF.UI.ViewModels
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
             // Set the output filename, if it's not already
-            if (string.IsNullOrEmpty(App.Instance.OutputPathTextBox.Text) || forceUpdate)
+            if (string.IsNullOrEmpty(App.Instance.OutputPathTextBox.Text))
             {
                 string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
                 string directory = App.Options.DefaultOutputPath;
