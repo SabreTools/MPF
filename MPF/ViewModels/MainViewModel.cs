@@ -432,7 +432,7 @@ namespace MPF.UI.ViewModels
             {
                 App.Instance.SystemTypeComboBox.IsEnabled = false;
                 App.Instance.MediaTypeComboBox.IsEnabled = false;
-                
+
                 App.Instance.OutputPathTextBox.IsEnabled = false;
                 App.Instance.OutputPathBrowseButton.IsEnabled = false;
 
@@ -449,7 +449,7 @@ namespace MPF.UI.ViewModels
 
                 App.Instance.SystemTypeComboBox.IsEnabled = true;
                 App.Instance.MediaTypeComboBox.IsEnabled = true;
-                
+
                 App.Instance.OutputPathTextBox.IsEnabled = true;
                 App.Instance.OutputPathBrowseButton.IsEnabled = true;
 
@@ -559,6 +559,23 @@ namespace MPF.UI.ViewModels
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
+            Env = DetermineEnvironment();
+            GetOutputNames(true);
+            EnsureDiscInformation();
+
+            // Enable event handlers
+            EnableEventHandlers();
+
+            // Enable the dumping button, if necessary
+            App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+        }
+
+        /// <summary>
+        /// Performs a fast update of the output path while skipping disc checks
+        /// </summary>
+        private void FastUpdateLabel()
+        {
+            // Set the initial environment and UI values
             Env = DetermineEnvironment();
             GetOutputNames(true);
             EnsureDiscInformation();
@@ -1532,10 +1549,10 @@ namespace MPF.UI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-            {
-                Env = DetermineEnvironment();
-                GetOutputNames(true);
-            }
+                if (App.Options.FastUpdateLabel)
+                    FastUpdateLabel();
+                else
+                    InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
         }
 
         #endregion
