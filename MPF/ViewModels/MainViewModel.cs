@@ -432,7 +432,7 @@ namespace MPF.UI.ViewModels
             {
                 App.Instance.SystemTypeComboBox.IsEnabled = false;
                 App.Instance.MediaTypeComboBox.IsEnabled = false;
-                
+
                 App.Instance.OutputPathTextBox.IsEnabled = false;
                 App.Instance.OutputPathBrowseButton.IsEnabled = false;
 
@@ -449,7 +449,7 @@ namespace MPF.UI.ViewModels
 
                 App.Instance.SystemTypeComboBox.IsEnabled = true;
                 App.Instance.MediaTypeComboBox.IsEnabled = true;
-                
+
                 App.Instance.OutputPathTextBox.IsEnabled = true;
                 App.Instance.OutputPathBrowseButton.IsEnabled = true;
 
@@ -559,6 +559,43 @@ namespace MPF.UI.ViewModels
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
+            Env = DetermineEnvironment();
+            GetOutputNames(true);
+            EnsureDiscInformation();
+
+            // Enable event handlers
+            EnableEventHandlers();
+
+            // Enable the dumping button, if necessary
+            App.Instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+        }
+
+        /// <summary>
+        /// Performs a fast update of the output path while skipping disc checks
+        /// </summary>
+        /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
+        private void FastUpdateLabel(bool removeEventHandlers)
+        {
+            // Disable the dumping button
+            App.Instance.StartStopButton.IsEnabled = false;
+
+            // Safely uncheck the parameters box, just in case
+            if (App.Instance.EnableParametersCheckBox.IsChecked == true)
+            {
+                App.Instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
+                App.Instance.EnableParametersCheckBox.IsChecked = false;
+                App.Instance.ParametersTextBox.IsEnabled = false;
+                App.Instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+            }
+
+            // Remove event handlers to ensure ordering
+            if (removeEventHandlers)
+                DisableEventHandlers();
+
+            // Refresh the drive info
+            (App.Instance.DriveLetterComboBox.SelectedItem as Drive)?.RefreshDrive();
+
+            // Set the initial environment and UI values
             Env = DetermineEnvironment();
             GetOutputNames(true);
             EnsureDiscInformation();
@@ -1532,7 +1569,12 @@ namespace MPF.UI.ViewModels
         private void UpdateVolumeLabelClick(object sender, RoutedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+            {
+                if (App.Options.FastUpdateLabel)
+                    FastUpdateLabel(removeEventHandlers: true);
+                else
+                    InitializeUIValues(removeEventHandlers: true, rescanDrives: false);
+            }
         }
 
         #endregion

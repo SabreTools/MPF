@@ -88,6 +88,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Fast update label - Skips disc checks and updates path only
+        /// </summary>
+        public bool FastUpdateLabel
+        {
+            get { return GetBooleanSetting(_settings, "FastUpdateLabel", false); }
+            set { _settings["FastUpdateLabel"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default output path for dumps
         /// </summary>
         public string DefaultOutputPath
