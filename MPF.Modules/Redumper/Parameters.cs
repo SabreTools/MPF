@@ -920,12 +920,34 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // REDUMP.ORG errors: <error count>
-                    string line = null;
-                    while (!sr.EndOfStream && !(line = sr.ReadLine().Trim()).StartsWith("REDUMP.ORG errors"));
+                    // Fast forward to the errors lines
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("data errors"));
                     if (sr.EndOfStream)
-                        return -1;
-                    return long.TryParse(line.Split(' ').Last(), out long count) ? count : -1;
+                        return 0;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    long errorCount = 0;
+                    while (!sr.EndOfStream)
+                    {
+                        // Skip forward to the "redump" line
+                        string line;
+                        while (!(line = sr.ReadLine().Trim()).StartsWith("redump"));
+
+                        // redump: <error count>
+                        string[] parts = line.Split(' ');
+                        if (long.TryParse(parts[1], out long redump))
+                            errorCount += redump;
+                        else
+                            return -1;
+
+                        if (!sr.EndOfStream)
+                            sr.ReadLine(); // Empty line
+
+                        if (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("data errors"))
+                            break;
+                    }
+
+                    return errorCount;
                 }
                 catch
                 {
