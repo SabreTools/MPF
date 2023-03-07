@@ -189,7 +189,7 @@ namespace MPF.Modules.Redumper
 
                     break;
             }
-            
+
             return (true, new List<string>());
         }
 
@@ -920,8 +920,11 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
+                    const string startMarker = "CD-ROM [";
+                    const string redumpMarker = "REDUMP.ORG errors";
+
                     // Fast forward to the errors lines
-                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("data errors"));
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith(startMarker));
                     if (sr.EndOfStream)
                         return 0;
 
@@ -929,13 +932,13 @@ namespace MPF.Modules.Redumper
                     long errorCount = 0;
                     while (!sr.EndOfStream)
                     {
-                        // Skip forward to the "redump" line
+                        // Skip forward to the redump error line
                         string line;
-                        while (!(line = sr.ReadLine().Trim()).StartsWith("redump"));
+                        while (!(line = sr.ReadLine().Trim()).StartsWith(redumpMarker));
 
-                        // redump: <error count>
+                        // Get the number from the error line
                         string[] parts = line.Split(' ');
-                        if (long.TryParse(parts[1], out long redump))
+                        if (long.TryParse(parts.Last(), out long redump))
                             errorCount += redump;
                         else
                             return -1;
@@ -943,7 +946,7 @@ namespace MPF.Modules.Redumper
                         if (!sr.EndOfStream)
                             sr.ReadLine(); // Empty line
 
-                        if (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("data errors"))
+                        if (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith(startMarker))
                             break;
                     }
 
