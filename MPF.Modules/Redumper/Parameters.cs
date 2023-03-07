@@ -912,42 +912,32 @@ namespace MPF.Modules.Redumper
         public static long GetErrorCount(string log)
         {
             // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(path: log))
+            if (!File.Exists(log))
                 return -1;
 
-            // First line of defense is the EdcEcc error file
             using (StreamReader sr = File.OpenText(log))
             {
                 try
                 {
-                    const string startMarker = "CD-ROM [";
-                    const string redumpMarker = "REDUMP.ORG errors";
-
                     // Fast forward to the errors lines
-                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith(startMarker));
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("CD-ROM ["));
                     if (sr.EndOfStream)
                         return 0;
 
-                    // Now that we're at the relevant entries, read each line in and concatenate
+                    // Now that we're at the relevant lines, find the error count
                     long errorCount = 0;
                     while (!sr.EndOfStream)
                     {
-                        // Skip forward to the redump error line
+                        // Skip forward to the "REDUMP.ORG" line
                         string line;
-                        while (!(line = sr.ReadLine().Trim()).StartsWith(redumpMarker));
+                        while (!(line = sr.ReadLine().Trim()).StartsWith("REDUMP.ORG errors"));
 
-                        // Get the number from the error line
+                        // REDUMP.ORG errors: <error count>
                         string[] parts = line.Split(' ');
-                        if (long.TryParse(parts.Last(), out long redump))
+                        if (long.TryParse(parts[2], out long redump))
                             errorCount += redump;
                         else
                             return -1;
-
-                        if (!sr.EndOfStream)
-                            sr.ReadLine(); // Empty line
-
-                        if (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith(startMarker))
-                            break;
                     }
 
                     return errorCount;

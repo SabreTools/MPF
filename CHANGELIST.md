@@ -75,6 +75,8 @@
 - Handle undetected discs on refresh
 - Originally intended behaviour of the Update Label button (IcySon55)
 - Update to BurnOutSharp 2.7.0
+- Get error count from recent redumper log (fuzz6001)
+- Minor cosmetic changes
 
 ### 2.4 (2022-10-26)
 
