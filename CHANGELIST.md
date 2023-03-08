@@ -77,6 +77,7 @@
 - Update to BurnOutSharp 2.7.0
 - Get error count from recent redumper log (fuzz6001)
 - Minor cosmetic changes
+- Set saner defaults for dumping speeds
 
 ### 2.4 (2022-10-26)
 

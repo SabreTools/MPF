@@ -141,7 +141,7 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedCD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedCD", 72); }
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedCD", 24); }
             set { _settings["PreferredDumpSpeedCD"] = value.ToString(); }
         }
 
@@ -150,7 +150,7 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedDVD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedDVD", 24); }
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedDVD", 16); }
             set { _settings["PreferredDumpSpeedDVD"] = value.ToString(); }
         }
 
@@ -159,7 +159,7 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedHDDVD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedHDDVD", 24); }
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedHDDVD", 8); }
             set { _settings["PreferredDumpSpeedHDDVD"] = value.ToString(); }
         }
 
@@ -168,7 +168,7 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedBD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedBD", 16); }
+            get { return GetInt32Setting(_settings, "PreferredDumpSpeedBD", 8); }
             set { _settings["PreferredDumpSpeedBD"] = value.ToString(); }
         }
 
