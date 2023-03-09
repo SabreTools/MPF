@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net48;net6.0-windows</TargetFrameworks>
+    <RuntimeIdentifiers>win7-x64;win-x86;win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
