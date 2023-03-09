@@ -82,6 +82,7 @@
 - Add `win7-x64` to identifier list
 - Remove unsupported identifiers
 - Add identifiers in more places
+- Move drive finding inside of the try/catch
 
 ### 2.4 (2022-10-26)
 

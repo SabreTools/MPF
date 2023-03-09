@@ -604,14 +604,14 @@ namespace MPF.Core.Data
             // TODO: Reduce reliance on `DriveInfo`
             // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
-            // Get all supported drive types
-            var drives = DriveInfo.GetDrives()
-                .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
-                .ToList();
-
             try
             {
+                // Get all supported drive types
+                var drives = DriveInfo.GetDrives()
+                    .Where(d => desiredDriveTypes.Contains(d.DriveType))
+                    .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
+                    .ToList();
+
                 CimSession session = CimSession.Create(null);
                 var collection = session.QueryInstances("root\\CIMV2", "WQL", "SELECT * FROM Win32_LogicalDisk");
 
@@ -625,13 +625,13 @@ namespace MPF.Core.Data
                         drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
                     }
                 }
+
+                return drives;
             }
             catch
             {
-                // No-op
+                return new List<Drive>();
             }
-
-            return drives;
         }
 
         #endregion
