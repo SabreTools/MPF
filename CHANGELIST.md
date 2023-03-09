@@ -80,6 +80,7 @@
 - Set saner defaults for dumping speeds
 - Attempt to support Windows 7
 - Add `win7-x64` to identifier list
+- Remove unsupported identifiers
 
 ### 2.4 (2022-10-26)
 
