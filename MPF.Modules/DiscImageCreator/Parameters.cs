@@ -224,6 +224,7 @@ namespace MPF.Modules.DiscImageCreator
             - subInfo       - Subchannel informational messages
             - subIntention  - Subchannel intentional error information
             - subReadable   - Human-readable version of `sub`
+            - toc           - Binary representation of the table of contents
             - volDesc       - Volume descriptor information
             */
 
@@ -257,6 +258,8 @@ namespace MPF.Modules.DiscImageCreator
                             missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
                             missingFiles.Add($"{basePath}.sub");
+                        if (!File.Exists($"{basePath}.toc"))
+                            missingFiles.Add($"{basePath}.toc");
                         if (!File.Exists($"{basePath}_disc.txt"))
                             missingFiles.Add($"{basePath}_disc.txt");
                         if (!File.Exists($"{basePath}_drive.txt"))
@@ -429,6 +432,11 @@ namespace MPF.Modules.DiscImageCreator
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt");
                     if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
+
+
+                    // Attempt to get the universal hash
+                    string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? "";
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
 
                     break;
 
@@ -1564,6 +1572,8 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add($"{basePath}.sub");
                     if (File.Exists($"{basePath}.subtmp"))
                         logFiles.Add($"{basePath}.subtmp");
+                    if (File.Exists($"{basePath}.toc"))
+                        logFiles.Add($"{basePath}.toc");
                     if (File.Exists($"{basePath}_disc.txt"))
                         logFiles.Add($"{basePath}_disc.txt");
                     if (File.Exists($"{basePath}_drive.txt"))
@@ -3485,6 +3495,47 @@ namespace MPF.Modules.DiscImageCreator
                         header += sr.ReadLine() + "\n"; // 0000-01F0
 
                     return header;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the universal hash from the input file, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <returns>Universal hash if possible, null on error</returns>
+        private static string GetUniversalHash(string disc)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return null;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    // Fast forward to the universal hash information
+                    while (!sr.ReadLine().Trim().StartsWith("========== Hash(Universal Whole image) ==========")) ;
+
+                    // If we find the universal hash line, return the SHA-1 hash only
+                    string line;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("<rom name"))
+                        {
+                            if (GetISOHashValues(line, out _, out _, out _, out string sha1))
+                                return sha1;
+                        }
+                    }
+
+                    // We couldn't detect it then
+                    return null;
                 }
                 catch
                 {
