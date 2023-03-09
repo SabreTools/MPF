@@ -85,6 +85,7 @@
 - Move drive finding inside of the try/catch
 - Update to DIC 20230309
 - Fix errant forward slashes
+- Add TOC back as optional file
 
 ### 2.4 (2022-10-26)
 

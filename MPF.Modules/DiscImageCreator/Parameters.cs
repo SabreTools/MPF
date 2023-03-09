@@ -1616,6 +1616,8 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add($"{basePath}_CSSKey.txt");
                     if (File.Exists($"{basePath}.dat"))
                         logFiles.Add($"{basePath}.dat");
+                    if (File.Exists($"{basePath}.toc"))
+                        logFiles.Add($"{basePath}.toc");
                     if (File.Exists($"{basePath}_disc.txt"))
                         logFiles.Add($"{basePath}_disc.txt");
                     if (File.Exists($"{basePath}_drive.txt"))
