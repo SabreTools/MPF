@@ -78,6 +78,7 @@
 - Get error count from recent redumper log (fuzz6001)
 - Minor cosmetic changes
 - Set saner defaults for dumping speeds
+- Attempt to support Windows 7
 
 ### 2.4 (2022-10-26)
 
