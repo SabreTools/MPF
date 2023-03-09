@@ -59,11 +59,11 @@ after_build:
 
 # DiscImageCreator
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/10931241/DiscImageCreator_20230309.zip
-- 7z e /DiscImageCreator_20230309.zip -oMPF\bin\Debug\net48\publish\Programs\Creator Release_ANSI\*
-- 7z e /DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
-- 7z e /DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\win-x86\publish\Programs\Creator Release_ANSI\*
-#- 7z e /DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\linux-x64\publish\Programs\Creator Release_ANSI\*
-#- 7z e /DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\osx-x64\publish\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20230309.zip -oMPF\bin\Debug\net48\publish\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
+- 7z e DiscImageCreator_20230309.zip -oMPF\bin\DebugFix \net6.0-windows\win-x86\publish\Programs\Creator Release_ANSI\*
+#- 7z e DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\linux-x64\publish\Programs\Creator Release_ANSI\*
+#- 7z e DiscImageCreator_20230309.zip -oMPF\bin\Debug\net6.0-windows\osx-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
 - ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_106/redumper-2023.02.19_build106-win64.zip
