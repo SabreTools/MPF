@@ -91,6 +91,7 @@
 - Fix incorrect image name setting
 - Ensure Redumper parameters are set
 - Ensure min values are taken care of
+- Update parameters with `=` handling
 
 ### 2.4 (2022-10-26)
 

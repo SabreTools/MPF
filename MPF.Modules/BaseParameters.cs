@@ -622,6 +622,7 @@ namespace MPF.Modules
 
                 string valuePart = commandParts[1];
 
+                this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
                 return (sbyte)(sbyte.Parse(value) * factor);
             }
@@ -698,6 +699,7 @@ namespace MPF.Modules
 
                 string valuePart = commandParts[1];
 
+                this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
                 return (short)(short.Parse(value) * factor);
             }
@@ -774,6 +776,7 @@ namespace MPF.Modules
 
                 string valuePart = commandParts[1];
 
+                this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
                 return (int)(int.Parse(value) * factor);
             }
@@ -850,6 +853,7 @@ namespace MPF.Modules
 
                 string valuePart = commandParts[1];
 
+                this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
                 return long.Parse(value) * factor;
             }
@@ -1002,6 +1006,7 @@ namespace MPF.Modules
 
                 string valuePart = commandParts[1];
 
+                this[longFlagString] = true;
                 (string value, long factor) = ExtractFactorFromValue(valuePart);
                 return (byte)(byte.Parse(value) * factor);
             }
