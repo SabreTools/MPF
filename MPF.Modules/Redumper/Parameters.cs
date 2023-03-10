@@ -725,6 +725,11 @@ namespace MPF.Modules.Redumper
             // Loop through all auxiliary flags, if necessary
             for (int i = index; i < parts.Count; i++)
             {
+                // Flag read-out values
+                byte? byteValue = null;
+                int? intValue = null;
+                string stringValue = null;
+
                 #region General
 
                 // Help
@@ -734,19 +739,29 @@ namespace MPF.Modules.Redumper
                 ProcessFlagParameter(parts, FlagStrings.Verbose, ref i);
 
                 // Drive
-                DriveValue = ProcessStringParameter(parts, FlagStrings.Drive, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.Drive, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    DriveValue = stringValue;
 
                 // Speed
-                SpeedValue = ProcessInt32Parameter(parts, FlagStrings.Speed, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.Speed, ref i);
+                if (intValue != null)
+                    SpeedValue = intValue;
 
                 // Retries
-                RetriesValue = ProcessInt32Parameter(parts, FlagStrings.Retries, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.Retries, ref i);
+                if (intValue != null)
+                    RetriesValue = intValue;
 
                 // Image Path
-                ImagePathValue = ProcessStringParameter(parts, FlagStrings.ImagePath, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.ImagePath, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    ImagePathValue = stringValue;
 
                 // Image Name
-                ImageNameValue = ProcessStringParameter(parts, FlagStrings.ImageName, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.ImageName, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    ImageNameValue = stringValue;
 
                 // Overwrite
                 ProcessFlagParameter(parts, FlagStrings.Overwrite, ref i);
@@ -756,22 +771,34 @@ namespace MPF.Modules.Redumper
                 #region Drive Configuration
 
                 // Drive Type
-                DriveTypeValue = ProcessStringParameter(parts, FlagStrings.DriveType, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.DriveType, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    DriveTypeValue = stringValue;
 
                 // Drive Read Offset
-                DriveReadOffsetValue = ProcessInt32Parameter(parts, FlagStrings.DriveReadOffset, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.DriveReadOffset, ref i);
+                if (intValue != null)
+                    DriveReadOffsetValue = intValue;
 
                 // Drive C2 Shift
-                DriveC2ShiftValue = ProcessInt32Parameter(parts, FlagStrings.DriveC2Shift, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.DriveC2Shift, ref i);
+                if (intValue != null)
+                    DriveC2ShiftValue = intValue;
 
                 // Drive Pregap Start
-                DrivePregapStartValue = ProcessInt32Parameter(parts, FlagStrings.DrivePregapStart, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.DrivePregapStart, ref i);
+                if (intValue != null)
+                    DrivePregapStartValue = intValue;
 
                 // Drive Read Method
-                DriveReadMethodValue = ProcessStringParameter(parts, FlagStrings.DriveReadMethod, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.DriveReadMethod, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    DriveReadMethodValue = stringValue;
 
                 // Drive Sector Order
-                DriveSectorOrderValue = ProcessStringParameter(parts, FlagStrings.DriveSectorOrder, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.DriveSectorOrder, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    DriveSectorOrderValue = stringValue;
 
                 #endregion
 
@@ -788,10 +815,14 @@ namespace MPF.Modules.Redumper
                 #region Offset
 
                 // Force Offset
-                ForceOffsetValue = ProcessInt32Parameter(parts, FlagStrings.ForceOffset, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.ForceOffset, ref i);
+                if (intValue != null)
+                    ForceOffsetValue = intValue;
 
                 // Audio Silence Threshold
-                AudioSilenceThresholdValue = ProcessInt32Parameter(parts, FlagStrings.AudioSilenceThreshold, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.AudioSilenceThreshold, ref i);
+                if (intValue != null)
+                    AudioSilenceThresholdValue = intValue;
 
                 // Correct Offset Shift
                 ProcessFlagParameter(parts, FlagStrings.CorrectOffsetShift, ref i);
@@ -810,7 +841,9 @@ namespace MPF.Modules.Redumper
                 ProcessFlagParameter(parts, FlagStrings.ForceQTOC, ref i);
 
                 // Skip Fill
-                SkipFillValue = ProcessUInt8Parameter(parts, FlagStrings.SkipFill, ref i);
+                byteValue = ProcessUInt8Parameter(parts, FlagStrings.SkipFill, ref i);
+                if (byteValue != null)
+                    SkipFillValue = byteValue;
 
                 // ISO9660 Trim
                 ProcessFlagParameter(parts, FlagStrings.ISO9660Trim, ref i);
@@ -823,16 +856,22 @@ namespace MPF.Modules.Redumper
                 #region Miscellaneous
 
                 // LBA Start
-                LBAStartValue = ProcessInt32Parameter(parts, FlagStrings.LBAStart, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.LBAStart, ref i);
+                if (intValue != null)
+                    LBAStartValue = intValue;
 
                 // LBA End
-                LBAEndValue = ProcessInt32Parameter(parts, FlagStrings.LBAEnd, ref i);
+                intValue = ProcessInt32Parameter(parts, FlagStrings.LBAEnd, ref i);
+                if (intValue != null)
+                    LBAEndValue = intValue;
 
                 // Refine Subchannel
                 ProcessFlagParameter(parts, FlagStrings.RefineSubchannel, ref i);
 
                 // Skip
-                SkipValue = ProcessStringParameter(parts, FlagStrings.Skip, ref i);
+                stringValue = ProcessStringParameter(parts, FlagStrings.Skip, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    SkipValue = stringValue;
 
                 #endregion
             }
