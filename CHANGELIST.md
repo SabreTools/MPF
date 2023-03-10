@@ -90,6 +90,7 @@
 - Use and trim quotes for Redumper
 - Fix incorrect image name setting
 - Ensure Redumper parameters are set
+- Ensure min values are taken care of
 
 ### 2.4 (2022-10-26)
 

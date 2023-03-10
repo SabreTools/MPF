@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -745,23 +746,23 @@ namespace MPF.Modules.Redumper
 
                 // Speed
                 intValue = ProcessInt32Parameter(parts, FlagStrings.Speed, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     SpeedValue = intValue;
 
                 // Retries
                 intValue = ProcessInt32Parameter(parts, FlagStrings.Retries, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     RetriesValue = intValue;
 
                 // Image Path
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImagePath, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
-                    ImagePathValue = stringValue;
+                    ImagePathValue = $"\"{stringValue.Trim('"')}\"";
 
                 // Image Name
                 stringValue = ProcessStringParameter(parts, FlagStrings.ImageName, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
-                    ImageNameValue = stringValue;
+                    ImageNameValue = $"\"{stringValue.Trim('"')}\"";
 
                 // Overwrite
                 ProcessFlagParameter(parts, FlagStrings.Overwrite, ref i);
@@ -777,17 +778,17 @@ namespace MPF.Modules.Redumper
 
                 // Drive Read Offset
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DriveReadOffset, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     DriveReadOffsetValue = intValue;
 
                 // Drive C2 Shift
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DriveC2Shift, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     DriveC2ShiftValue = intValue;
 
                 // Drive Pregap Start
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DrivePregapStart, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     DrivePregapStartValue = intValue;
 
                 // Drive Read Method
@@ -816,12 +817,12 @@ namespace MPF.Modules.Redumper
 
                 // Force Offset
                 intValue = ProcessInt32Parameter(parts, FlagStrings.ForceOffset, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     ForceOffsetValue = intValue;
 
                 // Audio Silence Threshold
                 intValue = ProcessInt32Parameter(parts, FlagStrings.AudioSilenceThreshold, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     AudioSilenceThresholdValue = intValue;
 
                 // Correct Offset Shift
@@ -842,7 +843,7 @@ namespace MPF.Modules.Redumper
 
                 // Skip Fill
                 byteValue = ProcessUInt8Parameter(parts, FlagStrings.SkipFill, ref i);
-                if (byteValue != null)
+                if (byteValue != null && byteValue != Byte.MinValue)
                     SkipFillValue = byteValue;
 
                 // ISO9660 Trim
@@ -857,12 +858,12 @@ namespace MPF.Modules.Redumper
 
                 // LBA Start
                 intValue = ProcessInt32Parameter(parts, FlagStrings.LBAStart, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     LBAStartValue = intValue;
 
                 // LBA End
                 intValue = ProcessInt32Parameter(parts, FlagStrings.LBAEnd, ref i);
-                if (intValue != null)
+                if (intValue != null && intValue != Int32.MinValue)
                     LBAEndValue = intValue;
 
                 // Refine Subchannel
