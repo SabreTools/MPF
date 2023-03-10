@@ -640,7 +640,10 @@ namespace MPF.Modules.Redumper
             BaseCommand = CommandStrings.NONE;
             ModeValues = new List<string> { CommandStrings.CD };
 
+            this[FlagStrings.Drive] = true;
             DriveValue = driveLetter.ToString();
+
+            this[FlagStrings.Speed] = true;
             SpeedValue = driveSpeed;
 
             // Set the output paths
