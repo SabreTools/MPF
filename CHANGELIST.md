@@ -87,6 +87,7 @@
 - Fix errant forward slashes
 - Add TOC back as optional file
 - Fix Redumper path generation
+- Use and trim quotes for Redumper
 
 ### 2.4 (2022-10-26)
 

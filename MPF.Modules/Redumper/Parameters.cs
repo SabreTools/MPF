@@ -27,7 +27,7 @@ namespace MPF.Modules.Redumper
         public override string InputPath => DriveValue;
 
         /// <inheritdoc/>
-        public override string OutputPath => Path.Combine(ImagePathValue ?? string.Empty, ImageNameValue ?? string.Empty);
+        public override string OutputPath => Path.Combine(ImagePathValue?.Trim('"') ?? string.Empty, ImageNameValue?.Trim('"') ?? string.Empty);
 
         /// <inheritdoc/>
         public override int? Speed => SpeedValue;
@@ -649,14 +649,14 @@ namespace MPF.Modules.Redumper
                 if (!string.IsNullOrWhiteSpace(imagePath))
                 {
                     this[FlagStrings.ImagePath] = true;
-                    ImagePathValue = imagePath;
+                    ImagePathValue = $"\"{imagePath}\"";
                 }
 
-                string imageName = Path.GetFileName(filename);
+                string imageName = Path.GetFileNameWithoutExtension(filename);
                 if (!string.IsNullOrWhiteSpace(imageName))
                 {
                     this[FlagStrings.ImageName] = true;
-                    ImageNameValue = imageName;
+                    ImageNameValue = $"\"{imageName}\"";
                 }
             }
 
