@@ -174,18 +174,32 @@ namespace MPF.Modules.Redumper
             switch (this.Type)
             {
                 case MediaType.CDROM:
-                    if (!File.Exists($"{basePath}.fulltoc"))
-                        missingFiles.Add($"{basePath}.fulltoc");
-                    if (!File.Exists($"{basePath}.log"))
-                        missingFiles.Add($"{basePath}.log");
+                    if (!File.Exists($"{basePath}.cue"))
+                        missingFiles.Add($"{basePath}.cue");
                     if (!File.Exists($"{basePath}.scram") && !File.Exists($"{basePath}.scrap"))
                         missingFiles.Add($"{basePath}.scram");
-                    if (!File.Exists($"{basePath}.state"))
-                        missingFiles.Add($"{basePath}.state");
-                    if (!File.Exists($"{basePath}.subcode"))
-                        missingFiles.Add($"{basePath}.subcode");
-                    if (!File.Exists($"{basePath}.toc"))
-                        missingFiles.Add($"{basePath}.toc");
+
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
+                    {
+                        if (!File.Exists($"{basePath}.fulltoc"))
+                            missingFiles.Add($"{basePath}.fulltoc");
+                        if (!File.Exists($"{basePath}.log"))
+                            missingFiles.Add($"{basePath}.log");
+                        if (!File.Exists($"{basePath}.state"))
+                            missingFiles.Add($"{basePath}.state");
+                        if (!File.Exists($"{basePath}.subcode"))
+                            missingFiles.Add($"{basePath}.subcode");
+                        if (!File.Exists($"{basePath}.toc"))
+                            missingFiles.Add($"{basePath}.toc");
+                    }
+
+                    // Removed or inconsistent files
+                    if (false)
+                    {
+                        // Depends on the disc
+                        if (!File.Exists($"{basePath}.cdtext"))
+                            missingFiles.Add($"{basePath}.cdtext");
+                    }
 
                     break;
             }
@@ -633,11 +647,17 @@ namespace MPF.Modules.Redumper
             {
                 string imagePath = Path.GetDirectoryName(filename);
                 if (!string.IsNullOrWhiteSpace(imagePath))
+                {
+                    this[FlagStrings.ImagePath] = true;
                     ImagePathValue = imagePath;
+                }
 
                 string imageName = Path.GetFileName(filename);
                 if (!string.IsNullOrWhiteSpace(imageName))
+                {
+                    this[FlagStrings.ImageName] = true;
                     ImageNameValue = imageName;
+                }
             }
 
             this[FlagStrings.Retries] = true;

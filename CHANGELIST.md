@@ -86,6 +86,7 @@
 - Update to DIC 20230309
 - Fix errant forward slashes
 - Add TOC back as optional file
+- Fix Redumper path generation
 
 ### 2.4 (2022-10-26)
 
