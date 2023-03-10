@@ -93,6 +93,7 @@
 - Ensure min values are taken care of
 - Update parameters with `=` handling
 - Ensure drive and speed are set
+- Handle quotes embedded
 
 ### 2.4 (2022-10-26)
 

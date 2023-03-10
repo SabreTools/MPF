@@ -680,7 +680,7 @@ namespace MPF.Modules.Redumper
             // Now split the string into parts for easier validation
             // https://stackoverflow.com/questions/14655023/split-a-string-that-has-white-spaces-unless-they-are-enclosed-within-quotes
             parameters = parameters.Trim();
-            List<string> parts = Regex.Matches(parameters, @"[\""].+?[\""]|[^ ]+")
+            List<string> parts = Regex.Matches(parameters, @"([a-zA-Z\-]*=)?[\""].+?[\""]|[^ ]+")
                 .Cast<Match>()
                 .Select(m => m.Value)
                 .ToList();
