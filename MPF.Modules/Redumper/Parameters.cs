@@ -839,7 +839,7 @@ namespace MPF.Modules.Redumper
 
             // If the image name was not set, set it with a default value
             if (string.IsNullOrWhiteSpace(this.ImageNameValue))
-                this.ImagePathValue = "track.bin";
+                this.ImageNameValue = "track";
 
             return true;
         }
