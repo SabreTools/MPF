@@ -94,6 +94,7 @@
 - Update parameters with `=` handling
 - Ensure drive and speed are set
 - Handle quotes embedded
+- Return list of missing files for Redumper
 
 ### 2.4 (2022-10-26)
 

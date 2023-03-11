@@ -203,9 +203,13 @@ namespace MPF.Modules.Redumper
                     }
 
                     break;
+
+                default:
+                    missingFiles.Add("Media and system combination not supported for Redumper");
+                    break;
             }
 
-            return (true, new List<string>());
+            return (!missingFiles.Any(), missingFiles);
         }
 
         /// <inheritdoc/>
