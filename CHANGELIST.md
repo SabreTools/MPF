@@ -1,5 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
+### 2.5 (2023-03-12)
+
 - Add _drive file to zip for UIC
 - Add Xbox Series X and PS5 to list, fix Acorn
 - Add Xbox Series X short name to list
@@ -96,6 +98,7 @@
 - Handle quotes embedded
 - Return list of missing files for Redumper
 - Readd accidentally deleted line
+- Detect EOF during the search for error counts (fuzz6001)
 
 ### 2.4 (2022-10-26)
 
