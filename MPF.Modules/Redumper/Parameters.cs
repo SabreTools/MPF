@@ -996,8 +996,10 @@ namespace MPF.Modules.Redumper
                     while (!sr.EndOfStream)
                     {
                         // Skip forward to the "REDUMP.ORG" line
-                        string line;
-                        while (!(line = sr.ReadLine().Trim()).StartsWith("REDUMP.ORG errors"));
+                        string line = string.Empty;
+                        while (!sr.EndOfStream && !(line = sr.ReadLine().Trim()).StartsWith("REDUMP.ORG errors"));
+                        if (line == string.Empty)
+                            break;
 
                         // REDUMP.ORG errors: <error count>
                         string[] parts = line.Split(' ');
