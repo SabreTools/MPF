@@ -1677,6 +1677,8 @@ namespace MPF.Library
                 // Remove invalid filename characters
                 foreach (char c in Path.GetInvalidFileNameChars())
                     fullFile = fullFile.Replace(c, '_');
+
+                return Path.Combine(fullDirectory, fullFile);
             }
             catch { }
 

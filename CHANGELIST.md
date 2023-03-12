@@ -95,6 +95,7 @@
 - Ensure drive and speed are set
 - Handle quotes embedded
 - Return list of missing files for Redumper
+- Readd accidentally deleted line
 
 ### 2.4 (2022-10-26)
 
