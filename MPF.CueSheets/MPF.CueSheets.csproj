@@ -4,9 +4,9 @@
     <TargetFrameworks>net48;net6.0</TargetFrameworks>
     <RuntimeIdentifiers>win7-x64;win-x86;win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
-    <Copyright>Copyright (c)2019-2022</Copyright>
+    <Copyright>Copyright (c)2019-2023</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
-    <Version>2.4</Version>
+    <Version>2.5</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <IncludeSource>true</IncludeSource>
