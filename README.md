@@ -13,16 +13,26 @@ For those who would rather use the most recent stable build, download the latest
 
 For those who like to test the newest features, download the latest AppVeyor WIP build here: [AppVeyor](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
 
-## System Requirements
+## Media Preservation Frontend (MPF)
 
-Even though this is written in C#, this program can only be used on Windows systems due to one of the base programs, DiscImageCreator, being Windows-only. There is some preliminary support for Linux underway, and we will try to integrate with that when the time comes.
+MPF is the main, UI-centric application of the MPF suite. This program allows users to use DiscImageCreator, Aaru, Redumper, or dd for Windows in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
-- Windows 7 (newest version of Windows recommended) or Mono-compatible Linux environment (MPF.Check only)
+### System Requirements
+
+- Windows 8.1 (x86 or x64) or newer
 - .NET Framework 4.8 or .NET 6.0 Runtimes (.NET 6.0 is mostly functional due to a dependency issues but may be unstable in some situations)
-- 1 GB of free RAM
 - As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
+
+## Media Preservation Frontend Checker (MPF.Check)
+
+MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from DiscImageCreator, Aaru, Redumper, dd for Windows, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
+
+### System Requirements
+
+- Windows 8.1 (x86 or x64) or newer, GNU/Linux x64, or OSX x64
+- .NET Framework 4.8 (Windows or `mono` only) or .NET 6.0 Runtimes
 
 ## Information
 
