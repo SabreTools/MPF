@@ -406,7 +406,7 @@
                 <TabItem Header="Login Info" Style="{DynamicResource CustomTabItemStyle}">
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Redump Credentials">
-                            <UniformGrid Columns="5" Rows="1">
+                            <UniformGrid Columns="5">
                                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Content="Username" />
                                 <TextBox x:Name="RedumpUsernameTextBox" Height="22" HorizontalAlignment="Stretch"
                                     Text="{Binding Options.RedumpUsername}" />
@@ -418,6 +418,12 @@
                                         Style="{DynamicResource CustomButtonStyle}" />
                             </UniformGrid>
                         </GroupBox>
+
+                        <Label>
+                            <Label.Content>
+                                <TextBlock TextWrapping="Wrap"><Bold Foreground="Red">WARNING:</Bold> If you choose to enable validation and information retrieval, you are responsible for ensuring that all data populated matches your actual media. Some information may be marked to check for validity as a reminder, but all information should be subject to the same scrutiny.</TextBlock>
+                            </Label.Content>
+                        </Label>
                     </StackPanel>
                 </TabItem>
             </TabControl>

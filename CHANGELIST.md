@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Update README
+- Add warning to login tab
 
 ### 2.5 (2023-03-12)
 
