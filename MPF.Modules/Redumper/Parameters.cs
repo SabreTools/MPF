@@ -218,6 +218,14 @@ namespace MPF.Modules.Redumper
             // Get the dumping program and version
             info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
 
+            // Fill in the hardware data
+            if (GetHardwareInfo($"{basePath}.log", out string manufacturer, out string model, out string firmware))
+            {
+                info.DumpingInfo.Manufacturer = manufacturer;
+                info.DumpingInfo.Model = model;
+                info.DumpingInfo.Firmware = firmware;
+            }
+
             switch (this.Type)
             {
                 case MediaType.CDROM:
@@ -1204,6 +1212,55 @@ namespace MPF.Modules.Redumper
                 {
                     // We don't care what the exception is right now
                     return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get hardware information from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>True if hardware info was set, false otherwise</returns>
+        private static bool GetHardwareInfo(string log, out string manufacturer, out string model, out string firmware)
+        {
+            // Set the default values
+            manufacturer = null; model = null; firmware = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return false;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the dump line
+                    while (!(sr.ReadLine()?.Trim().StartsWith("*** MODE: dump") ?? true));
+
+                    // If we find the hardware info line, return each value
+                    // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
+                    var regex = new Regex(@"drive: (.+) - (.+) \(revision level: (.+), vendor specific: (.+)\)");
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        var match = regex.Match(line.Trim());
+                        if (match.Success)
+                        {
+                            manufacturer = match.Groups[1].Value;
+                            model = match.Groups[2].Value;
+                            firmware = match.Groups[3].Value;
+                            firmware += match.Groups[4].Value == "<empty>" ? "" : $" ({match.Groups[4].Value})";
+                            return true;
+                        }
+                    }
+
+                    // We couldn't detect it then
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
                 }
             }
         }
