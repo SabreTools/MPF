@@ -20,7 +20,13 @@ MPF is the main, UI-centric application of the MPF suite. This program allows us
 ### System Requirements
 
 - Windows 8.1 (x86 or x64) or newer
-    - Users who wish to use MPF on Windows 7 need to disable strong name validation due to `Microsoft.Management.Infrastructure` being unsigned
+    - Users who wish to use MPF on Windows 7 need to disable strong name validation due to `Microsoft.Management.Infrastructure` being unsigned. Add the following registry keys (accurate at time of writing):
+    ```
+        [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\StrongName\Verification\*,31bf3856ad364e35]
+        [HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\StrongName\Verification\*,31bf3856ad364e35]
+    ```
+    - Alternatively, look at this [StackOverflow question](https://stackoverflow.com/questions/403731/strong-name-validation-failed) for more information.
+
 - .NET Framework 4.8 or .NET 6.0 Runtimes (.NET 6.0 is mostly functional due to a dependency issues but may be unstable in some situations)
 - As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 
