@@ -8,6 +8,7 @@
 - Update redumper to build 113
 - Split MMI invocation in drive listing
 - Update README
+- Add Hasbro iON
 
 ### 2.5 (2023-03-12)
 

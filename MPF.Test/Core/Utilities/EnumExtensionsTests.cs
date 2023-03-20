@@ -31,6 +31,7 @@ namespace MPF.Test.Core.Utilities
             RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem,
             RedumpSystem.AudioCD,
             RedumpSystem.DVDAudio,
+            RedumpSystem.HasbroiONEducationalGamingSystem,
             RedumpSystem.HasbroVideoNow,
             RedumpSystem.HasbroVideoNowColor,
             RedumpSystem.HasbroVideoNowJr,

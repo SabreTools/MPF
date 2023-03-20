@@ -62,6 +62,11 @@ namespace RedumpLib.Data
                     types.Add(MediaType.FloppyDisk);
                     break;
 
+                // http://videogamekraken.com/ion-educational-gaming-system-by-hasbro
+                case RedumpSystem.HasbroiONEducationalGamingSystem:
+                    types.Add(MediaType.CDROM);
+                    break;
+
                 // https://en.wikipedia.org/wiki/VideoNow
                 case RedumpSystem.HasbroVideoNow:
                     types.Add(MediaType.CDROM);
@@ -1339,6 +1344,12 @@ namespace RedumpLib.Data
                 case "fujitsufmtownsmarty":
                 case "fujitsu fm towns marty":
                     return RedumpSystem.FujitsuFMTownsMarty;
+                case "ion":
+                case "ionegs":
+                case "hasbroion":
+                case "hasbroioneducationalgamingsystem":
+                case "hasbro ion educational gaming system":
+                    return RedumpSystem.HasbroiONEducationalGamingSystem;
                 case "hvn":
                 case "videonow":
                 case "hasbrovideonow":

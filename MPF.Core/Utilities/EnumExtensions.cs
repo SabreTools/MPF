@@ -94,6 +94,7 @@ namespace MPF.Core.Utilities
                 case RedumpSystem.AtariJaguarCDInteractiveMultimediaSystem:
                 case RedumpSystem.AudioCD:
                 case RedumpSystem.DVDAudio:
+                case RedumpSystem.HasbroiONEducationalGamingSystem:
                 case RedumpSystem.HasbroVideoNow:
                 case RedumpSystem.HasbroVideoNowColor:
                 case RedumpSystem.HasbroVideoNowJr:
