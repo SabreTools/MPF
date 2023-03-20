@@ -54,7 +54,6 @@ namespace MPF.Modules.Redumper
         public const string ForceQTOC = "--force-qtoc";
         public const string SkipFill = "--skip-fill";
         public const string ISO9660Trim = "--iso9660-trim";
-        public const string CDiReadyNormalize = "--cdi-ready-normalize";
 
         // Miscellaneous
         public const string LBAStart = "--lba-start";

@@ -475,10 +475,6 @@ namespace MPF.Modules.Redumper
             if (this[FlagStrings.ISO9660Trim] == true)
                 parameters.Add(FlagStrings.ISO9660Trim);
 
-            // CD-i Ready Normalize
-            if (this[FlagStrings.CDiReadyNormalize] == true)
-                parameters.Add(FlagStrings.CDiReadyNormalize);
-
             #endregion
 
             #region Miscellaneous
@@ -555,7 +551,6 @@ namespace MPF.Modules.Redumper
                     FlagStrings.ForceQTOC,
                     FlagStrings.SkipFill,
                     FlagStrings.ISO9660Trim,
-                    FlagStrings.CDiReadyNormalize,
 
                     // Miscellaneous
                     FlagStrings.LBAStart,
@@ -863,9 +858,6 @@ namespace MPF.Modules.Redumper
 
                 // ISO9660 Trim
                 ProcessFlagParameter(parts, FlagStrings.ISO9660Trim, ref i);
-
-                // CD-i Ready Normalize
-                ProcessFlagParameter(parts, FlagStrings.CDiReadyNormalize, ref i);
 
                 #endregion
 
