@@ -4,6 +4,7 @@
 - Add warning to login tab
 - Pull hardware info from redumper log (fuzz6001)
 - Increase the version of AppVeyor (fuzz6001)
+- Add Windows 7 note to README
 
 ### 2.5 (2023-03-12)
 
