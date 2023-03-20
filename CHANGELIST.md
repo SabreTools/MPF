@@ -6,6 +6,7 @@
 - Increase the version of AppVeyor (fuzz6001)
 - Add Windows 7 note to README
 - Update redumper to build 113
+- Split MMI invocation in drive listing
 
 ### 2.5 (2023-03-12)
 

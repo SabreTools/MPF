@@ -604,14 +604,25 @@ namespace MPF.Core.Data
             // TODO: Reduce reliance on `DriveInfo`
             // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
+            // Create an output drive list
+            List<Drive> drives = new List<Drive>();
+
+            // Get all standard supported drive types
             try
             {
-                // Get all supported drive types
-                var drives = DriveInfo.GetDrives()
+                drives = DriveInfo.GetDrives()
                     .Where(d => desiredDriveTypes.Contains(d.DriveType))
                     .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
                     .ToList();
+            }
+            catch
+            {
+                return drives;
+            }
 
+            // Find and update all floppy drives
+            try
+            {
                 CimSession session = CimSession.Create(null);
                 var collection = session.QueryInstances("root\\CIMV2", "WQL", "SELECT * FROM Win32_LogicalDisk");
 
@@ -625,13 +636,13 @@ namespace MPF.Core.Data
                         drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
                     }
                 }
-
-                return drives;
             }
             catch
             {
-                return new List<Drive>();
+                // No-op
             }
+
+            return drives;
         }
 
         #endregion
