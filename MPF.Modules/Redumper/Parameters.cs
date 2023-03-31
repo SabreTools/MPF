@@ -448,6 +448,10 @@ namespace MPF.Modules.Redumper
             if (this[FlagStrings.CorrectOffsetShift] == true)
                 parameters.Add(FlagStrings.CorrectOffsetShift);
 
+            // Offset Shift Relocate
+            if (this[FlagStrings.OffsetShiftRelocate] == true)
+                parameters.Add(FlagStrings.OffsetShiftRelocate);
+
             #endregion
 
             #region Split
@@ -544,6 +548,7 @@ namespace MPF.Modules.Redumper
                     FlagStrings.ForceOffset,
                     FlagStrings.AudioSilenceThreshold,
                     FlagStrings.CorrectOffsetShift,
+                    FlagStrings.OffsetShiftRelocate,
 
                     // Split
                     FlagStrings.ForceSplit,
@@ -837,6 +842,9 @@ namespace MPF.Modules.Redumper
 
                 // Correct Offset Shift
                 ProcessFlagParameter(parts, FlagStrings.CorrectOffsetShift, ref i);
+
+                // Correct Shift Relocate
+                ProcessFlagParameter(parts, FlagStrings.OffsetShiftRelocate, ref i);
 
                 #endregion
 

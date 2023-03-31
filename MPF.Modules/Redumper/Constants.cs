@@ -47,6 +47,7 @@ namespace MPF.Modules.Redumper
         public const string ForceOffset = "--force-offset";
         public const string AudioSilenceThreshold = "--audio-silence-threshold";
         public const string CorrectOffsetShift = "--correct-offset-shift";
+        public const string OffsetShiftRelocate = "--offset-shift-relocate";
 
         // Split
         public const string ForceSplit = "--force-split";
