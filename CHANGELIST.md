@@ -9,6 +9,7 @@
 - Split MMI invocation in drive listing
 - Update README
 - Add Hasbro iON
+- Get the write offset from the latest redumper (fuzz6001)
 
 ### 2.5 (2023-03-12)
 
