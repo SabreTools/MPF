@@ -1143,7 +1143,7 @@ namespace MPF.Modules.Redumper
                 try
                 {
                     // Fast forward to the offset lines
-                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("detecting offset"));
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("*** MODE: split"));
                     if (sr.EndOfStream)
                         return null;
 
