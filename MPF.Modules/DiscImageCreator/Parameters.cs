@@ -92,11 +92,12 @@ namespace MPF.Modules.DiscImageCreator
         /// <summary>
         /// C2 reread options for dumping [CD only]
         /// [0] - Reread value (default 4000)
-        /// [1] - 0 reread issue sector (default), 1 reread all
-        /// [2] - First LBA to reread (default 0)
-        /// [3] - Last LBA to reread (default EOS)
+        /// [1] - C2 offset (default: 0)
+        /// [2] - 0 reread issue sector (default), 1 reread all
+        /// [3] - First LBA to reread (default 0)
+        /// [4] - Last LBA to reread (default EOS)
         /// </summary>
-        public int?[] C2OpcodeValue { get; set; } = new int?[4];
+        public int?[] C2OpcodeValue { get; set; } = new int?[5];
 
         /// <summary>
         /// C2 reread options for dumping [DVD/HD-DVD/BD only] (default 10)
@@ -153,12 +154,6 @@ namespace MPF.Modules.DiscImageCreator
         /// Possible values: 0 no next sub, 1 next sub (default), 2 next and next next
         /// </summary>
         public int? SubchannelReadLevelValue { get; set; }
-
-        /// <summary>
-        /// Set verify audio level for the dump
-        /// Possible values: 0 no offset (default), 1 with offset, 2 without dumping
-        /// </summary>
-        public int? VerifyAudioValue { get; set; }
 
         /// <summary>
         /// Set number of empty bytes to insert at the head of first track for VideoNow (default 0)
@@ -977,19 +972,23 @@ namespace MPF.Modules.DiscImageCreator
                     }
                     if (C2OpcodeValue[1] != null)
                     {
-                        if (C2OpcodeValue[1] == 0)
+                        parameters.Add(C2OpcodeValue[1].ToString());
+                    }
+                    if (C2OpcodeValue[2] != null)
+                    {
+                        if (C2OpcodeValue[2] == 0)
                         {
-                            parameters.Add(C2OpcodeValue[1].ToString());
+                            parameters.Add(C2OpcodeValue[2].ToString());
                         }
-                        else if (C2OpcodeValue[1] == 1)
+                        else if (C2OpcodeValue[2] == 1)
                         {
-                            parameters.Add(C2OpcodeValue[1].ToString());
-                            if (C2OpcodeValue[2] != null && C2OpcodeValue[3] != null)
+                            parameters.Add(C2OpcodeValue[2].ToString());
+                            if (C2OpcodeValue[3] != null && C2OpcodeValue[4] != null)
                             {
-                                if (C2OpcodeValue[2] > 0 && C2OpcodeValue[3] > 0)
+                                if (C2OpcodeValue[3] > 0 && C2OpcodeValue[4] > 0)
                                 {
-                                    parameters.Add(C2OpcodeValue[2].ToString());
                                     parameters.Add(C2OpcodeValue[3].ToString());
+                                    parameters.Add(C2OpcodeValue[4].ToString());
                                 }
                                 else
                                 {
@@ -1263,22 +1262,6 @@ namespace MPF.Modules.DiscImageCreator
                     parameters.Add(FlagStrings.UseAnchorVolumeDescriptorPointer);
             }
 
-            // Verify Audio
-            if (IsFlagSupported(FlagStrings.VerifyAudio))
-            {
-                if (this[FlagStrings.VerifyAudio] == true)
-                {
-                    parameters.Add(FlagStrings.VerifyAudio);
-                    if (VerifyAudioValue != null)
-                    {
-                        if (VerifyAudioValue >= 0 && VerifyAudioValue <= 2)
-                            parameters.Add(VerifyAudioValue.ToString());
-                        else
-                            return null;
-                    }
-                }
-            }
-
             // VideoNow
             if (IsFlagSupported(FlagStrings.VideoNow))
             {
@@ -1374,7 +1357,6 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.ScanSectorProtect,
                     FlagStrings.SeventyFour,
                     FlagStrings.SubchannelReadLevel,
-                    FlagStrings.VerifyAudio,
                     FlagStrings.VideoNow,
                     FlagStrings.VideoNowColor,
                     FlagStrings.VideoNowXP,
@@ -1705,7 +1687,7 @@ namespace MPF.Modules.DiscImageCreator
 
             AddOffsetValue = null;
             BEOpcodeValue = null;
-            C2OpcodeValue = new int?[4];
+            C2OpcodeValue = new int?[5];
             DVDRereadValue = null;
             FixValue = null;
             ForceUnitAccessValue = null;
@@ -2284,7 +2266,7 @@ namespace MPF.Modules.DiscImageCreator
                     if (parts[i] == FlagStrings.C2Opcode && IsFlagSupported(FlagStrings.C2Opcode))
                     {
                         this[FlagStrings.C2Opcode] = true;
-                        for (int j = 0; j < 4; j++)
+                        for (int j = 0; j < 5; j++)
                         {
                             if (!DoesExist(parts, i + 1))
                             {
@@ -2445,11 +2427,6 @@ namespace MPF.Modules.DiscImageCreator
 
                     // SeventyFour
                     ProcessFlagParameter(parts, FlagStrings.UseAnchorVolumeDescriptorPointer, ref i);
-
-                    // VerifyAudio
-                    intValue = ProcessInt32Parameter(parts, FlagStrings.VerifyAudio, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0 && intValue <= 2)
-                        VerifyAudioValue = intValue;
 
                     // VideoNow
                     intValue = ProcessInt32Parameter(parts, FlagStrings.VideoNow, ref i, missingAllowed: true);

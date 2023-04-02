@@ -11,6 +11,7 @@
 - Add Hasbro iON
 - Get the write offset from the latest redumper (fuzz6001)
 - Update redumper to build 115
+- Update to DIC 20230401
 
 ### 2.5 (2023-03-12)
 
