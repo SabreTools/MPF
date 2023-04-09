@@ -1969,6 +1969,9 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Mattel HyperScan", ShortName = "hs", HasCues = true, HasDat = true)]
         MattelHyperScan,
 
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Memorex Visual Information System", ShortName = "vis", HasCues = true, HasDat = true)]
+        MemorexVisualInformationSystem,
+
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox", ShortName = "xbox", HasCues = true, HasDat = true)]
         MicrosoftXbox,
 
@@ -1978,11 +1981,8 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox One", ShortName = "xboxone", IsBanned = true, HasDat = true)]
         MicrosoftXboxOne,
 
-        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox Series X", ShortName = "xboxsx", IsBanned = true)]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Microsoft Xbox Series X", ShortName = "xboxsx", IsBanned = true, HasDat = true)]
         MicrosoftXboxSeriesXS,
-
-        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Memorex Visual Information System", ShortName = "vis", HasCues = true, HasDat = true)]
-        MemorexVisualInformationSystem,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "NEC PC Engine CD & TurboGrafx CD", ShortName = "pce", HasCues = true, HasDat = true)]
         NECPCEngineCDTurboGrafxCD,
@@ -2038,7 +2038,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 4", ShortName = "ps4", IsBanned = true, HasDat = true)]
         SonyPlayStation4,
 
-        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 5", ShortName = "ps5", IsBanned = true)]
+        [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation 5", ShortName = "ps5", IsBanned = true, HasDat = true)]
         SonyPlayStation5,
 
         [System(Category = SystemCategory.DiscBasedConsole, LongName = "Sony PlayStation Portable", ShortName = "psp", HasDat = true)]
@@ -2216,7 +2216,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Computer, LongName = "Acorn Archimedes", ShortName = "arch", HasCues = true, HasDat = true)]
         AcornArchimedes,
 
-        [System(Category = SystemCategory.Computer, LongName = "Apple Macintosh", ShortName = "mac", HasCues = true, HasDat = true)]
+        [System(Category = SystemCategory.Computer, LongName = "Apple Macintosh", ShortName = "mac", HasCues = true, HasDat = true, HasLsd = true, HasSbi = true)]
         AppleMacintosh,
 
         [System(Category = SystemCategory.Computer, LongName = "Commodore Amiga CD", ShortName = "acd", HasCues = true, HasDat = true)]
@@ -2301,7 +2301,7 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Konami Python 2")]
         KonamiPython2,
 
-        [System(Category = SystemCategory.Arcade, LongName = "Konami System 573", ShortName = "ks573")]
+        [System(Category = SystemCategory.Arcade, LongName = "Konami System 573", ShortName = "ks573", HasCues = true, HasDat = true)]
         KonamiSystem573,
 
         [System(Category = SystemCategory.Arcade, LongName = "Konami System GV", ShortName = "ksgv", HasCues = true, HasDat = true)]
