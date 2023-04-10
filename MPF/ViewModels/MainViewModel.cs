@@ -51,6 +51,11 @@ namespace MPF.UI.ViewModels
         /// </summary>
         public List<RedumpSystemComboBoxItem> Systems { get; set; } = RedumpSystemComboBoxItem.GenerateElements().ToList();
 
+        /// <summary>
+        /// List of available internal programs
+        /// </summary>
+        public List<Element<InternalProgram>> InternalPrograms { get; set; } = new List<Element<InternalProgram>>();
+
         #endregion
 
         #region Private Event Flags
@@ -161,7 +166,7 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Populate media type according to system type
         /// </summary>
-        public void PopulateMediaType()
+        private void PopulateMediaType()
         {
             RedumpSystem? currentSystem = App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
 
@@ -181,6 +186,26 @@ namespace MPF.UI.ViewModels
                 App.Instance.MediaTypeComboBox.ItemsSource = null;
                 App.Instance.MediaTypeComboBox.SelectedIndex = -1;
             }
+
+            // Ensure the UI gets updated
+            App.Instance.UpdateLayout();
+        }
+
+        /// <summary>
+        /// Populate media type according to system type
+        /// </summary>
+        private void PopulateInternalPrograms()
+        {
+            // Get the current internal program
+            InternalProgram internalProgram = App.Options.InternalProgram;
+
+            // Create a static list of supported programs, not everything
+            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper, InternalProgram.DD };
+            InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
+
+            // Select the current default dumping program
+            int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
+            App.Instance.DumpingProgramComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
@@ -557,6 +582,9 @@ namespace MPF.UI.ViewModels
             CacheCurrentDiscType();
             SetCurrentDiscType();
 
+            // Set the dumping program
+            await App.Instance.Dispatcher.InvokeAsync(PopulateInternalPrograms);
+
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
             Env = DetermineEnvironment();
@@ -632,6 +660,7 @@ namespace MPF.UI.ViewModels
             App.Instance.MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
             App.Instance.DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
             App.Instance.DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            App.Instance.DumpingProgramComboBox.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
 
             // User Area TextChanged
             App.Instance.OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
@@ -929,6 +958,7 @@ namespace MPF.UI.ViewModels
                 App.Instance.DriveLetterComboBox.SelectedItem as Drive,
                 App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem,
                 App.Instance.MediaTypeComboBox.SelectedItem as Element<MediaType>,
+                App.Instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>,
                 App.Instance.ParametersTextBox.Text);
         }
 
@@ -1510,6 +1540,15 @@ namespace MPF.UI.ViewModels
         /// Handler for DriveSpeedComboBox SelectionChanged event
         /// </summary>
         private void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_canExecuteSelectionChanged)
+                EnsureDiscInformation();
+        }
+
+        /// <summary>
+        /// Handler for DumpingProgramComboBox SelectionChanged event
+        /// </summary>
+        private void DumpingProgramComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
                 EnsureDiscInformation();
