@@ -307,6 +307,24 @@ namespace MPF.Core.Data
         #region Redumper
 
         /// <summary>
+        /// Enable debug output while dumping by default
+        /// </summary>
+        public bool RedumperEnableDebug
+        {
+            get { return GetBooleanSetting(_settings, "RedumperEnableDebug", false); }
+            set { _settings["RedumperEnableDebug"] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Enable verbose output while dumping by default
+        /// </summary>
+        public bool RedumperEnableVerbose
+        {
+            get { return GetBooleanSetting(_settings, "RedumperEnableVerbose", false); }
+            set { _settings["RedumperEnableVerbose"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default number of rereads
         /// </summary>
         public int RedumperRereadCount

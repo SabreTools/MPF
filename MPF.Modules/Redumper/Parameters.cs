@@ -152,6 +152,11 @@ namespace MPF.Modules.Redumper
         /// </summary>
         public string SkipValue { get; set; }
 
+        /// <summary>
+        /// Maximum number of lead-in retries per session (Default 4)
+        /// </summary>
+        public int? PlextorLeadinRetriesValue { get; set; }
+
         #endregion
 
         #endregion
@@ -329,6 +334,10 @@ namespace MPF.Modules.Redumper
             if (this[FlagStrings.Verbose] == true)
                 parameters.Add(FlagStrings.Verbose);
 
+            // Debug
+            if (this[FlagStrings.Debug] == true)
+                parameters.Add(FlagStrings.Debug);
+
             // Drive
             if (this[FlagStrings.Drive] == true)
             {
@@ -418,9 +427,16 @@ namespace MPF.Modules.Redumper
 
             #region Drive Specific
 
-            // Plextor Skip Leadin
-            if (this[FlagStrings.PlextorSkipLeadin] == true)
-                parameters.Add(FlagStrings.PlextorSkipLeadin);
+            // Plextor Leadin Skip
+            if (this[FlagStrings.PlextorLeadinSkip] == true)
+                parameters.Add(FlagStrings.PlextorLeadinSkip);
+
+            // Plextor Leadin Retries
+            if (this[FlagStrings.PlextorLeadinRetries] == true)
+            {
+                if (PlextorLeadinRetriesValue != null)
+                    parameters.Add($"{FlagStrings.PlextorLeadinRetries}={PlextorLeadinRetriesValue}");
+            }
 
             // Asus Skip Leadout
             if (this[FlagStrings.AsusSkipLeadout] == true)
@@ -525,6 +541,7 @@ namespace MPF.Modules.Redumper
                     FlagStrings.HelpLong,
                     FlagStrings.HelpShort,
                     FlagStrings.Verbose,
+                    FlagStrings.Debug,
                     FlagStrings.Drive,
                     FlagStrings.Speed,
                     FlagStrings.Retries,
@@ -541,7 +558,8 @@ namespace MPF.Modules.Redumper
                     FlagStrings.DriveSectorOrder,
 
                     // Drive Specific
-                    FlagStrings.PlextorSkipLeadin,
+                    FlagStrings.PlextorLeadinSkip,
+                    FlagStrings.PlextorLeadinRetries,
                     FlagStrings.AsusSkipLeadout,
 
                     // Offset
@@ -658,6 +676,12 @@ namespace MPF.Modules.Redumper
             this[FlagStrings.Speed] = true;
             SpeedValue = driveSpeed;
 
+            // Set user-defined options
+            if (options.RedumperEnableVerbose)
+                this[FlagStrings.Verbose] = options.RedumperEnableVerbose;
+            if (options.RedumperEnableDebug)
+                this[FlagStrings.Debug] = options.RedumperEnableDebug;
+
             // Set the output paths
             if (!string.IsNullOrWhiteSpace(filename))
             {
@@ -754,6 +778,9 @@ namespace MPF.Modules.Redumper
                 // Verbose
                 ProcessFlagParameter(parts, FlagStrings.Verbose, ref i);
 
+                // Debug
+                ProcessFlagParameter(parts, FlagStrings.Debug, ref i);
+
                 // Drive
                 stringValue = ProcessStringParameter(parts, FlagStrings.Drive, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
@@ -820,8 +847,13 @@ namespace MPF.Modules.Redumper
 
                 #region Drive Specific
 
-                // Plextor Skip Leadin
-                ProcessFlagParameter(parts, FlagStrings.PlextorSkipLeadin, ref i);
+                // Plextor Leadin Skip
+                ProcessFlagParameter(parts, FlagStrings.PlextorLeadinSkip, ref i);
+
+                // Plextor Leadin Retries
+                intValue = ProcessInt32Parameter(parts, FlagStrings.PlextorLeadinRetries, ref i);
+                if (intValue != null && intValue != Int32.MinValue)
+                    PlextorLeadinRetriesValue = intValue;
 
                 // Asus Skip Leadout
                 ProcessFlagParameter(parts, FlagStrings.AsusSkipLeadout, ref i);

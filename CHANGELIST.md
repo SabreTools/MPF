@@ -14,6 +14,7 @@
 - Update to DIC 20230401
 - Add DIC `.` notice to README
 - Resync with Redump
+- Update redumper to build 118
 
 ### 2.5 (2023-03-12)
 

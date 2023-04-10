@@ -209,9 +209,9 @@ namespace MPF.UI.ViewModels
             return success;
         }
 
-#endregion
+        #endregion
 
-#region UI Functionality
+        #region UI Functionality
 
         /// <summary>
         /// Create an open folder dialog box
@@ -240,9 +240,9 @@ namespace MPF.UI.ViewModels
         private System.Windows.Controls.TextBox TextBoxForPathSetting(string name) =>
             Parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
-#endregion
+        #endregion
 
-#region Event Handlers
+        #region Event Handlers
 
         /// <summary>
         /// Handler for generic Click event
@@ -273,6 +273,6 @@ namespace MPF.UI.ViewModels
             _ = await TestRedumpLogin();
 #endif
 
-#endregion
+        #endregion
     }
 }

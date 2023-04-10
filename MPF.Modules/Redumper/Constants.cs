@@ -24,6 +24,7 @@ namespace MPF.Modules.Redumper
         public const string HelpLong = "--help";
         public const string HelpShort = "-h";
         public const string Verbose = "--verbose";
+        public const string Debug = "--debug";
         public const string Drive = "--drive";
         public const string Speed = "--speed";
         public const string Retries = "--retries";
@@ -40,7 +41,8 @@ namespace MPF.Modules.Redumper
         public const string DriveSectorOrder = "--drive-sector-order";
 
         // Drive Specific
-        public const string PlextorSkipLeadin = "--plextor-skip-leadin";
+        public const string PlextorLeadinSkip = "--plextor-leadin-skip";
+        public const string PlextorLeadinRetries = "--plextor-leadin-retries";
         public const string AsusSkipLeadout = "--asus-skip-leadout";
 
         // Offset

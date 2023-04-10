@@ -370,7 +370,17 @@
                 </TabItem>
 
                 <TabItem Header="Redumper" Style="{DynamicResource CustomTabItemStyle}">
-                    <UniformGrid Columns="2" Rows="1">
+                    <UniformGrid Columns="2" Rows="2">
+                        <CheckBox VerticalAlignment="Center" Content="Enable Debug Output"
+                            IsChecked="{Binding Options.RedumperEnableDebug}"
+                            ToolTip="Enable debug output in logs" Margin="0,4"
+                            />
+
+                        <CheckBox VerticalAlignment="Center" Content="Enable Verbose Output"
+                            IsChecked="{Binding Options.RedumperEnableVerbose}"
+                            ToolTip="Enable verbose output in logs" Margin="0,4"
+                            />
+                        
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"
                             Text="{Binding Options.RedumperRereadCount}"
