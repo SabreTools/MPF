@@ -20,6 +20,7 @@
 - Re-enable BD33 and BD66
 - Add PIC models for BD (unused)
 - Handle PIC based on disc type
+- UMDs always have "2 layers"
 
 ### 2.5 (2023-03-12)
 
