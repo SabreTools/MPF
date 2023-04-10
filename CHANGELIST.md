@@ -19,6 +19,7 @@
 - Add UltraCade
 - Re-enable BD33 and BD66
 - Add PIC models for BD (unused)
+- Handle PIC based on disc type
 
 ### 2.5 (2023-03-12)
 

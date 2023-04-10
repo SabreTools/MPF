@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
@@ -2981,8 +2982,25 @@ namespace MPF.Modules.DiscImageCreator
             {
                 using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
                 {
+                    // Disc type
+                    int infoLength;
+                    br.BaseStream.Seek(0x0C, SeekOrigin.Begin);
+                    string identifier = Encoding.ASCII.GetString(br.ReadBytes(3));
+                    switch (identifier)
+                    {
+                        case "BDO":
+                            infoLength = 0x40;
+                            break;
+                        case "BDW":
+                        case "BDR":
+                            infoLength = 0x74;
+                            break;
+                        default:
+                            return false;
+                    }
+
                     // Layerbreak 1
-                    br.BaseStream.Seek(0x1C, SeekOrigin.Begin);
+                    br.BaseStream.Seek((0 * infoLength) + 0x1C, SeekOrigin.Begin);
                     long layerbreak1Offset = br.ReadInt32BigEndian();
                     long layerbreak1Value = br.ReadInt32BigEndian();
                     if (layerbreak1Value == 0)
@@ -2991,7 +3009,7 @@ namespace MPF.Modules.DiscImageCreator
                     layerbreak1 = layerbreak1Value - layerbreak1Offset + 2;
 
                     // Layerbreak 2
-                    br.BaseStream.Seek(0x5C, SeekOrigin.Begin);
+                    br.BaseStream.Seek((1 * infoLength) + 0x1C, SeekOrigin.Begin);
                     long layerbreak2Offset = br.ReadInt32BigEndian();
                     long layerbreak2Value = br.ReadInt32BigEndian();
                     if (layerbreak2Value == 0)
@@ -3000,7 +3018,7 @@ namespace MPF.Modules.DiscImageCreator
                     layerbreak2 = layerbreak1 + layerbreak2Value - layerbreak2Offset + 2;
 
                     // Layerbreak 3
-                    br.BaseStream.Seek(0x9C, SeekOrigin.Begin);
+                    br.BaseStream.Seek((2 * infoLength) + 0x1C, SeekOrigin.Begin);
                     long layerbreak3Offset = br.ReadInt32BigEndian();
                     long layerbreak3Value = br.ReadInt32BigEndian();
                     if (layerbreak3Value == 0)
