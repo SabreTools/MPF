@@ -18,9 +18,9 @@ namespace MPF.Test.RedumpLib
         private static readonly DiscType?[] _mappableDiscTypes = new DiscType?[]
         {
             DiscType.BD25,
-            //DiscType.BD33,
+            DiscType.BD33,
             DiscType.BD50,
-            //DiscType.BD66,
+            DiscType.BD66,
             DiscType.BD100,
             DiscType.BD128,
             DiscType.CD,

@@ -17,6 +17,7 @@
 - Update redumper to build 118
 - Clarify non-Redump systems
 - Add UltraCade
+- Re-enable BD33 and BD66
 
 ### 2.5 (2023-03-12)
 

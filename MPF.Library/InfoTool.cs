@@ -1604,21 +1604,21 @@ namespace MPF.Library
             switch (info.CommonDiscInfo.Media)
             {
                 case DiscType.BD25:
-                //case DiscType.BD33:
+                case DiscType.BD33:
                 case DiscType.BD50:
-                //case DiscType.BD66:
+                case DiscType.BD66:
                 case DiscType.BD100:
                 case DiscType.BD128:
                     if (info.SizeAndChecksums.Layerbreak3 != default)
                         info.CommonDiscInfo.Media = DiscType.BD128;
                     else if (info.SizeAndChecksums.Layerbreak2 != default)
                         info.CommonDiscInfo.Media = DiscType.BD100;
-                    //else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 53_687_063_712)
-                    //    info.CommonDiscInfo.Media = DiscType.BD66;
+                    else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 50_050_629_632)
+                        info.CommonDiscInfo.Media = DiscType.BD66;
                     else if (info.SizeAndChecksums.Layerbreak != default)
                         info.CommonDiscInfo.Media = DiscType.BD50;
-                    //else if (info.SizeAndChecksums.Size > 26_843_531_856)
-                    //    info.CommonDiscInfo.Media = DiscType.BD33;
+                    else if (info.SizeAndChecksums.Size > 25_025_314_816)
+                        info.CommonDiscInfo.Media = DiscType.BD33;
                     else
                         info.CommonDiscInfo.Media = DiscType.BD25;
                     break;
