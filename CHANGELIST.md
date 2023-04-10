@@ -18,6 +18,7 @@
 - Clarify non-Redump systems
 - Add UltraCade
 - Re-enable BD33 and BD66
+- Add PIC models for BD (unused)
 
 ### 2.5 (2023-03-12)
 
