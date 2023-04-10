@@ -616,6 +616,12 @@ namespace RedumpLib.Data
                     types.Add(MediaType.CDROM);
                     break;
 
+                // https://en.wikipedia.org/wiki/UltraCade_Technologies
+                case RedumpSystem.UltraCade:
+                    types.Add(MediaType.CDROM);
+                    types.Add(MediaType.DVD);
+                    break;
+
                 #endregion
 
                 #region Others
@@ -1993,6 +1999,11 @@ namespace RedumpLib.Data
                 case "tsunami tsumo":
                 case "tsunami tsumo multi-game motion system":
                     return RedumpSystem.TsunamiTsuMoMultiGameMotionSystem;
+                case "ultracade":
+                case "ultracadepc":
+                case "ultracade pc":
+                case "ultracade pc-based systems":
+                    return RedumpSystem.UltraCade;
 
                 #endregion
 

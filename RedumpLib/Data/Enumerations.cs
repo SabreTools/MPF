@@ -2406,6 +2406,9 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Tsunami TsuMo Multi-Game Motion System")]
         TsunamiTsuMoMultiGameMotionSystem,
 
+        [System(Category = SystemCategory.Arcade, Available = false, LongName = "UltraCade PC-based Systems")]
+        UltraCade,
+
         // End of arcade section delimiter
         MarkerArcadeEnd,
 
