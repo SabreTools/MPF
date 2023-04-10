@@ -15,6 +15,7 @@
 - Add DIC `.` notice to README
 - Resync with Redump
 - Update redumper to build 118
+- Clarify non-Redump systems
 
 ### 2.5 (2023-03-12)
 

@@ -377,6 +377,12 @@ namespace RedumpLib.Data
                     types.Add(MediaType.DVD);
                     break;
 
+                // UNKNOWN
+                case RedumpSystem.JVLiTouch:
+                    types.Add(MediaType.CDROM);
+                    types.Add(MediaType.DVD);
+                    break;
+
                 // https://en.wikipedia.org/wiki/E-Amusement
                 case RedumpSystem.KonamieAmusement:
                     types.Add(MediaType.CDROM);
@@ -519,6 +525,7 @@ namespace RedumpLib.Data
                     types.Add(MediaType.DVD);
                     break;
 
+                // UNKNOWN
                 case RedumpSystem.SegaALLS:
                     types.Add(MediaType.DVD);
                     break;
@@ -1759,6 +1766,9 @@ namespace RedumpLib.Data
                 case "itpc":
                 case "incredible technologies pc-based systems":
                     return RedumpSystem.IncredibleTechnologiesVarious;
+                case "jvlitouch":
+                case "jvl itouch":
+                    return RedumpSystem.JVLiTouch;
                 case "kea":
                 case "eamusement":
                 case "e-amusement":

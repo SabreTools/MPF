@@ -2286,6 +2286,9 @@ namespace RedumpLib.Data
         [System(Category = SystemCategory.Arcade, Available = false, LongName = "Incredible Technologies PC-based Systems")]
         IncredibleTechnologiesVarious,
 
+        [System(Category = SystemCategory.Arcade, Available = false, LongName = "JVL iTouch")]
+        JVLiTouch,
+
         [System(Category = SystemCategory.Arcade, LongName = "Konami e-Amusement", ShortName = "kea", HasCues = true, HasDat = true)]
         KonamieAmusement,
 
