@@ -103,7 +103,7 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Get a complete list of  supported internal programs
         /// </summary>
-        internal static List<Element<InternalProgram>> PopulateInternalPrograms()
+        private static List<Element<InternalProgram>> PopulateInternalPrograms()
         {
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper, InternalProgram.DD };
             return internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
