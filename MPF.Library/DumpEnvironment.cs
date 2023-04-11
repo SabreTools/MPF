@@ -43,6 +43,11 @@ namespace MPF.Library
         public MediaType? Type { get; private set; }
 
         /// <summary>
+        /// Currently selected dumping program
+        /// </summary>
+        public InternalProgram InternalProgram { get; private set; }
+
+        /// <summary>
         /// Options object representing user-defined options
         /// </summary>
         public Options Options { get; private set; }
@@ -86,12 +91,14 @@ namespace MPF.Library
         /// <param name="drive"></param>
         /// <param name="system"></param>
         /// <param name="type"></param>
+        /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
         public DumpEnvironment(Options options,
             string outputPath,
             Drive drive,
             RedumpSystem? system,
             MediaType? type,
+            InternalProgram? internalProgram,
             string parameters)
         {
             // Set options object
@@ -104,6 +111,7 @@ namespace MPF.Library
             this.Drive = drive;
             this.System = system ?? options.DefaultSystem;
             this.Type = type ?? MediaType.NONE;
+            this.InternalProgram = internalProgram ?? options.InternalProgram;
             
             // Dumping program
             SetParameters(parameters);
@@ -154,7 +162,7 @@ namespace MPF.Library
         /// <param name="parameters">String representation of the parameters</param>
         public void SetParameters(string parameters)
         {
-            switch (Options.InternalProgram)
+            switch (this.InternalProgram)
             {
                 // Dumping support
                 case InternalProgram.Aaru:
@@ -212,7 +220,7 @@ namespace MPF.Library
                     return null;
 
                 // Set the proper parameters
-                switch (Options.InternalProgram)
+                switch (this.InternalProgram)
                 {
                     case InternalProgram.Aaru:
                         Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
@@ -283,10 +291,10 @@ namespace MPF.Library
             }
 
             // Execute internal tool
-            progress?.Report(Result.Success($"Executing {Options.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
+            progress?.Report(Result.Success($"Executing {this.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
             Directory.CreateDirectory(Path.GetDirectoryName(this.OutputPath));
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
-            progress?.Report(Result.Success($"{Options.InternalProgram} has finished!"));
+            progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
 
             // Execute additional tools
             progress?.Report(Result.Success("Running any additional tools... see log for output!"));
@@ -350,7 +358,7 @@ namespace MPF.Library
             }
 
             // Reset the drive automatically if configured to
-            if (Options.InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
+            if (this.InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
                 resultProgress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
                 await ResetDrive();

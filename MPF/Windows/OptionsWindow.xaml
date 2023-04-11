@@ -118,7 +118,7 @@
                         <Button x:Name="RedumperPathButton" Grid.Row="3" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
-                        <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Dumping Program" />
+                        <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Dumping Program" />
                         <ComboBox x:Name="InternalProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
                                   ItemsSource="{Binding InternalPrograms}" Style="{DynamicResource CustomComboBoxStyle}" />
 

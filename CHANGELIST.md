@@ -21,6 +21,7 @@
 - Add PIC models for BD (unused)
 - Handle PIC based on disc type
 - UMDs always have "2 layers"
+- Add dumping program selection to main UI
 
 ### 2.5 (2023-03-12)
 

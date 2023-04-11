@@ -119,6 +119,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
@@ -152,9 +153,12 @@
                     <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
                     <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
 
-                    <Label x:Name="ParametersLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
-                    <TextBox x:Name="ParametersTextBox" Grid.Row="4" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
-                    <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" />
+                    <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
+                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
+                    
+                    <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
+                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
+                    <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" />
                 </Grid>
             </GroupBox>
 
