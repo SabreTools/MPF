@@ -1147,7 +1147,7 @@ namespace MPF.UI.ViewModels
                 string output = Protection.FormatProtections(protections);
 
                 // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
-                if (Env.Options.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
+                if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
                 {
                     ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
                     App.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
