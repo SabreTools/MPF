@@ -98,7 +98,6 @@ namespace MPF.Core.Converters
 
                 if (!LongNameMethods.TryGetValue(sourceType, out MethodInfo method))
                 {
-                    
                     method = typeof(RedumpLib.Data.Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
                     if (method == null)
                         method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });

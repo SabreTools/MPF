@@ -202,6 +202,7 @@ namespace MPF.UI.ViewModels
             // Create a static list of supported programs, not everything
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper, InternalProgram.DD };
             InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
+            App.Instance.DumpingProgramComboBox.ItemsSource = InternalPrograms;
 
             // Select the current default dumping program
             int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
