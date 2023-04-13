@@ -24,6 +24,7 @@
 - Add dumping program selection to main UI
 - Update to DIC 20230413
 - Comment out `.` handling for DIC
+- Ensure dumping program box can enable/disable
 
 ### 2.5 (2023-03-12)
 

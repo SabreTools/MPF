@@ -695,6 +695,7 @@ namespace MPF.UI.ViewModels
             App.Instance.OutputPathBrowseButton.IsEnabled = false;
             App.Instance.DriveLetterComboBox.IsEnabled = false;
             App.Instance.DriveSpeedComboBox.IsEnabled = false;
+            App.Instance.DumpingProgramComboBox.IsEnabled = false;
             App.Instance.EnableParametersCheckBox.IsEnabled = false;
             App.Instance.StartStopButton.Content = Interface.StopDumping;
             App.Instance.MediaScanButton.IsEnabled = false;
@@ -714,6 +715,7 @@ namespace MPF.UI.ViewModels
             App.Instance.OutputPathBrowseButton.IsEnabled = true;
             App.Instance.DriveLetterComboBox.IsEnabled = true;
             App.Instance.DriveSpeedComboBox.IsEnabled = true;
+            App.Instance.DumpingProgramComboBox.IsEnabled = true;
             App.Instance.EnableParametersCheckBox.IsEnabled = true;
             App.Instance.StartStopButton.Content = Interface.StartDumping;
             App.Instance.MediaScanButton.IsEnabled = true;
