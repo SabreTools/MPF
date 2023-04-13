@@ -23,6 +23,7 @@
 - UMDs always have "2 layers"
 - Add dumping program selection to main UI
 - Update to DIC 20230413
+- Comment out `.` handling for DIC
 
 ### 2.5 (2023-03-12)
 

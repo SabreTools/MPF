@@ -1297,8 +1297,8 @@ namespace MPF.UI.ViewModels
                 // If "No", then we continue with the current known environment
             }
 
-            // Run path adjustments for DiscImageCreator
-            Env.AdjustPathsForDiscImageCreator();
+            // Run path adjustments for DiscImageCreator -- Disabled until further notice
+            //Env.AdjustPathsForDiscImageCreator();
 
             try
             {

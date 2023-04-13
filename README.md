@@ -43,8 +43,6 @@ MPF.Check is a commandline-only program that allows users to generate submission
 
 ## Information
 
-**WARNING**: For those who use DiscImageCreator for dumping, MPF will replace `.` with `_` in any inputted paths which may be unexpected. If there are `.` outside of the extension in either the path or the filename, DiscImageCreator will fail to perform the final hashing step properly. Unfortunately, a malformed `.dat` will still be generated, thus appearing to have succeeded and causing confusion with users. As this is avoidable by a simple replacement, MPF will continue to do that until DiscImageCreator is fully fixed.
-
 For all additional information, including information about the individual components included in the project and what dumping programs are supported, please see [the wiki](https://github.com/SabreTools/MPF/wiki) for more details.
 
 ## Changelist
