@@ -22,6 +22,7 @@
 - Handle PIC based on disc type
 - UMDs always have "2 layers"
 - Add dumping program selection to main UI
+- Update to DIC 20230413
 
 ### 2.5 (2023-03-12)
 
