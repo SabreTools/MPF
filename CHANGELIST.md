@@ -25,6 +25,7 @@
 - Update to DIC 20230413
 - Comment out `.` handling for DIC
 - Ensure dumping program box can enable/disable
+- Disable special SmartE handling for DIC
 
 ### 2.5 (2023-03-12)
 

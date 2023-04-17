@@ -1148,12 +1148,12 @@ namespace MPF.UI.ViewModels
                 (var protections, string error) = await Protection.RunProtectionScanOnPath(drive.Letter + ":\\", App.Options, progress);
                 string output = Protection.FormatProtections(protections);
 
-                // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only
-                if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
-                {
-                    ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
-                    App.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
-                }
+                // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
+                //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
+                //{
+                //    ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
+                //    App.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+                //}
 
                 if (!App.Instance.LogPanel.IsExpanded)
                 {
