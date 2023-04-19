@@ -1271,6 +1271,9 @@ namespace MPF.Modules
                     serial = exeName
                         .Replace('_', '-')
                         .Replace(".", string.Empty);
+
+                    // Some games may have the EXE in a subfolder
+                    serial = Path.GetFileName(serial);
                 }
             }
 
