@@ -27,6 +27,7 @@
 - Ensure dumping program box can enable/disable
 - Disable special SmartE handling for DIC
 - Remove path from PS1/PS2 serial
+- Make TOC file optional for CD/GD
 
 ### 2.5 (2023-03-12)
 

@@ -254,8 +254,6 @@ namespace MPF.Modules.DiscImageCreator
                             missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.sub") && !File.Exists($"{basePath}.subtmp"))
                             missingFiles.Add($"{basePath}.sub");
-                        if (!File.Exists($"{basePath}.toc"))
-                            missingFiles.Add($"{basePath}.toc");
                         if (!File.Exists($"{basePath}_disc.txt"))
                             missingFiles.Add($"{basePath}_disc.txt");
                         if (!File.Exists($"{basePath}_drive.txt"))
@@ -301,6 +299,10 @@ namespace MPF.Modules.DiscImageCreator
                         // Not guaranteed output
                         if (!File.Exists($"{basePath}_subIntention.txt"))
                             missingFiles.Add($"{basePath}_subIntention.txt");
+
+                        // Not guaranteed output (at least PCE)
+                        if (!File.Exists($"{basePath}.toc"))
+                            missingFiles.Add($"{basePath}.toc");
                     }
 
                     break;
