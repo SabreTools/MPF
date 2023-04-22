@@ -392,14 +392,17 @@ namespace MPF.Modules.DiscImageCreator
             if (GetDiscType($"{basePath}_disc.txt", out string discTypeOrBookType))
                 info.DumpingInfo.ReportedDiscType = discTypeOrBookType;
 
-            // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.dat");
+            // Get the Datafile information
+            Datafile datafile = GetDatafile($"{basePath}.dat");
 
             // Extract info based generically on MediaType
             switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
+                    // Fill in the hash data
+                    info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
+
                     info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
@@ -442,7 +445,7 @@ namespace MPF.Modules.DiscImageCreator
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
                     // Get the individual hash data, as per internal
-                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    if (GetISOHashValues(datafile, out long size, out string crc32, out string md5, out string sha1))
                     {
                         info.SizeAndChecksums.Size = size;
                         info.SizeAndChecksums.CRC32 = crc32;
@@ -2544,50 +2547,6 @@ namespace MPF.Modules.DiscImageCreator
         #endregion
 
         #region Information Extraction Methods
-
-        /// <summary>
-        /// Get the proper datfile from the input file, if possible
-        /// </summary>
-        /// <param name="dat">.dat file location</param>
-        /// <returns>Relevant pieces of the datfile, null on error</returns>
-        private static string GetDatfile(string dat)
-        {
-            // If the file doesn't exist, we can't get info from it
-            if (!File.Exists(dat))
-                return null;
-
-            using (StreamReader sr = File.OpenText(dat))
-            {
-                try
-                {
-                    // Make sure this file is a .dat
-                    if (sr.ReadLine() != "<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
-                        return null;
-                    if (sr.ReadLine() != "<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">")
-                        return null;
-
-                    // Fast forward to the rom lines
-                    while (!sr.ReadLine().TrimStart().StartsWith("<game")) ;
-                    sr.ReadLine(); // <category>Games</category>
-                    sr.ReadLine(); // <description>Plextor</description>
-
-                    // Now that we're at the relevant entries, read each line in and concatenate
-                    string datString = "", line = sr.ReadLine().Trim();
-                    while (line.StartsWith("<rom"))
-                    {
-                        datString += line + "\n";
-                        line = sr.ReadLine().Trim();
-                    }
-
-                    return datString.TrimEnd('\n');
-                }
-                catch
-                {
-                    // We don't care what the exception is right now
-                    return null;
-                }
-            }
-        }
 
         /// <summary>
         /// Get reported disc type information, if possible

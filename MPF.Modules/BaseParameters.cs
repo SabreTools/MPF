@@ -1084,6 +1084,39 @@ namespace MPF.Modules
         #region Common Information Extraction
 
         /// <summary>
+        /// Generate the proper datfile from the input Datafile, if possible
+        /// </summary>
+        /// <param name="datafile">.dat file location</param>
+        /// <returns>Relevant pieces of the datfile, null on error</returns>
+        protected static string GenerateDatfile(Datafile datafile)
+        {
+            // If we don't have a valid datafile, we can't do anything
+            if (datafile == null || datafile.Games.Length == 0 || datafile.Games[0].Roms.Length == 0)
+                return null;
+
+            // Otherwise, reconstruct the hash data with only the required info
+            try
+            {
+                var roms = datafile.Games[0].Roms;
+
+                string datString = string.Empty;
+                for (int i = 0; i < roms.Length; i++)
+                {
+                    var rom = roms[i];
+                    datString += $"<rom name=\"{rom.Name}\" size=\"{rom.Size}\" crc=\"{rom.Crc}\" md5=\"{rom.Md5}\" sha1=\"{rom.Sha1}\" />\n";
+                }
+
+                datString.TrimEnd('\n');
+                return datString;
+            }
+            catch
+            {
+                // We don't care what the exception is right now
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get Datafile from a standard DAT
         /// </summary>
         /// <param name="dat">Path to the DAT file to parse</param>
@@ -1122,6 +1155,7 @@ namespace MPF.Modules
             }
             catch
             {
+                // We don't care what the exception is right now
                 return null;
             }
         }

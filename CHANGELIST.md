@@ -30,6 +30,7 @@
 - Make TOC file optional for CD/GD
 - Add datafile models
 - Add datafile helper method
+- Start migrating to datafile serialization
 
 ### 2.5 (2023-03-12)
 
