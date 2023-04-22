@@ -28,6 +28,7 @@
 - Disable special SmartE handling for DIC
 - Remove path from PS1/PS2 serial
 - Make TOC file optional for CD/GD
+- Add datafile models
 
 ### 2.5 (2023-03-12)
 
