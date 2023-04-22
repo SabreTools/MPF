@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Schema;
+using System.Xml;
+using System.Xml.Serialization;
 using MPF.Core.Data;
 using MPF.Core.Hashing;
 using MPF.Core.Utilities;
@@ -1081,6 +1084,49 @@ namespace MPF.Modules
         #region Common Information Extraction
 
         /// <summary>
+        /// Get Datafile from a standard DAT
+        /// </summary>
+        /// <param name="dat">Path to the DAT file to parse</param>
+        /// <returns>Filled Datafile on success, null on error</returns>
+        protected static Datafile GetDatafile(string dat)
+        {
+            // If there's no path, we can't read the file
+            if (string.IsNullOrWhiteSpace(dat))
+                return null;
+
+            // If the file doesn't exist, we can't read it
+            if (!File.Exists(dat))
+                return null;
+
+            try
+            {
+                // Open and read in the XML file
+                XmlReader xtr = XmlReader.Create(dat, new XmlReaderSettings
+                {
+                    CheckCharacters = false,
+                    DtdProcessing = DtdProcessing.Ignore,
+                    IgnoreComments = true,
+                    IgnoreWhitespace = true,
+                    ValidationFlags = XmlSchemaValidationFlags.None,
+                    ValidationType = ValidationType.None,
+                });
+
+                // If the reader is null for some reason, we can't do anything
+                if (xtr == null)
+                    return null;
+
+                XmlSerializer serializer = new XmlSerializer(typeof(Datafile));
+                Datafile obj = serializer.Deserialize(xtr) as Datafile;
+
+                return obj;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Get hashes from an input file path
         /// </summary>
         /// <param name="filename">Path to the input file</param>
@@ -1213,6 +1259,27 @@ namespace MPF.Modules
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get the split values for ISO-based media
+        /// </summary>
+        /// <param name="datafile">Datafile represenging the hash data</param>
+        /// <returns>True if extraction was successful, false otherwise</returns>
+        protected static bool GetISOHashValues(Datafile datafile, out long size, out string crc32, out string md5, out string sha1)
+        {
+            size = -1; crc32 = null; md5 = null; sha1 = null;
+
+            if (datafile?.Games == null || datafile.Games.Length == 0 || datafile.Games[0].Roms.Length == 0)
+                return false;
+
+            var rom = datafile.Games[0].Roms[0];
+
+            crc32 = rom.Crc;
+            md5 = rom.Md5;
+            sha1 = rom.Sha1;
+
+            return true;
         }
 
         /// <summary>

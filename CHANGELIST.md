@@ -29,6 +29,7 @@
 - Remove path from PS1/PS2 serial
 - Make TOC file optional for CD/GD
 - Add datafile models
+- Add datafile helper method
 
 ### 2.5 (2023-03-12)
 
