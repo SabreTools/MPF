@@ -1558,6 +1558,12 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add($"{basePath}.dat");
                     if (File.Exists($"{basePath}.sub"))
                         logFiles.Add($"{basePath}.sub");
+                    if (File.Exists($"{basePath} (Track 00).sub"))
+                        logFiles.Add($"{basePath} (Track 00).sub");
+                    if (File.Exists($"{basePath} (Track 01)(-LBA).sub"))
+                        logFiles.Add($"{basePath} (Track 01)(-LBA).sub");
+                    if (File.Exists($"{basePath} (Track AA).sub"))
+                        logFiles.Add($"{basePath} (Track AA).sub");
                     if (File.Exists($"{basePath}.subtmp"))
                         logFiles.Add($"{basePath}.subtmp");
                     if (File.Exists($"{basePath}.toc"))
@@ -1586,6 +1592,8 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add($"{basePath}_subIntention.txt");
                     if (File.Exists($"{basePath}_subReadable.txt"))
                         logFiles.Add($"{basePath}_subReadable.txt");
+                    if (File.Exists($"{basePath}_suppl.dat"))
+                        logFiles.Add($"{basePath}_suppl.dat");
                     if (File.Exists($"{basePath}_volDesc.txt"))
                         logFiles.Add($"{basePath}_volDesc.txt");
 
@@ -1614,6 +1622,8 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add($"{basePath}_mainError.txt");
                     if (File.Exists($"{basePath}_mainInfo.txt"))
                         logFiles.Add($"{basePath}_mainInfo.txt");
+                    if (File.Exists($"{basePath}_suppl.dat"))
+                        logFiles.Add($"{basePath}_suppl.dat");
                     if (File.Exists($"{basePath}_volDesc.txt"))
                         logFiles.Add($"{basePath}_volDesc.txt");
 
@@ -3536,6 +3546,33 @@ namespace MPF.Modules.DiscImageCreator
         }
 
         /// <summary>
+        /// Get the XGD auxiliary hash info from the outputted files, if possible
+        /// </summary>
+        /// <param name="suppl">Datafile representing the supplementary hashes</param>
+        /// <param name="dmihash">Extracted DMI.bin CRC32 hash (upper-cased)</param>
+        /// <param name="pfihash">Extracted PFI.bin CRC32 hash (upper-cased)</param>
+        /// <param name="sshash">Extracted SS.bin CRC32 hash (upper-cased)</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        /// <remarks>Currently only the CRC32 values are returned for each, this may change in the future</remarks>
+        private static bool GetXGDAuxHashInfo(Datafile suppl, out string dmihash, out string pfihash, out string sshash)
+        {
+            // Assign values to all outputs first
+            dmihash = null; pfihash = null; sshash = null;
+
+            // If we don't have a valid datafile, we can't do anything
+            if (suppl == null || suppl.Games.Length == 0 || suppl.Games[0].Roms.Length == 0)
+                return false;
+
+            // Try to extract the hash information
+            var roms = suppl.Games[0].Roms;
+            dmihash = roms.FirstOrDefault(r => r.Name == "DMI.bin")?.Crc?.ToUpperInvariant();
+            pfihash = roms.FirstOrDefault(r => r.Name == "PFI.bin")?.Crc?.ToUpperInvariant();
+            sshash = roms.FirstOrDefault(r => r.Name == "SS.bin")?.Crc?.ToUpperInvariant();
+
+            return true;
+        }
+
+        /// <summary>
         /// Get the XGD auxiliary info from the outputted files, if possible
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
@@ -3604,6 +3641,72 @@ namespace MPF.Modules.DiscImageCreator
                                     pfihash = crc32.ToUpperInvariant();
                                 else if (line.Contains("DMI.bin"))
                                     dmihash = crc32.ToUpperInvariant();
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the XGD auxiliary security sector info from the outputted files, if possible
+        /// </summary>
+        /// <param name="disc">_disc.txt file location</param>
+        /// <param name="ss">Extracted security sector data</param>
+        /// <param name="ssver">Extracted security sector version</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        private static bool GetXGDAuxSSInfo(string disc, out string ss, out string ssver)
+        {
+            ss = null; ssver = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(disc))
+                return false;
+
+            // This flag is needed because recent versions of DIC include security data twice
+            bool foundSecuritySectors = false;
+
+            using (StreamReader sr = File.OpenText(disc))
+            {
+                try
+                {
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine().Trim();
+
+                        // Security Sector version
+                        if (line.StartsWith("Version of challenge table"))
+                        {
+                            ssver = line.Split(' ')[4]; // "Version of challenge table: <VER>"
+                        }
+
+                        // Security Sector ranges
+                        else if (line.StartsWith("Number of security sector ranges:") && !foundSecuritySectors)
+                        {
+                            // Set the flag so we don't read duplicate data
+                            foundSecuritySectors = true;
+
+                            Regex layerRegex = new Regex(@"Layer [01].*, startLBA-endLBA:\s*(\d+)-\s*(\d+)");
+
+                            line = sr.ReadLine().Trim();
+                            while (!line.StartsWith("========== TotalLength ==========")
+                                && !line.StartsWith("========== Unlock 2 state(wxripper) =========="))
+                            {
+                                // If we have a recognized line format, parse it
+                                if (line.StartsWith("Layer "))
+                                {
+                                    var match = layerRegex.Match(line);
+                                    ss += $"{match.Groups[1]}-{match.Groups[2]}\n";
+                                }
+
+                                line = sr.ReadLine().Trim();
                             }
                         }
                     }

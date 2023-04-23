@@ -1279,6 +1279,8 @@ namespace MPF.Modules
             if (string.IsNullOrWhiteSpace(hashData))
                 return false;
 
+            // TODO: Use deserialization to Rom instead of Regex
+
             Regex hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
             Match m = hashreg.Match(hashData);
             if (m.Success)

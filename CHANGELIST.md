@@ -31,6 +31,7 @@
 - Add datafile models
 - Add datafile helper method
 - Start migrating to datafile serialization
+- Prepare for future DIC changes
 
 ### 2.5 (2023-03-12)
 
