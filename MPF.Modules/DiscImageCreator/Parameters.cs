@@ -1598,8 +1598,12 @@ namespace MPF.Modules.DiscImageCreator
                         logFiles.Add($"{basePath}.dat");
                     if (File.Exists($"{basePath}.sub"))
                         logFiles.Add($"{basePath}.sub");
+                    if (File.Exists($"{basePath} (Track 0).sub"))
+                        logFiles.Add($"{basePath} (Track 0).sub");
                     if (File.Exists($"{basePath} (Track 00).sub"))
                         logFiles.Add($"{basePath} (Track 00).sub");
+                    if (File.Exists($"{basePath} (Track 1)(-LBA).sub"))
+                        logFiles.Add($"{basePath} (Track 1)(-LBA).sub");
                     if (File.Exists($"{basePath} (Track 01)(-LBA).sub"))
                         logFiles.Add($"{basePath} (Track 01)(-LBA).sub");
                     if (File.Exists($"{basePath} (Track AA).sub"))
