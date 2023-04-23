@@ -34,6 +34,7 @@
 - Prepare for future DIC changes
 - Add suppl support to Xbox
 - Support single digit subs
+- Fix info tool hash finding
 
 ### 2.5 (2023-03-12)
 

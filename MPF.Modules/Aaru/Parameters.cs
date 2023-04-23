@@ -229,15 +229,12 @@ namespace MPF.Modules.Aaru
             Datafile datafile = GenerateDatafile(sidecar, basePath);
 
             // Fill in the hash data
-            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(sidecar, basePath);
+            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
 
             switch (this.Type)
             {
                 // TODO: Can this do GD-ROM?
                 case MediaType.CDROM:
-                    // Fill in the hash data
-                    info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
-
                     // TODO: Re-enable once PVD generation / finding is fixed
                     // Generate / obtain the PVD
                     //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";

@@ -395,14 +395,14 @@ namespace MPF.Modules.DiscImageCreator
             // Get the Datafile information
             Datafile datafile = GetDatafile($"{basePath}.dat");
 
+            // Fill in the hash data
+            info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
+
             // Extract info based generically on MediaType
             switch (this.Type)
             {
                 case MediaType.CDROM:
                 case MediaType.GDROM: // TODO: Verify GD-ROM outputs this
-                    // Fill in the hash data
-                    info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
-
                     info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "Disc has no PVD"; ;
 
                     // Audio-only discs will fail if there are any C2 errors, so they would never get here
