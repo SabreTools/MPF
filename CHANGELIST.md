@@ -32,6 +32,7 @@
 - Add datafile helper method
 - Start migrating to datafile serialization
 - Prepare for future DIC changes
+- Add suppl support to Xbox
 
 ### 2.5 (2023-03-12)
 

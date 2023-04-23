@@ -541,13 +541,33 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
 
-                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string xgd1SS, out string xgd1SSVer))
+                    // If we have the new, external DAT
+                    if (File.Exists($"{basePath}_suppl.dat"))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
-                        info.Extras.SecuritySectorRanges = xgd1SS ?? "";
+                        Datafile suppl = GetDatafile($"{basePath}_suppl.dat");
+                        if (GetXGDAuxHashInfo(suppl, out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
+                        }
+
+                        if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out string xgd1SS, out string xgd1SSVer))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
+                            info.Extras.SecuritySectorRanges = xgd1SS ?? "";
+                        }
+                    }
+                    else
+                    {
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string xgd1SS, out string xgd1SSVer))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
+                            info.Extras.SecuritySectorRanges = xgd1SS ?? "";
+                        }
                     }
 
                     break;
@@ -564,13 +584,33 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
                     }
 
-                    if (GetXGDAuxInfo($"{basePath}_disc.txt", out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string xgd23SS, out string xgd23SSVer))
+                    // If we have the new, external DAT
+                    if (File.Exists($"{basePath}_suppl.dat"))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
-                        info.Extras.SecuritySectorRanges = xgd23SS ?? "";
+                        Datafile suppl = GetDatafile($"{basePath}_suppl.dat");
+                        if (GetXGDAuxHashInfo(suppl, out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
+                        }
+
+                        if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out string xgd23SS, out string xgd23SSVer))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
+                            info.Extras.SecuritySectorRanges = xgd23SS ?? "";
+                        }
+                    }
+                    else
+                    {
+                        if (GetXGDAuxInfo($"{basePath}_disc.txt", out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string xgd23SS, out string xgd23SSVer))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
+                            info.Extras.SecuritySectorRanges = xgd23SS ?? "";
+                        }
                     }
 
                     break;
