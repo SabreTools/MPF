@@ -38,6 +38,7 @@
 - Fix missing size for ISO data
 - Attempt to more accurately parse layerbreaks
 - Fix upcoming suppl DAT parsing
+- Ensure blank lines don't interfere
 
 ### 2.5 (2023-03-12)
 

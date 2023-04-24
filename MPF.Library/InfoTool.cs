@@ -2210,9 +2210,13 @@ namespace MPF.Library
 
                 // Loop through all of the hashdata to find matching IDs
                 resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
-                string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.Split('\n');
+                string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.TrimEnd('\n').Split('\n');
                 foreach (string hashData in splitData)
                 {
+                    // Catch any errant blank lines
+                    if (string.IsNullOrWhiteSpace(hashData))
+                        continue;
+
 #if NET48 || NETSTANDARD2_1
                     (bool singleFound, List<int> foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
 #else
