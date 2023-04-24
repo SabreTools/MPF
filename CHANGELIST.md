@@ -39,6 +39,7 @@
 - Attempt to more accurately parse layerbreaks
 - Fix upcoming suppl DAT parsing
 - Ensure blank lines don't interfere
+- De-indent ringcode data
 
 ### 2.5 (2023-03-12)
 
