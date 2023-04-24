@@ -461,7 +461,8 @@ namespace MPF.Modules.DiscImageCreator
                     }
                     else if (this.Type == MediaType.BluRay)
                     {
-                        if (GetLayerbreak($"{basePath}_PIC.bin", out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
+                        var di = GetDiscInformation($"{basePath}_PIC.bin");
+                        if (GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)
                                 info.SizeAndChecksums.Layerbreak = layerbreak1.Value;
@@ -2975,79 +2976,6 @@ namespace MPF.Modules.DiscImageCreator
                     // We don't care what the exception is right now
                     return null;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Get the layerbreak info associated with the dump
-        /// </summary>
-        /// <param name="picPath">Path to the PIC.bin file associated with the dump</param>
-        /// <returns>True if layerbreak info was set, false otherwise</returns>
-        /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
-        private static bool GetLayerbreak(string picPath, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
-        {
-            // Set the default values
-            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
-
-            // If the file doesn't exist, we can't get the info
-            if (!File.Exists(picPath))
-                return false;
-
-            try
-            {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(picPath)))
-                {
-                    // Disc type
-                    int infoLength;
-                    br.BaseStream.Seek(0x0C, SeekOrigin.Begin);
-                    string identifier = Encoding.ASCII.GetString(br.ReadBytes(3));
-                    switch (identifier)
-                    {
-                        case "BDO":
-                            infoLength = 0x40;
-                            break;
-                        case "BDW":
-                        case "BDR":
-                            infoLength = 0x74;
-                            break;
-                        default:
-                            return false;
-                    }
-
-                    // Layerbreak 1
-                    br.BaseStream.Seek((0 * infoLength) + 0x1C, SeekOrigin.Begin);
-                    long layerbreak1Offset = br.ReadInt32BigEndian();
-                    long layerbreak1Value = br.ReadInt32BigEndian();
-                    if (layerbreak1Value == 0)
-                        return false;
-
-                    layerbreak1 = layerbreak1Value - layerbreak1Offset + 2;
-
-                    // Layerbreak 2
-                    br.BaseStream.Seek((1 * infoLength) + 0x1C, SeekOrigin.Begin);
-                    long layerbreak2Offset = br.ReadInt32BigEndian();
-                    long layerbreak2Value = br.ReadInt32BigEndian();
-                    if (layerbreak2Value == 0)
-                        return true;
-
-                    layerbreak2 = layerbreak1 + layerbreak2Value - layerbreak2Offset + 2;
-
-                    // Layerbreak 3
-                    br.BaseStream.Seek((2 * infoLength) + 0x1C, SeekOrigin.Begin);
-                    long layerbreak3Offset = br.ReadInt32BigEndian();
-                    long layerbreak3Value = br.ReadInt32BigEndian();
-                    if (layerbreak3Value == 0)
-                        return true;
-
-                    layerbreak3 = layerbreak2 + layerbreak3Value - layerbreak3Offset + 2;
-
-                    return true;
-                }
-            }
-            catch
-            {
-                // We don't care what the error was
-                return false;
             }
         }
 

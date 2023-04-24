@@ -27,7 +27,7 @@
         /// <summary>
         /// Should be 0x00
         /// </summary>
-        public byte Reserved2 { get; set; }
+        public byte Reserved0 { get; set; }
 
         /// <summary>
         /// DI unit Sequence Number
@@ -42,7 +42,7 @@
         /// <summary>
         /// Should be 0x00
         /// </summary>
-        public byte Reserved3 { get; set; }
+        public byte Reserved1 { get; set; }
 
         #endregion
 

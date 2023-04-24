@@ -1161,6 +1161,126 @@ namespace MPF.Modules
         }
 
         /// <summary>
+        /// Gets disc information from a PIC file
+        /// </summary>
+        /// <param name="pic">Path to a PIC.bin file</param>
+        /// <returns>Filled PICDiscInformation on success, null on error</returns>
+        /// <remarks>This omits the emergency brake information, if it exists</remarks>
+        protected static PICDiscInformation GetDiscInformation(string pic)
+        {
+            try
+            {
+                using (BinaryReader br = new BinaryReader(File.OpenRead(pic)))
+                {
+                    var di = new PICDiscInformation();
+
+                    // Read the initial disc information
+                    di.DataStructureLength = br.ReadUInt16BigEndian();
+                    di.Reserved0 = br.ReadByte();
+                    di.Reserved1 = br.ReadByte();
+
+                    // Create a list for the units
+                    var diUnits = new List<PICDiscInformationUnit>();
+
+                    // Loop and read all available units
+                    for (int i = 0; i < 32; i++)
+                    {
+                        var unit = new PICDiscInformationUnit();
+
+                        // We only accept Disc Information units, not Emergency Brake or other
+                        unit.DiscInformationIdentifier = Encoding.ASCII.GetString(br.ReadBytes(2));
+                        if (unit.DiscInformationIdentifier != "DI")
+                            break;
+
+                        unit.DiscInformationFormat = br.ReadByte();
+                        unit.NumberOfUnitsInBlock = br.ReadByte();
+                        unit.Reserved0 = br.ReadByte();
+                        unit.SequenceNumber = br.ReadByte();
+                        unit.BytesInUse = br.ReadByte();
+                        unit.Reserved1 = br.ReadByte();
+
+                        unit.DiscTypeIdentifier = Encoding.ASCII.GetString(br.ReadBytes(3));
+                        unit.DiscSizeClassVersion = br.ReadByte();
+                        switch (unit.DiscTypeIdentifier)
+                        {
+                            case PICDiscInformationUnit.DiscTypeIdentifierROM:
+                                unit.FormatDependentContents = br.ReadBytes(52);
+                                break;
+                            case PICDiscInformationUnit.DiscTypeIdentifierReWritable:
+                            case PICDiscInformationUnit.DiscTypeIdentifierRecordable:
+                                unit.FormatDependentContents = br.ReadBytes(100);
+                                unit.DiscManufacturerID = br.ReadBytes(6);
+                                unit.MediaTypeID = br.ReadBytes(3);
+                                unit.TimeStamp = br.ReadUInt16();
+                                unit.ProductRevisionNumber = br.ReadByte();
+                                break;
+                        }
+
+                        diUnits.Add(unit);
+                    }
+
+                    // Assign the units and return
+                    di.Units = diUnits.ToArray();
+                    return di;
+                }
+            }
+            catch
+            {
+                // We don't care what the error was
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get the layerbreak info associated from the disc information
+        /// </summary>
+        /// <param name="di">Disc information containing unformatted data</param>
+        /// <returns>True if layerbreak info was set, false otherwise</returns>
+        protected static bool GetLayerbreaks(PICDiscInformation di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+        {
+            // Set the default values
+            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
+
+            // If we don't have valid disc information, we can't do anything
+            if (di?.Units == null || di.Units.Length <= 1)
+                return false;
+
+            int ReadFromArrayBigEndian(byte[] bytes, int offset)
+            {
+                var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
+                byte[] rev = span.ToArray();
+                Array.Reverse(rev);
+                return BitConverter.ToInt32(rev, 0);
+            }
+
+            // Layerbreak 1 (2+ layers)
+            if (di.Units.Length >= 2)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[0].FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[0].FormatDependentContents, 0x10);
+                layerbreak1 = value - offset + 2;
+            }
+
+            // Layerbreak 2 (3+ layers)
+            if (di.Units.Length >= 3)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[1].FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[1].FormatDependentContents, 0x10);
+                layerbreak2 = layerbreak1 + value - offset + 2;
+            }
+
+            // Layerbreak 3 (4 layers)
+            if (di.Units.Length >= 4)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[2].FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[2].FormatDependentContents, 0x10);
+                layerbreak3 = layerbreak2 + value - offset + 2;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Get hashes from an input file path
         /// </summary>
         /// <param name="filename">Path to the input file</param>
