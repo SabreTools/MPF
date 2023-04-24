@@ -1311,6 +1311,7 @@ namespace MPF.Modules
 
             var rom = datafile.Games[0].Roms[0];
 
+            Int64.TryParse(rom.Size, out size);
             crc32 = rom.Crc;
             md5 = rom.Md5;
             sha1 = rom.Sha1;
