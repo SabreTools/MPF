@@ -5,7 +5,7 @@ namespace MPF.Modules
     [XmlRoot("datafile")]
     public class Datafile
     {
-        [XmlElement("name")]
+        [XmlElement("header")]
         public Header Header;
 
         [XmlElement("game")]

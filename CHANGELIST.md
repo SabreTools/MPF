@@ -37,6 +37,7 @@
 - Fix info tool hash finding
 - Fix missing size for ISO data
 - Attempt to more accurately parse layerbreaks
+- Fix upcoming suppl DAT parsing
 
 ### 2.5 (2023-03-12)
 

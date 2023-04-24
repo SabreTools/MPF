@@ -3537,9 +3537,9 @@ namespace MPF.Modules.DiscImageCreator
 
             // Try to extract the hash information
             var roms = suppl.Games[0].Roms;
-            dmihash = roms.FirstOrDefault(r => r.Name == "DMI.bin")?.Crc?.ToUpperInvariant();
-            pfihash = roms.FirstOrDefault(r => r.Name == "PFI.bin")?.Crc?.ToUpperInvariant();
-            sshash = roms.FirstOrDefault(r => r.Name == "SS.bin")?.Crc?.ToUpperInvariant();
+            dmihash = roms.FirstOrDefault(r => r.Name.EndsWith("DMI.bin"))?.Crc?.ToUpperInvariant();
+            pfihash = roms.FirstOrDefault(r => r.Name.EndsWith("PFI.bin"))?.Crc?.ToUpperInvariant();
+            sshash = roms.FirstOrDefault(r => r.Name.EndsWith("SS.bin"))?.Crc?.ToUpperInvariant();
 
             return true;
         }
