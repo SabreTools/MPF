@@ -41,6 +41,7 @@
 - Ensure blank lines don't interfere
 - De-indent ringcode data
 - Be more specific with runtime identifiers
+- Fix subdump output path in AV config
 
 ### 2.5 (2023-03-12)
 
