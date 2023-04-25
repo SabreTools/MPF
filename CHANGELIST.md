@@ -40,6 +40,7 @@
 - Fix upcoming suppl DAT parsing
 - Ensure blank lines don't interfere
 - De-indent ringcode data
+- Be more specific with runtime identifiers
 
 ### 2.5 (2023-03-12)
 
