@@ -79,18 +79,18 @@ after_build:
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net48\publish *
 - mkdir MPF\bin\Debug\net48\publish\Programs\Subdump
-- mv MPF\bin\Debug\net48\publish\subdump_fua_0x28.exe MPF\bin\Debug\net48\publish\Programs\Subdump\subdump.exe
+- mv MPF\bin\Debug\net48\publish\subdump_fua_0x28.exe MPF\bin\Debug\net48\publish\Programs\Subdump\subdump.ex
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0-windows *
-- mkdir MPF\bin\Debug\net6.0-windows\Programs\Subdump
+- mkdir MPF\bin\Debug\net6.0-windows\win7-x64\publish\Programs\Subdump
 - mv MPF\bin\Debug\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net6.0-windows\win7-x64\publish\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0-windows *
-- mkdir MPF\bin\Debug\net6.0-windows\Programs\Subdump
+- mkdir MPF\bin\Debug\net6.0-windows\win8-x64\publish\Programs\Subdump
 - mv MPF\bin\Debug\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net6.0-windows\win8-x64\publish\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0-windows *
-- mkdir MPF\bin\Debug\net6.0-windows\Programs\Subdump
+- mkdir MPF\bin\Debug\net6.0-windows\win81-x64\publish\Programs\Subdump
 - mv MPF\bin\Debug\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net6.0-windows\win81-x64\publish\Programs\Subdump\subdump.exe
 - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0-windows *
-- mkdir MPF\bin\Debug\net6.0-windows\Programs\Subdump
+- mkdir MPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\Subdump
 - mv MPF\bin\Debug\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\Subdump\subdump.exe
 
 # MPF

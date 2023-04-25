@@ -42,6 +42,7 @@
 - De-indent ringcode data
 - Be more specific with runtime identifiers
 - Fix subdump output path in AV config
+- Fix subdump mkdir path in AV config
 
 ### 2.5 (2023-03-12)
 
