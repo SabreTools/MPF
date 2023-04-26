@@ -15,6 +15,7 @@ using MPF.UI.Core.Windows;
 using RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
+using MPF.UI.Core;
 
 namespace MPF.UI.ViewModels
 {
@@ -558,7 +559,7 @@ namespace MPF.UI.ViewModels
             if (App.Options.EnableDarkMode)
                 EnableDarkMode();
             else
-                DisableDarkMode();
+                EnableLightMode();
 
             // Force the UI to reload after applying the theme
             App.Instance.UpdateLayout();
@@ -724,80 +725,12 @@ namespace MPF.UI.ViewModels
         }
 
         /// <summary>
-        /// Recolor all UI elements back to normal values
+        /// Recolor all UI elements for light mode
         /// </summary>
-        private void DisableDarkMode()
+        private void EnableLightMode()
         {
-            // Handle application-wide resources
-            Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = null;
-            Application.Current.Resources[SystemColors.ControlBrushKey] = null;
-            Application.Current.Resources[SystemColors.ControlTextBrushKey] = null;
-            Application.Current.Resources[SystemColors.GrayTextBrushKey] = null;
-            Application.Current.Resources[SystemColors.WindowBrushKey] = null;
-            Application.Current.Resources[SystemColors.WindowTextBrushKey] = null;
-
-            // Handle Button-specific resources
-            Application.Current.Resources["Button.Disabled.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF4, 0xF4, 0xF4));
-            Application.Current.Resources["Button.MouseOver.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xBE, 0xE6, 0xFD));
-            Application.Current.Resources["Button.Pressed.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xC4, 0xE5, 0xF6));
-            Application.Current.Resources["Button.Static.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xDD, 0xDD, 0xDD));
-
-            // Handle ComboBox-specific resources
-            Application.Current.Resources["ComboBox.Disabled.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
-            Application.Current.Resources["ComboBox.Disabled.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            Application.Current.Resources["ComboBox.Disabled.Editable.Button.Background"] = Brushes.Transparent;
-            Application.Current.Resources["ComboBox.MouseOver.Background"] = new LinearGradientBrush(
-                Color.FromArgb(0xFF, 0xEC, 0xF4, 0xFC),
-                Color.FromArgb(0xFF, 0xDC, 0xEC, 0xFC),
-                new Point(0, 0),
-                new Point(0, 1));
-            Application.Current.Resources["ComboBox.MouseOver.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            Application.Current.Resources["ComboBox.MouseOver.Editable.Button.Background"] = new LinearGradientBrush(
-                Color.FromArgb(0xFF, 0xEB, 0xF4, 0xFC),
-                Color.FromArgb(0xFF, 0xDC, 0xEC, 0xFC),
-                new Point(0, 0),
-                new Point(0, 1));
-            Application.Current.Resources["ComboBox.Pressed.Background"] = new LinearGradientBrush(
-                Color.FromArgb(0xFF, 0xDA, 0xEC, 0xFC),
-                Color.FromArgb(0xFF, 0xC4, 0xE0, 0xFC),
-                new Point(0, 0),
-                new Point(0, 1));
-            Application.Current.Resources["ComboBox.Pressed.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            Application.Current.Resources["ComboBox.Pressed.Editable.Button.Background"] = new LinearGradientBrush(
-                Color.FromArgb(0xFF, 0xDA, 0xEB, 0xFC),
-                Color.FromArgb(0xFF, 0xC4, 0xE0, 0xFC),
-                new Point(0, 0),
-                new Point(0, 1));
-            Application.Current.Resources["ComboBox.Static.Background"] = new LinearGradientBrush(
-                Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0),
-                Color.FromArgb(0xFF, 0xE5, 0xE5, 0xE5),
-                new Point(0, 0),
-                new Point(0, 1));
-            Application.Current.Resources["ComboBox.Static.Editable.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            Application.Current.Resources["ComboBox.Static.Editable.Button.Background"] = Brushes.Transparent;
-            Application.Current.Resources["TextBox.Static.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-
-            // Handle CustomMessageBox-specific resources
-            Application.Current.Resources["CustomMessageBox.Static.Background"] = null;
-
-            // Handle MenuItem-specific resources
-            Application.Current.Resources["MenuItem.SubMenu.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0));
-            Application.Current.Resources["MenuItem.SubMenu.Border"] = Brushes.DarkGray;
-
-            // Handle ProgressBar-specific resources
-            Application.Current.Resources["ProgressBar.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xE6, 0xE6, 0xE6));
-
-            // Handle ScrollViewer-specific resources
-            Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = Brushes.LightGray;
-
-            // Handle TabItem-specific resources
-            Application.Current.Resources["TabItem.Selected.Background"] = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xFF, 0xFF));
-            Application.Current.Resources["TabItem.Static.Background"] = new LinearGradientBrush(
-                Color.FromArgb(0xFF, 0xF0, 0xF0, 0xF0),
-                Color.FromArgb(0xFF, 0xE5, 0xE5, 0xE5),
-                new Point(0, 0),
-                new Point(0, 1));
-            Application.Current.Resources["TabItem.Static.Border"] = Brushes.DarkGray;
+            var theme = new LightModeTheme();
+            theme.Apply();
         }
 
         /// <summary>
@@ -805,55 +738,8 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private void EnableDarkMode()
         {
-            // Setup needed brushes
-            var darkModeBrush = new SolidColorBrush { Color = Color.FromArgb(0xff, 0x20, 0x20, 0x20) };
-
-            // Handle application-wide resources
-            Application.Current.Resources[SystemColors.ActiveBorderBrushKey] = Brushes.Black;
-            Application.Current.Resources[SystemColors.ControlBrushKey] = darkModeBrush;
-            Application.Current.Resources[SystemColors.ControlTextBrushKey] = Brushes.White;
-            Application.Current.Resources[SystemColors.GrayTextBrushKey] = Brushes.DarkGray;
-            Application.Current.Resources[SystemColors.WindowBrushKey] = darkModeBrush;
-            Application.Current.Resources[SystemColors.WindowTextBrushKey] = Brushes.White;
-
-            // Handle Button-specific resources
-            Application.Current.Resources["Button.Disabled.Background"] = darkModeBrush;
-            Application.Current.Resources["Button.MouseOver.Background"] = darkModeBrush;
-            Application.Current.Resources["Button.Pressed.Background"] = darkModeBrush;
-            Application.Current.Resources["Button.Static.Background"] = darkModeBrush;
-
-            // Handle ComboBox-specific resources
-            Application.Current.Resources["ComboBox.Disabled.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Disabled.Editable.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Disabled.Editable.Button.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.MouseOver.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.MouseOver.Editable.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.MouseOver.Editable.Button.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Pressed.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Pressed.Editable.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Pressed.Editable.Button.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Static.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Static.Editable.Background"] = darkModeBrush;
-            Application.Current.Resources["ComboBox.Static.Editable.Button.Background"] = darkModeBrush;
-            Application.Current.Resources["TextBox.Static.Background"] = darkModeBrush;
-
-            // Handle CustomMessageBox-specific resources
-            Application.Current.Resources["CustomMessageBox.Static.Background"] = darkModeBrush;
-
-            // Handle MenuItem-specific resources
-            Application.Current.Resources["MenuItem.SubMenu.Background"] = darkModeBrush;
-            Application.Current.Resources["MenuItem.SubMenu.Border"] = Brushes.DarkGray;
-
-            // Handle ProgressBar-specific resources
-            Application.Current.Resources["ProgressBar.Background"] = darkModeBrush;
-
-            // Handle ScrollViewer-specific resources
-            Application.Current.Resources["ScrollViewer.ScrollBar.Background"] = darkModeBrush;
-
-            // Handle TabItem-specific resources
-            Application.Current.Resources["TabItem.Selected.Background"] = darkModeBrush;
-            Application.Current.Resources["TabItem.Static.Background"] = darkModeBrush;
-            Application.Current.Resources["TabItem.Static.Border"] = Brushes.DarkGray;
+            var theme = new DarkModeTheme();
+            theme.Apply();
         }
 
         #endregion
