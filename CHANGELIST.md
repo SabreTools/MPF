@@ -45,6 +45,7 @@
 - Fix subdump mkdir path in AV config
 - Single file packing for .NET 6 again
 - Add missing BD disc type identifier string
+- Truncate PIC data for PS4/PS5
 
 ### 2.5 (2023-03-12)
 

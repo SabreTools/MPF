@@ -486,6 +486,8 @@ namespace MPF.Modules.DiscImageCreator
                         switch (this.System)
                         {
                             case RedumpSystem.SonyPlayStation3:
+                            case RedumpSystem.SonyPlayStation4:
+                            case RedumpSystem.SonyPlayStation5:
                                 trimLength = 264;
                                 break;
                         }
