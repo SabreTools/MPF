@@ -102,6 +102,8 @@
 
         public const string DiscTypeIdentifierROM = "BDO";
 
+        public const string DiscTypeIdentifierROMUltra = "BDU";
+
         public const string DiscTypeIdentifierReWritable = "BDW";
 
         public const string DiscTypeIdentifierRecordable = "BDR";

@@ -1204,6 +1204,7 @@ namespace MPF.Modules
                         switch (unit.DiscTypeIdentifier)
                         {
                             case PICDiscInformationUnit.DiscTypeIdentifierROM:
+                            case PICDiscInformationUnit.DiscTypeIdentifierROMUltra:
                                 unit.FormatDependentContents = br.ReadBytes(52);
                                 break;
                             case PICDiscInformationUnit.DiscTypeIdentifierReWritable:
