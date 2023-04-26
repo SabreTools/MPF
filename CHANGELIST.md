@@ -47,6 +47,7 @@
 - Add missing BD disc type identifier string
 - Truncate PIC data for PS4/PS5
 - Add internal theme support with class
+- Add PIC identifier to SubmissionInfo
 
 ### 2.5 (2023-03-12)
 

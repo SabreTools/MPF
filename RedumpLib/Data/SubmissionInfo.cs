@@ -12,7 +12,7 @@ namespace RedumpLib.Data
         /// Version of the current schema
         /// </summary>
         [JsonProperty(PropertyName = "schema_version", DefaultValueHandling = DefaultValueHandling.Ignore)]
-        public int SchemaVersion { get; set; } = 2;
+        public int SchemaVersion { get; set; } = 3;
 
         /// <summary>
         /// Fully matched Redump ID
@@ -494,6 +494,9 @@ namespace RedumpLib.Data
         [JsonProperty(PropertyName = "d_layerbreak_3", NullValueHandling = NullValueHandling.Ignore)]
         public long Layerbreak3 { get; set; }
 
+        [JsonProperty(PropertyName = "d_pic_identifier", NullValueHandling = NullValueHandling.Ignore)]
+        public string PICIdentifier { get; set; }
+
         [JsonProperty(PropertyName = "d_size", NullValueHandling = NullValueHandling.Ignore)]
         public long Size { get; set; }
 
@@ -513,6 +516,7 @@ namespace RedumpLib.Data
                 Layerbreak = this.Layerbreak,
                 Layerbreak2 = this.Layerbreak2,
                 Layerbreak3 = this.Layerbreak3,
+                PICIdentifier = this.PICIdentifier,
                 Size = this.Size,
                 CRC32 = this.CRC32,
                 MD5 = this.MD5,

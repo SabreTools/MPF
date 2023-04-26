@@ -1233,55 +1233,6 @@ namespace MPF.Modules
         }
 
         /// <summary>
-        /// Get the layerbreak info associated from the disc information
-        /// </summary>
-        /// <param name="di">Disc information containing unformatted data</param>
-        /// <returns>True if layerbreak info was set, false otherwise</returns>
-        protected static bool GetLayerbreaks(PICDiscInformation di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
-        {
-            // Set the default values
-            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
-
-            // If we don't have valid disc information, we can't do anything
-            if (di?.Units == null || di.Units.Length <= 1)
-                return false;
-
-            int ReadFromArrayBigEndian(byte[] bytes, int offset)
-            {
-                var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
-                byte[] rev = span.ToArray();
-                Array.Reverse(rev);
-                return BitConverter.ToInt32(rev, 0);
-            }
-
-            // Layerbreak 1 (2+ layers)
-            if (di.Units.Length >= 2)
-            {
-                long offset = ReadFromArrayBigEndian(di.Units[0].FormatDependentContents, 0x0C);
-                long value = ReadFromArrayBigEndian(di.Units[0].FormatDependentContents, 0x10);
-                layerbreak1 = value - offset + 2;
-            }
-
-            // Layerbreak 2 (3+ layers)
-            if (di.Units.Length >= 3)
-            {
-                long offset = ReadFromArrayBigEndian(di.Units[1].FormatDependentContents, 0x0C);
-                long value = ReadFromArrayBigEndian(di.Units[1].FormatDependentContents, 0x10);
-                layerbreak2 = layerbreak1 + value - offset + 2;
-            }
-
-            // Layerbreak 3 (4 layers)
-            if (di.Units.Length >= 4)
-            {
-                long offset = ReadFromArrayBigEndian(di.Units[2].FormatDependentContents, 0x0C);
-                long value = ReadFromArrayBigEndian(di.Units[2].FormatDependentContents, 0x10);
-                layerbreak3 = layerbreak2 + value - offset + 2;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Get hashes from an input file path
         /// </summary>
         /// <param name="filename">Path to the input file</param>
@@ -1438,6 +1389,70 @@ namespace MPF.Modules
             sha1 = rom.Sha1;
 
             return true;
+        }
+
+        /// <summary>
+        /// Get the layerbreak info associated from the disc information
+        /// </summary>
+        /// <param name="di">Disc information containing unformatted data</param>
+        /// <returns>True if layerbreak info was set, false otherwise</returns>
+        protected static bool GetLayerbreaks(PICDiscInformation di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+        {
+            // Set the default values
+            layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
+
+            // If we don't have valid disc information, we can't do anything
+            if (di?.Units == null || di.Units.Length <= 1)
+                return false;
+
+            int ReadFromArrayBigEndian(byte[] bytes, int offset)
+            {
+                var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
+                byte[] rev = span.ToArray();
+                Array.Reverse(rev);
+                return BitConverter.ToInt32(rev, 0);
+            }
+
+            // Layerbreak 1 (2+ layers)
+            if (di.Units.Length >= 2)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[0].FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[0].FormatDependentContents, 0x10);
+                layerbreak1 = value - offset + 2;
+            }
+
+            // Layerbreak 2 (3+ layers)
+            if (di.Units.Length >= 3)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[1].FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[1].FormatDependentContents, 0x10);
+                layerbreak2 = layerbreak1 + value - offset + 2;
+            }
+
+            // Layerbreak 3 (4 layers)
+            if (di.Units.Length >= 4)
+            {
+                long offset = ReadFromArrayBigEndian(di.Units[2].FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[2].FormatDependentContents, 0x10);
+                layerbreak3 = layerbreak2 + value - offset + 2;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get the PIC identifier from the first disc information unit, if possible
+        /// </summary>
+        /// <param name="di">Disc information containing the data</param>
+        /// <returns>String representing the PIC identifier, null on error</returns>
+        protected static string GetPICIdentifier(PICDiscInformation di)
+        {
+            // If we don't have valid disc information, we can't do anything
+            if (di?.Units == null || di.Units.Length <= 1)
+                return null;
+
+            // We assume the identifier is consistent across all units
+            return di.Units[0].DiscTypeIdentifier;
         }
 
         /// <summary>

@@ -462,6 +462,7 @@ namespace MPF.Modules.DiscImageCreator
                     else if (this.Type == MediaType.BluRay)
                     {
                         var di = GetDiscInformation($"{basePath}_PIC.bin");
+                        info.SizeAndChecksums.PICIdentifier = GetPICIdentifier(di);
                         if (GetLayerbreaks(di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3))
                         {
                             if (layerbreak1 != null && layerbreak1 * 2048 < info.SizeAndChecksums.Size)

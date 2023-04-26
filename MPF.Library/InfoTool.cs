@@ -1603,10 +1603,14 @@ namespace MPF.Library
                         info.CommonDiscInfo.Media = DiscType.BD128;
                     else if (info.SizeAndChecksums.Layerbreak2 != default)
                         info.CommonDiscInfo.Media = DiscType.BD100;
+                    else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.PICIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                        info.CommonDiscInfo.Media = DiscType.BD66;
                     else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 50_050_629_632)
                         info.CommonDiscInfo.Media = DiscType.BD66;
                     else if (info.SizeAndChecksums.Layerbreak != default)
                         info.CommonDiscInfo.Media = DiscType.BD50;
+                    else if (info.SizeAndChecksums.PICIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                        info.CommonDiscInfo.Media = DiscType.BD33;
                     else if (info.SizeAndChecksums.Size > 25_025_314_816)
                         info.CommonDiscInfo.Media = DiscType.BD33;
                     else
