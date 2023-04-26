@@ -657,6 +657,7 @@ namespace MPF.Library
                 AddIfExists(output, Template.SystemField, info.CommonDiscInfo.System.LongName(), 1);
                 AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(
                         info.CommonDiscInfo.Media.ToMediaType(),
+                        info.SizeAndChecksums.PICIdentifier,
                         info.SizeAndChecksums.Size,
                         info.SizeAndChecksums.Layerbreak,
                         info.SizeAndChecksums.Layerbreak2,
@@ -873,12 +874,14 @@ namespace MPF.Library
         /// Get the adjusted name of the media based on layers, if applicable
         /// </summary>
         /// <param name="mediaType">MediaType to get the proper name for</param>
+        /// <param name="picIdentifier">PIC identifier string (BD only)</param>
         /// <param name="size">Size of the current media</param>
         /// <param name="layerbreak">First layerbreak value, as applicable</param>
         /// <param name="layerbreak2">Second layerbreak value, as applicable</param>
         /// <param name="layerbreak3">Third layerbreak value, as applicable</param>
         /// <returns>String representation of the media, including layer specification</returns>
-        public static string GetFixedMediaType(MediaType? mediaType, long size, long layerbreak, long layerbreak2, long layerbreak3)
+        /// TODO: Figure out why we have this and NormalizeDiscType as well
+        public static string GetFixedMediaType(MediaType? mediaType, string picIdentifier, long size, long layerbreak, long layerbreak2, long layerbreak3)
         {
             switch (mediaType)
             {
@@ -893,12 +896,16 @@ namespace MPF.Library
                         return $"{mediaType.LongName()}-128";
                     else if (layerbreak2 != default)
                         return $"{mediaType.LongName()}-100";
-                    //else if (layerbreak != default && size > 53_687_063_712)
-                    //    return $"{mediaType.LongName()}-66";
+                    else if (layerbreak != default && picIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                        return $"{mediaType.LongName()}-66";
+                    else if (layerbreak != default && size > 53_687_063_712)
+                        return $"{mediaType.LongName()}-66";
                     else if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
-                    //else if (size > 26_843_531_856)
-                    //    return $"{mediaType.LongName()}-33";
+                    else if (picIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                        return $"{mediaType.LongName()}-33";
+                    else if (size > 26_843_531_856)
+                        return $"{mediaType.LongName()}-33";
                     else
                         return $"{mediaType.LongName()}-25";
 

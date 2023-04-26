@@ -26,9 +26,9 @@ namespace MPF.Test.Library
         [InlineData(MediaType.DVD, 12345, 1, 2, 3, "DVD-ROM-9")]
         [InlineData(MediaType.BluRay, 0, 0, 0, 0, "BD-ROM-25")]
         [InlineData(MediaType.BluRay, 12345, 0, 0, 0, "BD-ROM-25")]
-        //[InlineData(MediaType.BluRay, 26_843_531_857, 0, 0, 0, "BD-ROM-33")]
+        [InlineData(MediaType.BluRay, 26_843_531_857, 0, 0, 0, "BD-ROM-33")]
         [InlineData(MediaType.BluRay, 12345, 1, 0, 0, "BD-ROM-50")]
-        //[InlineData(MediaType.BluRay, 53_687_063_713, 1, 0, 0, "BD-ROM-66")]
+        [InlineData(MediaType.BluRay, 53_687_063_713, 1, 0, 0, "BD-ROM-66")]
         [InlineData(MediaType.BluRay, 12345, 1, 2, 0, "BD-ROM-100")]
         [InlineData(MediaType.BluRay, 12345, 1, 2, 3, "BD-ROM-128")]
         [InlineData(MediaType.UMD, 0, 0, 0, 0, "UMD-SL")]
@@ -44,7 +44,8 @@ namespace MPF.Test.Library
             long layerbreak3,
             string expected)
         {
-            string actual = InfoTool.GetFixedMediaType(mediaType, size, layerbreak, layerbreak2, layerbreak3);
+            // TODO: Add tests around BDU
+            string actual = InfoTool.GetFixedMediaType(mediaType, null, size, layerbreak, layerbreak2, layerbreak3);
             Assert.Equal(expected, actual);
         }
 
