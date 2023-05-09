@@ -1060,7 +1060,7 @@ namespace MPF.Modules.Redumper
         }
 
         /// <summary>
-        /// Get the non-zero dta start from the input file, if possible
+        /// Get the non-zero data start from the input file, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
         /// <returns>Non-zero dta start if possible, null on error</returns>
@@ -1074,7 +1074,7 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // If we find the universal hash line, return the hash only
+                    // If we find the sample range, return the start value only
                     string line;
                     while (!sr.EndOfStream)
                     {

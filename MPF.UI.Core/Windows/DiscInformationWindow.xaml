@@ -369,7 +369,7 @@
                             <controls:UserInput x:Name="PVD" Label="PVD" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.Extras.PVD, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
-                            <controls:UserInput x:Name="RingNonZeroDataStart" Label="Universal Hash (SHA-1)" IsReadOnly="True"/>
+                            <controls:UserInput x:Name="RingNonZeroDataStart" Label="Ring Non-Zero Data Start" IsReadOnly="True"/>
                             <controls:UserInput x:Name="SecuROMData" Label="SecuROM Data" IsReadOnly="True"
                                                 Text="{Binding SubmissionInfo.CopyProtection.SecuROMData, Mode=TwoWay}" TextHeight="75" TextWrapping="NoWrap"
                                                 VerticalContentAlignmentValue="Top" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>

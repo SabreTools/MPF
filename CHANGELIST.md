@@ -49,6 +49,7 @@
 - Add internal theme support with class
 - Add PIC identifier to SubmissionInfo
 - Fix other media type method
+- Fix non-zero offset text
 
 ### 2.5 (2023-03-12)
 
