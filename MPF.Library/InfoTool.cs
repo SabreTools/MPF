@@ -319,6 +319,16 @@ namespace MPF.Library
 
                     break;
 
+                case RedumpSystem.MicrosoftXboxSeriesXS:
+                    string xboxSeriesXMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
+                    if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
+                    {
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
+                            Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                    }
+
+                    break;
+
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     info.CommonDiscInfo.EXEDateBuildDate = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;

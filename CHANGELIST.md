@@ -50,6 +50,7 @@
 - Add PIC identifier to SubmissionInfo
 - Fix other media type method
 - Fix non-zero offset text
+- Add executable listing for XSX
 
 ### 2.5 (2023-03-12)
 
