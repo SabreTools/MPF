@@ -51,6 +51,7 @@
 - Fix other media type method
 - Fix non-zero offset text
 - Add executable listing for XSX
+- Update redumper to build 151
 
 ### 2.5 (2023-03-12)
 
