@@ -1266,8 +1266,8 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // Fast forward to the dump line
-                    while (!(sr.ReadLine()?.Trim().StartsWith("*** MODE: dump") ?? true));
+                    // Fast forward to the drive information line
+                    while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true));
 
                     // If we find the hardware info line, return each value
                     // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)
