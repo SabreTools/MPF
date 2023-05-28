@@ -1182,11 +1182,6 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // Fast forward to the offset lines
-                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("*** MODE: split"));
-                    if (sr.EndOfStream)
-                        return null;
-
                     // If we find the disc write offset line, return the offset
                     string line;
                     while (!sr.EndOfStream)
