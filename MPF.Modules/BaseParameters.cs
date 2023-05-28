@@ -1091,7 +1091,7 @@ namespace MPF.Modules
         protected static string GenerateDatfile(Datafile datafile)
         {
             // If we don't have a valid datafile, we can't do anything
-            if (datafile == null || datafile.Games.Length == 0 || datafile.Games[0].Roms.Length == 0)
+            if (datafile?.Games == null || datafile.Games.Length == 0 || datafile.Games[0]?.Roms == null || datafile.Games[0].Roms.Length == 0)
                 return null;
 
             // Otherwise, reconstruct the hash data with only the required info
