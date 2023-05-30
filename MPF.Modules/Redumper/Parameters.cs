@@ -1278,6 +1278,10 @@ namespace MPF.Modules.Redumper
                         {
                             region = line.Substring("region: ".Length).Trim();
                         }
+                        else if (line.StartsWith("regions:"))
+                        {
+                            region = line.Substring("regions: ".Length).Trim();
+                        }
                         else if (line.StartsWith("header:"))
                         {
                             line = sr.ReadLine().TrimStart();
