@@ -245,9 +245,9 @@ namespace MPF.Modules.Aaru
 
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
-                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? "";
+                    info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
 
-                    string cdWriteOffset = GetWriteOffset(sidecar) ?? "";
+                    string cdWriteOffset = GetWriteOffset(sidecar) ?? string.Empty;
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
                     break;
@@ -271,7 +271,7 @@ namespace MPF.Modules.Aaru
                     // Deal with the layerbreak
                     string layerbreak = null;
                     if (this.Type == MediaType.DVD)
-                        layerbreak = GetLayerbreak(sidecar) ?? "";
+                        layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
                     else if (this.Type == MediaType.BluRay)
                         layerbreak = info.SizeAndChecksums.Size > 25_025_314_816 ? "25025314816" : null;
 
@@ -303,7 +303,7 @@ namespace MPF.Modules.Aaru
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? "";
+                    info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -315,7 +315,7 @@ namespace MPF.Modules.Aaru
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
@@ -325,13 +325,13 @@ namespace MPF.Modules.Aaru
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
-                        info.Extras.SecuritySectorRanges = ss ?? "";
+                        info.Extras.SecuritySectorRanges = ss ?? string.Empty;
                     }
 
                     if (GetXboxDMIInfo(sidecar, out string serial, out string version, out Region? region))
                     {
-                        info.CommonDiscInfo.Serial = serial ?? "";
-                        info.VersionAndEditions.Version = version ?? "";
+                        info.CommonDiscInfo.Serial = serial ?? string.Empty;
+                        info.VersionAndEditions.Version = version ?? string.Empty;
                         info.CommonDiscInfo.Region = region;
                     }
 
@@ -344,13 +344,13 @@ namespace MPF.Modules.Aaru
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
-                        info.Extras.SecuritySectorRanges = ss360 ?? "";
+                        info.Extras.SecuritySectorRanges = ss360 ?? string.Empty;
                     }
 
                     if (GetXbox360DMIInfo(sidecar, out string serial360, out string version360, out Region? region360))
                     {
-                        info.CommonDiscInfo.Serial = serial360 ?? "";
-                        info.VersionAndEditions.Version = version360 ?? "";
+                        info.CommonDiscInfo.Serial = serial360 ?? string.Empty;
+                        info.VersionAndEditions.Version = version360 ?? string.Empty;
                         info.CommonDiscInfo.Region = region360;
                     }
                     break;
@@ -375,22 +375,22 @@ namespace MPF.Modules.Aaru
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
                     break;
             }
 

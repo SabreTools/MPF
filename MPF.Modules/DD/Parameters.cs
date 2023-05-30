@@ -100,7 +100,7 @@ namespace MPF.Modules.DD
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -123,22 +123,22 @@ namespace MPF.Modules.DD
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
                     break;
             }
         }

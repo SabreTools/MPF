@@ -72,7 +72,7 @@ namespace MPF.Modules.UmdImageCreator
             switch (this.Type)
             {
                 case MediaType.UMD:
-                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? "";
+                    info.Extras.PVD = GetPVD(basePath + "_mainInfo.txt") ?? string.Empty;
 
                     if (GetFileHashes(basePath + ".iso", out long filesize, out string crc32, out string md5, out string sha1))
                     {
@@ -84,9 +84,9 @@ namespace MPF.Modules.UmdImageCreator
 
                     if (GetUMDAuxInfo(basePath + "_disc.txt", out string title, out DiscCategory? umdcat, out string umdversion, out string umdlayer, out long umdsize))
                     {
-                        info.CommonDiscInfo.Title = title ?? "";
+                        info.CommonDiscInfo.Title = title ?? string.Empty;
                         info.CommonDiscInfo.Category = umdcat ?? DiscCategory.Games;
-                        info.VersionAndEditions.Version = umdversion ?? "";
+                        info.VersionAndEditions.Version = umdversion ?? string.Empty;
                         info.SizeAndChecksums.Size = umdsize;
 
                         if (!string.IsNullOrWhiteSpace(umdlayer))

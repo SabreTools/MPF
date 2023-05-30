@@ -236,19 +236,19 @@ namespace MPF.Modules.Redumper
                 case MediaType.CDROM:
                     info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD"; ;
                     info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
-                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? "";
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
 
-                    string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? "";
+                    string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     long errorCount = GetErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
-                    string universalHash = GetUniversalHash($"{basePath}.log") ?? "";
+                    string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
 
-                    string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? "";
+                    string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
 
                     break;
@@ -265,7 +265,32 @@ namespace MPF.Modules.Redumper
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
+                    break;
+
+                case RedumpSystem.SegaMegaCDSegaCD:
+                    info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out string scdBuildDate, out string scdSerial, out string scdRegion) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
+                    info.CommonDiscInfo.EXEDateBuildDate = scdBuildDate ?? string.Empty;
+                    // TODO: Support region setting from parsed value
+
+                    break;
+
+                case RedumpSystem.SegaSaturn:
+                    info.Extras.Header = GetSaturnHeader($"{basePath}.log") ?? string.Empty;
+
+                    // Take only the first 16 lines for Saturn
+                    if (!string.IsNullOrEmpty(info.Extras.Header))
+                        info.Extras.Header = string.Join("\n", info.Extras.Header.Split('\n').Take(16));
+
+                    if (GetSaturnBuildInfo(info.Extras.Header, out string saturnSerial, out string saturnVersion, out string buildDate))
+                    {
+                        // Ensure internal serial is pulled from local data
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
+                        info.VersionAndEditions.Version = saturnVersion ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
+                    }
+
                     break;
 
                 case RedumpSystem.SonyPlayStation:
@@ -288,22 +313,22 @@ namespace MPF.Modules.Redumper
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
                     break;
             }
         }
@@ -951,7 +976,7 @@ namespace MPF.Modules.Redumper
                 try
                 {
                     // Fast forward to the dat line
-                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("CUE ["));
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("CUE [")) ;
                     if (sr.EndOfStream)
                         return null;
 
@@ -989,7 +1014,7 @@ namespace MPF.Modules.Redumper
                 try
                 {
                     // Fast forward to the dat line
-                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("dat:"));
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("dat:")) ;
                     if (sr.EndOfStream)
                         return null;
 
@@ -1027,7 +1052,7 @@ namespace MPF.Modules.Redumper
                 try
                 {
                     // Fast forward to the errors lines
-                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("CD-ROM ["));
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("CD-ROM [")) ;
                     if (sr.EndOfStream)
                         return 0;
 
@@ -1037,7 +1062,7 @@ namespace MPF.Modules.Redumper
                     {
                         // Skip forward to the "REDUMP.ORG" line
                         string line = string.Empty;
-                        while (!sr.EndOfStream && !(line = sr.ReadLine().Trim()).StartsWith("REDUMP.ORG errors"));
+                        while (!sr.EndOfStream && !(line = sr.ReadLine().Trim()).StartsWith("REDUMP.ORG errors")) ;
                         if (line == string.Empty)
                             break;
 
@@ -1109,8 +1134,8 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // Fast forward to the dat line
-                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("PVD:"));
+                    // Fast forward to the PVD line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("PVD:")) ;
                     if (sr.EndOfStream)
                         return null;
 
@@ -1123,6 +1148,152 @@ namespace MPF.Modules.Redumper
                     }
 
                     return pvdString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the build info from a Saturn disc, if possible
+        /// </summary>
+        /// <<param name="segaHeader">String representing a formatter variant of the Saturn header</param>
+        /// <returns>True on successful extraction of info, false otherwise</returns>
+        /// TODO: Remove when Redumpe gets native reading support
+        private static bool GetSaturnBuildInfo(string segaHeader, out string serial, out string version, out string date)
+        {
+            serial = null; version = null; date = null;
+
+            // If the input header is null, we can't do a thing
+            if (string.IsNullOrWhiteSpace(segaHeader))
+                return false;
+
+            // Now read it in cutting it into lines for easier parsing
+            try
+            {
+                string[] header = segaHeader.Split('\n');
+                string serialVersionLine = header[2].Substring(58);
+                string dateLine = header[3].Substring(58);
+                serial = serialVersionLine.Substring(0, 10).Trim();
+                version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine.Substring(0, 8);
+                date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
+                return true;
+            }
+            catch
+            {
+                // We don't care what the error is
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the header from a Saturn, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private static string GetSaturnHeader(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the SS line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("SS [")) ;
+                    if (sr.EndOfStream)
+                        return null;
+
+                    string line, headerString = "";
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("header:"))
+                        {
+                            line = sr.ReadLine().TrimStart();
+                            while (line.StartsWith("00"))
+                            {
+                                headerString += line + "\n";
+                                line = sr.ReadLine().Trim();
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    return headerString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the header from a Sega CD / Mega CD, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Header as a byte array if possible, null on error</returns>
+        private static string GetSegaCDHeader(string log, out string buildDate, out string serial, out string region)
+        {
+            // Set the default values
+            buildDate = null; serial = null; region = null;
+
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the MCD line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("MCD [")) ;
+                    if (sr.EndOfStream)
+                        return null;
+
+                    string line, headerString = "";
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("build date:"))
+                        {
+                            buildDate = line.Substring("build date: ".Length).Trim();
+                        }
+                        else if (line.StartsWith("serial:"))
+                        {
+                            serial = line.Substring("serial: ".Length).Trim();
+                        }
+                        else if (line.StartsWith("region:"))
+                        {
+                            region = line.Substring("region: ".Length).Trim();
+                        }
+                        else if (line.StartsWith("header:"))
+                        {
+                            line = sr.ReadLine().TrimStart();
+                            while (line.StartsWith("01"))
+                            {
+                                headerString += line + "\n";
+                                line = sr.ReadLine().Trim();
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    return headerString.TrimEnd('\n');
                 }
                 catch
                 {
@@ -1262,7 +1433,7 @@ namespace MPF.Modules.Redumper
                 try
                 {
                     // Fast forward to the drive information line
-                    while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true));
+                    while (!(sr.ReadLine()?.Trim().StartsWith("drive path:") ?? true)) ;
 
                     // If we find the hardware info line, return each value
                     // drive: <vendor_id> - <product_id> (revision level: <product_revision_level>, vendor specific: <vendor_specific>)

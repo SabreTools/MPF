@@ -55,6 +55,7 @@
 - Add more safety to DAT generation
 - Get write offset from redumper 119 (fuzz6001)
 - Update hardware information pull from redumper (fuzz6001)
+- Add MCD/SS header support for Redumper
 
 ### 2.5 (2023-03-12)
 

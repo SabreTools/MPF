@@ -421,11 +421,11 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
                     }
 
-                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? "";
+                    info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
                     //var cueSheet = new CueSheet($"{basePath}.cue"); // TODO: Do something with this
 
                     // Attempt to get the write offset
-                    string cdWriteOffset = GetWriteOffset($"{basePath}_disc.txt") ?? "";
+                    string cdWriteOffset = GetWriteOffset($"{basePath}_disc.txt") ?? string.Empty;
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
@@ -436,7 +436,7 @@ namespace MPF.Modules.DiscImageCreator
 
 
                     // Attempt to get the universal hash
-                    string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? "";
+                    string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
 
                     break;
@@ -456,7 +456,7 @@ namespace MPF.Modules.DiscImageCreator
                     // Deal with the layerbreaks
                     if (this.Type == MediaType.DVD)
                     {
-                        string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? "";
+                        string layerbreak = GetLayerbreak($"{basePath}_disc.txt", System.IsXGD()) ?? string.Empty;
                         info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     }
                     else if (this.Type == MediaType.BluRay)
@@ -478,7 +478,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     // Read the PVD
                     if (!options.EnableRedumpCompatibility || System != RedumpSystem.MicrosoftXbox)
-                        info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? "";
+                        info.Extras.PVD = GetPVD($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Bluray-specific options
                     if (this.Type == MediaType.BluRay)
@@ -493,7 +493,7 @@ namespace MPF.Modules.DiscImageCreator
                                 break;
                         }
 
-                        info.Extras.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? "";
+                        info.Extras.PIC = GetPIC($"{basePath}_PIC.bin", trimLength) ?? string.Empty;
                     }
 
                     break;
@@ -511,14 +511,14 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         FileInfo fi = new FileInfo($"{basePath}_subIntention.txt");
                         if (fi.Length > 0)
-                            info.CopyProtection.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? "";
+                            info.CopyProtection.SecuROMData = GetFullFile($"{basePath}_subIntention.txt") ?? string.Empty;
                     }
 
                     break;
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    info.CopyProtection.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? "";
+                    info.CopyProtection.Protection = GetDVDProtection($"{basePath}_CSSKey.txt", $"{basePath}_disc.txt") ?? string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
@@ -530,7 +530,7 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
@@ -539,9 +539,9 @@ namespace MPF.Modules.DiscImageCreator
                     if (xgd1Info?.Initialized == true)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.XMID;
-                        info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? "";
+                        info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
-                            info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? "";
+                            info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? string.Empty;
                         info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
                     }
 
@@ -559,7 +559,7 @@ namespace MPF.Modules.DiscImageCreator
                         if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out string xgd1SS, out string xgd1SSVer))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
-                            info.Extras.SecuritySectorRanges = xgd1SS ?? "";
+                            info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
                     else
@@ -570,7 +570,7 @@ namespace MPF.Modules.DiscImageCreator
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
-                            info.Extras.SecuritySectorRanges = xgd1SS ?? "";
+                            info.Extras.SecuritySectorRanges = xgd1SS ?? string.Empty;
                         }
                     }
 
@@ -582,9 +582,9 @@ namespace MPF.Modules.DiscImageCreator
                     if (xgd23Info?.Initialized == true)
                     {
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.XMID;
-                        info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? "";
+                        info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
-                            info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? "";
+                            info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? string.Empty;
                         info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
                     }
 
@@ -602,7 +602,7 @@ namespace MPF.Modules.DiscImageCreator
                         if (GetXGDAuxSSInfo($"{basePath}_disc.txt", out string xgd23SS, out string xgd23SSVer))
                         {
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
-                            info.Extras.SecuritySectorRanges = xgd23SS ?? "";
+                            info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }
                     else
@@ -613,7 +613,7 @@ namespace MPF.Modules.DiscImageCreator
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
-                            info.Extras.SecuritySectorRanges = xgd23SS ?? "";
+                            info.Extras.SecuritySectorRanges = xgd23SS ?? string.Empty;
                         }
                     }
 
@@ -622,7 +622,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.NamcoSegaNintendoTriforce:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -632,15 +632,15 @@ namespace MPF.Modules.DiscImageCreator
                         {
                             // Ensure internal serial is pulled from local data
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                            info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
 
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
-                    info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                    info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Take only the last 16 lines for Sega CD
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -650,7 +650,7 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
-                        info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? "";
+                        info.CommonDiscInfo.EXEDateBuildDate = fixedDate ?? string.Empty;
                     }
 
                     break;
@@ -658,7 +658,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaChihiro:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -668,8 +668,8 @@ namespace MPF.Modules.DiscImageCreator
                         {
                             // Ensure internal serial is pulled from local data
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                            info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
 
@@ -678,7 +678,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaDreamcast:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -688,8 +688,8 @@ namespace MPF.Modules.DiscImageCreator
                         {
                             // Ensure internal serial is pulled from local data
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                            info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
 
@@ -698,7 +698,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaNaomi:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -708,8 +708,8 @@ namespace MPF.Modules.DiscImageCreator
                         {
                             // Ensure internal serial is pulled from local data
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                            info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
 
@@ -718,7 +718,7 @@ namespace MPF.Modules.DiscImageCreator
                 case RedumpSystem.SegaNaomi2:
                     if (this.Type == MediaType.CDROM)
                     {
-                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                        info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                         // Take only the first 16 lines for GD-ROM
                         if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -728,15 +728,15 @@ namespace MPF.Modules.DiscImageCreator
                         {
                             // Ensure internal serial is pulled from local data
                             info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = gdSerial ?? string.Empty;
-                            info.VersionAndEditions.Version = gdVersion ?? "";
-                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? "";
+                            info.VersionAndEditions.Version = gdVersion ?? string.Empty;
+                            info.CommonDiscInfo.EXEDateBuildDate = gdDate ?? string.Empty;
                         }
                     }
 
                     break;
 
                 case RedumpSystem.SegaSaturn:
-                    info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? "";
+                    info.Extras.Header = GetSegaHeader($"{basePath}_mainInfo.txt") ?? string.Empty;
 
                     // Take only the first 16 lines for Saturn
                     if (!string.IsNullOrEmpty(info.Extras.Header))
@@ -746,8 +746,8 @@ namespace MPF.Modules.DiscImageCreator
                     {
                         // Ensure internal serial is pulled from local data
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = saturnSerial ?? string.Empty;
-                        info.VersionAndEditions.Version = saturnVersion ?? "";
-                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? "";
+                        info.VersionAndEditions.Version = saturnVersion ?? string.Empty;
+                        info.CommonDiscInfo.EXEDateBuildDate = buildDate ?? string.Empty;
                     }
 
                     break;
@@ -786,22 +786,22 @@ namespace MPF.Modules.DiscImageCreator
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
-                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
-                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
-                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
-                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? "";
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? "";
+                    info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
                     break;
             }
 
