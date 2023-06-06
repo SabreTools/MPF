@@ -57,6 +57,7 @@
 - Update hardware information pull from redumper (fuzz6001)
 - Add MCD/SS header support for Redumper
 - Fix MCD region(s) parsing
+- Update to DIC 20230606
 
 ### 2.5 (2023-03-12)
 

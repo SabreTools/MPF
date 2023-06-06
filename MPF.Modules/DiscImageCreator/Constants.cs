@@ -26,6 +26,7 @@ namespace MPF.Modules.DiscImageCreator
         public const string Sub = "sub";
         public const string Swap = "swap";
         public const string Tape = "tape";
+        public const string Version = "/v";
         public const string XBOX = "xbox";
         public const string XBOXSwap = "xboxswap";
         public const string XGD2Swap = "xgd2swap";
@@ -51,7 +52,6 @@ namespace MPF.Modules.DiscImageCreator
         public const string Fix = "/fix";
         public const string ForceUnitAccess = "/f";
         public const string MultiSectorRead = "/mr";
-        public const string MultiSession = "/ms";
         public const string NoFixSubP = "/np";
         public const string NoFixSubQ = "/nq";
         public const string NoFixSubQLibCrypt = "/nl";
@@ -59,6 +59,7 @@ namespace MPF.Modules.DiscImageCreator
         public const string NoFixSubQSecuROM = "/ns";
         public const string NoSkipSS = "/nss";
         public const string PadSector = "/ps";
+        public const string Range = "/ra";
         public const string Raw = "/raw";
         public const string Resume = "/re";
         public const string Reverse = "/r";

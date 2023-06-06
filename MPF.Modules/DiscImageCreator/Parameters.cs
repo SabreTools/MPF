@@ -128,7 +128,7 @@ namespace MPF.Modules.DiscImageCreator
         /// <summary>
         /// Set the pad sector flag value (default 0)
         /// </summary>
-        public int? PadSectorValue { get; set; }
+        public byte? PadSectorValue { get; set; }
 
         /// <summary>
         /// Set the reverse End LBA value (required for DVD)
@@ -300,6 +300,10 @@ namespace MPF.Modules.DiscImageCreator
                         if (!File.Exists($"{basePath}_subIntention.txt"))
                             missingFiles.Add($"{basePath}_subIntention.txt");
 
+                        // Not guaranteed output
+                        if (File.Exists($"{basePath}_suppl.dat"))
+                            missingFiles.Add($"{basePath}_suppl.dat");
+
                         // Not guaranteed output (at least PCE)
                         if (!File.Exists($"{basePath}.toc"))
                             missingFiles.Add($"{basePath}.toc");
@@ -338,6 +342,14 @@ namespace MPF.Modules.DiscImageCreator
                         // Not guaranteed output
                         if (File.Exists($"{basePath}_CSSKey.txt"))
                             missingFiles.Add($"{basePath}_CSSKey.txt");
+
+                        // Only output for some parameters
+                        if (File.Exists($"{basePath}.raw"))
+                            missingFiles.Add($"{basePath}.raw");
+
+                        // Not guaranteed output
+                        if (File.Exists($"{basePath}_suppl.dat"))
+                            missingFiles.Add($"{basePath}_suppl.dat");
                     }
 
                     break;
@@ -1135,13 +1147,6 @@ namespace MPF.Modules.DiscImageCreator
                 }
             }
 
-            // Multi-Session
-            if (IsFlagSupported(FlagStrings.MultiSession))
-            {
-                if (this[FlagStrings.MultiSession] == true)
-                    parameters.Add(FlagStrings.MultiSession);
-            }
-
             // Not fix SubP
             if (IsFlagSupported(FlagStrings.NoFixSubP))
             {
@@ -1197,6 +1202,13 @@ namespace MPF.Modules.DiscImageCreator
                     if (PadSectorValue != null)
                         parameters.Add(PadSectorValue.ToString());
                 }
+            }
+
+            // Range
+            if (IsFlagSupported(FlagStrings.Range))
+            {
+                if (this[FlagStrings.Range] == true)
+                    parameters.Add(FlagStrings.Range);
             }
 
             // Raw read (2064 byte/sector)
@@ -1358,7 +1370,6 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSession,
                     FlagStrings.NoFixSubP,
                     FlagStrings.NoFixSubQ,
                     FlagStrings.NoFixSubRtoW,
@@ -1396,7 +1407,6 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.ExtractMicroSoftCabFile,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.MultiSectorRead,
-                    FlagStrings.MultiSession,
                     FlagStrings.NoFixSubP,
                     FlagStrings.NoFixSubQ,
                     FlagStrings.NoFixSubQLibCrypt,
@@ -1420,7 +1430,6 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSession,
                     FlagStrings.NoFixSubP,
                     FlagStrings.NoFixSubQ,
                     FlagStrings.NoFixSubRtoW,
@@ -1441,6 +1450,7 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.Fix,
                     FlagStrings.ForceUnitAccess,
                     FlagStrings.PadSector,
+                    FlagStrings.Range,
                     FlagStrings.Raw,
                     FlagStrings.Resume,
                     FlagStrings.Reverse,
@@ -1520,7 +1530,6 @@ namespace MPF.Modules.DiscImageCreator
                     FlagStrings.DatExpand,
                     FlagStrings.DisableBeep,
                     FlagStrings.ForceUnitAccess,
-                    FlagStrings.MultiSession,
                     FlagStrings.NoFixSubP,
                     FlagStrings.NoFixSubQ,
                     FlagStrings.NoFixSubQLibCrypt,
@@ -1537,6 +1546,10 @@ namespace MPF.Modules.DiscImageCreator
                 },
 
                 [CommandStrings.Tape] = new List<string>()
+                {
+                },
+
+                [CommandStrings.Version] = new List<string>()
                 {
                 },
 
@@ -2242,6 +2255,12 @@ namespace MPF.Modules.DiscImageCreator
 
                     break;
 
+                case CommandStrings.Version:
+                    if (parts.Count != 1)
+                        return false;
+
+                    break;
+
                 case CommandStrings.XBOX:
                     if (parts.Count < 4)
                         return false;
@@ -2302,6 +2321,7 @@ namespace MPF.Modules.DiscImageCreator
                 for (int i = index; i < parts.Count; i++)
                 {
                     // Flag read-out values
+                    byte? byteValue = null;
                     int? intValue = null;
                     string stringValue = null;
 
@@ -2387,9 +2407,6 @@ namespace MPF.Modules.DiscImageCreator
                     if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
                         MultiSectorReadValue = intValue;
 
-                    // Multi-Session
-                    ProcessFlagParameter(parts, FlagStrings.MultiSession, ref i);
-
                     // NoFixSubP
                     ProcessFlagParameter(parts, FlagStrings.NoFixSubP, ref i);
 
@@ -2411,9 +2428,9 @@ namespace MPF.Modules.DiscImageCreator
                         NoSkipSecuritySectorValue = intValue;
 
                     // PadSector
-                    intValue = ProcessInt32Parameter(parts, FlagStrings.PadSector, ref i, missingAllowed: true);
-                    if (intValue != null && intValue != Int32.MinValue && intValue >= 0)
-                        PadSectorValue = intValue;
+                    byteValue = ProcessUInt8Parameter(parts, FlagStrings.PadSector, ref i, missingAllowed: true);
+                    if (byteValue != null)
+                        PadSectorValue = byteValue;
 
                     // Raw
                     ProcessFlagParameter(parts, FlagStrings.Raw, ref i);
