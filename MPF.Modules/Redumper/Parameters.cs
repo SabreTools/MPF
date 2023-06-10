@@ -286,7 +286,8 @@ namespace MPF.Modules.Redumper
                         info.SizeAndChecksums.SHA1 = sha1;
                     }
 
-                    // TODO: Get layerbreak info
+                    string layerbreak = GetLayerbreak($"{basePath}.log") ?? string.Empty;
+                    info.SizeAndChecksums.Layerbreak = !string.IsNullOrEmpty(layerbreak) ? Int64.Parse(layerbreak) : default;
                     break;
             }
 
@@ -1146,11 +1147,11 @@ namespace MPF.Modules.Redumper
         }
 
         /// <summary>
-        /// Get the non-zero data start from the input file, if possible
+        /// Get the layerbreak from the input file, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
-        /// <returns>Non-zero dta start if possible, null on error</returns>
-        private static string GetRingNonZeroDataStart(string log)
+        /// <returns>Layerbreak if possible, null on error</returns>
+        private static string GetLayerbreak(string log)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(log))
@@ -1160,16 +1161,33 @@ namespace MPF.Modules.Redumper
             {
                 try
                 {
-                    // If we find the sample range, return the start value only
-                    string line;
+                    // Fast forward to the disc structure lines
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("layer 0")) ;
+                    if (sr.EndOfStream)
+                        return null;
+
+                    // Now that we're at the relevant lines, find the error count
+                    string layerbreak = null;
                     while (!sr.EndOfStream)
                     {
-                        line = sr.ReadLine().TrimStart();
-                        if (line.StartsWith("non-zero data sample range"))
-                            return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
+                        string line = sr.ReadLine()?.Trim();
+
+                        // Single-layer discs have no layerbreak
+                        if (line.Contains("layers count: 1"))
+                        {
+                            return null;
+                        }
+
+                        // Dual-layer discs have a regular layerbreak
+                        else if (line.StartsWith("data "))
+                        {
+                            // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
+                            string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+                            layerbreak = layerbreak == null ? split[7].TrimEnd(',') : layerbreak;
+                        }
                     }
 
-                    // We couldn't detect it then
+                    // If we get to the end, there's an issue
                     return null;
                 }
                 catch
@@ -1209,6 +1227,41 @@ namespace MPF.Modules.Redumper
                     }
 
                     return pvdString.TrimEnd('\n');
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the non-zero data start from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Non-zero dta start if possible, null on error</returns>
+        private static string GetRingNonZeroDataStart(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // If we find the sample range, return the start value only
+                    string line;
+                    while (!sr.EndOfStream)
+                    {
+                        line = sr.ReadLine().TrimStart();
+                        if (line.StartsWith("non-zero data sample range"))
+                            return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
+                    }
+
+                    // We couldn't detect it then
+                    return null;
                 }
                 catch
                 {
