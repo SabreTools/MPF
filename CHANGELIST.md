@@ -61,6 +61,7 @@
 - Update redumper to build 166
 - Unblock Redumper DVD support
 - Support Redumper DVD layerbreak
+- Add placeholder and TODOs for Redumper
 
 ### 2.5 (2023-03-12)
 

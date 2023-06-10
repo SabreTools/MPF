@@ -293,6 +293,19 @@ namespace MPF.Modules.Redumper
 
             switch (this.System)
             {
+                // case RedumpSystem.AppleMacintosh:
+                case RedumpSystem.EnhancedCD:
+                case RedumpSystem.IBMPCcompatible:
+                case RedumpSystem.RainbowDisc:
+                case RedumpSystem.SonyElectronicBook:
+                    // TODO: Support SecuROM data when generated
+                    break;
+
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.DVDVideo:
+                    // TODO: Support DVD protection when generated
+                    break;
+
                 case RedumpSystem.KonamiPython2:
                     if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
                     {
@@ -305,12 +318,39 @@ namespace MPF.Modules.Redumper
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
+                case RedumpSystem.MicrosoftXbox:
+                    // TODO: Support DMI and additional file information when generated
+                    break;
+
+                case RedumpSystem.MicrosoftXbox360:
+                    // TODO: Support DMI and additional file information when generated
+                    break;
+
+                case RedumpSystem.NamcoSegaNintendoTriforce:
+                    // TODO: Support header information and GD-ROM info when generated
+                    break;
+
                 case RedumpSystem.SegaMegaCDSegaCD:
                     info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out string scdBuildDate, out string scdSerial, out string scdRegion) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
                     info.CommonDiscInfo.EXEDateBuildDate = scdBuildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
+                    break;
 
+                case RedumpSystem.SegaChihiro:
+                    // TODO: Support header information and GD-ROM info when generated
+                    break;
+
+                case RedumpSystem.SegaDreamcast:
+                    // TODO: Support header information and GD-ROM info when generated
+                    break;
+
+                case RedumpSystem.SegaNaomi:
+                    // TODO: Support header information and GD-ROM info when generated
+                    break;
+
+                case RedumpSystem.SegaNaomi2:
+                    // TODO: Support header information and GD-ROM info when generated
                     break;
 
                 case RedumpSystem.SegaSaturn:
@@ -339,6 +379,7 @@ namespace MPF.Modules.Redumper
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
+                    // TODO: Support EDC and Antimodchip information when generated
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -367,6 +408,33 @@ namespace MPF.Modules.Redumper
                     info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
                     break;
+            }
+
+            // Fill in any artifacts that exist, Base64-encoded, if we need to
+            if (includeArtifacts)
+            {
+                if (File.Exists($"{basePath}.cdtext"))
+                    info.Artifacts["cdtext"] = GetBase64(GetFullFile($"{basePath}.cdtext"));
+                if (File.Exists($"{basePath}.cue"))
+                    info.Artifacts["cue"] = GetBase64(GetFullFile($"{basePath}.cue"));
+                if (File.Exists($"{basePath}.fulltoc"))
+                    info.Artifacts["fulltoc"] = GetBase64(GetFullFile($"{basePath}.fulltoc"));
+                if (File.Exists($"{basePath}.log"))
+                    info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log"));
+                if (File.Exists($"{basePath}.manufacturer"))
+                    info.Artifacts["manufacturer"] = GetBase64(GetFullFile($"{basePath}.manufacturer"));
+                if (File.Exists($"{basePath}.physical"))
+                    info.Artifacts["physical"] = GetBase64(GetFullFile($"{basePath}.physical"));
+                // if (File.Exists($"{basePath}.scram"))
+                //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram"));
+                // if (File.Exists($"{basePath}.scrap"))
+                //     info.Artifacts["scrap"] = GetBase64(GetFullFile($"{basePath}.scrap"));
+                if (File.Exists($"{basePath}.state"))
+                    info.Artifacts["state"] = GetBase64(GetFullFile($"{basePath}.state"));
+                if (File.Exists($"{basePath}.subcode"))
+                    info.Artifacts["subcode"] = GetBase64(GetFullFile($"{basePath}.subcode"));
+                if (File.Exists($"{basePath}.toc"))
+                    info.Artifacts["toc"] = GetBase64(GetFullFile($"{basePath}.toc"));
             }
         }
 
