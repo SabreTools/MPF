@@ -153,6 +153,11 @@ namespace MPF.Modules.Redumper
         public string SkipValue { get; set; }
 
         /// <summary>
+        /// Number of sectors to read at once on initial dump, DVD only (Default 32)
+        /// </summary>
+        public int? DumpReadSizeValue { get; set; }
+
+        /// <summary>
         /// Maximum number of lead-in retries per session (Default 4)
         /// </summary>
         public int? PlextorLeadinRetriesValue { get; set; }
@@ -549,6 +554,13 @@ namespace MPF.Modules.Redumper
                     parameters.Add($"{FlagStrings.Skip}={SkipValue}");
             }
 
+            // Dump Read Size
+            if (this[FlagStrings.DumpReadSize] == true)
+            {
+                if (DumpReadSizeValue != null && DumpReadSizeValue > 0)
+                    parameters.Add($"{FlagStrings.DumpReadSize}={DumpReadSizeValue}");
+            }
+
             #endregion
 
             return string.Join(" ", parameters);
@@ -605,6 +617,7 @@ namespace MPF.Modules.Redumper
                     FlagStrings.LBAEnd,
                     FlagStrings.RefineSubchannel,
                     FlagStrings.Skip,
+                    FlagStrings.DumpReadSize,
                 },
             };
         }
@@ -683,6 +696,7 @@ namespace MPF.Modules.Redumper
             LBAStartValue = null;
             LBAEndValue = null;
             SkipValue = null;
+            DumpReadSizeValue = null;
         }
 
         /// <inheritdoc/>
@@ -764,8 +778,8 @@ namespace MPF.Modules.Redumper
                     case CommandStrings.Protection:
                     case CommandStrings.Refine:
                     case CommandStrings.Split:
+                    case CommandStrings.Verify:
                     case CommandStrings.Info:
-                        // case CommandStrings.Rings:
                         ModeValues.Add(part);
                         break;
 
@@ -945,6 +959,11 @@ namespace MPF.Modules.Redumper
                 stringValue = ProcessStringParameter(parts, FlagStrings.Skip, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
                     SkipValue = stringValue;
+
+                // Skip
+                intValue = ProcessInt32Parameter(parts, FlagStrings.DumpReadSize, ref i);
+                if (!string.IsNullOrWhiteSpace(stringValue))
+                    DumpReadSizeValue = intValue;
 
                 #endregion
             }

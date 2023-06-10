@@ -11,8 +11,8 @@ namespace MPF.Modules.Redumper
         public const string Info = "info";
         public const string Protection = "protection";
         public const string Refine = "refine";
-        //public const string Rings = "rings";
         public const string Split = "split";
+        public const string Verify = "verify";
     }
 
     /// <summary>
@@ -63,5 +63,6 @@ namespace MPF.Modules.Redumper
         public const string LBAEnd = "--lba-end";
         public const string RefineSubchannel = "--refine-subchannel";
         public const string Skip = "--skip";
+        public const string DumpReadSize = "--dump-read-size";
     }
 }
