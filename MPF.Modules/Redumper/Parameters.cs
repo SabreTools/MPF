@@ -214,6 +214,21 @@ namespace MPF.Modules.Redumper
 
                     break;
 
+                case MediaType.DVD:
+                    if (!File.Exists($"{basePath}_logs.zip") || !preCheck)
+                    {
+                        if (!File.Exists($"{basePath}.log"))
+                            missingFiles.Add($"{basePath}.log");
+                        if (!File.Exists($"{basePath}.manufacturer"))
+                            missingFiles.Add($"{basePath}.manufacturer");
+                        if (!File.Exists($"{basePath}.physical"))
+                            missingFiles.Add($"{basePath}.physical");
+                        if (!File.Exists($"{basePath}.state"))
+                            missingFiles.Add($"{basePath}.state");
+                    }
+
+                    break;
+
                 default:
                     missingFiles.Add("Media and system combination not supported for Redumper");
                     break;
@@ -256,6 +271,22 @@ namespace MPF.Modules.Redumper
                     string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
 
+                    break;
+
+                case MediaType.DVD:
+                    info.Extras.PVD = GetPVD($"{basePath}.log") ?? "Disc has no PVD"; ;
+                    info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
+
+                    // Get the individual hash data, as per internal
+                    if (GetISOHashValues(info.TracksAndWriteOffsets.ClrMameProData, out long size, out string crc32, out string md5, out string sha1))
+                    {
+                        info.SizeAndChecksums.Size = size;
+                        info.SizeAndChecksums.CRC32 = crc32;
+                        info.SizeAndChecksums.MD5 = md5;
+                        info.SizeAndChecksums.SHA1 = sha1;
+                    }
+
+                    // TODO: Get layerbreak info
                     break;
             }
 
@@ -650,6 +681,17 @@ namespace MPF.Modules.Redumper
                     if (File.Exists($"{basePath}.toc"))
                         logFiles.Add($"{basePath}.toc");
                     break;
+
+                case MediaType.DVD:
+                    if (File.Exists($"{basePath}.log"))
+                        logFiles.Add($"{basePath}.log");
+                    if (File.Exists($"{basePath}.manufacturer"))
+                        logFiles.Add($"{basePath}.manufacturer");
+                    if (File.Exists($"{basePath}.physical"))
+                        logFiles.Add($"{basePath}.physical");
+                    if (File.Exists($"{basePath}.state"))
+                        logFiles.Add($"{basePath}.state");
+                    break;
             }
 
             return logFiles;
@@ -702,8 +744,8 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         protected override void SetDefaultParameters(char driveLetter, string filename, int? driveSpeed, Options options)
         {
-            // If we don't have a CD, we can't dump using redumper
-            if (this.Type != MediaType.CDROM)
+            // If we don't have a CD or DVD, we can't dump using redumper
+            if (this.Type != MediaType.CDROM && this.Type != MediaType.DVD)
                 return;
 
             BaseCommand = CommandStrings.NONE;

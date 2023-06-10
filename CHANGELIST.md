@@ -59,6 +59,7 @@
 - Fix MCD region(s) parsing
 - Update to DIC 20230606
 - Update redumper to build 166
+- Unblock Redumper DVD support
 
 ### 2.5 (2023-03-12)
 
