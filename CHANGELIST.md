@@ -62,6 +62,7 @@
 - Unblock Redumper DVD support
 - Support Redumper DVD layerbreak
 - Add placeholder and TODOs for Redumper
+- Add TODO with notes to Redumper
 
 ### 2.5 (2023-03-12)
 
