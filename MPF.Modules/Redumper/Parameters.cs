@@ -223,9 +223,9 @@ namespace MPF.Modules.Redumper
                     {
                         if (!File.Exists($"{basePath}.log"))
                             missingFiles.Add($"{basePath}.log");
-                        if (!File.Exists($"{basePath}.manufacturer"))
+                        if (!File.Exists($"{basePath}.manufacturer") && !File.Exists($"{basePath}.1.manufacturer") && !File.Exists($"{basePath}.2.manufacturer"))
                             missingFiles.Add($"{basePath}.manufacturer");
-                        if (!File.Exists($"{basePath}.physical"))
+                        if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
                             missingFiles.Add($"{basePath}.physical");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
@@ -427,8 +427,16 @@ namespace MPF.Modules.Redumper
                     info.Artifacts["log"] = GetBase64(GetFullFile($"{basePath}.log"));
                 if (File.Exists($"{basePath}.manufacturer"))
                     info.Artifacts["manufacturer"] = GetBase64(GetFullFile($"{basePath}.manufacturer"));
+                if (File.Exists($"{basePath}.1.manufacturer"))
+                    info.Artifacts["manufacturer1"] = GetBase64(GetFullFile($"{basePath}.1.manufacturer"));
+                if (File.Exists($"{basePath}.2.manufacturer"))
+                    info.Artifacts["manufacturer2"] = GetBase64(GetFullFile($"{basePath}.2.manufacturer"));
                 if (File.Exists($"{basePath}.physical"))
                     info.Artifacts["physical"] = GetBase64(GetFullFile($"{basePath}.physical"));
+                if (File.Exists($"{basePath}.1.physical"))
+                    info.Artifacts["physical1"] = GetBase64(GetFullFile($"{basePath}.1.physical"));
+                if (File.Exists($"{basePath}.2.physical"))
+                    info.Artifacts["physical2"] = GetBase64(GetFullFile($"{basePath}.2.physical"));
                 // if (File.Exists($"{basePath}.scram"))
                 //     info.Artifacts["scram"] = GetBase64(GetFullFile($"{basePath}.scram"));
                 // if (File.Exists($"{basePath}.scrap"))
@@ -760,8 +768,16 @@ namespace MPF.Modules.Redumper
                         logFiles.Add($"{basePath}.log");
                     if (File.Exists($"{basePath}.manufacturer"))
                         logFiles.Add($"{basePath}.manufacturer");
+                    if (File.Exists($"{basePath}.1.manufacturer"))
+                        logFiles.Add($"{basePath}.1.manufacturer");
+                    if (File.Exists($"{basePath}.2.manufacturer"))
+                        logFiles.Add($"{basePath}.2.manufacturer");
                     if (File.Exists($"{basePath}.physical"))
                         logFiles.Add($"{basePath}.physical");
+                    if (File.Exists($"{basePath}.1.physical"))
+                        logFiles.Add($"{basePath}.1.physical");
+                    if (File.Exists($"{basePath}.2.physical"))
+                        logFiles.Add($"{basePath}.2.physical");
                     if (File.Exists($"{basePath}.state"))
                         logFiles.Add($"{basePath}.state");
                     break;
