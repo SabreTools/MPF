@@ -1173,7 +1173,10 @@ namespace MPF.Modules.Redumper
                     while (line.StartsWith("<rom"))
                     {
                         datString += line + "\n";
-                        line = sr.ReadLine().Trim();
+                        if (sr.EndOfStream)
+                            break;
+
+                        line = sr.ReadLine()?.Trim();
                     }
 
                     return datString.TrimEnd('\n');
@@ -1260,6 +1263,10 @@ namespace MPF.Modules.Redumper
                     {
                         string line = sr.ReadLine()?.Trim();
 
+                        // If we have a null line, just break
+                        if (line == null)
+                            break;
+
                         // Single-layer discs have no layerbreak
                         if (line.Contains("layers count: 1"))
                         {
@@ -1275,8 +1282,8 @@ namespace MPF.Modules.Redumper
                         }
                     }
 
-                    // If we get to the end, there's an issue
-                    return null;
+                    // Return the layerbreak, if possible
+                    return layerbreak;
                 }
                 catch
                 {
