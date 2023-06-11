@@ -3,25 +3,22 @@
     "tasks": [
         {
             "label": "build",
-            "command": "dotnet",
+            "command": "msbuild",
             "type": "process",
             "args": [
-                "build",
                 "${workspaceFolder}/MPF.sln",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "-property:RuntimeIdentifiers=win7-x64"
             ],
             "problemMatcher": "$msCompile"
         },
         {
             "label": "publish",
-            "command": "dotnet",
+            "command": "msbuild",
             "type": "process",
             "args": [
-                "publish",
                 "${workspaceFolder}/MPF/MPF.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "-target:Publish",
+                "-property:RuntimeIdentifiers=win7-x64"
             ],
             "problemMatcher": "$msCompile"
         },

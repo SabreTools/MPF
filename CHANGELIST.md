@@ -64,6 +64,7 @@
 - Add placeholder and TODOs for Redumper
 - Add TODO with notes to Redumper
 - Fix 2-layer DVD support in Redumper
+- Fix VSCode build
 
 ### 2.5 (2023-03-12)
 
