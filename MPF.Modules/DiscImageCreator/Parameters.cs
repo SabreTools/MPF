@@ -779,14 +779,8 @@ namespace MPF.Modules.DiscImageCreator
                     else if (File.Exists($"{basePath}.img_EccEdc.txt"))
                         psEdcStatus = GetPlayStationEDCStatus($"{basePath}.img_EccEdc.txt");
 
-                    if (psEdcStatus == true)
-                        info.EDC.EDC = YesNo.Yes;
-                    else if (psEdcStatus == false)
-                        info.EDC.EDC = YesNo.No;
-                    else
-                        info.EDC.EDC = YesNo.NULL;
-
-                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt") ? YesNo.Yes : YesNo.No;
+                    info.EDC.EDC = psEdcStatus.ToYesNo();
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}_disc.txt").ToYesNo();
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -3149,11 +3143,11 @@ namespace MPF.Modules.DiscImageCreator
         /// </summary>
         /// <param name="disc">_disc.txt file location</param>
         /// <returns>Anti-modchip existence if possible, false on error</returns>
-        private static bool GetPlayStationAntiModchipDetected(string disc)
+        private static bool? GetPlayStationAntiModchipDetected(string disc)
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(disc))
-                return false;
+                return null;
 
             using (StreamReader sr = File.OpenText(disc))
             {
@@ -3176,7 +3170,7 @@ namespace MPF.Modules.DiscImageCreator
                 catch
                 {
                     // We don't care what the exception is right now
-                    return false;
+                    return null;
                 }
             }
         }

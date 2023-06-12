@@ -383,30 +383,9 @@ namespace MPF.Modules.Redumper
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
-                    bool? psAntiModchipStatus = GetPlayStationAntiModchipDetected($"{basePath}.log");
-                    if (psAntiModchipStatus == true)
-                        info.CopyProtection.AntiModchip = YesNo.Yes;
-                    else if (psAntiModchipStatus == false)
-                        info.CopyProtection.AntiModchip = YesNo.No;
-                    else
-                        info.CopyProtection.AntiModchip = YesNo.NULL;
-
-                    bool? psEdcStatus = GetPlayStationEDCStatus($"{basePath}.log");
-                    if (psEdcStatus == true)
-                        info.EDC.EDC = YesNo.Yes;
-                    else if (psEdcStatus == false)
-                        info.EDC.EDC = YesNo.No;
-                    else
-                        info.EDC.EDC = YesNo.NULL;
-
-                    bool? psLibCryptStatus = GetPlayStationLibCryptStatus($"{basePath}.log");
-                    if (psLibCryptStatus == true)
-                        info.CopyProtection.LibCrypt = YesNo.Yes;
-                    else if (psLibCryptStatus == false)
-                        info.CopyProtection.LibCrypt = YesNo.No;
-                    else
-                        info.CopyProtection.LibCrypt = YesNo.NULL;
-
+                    info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
+                    info.EDC.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
+                    info.CopyProtection.LibCrypt = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo();
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -1420,7 +1399,7 @@ namespace MPF.Modules.Redumper
 
                         if (line.StartsWith("libcrypt: no"))
                             return false;
-                        else if (line.StartsWith("libcrypt: yes))
+                        else if (line.StartsWith("libcrypt: yes"))
                             return true;
 
                         line = sr.ReadLine().Trim();

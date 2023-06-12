@@ -2136,6 +2136,24 @@ namespace RedumpLib.Data
         public static string LongName(this YesNo? yesno) => AttributeHelper<YesNo?>.GetAttribute(yesno)?.LongName ?? "Yes/No";
 
         /// <summary>
+        /// Get the YesNo enum value for a given nullable boolean
+        /// </summary>
+        /// <param name="yesno">Nullable boolean value to convert</param>
+        /// <returns>YesNo represented by the nullable boolean, if possible</returns>
+        public static YesNo? ToYesNo(this bool? yesno)
+        {
+            switch (yesno)
+            {
+                case false:
+                    return YesNo.No;
+                case true:
+                    return YesNo.Yes;
+                default:
+                    return YesNo.NULL;
+            }
+        }
+
+        /// <summary>
         /// Get the YesNo enum value for a given string
         /// </summary>
         /// <param name="yesno">String value to convert</param>

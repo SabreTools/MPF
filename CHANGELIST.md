@@ -67,6 +67,7 @@
 - Fix VSCode build
 - Fix Redumper DAT/layer parsing
 - Update Redumper PS1 output parsing
+- Fix previous commit, clean up helpers
 
 ### 2.5 (2023-03-12)
 
