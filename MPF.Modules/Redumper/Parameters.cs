@@ -383,7 +383,30 @@ namespace MPF.Modules.Redumper
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
                     }
 
-                    // TODO: Support EDC and Antimodchip information when generated
+                    bool? psAntiModchipStatus = GetPlayStationAntiModchipDetected($"{basePath}.log");
+                    if (psAntiModchipStatus == true)
+                        info.CopyProtection.AntiModchip = YesNo.Yes;
+                    else if (psAntiModchipStatus == false)
+                        info.CopyProtection.AntiModchip = YesNo.No;
+                    else
+                        info.CopyProtection.AntiModchip = YesNo.NULL;
+
+                    bool? psEdcStatus = GetPlayStationEDCStatus($"{basePath}.log");
+                    if (psEdcStatus == true)
+                        info.EDC.EDC = YesNo.Yes;
+                    else if (psEdcStatus == false)
+                        info.EDC.EDC = YesNo.No;
+                    else
+                        info.EDC.EDC = YesNo.NULL;
+
+                    bool? psLibCryptStatus = GetPlayStationLibCryptStatus($"{basePath}.log");
+                    if (psLibCryptStatus == true)
+                        info.CopyProtection.LibCrypt = YesNo.Yes;
+                    else if (psLibCryptStatus == false)
+                        info.CopyProtection.LibCrypt = YesNo.No;
+                    else
+                        info.CopyProtection.LibCrypt = YesNo.NULL;
+
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -1284,6 +1307,126 @@ namespace MPF.Modules.Redumper
 
                     // Return the layerbreak, if possible
                     return layerbreak;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the existence of an anti-modchip string from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Anti-modchip existence if possible, false on error</returns>
+        private static bool? GetPlayStationAntiModchipDetected(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Check for the anti-modchip strings
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line == null)
+                            return false;
+
+                        if (line.StartsWith("anti-modchip: no"))
+                            return false;
+                        else if (line.StartsWith("anti-modchip: yes"))
+                            return true;
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the detected missing EDC count from the input files, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Status of PS1 EDC, if possible</returns>
+        private static bool? GetPlayStationEDCStatus(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Check for the EDC strings
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line == null)
+                            return false;
+
+                        if (line.StartsWith("EDC: no"))
+                            return false;
+                        else if (line.StartsWith("EDC: yes"))
+                            return true;
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the existence of LibCrypt from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Status of PS1 LibCrypt, if possible</returns>
+        private static bool? GetPlayStationLibCryptStatus(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Check for the libcrypt strings
+                    string line = sr.ReadLine().Trim();
+                    while (!sr.EndOfStream)
+                    {
+                        if (line == null)
+                            return false;
+
+                        if (line.StartsWith("libcrypt: no"))
+                            return false;
+                        else if (line.StartsWith("libcrypt: yes))
+                            return true;
+
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return false;
                 }
                 catch
                 {

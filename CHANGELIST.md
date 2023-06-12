@@ -66,6 +66,7 @@
 - Fix 2-layer DVD support in Redumper
 - Fix VSCode build
 - Fix Redumper DAT/layer parsing
+- Update Redumper PS1 output parsing
 
 ### 2.5 (2023-03-12)
 
