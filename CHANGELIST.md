@@ -71,6 +71,7 @@
 - Update redumper to build 173
 - Initial support for Redumper CSS outputs
 - Hook up CSS output for testing
+- Update redumper to build 174
 
 ### 2.5 (2023-03-12)
 
