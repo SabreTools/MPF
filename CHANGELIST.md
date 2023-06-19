@@ -69,6 +69,7 @@
 - Update Redumper PS1 output parsing
 - Fix previous commit, clean up helpers
 - Update redumper to build 173
+- Initial support for Redumper CSS outputs
 
 ### 2.5 (2023-03-12)
 

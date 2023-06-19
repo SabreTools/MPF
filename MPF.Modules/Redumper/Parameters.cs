@@ -1192,6 +1192,77 @@ namespace MPF.Modules.Redumper
         }
 
         /// <summary>
+        /// Get the DVD protection information, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Formatted string representing the DVD protection, null on error</returns>
+        private static string GetDVDProtection(string log)
+        {
+            // If one of the files doesn't exist, we can't get info from them
+            if (!File.Exists(log))
+                return null;
+
+            // Setup all of the individual pieces
+            string region = null, rceProtection = null, copyrightProtectionSystemType = null, vobKeys = null, decryptedDiscKey = null;
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the copyright information
+                    while (!sr.ReadLine().Trim().StartsWith("copyright:")) ;
+
+                    // Now read until we hit the manufacturing information
+                    string line = sr.ReadLine()?.Trim();
+                    while (line != null && !sr.EndOfStream)
+                    {
+                        if (line.StartsWith("protection system type"))
+                        {
+                            copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
+                        }
+                        else if (line.StartsWith("region management information:"))
+                        {
+                            region = line.Substring("region management information: ".Length);
+                        }
+                        else if (line.StartsWith("disc key"))
+                        {
+                            decryptedDiscKey = line.Substring("disc key: ".Length);
+                        }
+                        else if (line.StartsWith("title keys"))
+                        {
+                            vobKeys = string.Empty;
+
+                            line = sr.ReadLine()?.Trim();
+                            while (!string.IsNullOrWhiteSpace(line))
+                            {
+                                var match = Regex.Match(line, @"^(.*?): (.*?)$");   
+                                if (match.Success)
+                                    vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value}\n";
+                            }
+                        }
+
+                        line = sr.ReadLine()?.Trim();
+                    }
+                }
+                catch { }
+            }
+
+            // Now we format everything we can
+            string protection = string.Empty;
+            if (!string.IsNullOrEmpty(region))
+                protection += $"Region: {region}\n";
+            if (!string.IsNullOrEmpty(rceProtection))
+                protection += $"RCE Protection: {rceProtection}\n";
+            if (!string.IsNullOrEmpty(copyrightProtectionSystemType))
+                protection += $"Copyright Protection System Type: {copyrightProtectionSystemType}\n";
+            if (!string.IsNullOrEmpty(vobKeys))
+                protection += vobKeys;
+            if (!string.IsNullOrEmpty(decryptedDiscKey))
+                protection += $"Decrypted Disc Key: {decryptedDiscKey}\n";
+
+            return protection;
+        }
+
+        /// <summary>
         /// Get the detected error count from the input files, if possible
         /// </summary>
         /// <param name="log">Log file location</param>
