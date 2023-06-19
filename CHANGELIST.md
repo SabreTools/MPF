@@ -68,6 +68,7 @@
 - Fix Redumper DAT/layer parsing
 - Update Redumper PS1 output parsing
 - Fix previous commit, clean up helpers
+- Update redumper to build 173
 
 ### 2.5 (2023-03-12)
 

@@ -68,12 +68,12 @@ after_build:
 - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
-- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_166/redumper-2023.06.09_build166-win64.zip
-- 7z e redumper-2023.06.09_build166-win64.zip -oMPF\bin\Debug\net48\publish\Programs\Redumper redumper-2023.06.09_build166-win64\bin\*
-- 7z e redumper-2023.06.09_build166-win64.zip -oMPF\bin\Debug\net6.0-windows\win7-x64\publish\Programs\Redumper redumper-2023.06.09_build166-win64\bin\*
-- 7z e redumper-2023.06.09_build166-win64.zip -oMPF\bin\Debug\net6.0-windows\win8-x64\publish\Programs\Redumper redumper-2023.06.09_build166-win64\bin\*
-- 7z e redumper-2023.06.09_build166-win64.zip -oMPF\bin\Debug\net6.0-windows\win81-x64\publish\Programs\Redumper redumper-2023.06.09_build166-win64\bin\*
-- 7z e redumper-2023.06.09_build166-win64.zip -oMPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\Redumper redumper-2023.06.09_build166-win64\bin\*
+- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_173/redumper-2023.06.19_build173-win64.zip
+- 7z e redumper-2023.06.19_build173-win64.zip -oMPF\bin\Debug\net48\publish\Programs\Redumper redumper-2023.06.19_build173-win64\bin\*
+- 7z e redumper-2023.06.19_build173-win64.zip -oMPF\bin\Debug\net6.0-windows\win7-x64\publish\Programs\Redumper redumper-2023.06.19_build173-win64\bin\*
+- 7z e redumper-2023.06.19_build173-win64.zip -oMPF\bin\Debug\net6.0-windows\win8-x64\publish\Programs\Redumper redumper-2023.06.19_build173-win64\bin\*
+- 7z e redumper-2023.06.19_build173-win64.zip -oMPF\bin\Debug\net6.0-windows\win81-x64\publish\Programs\Redumper redumper-2023.06.19_build173-win64\bin\*
+- 7z e redumper-2023.06.19_build173-win64.zip -oMPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\Redumper redumper-2023.06.19_build173-win64\bin\*
 
 # Subdump
 - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
