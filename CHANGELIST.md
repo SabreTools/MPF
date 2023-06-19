@@ -70,6 +70,7 @@
 - Fix previous commit, clean up helpers
 - Update redumper to build 173
 - Initial support for Redumper CSS outputs
+- Hook up CSS output for testing
 
 ### 2.5 (2023-03-12)
 

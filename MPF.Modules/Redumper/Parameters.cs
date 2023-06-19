@@ -307,7 +307,7 @@ namespace MPF.Modules.Redumper
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
-                    // TODO: Support DVD protection when generated
+                    info.CopyProtection.Protection = GetDVDProtection($"{basePath}.log") ?? string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
