@@ -7,6 +7,9 @@ namespace MPF.Modules.Redumper
     {
         public const string NONE = "";
         public const string CD = "cd";
+        public const string DVD = "dvd"; // Synonym for CD
+        public const string BluRay = "bd"; // Synonym for CD
+        public const string SACD = "sacd"; // Synonym for CD
         public const string Dump = "dump";
         public const string Info = "info";
         public const string Protection = "protection";

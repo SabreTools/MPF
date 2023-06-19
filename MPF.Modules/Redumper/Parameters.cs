@@ -793,6 +793,9 @@ namespace MPF.Modules.Redumper
         {
             return this.BaseCommand == CommandStrings.NONE
                 || this.BaseCommand.Contains(CommandStrings.CD)
+                || this.BaseCommand.Contains(CommandStrings.DVD)
+                || this.BaseCommand.Contains(CommandStrings.BluRay)
+                || this.BaseCommand.Contains(CommandStrings.SACD)
                 || this.BaseCommand.Contains(CommandStrings.Dump);
         }
 
@@ -840,7 +843,29 @@ namespace MPF.Modules.Redumper
                 return;
 
             BaseCommand = CommandStrings.NONE;
-            ModeValues = new List<string> { CommandStrings.CD };
+            switch (this.Type)
+            {
+                case MediaType.CDROM:
+                    switch (this.System)
+                    {
+                        case RedumpSystem.SuperAudioCD:
+                            ModeValues = new List<string> { CommandStrings.SACD };
+                            break;
+                        default:
+                            ModeValues = new List<string> { CommandStrings.CD };
+                            break;
+                    }
+                    break;
+                case MediaType.DVD:
+                    ModeValues = new List<string> { CommandStrings.DVD };
+                    break;
+                case MediaType.BluRay:
+                    ModeValues = new List<string> { CommandStrings.BluRay };
+                    break;
+                default:
+                    BaseCommand = null;
+                    return;
+            }  
 
             this[FlagStrings.Drive] = true;
             DriveValue = driveLetter.ToString();
@@ -907,6 +932,9 @@ namespace MPF.Modules.Redumper
                 switch (part)
                 {
                     case CommandStrings.CD:
+                    case CommandStrings.DVD:
+                    case CommandStrings.BluRay:
+                    case CommandStrings.SACD:
                     case CommandStrings.Dump:
                     case CommandStrings.Protection:
                     case CommandStrings.Refine:

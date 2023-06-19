@@ -72,6 +72,7 @@
 - Initial support for Redumper CSS outputs
 - Hook up CSS output for testing
 - Update redumper to build 174
+- Add support for redumper CD synonyms
 
 ### 2.5 (2023-03-12)
 
