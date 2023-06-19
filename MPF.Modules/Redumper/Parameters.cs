@@ -1262,9 +1262,11 @@ namespace MPF.Modules.Redumper
                             line = sr.ReadLine()?.Trim();
                             while (!string.IsNullOrWhiteSpace(line))
                             {
-                                var match = Regex.Match(line, @"^(.*?): (.*?)$");   
+                                var match = Regex.Match(line, @"^(.*?): (.*?)$");
                                 if (match.Success)
                                     vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value}\n";
+                                else
+                                    break;
                             }
                         }
 
