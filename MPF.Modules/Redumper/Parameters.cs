@@ -1267,6 +1267,8 @@ namespace MPF.Modules.Redumper
                                     vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value}\n";
                                 else
                                     break;
+
+                                line = sr.ReadLine()?.Trim();
                             }
                         }
 

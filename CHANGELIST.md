@@ -74,6 +74,7 @@
 - Update redumper to build 174
 - Add support for redumper CD synonyms
 - Adjust CSS title key parsing
+- Fix non-reading loop
 
 ### 2.5 (2023-03-12)
 
