@@ -75,6 +75,7 @@
 - Add support for redumper CD synonyms
 - Adjust CSS title key parsing
 - Fix non-reading loop
+- Normalize Redumper CSS outputs
 
 ### 2.5 (2023-03-12)
 

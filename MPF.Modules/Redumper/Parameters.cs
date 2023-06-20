@@ -1246,6 +1246,8 @@ namespace MPF.Modules.Redumper
                         if (line.StartsWith("protection system type"))
                         {
                             copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
+                            if (copyrightProtectionSystemType == "none")
+                                copyrightProtectionSystemType = "No";
                         }
                         else if (line.StartsWith("region management information:"))
                         {
@@ -1264,12 +1266,24 @@ namespace MPF.Modules.Redumper
                             {
                                 var match = Regex.Match(line, @"^(.*?): (.*?)$");
                                 if (match.Success)
-                                    vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value}\n";
+                                {
+                                    string normalizedKey = match.Groups[2].Value.Replace(':', ' ');
+                                    if (normalizedKey == "none")
+                                        normalizedKey = "No Title Key";
+
+                                    vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value.Replace(':', ' ')}\n";
+                                }
                                 else
+                                {
                                     break;
+                                }
 
                                 line = sr.ReadLine()?.Trim();
                             }
+                        }
+                        else
+                        {
+                            break;
                         }
 
                         line = sr.ReadLine()?.Trim();
