@@ -76,6 +76,7 @@
 - Adjust CSS title key parsing
 - Fix non-reading loop
 - Normalize Redumper CSS outputs
+- Normalize multi-instance site tags
 
 ### 2.5 (2023-03-12)
 
