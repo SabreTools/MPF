@@ -77,6 +77,7 @@
 - Fix non-reading loop
 - Normalize Redumper CSS outputs
 - Normalize multi-instance site tags
+- Add missing Aaru error log to zip
 
 ### 2.5 (2023-03-12)
 

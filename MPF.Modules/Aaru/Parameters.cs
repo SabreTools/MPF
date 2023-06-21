@@ -1437,6 +1437,8 @@ namespace MPF.Modules.Aaru
                 case MediaType.CDROM:
                     if (File.Exists($"{basePath}.cicm.xml"))
                         logFiles.Add($"{basePath}.cicm.xml");
+                    if (File.Exists($"{basePath}.error.log"))
+                        logFiles.Add($"{basePath}.error.log");
                     if (File.Exists($"{basePath}.ibg"))
                         logFiles.Add($"{basePath}.ibg");
                     if (File.Exists($"{basePath}.log"))
@@ -1455,6 +1457,8 @@ namespace MPF.Modules.Aaru
                 case MediaType.BluRay:
                     if (File.Exists($"{basePath}.cicm.xml"))
                         logFiles.Add($"{basePath}.cicm.xml");
+                    if (File.Exists($"{basePath}.error.log"))
+                        logFiles.Add($"{basePath}.error.log");
                     if (File.Exists($"{basePath}.ibg"))
                         logFiles.Add($"{basePath}.ibg");
                     if (File.Exists($"{basePath}.log"))
