@@ -180,10 +180,6 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
-            // TODO: Also check for incomplete files, if possible
-            //  All files should be generated at the beginning of a dump, so it is difficult to know if anything is missing
-            //  Potentially looking inside of the `log` file, if it exists, would be useful
-            //  Another option could be the presence of the DAT section, since it's not a separate file here
             List<string> missingFiles = new List<string>();
 
             switch (this.Type)
@@ -200,6 +196,8 @@ namespace MPF.Modules.Redumper
                             missingFiles.Add($"{basePath}.fulltoc");
                         if (!File.Exists($"{basePath}.log"))
                             missingFiles.Add($"{basePath}.log");
+                        else if (GetDatfile($"{basePath}.log") == null)
+                            missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.state"))
                             missingFiles.Add($"{basePath}.state");
                         if (!File.Exists($"{basePath}.subcode"))
@@ -223,6 +221,8 @@ namespace MPF.Modules.Redumper
                     {
                         if (!File.Exists($"{basePath}.log"))
                             missingFiles.Add($"{basePath}.log");
+                        else if (GetDatfile($"{basePath}.log") == null)
+                            missingFiles.Add($"{basePath}.dat");
                         if (!File.Exists($"{basePath}.manufacturer") && !File.Exists($"{basePath}.1.manufacturer") && !File.Exists($"{basePath}.2.manufacturer"))
                             missingFiles.Add($"{basePath}.manufacturer");
                         if (!File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.physical") && !File.Exists($"{basePath}.1.physical") && !File.Exists($"{basePath}.2.physical"))
