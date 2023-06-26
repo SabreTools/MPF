@@ -940,6 +940,7 @@ namespace MPF.Modules.Redumper
                     case CommandStrings.Refine:
                     case CommandStrings.Split:
                     case CommandStrings.Verify:
+                    case CommandStrings.DVDKey:
                     case CommandStrings.Info:
                         ModeValues.Add(part);
                         break;
@@ -1268,8 +1269,10 @@ namespace MPF.Modules.Redumper
                                 if (match.Success)
                                 {
                                     string normalizedKey = match.Groups[2].Value.Replace(':', ' ');
-                                    if (normalizedKey == "none")
+                                    if (normalizedKey == "<none>")
                                         normalizedKey = "No Title Key";
+                                    else if (normalizedKey == "<error>")
+                                        normalizedKey = "Error Retrieving Title Key";
 
                                     vobKeys += $"{match.Groups[1].Value} Title Key: {match.Groups[2].Value.Replace(':', ' ')}\n";
                                 }
