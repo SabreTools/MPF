@@ -72,6 +72,7 @@ namespace MPF.Core.Utilities
                 case RedumpSystem.SonyPlayStation3:
                 case RedumpSystem.SonyPlayStation4:
                 //case RedumpSystem.SonyPlayStation5:
+                case RedumpSystem.SonyPlayStationPortable:
                     return true;
                 default:
                     return false;

@@ -80,6 +80,7 @@
 - Add missing Aaru error log to zip
 - Check Redumper dat section for completeness
 - Update redumper to build 176
+- UMDs are Sony discs
 
 ### 2.5 (2023-03-12)
 
