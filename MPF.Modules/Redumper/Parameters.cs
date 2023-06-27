@@ -1256,7 +1256,7 @@ namespace MPF.Modules.Redumper
                         }
                         else if (line.StartsWith("disc key"))
                         {
-                            decryptedDiscKey = line.Substring("disc key: ".Length);
+                            decryptedDiscKey = line.Substring("disc key: ".Length).Replace(':', ' ');
                         }
                         else if (line.StartsWith("title keys"))
                         {
