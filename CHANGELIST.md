@@ -82,6 +82,7 @@
 - Update redumper to build 176
 - UMDs are Sony discs
 - Strip colons from Redumper disc key
+- Use `HashSet` for disc or book type
 
 ### 2.5 (2023-03-12)
 

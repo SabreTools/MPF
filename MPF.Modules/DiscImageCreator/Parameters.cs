@@ -2635,6 +2635,9 @@ namespace MPF.Modules.DiscImageCreator
             {
                 try
                 {
+                    // Create a hashset to contain all of the found values
+                    var discTypeOrBookTypeSet = new HashSet<string>();
+
                     string line = sr.ReadLine();
                     while (line != null)
                     {
@@ -2645,44 +2648,41 @@ namespace MPF.Modules.DiscImageCreator
                         if (line.StartsWith("DiscType:"))
                         {
                             // DiscType: <discType>
-                            if (string.IsNullOrEmpty(discTypeOrBookType))
-                                discTypeOrBookType = line.Substring("DiscType: ".Length);
-                            else
-                                discTypeOrBookType += $", {line.Substring("DiscType: ".Length)}";
+                            string identifier = line.Substring("DiscType: ".Length);
+                            discTypeOrBookTypeSet.Add(identifier);
                         }
                         else if (line.StartsWith("DiscTypeIdentifier:"))
                         {
-                            // DiscType: <discType>
-                            if (string.IsNullOrEmpty(discTypeOrBookType))
-                                discTypeOrBookType = line.Substring("DiscTypeIdentifier: ".Length);
-                            else
-                                discTypeOrBookType += $", {line.Substring("DiscTypeIdentifier: ".Length)}";
+                            // DiscTypeIdentifier: <discType>
+                            string identifier = line.Substring("DiscTypeIdentifier: ".Length);
+                            discTypeOrBookTypeSet.Add(identifier);
                         }
                         else if (line.StartsWith("DiscTypeSpecific:"))
                         {
-                            // DiscType: <discType>
-                            if (string.IsNullOrEmpty(discTypeOrBookType))
-                                discTypeOrBookType = line.Substring("DiscTypeSpecific: ".Length);
-                            else
-                                discTypeOrBookType += $", {line.Substring("DiscTypeSpecific: ".Length)}";
+                            // DiscTypeSpecific: <discType>
+                            string identifier = line.Substring("DiscTypeSpecific: ".Length);
+                            discTypeOrBookTypeSet.Add(identifier);
                         }
                         else if (line.StartsWith("BookType:"))
                         {
                             // BookType: <discType>
-                            if (string.IsNullOrEmpty(discTypeOrBookType))
-                                discTypeOrBookType = line.Substring("BookType: ".Length);
-                            else
-                                discTypeOrBookType += $", {line.Substring("BookType: ".Length)}";
+                            string identifier = line.Substring("BookType: ".Length);
+                            discTypeOrBookTypeSet.Add(identifier);
                         }
 
                         line = sr.ReadLine();
                     }
+
+                    // Create the output string
+                    if (discTypeOrBookTypeSet.Any())
+                        discTypeOrBookType = string.Join(", ", discTypeOrBookTypeSet);
 
                     return true;
                 }
                 catch
                 {
                     // We don't care what the exception is right now
+                    discTypeOrBookType = null;
                     return false;
                 }
             }
