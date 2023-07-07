@@ -2675,7 +2675,7 @@ namespace MPF.Modules.DiscImageCreator
 
                     // Create the output string
                     if (discTypeOrBookTypeSet.Any())
-                        discTypeOrBookType = string.Join(", ", discTypeOrBookTypeSet);
+                        discTypeOrBookType = string.Join(", ", discTypeOrBookTypeSet.OrderBy(s => s));
 
                     return true;
                 }
