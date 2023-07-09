@@ -1395,7 +1395,14 @@ namespace MPF.Modules.Redumper
                             return null;
                         }
 
-                        // Dual-layer discs have a regular layerbreak
+                        // Dual-layer discs have a regular layerbreak (new)
+                        else if (line.StartsWith("layer break:"))
+                        {
+                            // layer break: <layerbreak>
+                            layerbreak = layerbreak == null ? line.Substring("layer break: ".Length).Trim() : layerbreak;
+                        }
+
+                        // Dual-layer discs have a regular layerbreak (old)
                         else if (line.StartsWith("data "))
                         {
                             // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
