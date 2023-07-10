@@ -442,10 +442,8 @@ namespace MPF.Modules.DiscImageCreator
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
                     // Attempt to get multisession data
-                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt");
-                    if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
-
+                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt") ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
                     // Attempt to get the universal hash
                     string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? string.Empty;

@@ -262,16 +262,24 @@ namespace MPF.Modules.Redumper
                     info.TracksAndWriteOffsets.ClrMameProData = GetDatfile($"{basePath}.log");
                     info.TracksAndWriteOffsets.Cuesheet = GetFullFile($"{basePath}.cue") ?? string.Empty;
 
+                    // Attempt to get the write offset
                     string cdWriteOffset = GetWriteOffset($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.RingWriteOffset = cdWriteOffset;
                     info.TracksAndWriteOffsets.OtherWriteOffsets = cdWriteOffset;
 
+                    // Attempt to get the error count
                     long errorCount = GetErrorCount($"{basePath}.log");
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
+                    // Attempt to get multisession data
+                    string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
+                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
+
+                    // Attempt to get the universal hash
                     string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
 
+                    // Attempt to get the non-zero data start
                     string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
 
@@ -1379,7 +1387,7 @@ namespace MPF.Modules.Redumper
                     if (sr.EndOfStream)
                         return null;
 
-                    // Now that we're at the relevant lines, find the error count
+                    // Now that we're at the relevant lines, find the layerbreak
                     string layerbreak = null;
                     while (!sr.EndOfStream)
                     {
@@ -1413,6 +1421,60 @@ namespace MPF.Modules.Redumper
 
                     // Return the layerbreak, if possible
                     return layerbreak;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get multisession information from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>Formatted multisession information, null on error</returns>
+        private static string GetMultisessionInformation(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the multisession lines
+                    while (!sr.EndOfStream && !sr.ReadLine().Trim().StartsWith("multisession:")) ;
+                    if (sr.EndOfStream)
+                        return null;
+
+                    // Now that we're at the relevant lines, find the session info
+                    string firstSession = null, secondSession = null;
+                    while (!sr.EndOfStream)
+                    {
+                        string line = sr.ReadLine()?.Trim();
+
+                        // If we have a null line, just break
+                        if (line == null)
+                            break;
+
+                        // Store the first session range
+                        if (line.Contains("session 1:"))
+                            firstSession = line.Substring("session 1: ".Length).Trim();
+
+                        // Store the secomd session range
+                        else if (line.Contains("session 2:"))
+                            secondSession = line.Substring("session 2: ".Length).Trim();
+                    }
+
+                    // If either is blank, we don't have multisession
+                    if (string.IsNullOrEmpty(firstSession) || string.IsNullOrEmpty(secondSession))
+                        return null;
+
+                    // Create and return the formatted output
+                    return $"Session 1: {firstSession}\nSession 2: {secondSession}";
                 }
                 catch
                 {
