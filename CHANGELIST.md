@@ -86,6 +86,7 @@
 - Add ordering to disc or book type
 - Update redumper to build 183
 - Parse and format Redumper CD multisession data
+- New layerbreak takes precedence
 
 ### 2.5 (2023-03-12)
 

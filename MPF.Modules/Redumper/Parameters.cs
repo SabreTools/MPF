@@ -1407,7 +1407,7 @@ namespace MPF.Modules.Redumper
                         else if (line.StartsWith("layer break:"))
                         {
                             // layer break: <layerbreak>
-                            layerbreak = layerbreak == null ? line.Substring("layer break: ".Length).Trim() : layerbreak;
+                            layerbreak = line.Substring("layer break: ".Length).Trim();
                         }
 
                         // Dual-layer discs have a regular layerbreak (old)
