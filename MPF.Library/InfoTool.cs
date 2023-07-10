@@ -2048,6 +2048,19 @@ namespace MPF.Library
                         if (!commentLine.Contains(siteCode.ShortName()))
                             continue;
 
+                        // Skip certain site codes because of data issues
+                        switch (siteCode)
+                        {
+                            // Xbox and X360
+                            case SiteCode.DMIHash:
+                            case SiteCode.PFIHash:
+                            case SiteCode.SSHash:
+                            case SiteCode.SSVersion:
+                            case SiteCode.XMID:
+                            case SiteCode.XeMID:
+                                continue;
+                        }
+
                         // Cache the current site code
                         lastSiteCode = siteCode;
 
@@ -2343,7 +2356,9 @@ namespace MPF.Library
             text = text.Replace("PFI:", ((SiteCode?)SiteCode.PFIHash).ShortName());
             text = text.Replace("SS:", ((SiteCode?)SiteCode.SSHash).ShortName());
             text = text.Replace("SSv1:", ((SiteCode?)SiteCode.SSHash).ShortName());
+            text = text.Replace("<b>SSv1</b>:", ((SiteCode?)SiteCode.SSHash).ShortName());
             text = text.Replace("SSv2:", ((SiteCode?)SiteCode.SSHash).ShortName());
+            text = text.Replace("<b>SSv2</b>:", ((SiteCode?)SiteCode.SSHash).ShortName());
             text = text.Replace("SS version:", ((SiteCode?)SiteCode.SSVersion).ShortName());
             text = text.Replace("XeMID:", ((SiteCode?)SiteCode.XeMID).ShortName());
             text = text.Replace("XMID:", ((SiteCode?)SiteCode.XMID).ShortName());

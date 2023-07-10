@@ -87,6 +87,7 @@
 - Update redumper to build 183
 - Parse and format Redumper CD multisession data
 - New layerbreak takes precedence
+- Reduce pulled information for Xbox and X360
 
 ### 2.5 (2023-03-12)
 
