@@ -2058,6 +2058,7 @@ namespace MPF.Library
                             case SiteCode.SSVersion:
                             case SiteCode.XMID:
                             case SiteCode.XeMID:
+                                foundTag = true;
                                 continue;
                         }
 
