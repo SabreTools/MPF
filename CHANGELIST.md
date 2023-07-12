@@ -89,6 +89,7 @@
 - New layerbreak takes precedence
 - Reduce pulled information for Xbox and X360
 - Ensure we found the tags we're skipping
+- Omit pulling universal hash
 
 ### 2.5 (2023-03-12)
 

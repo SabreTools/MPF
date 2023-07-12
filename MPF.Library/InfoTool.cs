@@ -2051,6 +2051,11 @@ namespace MPF.Library
                         // Skip certain site codes because of data issues
                         switch (siteCode)
                         {
+                            // Audio CD
+                            case SiteCode.UniversalHash:
+                                foundTag = true;
+                                continue;
+
                             // Xbox and X360
                             case SiteCode.DMIHash:
                             case SiteCode.PFIHash:
