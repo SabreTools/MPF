@@ -1340,7 +1340,6 @@ namespace MPF.Modules.Redumper
                         return 0;
 
                     // Now that we're at the relevant lines, find the error count
-                    long errorCount = 0;
                     while (!sr.EndOfStream)
                     {
                         // Skip forward to the "REDUMP.ORG" line
@@ -1352,12 +1351,12 @@ namespace MPF.Modules.Redumper
                         // REDUMP.ORG errors: <error count>
                         string[] parts = line.Split(' ');
                         if (long.TryParse(parts[2], out long redump))
-                            errorCount += redump;
+                            return redump;
                         else
                             return -1;
                     }
 
-                    return errorCount;
+                    return -1;
                 }
                 catch
                 {

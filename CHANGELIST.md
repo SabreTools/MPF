@@ -1,4 +1,8 @@
-### 2.6 (2023-07-xx)
+### WIP (xxxx-xx-xx)
+
+- Simplify Redumper error value extraction
+
+### 2.6 (2023-07-14)
 
 - Update README
 - Add warning to login tab
