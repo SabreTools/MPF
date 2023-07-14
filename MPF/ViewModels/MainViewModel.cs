@@ -527,7 +527,7 @@ namespace MPF.UI.ViewModels
         {
             if (optionsWindow?.OptionsViewModel.SavedSettings == true)
             {
-                App.Options = optionsWindow.OptionsViewModel.Options.Clone() as Options;
+                App.Options = optionsWindow.OptionsViewModel.Options.Clone() as MPF.Core.Data.Options;
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
             }
         }

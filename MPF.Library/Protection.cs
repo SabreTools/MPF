@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using BinaryObjectScanner.Protection;
 using BurnOutSharp;
-using BurnOutSharp.ProtectionType;
-using MPF.Core.Data;
 using psxt001z;
 
 namespace MPF.Library
@@ -20,7 +19,7 @@ namespace MPF.Library
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(Dictionary<string, List<string>>, string)> RunProtectionScanOnPath(string path, Options options, IProgress<ProtectionProgress> progress = null)
+        public static async Task<(Dictionary<string, List<string>>, string)> RunProtectionScanOnPath(string path, Core.Data.Options options, IProgress<ProtectionProgress> progress = null)
         {
             try
             {
@@ -29,6 +28,7 @@ namespace MPF.Library
                     var scanner = new Scanner(
                         options.ScanArchivesForProtection,
                         scanContents: true, // Hardcoded value to avoid issues
+                        scanGameEngines: false, // Hardcoded value to avoid issues
                         options.ScanPackersForProtection,
                         scanPaths: true, // Hardcoded value to avoid issues
                         options.IncludeDebugProtectionInformation,

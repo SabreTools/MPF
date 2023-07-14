@@ -40,7 +40,7 @@ namespace MPF.Library
             Drive drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Options options,
+            Core.Data.Options options,
             BaseParameters parameters,
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null)
@@ -466,7 +466,7 @@ namespace MPF.Library
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        private static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Options options, IProgress<ProtectionProgress> progress = null)
+        private static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Core.Data.Options options, IProgress<ProtectionProgress> progress = null)
         {
             if (options.ScanForProtection && drive != null)
             {
@@ -646,7 +646,7 @@ namespace MPF.Library
         /// <param name="info">Information object that should contain normalized values</param>
         /// <param name="options">Options object representing user-defined options</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
-        public static (List<string>, string) FormatOutputData(SubmissionInfo info, Options options)
+        public static (List<string>, string) FormatOutputData(SubmissionInfo info, Core.Data.Options options)
         {
             // Check to see if the inputs are valid
             if (info == null)
@@ -2217,9 +2217,9 @@ namespace MPF.Library
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
 #if NET48 || NETSTANDARD2_1
-        private static bool FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        private static bool FillFromRedump(Core.Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
 #else
-        private async static Task<bool> FillFromRedump(Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        private async static Task<bool> FillFromRedump(Core.Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
 #endif
         {
             // Set the current dumper based on username

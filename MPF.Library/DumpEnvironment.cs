@@ -50,7 +50,7 @@ namespace MPF.Library
         /// <summary>
         /// Options object representing user-defined options
         /// </summary>
-        public Options Options { get; private set; }
+        public Core.Data.Options Options { get; private set; }
 
         /// <summary>
         /// Parameters object representing what to send to the internal program
@@ -93,7 +93,7 @@ namespace MPF.Library
         /// <param name="type"></param>
         /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
-        public DumpEnvironment(Options options,
+        public DumpEnvironment(Core.Data.Options options,
             string outputPath,
             Drive drive,
             RedumpSystem? system,

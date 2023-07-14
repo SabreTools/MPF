@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.6 (2023-07-xx)
 
 - Update README
 - Add warning to login tab
@@ -90,6 +90,7 @@
 - Reduce pulled information for Xbox and X360
 - Ensure we found the tags we're skipping
 - Omit pulling universal hash
+- Update Nuget packages to newest stable
 
 ### 2.5 (2023-03-12)
 

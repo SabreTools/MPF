@@ -24,7 +24,7 @@ namespace MPF.Check
                 return;
 
             // Loop through and process options
-            (Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
+            (Core.Data.Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
 
             // Make new Progress objects
             var resultProgress = new Progress<Result>();
