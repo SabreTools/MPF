@@ -6,7 +6,7 @@
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
     <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
-    <Version>2.5</Version>
+    <Version>2.6</Version>
     <AssemblyVersion>$(Version)</AssemblyVersion>
     <FileVersion>$(Version)</FileVersion>
     <IncludeSource>true</IncludeSource>
