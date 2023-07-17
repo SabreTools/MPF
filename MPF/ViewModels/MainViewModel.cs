@@ -802,19 +802,8 @@ namespace MPF.UI.ViewModels
                 App.Logger.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
-#else
-            // Media type detection on initialize is always disabled
-            App.Logger.VerboseLogLn($"Media type detection not available, defaulting to {defaultMediaType.LongName()}.");
-            CurrentMediaType = defaultMediaType;
-#endif
-
-#if NET48 || NETSTANDARD2_1
             // If the drive is marked active, try to read from it
             else if (drive.MarkedActive)
-#else
-            // If the drive is marked active, try to read from it
-            if (drive.MarkedActive)
-#endif
             {
                 App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}].. ");
                 (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType();
@@ -842,6 +831,11 @@ namespace MPF.UI.ViewModels
                 App.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
+#else
+            // Media type detection on initialize is always disabled
+            App.Logger.VerboseLogLn($"Media type detection not available, defaulting to {defaultMediaType.LongName()}.");
+            CurrentMediaType = defaultMediaType;
+#endif
 
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
@@ -1328,7 +1322,7 @@ namespace MPF.UI.ViewModels
             return true;
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 
