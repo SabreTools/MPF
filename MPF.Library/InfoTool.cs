@@ -615,7 +615,11 @@ namespace MPF.Library
                 foreach (string file in files)
                 {
                     string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                    zf.CreateEntryFromFile(file, entryName);
+#if NET48 || NETSTANDARD2_1
+                    zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
+#else
+                    zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
+#endif
 
                     // If the file is MPF-specific, don't delete
                     if (mpfFiles.Contains(file))
@@ -1200,7 +1204,7 @@ namespace MPF.Library
             return files;
         }
 
-        #endregion
+#endregion
 
         #region Normalization
 
