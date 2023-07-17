@@ -2051,12 +2051,20 @@ namespace MPF.Library
                         // Skip certain site codes because of data issues
                         switch (siteCode)
                         {
+                            // Multiple
+                            case SiteCode.InternalSerialName:
+                            case SiteCode.Multisession:
+                            case SiteCode.VolumeLabel:
+                                foundTag = true;
+                                break;
+
                             // Audio CD
+                            case SiteCode.RingNonZeroDataStart:
                             case SiteCode.UniversalHash:
                                 foundTag = true;
                                 continue;
 
-                            // Xbox and X360
+                            // Microsoft Xbox and Xbox 360
                             case SiteCode.DMIHash:
                             case SiteCode.PFIHash:
                             case SiteCode.SSHash:
@@ -2065,6 +2073,16 @@ namespace MPF.Library
                             case SiteCode.XeMID:
                                 foundTag = true;
                                 continue;
+
+                            // Microsoft Xbox One and Series X/S
+                            case SiteCode.Filename:
+                                foundTag = true;
+                                break;
+
+                            // Nintendo Gamecube
+                            case SiteCode.InternalName:
+                                foundTag = true;
+                                break;
                         }
 
                         // Cache the current site code

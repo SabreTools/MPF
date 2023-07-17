@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Simplify Redumper error value extraction
+- Don't pull comment fields that auto-populate
 
 ### 2.6 (2023-07-14)
 
