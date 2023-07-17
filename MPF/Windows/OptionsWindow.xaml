@@ -133,7 +133,7 @@
                     <StackPanel>
                         <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Header="Dumping">
                             <UniformGrid Columns="2" Rows="9">
-                                <CheckBox VerticalAlignment="Center" Content="Skip Type Detect"
+                                <CheckBox x:Name="SkipMediaTypeDetectionCheckBox" VerticalAlignment="Center" Content="Skip Type Detect"
                                      IsChecked="{Binding Options.SkipMediaTypeDetection}"
                                      ToolTip="Disable trying to guess media type inserted (may improve performance at startup)" Margin="0,4"
                                      />
