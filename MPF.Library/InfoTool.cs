@@ -2060,7 +2060,7 @@ namespace MPF.Library
                             case SiteCode.Multisession:
                             case SiteCode.VolumeLabel:
                                 foundTag = true;
-                                break;
+                                continue;
 
                             // Audio CD
                             case SiteCode.RingNonZeroDataStart:
@@ -2081,12 +2081,12 @@ namespace MPF.Library
                             // Microsoft Xbox One and Series X/S
                             case SiteCode.Filename:
                                 foundTag = true;
-                                break;
+                                continue;
 
                             // Nintendo Gamecube
                             case SiteCode.InternalName:
                                 foundTag = true;
-                                break;
+                                continue;
                         }
 
                         // Cache the current site code
