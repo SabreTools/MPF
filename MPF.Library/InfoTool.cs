@@ -2052,6 +2052,15 @@ namespace MPF.Library
                         if (!commentLine.Contains(siteCode.ShortName()))
                             continue;
 
+                        // Mark as having found a tag
+                        foundTag = true;
+
+                        // Cache the current site code
+                        lastSiteCode = siteCode;
+
+                        // A subset of tags can be multiline
+                        addToLast = IsMultiLine(siteCode);
+
                         // Skip certain site codes because of data issues
                         switch (siteCode)
                         {
@@ -2059,13 +2068,11 @@ namespace MPF.Library
                             case SiteCode.InternalSerialName:
                             case SiteCode.Multisession:
                             case SiteCode.VolumeLabel:
-                                foundTag = true;
                                 continue;
 
                             // Audio CD
                             case SiteCode.RingNonZeroDataStart:
                             case SiteCode.UniversalHash:
-                                foundTag = true;
                                 continue;
 
                             // Microsoft Xbox and Xbox 360
@@ -2075,22 +2082,16 @@ namespace MPF.Library
                             case SiteCode.SSVersion:
                             case SiteCode.XMID:
                             case SiteCode.XeMID:
-                                foundTag = true;
                                 continue;
 
                             // Microsoft Xbox One and Series X/S
                             case SiteCode.Filename:
-                                foundTag = true;
                                 continue;
 
                             // Nintendo Gamecube
                             case SiteCode.InternalName:
-                                foundTag = true;
                                 continue;
                         }
-
-                        // Cache the current site code
-                        lastSiteCode = siteCode;
 
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
@@ -2100,11 +2101,6 @@ namespace MPF.Library
                         else
                             info.CommonDiscInfo.CommentsSpecialFields[siteCode] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
 
-                        // A subset of tags can be multiline
-                        addToLast = IsMultiLine(siteCode);
-
-                        // Mark as having found a tag
-                        foundTag = true;
                         break;
                     }
 
