@@ -1002,6 +1002,9 @@ namespace MPF.UI.ViewModels
             else
                 Env.Parameters.Speed = App.Instance.DriveSpeedComboBox.SelectedValue as int?;
 
+            // Disable change handling
+            DisableEventHandlers();
+
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             trimmedPath = InfoTool.NormalizeOutputPaths(trimmedPath);
             App.Instance.OutputPathTextBox.Text = trimmedPath;
@@ -1010,6 +1013,9 @@ namespace MPF.UI.ViewModels
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
             if (mediaTypeIndex > -1)
                 App.Instance.MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
+
+            // Reenable change handling
+            EnableEventHandlers();
         }
 
         /// <summary>
@@ -1479,7 +1485,10 @@ namespace MPF.UI.ViewModels
         /// Handler for OutputPathTextBox TextChanged event
         /// </summary>
         private void OutputPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
-            => EnsureDiscInformation();
+        {
+            if (_canExecuteSelectionChanged)
+                EnsureDiscInformation();
+        }
 
         /// <summary>
         /// Handler for StartStopButton Click event

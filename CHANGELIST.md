@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Ensure custom parameters properly set
+
 ### 2.6.1 (2023-07-19)
 
 - Simplify Redumper error value extraction
