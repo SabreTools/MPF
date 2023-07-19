@@ -13,8 +13,18 @@ namespace MPF.Modules.Redumper
         /// <returns>Valid extension (with leading '.'), null on error</returns>
         public static string Extension(MediaType? type)
         {
-            // TODO: Determine what extensions are used for each supported type
-            return ".bin";
+            switch (type)
+            {
+                case MediaType.CDROM:
+                    return ".bin";
+                case MediaType.DVD:
+                case MediaType.HDDVD:
+                case MediaType.BluRay:
+                    return ".iso";
+                case MediaType.NONE:
+                default:
+                    return null;
+            }
         }
 
         #endregion

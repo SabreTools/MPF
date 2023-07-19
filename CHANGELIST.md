@@ -4,6 +4,7 @@
 - Don't pull comment fields that auto-populate
 - Set best compression levels for log files
 - Be more explicit about .NET 6 limitation
+- Set extensions for Redumper in UI
 
 ### 2.6 (2023-07-14)
 
