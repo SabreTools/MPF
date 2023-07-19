@@ -398,6 +398,7 @@ namespace MPF.Modules.Redumper
                     info.CopyProtection.AntiModchip = GetPlayStationAntiModchipDetected($"{basePath}.log").ToYesNo();
                     info.EDC.EDC = GetPlayStationEDCStatus($"{basePath}.log").ToYesNo();
                     info.CopyProtection.LibCrypt = GetPlayStationLibCryptStatus($"{basePath}.log").ToYesNo();
+                    info.CopyProtection.LibCryptData = GetPlayStationLibCryptData($"{basePath}.log");
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
@@ -1558,6 +1559,45 @@ namespace MPF.Modules.Redumper
                     }
 
                     return false;
+                }
+                catch
+                {
+                    // We don't care what the exception is right now
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the LibCrypt data from the input file, if possible
+        /// </summary>
+        /// <param name="log">Log file location</param>
+        /// <returns>PS1 LibCrypt data, if possible</returns>
+        private static string GetPlayStationLibCryptData(string log)
+        {
+            // If the file doesn't exist, we can't get info from it
+            if (!File.Exists(log))
+                return null;
+
+            // TODO: Implement when we have an example
+            using (StreamReader sr = File.OpenText(log))
+            {
+                try
+                {
+                    // Fast forward to the LibCrypt line
+                    while (!sr.EndOfStream && !sr.ReadLine().TrimStart().StartsWith("libcrypt:")) ;
+                    if (sr.EndOfStream)
+                        return null;
+
+                    // Now that we're at the relevant entries, read each line in and concatenate
+                    string pvdString = "", line = sr.ReadLine().Trim();
+                    while (line.StartsWith("MSF:"))
+                    {
+                        pvdString += line + "\n";
+                        line = sr.ReadLine().Trim();
+                    }
+
+                    return pvdString.TrimEnd('\n');
                 }
                 catch
                 {

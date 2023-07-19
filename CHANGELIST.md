@@ -2,6 +2,7 @@
 
 - Ensure custom parameters properly set
 - Universal hash only for audio discs
+- Support LibCrypt data from Redumper
 
 ### 2.6.1 (2023-07-19)
 
