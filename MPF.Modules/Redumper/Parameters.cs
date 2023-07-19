@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using MPF.Core.Utilities;
 using RedumpLib.Data;
 
 namespace MPF.Modules.Redumper
@@ -275,9 +276,12 @@ namespace MPF.Modules.Redumper
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
-                    // Attempt to get the universal hash
-                    string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+                    // Attempt to get the universal hash, if it's an audio disc
+                    if (this.System.IsAudio())
+                    {
+                        string universalHash = GetUniversalHash($"{basePath}.log") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+                    }
 
                     // Attempt to get the non-zero data start
                     string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;

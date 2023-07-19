@@ -101,6 +101,7 @@ namespace MPF.Core.Utilities
                 case RedumpSystem.HasbroVideoNowJr:
                 case RedumpSystem.HasbroVideoNowXP:
                 case RedumpSystem.PhilipsCDi:
+                case RedumpSystem.PlayStationGameSharkUpdates:
                 case RedumpSystem.SuperAudioCD:
                     return true;
                 default:

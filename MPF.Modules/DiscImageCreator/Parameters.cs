@@ -445,9 +445,12 @@ namespace MPF.Modules.DiscImageCreator
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt") ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
-                    // Attempt to get the universal hash
-                    string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+                    // Attempt to get the universal hash, if it's an audio disc
+                    if (this.System.IsAudio())
+                    {
+                        string universalHash = GetUniversalHash($"{basePath}_disc.txt") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
+                    }
 
                     break;
 

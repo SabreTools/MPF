@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Ensure custom parameters properly set
+- Universal hash only for audio discs
 
 ### 2.6.1 (2023-07-19)
 
