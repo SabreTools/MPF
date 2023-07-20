@@ -29,7 +29,7 @@ namespace MPF.Modules.Redumper
         public override string InputPath => DriveValue;
 
         /// <inheritdoc/>
-        public override string OutputPath => Path.Combine(ImagePathValue?.Trim('"') ?? string.Empty, ImageNameValue?.Trim('"') ?? string.Empty);
+        public override string OutputPath => Path.Combine(ImagePathValue?.Trim('"') ?? string.Empty, ImageNameValue?.Trim('"') ?? string.Empty) + GetDefaultExtension(this.Type);
 
         /// <inheritdoc/>
         public override int? Speed => SpeedValue;
@@ -1579,7 +1579,6 @@ namespace MPF.Modules.Redumper
             if (!File.Exists(log))
                 return null;
 
-            // TODO: Implement when we have an example
             using (StreamReader sr = File.OpenText(log))
             {
                 try
@@ -1590,14 +1589,14 @@ namespace MPF.Modules.Redumper
                         return null;
 
                     // Now that we're at the relevant entries, read each line in and concatenate
-                    string pvdString = "", line = sr.ReadLine().Trim();
+                    string libCryptString = "", line = sr.ReadLine().Trim();
                     while (line.StartsWith("MSF:"))
                     {
-                        pvdString += line + "\n";
+                        libCryptString += line + "\n";
                         line = sr.ReadLine().Trim();
                     }
 
-                    return pvdString.TrimEnd('\n');
+                    return libCryptString.TrimEnd('\n');
                 }
                 catch
                 {
