@@ -4,6 +4,7 @@
 - Universal hash only for audio discs
 - Support LibCrypt data from Redumper
 - Always show extension for Redumper
+- Normalize old universal hash text
 
 ### 2.6.1 (2023-07-19)
 
