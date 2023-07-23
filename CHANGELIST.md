@@ -7,6 +7,7 @@
 - Normalize old universal hash text
 - Skip extra tracks during checking
 - Modify the track count on checking
+- Attempt to match universal hash
 
 ### 2.6.1 (2023-07-19)
 

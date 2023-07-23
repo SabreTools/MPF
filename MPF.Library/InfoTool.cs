@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -2320,6 +2321,29 @@ namespace MPF.Library
                     }
                 }
 
+                // If we don't have any matches but we have a universal hash
+                if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.UniversalHash))
+                {
+                    (bool singleFound, List<int> foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
+
+                    // Ensure that the hash is found
+                    allFound = singleFound;
+
+                    // If we found a track, only keep track of distinct found tracks
+                    if (singleFound && foundIds != null)
+                    {
+                        if (fullyMatchedIDs == null)
+                            fullyMatchedIDs = foundIds;
+                        else
+                            fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
+                    }
+                    // If no tracks were found, remove all fully matched IDs found so far
+                    else
+                    {
+                        fullyMatchedIDs = new List<int>();
+                    }
+                }
+
                 // Make sure we only have unique IDs
                 info.PartiallyMatchedIDs = info.PartiallyMatchedIDs
                     .Distinct()
@@ -2483,6 +2507,57 @@ namespace MPF.Library
             List<int> newIds = ListSearchResults(wc, sha1);
 #else
             List<int> newIds = await ListSearchResults(wc, sha1);
+#endif
+
+            // If we got null back, there was an error
+            if (newIds == null)
+            {
+                resultProgress?.Report(Result.Failure("There was an unknown error retrieving information from Redump"));
+                return (false, null);
+            }
+
+            // If no IDs match any track, just return
+            if (!newIds.Any())
+                return (false, null);
+
+            // Join the list of found IDs to the existing list, if possible
+            if (info.PartiallyMatchedIDs.Any())
+                info.PartiallyMatchedIDs.AddRange(newIds);
+            else
+                info.PartiallyMatchedIDs = newIds;
+
+            return (true, newIds);
+        }
+
+        /// <summary>
+        /// Validate a universal hash against Redump, if possible
+        /// </summary>
+        /// <param name="wc">RedumpWebClient for making the connection</param>
+        /// <param name="info">Existing SubmissionInfo object to fill</param>
+        /// <param name="resultProgress">Optional result progress callback</param>
+        /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
+#if NET48 || NETSTANDARD2_1
+        private static (bool, List<int>) ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
+#else
+        private async static Task<(bool, List<int>)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
+#endif
+        {
+            // If we don't have a universal hash
+            string universalHash = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
+            if (string.IsNullOrEmpty(universalHash))
+            {
+                resultProgress?.Report(Result.Failure("Line could not be parsed for hash data"));
+                return (false, null);
+            }
+
+            // Format the universal hash for finding within the comments
+            universalHash = $"comments/only/{universalHash}";
+
+            // Get all matching IDs for the hash
+#if NET48 || NETSTANDARD2_1
+            List<int> newIds = ListSearchResults(wc, universalHash);
+#else
+            List<int> newIds = await ListSearchResults(wc, universalHash);
 #endif
 
             // If we got null back, there was an error
