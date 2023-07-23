@@ -1204,7 +1204,7 @@ namespace MPF.Library
             return files;
         }
 
-#endregion
+        #endregion
 
         #region Normalization
 
@@ -2096,7 +2096,7 @@ namespace MPF.Library
                         // If we don't already have this site code, add it to the dictionary
                         if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
                             info.CommonDiscInfo.CommentsSpecialFields[siteCode] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
-                        
+
                         // Otherwise, append the value to the existing key
                         else
                             info.CommonDiscInfo.CommentsSpecialFields[siteCode] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
@@ -2279,6 +2279,16 @@ namespace MPF.Library
                     // Catch any errant blank lines
                     if (string.IsNullOrWhiteSpace(hashData))
                         continue;
+
+                    // If the line ends in a known extra track names, skip them for checking
+                    if (hashData.Contains("(Track 0).bin")
+                        || hashData.Contains("(Track 00).bin")
+                        || hashData.Contains("(Track A).bin")
+                        || hashData.Contains("(Track AA).bin"))
+                    {
+                        resultProgress?.Report(Result.Success("Extra track found, skipping!"));
+                        continue;
+                    }
 
 #if NET48 || NETSTANDARD2_1
                     (bool singleFound, List<int> foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
