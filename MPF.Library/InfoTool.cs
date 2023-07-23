@@ -2274,11 +2274,16 @@ namespace MPF.Library
                 // Loop through all of the hashdata to find matching IDs
                 resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
                 string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.TrimEnd('\n').Split('\n');
+                int trackCount = splitData.Length;
                 foreach (string hashData in splitData)
                 {
                     // Catch any errant blank lines
                     if (string.IsNullOrWhiteSpace(hashData))
+                    {
+                        trackCount--;
+                        resultProgress?.Report(Result.Success("Blank line found, skipping!"));
                         continue;
+                    }
 
                     // If the line ends in a known extra track names, skip them for checking
                     if (hashData.Contains("(Track 0).bin")
@@ -2286,6 +2291,7 @@ namespace MPF.Library
                         || hashData.Contains("(Track A).bin")
                         || hashData.Contains("(Track AA).bin"))
                     {
+                        trackCount--;
                         resultProgress?.Report(Result.Success("Extra track found, skipping!"));
                         continue;
                     }
@@ -2334,10 +2340,10 @@ namespace MPF.Library
                 {
                     // Skip if the track count doesn't match
 #if NET48 || NETSTANDARD2_1
-                    if (!ValidateTrackCount(wc, fullyMatchedIDs[i], splitData.Length))
+                    if (!ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
                         continue;
 #else
-                    if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], splitData.Length))
+                    if (!await ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
                         continue;
 #endif
 

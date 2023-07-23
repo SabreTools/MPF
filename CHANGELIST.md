@@ -6,6 +6,7 @@
 - Always show extension for Redumper
 - Normalize old universal hash text
 - Skip extra tracks during checking
+- Modify the track count on checking
 
 ### 2.6.1 (2023-07-19)
 
