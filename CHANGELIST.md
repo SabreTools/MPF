@@ -9,6 +9,7 @@
 - Modify the track count on checking
 - Attempt to match universal hash
 - Fix .NET Framework 4.8 build
+- Fix universal hash URL generation
 
 ### 2.6.1 (2023-07-19)
 

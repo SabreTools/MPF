@@ -2336,10 +2336,7 @@ namespace MPF.Library
                     // If we found a track, only keep track of distinct found tracks
                     if (singleFound && foundIds != null)
                     {
-                        if (fullyMatchedIDs == null)
-                            fullyMatchedIDs = foundIds;
-                        else
-                            fullyMatchedIDs = fullyMatchedIDs.Intersect(foundIds).ToList();
+                        fullyMatchedIDs = foundIds;
                     }
                     // If no tracks were found, remove all fully matched IDs found so far
                     else
@@ -2440,11 +2437,12 @@ namespace MPF.Library
         /// </summary>
         /// <param name="wc">RedumpWebClient for making the connection</param>
         /// <param name="query">Query string to attempt to search for</param>
+        /// <param name="filterForwardSlashes">True to filter forward slashes, false otherwise</param>
         /// <returns>All disc IDs for the given query, null on error</returns>
 #if NET48 || NETSTANDARD2_1
-        private static List<int> ListSearchResults(RedumpWebClient wc, string query)
+        private static List<int> ListSearchResults(RedumpWebClient wc, string query, bool filterForwardSlashes = true)
 #else
-        private async static Task<List<int>> ListSearchResults(RedumpHttpClient wc, string query)
+        private async static Task<List<int>> ListSearchResults(RedumpHttpClient wc, string query, bool filterForwardSlashes = true)
 #endif
         {
             List<int> ids = new List<int>();
@@ -2454,7 +2452,8 @@ namespace MPF.Library
 
             // Special characters become dashes
             query = query.Replace(' ', '-');
-            query = query.Replace('/', '-');
+            if (filterForwardSlashes)
+                query = query.Replace('/', '-');
             query = query.Replace('\\', '/');
 
             // Lowercase is defined per language
@@ -2550,18 +2549,18 @@ namespace MPF.Library
             string universalHash = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
             if (string.IsNullOrEmpty(universalHash))
             {
-                resultProgress?.Report(Result.Failure("Line could not be parsed for hash data"));
+                resultProgress?.Report(Result.Failure("Universal hash was missing"));
                 return (false, null);
             }
 
             // Format the universal hash for finding within the comments
-            universalHash = $"comments/only/{universalHash}";
+            universalHash = $"{universalHash.Substring(0, universalHash.Length - 1)}/comments/only";
 
             // Get all matching IDs for the hash
 #if NET48 || NETSTANDARD2_1
-            List<int> newIds = ListSearchResults(wc, universalHash);
+            List<int> newIds = ListSearchResults(wc, universalHash, filterForwardSlashes: false);
 #else
-            List<int> newIds = await ListSearchResults(wc, universalHash);
+            List<int> newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
 #endif
 
             // If we got null back, there was an error
