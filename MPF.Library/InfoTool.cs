@@ -2324,7 +2324,11 @@ namespace MPF.Library
                 // If we don't have any matches but we have a universal hash
                 if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.UniversalHash))
                 {
+#if NET48 || NETSTANDARD2_1
+                    (bool singleFound, List<int> foundIds) = ValidateUniversalHash(wc, info, resultProgress);
+#else
                     (bool singleFound, List<int> foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
+#endif
 
                     // Ensure that the hash is found
                     allFound = singleFound;
