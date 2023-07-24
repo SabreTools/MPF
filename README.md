@@ -27,10 +27,19 @@ MPF is the main, UI-centric application of the MPF suite. This program allows us
     ```
     - Alternatively, look at this [StackOverflow question](https://stackoverflow.com/questions/403731/strong-name-validation-failed) for more information.
 
-- .NET Framework 4.8 or .NET 6.0 Runtimes (.NET 6.0 is mostly functional due to a dependency issues but may be unstable in some situations)
+- .NET Framework 4.8 or .NET 6.0 Runtimes
 - As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
+
+### Support Limitations
+
+.NET 6 has some known limitations that are documented in code and in some prior support tickets:
+
+- Windows-only due to reliance on WPF and Winforms
+    - MAUI is not a viable alternative due to lack of out-of-box support for Linux
+    - Avalonia is being heavily considered
+- No media type detection due to lack of alternatives to IMAPI2
 
 ### Build Instructions
 
