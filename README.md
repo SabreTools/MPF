@@ -32,6 +32,24 @@ MPF is the main, UI-centric application of the MPF suite. This program allows us
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
 
+### Build Instructions
+
+To build for .NET Framework 4.8 (Windows only), ensure that the .NET Framework 4.8 SDK is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+
+```
+dotnet restore
+msbuild MPF\MPF.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
+```
+
+To build for .NET 6.0 (Windows only), ensure that the .NET 6.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+
+```
+dotnet build MPF\MPF.csproj --framework net6.0-windows --runtime [win7-x64|win8-x64|win81-x64|win10-x64]
+```
+
+Choose one of `[win7-x64|win8-x64|win81-x64|win10-x64]` depending on the machine you are targeting. `win10-x64` also includes Windows 11.
+
+
 ## Media Preservation Frontend Checker (MPF.Check)
 
 MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from DiscImageCreator, Aaru, Redumper, dd for Windows, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
@@ -40,6 +58,23 @@ MPF.Check is a commandline-only program that allows users to generate submission
 
 - Windows 8.1 (x86 or x64) or newer, GNU/Linux x64, or OSX x64
 - .NET Framework 4.8 (Windows or `mono` only) or .NET 6.0 Runtimes
+
+### Build Instructions
+
+To build for .NET Framework 4.8 (Windows only), ensure that the .NET Framework 4.8 SDK is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+
+```
+dotnet restore
+msbuild MPF.Check\MPF.Check.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
+```
+
+To build for .NET 6.0 (All OSes, Windows target only), ensure that the .NET 6.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+
+```
+dotnet build MPF.Check\MPF.Check.csproj --framework net6.0 --runtime [win7-x64|win8-x64|win81-x64|win10-x64|linux-x64|osx-x64]
+```
+
+Choose one of `[win7-x64|win8-x64|win81-x64|win10-x64|linux-x64|osx-x64]` depending on the machine you are targeting. `win10-x64` also includes Windows 11.
 
 ## Information
 
