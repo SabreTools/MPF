@@ -13,6 +13,7 @@
 - Add Windows publish script
 - Add *nix publish script
 - Add build instructions to README
+- Clarify build instructions
 
 ### 2.6.1 (2023-07-19)
 

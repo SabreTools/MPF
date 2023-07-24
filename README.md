@@ -68,7 +68,7 @@ dotnet restore
 msbuild MPF.Check\MPF.Check.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
 ```
 
-To build for .NET 6.0 (All OSes, Windows target only), ensure that the .NET 6.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+To build for .NET 6.0 (All supported OSes), ensure that the .NET 6.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 ```
 dotnet build MPF.Check\MPF.Check.csproj --framework net6.0 --runtime [win7-x64|win8-x64|win81-x64|win10-x64|linux-x64|osx-x64]
