@@ -14,12 +14,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D1DCF5A-F0B0-4E81-A05B-F1A7D37C9D9D}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		build-win.bat = build-win.bat
 		CHANGELIST.md = CHANGELIST.md
 		.github\ISSUE_TEMPLATE\feature-request.md = .github\ISSUE_TEMPLATE\feature-request.md
 		.github\ISSUE_TEMPLATE\informational.md = .github\ISSUE_TEMPLATE\informational.md
 		.github\ISSUE_TEMPLATE\issue-report.md = .github\ISSUE_TEMPLATE\issue-report.md
+		publish-nix.sh = publish-nix.sh
 		README.md = README.md
+		publish-win.bat = publish-win.bat
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedumpLib", "RedumpLib\RedumpLib.csproj", "{13574913-A426-4644-9955-F49AD0876E5F}"

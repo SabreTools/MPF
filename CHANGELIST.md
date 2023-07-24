@@ -11,6 +11,7 @@
 - Fix .NET Framework 4.8 build
 - Fix universal hash URL generation
 - Add Windows publish script
+- Add *nix publish script
 
 ### 2.6.1 (2023-07-19)
 
