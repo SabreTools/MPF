@@ -954,6 +954,7 @@ namespace MPF.Modules.Redumper
                     case CommandStrings.Split:
                     case CommandStrings.Verify:
                     case CommandStrings.DVDKey:
+                    case CommandStrings.DVDIsoKey:
                     case CommandStrings.Info:
                         ModeValues.Add(part);
                         break;

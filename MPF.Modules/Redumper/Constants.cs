@@ -17,6 +17,7 @@ namespace MPF.Modules.Redumper
         public const string Split = "split";
         public const string Verify = "verify";
         public const string DVDKey = "dvdkey";
+        public const string DVDIsoKey = "dvdisokey";
     }
 
     /// <summary>
