@@ -218,7 +218,7 @@ namespace MPF.Library
             {
                 if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                    foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => !p.StartsWith("Macrovision Security Driver"))
                         .Where(p => p != "SafeDisc")
@@ -229,7 +229,7 @@ namespace MPF.Library
                 }
                 else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                    foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => !p.StartsWith("Macrovision Security Driver"))
                         .Where(p => p != "SafeDisc")
@@ -239,7 +239,7 @@ namespace MPF.Library
                 }
                 else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                    foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => !p.StartsWith("Macrovision Security Driver"))
                         .Where(p => p != "SafeDisc")
@@ -248,7 +248,7 @@ namespace MPF.Library
                 }
                 else if (foundProtections.Any(p => p.StartsWith("Macrovision Security Driver")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                    foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => p != "SafeDisc")
                         .Where(p => p != "SafeDisc 1/Lite")
@@ -256,13 +256,13 @@ namespace MPF.Library
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 2+"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                    foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => p != "SafeDisc");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 1/Lite"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                    foundProtections = foundProtections.Where(p => !p.StartsWith("Macrovision Protected Application"))
                         .Where(p => !p.StartsWith("Macrovision Protection File"))
                         .Where(p => p != "SafeDisc");
                 }
