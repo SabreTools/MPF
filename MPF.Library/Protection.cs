@@ -214,80 +214,57 @@ namespace MPF.Library
             }
 
             // SafeDisc
-            // TODO: Update based on new internal naming schemes
             if (foundProtections.Any(p => p.StartsWith("SafeDisc")))
             {
                 if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                        .Where(p => !p.StartsWith("Macrovision Protection File"))
+                        .Where(p => !p.StartsWith("Macrovision Security Driver"))
+                        .Where(p => p != "SafeDisc")
+                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}")))
+                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
                         .Where(p => p != "SafeDisc 1/Lite")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc 2")
-                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
-                        .Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"))
-                        .Where(p => !p.StartsWith("SafeDisc (drvmgt.dll)"))
-                        .Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"))
-                        .Where(p => p != "SafeDisc Lite");
+                        .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => p.StartsWith("SafeDisc (drvmgt.dll)")))
+                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}-[0-9]\.[0-9]{2}\.[0-9]{3}")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                        .Where(p => !p.StartsWith("Macrovision Protection File"))
+                        .Where(p => !p.StartsWith("Macrovision Security Driver"))
+                        .Where(p => p != "SafeDisc")
+                        .Where(p => !(Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
                         .Where(p => p != "SafeDisc 1/Lite")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc 2")
-                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
-                        .Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"))
-                        .Where(p => !p.StartsWith("SafeDisc (secdrv.sys)"))
-                        .Where(p => p != "SafeDisc Lite");
+                        .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => p.StartsWith("SafeDisc (secdrv.sys)")))
+                else if (foundProtections.Any(p => Regex.IsMatch(p, @"SafeDisc [0-9]\.[0-9]{2}\.[0-9]{3}/+")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                        .Where(p => !p.StartsWith("Macrovision Protection File"))
+                        .Where(p => !p.StartsWith("Macrovision Security Driver"))
+                        .Where(p => p != "SafeDisc")
                         .Where(p => p != "SafeDisc 1/Lite")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc 2")
-                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
-                        .Where(p => !p.StartsWith("SafeDisc (dplayerx.dll)"))
-                        .Where(p => p != "SafeDisc Lite");
+                        .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => p.StartsWith("SafeDisc (dplayerx.dll)")))
+                else if (foundProtections.Any(p => p.StartsWith("Macrovision Security Driver")))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
+                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                        .Where(p => !p.StartsWith("Macrovision Protection File"))
+                        .Where(p => p != "SafeDisc")
                         .Where(p => p != "SafeDisc 1/Lite")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc 2")
-                        .Where(p => p != "SafeDisc 3.20-4.xx (version removed)")
-                        .Where(p => p != "SafeDisc Lite");
+                        .Where(p => p != "SafeDisc 2+");
                 }
-                else if (foundProtections.Any(p => p == "SafeDisc 3.20-4.xx (version removed)"))
+                else if (foundProtections.Any(p => p == "SafeDisc 2+"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
-                        .Where(p => p != "SafeDisc 1/Lite")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc 2")
-                        .Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc 2"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
-                        .Where(p => p != "SafeDisc 1/Lite")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc Lite");
+                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                        .Where(p => !p.StartsWith("Macrovision Protection File"))
+                        .Where(p => p != "SafeDisc");
                 }
                 else if (foundProtections.Any(p => p == "SafeDisc 1/Lite"))
                 {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
-                        .Where(p => p != "SafeDisc 1-3")
-                        .Where(p => p != "SafeDisc Lite");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc Lite"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc")
-                        .Where(p => p != "SafeDisc 1-3");
-                }
-                else if (foundProtections.Any(p => p == "SafeDisc 1-3"))
-                {
-                    foundProtections = foundProtections.Where(p => p != "SafeDisc");
+                    foundProtections = foundProtections.Where(p => p != "Macrovision Protected Application")
+                        .Where(p => !p.StartsWith("Macrovision Protection File"))
+                        .Where(p => p != "SafeDisc");
                 }
             }
 
