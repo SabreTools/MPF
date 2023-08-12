@@ -42,8 +42,6 @@ namespace MPF.Modules.UmdImageCreator
                     {
                         if (!File.Exists($"{basePath}_disc.txt"))
                             missingFiles.Add($"{basePath}_disc.txt");
-                        if (!File.Exists($"{basePath}_drive.txt"))
-                            missingFiles.Add($"{basePath}_drive.txt");
                         if (!File.Exists($"{basePath}_mainError.txt"))
                             missingFiles.Add($"{basePath}_mainError.txt");
                         if (!File.Exists($"{basePath}_mainInfo.txt"))
