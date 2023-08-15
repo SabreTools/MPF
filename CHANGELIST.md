@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.6.3 (2023-08-15)
 
 - Update redumper to build 195
 - Add known .NET 6 limitations to README
