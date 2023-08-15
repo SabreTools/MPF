@@ -65,6 +65,7 @@ namespace MPF.Modules.UmdImageCreator
         {
             // TODO: Determine if there's a UMDImageCreator version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "_disc.txt")?.ToString("yyyy-MM-dd hh:mm:ss");
 
             // Extract info based generically on MediaType
             switch (this.Type)

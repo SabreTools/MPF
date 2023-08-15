@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using psxt001z;
 using RedumpLib.Data;
 using Xunit;
 
@@ -160,6 +161,7 @@ namespace MPF.Test.RedumpLib
                 DumpingInfo = new DumpingInfoSection()
                 {
                     DumpingProgram = "DiscImageCreator 20500101",
+                    DumpingDate = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"),
                     Manufacturer = "ATAPI",
                     Model = "Optical Drive",
                     Firmware = "1.23",

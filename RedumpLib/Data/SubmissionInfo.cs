@@ -535,6 +535,10 @@ namespace RedumpLib.Data
         public string DumpingProgram { get; set; }
 
         // Name not defined by Redump
+        [JsonProperty(PropertyName = "d_dumping_date", Required = Required.AllowNull)]
+        public string DumpingDate { get; set; }
+
+        // Name not defined by Redump
         [JsonProperty(PropertyName = "d_drive_manufacturer", Required = Required.AllowNull)]
         public string Manufacturer { get; set; }
 
@@ -555,6 +559,7 @@ namespace RedumpLib.Data
             return new DumpingInfoSection
             {
                 DumpingProgram = this.DumpingProgram,
+                DumpingDate = this.DumpingDate,
                 Manufacturer = this.Manufacturer,
                 Model = this.Model,
                 Firmware = this.Firmware,

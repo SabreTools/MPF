@@ -85,6 +85,7 @@ namespace MPF.Core.Data
         // Automatic Information
 
         public const string DumpingProgramField = "Dumping Program";
+        public const string DumpingDateField = "Date";
         public const string DumpingDriveManufacturer = "Manufacturer";
         public const string DumpingDriveModel = "Model";
         public const string DumpingDriveFirmware = "Firmware";

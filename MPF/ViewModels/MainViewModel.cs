@@ -424,6 +424,7 @@ namespace MPF.UI.ViewModels
                 DumpingInfo = new DumpingInfoSection()
                 {
                     DumpingProgram = "DiscImageCreator 20500101",
+                    DumpingDate = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"),
                     Manufacturer = "ATAPI",
                     Model = "Optical Drive",
                     Firmware = "1.23",

@@ -199,6 +199,7 @@ namespace MPF.Modules.Aaru
 
             // TODO: Determine if there's an Aaru version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd hh:mm:ss");
 
             // Deserialize the sidecar, if possible
             var sidecar = GenerateSidecar(basePath + ".cicm.xml");

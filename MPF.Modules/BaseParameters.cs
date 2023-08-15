@@ -1340,6 +1340,22 @@ namespace MPF.Modules
         }
 
         /// <summary>
+        /// Get the last modified date from a file path, if possible
+        /// </summary>
+        /// <param name="filename">Path to the input file</param>
+        /// <returns>Filled DateTime on success, null on failure</returns>
+        protected static DateTime? GetFileModifiedDate(string filename, bool fallback = false)
+        {
+            if (string.IsNullOrWhiteSpace(filename))
+                return fallback ? (DateTime?)DateTime.UtcNow : null;
+            else if (!File.Exists(filename))
+                return fallback ? (DateTime?)DateTime.UtcNow : null;
+
+            var fi = new FileInfo(filename);
+            return fi.LastWriteTimeUtc;
+        }
+
+        /// <summary>
         /// Get the split values for ISO-based media
         /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>

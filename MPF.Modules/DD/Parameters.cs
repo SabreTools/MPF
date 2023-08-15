@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -83,6 +84,7 @@ namespace MPF.Modules.DD
 
             // TODO: Determine if there's a DD version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
+            info.DumpingInfo.DumpingDate = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss");
 
             switch (this.Type)
             {

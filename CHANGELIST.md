@@ -4,6 +4,7 @@
 - Add known .NET 6 limitations to README
 - Remove `_drive.txt` from required UIC outputs
 - Make `use` flag required for MPF.Check
+- Add dumping date to log
 
 ### 2.6.2 (2023-07-25)
 

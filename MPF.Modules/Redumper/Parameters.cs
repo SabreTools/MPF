@@ -247,6 +247,7 @@ namespace MPF.Modules.Redumper
         {
             // Get the dumping program and version
             info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {GetVersion($"{basePath}.log") ?? "Unknown Version"}";
+            info.DumpingInfo.DumpingDate = GetFileModifiedDate($"{basePath}.log")?.ToString("yyyy-MM-dd hh:mm:ss");
 
             // Fill in the hardware data
             if (GetHardwareInfo($"{basePath}.log", out string manufacturer, out string model, out string firmware))
