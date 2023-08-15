@@ -25,6 +25,11 @@ namespace MPF.Check
 
             // Loop through and process options
             (Core.Data.Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
+            if (options.InternalProgram == InternalProgram.NONE)
+            {
+                DisplayHelp("A program name needs to be provided");
+                return;
+            }
 
             // Make new Progress objects
             var resultProgress = new Progress<Result>();

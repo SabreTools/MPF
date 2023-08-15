@@ -3,6 +3,7 @@
 - Update redumper to build 195
 - Add known .NET 6 limitations to README
 - Remove `_drive.txt` from required UIC outputs
+- Make `use` flag required for MPF.Check
 
 ### 2.6.2 (2023-07-25)
 

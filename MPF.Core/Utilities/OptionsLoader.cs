@@ -109,10 +109,6 @@ namespace MPF.Core.Utilities
                 }
             }
 
-            // We default to DiscImageCreator currently
-            if (options.InternalProgram == InternalProgram.NONE)
-                options.InternalProgram = InternalProgram.DiscImageCreator;
-
             // Now deal with the complex options
             options.ScanForProtection = scan && !string.IsNullOrWhiteSpace(parsedPath);
             options.OutputSeparateProtectionFile = scan && protectFile && !string.IsNullOrWhiteSpace(parsedPath);
@@ -127,8 +123,8 @@ namespace MPF.Core.Utilities
         {
             var supportedArguments = new List<string>();
 
+            supportedArguments.Add("-u, --use <program>            Dumping program output type [REQUIRED]");
             supportedArguments.Add("-c, --credentials <user> <pw>  Redump username and password");
-            supportedArguments.Add("-u, --use <program>            Dumping program output type");
             supportedArguments.Add("-p, --path <drivepath>         Physical drive path for additional checks");
             supportedArguments.Add("-s, --scan                     Enable copy protection scan (requires --path)");
             supportedArguments.Add("-f, --protect-file             Output protection to separate file (requires --scan)");
