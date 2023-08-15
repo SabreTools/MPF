@@ -284,9 +284,12 @@ namespace MPF.Modules.Redumper
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash] = universalHash;
                     }
 
-                    // Attempt to get the non-zero data start
-                    string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+                    // Attempt to get the non-zero data start, if it's an audio disc
+                    if (this.System.IsAudio())
+                    {
+                        string ringNonZeroDataStart = GetRingNonZeroDataStart($"{basePath}.log") ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.RingNonZeroDataStart] = ringNonZeroDataStart;
+                    }
 
                     break;
 
@@ -879,7 +882,7 @@ namespace MPF.Modules.Redumper
                 default:
                     BaseCommand = null;
                     return;
-            }  
+            }
 
             this[FlagStrings.Drive] = true;
             DriveValue = driveLetter.ToString();

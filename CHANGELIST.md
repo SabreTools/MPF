@@ -5,6 +5,7 @@
 - Remove `_drive.txt` from required UIC outputs
 - Make `use` flag required for MPF.Check
 - Add dumping date to log
+- Non-zero data start only for audio discs
 
 ### 2.6.2 (2023-07-25)
 
