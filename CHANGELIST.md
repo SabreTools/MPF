@@ -6,6 +6,7 @@
 - Make `use` flag required for MPF.Check
 - Add dumping date to log
 - Non-zero data start only for audio discs
+- Update SafeDisc Sanitization (TheRogueArchivist)
 
 ### 2.6.2 (2023-07-25)
 
