@@ -218,6 +218,16 @@ namespace MPF.UI.ViewModels
         #region UI Commands
 
         /// <summary>
+        /// Change the currently selected dumping program
+        /// </summary>
+        public void ChangeDumpingProgram()
+        {
+            App.Logger.VerboseLogLn($"Changed dumping program to: {(App.Instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>).Name}");
+            GetOutputNames(false);
+            EnsureDiscInformation();
+        }
+
+        /// <summary>
         /// Change the currently selected media type
         /// </summary>
         public void ChangeMediaType(SelectionChangedEventArgs e)
@@ -1452,7 +1462,7 @@ namespace MPF.UI.ViewModels
         private void DumpingProgramComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                EnsureDiscInformation();
+                ChangeDumpingProgram();
         }
 
         /// <summary>

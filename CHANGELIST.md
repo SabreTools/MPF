@@ -2,6 +2,7 @@
 
 - Add CD Projekt ID field
 - Fix speed setting in Aaru
+- Add helper for changing dumping program from UI
 
 ### 2.6.3 (2023-08-15)
 
