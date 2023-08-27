@@ -2741,6 +2741,8 @@ namespace MPF.Library
 
             if (tags.ContainsKey(SiteCode.BBFCRegistrationNumber))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.BBFCRegistrationNumber, tags[SiteCode.BBFCRegistrationNumber]));
+            if (tags.ContainsKey(SiteCode.CDProjektID))
+                sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.CDProjektID, tags[SiteCode.CDProjektID]));
             if (tags.ContainsKey(SiteCode.DiscHologramID))
                 sorted.Add(new KeyValuePair<SiteCode?, string>(SiteCode.DiscHologramID, tags[SiteCode.DiscHologramID]));
             if (tags.ContainsKey(SiteCode.DNASDiscID))

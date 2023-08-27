@@ -194,6 +194,7 @@
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <StackPanel Orientation="Vertical">
                                     <controls:UserInput x:Name="BBFCRegistrationNumberTextBox" Label="BBFC Reg. No."/>
+                                    <controls:UserInput x:Name="CDProjektIDTextBox" Label="CD Projekt ID"/>
                                     <controls:UserInput x:Name="DiscHologramIDTextBox" Label="Disc Hologram ID"/>
                                     <controls:UserInput x:Name="DNASDiscIDTextBox" Label="DNAS Disc ID"/>
                                     <controls:UserInput x:Name="ISBNTextBox" Label="ISBN"/>

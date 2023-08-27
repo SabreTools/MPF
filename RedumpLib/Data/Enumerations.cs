@@ -3533,6 +3533,10 @@ namespace RedumpLib.Data
         BBFCRegistrationNumber,
 
         // TODO: This doesn't have a site tag yet
+        [HumanReadable(ShortName = "<b>CD Projekt ID</b>:", LongName = "<b>CD Projekt ID</b>:")]
+        CDProjektID,
+
+        // TODO: This doesn't have a site tag yet
         [HumanReadable(ShortName = "<b>Disc Hologram ID</b>:", LongName = "<b>Disc Hologram ID</b>:")]
         DiscHologramID,
 

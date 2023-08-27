@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Add CD Projekt ID field
+
 ### 2.6.3 (2023-08-15)
 
 - Update redumper to build 195
