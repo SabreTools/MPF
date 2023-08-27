@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 
 - Add CD Projekt ID field
+- Fix speed setting in Aaru
 
 ### 2.6.3 (2023-08-15)
 

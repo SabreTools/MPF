@@ -1828,7 +1828,7 @@ namespace MPF.Modules.Aaru
 
                 // Speed
                 byteValue = ProcessInt8Parameter(parts, null, FlagStrings.SpeedLong, ref i);
-                if (byteValue == null && byteValue != SByte.MinValue)
+                if (byteValue != null && byteValue != SByte.MinValue)
                     SpeedValue = byteValue;
 
                 #endregion
