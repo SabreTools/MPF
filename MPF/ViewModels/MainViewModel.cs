@@ -223,8 +223,8 @@ namespace MPF.UI.ViewModels
         public void ChangeDumpingProgram()
         {
             App.Logger.VerboseLogLn($"Changed dumping program to: {(App.Instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>).Name}");
-            GetOutputNames(false);
             EnsureDiscInformation();
+            GetOutputNames(false);
         }
 
         /// <summary>

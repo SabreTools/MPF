@@ -4,6 +4,7 @@
 - Fix speed setting in Aaru
 - Add helper for changing dumping program from UI
 - Handle extension changing only
+- Swap order of operations for changing program
 
 ### 2.6.3 (2023-08-15)
 
