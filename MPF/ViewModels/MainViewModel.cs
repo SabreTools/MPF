@@ -985,6 +985,16 @@ namespace MPF.UI.ViewModels
                 App.Instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
+            // Otherwise, reset the extension of the currently set path
+            else
+            {
+                string filename = Path.GetFileNameWithoutExtension(App.Instance.OutputPathTextBox.Text);
+                string directory = Path.GetDirectoryName(App.Instance.OutputPathTextBox.Text);
+                filename = $"{filename}{extension ?? ".bin"}";
+
+                App.Instance.OutputPathTextBox.Text = Path.Combine(directory, filename);
+            }
+
             // Ensure the UI gets updated
             App.Instance.UpdateLayout();
         }
