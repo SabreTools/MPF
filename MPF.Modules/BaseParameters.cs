@@ -1850,8 +1850,32 @@ namespace MPF.Modules
                     case 'C': return Region.China;
                     case 'E': return Region.Europe;
                     case 'K': return Region.SouthKorea;
-                    case 'P': return null; // S_P_ serials may be Japan, Asia or Korea
                     case 'U': return Region.UnitedStatesOfAmerica;
+                    case 'P': 
+                        // Region of S_P_ serials may be Japan, Asia, or SouthKorea
+                        switch (serial[3])
+                        {
+                            case 'S':
+                                // Check first two digits of S_PS serial
+                                switch (serial[4:6])
+                                {
+                                    case '46': return Region.SouthKorea;
+                                    case '56': return Region.SouthKorea;
+                                    case '51': return Region.Asia;
+                                    case '55': return Region.Asia;
+                                    default: return Region.Japan;
+                                }
+                            case 'M':
+                                // Check first three digits of S_PM serial
+                                switch (serial[4:7])
+                                {
+                                    case '645': return Region.SouthKorea;
+                                    case '675': return Region.SouthKorea;
+                                    case '885': return Region.SouthKorea;
+                                    default: return Region.Japan; // Remaining S_PM serials may be Japan or Asia
+                                }
+                            default: return Region.Japan;
+                        }
                 }
             }
 
