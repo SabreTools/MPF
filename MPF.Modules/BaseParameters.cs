@@ -1857,7 +1857,7 @@ namespace MPF.Modules
                         {
                             case 'S':
                                 // Check first two digits of S_PS serial
-                                switch (serial[4:6])
+                                switch (serial.Substring(4, 2))
                                 {
                                     case '46': return Region.SouthKorea;
                                     case '56': return Region.SouthKorea;
@@ -1867,7 +1867,7 @@ namespace MPF.Modules
                                 }
                             case 'M':
                                 // Check first three digits of S_PM serial
-                                switch (serial[4:7])
+                                switch (serial.Substring(4, 3))
                                 {
                                     case '645': return Region.SouthKorea;
                                     case '675': return Region.SouthKorea;
