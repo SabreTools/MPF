@@ -17,7 +17,7 @@ namespace MPF.Modules.DD
         #region Generic Dumping Information
 
         /// <inheritdoc/>
-        public override string InputPath => InputFileValue?.TrimStart('\\', '?');
+        public override string InputPath => InputFileValue?.TrimStart('\\', '.');
 
         /// <inheritdoc/>
         public override string OutputPath => OutputFileValue;
@@ -298,7 +298,7 @@ namespace MPF.Modules.DD
             BaseCommand = CommandStrings.NONE;
 
             this[FlagStrings.InputFile] = true;
-            InputFileValue = $"\\\\?\\{driveLetter}:";
+            InputFileValue = $"\\\\.\\{driveLetter}:";
 
             this[FlagStrings.OutputFile] = true;
             OutputFileValue = filename;
