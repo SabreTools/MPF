@@ -1860,6 +1860,10 @@ namespace MPF.Modules
                 return Region.Japan;
 
             // Region appears entirely random
+            else if (serial.StartsWith("PABX"))
+                return null;
+
+            // Region appears entirely random
             else if (serial.StartsWith("PBPX"))
                 return null;
 
