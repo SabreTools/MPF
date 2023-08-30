@@ -1859,19 +1859,19 @@ namespace MPF.Modules
                                 // Check first two digits of S_PS serial
                                 switch (serial.Substring(4, 2))
                                 {
-                                    case '46': return Region.SouthKorea;
-                                    case '56': return Region.SouthKorea;
-                                    case '51': return Region.Asia;
-                                    case '55': return Region.Asia;
+                                    case "46": return Region.SouthKorea;
+                                    case "56": return Region.SouthKorea;
+                                    case "51": return Region.Asia;
+                                    case "55": return Region.Asia;
                                     default: return Region.Japan;
                                 }
                             case 'M':
                                 // Check first three digits of S_PM serial
                                 switch (serial.Substring(4, 3))
                                 {
-                                    case '645': return Region.SouthKorea;
-                                    case '675': return Region.SouthKorea;
-                                    case '885': return Region.SouthKorea;
+                                    case "645": return Region.SouthKorea;
+                                    case "675": return Region.SouthKorea;
+                                    case "885": return Region.SouthKorea;
                                     default: return Region.Japan; // Remaining S_PM serials may be Japan or Asia
                                 }
                             default: return Region.Japan;
