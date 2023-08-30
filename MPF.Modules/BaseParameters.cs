@@ -1849,9 +1849,9 @@ namespace MPF.Modules
                     case 'A': return Region.Asia;
                     case 'C': return Region.China;
                     case 'E': return Region.Europe;
-                    case 'J': return Region.JapanKorea;
+                    case 'J': return null; // J-region discs may be Japan, Asia or Korea
                     case 'K': return Region.SouthKorea;
-                    case 'P': return Region.Japan;
+                    case 'P': return null; // P-region discs may be Japan, Asia or Korea
                     case 'U': return Region.UnitedStatesOfAmerica;
                 }
             }
@@ -1861,11 +1861,15 @@ namespace MPF.Modules
                 return Region.Japan;
 
             // Region appears entirely random
-            else if (serial.StartsWith("PABX"))
+            else if (serial.StartsWith("PBPX"))
                 return null;
 
             // Japan-only special serial
             else if (serial.StartsWith("PCBX"))
+                return Region.Japan;
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PCXC"))
                 return Region.Japan;
 
             // Single disc known, Japan
@@ -1875,6 +1879,10 @@ namespace MPF.Modules
             // Single disc known, Europe
             else if (serial.StartsWith("PEBX"))
                 return Region.Europe;
+
+            // Single disc known, USA
+            else if (serial.StartsWith("PUBX"))
+                return Region.UnitedStatesOfAmerica;
 
             return null;
         }
