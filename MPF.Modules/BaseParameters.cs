@@ -1849,7 +1849,6 @@ namespace MPF.Modules
                     case 'A': return Region.Asia;
                     case 'C': return Region.China;
                     case 'E': return Region.Europe;
-                    case 'J': return null; // J-region discs may be Japan, Asia or Korea
                     case 'K': return Region.SouthKorea;
                     case 'P': return null; // P-region discs may be Japan, Asia or Korea
                     case 'U': return Region.UnitedStatesOfAmerica;
