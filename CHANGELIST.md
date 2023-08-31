@@ -6,6 +6,7 @@
 - Handle extension changing only
 - Swap order of operations for changing program
 - Fix dumping path in DD
+- Fix PlayStation serial code region parsing (Deterous)
 
 ### 2.6.3 (2023-08-15)
 
