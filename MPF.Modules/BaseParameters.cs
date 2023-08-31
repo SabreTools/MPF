@@ -1849,10 +1849,33 @@ namespace MPF.Modules
                     case 'A': return Region.Asia;
                     case 'C': return Region.China;
                     case 'E': return Region.Europe;
-                    case 'J': return Region.JapanKorea;
                     case 'K': return Region.SouthKorea;
-                    case 'P': return Region.Japan;
                     case 'U': return Region.UnitedStatesOfAmerica;
+                    case 'P': 
+                        // Region of S_P_ serials may be Japan, Asia, or SouthKorea
+                        switch (serial[3])
+                        {
+                            case 'S':
+                                // Check first two digits of S_PS serial
+                                switch (serial.Substring(4, 2))
+                                {
+                                    case "46": return Region.SouthKorea;
+                                    case "56": return Region.SouthKorea;
+                                    case "51": return Region.Asia;
+                                    case "55": return Region.Asia;
+                                    default: return Region.Japan;
+                                }
+                            case 'M':
+                                // Check first three digits of S_PM serial
+                                switch (serial.Substring(4, 3))
+                                {
+                                    case "645": return Region.SouthKorea;
+                                    case "675": return Region.SouthKorea;
+                                    case "885": return Region.SouthKorea;
+                                    default: return Region.Japan; // Remaining S_PM serials may be Japan or Asia
+                                }
+                            default: return Region.Japan;
+                        }
                 }
             }
 
@@ -1864,8 +1887,16 @@ namespace MPF.Modules
             else if (serial.StartsWith("PABX"))
                 return null;
 
+            // Region appears entirely random
+            else if (serial.StartsWith("PBPX"))
+                return null;
+
             // Japan-only special serial
             else if (serial.StartsWith("PCBX"))
+                return Region.Japan;
+
+            // Japan-only special serial
+            else if (serial.StartsWith("PCXC"))
                 return Region.Japan;
 
             // Single disc known, Japan
@@ -1875,6 +1906,10 @@ namespace MPF.Modules
             // Single disc known, Europe
             else if (serial.StartsWith("PEBX"))
                 return Region.Europe;
+
+            // Single disc known, USA
+            else if (serial.StartsWith("PUBX"))
+                return Region.UnitedStatesOfAmerica;
 
             return null;
         }
