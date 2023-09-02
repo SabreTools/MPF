@@ -1,6 +1,6 @@
 # Media Preservation Frontend (MPF)
 
-DiscImageCreator/Aaru UI in C#
+Redumper/Aaru/DiscImageCreator UI in C#
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3ldav3v0c373jeqa?svg=true)](https://ci.appveyor.com/project/mnadareski/MPF/build/artifacts)
 
@@ -15,7 +15,7 @@ For those who like to test the newest features, download the latest AppVeyor WIP
 
 ## Media Preservation Frontend (MPF)
 
-MPF is the main, UI-centric application of the MPF suite. This program allows users to use DiscImageCreator, Aaru, Redumper, or dd for Windows in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
+MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, DiscImageCreator, or dd for Windows in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
 ### System Requirements
 
@@ -61,7 +61,7 @@ Choose one of `[win7-x64|win8-x64|win81-x64|win10-x64]` depending on the machine
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
-MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from DiscImageCreator, Aaru, Redumper, dd for Windows, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
+MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, dd for Windows, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
 
 ### System Requirements
 
@@ -103,28 +103,38 @@ MPF uses some external libraries to assist with additional information gathering
 
 ## Contributors
 
-Here are the talented people who have contributed to the project so far:
+Here are the talented people who have contributed to the project so far in ways that GitHub doesn't like to track:
 
-- **darksabre76** - Project Lead / Backend Design / UI Maintenence
 - **ReignStumble** - Former Project Lead / UI Design
-- **Jakz** - Primary Feature Contributor
-- **NHellFire** - Feature Contributor
 - **Shadów** - UI Support
+
+For all others who have contributed in some way, please see [here](https://github.com/SabreTools/MPF/graphs/contributors).
 
 ## Notable Testers
 
 These are the tireless individuals who have dedicated countless hours to help test the many features of MPF and have worked with the development team closely:
 
-- **Dizzzy/user7** - Additonal thanks for the original concept
+- [**ajshell1**](https://github.com/ajshell1)
+- [**Billy**](https://github.com/InternalLoss)
+- [**David 'Foxhack' Silva**](https://github.com/FoxhackDN)
+- [**ehw**](https://github.com/ehw)
+- [**fuzzball**](https://github.com/fuzz6001)
+- [**Gameboi64**](https://github.com/gameboi64)
+- [**Intothisworld**](https://github.com/Intothisworld)
+- [**John Veness**](https://github.com/JohnVeness)
 - **Kludge**
-- **ajshell1**
-- **Whovian**
-- **Gameboi64**
-- **silasqwerty**
+- [**Matt Sephton**](https://github.com/gingerbeardman)
+- [**NightsoN Blaze**](https://github.com/nightson)
+- [**NovaSAurora**](https://github.com/NovaSAurora)
+- [**Seventy7**](https://github.com/7Seventy7) - Additonal thanks for the original concept
+- [**Silent**](https://github.com/CookiePLMonster)
+- [**Terry Janas**](https://github.com/tjanas)
+- [**TheRogueArchivist**](https://github.com/TheRogueArchivist)
+- [**Whovian9369**](https://github.com/Whovian9369)
 
 ## Community Shout-Outs
 
 Thanks to these communities for their use, testing, and feedback. I can't even hope to be able to thank everyone individually.
 
-- **VGPC Discord** - Fast feedback and a lot of testing
-- **Redump Community** - Near-daily use to assist with metadata gathering
+- [**VGPC Discord**](https://discord.gg/AHTfxQV) - Fast feedback and a lot of testing
+- [**Redump Community**](http://redump.org/) - Near-daily use to assist with metadata gathering
