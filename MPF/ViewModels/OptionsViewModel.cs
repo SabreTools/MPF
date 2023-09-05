@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using MPF.Core.Data;
 using MPF.UI.Core.ComboBoxItems;
 using MPF.Windows;
-using RedumpLib.Web;
+using SabreTools.RedumpLib.Web;
 using WPFCustomMessageBox;
 
 namespace MPF.UI.ViewModels

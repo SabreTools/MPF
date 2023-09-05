@@ -6,7 +6,7 @@ using System.Reflection;
 using IMAPI2;
 #endif
 using MPF.Core.Data;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Converters
 {
@@ -98,7 +98,7 @@ namespace MPF.Core.Converters
 
                 if (!LongNameMethods.TryGetValue(sourceType, out MethodInfo method))
                 {
-                    method = typeof(RedumpLib.Data.Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                    method = typeof(SabreTools.RedumpLib.Data.Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
                     if (method == null)
                         method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
 

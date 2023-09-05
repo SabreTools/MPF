@@ -6,7 +6,7 @@ using Microsoft.Management.Infrastructure;
 using Microsoft.Management.Infrastructure.Generic;
 using MPF.Core.Converters;
 using MPF.Core.Utilities;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 #if NETFRAMEWORK
 using IMAPI2;
 #endif

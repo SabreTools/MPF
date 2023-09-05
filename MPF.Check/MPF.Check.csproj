@@ -28,9 +28,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
+    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="2.8.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -39,12 +45,6 @@
   
   <ItemGroup>
     <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
-    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
 </Project>

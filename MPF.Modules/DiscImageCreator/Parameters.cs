@@ -8,7 +8,7 @@ using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.CueSheets;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.Modules.DiscImageCreator
 {

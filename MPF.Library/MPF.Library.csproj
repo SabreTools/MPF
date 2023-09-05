@@ -24,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.Modules\MPF.Modules.csproj" />
-    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +31,7 @@
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />

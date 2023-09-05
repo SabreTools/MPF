@@ -24,24 +24,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Images\ring-code-guide-1-layer.png" />
     <Resource Include="Images\ring-code-guide-2-layer.png" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
+    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>

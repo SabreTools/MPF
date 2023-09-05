@@ -14,8 +14,8 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Modules;
 using Newtonsoft.Json;
-using RedumpLib.Data;
-using RedumpLib.Web;
+using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
 
 namespace MPF.Library
@@ -84,9 +84,17 @@ namespace MPF.Library
                     Serial = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty,
                     Barcode = options.AddPlaceholders ? Template.OptionalValue : string.Empty,
                     Contents = string.Empty,
+#if NET48
                     ContentsSpecialFields = new Dictionary<SiteCode?, string>(),
+#else
+                    ContentsSpecialFields = new Dictionary<SiteCode, string>(),
+#endif
                     Comments = string.Empty,
+#if NET48
                     CommentsSpecialFields = new Dictionary<SiteCode?, string>(),
+#else
+                    CommentsSpecialFields = new Dictionary<SiteCode, string>(),
+#endif
                 },
                 VersionAndEditions = new VersionAndEditionsSection()
                 {
@@ -569,7 +577,7 @@ namespace MPF.Library
             }
         }
 
-        #endregion
+#endregion
 
         #region Information Output
 
@@ -2050,6 +2058,10 @@ namespace MPF.Library
                     bool foundTag = false;
                     foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
                     {
+                        // If we have a null site code, just skip
+                        if (siteCode == null)
+                            continue;
+
                         // If the line doesn't contain this tag, just skip
                         if (!commentLine.Contains(siteCode.ShortName()))
                             continue;
@@ -2096,12 +2108,12 @@ namespace MPF.Library
                         }
 
                         // If we don't already have this site code, add it to the dictionary
-                        if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode))
-                            info.CommonDiscInfo.CommentsSpecialFields[siteCode] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+                        if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode.Value))
+                            info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
 
                         // Otherwise, append the value to the existing key
                         else
-                            info.CommonDiscInfo.CommentsSpecialFields[siteCode] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+                            info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
 
                         break;
                     }
@@ -2111,10 +2123,10 @@ namespace MPF.Library
                     {
                         if (addToLast && lastSiteCode != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode]))
-                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += "\n";
+                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value]))
+                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += "\n";
 
-                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode] += commentLine;
+                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += commentLine;
                         }
                         else
                         {
@@ -2167,6 +2179,10 @@ namespace MPF.Library
                     bool foundTag = false;
                     foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
                     {
+                        // If we have a null site code, just skip
+                        if (siteCode == null)
+                            continue;
+
                         // If the line doesn't contain this tag, just skip
                         if (!contentLine.Contains(siteCode.ShortName()))
                             continue;
@@ -2175,8 +2191,8 @@ namespace MPF.Library
                         lastSiteCode = siteCode;
 
                         // If we don't already have this site code, add it to the dictionary
-                        if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode))
-                            info.CommonDiscInfo.ContentsSpecialFields[siteCode] = $"(VERIFY THIS) {contentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+                        if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode.Value))
+                            info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
 
                         // A subset of tags can be multiline
                         addToLast = IsMultiLine(siteCode);
@@ -2191,10 +2207,10 @@ namespace MPF.Library
                     {
                         if (addToLast && lastSiteCode != null)
                         {
-                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode]))
-                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += "\n";
+                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value]))
+                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += "\n";
 
-                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode] += contentLine;
+                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += contentLine;
                         }
                         else
                         {
@@ -2697,7 +2713,11 @@ namespace MPF.Library
         /// Order comment code tags according to Redump requirements
         /// </summary>
         /// <returns>Ordered list of KeyValuePairs representing the tags and values</returns>
+#if NET48
         private static List<KeyValuePair<SiteCode?, string>> OrderCommentTags(Dictionary<SiteCode?, string> tags)
+#else
+        private static List<KeyValuePair<SiteCode?, string>> OrderCommentTags(Dictionary<SiteCode, string> tags)
+#endif
         {
             var sorted = new List<KeyValuePair<SiteCode?, string>>();
 
@@ -2820,7 +2840,11 @@ namespace MPF.Library
         /// Order content code tags according to Redump requirements
         /// </summary>
         /// <returns>Ordered list of KeyValuePairs representing the tags and values</returns>
+#if NET48
         private static List<KeyValuePair<SiteCode?, string>> OrderContentTags(Dictionary<SiteCode?, string> tags)
+#else
+        private static List<KeyValuePair<SiteCode?, string>> OrderContentTags(Dictionary<SiteCode, string> tags)
+#endif
         {
             var sorted = new List<KeyValuePair<SiteCode?, string>>();
 
@@ -2859,6 +2883,6 @@ namespace MPF.Library
             return sorted;
         }
 
-        #endregion
+#endregion
     }
 }

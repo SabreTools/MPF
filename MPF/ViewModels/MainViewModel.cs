@@ -12,7 +12,7 @@ using MPF.Library;
 using MPF.UI.Core.ComboBoxItems;
 using MPF.Windows;
 using MPF.UI.Core.Windows;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
 using MPF.UI.Core;
@@ -355,12 +355,20 @@ namespace MPF.UI.ViewModels
                     EXEDateBuildDate = "19xx-xx-xx",
                     ErrorsCount = "0",
                     Comments = "Comment data line 1\r\nComment data line 2",
+#if NET48
                     CommentsSpecialFields = new Dictionary<SiteCode?, string>()
+#else
+                    CommentsSpecialFields = new Dictionary<SiteCode, string>()
+#endif
                     {
                         [SiteCode.ISBN] = "ISBN",
                     },
                     Contents = "Special contents 1\r\nSpecial contents 2",
+#if NET48
                     ContentsSpecialFields = new Dictionary<SiteCode?, string>()
+#else
+                    ContentsSpecialFields = new Dictionary<SiteCode, string>()
+#endif
                     {
                         [SiteCode.PlayableDemos] = "Game Demo 1",
                     },
@@ -543,7 +551,7 @@ namespace MPF.UI.ViewModels
             }
         }
 
-        #endregion
+#endregion
 
         #region UI Functionality
 

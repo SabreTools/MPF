@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using MPF.Library;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.Library
@@ -76,13 +76,21 @@ namespace MPF.Test.Library
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     Comments = "This is a comments line\n[T:ISBN] ISBN Value",
+#if NET48
                     CommentsSpecialFields = new Dictionary<SiteCode?, string>()
+#else
+                    CommentsSpecialFields = new Dictionary<SiteCode, string>()
+#endif
                     {
                         [SiteCode.VolumeLabel] = "VOLUME_LABEL",
                     },
 
                     Contents = "This is a contents line\n[T:GF] Game Footage",
+#if NET48
                     ContentsSpecialFields = new Dictionary<SiteCode?, string>()
+#else
+                    ContentsSpecialFields = new Dictionary<SiteCode, string>()
+#endif
                     {
                         [SiteCode.Patches] = "1.04 patch",
                     },
@@ -132,13 +140,21 @@ namespace MPF.Test.Library
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
                     Comments = null,
+#if NET48
                     CommentsSpecialFields = new Dictionary<SiteCode?, string>()
+#else
+                    CommentsSpecialFields = new Dictionary<SiteCode, string>()
+#endif
                     {
                         [SiteCode.VolumeLabel] = "VOLUME_LABEL",
                     },
 
                     Contents = null,
+#if NET48
                     ContentsSpecialFields = new Dictionary<SiteCode?, string>()
+#else
+                    ContentsSpecialFields = new Dictionary<SiteCode, string>()
+#endif
                     {
                         [SiteCode.Patches] = "1.04 patch",
                     },

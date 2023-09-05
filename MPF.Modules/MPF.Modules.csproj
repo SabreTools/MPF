@@ -23,10 +23,10 @@
   <ItemGroup>
     <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
     <ProjectReference Include="..\MPF.CueSheets\MPF.CueSheets.csproj" />
-    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">

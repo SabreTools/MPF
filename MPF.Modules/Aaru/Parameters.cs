@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.CueSheets;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 using Schemas;
 
 namespace MPF.Modules.Aaru

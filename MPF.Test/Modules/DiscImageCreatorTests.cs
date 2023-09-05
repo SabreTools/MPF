@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using MPF.Core.Data;
 using MPF.Modules.DiscImageCreator;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.Modules

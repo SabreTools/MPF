@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.Modules.Redumper
 {

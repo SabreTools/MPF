@@ -5,8 +5,8 @@ using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Library;
-using RedumpLib.Data;
-using RedumpLib.Web;
+using SabreTools.RedumpLib.Data;
+using SabreTools.RedumpLib.Web;
 
 namespace MPF.Check
 {

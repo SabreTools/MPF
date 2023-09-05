@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 using Xunit;
 
 namespace MPF.Test.RedumpLib

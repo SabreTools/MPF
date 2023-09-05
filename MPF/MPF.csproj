@@ -27,9 +27,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Images\Icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
+    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
+    <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationFramework.Aero" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="2.8.0" GeneratePathProperty="true">
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
       <PrivateAssets>all</PrivateAssets>
@@ -39,21 +54,6 @@
 
   <ItemGroup>
     <Content Include="$(PkgBurnOutSharp)\content\**" PackagePath="contentFiles\any\any;content" CopyToOutputDirectory="Always" PackageCopyToOutput="true" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Images\Icon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MPF.Core\MPF.Core.csproj" />
-    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
-    <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
-    <ProjectReference Include="..\RedumpLib\RedumpLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
 
 </Project>

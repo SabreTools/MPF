@@ -5,7 +5,7 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.UI.Core.ComboBoxItems;
 using MPF.UI.Core.Windows;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.UI.Core.ViewModels
 {
@@ -536,9 +536,17 @@ namespace MPF.UI.Core.ViewModels
 
             // Initialize the dictionaries, if needed
             if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields == null)
+#if NET48
                 SubmissionInfo.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                SubmissionInfo.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
             if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields == null)
+#if NET48
                 SubmissionInfo.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                SubmissionInfo.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
 
             #region Comment Fields
 
@@ -801,7 +809,7 @@ namespace MPF.UI.Core.ViewModels
             }
         }
 
-        #endregion
+#endregion
 
         #region Event Handlers
 

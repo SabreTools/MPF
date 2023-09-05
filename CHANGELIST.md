@@ -8,6 +8,7 @@
 - Fix dumping path in DD
 - Fix PlayStation serial code region parsing (Deterous)
 - Retrofit README
+- Migrate to Nuget package for Redump
 
 ### 2.6.3 (2023-08-15)
 
@@ -835,7 +836,7 @@
 - edccchk now run on all CD-Roms
 - Discs unsupported by Windows are now regonized
 - Extra \ when accepting default save has been removed.
- 
+
 ### 1.02b (2018-05-18)
 
 - Added missing DLL

@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 using MPF.Core.Data;
 using MPF.Core.Hashing;
 using MPF.Core.Utilities;
-using RedumpLib.Data;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.Modules
 {
