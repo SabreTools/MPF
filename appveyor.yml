@@ -51,14 +51,6 @@ after_build:
 - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\win81-x64\publish\Programs\Aaru *
 - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\Aaru *
 
-# dd for Windows
-- ps: appveyor DownloadFile http://www.chrysocome.net/downloads/8ab730cd2a29e76ddd89be1f99357942/dd-0.6beta3.zip
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net48\publish\Programs\DD *
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\win7-x64\publish\Programs\DD *
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\win8-x64\publish\Programs\DD *
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\win81-x64\publish\Programs\DD *
-- 7z e dd-0.6beta3.zip -oMPF\bin\Debug\net6.0-windows\win10-x64\publish\Programs\DD *
-
 # DiscImageCreator
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/11660558/DiscImageCreator_20230606.zip
 - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net48\publish\Programs\Creator Release_ANSI\*

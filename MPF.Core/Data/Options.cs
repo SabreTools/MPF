@@ -31,15 +31,6 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Path to dd for Windows
-        /// </summary>
-        public string DDPath
-        {
-            get { return GetStringSetting(_settings, "DDPath", "Programs\\DD\\dd.exe"); }
-            set { _settings["DDPath"] = value; }
-        }
-
-        /// <summary>
         /// Path to Redumper
         /// </summary>
         public string RedumperPath

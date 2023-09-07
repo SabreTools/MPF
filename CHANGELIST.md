@@ -9,6 +9,7 @@
 - Fix PlayStation serial code region parsing (Deterous)
 - Retrofit README
 - Migrate to Nuget package for Redump
+- Remove dd for Windows
 
 ### 2.6.3 (2023-08-15)
 

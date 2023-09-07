@@ -20,7 +20,6 @@
 
         // Dumping support
         Aaru,
-        DD,
         DiscImageCreator,
         Redumper,
 

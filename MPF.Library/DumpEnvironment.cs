@@ -169,10 +169,6 @@ namespace MPF.Library
                     this.Parameters = new Modules.Aaru.Parameters(parameters) { ExecutablePath = Options.AaruPath };
                     break;
 
-                case InternalProgram.DD:
-                    this.Parameters = new Modules.DD.Parameters(parameters) { ExecutablePath = Options.DDPath };
-                    break;
-
                 case InternalProgram.DiscImageCreator:
                     this.Parameters = new Modules.DiscImageCreator.Parameters(parameters) { ExecutablePath = Options.DiscImageCreatorPath };
                     break;
@@ -224,10 +220,6 @@ namespace MPF.Library
                 {
                     case InternalProgram.Aaru:
                         Parameters = new Modules.Aaru.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
-                        break;
-
-                    case InternalProgram.DD:
-                        Parameters = new Modules.DD.Parameters(System, Type, Drive.Letter, this.OutputPath, driveSpeed, Options);
                         break;
 
                     case InternalProgram.DiscImageCreator:

@@ -130,8 +130,6 @@ namespace MPF.Core.Converters
 
                 case InternalProgram.Aaru:
                     return "Aaru";
-                case InternalProgram.DD:
-                    return "dd";
                 case InternalProgram.DiscImageCreator:
                     return "DiscImageCreator";
                 case InternalProgram.Redumper:
@@ -182,8 +180,6 @@ namespace MPF.Core.Converters
                 case "dicreator":
                 case "discimagecreator":
                     return InternalProgram.DiscImageCreator;
-                case "dd":
-                    return InternalProgram.DD;
                 case "rd":
                 case "redumper":
                     return InternalProgram.Redumper;

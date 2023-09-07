@@ -59,7 +59,6 @@ namespace MPF.UI.ViewModels
             // Add handlers
             Parent.AaruPathButton.Click += BrowseForPathClick;
             Parent.DiscImageCreatorPathButton.Click += BrowseForPathClick;
-            Parent.DDPathButton.Click += BrowseForPathClick;
             Parent.DefaultOutputPathButton.Click += BrowseForPathClick;
 
             Parent.AcceptButton.Click += OnAcceptClick;
@@ -105,7 +104,7 @@ namespace MPF.UI.ViewModels
         /// </summary>
         private static List<Element<InternalProgram>> PopulateInternalPrograms()
         {
-            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper, InternalProgram.DD };
+            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper };
             return internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
         }
 

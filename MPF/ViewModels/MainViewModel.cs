@@ -201,7 +201,7 @@ namespace MPF.UI.ViewModels
             InternalProgram internalProgram = App.Options.InternalProgram;
 
             // Create a static list of supported programs, not everything
-            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper, InternalProgram.DD };
+            var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper };
             InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
             App.Instance.DumpingProgramComboBox.ItemsSource = InternalPrograms;
 
@@ -297,7 +297,7 @@ namespace MPF.UI.ViewModels
             string aboutText = $"Media Preservation Frontend (MPF)"
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}A community preservation frontend developed in C#."
-                + $"{Environment.NewLine}Supports DiscImageCreator, Aaru, and DD for Windows."
+                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
                 + $"{Environment.NewLine}Originally created to help the Redump project."
                 + $"{Environment.NewLine}"
                 + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
