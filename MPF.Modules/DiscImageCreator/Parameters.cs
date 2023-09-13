@@ -552,11 +552,11 @@ namespace MPF.Modules.DiscImageCreator
                     XgdInfo xgd1Info = new XgdInfo(xgd1XMID);
                     if (xgd1Info?.Initialized == true)
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.XMID;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XMID] = xgd1Info.RawXMID;
                         info.CommonDiscInfo.Serial = xgd1Info.GetSerial() ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
                             info.VersionAndEditions.Version = xgd1Info.GetVersion() ?? string.Empty;
-                        info.CommonDiscInfo.Region = xgd1Info.InternalRegion;
+                        info.CommonDiscInfo.Region = XgdInfo.GetRegion(xgd1Info.XMID.RegionIdentifier);
                     }
 
                     // If we have the new, external DAT
@@ -595,11 +595,11 @@ namespace MPF.Modules.DiscImageCreator
                     XgdInfo xgd23Info = new XgdInfo(xgd23XeMID);
                     if (xgd23Info?.Initialized == true)
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.XMID;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.XeMID] = xgd23Info.RawXMID;
                         info.CommonDiscInfo.Serial = xgd23Info.GetSerial() ?? string.Empty;
                         if (!options.EnableRedumpCompatibility)
                             info.VersionAndEditions.Version = xgd23Info.GetVersion() ?? string.Empty;
-                        info.CommonDiscInfo.Region = xgd23Info.InternalRegion;
+                        info.CommonDiscInfo.Region = XgdInfo.GetRegion(xgd23Info.XeMID.RegionIdentifier);
                     }
 
                     // If we have the new, external DAT

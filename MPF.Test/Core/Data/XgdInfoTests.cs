@@ -22,13 +22,13 @@ namespace MPF.Test.Core.Data
         [InlineData("AV00100W\0", "AV", "001", "00", 'W')]
         public void XGD1ValidTests(string validString, string publisher, string gameId, string version, char regionIdentifier)
         {
-            XgdInfo xgdInfo = new XgdInfo(validString, validate: true);
+            XgdInfo xgdInfo = new XgdInfo(validString);
 
             Assert.True(xgdInfo.Initialized);
-            Assert.Equal(publisher, xgdInfo.PublisherIdentifier);
-            Assert.Equal(gameId, xgdInfo.GameID);
-            Assert.Equal(version, xgdInfo.SKU);
-            Assert.Equal(regionIdentifier, xgdInfo.RegionIdentifier);
+            Assert.Equal(publisher, xgdInfo.XMID.PublisherIdentifier);
+            Assert.Equal(gameId, xgdInfo.XMID.GameID);
+            Assert.Equal(version, xgdInfo.XMID.VersionNumber);
+            Assert.Equal(regionIdentifier, xgdInfo.XMID.RegionIdentifier);
         }
 
         [Theory]
@@ -40,7 +40,7 @@ namespace MPF.Test.Core.Data
         [InlineData("AV00000Z\0")]
         public void XGD1InvalidTests(string invalidString)
         {
-            XgdInfo xgdInfo = new XgdInfo(invalidString, validate: true);
+            XgdInfo xgdInfo = new XgdInfo(invalidString);
             Assert.False(xgdInfo.Initialized);
         }
 
@@ -55,18 +55,18 @@ namespace MPF.Test.Core.Data
         [InlineData("AV200100W01F11DEADBEEF\0", "AV", "001", "00", 'W', "01", 'F', "11", "DEADBEEF")]
         public void XGD23ValidTests(string validString, string publisher, string gameId, string sku, char regionIdentifier, string baseVersion, char mediaSubtype, string discNumber, string cert)
         {
-            XgdInfo xgdInfo = new XgdInfo(validString, validate: true);
+            XgdInfo xgdInfo = new XgdInfo(validString);
 
             Assert.True(xgdInfo.Initialized);
-            Assert.Equal(publisher, xgdInfo.PublisherIdentifier);
-            Assert.Equal('2', xgdInfo.PlatformIdentifier);
-            Assert.Equal(gameId, xgdInfo.GameID);
-            Assert.Equal(sku, xgdInfo.SKU);
-            Assert.Equal(regionIdentifier, xgdInfo.RegionIdentifier);
-            Assert.Equal(baseVersion, xgdInfo.BaseVersion);
-            Assert.Equal(mediaSubtype, xgdInfo.MediaSubtypeIdentifier);
-            Assert.Equal(discNumber, xgdInfo.DiscNumberIdentifier);
-            Assert.Equal(cert, xgdInfo.CertificationSubmissionIdentifier);
+            Assert.Equal(publisher, xgdInfo.XeMID.PublisherIdentifier);
+            Assert.Equal('2', xgdInfo.XeMID.PlatformIdentifier);
+            Assert.Equal(gameId, xgdInfo.XeMID.GameID);
+            Assert.Equal(sku, xgdInfo.XeMID.SKU);
+            Assert.Equal(regionIdentifier, xgdInfo.XeMID.RegionIdentifier);
+            Assert.Equal(baseVersion, xgdInfo.XeMID.BaseVersion);
+            Assert.Equal(mediaSubtype, xgdInfo.XeMID.MediaSubtypeIdentifier);
+            Assert.Equal(discNumber, xgdInfo.XeMID.DiscNumberIdentifier);
+            Assert.Equal(cert, xgdInfo.XeMID.CertificationSubmissionIdentifier);
         }
 
         [Theory]
@@ -108,7 +108,7 @@ namespace MPF.Test.Core.Data
         [InlineData("AV200000W00A0000000000\0")]
         public void XGD23InvalidTests(string invalidString)
         {
-            XgdInfo xgdInfo = new XgdInfo(invalidString, validate: true);
+            XgdInfo xgdInfo = new XgdInfo(invalidString);
             Assert.False(xgdInfo.Initialized);
         }
     }

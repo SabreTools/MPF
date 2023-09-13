@@ -10,6 +10,7 @@
 - Retrofit README
 - Migrate to Nuget package for Redump
 - Remove dd for Windows
+- Migrate to Nuget package for XMID
 
 ### 2.6.3 (2023-08-15)
 
