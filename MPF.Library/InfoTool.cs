@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Drawing2D;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -14,6 +13,7 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Modules;
 using Newtonsoft.Json;
+using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -920,13 +920,13 @@ namespace MPF.Library
                         return $"{mediaType.LongName()}-128";
                     else if (layerbreak2 != default)
                         return $"{mediaType.LongName()}-100";
-                    else if (layerbreak != default && picIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                    else if (layerbreak != default && picIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
                         return $"{mediaType.LongName()}-66";
                     else if (layerbreak != default && size > 53_687_063_712)
                         return $"{mediaType.LongName()}-66";
                     else if (layerbreak != default)
                         return $"{mediaType.LongName()}-50";
-                    else if (picIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                    else if (picIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
                         return $"{mediaType.LongName()}-33";
                     else if (size > 26_843_531_856)
                         return $"{mediaType.LongName()}-33";
@@ -1634,13 +1634,13 @@ namespace MPF.Library
                         info.CommonDiscInfo.Media = DiscType.BD128;
                     else if (info.SizeAndChecksums.Layerbreak2 != default)
                         info.CommonDiscInfo.Media = DiscType.BD100;
-                    else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.PICIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                    else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.PICIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
                         info.CommonDiscInfo.Media = DiscType.BD66;
                     else if (info.SizeAndChecksums.Layerbreak != default && info.SizeAndChecksums.Size > 50_050_629_632)
                         info.CommonDiscInfo.Media = DiscType.BD66;
                     else if (info.SizeAndChecksums.Layerbreak != default)
                         info.CommonDiscInfo.Media = DiscType.BD50;
-                    else if (info.SizeAndChecksums.PICIdentifier == PICDiscInformationUnit.DiscTypeIdentifierROMUltra)
+                    else if (info.SizeAndChecksums.PICIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
                         info.CommonDiscInfo.Media = DiscType.BD33;
                     else if (info.SizeAndChecksums.Size > 25_025_314_816)
                         info.CommonDiscInfo.Media = DiscType.BD33;
@@ -1912,7 +1912,7 @@ namespace MPF.Library
 #endif
 
             // Title, Disc Number/Letter, Disc Title
-            var match = Constants.TitleRegex.Match(discData);
+            var match = SabreTools.RedumpLib.Data.Constants.TitleRegex.Match(discData);
             if (match.Success)
             {
                 string title = WebUtility.HtmlDecode(match.Groups[1].Value);
@@ -1922,7 +1922,7 @@ namespace MPF.Library
                 if (firstParenLocation >= 0)
                 {
                     info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
-                    var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
+                    var subMatches = SabreTools.RedumpLib.Data.Constants.DiscNumberLetterRegex.Matches(title);
                     foreach (Match subMatch in subMatches)
                     {
                         var subMatchValue = subMatch.Groups[1].Value;
@@ -1944,14 +1944,14 @@ namespace MPF.Library
             }
 
             // Foreign Title
-            match = Constants.ForeignTitleRegex.Match(discData);
+            match = SabreTools.RedumpLib.Data.Constants.ForeignTitleRegex.Match(discData);
             if (match.Success)
                 info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
             else
                 info.CommonDiscInfo.ForeignTitleNonLatin = null;
 
             // Category
-            match = Constants.CategoryRegex.Match(discData);
+            match = SabreTools.RedumpLib.Data.Constants.CategoryRegex.Match(discData);
             if (match.Success)
                 info.CommonDiscInfo.Category = Extensions.ToDiscCategory(match.Groups[1].Value);
             else
@@ -1960,13 +1960,13 @@ namespace MPF.Library
             // Region
             if (info.CommonDiscInfo.Region == null)
             {
-                match = Constants.RegionRegex.Match(discData);
+                match = SabreTools.RedumpLib.Data.Constants.RegionRegex.Match(discData);
                 if (match.Success)
                     info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
             }
 
             // Languages
-            var matches = Constants.LanguagesRegex.Matches(discData);
+            var matches = SabreTools.RedumpLib.Data.Constants.LanguagesRegex.Matches(discData);
             if (matches.Count > 0)
             {
                 List<Language?> tempLanguages = new List<Language?>();
@@ -1985,7 +1985,7 @@ namespace MPF.Library
             // Error count
             if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
             {
-                match = Constants.ErrorCountRegex.Match(discData);
+                match = SabreTools.RedumpLib.Data.Constants.ErrorCountRegex.Match(discData);
                 if (match.Success)
                     info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
             }
@@ -1993,13 +1993,13 @@ namespace MPF.Library
             // Version
             if (info.VersionAndEditions.Version == null)
             {
-                match = Constants.VersionRegex.Match(discData);
+                match = SabreTools.RedumpLib.Data.Constants.VersionRegex.Match(discData);
                 if (match.Success)
                     info.VersionAndEditions.Version = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
             }
 
             // Dumpers
-            matches = Constants.DumpersRegex.Matches(discData);
+            matches = SabreTools.RedumpLib.Data.Constants.DumpersRegex.Matches(discData);
             if (matches.Count > 0)
             {
                 // Start with any currently listed dumpers
@@ -2019,7 +2019,7 @@ namespace MPF.Library
             // TODO: Unify handling of fields that can include site codes (Comments/Contents)
 
             // Comments
-            match = Constants.CommentsRegex.Match(discData);
+            match = SabreTools.RedumpLib.Data.Constants.CommentsRegex.Match(discData);
             if (match.Success)
             {
                 // Process the old comments block
@@ -2140,7 +2140,7 @@ namespace MPF.Library
             }
 
             // Contents
-            match = Constants.ContentsRegex.Match(discData);
+            match = SabreTools.RedumpLib.Data.Constants.ContentsRegex.Match(discData);
             if (match.Success)
             {
                 // Process the old contents block
@@ -2224,7 +2224,7 @@ namespace MPF.Library
             }
 
             // Added
-            match = Constants.AddedRegex.Match(discData);
+            match = SabreTools.RedumpLib.Data.Constants.AddedRegex.Match(discData);
             if (match.Success)
             {
                 if (DateTime.TryParse(match.Groups[1].Value, out DateTime added))
@@ -2234,7 +2234,7 @@ namespace MPF.Library
             }
 
             // Last Modified
-            match = Constants.LastModifiedRegex.Match(discData);
+            match = SabreTools.RedumpLib.Data.Constants.LastModifiedRegex.Match(discData);
             if (match.Success)
             {
                 if (DateTime.TryParse(match.Groups[1].Value, out DateTime lastModified))
@@ -2483,9 +2483,9 @@ namespace MPF.Library
                 while (true)
                 {
 #if NET48 || NETSTANDARD2_1
-                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(SabreTools.RedumpLib.Data.Constants.QuickSearchUrl, query, pageNumber++));
 #else
-                    List<int> pageIds = await wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
+                    List<int> pageIds = await wc.CheckSingleSitePage(string.Format(SabreTools.RedumpLib.Data.Constants.QuickSearchUrl, query, pageNumber++));
 #endif
                     ids.AddRange(pageIds);
                     if (pageIds.Count <= 1)
@@ -2623,7 +2623,7 @@ namespace MPF.Library
                 return false;
 
             // Discs with only 1 track don't have a track count listed
-            var match = Constants.TrackCountRegex.Match(discData);
+            var match = SabreTools.RedumpLib.Data.Constants.TrackCountRegex.Match(discData);
             if (!match.Success && localCount == 1)
                 return true;
             else if (!match.Success)
