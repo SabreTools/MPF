@@ -11,6 +11,7 @@
 - Migrate to Nuget package for Redump
 - Remove dd for Windows
 - Migrate to Nuget package for XMID
+- Migrate to Nuget package for cuesheets
 
 ### 2.6.3 (2023-08-15)
 

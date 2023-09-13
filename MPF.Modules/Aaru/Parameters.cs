@@ -9,7 +9,7 @@ using System.Xml.Schema;
 using System.Xml.Serialization;
 using MPF.Core.Converters;
 using MPF.Core.Data;
-using MPF.CueSheets;
+using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib.Data;
 using Schemas;
 
@@ -2441,10 +2441,10 @@ namespace MPF.Modules.Aaru
 
             // Required variables
             uint totalTracks = 0;
-            CueSheet cueSheet = new CueSheet
+            var cueFiles = new List<CueFile>();
+            var cueSheet = new CueSheet
             {
                 Performer = string.Join(", ", cicmSidecar.Performer ?? new string[0]),
-                Files = new List<CueFile>(),
             };
 
             // Only care about OpticalDisc types
@@ -2482,13 +2482,13 @@ namespace MPF.Modules.Aaru
                     {
                         FileName = GenerateTrackName(basePath, (int)totalTracks, cueTrack.Number, opticalDisc.DiscType),
                         FileType = CueFileType.BINARY,
-                        Tracks = new List<CueTrack>(),
                     };
 
                     // Add index data
+                    var cueTracks = new List<CueTrack>();
                     if (track.Indexes != null && track.Indexes.Length > 0)
                     {
-                        cueTrack.Indices = new List<CueIndex>();
+                        var cueIndicies = new List<CueIndex>();
 
                         // Loop through each index
                         foreach (TrackIndexType trackIndex in track.Indexes)
@@ -2502,36 +2502,60 @@ namespace MPF.Modules.Aaru
 
                             // Pregap information
                             if (trackIndex.Value < 0)
-                                cueTrack.PreGap = new PreGap(timeString);
+                            {
+                                string[] timeStringSplit = timeString.Split(':');
+                                cueTrack.PreGap = new PreGap
+                                {
+                                    Minutes = int.Parse(timeStringSplit[0]),
+                                    Seconds = int.Parse(timeStringSplit[1]),
+                                    Frames = int.Parse(timeStringSplit[2]),
+                                };
+                            }
 
                             // Individual indexes
                             else
-                                cueTrack.Indices.Add(new CueIndex(trackIndex.index.ToString(), timeString));
+                            {
+                                string[] timeStringSplit = timeString.Split(':');
+                                cueIndicies.Add(new CueIndex
+                                {
+                                    Index = trackIndex.index,
+                                    Minutes = int.Parse(timeStringSplit[0]),
+                                    Seconds = int.Parse(timeStringSplit[1]),
+                                    Frames = int.Parse(timeStringSplit[2]),
+                                });
+                            }
                         }
+
+                        cueTrack.Indices = cueIndicies.ToArray();
                     }
                     else
                     {
                         // Default if index data missing from sidecar
-                        cueTrack.Indices = new List<CueIndex>()
+                        cueTrack.Indices = new CueIndex[]
                         {
-                            new CueIndex("01", "00:00:00"),
+                            new CueIndex
+                            {
+                                Index = 1,
+                                Minutes = 0,
+                                Seconds = 0,
+                                Frames = 0,
+                            },
                         };
                     }
 
                     // Add the track to the file
-                    cueFile.Tracks.Add(cueTrack);
+                    cueTracks.Add(cueTrack);
 
                     // Add the file to the cuesheet
-                    cueSheet.Files.Add(cueFile);
+                    cueFiles.Add(cueFile);
                 }
             }
 
             // If we have a cuesheet to write out, do so
+            cueSheet.Files = cueFiles.ToArray();
             if (cueSheet != null && cueSheet != default)
             {
-                MemoryStream ms = new MemoryStream();
-                cueSheet.Write(ms);
-                ms.Position = 0;
+                var ms = new SabreTools.Serialization.Streams.CueSheet().Serialize(cueSheet);
                 using (var sr = new StreamReader(ms))
                 {
                     return sr.ReadToEnd();

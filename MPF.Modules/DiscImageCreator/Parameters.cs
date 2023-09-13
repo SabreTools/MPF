@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using MPF.CueSheets;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Modules.DiscImageCreator
