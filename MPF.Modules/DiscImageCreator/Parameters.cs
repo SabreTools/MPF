@@ -390,7 +390,7 @@ namespace MPF.Modules.DiscImageCreator
             // Get the dumping program and version
             (string dicCmd, string dicVersion) = GetCommandFilePathAndVersion(basePath);
             info.DumpingInfo.DumpingProgram = $"{EnumConverter.LongName(this.InternalProgram)} {dicVersion ?? "Unknown Version"}";
-            info.DumpingInfo.DumpingDate = GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd hh:mm:ss");
+            info.DumpingInfo.DumpingDate = GetFileModifiedDate(dicCmd)?.ToString("yyyy-MM-dd HH:mm:ss");
 
             // Fill in the hardware data
             if (GetHardwareInfo($"{basePath}_drive.txt", out string manufacturer, out string model, out string firmware))
