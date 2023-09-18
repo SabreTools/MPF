@@ -169,7 +169,7 @@ namespace MPF.Test.RedumpLib
                 DumpingInfo = new DumpingInfoSection()
                 {
                     DumpingProgram = "DiscImageCreator 20500101",
-                    DumpingDate = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"),
+                    DumpingDate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
                     Manufacturer = "ATAPI",
                     Model = "Optical Drive",
                     Firmware = "1.23",

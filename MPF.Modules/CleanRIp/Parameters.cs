@@ -64,7 +64,7 @@ namespace MPF.Modules.CleanRip
         {
             // TODO: Determine if there's a CleanRip version anywhere
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
-            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd hh:mm:ss");
+            info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
             Datafile datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
             
