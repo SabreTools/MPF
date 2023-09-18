@@ -13,6 +13,7 @@
 - Migrate to Nuget package for XMID
 - Migrate to Nuget package for cuesheets
 - Migrate to Nuget package for PIC
+- Fix timestamp (Ragowit)
 
 ### 2.6.3 (2023-08-15)
 
