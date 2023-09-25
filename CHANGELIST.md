@@ -24,6 +24,7 @@
 - Remove log formatting code
 - Move LogOutput
 - Move to csproj tag for internals
+- Move OptionsWindow
 
 ### 2.6.3 (2023-08-15)
 

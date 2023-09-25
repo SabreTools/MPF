@@ -1,7 +1,7 @@
-﻿using MPF.UI.Core.Windows;
-using MPF.UI.ViewModels;
+﻿using MPF.Core.Data;
+using MPF.UI.Core.ViewModels;
 
-namespace MPF.Windows
+namespace MPF.UI.Core.Windows
 {
     /// <summary>
     /// Interaction logic for OptionsWindow.xaml
@@ -16,10 +16,10 @@ namespace MPF.Windows
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsWindow()
+        public OptionsWindow(Options options)
         {
             InitializeComponent();
-            DataContext = new OptionsViewModel(this);
+            DataContext = new OptionsViewModel(this, options);
 
 #if NET6_0_OR_GREATER
             this.SkipMediaTypeDetectionCheckBox.IsEnabled = false;

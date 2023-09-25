@@ -7,11 +7,11 @@ using System.Windows;
 using System.Windows.Forms;
 using MPF.Core.Data;
 using MPF.UI.Core.ComboBoxItems;
-using MPF.Windows;
+using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Web;
 using WPFCustomMessageBox;
 
-namespace MPF.UI.ViewModels
+namespace MPF.UI.Core.ViewModels
 {
     public class OptionsViewModel
     {
@@ -51,10 +51,10 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsViewModel(OptionsWindow parent)
+        public OptionsViewModel(OptionsWindow parent, Options baseOptions)
         {
             Parent = parent;
-            Options = App.Options.Clone() as Options;
+            Options = baseOptions.Clone() as Options;
 
             // Add handlers
             Parent.AaruPathButton.Click += BrowseForPathClick;

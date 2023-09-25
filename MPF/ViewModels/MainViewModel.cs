@@ -469,7 +469,7 @@ namespace MPF.UI.ViewModels
         /// </summary>
         public void ShowOptionsWindow()
         {
-            var optionsWindow = new OptionsWindow() { Owner = App.Instance };
+            var optionsWindow = new OptionsWindow(App.Options) { Owner = App.Instance };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }
