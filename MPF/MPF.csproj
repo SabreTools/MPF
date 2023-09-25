@@ -18,6 +18,7 @@
     <FileVersion>$(Version)</FileVersion>
     <IncludeSource>true</IncludeSource>
     <IncludeSymbols>true</IncludeSymbols>
+    <InternalsVisibleTo>MPF.Test</InternalsVisibleTo>
   </PropertyGroup>
 
   <PropertyGroup>

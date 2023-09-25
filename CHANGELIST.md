@@ -23,6 +23,7 @@
 - Remove App references from LogViewModel
 - Remove log formatting code
 - Move LogOutput
+- Move to csproj tag for internals
 
 ### 2.6.3 (2023-08-15)
 
