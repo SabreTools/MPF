@@ -17,6 +17,7 @@
 - Not building against .NET Standard
 - Move RedumpSystemComboBoxItem
 - Move Constants
+- Move WPFCustomMessageBox
 
 ### 2.6.3 (2023-08-15)
 
