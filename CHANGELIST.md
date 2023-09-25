@@ -16,6 +16,7 @@
 - Fix timestamp (Ragowit)
 - Not building against .NET Standard
 - Move RedumpSystemComboBoxItem
+- Move Constants
 
 ### 2.6.3 (2023-08-15)
 

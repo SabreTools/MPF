@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 
-namespace MPF
+namespace MPF.UI.Core
 {
     /// <summary>
     /// Variables for UI elements
