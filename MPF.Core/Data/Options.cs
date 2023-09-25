@@ -520,19 +520,6 @@ namespace MPF.Core.Data
             set { _settings["OpenLogWindowAtStartup"] = value.ToString(); }
         }
 
-        /// <summary>
-        /// Enable fancy formatting of log statements
-        /// </summary>
-        /// <remarks>
-        /// This is mainly for outputting redirected console outputs. Not many
-        /// other bits of the logs include any specially handled outputs.
-        /// </remarks>
-        public bool EnableLogFormatting
-        {
-            get { return GetBooleanSetting(_settings, "EnableLogFormatting", false); }
-            set { _settings["EnableLogFormatting"] = value.ToString(); }
-        }
-
         #endregion
 
         #region Redump Login Information

@@ -19,6 +19,7 @@
 - Move Constants
 - Move WPFCustomMessageBox
 - Remove EnableProgressProcessing
+- Remove EnableLogFormatting
 
 ### 2.6.3 (2023-08-15)
 

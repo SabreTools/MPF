@@ -396,11 +396,6 @@
                             IsChecked="{Binding Options.OpenLogWindowAtStartup}"
                             ToolTip="Open the log panel when the program launches" Margin="0,4"
                             />
-
-                        <CheckBox VerticalAlignment="Center" Content="Enable Log Formatting"
-                            IsChecked="{Binding Options.EnableLogFormatting}"
-                            ToolTip="Format log lines written to the log, including overwriting previous lines on match. Disable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
-                            />
                     </UniformGrid>
                 </TabItem>
 

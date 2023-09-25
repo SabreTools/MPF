@@ -405,61 +405,10 @@ namespace MPF.UI.ViewModels
 
             try
             {
-                // If we're not processing log formatting, just append and continue
-                if (!App.Options.EnableLogFormatting)
-                {
-                    if (nextText.StartsWith("\r"))
-                        ReplaceLastLine(nextLogLine);
-                    else
-                        AppendToTextBox(nextLogLine);
-
-                    return;
-                }
-
-                // Get last line
-                lastLine = lastLine ?? GetLastLine();
-
-                // Always append if there's no previous line
-                if (lastLine == null)
-                {
-                    AppendToTextBox(nextLogLine);
-                    lastUsedMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
-                }
-                // Return always means overwrite
-                else if (nextText.StartsWith("\r"))
-                {
+                if (nextText.StartsWith("\r"))
                     ReplaceLastLine(nextLogLine);
-                    lastUsedMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText.TrimStart('\r')) == true);
-                }
-                // If we have a cached matcher and we match
-                else if (lastUsedMatcher?.Matches(nextText) == true)
-                {
-                    ReplaceLastLine(nextLogLine);
-                }
                 else
-                {
-                    // Get the first matching Matcher
-                    var firstMatcher = _matchers.FirstOrDefault(m => m?.Matches(nextText) == true);
-                    if (firstMatcher.HasValue)
-                    {
-                        string lastText = Parent.Dispatcher.Invoke(() => { return lastLine.Text; });
-                        if (firstMatcher.Value.Matches(lastText))
-                            ReplaceLastLine(nextLogLine);
-                        else if (string.IsNullOrWhiteSpace(lastText))
-                            ReplaceLastLine(nextLogLine);
-                        else
-                            AppendToTextBox(nextLogLine);
-
-                        // Cache the last used Matcher
-                        lastUsedMatcher = firstMatcher;
-                    }
-                    // Default case for all other text
-                    else
-                    {
-                        AppendToTextBox(nextLogLine);
-                        lastUsedMatcher = null;
-                    }
-                }
+                    AppendToTextBox(nextLogLine);
             }
             catch (Exception ex)
             {
