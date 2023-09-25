@@ -21,6 +21,7 @@
 - Remove EnableProgressProcessing
 - Remove EnableLogFormatting
 - Remove App references from LogViewModel
+- Remove log formatting code
 
 ### 2.6.3 (2023-08-15)
 
