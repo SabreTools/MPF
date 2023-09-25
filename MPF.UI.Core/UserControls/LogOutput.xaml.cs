@@ -1,7 +1,7 @@
 ﻿using System.Windows.Controls;
-using MPF.UI.ViewModels;
+using MPF.UI.Core.ViewModels;
 
-namespace MPF.UserControls
+namespace MPF.UI.Core.UserControls
 {
     public partial class LogOutput : UserControl
     {

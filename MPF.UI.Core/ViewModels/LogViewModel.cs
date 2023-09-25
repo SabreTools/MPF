@@ -8,9 +8,9 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using MPF.Core.Data;
-using MPF.UserControls;
+using MPF.UI.Core.UserControls;
 
-namespace MPF.UI.ViewModels
+namespace MPF.UI.Core.ViewModels
 {
     public class LogViewModel
     {

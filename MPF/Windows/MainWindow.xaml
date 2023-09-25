@@ -3,7 +3,7 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                        xmlns:controls="clr-namespace:MPF.UserControls"
+                        xmlns:controls="clr-namespace:MPF.UI.Core.UserControls;assembly=MPF.UI.Core"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows;assembly=MPF.UI.Core"
                         xmlns:viewModels="clr-namespace:MPF.UI.ViewModels"
                         mc:Ignorable="d"
