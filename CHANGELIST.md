@@ -15,6 +15,7 @@
 - Migrate to Nuget package for PIC
 - Fix timestamp (Ragowit)
 - Not building against .NET Standard
+- Move RedumpSystemComboBoxItem
 
 ### 2.6.3 (2023-08-15)
 

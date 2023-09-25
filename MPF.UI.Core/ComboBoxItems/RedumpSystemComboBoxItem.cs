@@ -5,7 +5,7 @@ using MPF.Core.Utilities;
 using MPF.UI.Core.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF
+namespace MPF.UI.Core.ComboBoxItems
 {
     /// <summary>
     /// Represents a single item in the System combo box
