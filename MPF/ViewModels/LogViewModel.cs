@@ -460,10 +460,6 @@ namespace MPF.UI.ViewModels
                         lastUsedMatcher = null;
                     }
                 }
-
-                // Update the bar if needed
-                if (App.Options.EnableProgressProcessing)
-                    ProcessStringForProgressBar(nextText, lastUsedMatcher);
             }
             catch (Exception ex)
             {

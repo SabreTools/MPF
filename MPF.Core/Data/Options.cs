@@ -522,7 +522,6 @@ namespace MPF.Core.Data
 
         /// <summary>
         /// Enable fancy formatting of log statements
-        /// Disables EnableProgressProcessing if disabled
         /// </summary>
         /// <remarks>
         /// This is mainly for outputting redirected console outputs. Not many
@@ -532,16 +531,6 @@ namespace MPF.Core.Data
         {
             get { return GetBooleanSetting(_settings, "EnableLogFormatting", false); }
             set { _settings["EnableLogFormatting"] = value.ToString(); }
-        }
-
-        /// <summary>
-        /// Enable progress bar updating based on log text
-        /// Disabled if EnableLogFormatting is disabled
-        /// </summary>
-        public bool EnableProgressProcessing
-        {
-            get { return GetBooleanSetting(_settings, "EnableProgressProcessing", false); }
-            set { _settings["EnableProgressProcessing"] = value.ToString(); }
         }
 
         #endregion

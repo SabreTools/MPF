@@ -401,11 +401,6 @@
                             IsChecked="{Binding Options.EnableLogFormatting}"
                             ToolTip="Format log lines written to the log, including overwriting previous lines on match. Disable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
                             />
-                        
-                        <CheckBox VerticalAlignment="Center" Content="Enable Progress Processing"
-                            IsChecked="{Binding Options.EnableProgressProcessing}" IsEnabled="{Binding Options.EnableLogFormatting}"
-                            ToolTip="Process lines written to the log to update the progress bar. Disable this if you have a weaker system as there is an increased processing load otherwise." Margin="0,4"
-                            />
                     </UniformGrid>
                 </TabItem>
 

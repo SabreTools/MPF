@@ -18,6 +18,7 @@
 - Move RedumpSystemComboBoxItem
 - Move Constants
 - Move WPFCustomMessageBox
+- Remove EnableProgressProcessing
 
 ### 2.6.3 (2023-08-15)
 
