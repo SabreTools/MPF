@@ -187,13 +187,13 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Test Redump login credentials
         /// </summary>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private bool? TestRedumpLogin()
 #else
         private async Task<bool?> TestRedumpLogin()
 #endif
         {
-#if NET48 || NETSTANDARD2_1
+#if NET48
             (bool? success, string message) = RedumpWebClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
 #else
             (bool? success, string message) = await RedumpHttpClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
@@ -264,7 +264,7 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Test Redump credentials for validity
         /// </summary>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private void OnRedumpTestClick(object sender, EventArgs e) =>
             TestRedumpLogin();
 #else

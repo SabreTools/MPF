@@ -14,6 +14,7 @@
 - Migrate to Nuget package for cuesheets
 - Migrate to Nuget package for PIC
 - Fix timestamp (Ragowit)
+- Not building against .NET Standard
 
 ### 2.6.3 (2023-08-15)
 

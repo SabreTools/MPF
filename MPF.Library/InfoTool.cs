@@ -109,7 +109,7 @@ namespace MPF.Library
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
-#if NET48 || NETSTANDARD2_1
+#if NET48
                 FillFromRedump(options, info, resultProgress);
 #else
                 _ = await FillFromRedump(options, info, resultProgress);
@@ -624,7 +624,7 @@ namespace MPF.Library
                 foreach (string file in files)
                 {
                     string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-#if NET48 || NETSTANDARD2_1
+#if NET48
                     zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
 #else
                     zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
@@ -1897,7 +1897,7 @@ namespace MPF.Library
         /// <param name="wc">RedumpWebClient for making the connection</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="id">Redump disc ID to retrieve</param>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private static bool FillFromId(RedumpWebClient wc, SubmissionInfo info, int id)
         {
             string discData = wc.DownloadSingleSiteID(id);
@@ -2252,7 +2252,7 @@ namespace MPF.Library
         /// <param name="options">Options object representing user-defined options</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private static bool FillFromRedump(Core.Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
 #else
         private async static Task<bool> FillFromRedump(Core.Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
@@ -2262,14 +2262,14 @@ namespace MPF.Library
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
             info.PartiallyMatchedIDs = new List<int>();
 
-#if NET48 || NETSTANDARD2_1
+#if NET48
             using (RedumpWebClient wc = new RedumpWebClient())
 #else
             using (RedumpHttpClient wc = new RedumpHttpClient())
 #endif
             {
                 // Login to Redump
-#if NET48 || NETSTANDARD2_1
+#if NET48
                 bool? loggedIn = wc.Login(options.RedumpUsername, options.RedumpPassword);
 #else
                 bool? loggedIn = await wc.Login(options.RedumpUsername, options.RedumpPassword);
@@ -2314,7 +2314,7 @@ namespace MPF.Library
                         continue;
                     }
 
-#if NET48 || NETSTANDARD2_1
+#if NET48
                     (bool singleFound, List<int> foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
 #else
                     (bool singleFound, List<int> foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
@@ -2341,7 +2341,7 @@ namespace MPF.Library
                 // If we don't have any matches but we have a universal hash
                 if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.UniversalHash))
                 {
-#if NET48 || NETSTANDARD2_1
+#if NET48
                     (bool singleFound, List<int> foundIds) = ValidateUniversalHash(wc, info, resultProgress);
 #else
                     (bool singleFound, List<int> foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
@@ -2381,7 +2381,7 @@ namespace MPF.Library
                 for (int i = 0; i < totalMatchedIDsCount; i++)
                 {
                     // Skip if the track count doesn't match
-#if NET48 || NETSTANDARD2_1
+#if NET48
                     if (!ValidateTrackCount(wc, fullyMatchedIDs[i], trackCount))
                         continue;
 #else
@@ -2391,7 +2391,7 @@ namespace MPF.Library
 
                     // Fill in the fields from the existing ID
                     resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
-#if NET48 || NETSTANDARD2_1
+#if NET48
                     FillFromId(wc, info, fullyMatchedIDs[i]);
 #else
                     _ = await FillFromId(wc, info, fullyMatchedIDs[i]);
@@ -2456,7 +2456,7 @@ namespace MPF.Library
         /// <param name="query">Query string to attempt to search for</param>
         /// <param name="filterForwardSlashes">True to filter forward slashes, false otherwise</param>
         /// <returns>All disc IDs for the given query, null on error</returns>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private static List<int> ListSearchResults(RedumpWebClient wc, string query, bool filterForwardSlashes = true)
 #else
         private async static Task<List<int>> ListSearchResults(RedumpHttpClient wc, string query, bool filterForwardSlashes = true)
@@ -2482,7 +2482,7 @@ namespace MPF.Library
                 int pageNumber = 1;
                 while (true)
                 {
-#if NET48 || NETSTANDARD2_1
+#if NET48
                     List<int> pageIds = wc.CheckSingleSitePage(string.Format(SabreTools.RedumpLib.Data.Constants.QuickSearchUrl, query, pageNumber++));
 #else
                     List<int> pageIds = await wc.CheckSingleSitePage(string.Format(SabreTools.RedumpLib.Data.Constants.QuickSearchUrl, query, pageNumber++));
@@ -2509,7 +2509,7 @@ namespace MPF.Library
         /// <param name="hashData">DAT-formatted hash data to parse out</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private static (bool, List<int>) ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
 #else
         private async static Task<(bool, List<int>)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
@@ -2523,7 +2523,7 @@ namespace MPF.Library
             }
 
             // Get all matching IDs for the track
-#if NET48 || NETSTANDARD2_1
+#if NET48
             List<int> newIds = ListSearchResults(wc, sha1);
 #else
             List<int> newIds = await ListSearchResults(wc, sha1);
@@ -2556,7 +2556,7 @@ namespace MPF.Library
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <returns>True if the track was found, false otherwise; List of found values, if possible</returns>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private static (bool, List<int>) ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
 #else
         private async static Task<(bool, List<int>)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
@@ -2574,7 +2574,7 @@ namespace MPF.Library
             universalHash = $"{universalHash.Substring(0, universalHash.Length - 1)}/comments/only";
 
             // Get all matching IDs for the hash
-#if NET48 || NETSTANDARD2_1
+#if NET48
             List<int> newIds = ListSearchResults(wc, universalHash, filterForwardSlashes: false);
 #else
             List<int> newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
@@ -2607,14 +2607,14 @@ namespace MPF.Library
         /// <param name="id">Redump disc ID to retrieve</param>
         /// <param name="localCount">Local count of tracks for the current disc</param>
         /// <returns>True if the track count matches, false otherwise</returns>
-#if NET48 || NETSTANDARD2_1
+#if NET48
         private static bool ValidateTrackCount(RedumpWebClient wc, int id, int localCount)
 #else
         private async static Task<bool> ValidateTrackCount(RedumpHttpClient wc, int id, int localCount)
 #endif
         {
             // If we can't pull the remote data, we can't match
-#if NET48 || NETSTANDARD2_1
+#if NET48
             string discData = wc.DownloadSingleSiteID(id);
 #else
             string discData = await wc.DownloadSingleSiteID(id);

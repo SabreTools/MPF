@@ -814,7 +814,7 @@ namespace MPF.UI.ViewModels
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
 
-#if NET48 || NETSTANDARD2_1
+#if NET48
             // If we're skipping detection, set the default value
             if (App.Options.SkipMediaTypeDetection)
             {
