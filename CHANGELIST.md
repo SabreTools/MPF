@@ -20,6 +20,7 @@
 - Move WPFCustomMessageBox
 - Remove EnableProgressProcessing
 - Remove EnableLogFormatting
+- Remove App references from LogViewModel
 
 ### 2.6.3 (2023-08-15)
 

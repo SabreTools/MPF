@@ -105,7 +105,8 @@ namespace MPF.UI.ViewModels
         /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
         private void PopulateDrives()
         {
-            App.Logger.VerboseLogLn("Scanning for drives..");
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn("Scanning for drives..");
 
             // Always enable the media scan
             App.Instance.MediaScanButton.IsEnabled = true;
@@ -120,7 +121,8 @@ namespace MPF.UI.ViewModels
 
             if (App.Instance.DriveLetterComboBox.Items.Count > 0)
             {
-                App.Logger.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
 
                 // Check for the last selected drive, if possible
                 int index = -1;
@@ -153,7 +155,8 @@ namespace MPF.UI.ViewModels
             }
             else
             {
-                App.Logger.VerboseLogLn("Found no drives");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLogLn("Found no drives");
                 App.Instance.DriveLetterComboBox.SelectedIndex = -1;
                 App.Instance.StatusLabel.Text = "No valid drive found!";
                 App.Instance.StartStopButton.IsEnabled = false;
@@ -222,7 +225,8 @@ namespace MPF.UI.ViewModels
         /// </summary>
         public void ChangeDumpingProgram()
         {
-            App.Logger.VerboseLogLn($"Changed dumping program to: {(App.Instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>).Name}");
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn($"Changed dumping program to: {(App.Instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>).Name}");
             EnsureDiscInformation();
             GetOutputNames(false);
         }
@@ -249,7 +253,8 @@ namespace MPF.UI.ViewModels
         /// </summary>
         public void ChangeSystem()
         {
-            App.Logger.VerboseLogLn($"Changed system to: {(App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem).Name}");
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn($"Changed system to: {(App.Instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem).Name}");
             PopulateMediaType();
             GetOutputNames(false);
             EnsureDiscInformation();
@@ -517,19 +522,22 @@ namespace MPF.UI.ViewModels
             }
             else if ((string)App.Instance.StartStopButton.Content == Interface.StopDumping)
             {
-                App.Logger.VerboseLogLn("Canceling dumping process...");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLogLn("Canceling dumping process...");
                 Env.CancelDumping();
                 App.Instance.CopyProtectScanButton.IsEnabled = true;
 
                 if (Env.Options.EjectAfterDump == true)
                 {
-                    App.Logger.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
+                    if (App.Options.VerboseLogging)
+                        App.Logger.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
                     await Env.EjectDisc();
                 }
 
                 if (App.Options.DICResetDriveAfterDump)
                 {
-                    App.Logger.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
+                    if (App.Options.VerboseLogging)
+                        App.Logger.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
                     await Env.ResetDrive();
                 }
             }
@@ -551,7 +559,7 @@ namespace MPF.UI.ViewModels
             }
         }
 
-#endregion
+        #endregion
 
         #region UI Functionality
 
@@ -814,7 +822,7 @@ namespace MPF.UI.ViewModels
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
 
-#if NET48
+#if NET48 || NETSTANDARD2_1
             // If we're skipping detection, set the default value
             if (App.Options.SkipMediaTypeDetection)
             {
@@ -824,22 +832,25 @@ namespace MPF.UI.ViewModels
             // If the drive is marked active, try to read from it
             else if (drive.MarkedActive)
             {
-                App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}].. ");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}].. ");
                 (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType();
 
                 // If we got an error message, post it to the log
-                if (errorMessage != null)
+                if (errorMessage != null && App.Options.VerboseLogging)
                     App.Logger.VerboseLogLn($"Message from detecting media type: {errorMessage}");
 
                 // If we got either an error or no media, default to the current System default
                 if (detectedMediaType == null)
                 {
-                    App.Logger.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
+                    if (App.Options.VerboseLogging)
+                        App.Logger.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
                     CurrentMediaType = defaultMediaType;
                 }
                 else
                 {
-                    App.Logger.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
+                    if (App.Options.VerboseLogging)
+                        App.Logger.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
                     CurrentMediaType = detectedMediaType;
                 }
             }
@@ -847,12 +858,14 @@ namespace MPF.UI.ViewModels
             // All other cases, just use the default
             else
             {
-                App.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
 #else
             // Media type detection on initialize is always disabled
-            App.Logger.VerboseLogLn($"Media type detection not available, defaulting to {defaultMediaType.LongName()}.");
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn($"Media type detection not available, defaulting to {defaultMediaType.LongName()}.");
             CurrentMediaType = defaultMediaType;
 #endif
 
@@ -882,13 +895,16 @@ namespace MPF.UI.ViewModels
         {
             if (Drives == null || Drives.Count == 0 || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
             {
-                App.Logger.VerboseLog("Skipping system type detection because no valid drives found!");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLog("Skipping system type detection because no valid drives found!");
             }
             else if (!App.Options.SkipSystemDetection)
             {
-                App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLog($"Trying to detect system for drive {Drives[App.Instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
                 var currentSystem = Drives[App.Instance.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(App.Options.DefaultSystem) ?? App.Options.DefaultSystem;
-                App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
 
                 if (currentSystem != null)
                 {
@@ -899,7 +915,8 @@ namespace MPF.UI.ViewModels
             else if (App.Options.SkipSystemDetection && App.Options.DefaultSystem != null)
             {
                 var currentSystem = App.Options.DefaultSystem;
-                App.Logger.VerboseLog($"System detection disabled, setting to default of {currentSystem.LongName()}.");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLog($"System detection disabled, setting to default of {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
                 App.Instance.SystemTypeComboBox.SelectedIndex = sysIndex;
             }
@@ -949,7 +966,8 @@ namespace MPF.UI.ViewModels
         {
             if (Drives == null || Drives.Count == 0 || App.Instance.DriveLetterComboBox.SelectedIndex == -1)
             {
-                App.Logger.VerboseLog("Skipping output name building because no valid drives found!");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLog("Skipping output name building because no valid drives found!");
                 return;
             }
 
@@ -1060,7 +1078,8 @@ namespace MPF.UI.ViewModels
             var drive = App.Instance.DriveLetterComboBox.SelectedItem as Drive;
             if (drive.Letter != default(char))
             {
-                App.Logger.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
+                if (App.Options.VerboseLogging)
+                    App.Logger.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
 
                 var tempContent = App.Instance.StatusLabel.Text;
                 App.Instance.StatusLabel.Text = "Scanning for copy protection... this might take a while!";
@@ -1078,7 +1097,8 @@ namespace MPF.UI.ViewModels
                 //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
                 //{
                 //    ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
-                //    App.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+                //    if (App.Options.VerboseLogging)
+                //        App.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 //}
 
                 if (!App.Instance.LogPanel.IsExpanded)
@@ -1130,7 +1150,8 @@ namespace MPF.UI.ViewModels
             // Set the drive speed list that's appropriate
             var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
             App.Instance.DriveSpeedComboBox.ItemsSource = values;
-            App.Logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
 
             // Set the selected speed
             int speed;
@@ -1156,7 +1177,8 @@ namespace MPF.UI.ViewModels
                     break;
             }
 
-            App.Logger.VerboseLogLn($"Setting drive speed to: {speed}");
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn($"Setting drive speed to: {speed}");
             App.Instance.DriveSpeedComboBox.SelectedValue = speed;
 
             // Ensure the UI gets updated
@@ -1396,9 +1418,9 @@ namespace MPF.UI.ViewModels
                 App.Instance.StatusLabel.Text = value.Message;
 
             // Log based on success or failure
-            if (value)
+            if (value && App.Options.VerboseLogging)
                 App.Logger.VerboseLogLn(message);
-            else
+            else if (!value)
                 App.Logger.ErrorLogLn(message);
         }
 
@@ -1409,7 +1431,8 @@ namespace MPF.UI.ViewModels
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             App.Instance.StatusLabel.Text = message;
-            App.Logger.VerboseLogLn(message);
+            if (App.Options.VerboseLogging)
+                App.Logger.VerboseLogLn(message);
         }
 
         #endregion

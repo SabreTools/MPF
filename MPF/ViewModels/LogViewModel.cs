@@ -317,7 +317,7 @@ namespace MPF.UI.ViewModels
         /// Enqueue text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void Log(string text) => LogInternal(text);
+        public void Log(string text) => LogInternal(text, LogLevel.USER);
 
         /// <summary>
         /// Enqueue text with a newline to the log
@@ -329,7 +329,7 @@ namespace MPF.UI.ViewModels
         /// Enqueue error text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void ErrorLog(string text) => LogInternal(text, LogViewModel.LogLevel.ERROR);
+        public void ErrorLog(string text) => LogInternal(text, LogLevel.ERROR);
 
         /// <summary>
         /// Enqueue error text with a newline to the log
@@ -341,7 +341,7 @@ namespace MPF.UI.ViewModels
         /// Enqueue secret text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void SecretLog(string text) => LogInternal(text, LogViewModel.LogLevel.SECRET);
+        public void SecretLog(string text) => LogInternal(text, LogLevel.SECRET);
 
         /// <summary>
         /// Enqueue secret text with a newline to the log
@@ -353,7 +353,7 @@ namespace MPF.UI.ViewModels
         /// Enqueue verbose text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        public void VerboseLog(string text) => LogInternal(text, LogViewModel.LogLevel.VERBOSE);
+        public void VerboseLog(string text) => LogInternal(text, LogLevel.VERBOSE);
 
         /// <summary>
         /// Enqueue verbose text with a newline to the log
@@ -377,15 +377,11 @@ namespace MPF.UI.ViewModels
         /// Enqueue text to the log with formatting
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        /// <param name="logLevel">LogLevel for the log, defaults to USER</param>
-        private void LogInternal(string text, LogLevel logLevel = LogLevel.USER)
+        /// <param name="logLevel">LogLevel for the log</param>
+        private void LogInternal(string text, LogLevel logLevel)
         {
             // Null text gets ignored
             if (text == null)
-                return;
-
-            // If we have verbose logs but not enabled, ignore
-            if (logLevel == LogLevel.VERBOSE && !App.Options.VerboseLogging)
                 return;
 
             // Enqueue the text
