@@ -9,15 +9,12 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Library;
 using MPF.UI.Core.ComboBoxItems;
-using MPF.UI.Core.ViewModels;
 using MPF.UI.Core.Windows;
-using MPF.Windows;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
-using MPF.UI.Core;
 
-namespace MPF.UI.ViewModels
+namespace MPF.UI.Core.ViewModels
 {
     public class MainViewModel
     {
@@ -322,7 +319,7 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Shutdown the current application
         /// </summary>
-        public void ExitApplication() => Application.Current.Shutdown();
+        public static void ExitApplication() => Application.Current.Shutdown();
 
         /// <summary>
         /// Set the output path from a dialog box
@@ -793,7 +790,7 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Recolor all UI elements for light mode
         /// </summary>
-        private void EnableLightMode()
+        private static void EnableLightMode()
         {
             var theme = new LightModeTheme();
             theme.Apply();
@@ -802,7 +799,7 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Recolor all UI elements for dark mode
         /// </summary>
-        private void EnableDarkMode()
+        private static void EnableDarkMode()
         {
             var theme = new DarkModeTheme();
             theme.Apply();
@@ -1302,8 +1299,7 @@ namespace MPF.UI.ViewModels
                 DisableAllUIElements();
 
                 // Refresh the drive, if it wasn't null
-                if (Env.Drive != null)
-                    Env.Drive.RefreshDrive();
+                Env.Drive?.RefreshDrive();
 
                 // Output to the label and log
                 this.Parent.StatusLabel.Text = "Starting dumping process... Please wait!";
@@ -1367,7 +1363,7 @@ namespace MPF.UI.ViewModels
             // Validate that we have an output path of any sort
             if (string.IsNullOrWhiteSpace(Env.OutputPath))
             {
-                MessageBoxResult mbresult = CustomMessageBox.Show("No output path was provided so dumping cannot continue.", "Missing Path", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = CustomMessageBox.Show("No output path was provided so dumping cannot continue.", "Missing Path", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 this.Logger.LogLn("Dumping aborted!");
                 return false;
             }

@@ -1,8 +1,7 @@
 using System;
-using MPF.UI.Core.Windows;
-using MPF.UI.ViewModels;
+using MPF.UI.Core.ViewModels;
 
-namespace MPF.Windows
+namespace MPF.UI.Core.Windows
 {
     public partial class MainWindow : WindowBase
     {
