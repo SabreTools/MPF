@@ -1,3 +1,7 @@
+### WIP (xxxx-xx-xx)
+
+- Normalize Redumper CSS output
+
 ### 2.6.4 (2023-09-25)
 
 - Add CD Projekt ID field

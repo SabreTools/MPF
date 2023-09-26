@@ -1265,7 +1265,7 @@ namespace MPF.Modules.Redumper
                         if (line.StartsWith("protection system type"))
                         {
                             copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
-                            if (copyrightProtectionSystemType == "none")
+                            if (copyrightProtectionSystemType == "none" || copyrightProtectionSystemType == "<none>")
                                 copyrightProtectionSystemType = "No";
                         }
                         else if (line.StartsWith("region management information:"))
@@ -1287,7 +1287,7 @@ namespace MPF.Modules.Redumper
                                 if (match.Success)
                                 {
                                     string normalizedKey = match.Groups[2].Value.Replace(':', ' ');
-                                    if (normalizedKey == "<none>")
+                                    if (normalizedKey == "none" || normalizedKey == "<none>")
                                         normalizedKey = "No Title Key";
                                     else if (normalizedKey == "<error>")
                                         normalizedKey = "Error Retrieving Title Key";
