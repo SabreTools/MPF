@@ -6,6 +6,7 @@
 - Disable subdump download in AppVeyor
 - Normalize publish scripts
 - Update AppVeyor to match scripts
+- Add release publish scripts
 
 ### 2.6.4 (2023-09-25)
 
