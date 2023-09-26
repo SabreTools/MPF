@@ -1,8 +1,6 @@
 ﻿using System.Windows;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using MPF.UI.Core.ViewModels;
-using MPF.Windows;
 
 namespace MPF
 {
@@ -16,21 +14,6 @@ namespace MPF
     /// </remarks>
     public partial class App : Application
     {
-        /// <summary>
-        /// Static application instance for reference
-        /// </summary>
-        private static App _appInstance;
-
-        /// <summary>
-        /// Read-only access to the current main window
-        /// </summary>
-        public static MainWindow Instance => _appInstance.MainWindow as MainWindow;
-
-        /// <summary>
-        /// Read-only access to the current log window
-        /// </summary>
-        public static LogViewModel Logger => Instance.LogOutput.LogViewModel;
-
         /// <summary>
         /// Access to the current options
         /// </summary>
@@ -54,7 +37,6 @@ namespace MPF
         /// </summary>
         public App()
         {
-            _appInstance = this;
             _options = OptionsLoader.LoadFromConfig();
         }
     }

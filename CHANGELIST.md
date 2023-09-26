@@ -30,6 +30,7 @@
 - More decoupling App
 - Make Options non-cloneable
 - Set parent on MainViewModel init
+- Make logger a local reference
 
 ### 2.6.3 (2023-08-15)
 
