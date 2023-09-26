@@ -25,6 +25,11 @@ namespace MPF.UI.ViewModels
         #region Fields
 
         /// <summary>
+        /// Parent MainWindow object
+        /// </summary>
+        public MainWindow Parent { get; private set; }
+
+        /// <summary>
         /// Currently selected or detected media type
         /// </summary>
         public MediaType? CurrentMediaType { get; set; }
@@ -72,30 +77,33 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Initialize the main window after loading
         /// </summary>
-        public void Init(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public void Init(MainWindow parent, LogViewModel logger, MPF.Core.Data.Options options)
         {
+            // Set the parent window
+            this.Parent = parent;
+
             // Load the log output
-            instance.LogPanel.IsExpanded = options.OpenLogWindowAtStartup;
+            this.Parent.LogPanel.IsExpanded = options.OpenLogWindowAtStartup;
 
             // Disable buttons until we load fully
-            instance.StartStopButton.IsEnabled = false;
-            instance.MediaScanButton.IsEnabled = false;
-            instance.UpdateVolumeLabel.IsEnabled = false;
-            instance.CopyProtectScanButton.IsEnabled = false;
+            this.Parent.StartStopButton.IsEnabled = false;
+            this.Parent.MediaScanButton.IsEnabled = false;
+            this.Parent.UpdateVolumeLabel.IsEnabled = false;
+            this.Parent.CopyProtectScanButton.IsEnabled = false;
 
             // Add the click handlers to the UI
-            AddEventHandlers(instance);
+            AddEventHandlers();
 
             // Display the debug option in the menu, if necessary
             if (options.ShowDebugViewMenuItem)
-                instance.DebugViewMenuItem.Visibility = Visibility.Visible;
+                this.Parent.DebugViewMenuItem.Visibility = Visibility.Visible;
 
             // Finish initializing the rest of the values
-            InitializeUIValues(instance, logger, options, removeEventHandlers: false, rescanDrives: true);
+            InitializeUIValues(logger, options, removeEventHandlers: false, rescanDrives: true);
 
             // Check for updates, if necessary
             if (options.CheckForUpdatesOnStartup)
-                CheckForUpdates(instance, logger, showIfSame: false);
+                CheckForUpdates(logger, showIfSame: false);
         }
 
         #region Population
@@ -104,23 +112,23 @@ namespace MPF.UI.ViewModels
         /// Get a complete list of active disc drives and fill the combo box
         /// </summary>
         /// <remarks>TODO: Find a way for this to periodically run, or have it hook to a "drive change" event</remarks>
-        private void PopulateDrives(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        private void PopulateDrives(LogViewModel logger, MPF.Core.Data.Options options)
         {
             if (options.VerboseLogging)
                 logger.VerboseLogLn("Scanning for drives..");
 
             // Always enable the media scan
-            instance.MediaScanButton.IsEnabled = true;
-            instance.UpdateVolumeLabel.IsEnabled = true;
+            this.Parent.MediaScanButton.IsEnabled = true;
+            this.Parent.UpdateVolumeLabel.IsEnabled = true;
 
             // If we have a selected drive, keep track of it
-            char? lastSelectedDrive = (instance.DriveLetterComboBox.SelectedValue as Drive)?.Letter;
+            char? lastSelectedDrive = (this.Parent.DriveLetterComboBox.SelectedValue as Drive)?.Letter;
 
             // Populate the list of drives and add it to the combo box
             Drives = Drive.CreateListOfDrives(options.IgnoreFixedDrives);
-            instance.DriveLetterComboBox.ItemsSource = Drives;
+            this.Parent.DriveLetterComboBox.ItemsSource = Drives;
 
-            if (instance.DriveLetterComboBox.Items.Count > 0)
+            if (this.Parent.DriveLetterComboBox.Items.Count > 0)
             {
                 if (options.VerboseLogging)
                     logger.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
@@ -143,63 +151,63 @@ namespace MPF.UI.ViewModels
                     index = Drives.FindIndex(d => d.MarkedActive);
 
                 // Set the selected index
-                instance.DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
-                instance.StatusLabel.Text = "Valid drive found! Choose your Media Type";
-                instance.CopyProtectScanButton.IsEnabled = true;
+                this.Parent.DriveLetterComboBox.SelectedIndex = (index != -1 ? index : 0);
+                this.Parent.StatusLabel.Text = "Valid drive found! Choose your Media Type";
+                this.Parent.CopyProtectScanButton.IsEnabled = true;
 
                 // Get the current system type
                 if (index != -1)
-                    DetermineSystemType(instance, logger, options);
+                    DetermineSystemType(logger, options);
 
                 // Only enable the start/stop if we don't have the default selected
-                instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton(instance);
+                this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
             }
             else
             {
                 if (options.VerboseLogging)
                     logger.VerboseLogLn("Found no drives");
-                instance.DriveLetterComboBox.SelectedIndex = -1;
-                instance.StatusLabel.Text = "No valid drive found!";
-                instance.StartStopButton.IsEnabled = false;
-                instance.CopyProtectScanButton.IsEnabled = false;
+                this.Parent.DriveLetterComboBox.SelectedIndex = -1;
+                this.Parent.StatusLabel.Text = "No valid drive found!";
+                this.Parent.StartStopButton.IsEnabled = false;
+                this.Parent.CopyProtectScanButton.IsEnabled = false;
             }
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Populate media type according to system type
         /// </summary>
-        private void PopulateMediaType(MainWindow instance)
+        private void PopulateMediaType()
         {
-            RedumpSystem? currentSystem = instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
+            RedumpSystem? currentSystem = this.Parent.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
 
             if (currentSystem != null)
             {
                 var mediaTypeValues = currentSystem.MediaTypes();
                 MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
-                instance.MediaTypeComboBox.ItemsSource = MediaTypes;
+                this.Parent.MediaTypeComboBox.ItemsSource = MediaTypes;
 
-                instance.MediaTypeComboBox.IsEnabled = MediaTypes.Count > 1;
+                this.Parent.MediaTypeComboBox.IsEnabled = MediaTypes.Count > 1;
                 int currentIndex = MediaTypes.FindIndex(m => m == CurrentMediaType);
-                instance.MediaTypeComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
+                this.Parent.MediaTypeComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
             }
             else
             {
-                instance.MediaTypeComboBox.IsEnabled = false;
-                instance.MediaTypeComboBox.ItemsSource = null;
-                instance.MediaTypeComboBox.SelectedIndex = -1;
+                this.Parent.MediaTypeComboBox.IsEnabled = false;
+                this.Parent.MediaTypeComboBox.ItemsSource = null;
+                this.Parent.MediaTypeComboBox.SelectedIndex = -1;
             }
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Populate media type according to system type
         /// </summary>
-        private void PopulateInternalPrograms(MainWindow instance, MPF.Core.Data.Options options)
+        private void PopulateInternalPrograms(MPF.Core.Data.Options options)
         {
             // Get the current internal program
             InternalProgram internalProgram = options.InternalProgram;
@@ -207,14 +215,14 @@ namespace MPF.UI.ViewModels
             // Create a static list of supported programs, not everything
             var internalPrograms = new List<InternalProgram> { InternalProgram.DiscImageCreator, InternalProgram.Aaru, InternalProgram.Redumper };
             InternalPrograms = internalPrograms.Select(ip => new Element<InternalProgram>(ip)).ToList();
-            instance.DumpingProgramComboBox.ItemsSource = InternalPrograms;
+            this.Parent.DumpingProgramComboBox.ItemsSource = InternalPrograms;
 
             // Select the current default dumping program
             int currentIndex = InternalPrograms.FindIndex(m => m == internalProgram);
-            instance.DumpingProgramComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
+            this.Parent.DumpingProgramComboBox.SelectedIndex = (currentIndex > -1 ? currentIndex : 0);
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         #endregion
@@ -224,48 +232,48 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Change the currently selected dumping program
         /// </summary>
-        public void ChangeDumpingProgram(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public void ChangeDumpingProgram(LogViewModel logger, MPF.Core.Data.Options options)
         {
             if (options.VerboseLogging)
-                logger.VerboseLogLn($"Changed dumping program to: {(instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>).Name}");
-            EnsureDiscInformation(instance, options);
-            GetOutputNames(instance, logger, options, false);
+                logger.VerboseLogLn($"Changed dumping program to: {(this.Parent.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>).Name}");
+            EnsureDiscInformation(options);
+            GetOutputNames(logger, options, false);
         }
 
         /// <summary>
         /// Change the currently selected media type
         /// </summary>
-        public void ChangeMediaType(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options, SelectionChangedEventArgs e)
+        public void ChangeMediaType(LogViewModel logger, MPF.Core.Data.Options options, SelectionChangedEventArgs e)
         {
             // Only change the media type if the selection and not the list has changed
             if (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1)
             {
-                var selectedMediaType = instance.MediaTypeComboBox.SelectedItem as Element<MediaType>;
+                var selectedMediaType = this.Parent.MediaTypeComboBox.SelectedItem as Element<MediaType>;
                 CurrentMediaType = selectedMediaType.Value;
-                SetSupportedDriveSpeed(instance, logger, options);
+                SetSupportedDriveSpeed(logger, options);
             }
 
-            GetOutputNames(instance, logger, options, false);
-            EnsureDiscInformation(instance, options);
+            GetOutputNames(logger, options, false);
+            EnsureDiscInformation(options);
         }
 
         /// <summary>
         /// Change the currently selected system
         /// </summary>
-        public void ChangeSystem(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public void ChangeSystem(LogViewModel logger, MPF.Core.Data.Options options)
         {
             if (options.VerboseLogging)
-                logger.VerboseLogLn($"Changed system to: {(instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem).Name}");
-            PopulateMediaType(instance);
-            GetOutputNames(instance, logger, options, false);
-            EnsureDiscInformation(instance, options);
+                logger.VerboseLogLn($"Changed system to: {(this.Parent.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem).Name}");
+            PopulateMediaType();
+            GetOutputNames(logger, options, false);
+            EnsureDiscInformation(options);
         }
 
         /// <summary>
         /// Check for available updates
         /// </summary>
         /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
-        public void CheckForUpdates(MainWindow instance, LogViewModel logger, bool showIfSame)
+        public void CheckForUpdates(LogViewModel logger, bool showIfSame)
         {
             (bool different, string message, string url) = Tools.CheckForNewVersion();
 
@@ -278,7 +286,7 @@ namespace MPF.UI.ViewModels
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
 
             if (showIfSame || different)
-                CustomMessageBox.Show(instance, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+                CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -289,16 +297,16 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Set the output path from a dialog box
         /// </summary>
-        public void SetOutputPath(MainWindow instance, MPF.Core.Data.Options options)
+        public void SetOutputPath(MPF.Core.Data.Options options)
         {
-            BrowseFile(instance, options);
-            EnsureDiscInformation(instance, options);
+            BrowseFile(options);
+            EnsureDiscInformation(options);
         }
 
         /// <summary>
         /// Show the About text popup
         /// </summary>
-        public void ShowAboutText(MainWindow instance, LogViewModel logger)
+        public void ShowAboutText(LogViewModel logger)
         {
             string aboutText = $"Media Preservation Frontend (MPF)"
                 + $"{Environment.NewLine}"
@@ -311,7 +319,7 @@ namespace MPF.UI.ViewModels
                 + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
 
             logger.SecretLogLn(aboutText);
-            CustomMessageBox.Show(instance, aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -470,7 +478,7 @@ namespace MPF.UI.ViewModels
         /// </summary>
         public void ShowOptionsWindow(MPF.Core.Data.Options options)
         {
-            var optionsWindow = new OptionsWindow(options) { Owner = App.Instance };
+            var optionsWindow = new OptionsWindow(options) { Owner = this.Parent };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }
@@ -478,55 +486,55 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Toggle the parameters input box
         /// </summary>
-        public void ToggleParameters(MainWindow instance)
+        public void ToggleParameters()
         {
-            if (instance.EnableParametersCheckBox.IsChecked == true)
+            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
             {
-                instance.SystemTypeComboBox.IsEnabled = false;
-                instance.MediaTypeComboBox.IsEnabled = false;
+                this.Parent.SystemTypeComboBox.IsEnabled = false;
+                this.Parent.MediaTypeComboBox.IsEnabled = false;
 
-                instance.OutputPathTextBox.IsEnabled = false;
-                instance.OutputPathBrowseButton.IsEnabled = false;
+                this.Parent.OutputPathTextBox.IsEnabled = false;
+                this.Parent.OutputPathBrowseButton.IsEnabled = false;
 
-                instance.MediaScanButton.IsEnabled = false;
-                instance.UpdateVolumeLabel.IsEnabled = false;
-                instance.CopyProtectScanButton.IsEnabled = false;
+                this.Parent.MediaScanButton.IsEnabled = false;
+                this.Parent.UpdateVolumeLabel.IsEnabled = false;
+                this.Parent.CopyProtectScanButton.IsEnabled = false;
 
-                instance.ParametersTextBox.IsEnabled = true;
+                this.Parent.ParametersTextBox.IsEnabled = true;
             }
             else
             {
-                instance.ParametersTextBox.IsEnabled = false;
-                ProcessCustomParameters(instance);
+                this.Parent.ParametersTextBox.IsEnabled = false;
+                ProcessCustomParameters();
 
-                instance.SystemTypeComboBox.IsEnabled = true;
-                instance.MediaTypeComboBox.IsEnabled = true;
+                this.Parent.SystemTypeComboBox.IsEnabled = true;
+                this.Parent.MediaTypeComboBox.IsEnabled = true;
 
-                instance.OutputPathTextBox.IsEnabled = true;
-                instance.OutputPathBrowseButton.IsEnabled = true;
+                this.Parent.OutputPathTextBox.IsEnabled = true;
+                this.Parent.OutputPathBrowseButton.IsEnabled = true;
 
-                instance.MediaScanButton.IsEnabled = true;
-                instance.UpdateVolumeLabel.IsEnabled = true;
-                instance.CopyProtectScanButton.IsEnabled = true;
+                this.Parent.MediaScanButton.IsEnabled = true;
+                this.Parent.UpdateVolumeLabel.IsEnabled = true;
+                this.Parent.CopyProtectScanButton.IsEnabled = true;
             }
         }
 
         /// <summary>
         /// Toggle the Start/Stop button
         /// </summary>
-        public async void ToggleStartStop(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public async void ToggleStartStop(LogViewModel logger, MPF.Core.Data.Options options)
         {
             // Dump or stop the dump
-            if ((string)instance.StartStopButton.Content == Interface.StartDumping)
+            if ((string)this.Parent.StartStopButton.Content == Interface.StartDumping)
             {
-                StartDumping(instance, logger, options);
+                StartDumping(logger, options);
             }
-            else if ((string)instance.StartStopButton.Content == Interface.StopDumping)
+            else if ((string)this.Parent.StartStopButton.Content == Interface.StopDumping)
             {
                 if (options.VerboseLogging)
                     logger.VerboseLogLn("Canceling dumping process...");
                 Env.CancelDumping();
-                instance.CopyProtectScanButton.IsEnabled = true;
+                this.Parent.CopyProtectScanButton.IsEnabled = true;
 
                 if (Env.Options.EjectAfterDump == true)
                 {
@@ -551,12 +559,12 @@ namespace MPF.UI.ViewModels
         /// Update the internal options from a closed OptionsWindow
         /// </summary>
         /// <param name="optionsWindow">OptionsWindow to copy back data from</param>
-        public void UpdateOptions(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options, OptionsWindow optionsWindow)
+        public void UpdateOptions(LogViewModel logger, MPF.Core.Data.Options options, OptionsWindow optionsWindow)
         {
             if (optionsWindow?.OptionsViewModel.SavedSettings == true)
             {
                 options.SetFromExisting(optionsWindow.OptionsViewModel.Options);
-                InitializeUIValues(instance, logger, options, removeEventHandlers: true, rescanDrives: true);
+                InitializeUIValues(logger, options, removeEventHandlers: true, rescanDrives: true);
             }
         }
 
@@ -569,18 +577,18 @@ namespace MPF.UI.ViewModels
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
         /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        public async void InitializeUIValues(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options, bool removeEventHandlers, bool rescanDrives)
+        public async void InitializeUIValues(LogViewModel logger, MPF.Core.Data.Options options, bool removeEventHandlers, bool rescanDrives)
         {
             // Disable the dumping button
-            instance.StartStopButton.IsEnabled = false;
+            this.Parent.StartStopButton.IsEnabled = false;
 
             // Safely uncheck the parameters box, just in case
-            if (instance.EnableParametersCheckBox.IsChecked == true)
+            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
             {
-                instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
-                instance.EnableParametersCheckBox.IsChecked = false;
-                instance.ParametersTextBox.IsEnabled = false;
-                instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+                this.Parent.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
+                this.Parent.EnableParametersCheckBox.IsChecked = false;
+                this.Parent.ParametersTextBox.IsEnabled = false;
+                this.Parent.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
             }
 
             // Set the UI color scheme according to the options
@@ -590,7 +598,7 @@ namespace MPF.UI.ViewModels
                 EnableLightMode();
 
             // Force the UI to reload after applying the theme
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
 
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
@@ -599,51 +607,51 @@ namespace MPF.UI.ViewModels
             // Populate the list of drives and determine the system
             if (rescanDrives)
             {
-                instance.StatusLabel.Text = "Creating drive list, please wait!";
-                await instance.Dispatcher.InvokeAsync(() => PopulateDrives(instance, logger, options));
+                this.Parent.StatusLabel.Text = "Creating drive list, please wait!";
+                await this.Parent.Dispatcher.InvokeAsync(() => PopulateDrives(logger, options));
             }
             else
             {
-                await instance.Dispatcher.InvokeAsync(() => DetermineSystemType(instance, logger, options));
+                await this.Parent.Dispatcher.InvokeAsync(() => DetermineSystemType(logger, options));
             }
 
             // Determine current media type, if possible
-            await instance.Dispatcher.InvokeAsync(() => PopulateMediaType(instance));
-            CacheCurrentDiscType(instance, logger, options);
-            SetCurrentDiscType(instance);
+            await this.Parent.Dispatcher.InvokeAsync(() => PopulateMediaType());
+            CacheCurrentDiscType(logger, options);
+            SetCurrentDiscType();
 
             // Set the dumping program
-            await instance.Dispatcher.InvokeAsync(() => PopulateInternalPrograms(instance, options));
+            await this.Parent.Dispatcher.InvokeAsync(() => PopulateInternalPrograms(options));
 
             // Set the initial environment and UI values
-            SetSupportedDriveSpeed(instance, logger, options);
-            Env = DetermineEnvironment(instance, options);
-            GetOutputNames(instance, logger, options, true);
-            EnsureDiscInformation(instance, options);
+            SetSupportedDriveSpeed(logger, options);
+            Env = DetermineEnvironment(options);
+            GetOutputNames(logger, options, true);
+            EnsureDiscInformation(options);
 
             // Enable event handlers
             EnableEventHandlers();
 
             // Enable the dumping button, if necessary
-            instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton(instance);
+            this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
         /// Performs a fast update of the output path while skipping disc checks
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
-        private void FastUpdateLabel(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options, bool removeEventHandlers)
+        private void FastUpdateLabel(LogViewModel logger, MPF.Core.Data.Options options, bool removeEventHandlers)
         {
             // Disable the dumping button
-            instance.StartStopButton.IsEnabled = false;
+            this.Parent.StartStopButton.IsEnabled = false;
 
             // Safely uncheck the parameters box, just in case
-            if (instance.EnableParametersCheckBox.IsChecked == true)
+            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
             {
-                instance.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
-                instance.EnableParametersCheckBox.IsChecked = false;
-                instance.ParametersTextBox.IsEnabled = false;
-                instance.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
+                this.Parent.EnableParametersCheckBox.Checked -= EnableParametersCheckBoxClick;
+                this.Parent.EnableParametersCheckBox.IsChecked = false;
+                this.Parent.ParametersTextBox.IsEnabled = false;
+                this.Parent.EnableParametersCheckBox.Checked += EnableParametersCheckBoxClick;
             }
 
             // Remove event handlers to ensure ordering
@@ -651,49 +659,49 @@ namespace MPF.UI.ViewModels
                 DisableEventHandlers();
 
             // Refresh the drive info
-            (instance.DriveLetterComboBox.SelectedItem as Drive)?.RefreshDrive();
+            (this.Parent.DriveLetterComboBox.SelectedItem as Drive)?.RefreshDrive();
 
             // Set the initial environment and UI values
-            Env = DetermineEnvironment(instance, options);
-            GetOutputNames(instance, logger, options, true);
-            EnsureDiscInformation(instance, options);
+            Env = DetermineEnvironment(options);
+            GetOutputNames(logger, options, true);
+            EnsureDiscInformation(options);
 
             // Enable event handlers
             EnableEventHandlers();
 
             // Enable the dumping button, if necessary
-            instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton(instance);
+            this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
         /// Add all event handlers
         /// </summary>
-        private void AddEventHandlers(MainWindow instance)
+        private void AddEventHandlers()
         {
             // Menu Bar Click
-            instance.AboutMenuItem.Click += AboutClick;
-            instance.AppExitMenuItem.Click += AppExitClick;
-            instance.CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
-            instance.DebugViewMenuItem.Click += DebugViewClick;
-            instance.OptionsMenuItem.Click += OptionsMenuItemClick;
+            this.Parent.AboutMenuItem.Click += AboutClick;
+            this.Parent.AppExitMenuItem.Click += AppExitClick;
+            this.Parent.CheckForUpdatesMenuItem.Click += CheckForUpdatesClick;
+            this.Parent.DebugViewMenuItem.Click += DebugViewClick;
+            this.Parent.OptionsMenuItem.Click += OptionsMenuItemClick;
 
             // User Area Click
-            instance.CopyProtectScanButton.Click += CopyProtectScanButtonClick;
-            instance.EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
-            instance.MediaScanButton.Click += MediaScanButtonClick;
-            instance.UpdateVolumeLabel.Click += UpdateVolumeLabelClick;
-            instance.OutputPathBrowseButton.Click += OutputPathBrowseButtonClick;
-            instance.StartStopButton.Click += StartStopButtonClick;
+            this.Parent.CopyProtectScanButton.Click += CopyProtectScanButtonClick;
+            this.Parent.EnableParametersCheckBox.Click += EnableParametersCheckBoxClick;
+            this.Parent.MediaScanButton.Click += MediaScanButtonClick;
+            this.Parent.UpdateVolumeLabel.Click += UpdateVolumeLabelClick;
+            this.Parent.OutputPathBrowseButton.Click += OutputPathBrowseButtonClick;
+            this.Parent.StartStopButton.Click += StartStopButtonClick;
 
             // User Area SelectionChanged
-            instance.SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
-            instance.MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
-            instance.DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
-            instance.DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
-            instance.DumpingProgramComboBox.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
+            this.Parent.SystemTypeComboBox.SelectionChanged += SystemTypeComboBoxSelectionChanged;
+            this.Parent.MediaTypeComboBox.SelectionChanged += MediaTypeComboBoxSelectionChanged;
+            this.Parent.DriveLetterComboBox.SelectionChanged += DriveLetterComboBoxSelectionChanged;
+            this.Parent.DriveSpeedComboBox.SelectionChanged += DriveSpeedComboBoxSelectionChanged;
+            this.Parent.DumpingProgramComboBox.SelectionChanged += DumpingProgramComboBoxSelectionChanged;
 
             // User Area TextChanged
-            instance.OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
+            this.Parent.OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
         }
 
         /// <summary>
@@ -715,41 +723,41 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Disable all UI elements during dumping
         /// </summary>
-        private void DisableAllUIElements(MainWindow instance)
+        private void DisableAllUIElements()
         {
-            instance.OptionsMenuItem.IsEnabled = false;
-            instance.SystemTypeComboBox.IsEnabled = false;
-            instance.MediaTypeComboBox.IsEnabled = false;
-            instance.OutputPathTextBox.IsEnabled = false;
-            instance.OutputPathBrowseButton.IsEnabled = false;
-            instance.DriveLetterComboBox.IsEnabled = false;
-            instance.DriveSpeedComboBox.IsEnabled = false;
-            instance.DumpingProgramComboBox.IsEnabled = false;
-            instance.EnableParametersCheckBox.IsEnabled = false;
-            instance.StartStopButton.Content = Interface.StopDumping;
-            instance.MediaScanButton.IsEnabled = false;
-            instance.UpdateVolumeLabel.IsEnabled = false;
-            instance.CopyProtectScanButton.IsEnabled = false;
+            this.Parent.OptionsMenuItem.IsEnabled = false;
+            this.Parent.SystemTypeComboBox.IsEnabled = false;
+            this.Parent.MediaTypeComboBox.IsEnabled = false;
+            this.Parent.OutputPathTextBox.IsEnabled = false;
+            this.Parent.OutputPathBrowseButton.IsEnabled = false;
+            this.Parent.DriveLetterComboBox.IsEnabled = false;
+            this.Parent.DriveSpeedComboBox.IsEnabled = false;
+            this.Parent.DumpingProgramComboBox.IsEnabled = false;
+            this.Parent.EnableParametersCheckBox.IsEnabled = false;
+            this.Parent.StartStopButton.Content = Interface.StopDumping;
+            this.Parent.MediaScanButton.IsEnabled = false;
+            this.Parent.UpdateVolumeLabel.IsEnabled = false;
+            this.Parent.CopyProtectScanButton.IsEnabled = false;
         }
 
         /// <summary>
         /// Enable all UI elements after dumping
         /// </summary>
-        private void EnableAllUIElements(MainWindow instance)
+        private void EnableAllUIElements()
         {
-            instance.OptionsMenuItem.IsEnabled = true;
-            instance.SystemTypeComboBox.IsEnabled = true;
-            instance.MediaTypeComboBox.IsEnabled = true;
-            instance.OutputPathTextBox.IsEnabled = true;
-            instance.OutputPathBrowseButton.IsEnabled = true;
-            instance.DriveLetterComboBox.IsEnabled = true;
-            instance.DriveSpeedComboBox.IsEnabled = true;
-            instance.DumpingProgramComboBox.IsEnabled = true;
-            instance.EnableParametersCheckBox.IsEnabled = true;
-            instance.StartStopButton.Content = Interface.StartDumping;
-            instance.MediaScanButton.IsEnabled = true;
-            instance.UpdateVolumeLabel.IsEnabled = true;
-            instance.CopyProtectScanButton.IsEnabled = true;
+            this.Parent.OptionsMenuItem.IsEnabled = true;
+            this.Parent.SystemTypeComboBox.IsEnabled = true;
+            this.Parent.MediaTypeComboBox.IsEnabled = true;
+            this.Parent.OutputPathTextBox.IsEnabled = true;
+            this.Parent.OutputPathBrowseButton.IsEnabled = true;
+            this.Parent.DriveLetterComboBox.IsEnabled = true;
+            this.Parent.DriveSpeedComboBox.IsEnabled = true;
+            this.Parent.DumpingProgramComboBox.IsEnabled = true;
+            this.Parent.EnableParametersCheckBox.IsEnabled = true;
+            this.Parent.StartStopButton.Content = Interface.StartDumping;
+            this.Parent.MediaScanButton.IsEnabled = true;
+            this.Parent.UpdateVolumeLabel.IsEnabled = true;
+            this.Parent.CopyProtectScanButton.IsEnabled = true;
         }
 
         /// <summary>
@@ -777,10 +785,10 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Browse for an output file path
         /// </summary>
-        private void BrowseFile(MainWindow instance, MPF.Core.Data.Options options)
+        private void BrowseFile(MPF.Core.Data.Options options)
         {
             // Get the current path, if possible
-            string currentPath = instance.OutputPathTextBox.Text;
+            string currentPath = this.Parent.OutputPathTextBox.Text;
             if (string.IsNullOrWhiteSpace(currentPath))
                 currentPath = Path.Combine(options.DefaultOutputPath, "track.bin");
             if (string.IsNullOrWhiteSpace(currentPath))
@@ -804,21 +812,21 @@ namespace MPF.UI.ViewModels
 
             if (result == WinForms.DialogResult.OK)
             {
-                instance.OutputPathTextBox.Text = fileDialog.FileName;
+                this.Parent.OutputPathTextBox.Text = fileDialog.FileName;
             }
         }
 
         /// <summary>
         /// Cache the current disc type to internal variable
         /// </summary>
-        private void CacheCurrentDiscType(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        private void CacheCurrentDiscType(LogViewModel logger, MPF.Core.Data.Options options)
         {
             // If the selected item is invalid, we just skip
-            if (!(instance.DriveLetterComboBox.SelectedItem is Drive drive))
+            if (!(this.Parent.DriveLetterComboBox.SelectedItem is Drive drive))
                 return;
 
             // Get reasonable default values based on the current system
-            RedumpSystem? currentSystem = Systems[instance.SystemTypeComboBox.SelectedIndex];
+            RedumpSystem? currentSystem = Systems[this.Parent.SystemTypeComboBox.SelectedIndex];
             MediaType? defaultMediaType = currentSystem.MediaTypes().FirstOrDefault() ?? MediaType.CDROM;
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
@@ -872,30 +880,30 @@ namespace MPF.UI.ViewModels
 #endif
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Create a DumpEnvironment with all current settings
         /// </summary>
-        /// <returns>Filled DumpEnvironment instance</returns>
-        private static DumpEnvironment DetermineEnvironment(MainWindow instance, MPF.Core.Data.Options options)
+        /// <returns>Filled DumpEnvironment this.Parent</returns>
+        private DumpEnvironment DetermineEnvironment(MPF.Core.Data.Options options)
         {
             return new DumpEnvironment(options,
-                instance.OutputPathTextBox.Text,
-                instance.DriveLetterComboBox.SelectedItem as Drive,
-                instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem,
-                instance.MediaTypeComboBox.SelectedItem as Element<MediaType>,
-                instance.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>,
-                instance.ParametersTextBox.Text);
+                this.Parent.OutputPathTextBox.Text,
+                this.Parent.DriveLetterComboBox.SelectedItem as Drive,
+                this.Parent.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem,
+                this.Parent.MediaTypeComboBox.SelectedItem as Element<MediaType>,
+                this.Parent.DumpingProgramComboBox.SelectedItem as Element<InternalProgram>,
+                this.Parent.ParametersTextBox.Text);
         }
 
         /// <summary>
         /// Determine and set the current system type, if allowed
         /// </summary>
-        private void DetermineSystemType(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        private void DetermineSystemType(LogViewModel logger, MPF.Core.Data.Options options)
         {
-            if (Drives == null || Drives.Count == 0 || instance.DriveLetterComboBox.SelectedIndex == -1)
+            if (Drives == null || Drives.Count == 0 || this.Parent.DriveLetterComboBox.SelectedIndex == -1)
             {
                 if (options.VerboseLogging)
                     logger.VerboseLog("Skipping system type detection because no valid drives found!");
@@ -903,15 +911,15 @@ namespace MPF.UI.ViewModels
             else if (!options.SkipSystemDetection)
             {
                 if (options.VerboseLogging)
-                    logger.VerboseLog($"Trying to detect system for drive {Drives[instance.DriveLetterComboBox.SelectedIndex].Letter}.. ");
-                var currentSystem = Drives[instance.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(options.DefaultSystem) ?? options.DefaultSystem;
+                    logger.VerboseLog($"Trying to detect system for drive {Drives[this.Parent.DriveLetterComboBox.SelectedIndex].Letter}.. ");
+                var currentSystem = Drives[this.Parent.DriveLetterComboBox.SelectedIndex]?.GetRedumpSystem(options.DefaultSystem) ?? options.DefaultSystem;
                 if (options.VerboseLogging)
                     logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
 
                 if (currentSystem != null)
                 {
                     int sysIndex = Systems.FindIndex(s => s == currentSystem);
-                    instance.SystemTypeComboBox.SelectedIndex = sysIndex;
+                    this.Parent.SystemTypeComboBox.SelectedIndex = sysIndex;
                 }
             }
             else if (options.SkipSystemDetection && options.DefaultSystem != null)
@@ -920,68 +928,68 @@ namespace MPF.UI.ViewModels
                 if (options.VerboseLogging)
                     logger.VerboseLog($"System detection disabled, setting to default of {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
-                instance.SystemTypeComboBox.SelectedIndex = sysIndex;
+                this.Parent.SystemTypeComboBox.SelectedIndex = sysIndex;
             }
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Ensure information is consistent with the currently selected disc type
         /// </summary>
-        public void EnsureDiscInformation(MainWindow instance, MPF.Core.Data.Options options)
+        public void EnsureDiscInformation(MPF.Core.Data.Options options)
         {
             // Get the current environment information
-            Env = DetermineEnvironment(instance, options);
+            Env = DetermineEnvironment(options);
 
             // Get the status to write out
             Result result = Tools.GetSupportStatus(Env.System, Env.Type);
-            instance.StatusLabel.Text = result.Message;
+            this.Parent.StatusLabel.Text = result.Message;
 
             // Set the index for the current disc type
-            SetCurrentDiscType(instance);
+            SetCurrentDiscType();
 
             // Enable or disable the button
-            instance.StartStopButton.IsEnabled = result && ShouldEnableDumpingButton(instance);
+            this.Parent.StartStopButton.IsEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            instance.DriveSpeedComboBox.IsEnabled = Env.Type.DoesSupportDriveSpeed();
+            this.Parent.DriveSpeedComboBox.IsEnabled = Env.Type.DoesSupportDriveSpeed();
 
             // If input params are not enabled, generate the full parameters from the environment
-            if (!instance.ParametersTextBox.IsEnabled)
+            if (!this.Parent.ParametersTextBox.IsEnabled)
             {
-                string generated = Env.GetFullParameters((int?)instance.DriveSpeedComboBox.SelectedItem);
+                string generated = Env.GetFullParameters((int?)this.Parent.DriveSpeedComboBox.SelectedItem);
                 if (generated != null)
-                    instance.ParametersTextBox.Text = generated;
+                    this.Parent.ParametersTextBox.Text = generated;
             }
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Get the default output directory name from the currently selected drive
         /// </summary>
         /// <param name="driveChanged">Force an updated name if the drive letter changes</param>
-        public void GetOutputNames(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options, bool driveChanged)
+        public void GetOutputNames(LogViewModel logger, MPF.Core.Data.Options options, bool driveChanged)
         {
-            if (Drives == null || Drives.Count == 0 || instance.DriveLetterComboBox.SelectedIndex == -1)
+            if (Drives == null || Drives.Count == 0 || this.Parent.DriveLetterComboBox.SelectedIndex == -1)
             {
                 if (options.VerboseLogging)
                     logger.VerboseLog("Skipping output name building because no valid drives found!");
                 return;
             }
 
-            Drive drive = instance.DriveLetterComboBox.SelectedItem as Drive;
-            RedumpSystem? systemType = instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
-            MediaType? mediaType = instance.MediaTypeComboBox.SelectedItem as Element<MediaType>;
+            Drive drive = this.Parent.DriveLetterComboBox.SelectedItem as Drive;
+            RedumpSystem? systemType = this.Parent.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem;
+            MediaType? mediaType = this.Parent.MediaTypeComboBox.SelectedItem as Element<MediaType>;
 
             // Get the extension for the file for the next two statements
             string extension = Env.Parameters?.GetDefaultExtension(mediaType);
 
             // Set the output filename, if it's not already
-            if (string.IsNullOrEmpty(instance.OutputPathTextBox.Text))
+            if (string.IsNullOrEmpty(this.Parent.OutputPathTextBox.Text))
             {
                 string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
                 string directory = options.DefaultOutputPath;
@@ -991,15 +999,15 @@ namespace MPF.UI.ViewModels
                 if (directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
                     directory = Path.GetDirectoryName(directory);
 
-                instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+                this.Parent.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
             // Set the output filename, if we changed drives
             else if (driveChanged)
             {
                 string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
-                string oldFilename = Path.GetFileNameWithoutExtension(instance.OutputPathTextBox.Text);
-                string directory = Path.GetDirectoryName(instance.OutputPathTextBox.Text);
+                string oldFilename = Path.GetFileNameWithoutExtension(this.Parent.OutputPathTextBox.Text);
+                string directory = Path.GetDirectoryName(this.Parent.OutputPathTextBox.Text);
                 string filename = $"{label}{extension ?? ".bin"}";
 
                 // If the previous path included the label
@@ -1010,29 +1018,29 @@ namespace MPF.UI.ViewModels
                 if (directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
                     directory = Path.GetDirectoryName(directory);
 
-                instance.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
+                this.Parent.OutputPathTextBox.Text = Path.Combine(directory, label, filename);
             }
 
             // Otherwise, reset the extension of the currently set path
             else
             {
-                string filename = Path.GetFileNameWithoutExtension(instance.OutputPathTextBox.Text);
-                string directory = Path.GetDirectoryName(instance.OutputPathTextBox.Text);
+                string filename = Path.GetFileNameWithoutExtension(this.Parent.OutputPathTextBox.Text);
+                string directory = Path.GetDirectoryName(this.Parent.OutputPathTextBox.Text);
                 filename = $"{filename}{extension ?? ".bin"}";
 
-                instance.OutputPathTextBox.Text = Path.Combine(directory, filename);
+                this.Parent.OutputPathTextBox.Text = Path.Combine(directory, filename);
             }
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Process the current custom parameters back into UI values
         /// </summary>
-        public void ProcessCustomParameters(MainWindow instance)
+        public void ProcessCustomParameters()
         {
-            Env.SetParameters(instance.ParametersTextBox.Text);
+            Env.SetParameters(this.Parent.ParametersTextBox.Text);
             if (Env.Parameters == null)
                 return;
 
@@ -1041,27 +1049,27 @@ namespace MPF.UI.ViewModels
             {
                 int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(Env.Parameters.InputPath[0]);
                 if (driveIndex > -1)
-                    instance.DriveLetterComboBox.SelectedIndex = driveIndex;
+                    this.Parent.DriveLetterComboBox.SelectedIndex = driveIndex;
             }
             catch { }
 
             int driveSpeed = Env.Parameters.Speed ?? -1;
             if (driveSpeed > 0)
-                instance.DriveSpeedComboBox.SelectedValue = driveSpeed;
+                this.Parent.DriveSpeedComboBox.SelectedValue = driveSpeed;
             else
-                Env.Parameters.Speed = instance.DriveSpeedComboBox.SelectedValue as int?;
+                Env.Parameters.Speed = this.Parent.DriveSpeedComboBox.SelectedValue as int?;
 
             // Disable change handling
             DisableEventHandlers();
 
             string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
             trimmedPath = InfoTool.NormalizeOutputPaths(trimmedPath);
-            instance.OutputPathTextBox.Text = trimmedPath;
+            this.Parent.OutputPathTextBox.Text = trimmedPath;
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
             if (mediaTypeIndex > -1)
-                instance.MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
+                this.Parent.MediaTypeComboBox.SelectedIndex = mediaTypeIndex;
 
             // Reenable change handling
             EnableEventHandlers();
@@ -1070,25 +1078,25 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-        public async void ScanAndShowProtection(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public async void ScanAndShowProtection(LogViewModel logger, MPF.Core.Data.Options options)
         {
             // Determine current environment, just in case
             if (Env == null)
-                Env = DetermineEnvironment(instance, options);
+                Env = DetermineEnvironment(options);
 
             // Pull the drive letter from the UI directly, just in case
-            var drive = instance.DriveLetterComboBox.SelectedItem as Drive;
+            var drive = this.Parent.DriveLetterComboBox.SelectedItem as Drive;
             if (drive.Letter != default(char))
             {
                 if (options.VerboseLogging)
                     logger.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");
 
-                var tempContent = instance.StatusLabel.Text;
-                instance.StatusLabel.Text = "Scanning for copy protection... this might take a while!";
-                instance.StartStopButton.IsEnabled = false;
-                instance.MediaScanButton.IsEnabled = false;
-                instance.UpdateVolumeLabel.IsEnabled = false;
-                instance.CopyProtectScanButton.IsEnabled = false;
+                var tempContent = this.Parent.StatusLabel.Text;
+                this.Parent.StatusLabel.Text = "Scanning for copy protection... this might take a while!";
+                this.Parent.StartStopButton.IsEnabled = false;
+                this.Parent.MediaScanButton.IsEnabled = false;
+                this.Parent.UpdateVolumeLabel.IsEnabled = false;
+                this.Parent.CopyProtectScanButton.IsEnabled = false;
 
                 var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
@@ -1103,7 +1111,7 @@ namespace MPF.UI.ViewModels
                 //        logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 //}
 
-                if (!instance.LogPanel.IsExpanded)
+                if (!this.Parent.LogPanel.IsExpanded)
                 {
                     if (string.IsNullOrEmpty(error))
                         CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1116,18 +1124,18 @@ namespace MPF.UI.ViewModels
                 else
                     logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
-                instance.StatusLabel.Text = tempContent;
-                instance.StartStopButton.IsEnabled = ShouldEnableDumpingButton(instance);
-                instance.MediaScanButton.IsEnabled = true;
-                instance.UpdateVolumeLabel.IsEnabled = true;
-                instance.CopyProtectScanButton.IsEnabled = true;
+                this.Parent.StatusLabel.Text = tempContent;
+                this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+                this.Parent.MediaScanButton.IsEnabled = true;
+                this.Parent.UpdateVolumeLabel.IsEnabled = true;
+                this.Parent.CopyProtectScanButton.IsEnabled = true;
             }
         }
 
         /// <summary>
         /// Set the current disc type in the combo box
         /// </summary>
-        private void SetCurrentDiscType(MainWindow instance)
+        private void SetCurrentDiscType()
         {
             // If we have an invalid current type, we don't care and return
             if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
@@ -1136,22 +1144,22 @@ namespace MPF.UI.ViewModels
             // Now set the selected item, if possible
             int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentMediaType);
             if (index != -1)
-                instance.MediaTypeComboBox.SelectedIndex = index;
+                this.Parent.MediaTypeComboBox.SelectedIndex = index;
             else
-                instance.StatusLabel.Text = $"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!";
+                this.Parent.StatusLabel.Text = $"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!";
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Set the drive speed based on reported maximum and user-defined option
         /// </summary>
-        public void SetSupportedDriveSpeed(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public void SetSupportedDriveSpeed(LogViewModel logger, MPF.Core.Data.Options options)
         {
             // Set the drive speed list that's appropriate
             var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
-            instance.DriveSpeedComboBox.ItemsSource = values;
+            this.Parent.DriveSpeedComboBox.ItemsSource = values;
             if (options.VerboseLogging)
                 logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
 
@@ -1181,22 +1189,22 @@ namespace MPF.UI.ViewModels
 
             if (options.VerboseLogging)
                 logger.VerboseLogLn($"Setting drive speed to: {speed}");
-            instance.DriveSpeedComboBox.SelectedValue = speed;
+            this.Parent.DriveSpeedComboBox.SelectedValue = speed;
 
             // Ensure the UI gets updated
-            instance.UpdateLayout();
+            this.Parent.UpdateLayout();
         }
 
         /// <summary>
         /// Determine if the dumping button should be enabled
         /// </summary>
-        private bool ShouldEnableDumpingButton(MainWindow instance)
+        private bool ShouldEnableDumpingButton()
         {
             return Drives != null
                 && Drives.Count > 0
-                && instance.SystemTypeComboBox.SelectedIndex > -1
-                && instance.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem != null
-                && !string.IsNullOrEmpty(instance.ParametersTextBox.Text);
+                && this.Parent.SystemTypeComboBox.SelectedIndex > -1
+                && this.Parent.SystemTypeComboBox.SelectedItem as RedumpSystemComboBoxItem != null
+                && !string.IsNullOrEmpty(this.Parent.ParametersTextBox.Text);
         }
 
         /// <summary>
@@ -1207,11 +1215,11 @@ namespace MPF.UI.ViewModels
         private (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
             if (App.Options.ShowDiscEjectReminder)
-                CustomMessageBox.Show(App.Instance, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.Show("It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
 
             var discInformationWindow = new DiscInformationWindow(App.Options, submissionInfo)
             {
-                Owner = App.Instance,
+                Owner = this.Parent,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
             bool? result = discInformationWindow.ShowDialog();
@@ -1226,23 +1234,23 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Begin the dumping process using the given inputs
         /// </summary>
-        public async void StartDumping(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
+        public async void StartDumping(LogViewModel logger, MPF.Core.Data.Options options)
         {
             // One last check to determine environment, just in case
-            Env = DetermineEnvironment(instance, options);
+            Env = DetermineEnvironment(options);
 
             // Force an internal drive refresh in case the user entered things manually
             Env.Drive.RefreshDrive();
 
             // If still in custom parameter mode, check that users meant to continue or not
-            if (instance.EnableParametersCheckBox.IsChecked == true)
+            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
             {
                 MessageBoxResult result = CustomMessageBox.Show("It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", "Custom Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    instance.EnableParametersCheckBox.IsChecked = false;
-                    instance.ParametersTextBox.IsEnabled = false;
-                    ProcessCustomParameters(instance);
+                    this.Parent.EnableParametersCheckBox.IsChecked = false;
+                    this.Parent.ParametersTextBox.IsEnabled = false;
+                    ProcessCustomParameters();
                 }
                 else if (result == MessageBoxResult.Cancel)
                 {
@@ -1261,14 +1269,14 @@ namespace MPF.UI.ViewModels
                     return;
 
                 // Disable all UI elements apart from dumping button
-                DisableAllUIElements(instance);
+                DisableAllUIElements();
 
                 // Refresh the drive, if it wasn't null
                 if (Env.Drive != null)
                     Env.Drive.RefreshDrive();
 
                 // Output to the label and log
-                instance.StatusLabel.Text = "Starting dumping process... Please wait!";
+                this.Parent.StatusLabel.Text = "Starting dumping process... Please wait!";
                 logger.LogLn("Starting dumping process... Please wait!");
                 if (options.ToolsInSeparateWindow)
                     logger.LogLn("Look for the separate command window for more details");
@@ -1290,10 +1298,10 @@ namespace MPF.UI.ViewModels
                 if (!Env.Parameters.IsDumpingCommand())
                 {
                     logger.LogLn("No dumping command was run, submission information will not be gathered.");
-                    instance.StatusLabel.Text = "Execution complete!";
+                    this.Parent.StatusLabel.Text = "Execution complete!";
 
                     // Reset all UI elements
-                    EnableAllUIElements(instance);
+                    EnableAllUIElements();
                     return;
                 }
 
@@ -1305,18 +1313,18 @@ namespace MPF.UI.ViewModels
                 else
                 {
                     logger.ErrorLogLn(result.Message);
-                    instance.StatusLabel.Text = "Execution failed!";
+                    this.Parent.StatusLabel.Text = "Execution failed!";
                 }
             }
             catch (Exception ex)
             {
                 logger.ErrorLogLn(ex.ToString());
-                instance.StatusLabel.Text = "An exception occurred!";
+                this.Parent.StatusLabel.Text = "An exception occurred!";
             }
             finally
             {
                 // Reset all UI elements
-                EnableAllUIElements(instance);
+                EnableAllUIElements();
             }
         }
 
@@ -1391,7 +1399,7 @@ namespace MPF.UI.ViewModels
         /// Handler for OptionsWindow OnUpdated event
         /// </summary>
         private void OnOptionsUpdated(object sender, EventArgs e) =>
-            UpdateOptions(App.Instance, App.Logger, App.Options, sender as OptionsWindow);
+            UpdateOptions(App.Logger, App.Options, sender as OptionsWindow);
 
         #region Progress Reporting
 
@@ -1417,9 +1425,9 @@ namespace MPF.UI.ViewModels
 
             // Update the label with only the first line of output
             if (message.Contains("\n"))
-                App.Instance.StatusLabel.Text = value.Message.Split('\n')[0] + " (See log output)";
+                this.Parent.StatusLabel.Text = value.Message.Split('\n')[0] + " (See log output)";
             else
-                App.Instance.StatusLabel.Text = value.Message;
+                this.Parent.StatusLabel.Text = value.Message;
 
             // Log based on success or failure
             if (value && App.Options.VerboseLogging)
@@ -1434,7 +1442,7 @@ namespace MPF.UI.ViewModels
         private void ProgressUpdated(object sender, ProtectionProgress value)
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
-            App.Instance.StatusLabel.Text = message;
+            this.Parent.StatusLabel.Text = message;
             if (App.Options.VerboseLogging)
                 App.Logger.VerboseLogLn(message);
         }
@@ -1447,7 +1455,7 @@ namespace MPF.UI.ViewModels
         /// Handler for AboutMenuItem Click event
         /// </summary>
         private void AboutClick(object sender, RoutedEventArgs e) =>
-            ShowAboutText(App.Instance, App.Logger);
+            ShowAboutText(App.Logger);
 
         /// <summary>
         /// Handler for AppExitMenuItem Click event
@@ -1459,7 +1467,7 @@ namespace MPF.UI.ViewModels
         /// Handler for CheckForUpdatesMenuItem Click event
         /// </summary>
         private void CheckForUpdatesClick(object sender, RoutedEventArgs e) =>
-            CheckForUpdates(App.Instance, App.Logger, showIfSame: true);
+            CheckForUpdates(App.Logger, showIfSame: true);
 
         /// <summary>
         /// Handler for DebugViewMenuItem Click event
@@ -1481,7 +1489,7 @@ namespace MPF.UI.ViewModels
         /// Handler for CopyProtectScanButton Click event
         /// </summary>
         private void CopyProtectScanButtonClick(object sender, RoutedEventArgs e) =>
-            ScanAndShowProtection(App.Instance, App.Logger, App.Options);
+            ScanAndShowProtection(App.Logger, App.Options);
 
         /// <summary>
         /// Handler for DriveLetterComboBox SelectionChanged event
@@ -1489,7 +1497,7 @@ namespace MPF.UI.ViewModels
         private void DriveLetterComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                InitializeUIValues(App.Instance, App.Logger, App.Options, removeEventHandlers: true, rescanDrives: false);
+                InitializeUIValues(App.Logger, App.Options, removeEventHandlers: true, rescanDrives: false);
         }
 
         /// <summary>
@@ -1498,7 +1506,7 @@ namespace MPF.UI.ViewModels
         private void DriveSpeedComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                EnsureDiscInformation(App.Instance, App.Options);
+                EnsureDiscInformation(App.Options);
         }
 
         /// <summary>
@@ -1507,20 +1515,20 @@ namespace MPF.UI.ViewModels
         private void DumpingProgramComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                ChangeDumpingProgram(App.Instance, App.Logger, App.Options);
+                ChangeDumpingProgram(App.Logger, App.Options);
         }
 
         /// <summary>
         /// Handler for EnableParametersCheckBox Click event
         /// </summary>
         private void EnableParametersCheckBoxClick(object sender, RoutedEventArgs e) =>
-            ToggleParameters(App.Instance);
+            ToggleParameters();
 
         /// <summary>
         /// Handler for MediaScanButton Click event
         /// </summary>
         private void MediaScanButtonClick(object sender, RoutedEventArgs e) =>
-            InitializeUIValues(App.Instance, App.Logger, App.Options, removeEventHandlers: true, rescanDrives: true);
+            InitializeUIValues(App.Logger, App.Options, removeEventHandlers: true, rescanDrives: true);
 
         /// <summary>
         /// Handler for MediaTypeComboBox SelectionChanged event
@@ -1528,14 +1536,14 @@ namespace MPF.UI.ViewModels
         private void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                ChangeMediaType(App.Instance, App.Logger, App.Options, e);
+                ChangeMediaType(App.Logger, App.Options, e);
         }
 
         /// <summary>
         /// Handler for OutputPathBrowseButton Click event
         /// </summary>
         private void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e) =>
-            SetOutputPath(App.Instance, App.Options);
+            SetOutputPath(App.Options);
 
         /// <summary>
         /// Handler for OutputPathTextBox TextChanged event
@@ -1543,14 +1551,14 @@ namespace MPF.UI.ViewModels
         private void OutputPathTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                EnsureDiscInformation(App.Instance, App.Options);
+                EnsureDiscInformation(App.Options);
         }
 
         /// <summary>
         /// Handler for StartStopButton Click event
         /// </summary>
         private void StartStopButtonClick(object sender, RoutedEventArgs e) =>
-            ToggleStartStop(App.Instance, App.Logger, App.Options);
+            ToggleStartStop(App.Logger, App.Options);
 
         /// <summary>
         /// Handler for SystemTypeComboBox SelectionChanged event
@@ -1558,7 +1566,7 @@ namespace MPF.UI.ViewModels
         private void SystemTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_canExecuteSelectionChanged)
-                ChangeSystem(App.Instance, App.Logger, App.Options);
+                ChangeSystem(App.Logger, App.Options);
         }
 
         /// <summary>
@@ -1569,9 +1577,9 @@ namespace MPF.UI.ViewModels
             if (_canExecuteSelectionChanged)
             {
                 if (App.Options.FastUpdateLabel)
-                    FastUpdateLabel(App.Instance, App.Logger, App.Options, removeEventHandlers: true);
+                    FastUpdateLabel(App.Logger, App.Options, removeEventHandlers: true);
                 else
-                    InitializeUIValues(App.Instance, App.Logger, App.Options, removeEventHandlers: true, rescanDrives: false);
+                    InitializeUIValues(App.Logger, App.Options, removeEventHandlers: true, rescanDrives: false);
             }
         }
 

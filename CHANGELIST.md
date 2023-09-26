@@ -29,6 +29,7 @@
 - Fix build
 - More decoupling App
 - Make Options non-cloneable
+- Set parent on MainViewModel init
 
 ### 2.6.3 (2023-08-15)
 

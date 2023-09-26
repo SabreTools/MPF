@@ -22,7 +22,7 @@ namespace MPF.Windows
         protected override void OnContentRendered(EventArgs e)
         {
             base.OnContentRendered(e);
-            MainViewModel.Init(App.Instance, App.Logger, App.Options);
+            MainViewModel.Init(this, App.Logger, App.Options);
         }
     }
 }
