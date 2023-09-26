@@ -54,7 +54,7 @@ namespace MPF.UI.Core.ViewModels
         public OptionsViewModel(OptionsWindow parent, Options baseOptions)
         {
             Parent = parent;
-            Options = baseOptions.Clone() as Options;
+            Options = new Options(baseOptions);
 
             // Add handlers
             Parent.AaruPathButton.Click += BrowseForPathClick;

@@ -25,6 +25,10 @@
 - Move LogOutput
 - Move to csproj tag for internals
 - Move OptionsWindow
+- Begin decoupling App
+- Fix build
+- More decoupling App
+- Make Options non-cloneable
 
 ### 2.6.3 (2023-08-15)
 

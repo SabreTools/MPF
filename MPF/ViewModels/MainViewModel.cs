@@ -551,12 +551,12 @@ namespace MPF.UI.ViewModels
         /// Update the internal options from a closed OptionsWindow
         /// </summary>
         /// <param name="optionsWindow">OptionsWindow to copy back data from</param>
-        public void UpdateOptions(OptionsWindow optionsWindow)
+        public void UpdateOptions(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options, OptionsWindow optionsWindow)
         {
             if (optionsWindow?.OptionsViewModel.SavedSettings == true)
             {
-                App.Options = optionsWindow.OptionsViewModel.Options.Clone() as MPF.Core.Data.Options;
-                InitializeUIValues(App.Instance, App.Logger, App.Options, removeEventHandlers: true, rescanDrives: true);
+                options.SetFromExisting(optionsWindow.OptionsViewModel.Options);
+                InitializeUIValues(instance, logger, options, removeEventHandlers: true, rescanDrives: true);
             }
         }
 
@@ -1391,7 +1391,7 @@ namespace MPF.UI.ViewModels
         /// Handler for OptionsWindow OnUpdated event
         /// </summary>
         private void OnOptionsUpdated(object sender, EventArgs e) =>
-            UpdateOptions(sender as OptionsWindow);
+            UpdateOptions(App.Instance, App.Logger, App.Options, sender as OptionsWindow);
 
         #region Progress Reporting
 

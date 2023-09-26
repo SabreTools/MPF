@@ -6,9 +6,9 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data
 {
-    public class Options : IDictionary<string, string>, ICloneable
+    public class Options : IDictionary<string, string>
     {
-        private readonly Dictionary<string, string> _settings;
+        private Dictionary<string, string> _settings;
 
         #region Internal Program
 
@@ -554,11 +554,21 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
-        /// Create a clone of the object
+        /// Constructor taking an existing Options object
         /// </summary>
-        public object Clone()
+        /// <param name="source"></param>
+        public Options(Options source)
         {
-            return new Options(new Dictionary<string, string>(_settings));
+            _settings = new Dictionary<string, string>(source._settings);
+        }
+
+        /// <summary>
+        /// Set all fields from an existing Options object
+        /// </summary>
+        /// <param name="source"></param>
+        public void SetFromExisting(Options source)
+        {
+            _settings = new Dictionary<string, string>(source._settings);
         }
 
         #region Helpers
