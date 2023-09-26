@@ -28,29 +28,29 @@ build_script:
   - msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
   - msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
 
-  # .NET 6.0
-  - dotnet publish MPF\MPF.csproj --framework net6.0-windows --runtime win7-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj --framework net6.0-windows --runtime win8-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj --framework net6.0-windows --runtime win81-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj --framework net6.0-windows --runtime win10-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime win7-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime win8-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime win81-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime win10-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net6.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
+  # .NET 6.0 Debug
+  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win7-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win8-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win81-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win10-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win7-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win8-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win81-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win10-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained true -p:PublishSingleFile=true
 
-  # .NET 7.0
-  - dotnet publish MPF\MPF.csproj --framework net7.0-windows --runtime win7-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj --framework net7.0-windows --runtime win8-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj --framework net7.0-windows --runtime win81-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF\MPF.csproj --framework net7.0-windows --runtime win10-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net7.0 --runtime win7-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net7.0 --runtime win8-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net7.0 --runtime win81-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net7.0 --runtime win10-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net7.0 --runtime linux-x64 --self-contained true -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj --framework net7.0 --runtime osx-x64 --self-contained true -p:PublishSingleFile=true
+  # .NET 7.0 Debug
+  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win7-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win8-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win81-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win10-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win7-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win8-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win81-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win10-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 --self-contained true -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained true -p:PublishSingleFile=true
 
 # post-build step
 after_build:
@@ -129,7 +129,7 @@ after_build:
 # - mkdir MPF\bin\Debug\net7.0-windows\win10-x64\publish\Programs\Subdump
 # - mv MPF\bin\Debug\net7.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net7.0-windows\win10-x64\publish\Programs\Subdump\subdump.exe
 
-# MPF
+# Create MPF Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net48\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net48.zip *
 
@@ -151,7 +151,7 @@ after_build:
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net7.0-windows\win10-x64\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net7.0_win10-x64.zip *
 
-# MPF.Check
+# Create MPF.Check Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net48\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net48.zip *
 
