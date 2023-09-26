@@ -1229,7 +1229,7 @@ namespace MPF.UI.ViewModels
         public async void StartDumping(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
         {
             // One last check to determine environment, just in case
-            Env = DetermineEnvironment(instance, loptions);
+            Env = DetermineEnvironment(instance, options);
 
             // Force an internal drive refresh in case the user entered things manually
             Env.Drive.RefreshDrive();
@@ -1270,7 +1270,7 @@ namespace MPF.UI.ViewModels
                 // Output to the label and log
                 instance.StatusLabel.Text = "Starting dumping process... Please wait!";
                 logger.LogLn("Starting dumping process... Please wait!");
-                if (loptions.ToolsInSeparateWindow)
+                if (options.ToolsInSeparateWindow)
                     logger.LogLn("Look for the separate command window for more details");
                 else
                     logger.LogLn("Program outputs may be slow to populate in the log window");
@@ -1422,7 +1422,7 @@ namespace MPF.UI.ViewModels
                 App.Instance.StatusLabel.Text = value.Message;
 
             // Log based on success or failure
-            if (value && loptions.VerboseLogging)
+            if (value && App.Options.VerboseLogging)
                 App.Logger.VerboseLogLn(message);
             else if (!value)
                 App.Logger.ErrorLogLn(message);
@@ -1435,7 +1435,7 @@ namespace MPF.UI.ViewModels
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             App.Instance.StatusLabel.Text = message;
-            if (loptions.VerboseLogging)
+            if (App.Options.VerboseLogging)
                 App.Logger.VerboseLogLn(message);
         }
 
