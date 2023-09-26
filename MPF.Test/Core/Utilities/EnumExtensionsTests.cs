@@ -36,6 +36,7 @@ namespace MPF.Test.Core.Utilities
             RedumpSystem.HasbroVideoNowColor,
             RedumpSystem.HasbroVideoNowJr,
             RedumpSystem.HasbroVideoNowXP,
+            RedumpSystem.PlayStationGameSharkUpdates,
             RedumpSystem.PhilipsCDi,
             RedumpSystem.SuperAudioCD,
         };

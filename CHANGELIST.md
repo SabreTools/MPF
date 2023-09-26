@@ -34,6 +34,7 @@
 - Move options into MainViewModel
 - Move MainWindow
 - Add .NET 7 as a build target (not AppVeyor)
+- Fix tests that have been broken for a while
 
 ### 2.6.3 (2023-08-15)
 

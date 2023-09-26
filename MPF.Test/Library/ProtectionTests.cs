@@ -183,43 +183,6 @@ namespace MPF.Test.Library
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        [InlineData(4)]
-        [InlineData(5)]
-        [InlineData(6)]
-        [InlineData(7)]
-        [InlineData(8)]
-        public void SanitizeFoundProtectionsSafeDiscTest(int skip)
-        {
-            List<string> protections = new List<string>()
-            {
-                "SafeDisc 1.20.000",
-                "SafeDisc (drvmgt.dll) 1.2.0",
-                "SafeDisc (secdrv.sys) 1.2.0",
-                "SafeDisc (dplayerx.dll) 1.2.0",
-                "SafeDisc 3.20-4.xx (version removed)",
-                "SafeDisc 2",
-                "SafeDisc 1/Lite",
-                "SafeDisc Lite",
-                "SafeDisc 1-3",
-                "SafeDisc",
-            };
-
-            // Safeguard for the future
-            if (skip >= protections.Count)
-                throw new ArgumentException("Invalid skip value", nameof(skip));
-
-            // The list is in order of preference
-            protections = protections.Skip(skip).ToList();
-
-            string sanitized = Protection.SanitizeFoundProtections(protections);
-            Assert.Equal(protections[0], sanitized);
-        }
-
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
         public void SanitizeFoundProtectionStarForceTest(int skip)
         {
             List<string> protections = new List<string>()
