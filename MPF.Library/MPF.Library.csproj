@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net48;net6.0</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0;net7.0</TargetFrameworks>
     <RuntimeIdentifiers>win7-x64;win8-x64;win81-x64;win10-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <AssemblyName>MPF.Library</AssemblyName>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>

@@ -33,6 +33,7 @@
 - Make logger a local reference
 - Move options into MainViewModel
 - Move MainWindow
+- Add .NET 7 as a build target (not AppVeyor)
 
 ### 2.6.3 (2023-08-15)
 
