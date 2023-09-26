@@ -2,7 +2,6 @@
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.UI.Core.ViewModels;
-using MPF.UI.ViewModels;
 using MPF.Windows;
 
 namespace MPF

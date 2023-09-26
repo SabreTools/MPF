@@ -72,30 +72,30 @@ namespace MPF.UI.ViewModels
         /// <summary>
         /// Initialize the main window after loading
         /// </summary>
-        public void Init()
+        public void Init(MainWindow instance, LogViewModel logger, MPF.Core.Data.Options options)
         {
             // Load the log output
-            App.Instance.LogPanel.IsExpanded = App.Options.OpenLogWindowAtStartup;
+            instance.LogPanel.IsExpanded = options.OpenLogWindowAtStartup;
 
             // Disable buttons until we load fully
-            App.Instance.StartStopButton.IsEnabled = false;
-            App.Instance.MediaScanButton.IsEnabled = false;
-            App.Instance.UpdateVolumeLabel.IsEnabled = false;
-            App.Instance.CopyProtectScanButton.IsEnabled = false;
+            instance.StartStopButton.IsEnabled = false;
+            instance.MediaScanButton.IsEnabled = false;
+            instance.UpdateVolumeLabel.IsEnabled = false;
+            instance.CopyProtectScanButton.IsEnabled = false;
 
             // Add the click handlers to the UI
-            AddEventHandlers(App.Instance);
+            AddEventHandlers(instance);
 
             // Display the debug option in the menu, if necessary
-            if (App.Options.ShowDebugViewMenuItem)
-                App.Instance.DebugViewMenuItem.Visibility = Visibility.Visible;
+            if (options.ShowDebugViewMenuItem)
+                instance.DebugViewMenuItem.Visibility = Visibility.Visible;
 
             // Finish initializing the rest of the values
-            InitializeUIValues(App.Instance, App.Logger, App.Options, removeEventHandlers: false, rescanDrives: true);
+            InitializeUIValues(instance, logger, options, removeEventHandlers: false, rescanDrives: true);
 
             // Check for updates, if necessary
-            if (App.Options.CheckForUpdatesOnStartup)
-                CheckForUpdates(App.Instance, App.Logger, showIfSame: false);
+            if (options.CheckForUpdatesOnStartup)
+                CheckForUpdates(instance, logger, showIfSame: false);
         }
 
         #region Population
