@@ -31,6 +31,7 @@
 - Make Options non-cloneable
 - Set parent on MainViewModel init
 - Make logger a local reference
+- Move options into MainViewModel
 
 ### 2.6.3 (2023-08-15)
 
