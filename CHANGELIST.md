@@ -4,6 +4,7 @@
 - Update redumper to build 219
 - Add .NET 7 to build scripts
 - Disable subdump download in AppVeyor
+- Normalize publish scripts
 
 ### 2.6.4 (2023-09-25)
 
