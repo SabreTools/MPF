@@ -11,6 +11,7 @@
 - Fix options not saving on update
 - Combine build scripts
 - Force information window to top
+- Reset debug option to false
 
 ### 2.6.4 (2023-09-25)
 
