@@ -2331,7 +2331,9 @@ namespace MPF.Library
 
                     // If the line ends in a known extra track names, skip them for checking
                     if (hashData.Contains("(Track 0).bin")
+                        || hashData.Contains("(Track 0.2).bin")
                         || hashData.Contains("(Track 00).bin")
+                        || hashData.Contains("(Track 00.2).bin")
                         || hashData.Contains("(Track A).bin")
                         || hashData.Contains("(Track AA).bin"))
                     {

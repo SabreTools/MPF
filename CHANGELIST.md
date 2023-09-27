@@ -9,6 +9,7 @@
 - Address some warnings and infos
 - Add setting for pulling comment/contents
 - Move to config.json
+- Omit track 0.2 and 00.2 from hash search
 
 ### 2.6.5 (2023-09-27)
 
