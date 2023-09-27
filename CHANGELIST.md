@@ -8,6 +8,7 @@
 - Update AppVeyor to match scripts
 - Add release publish scripts
 - Handle invalid characters when changing program
+- Fix options not saving on update
 
 ### 2.6.4 (2023-09-25)
 

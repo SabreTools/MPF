@@ -590,7 +590,7 @@ namespace MPF.UI.Core.ViewModels
         {
             if (optionsWindow?.OptionsViewModel.SavedSettings == true)
             {
-                this.Options.SetFromExisting(optionsWindow.OptionsViewModel.Options);
+                this.Options = new MPF.Core.Data.Options(optionsWindow.OptionsViewModel.Options);
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
             }
         }
