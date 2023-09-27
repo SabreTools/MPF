@@ -15,7 +15,7 @@ For those who like to test the newest features, download the latest AppVeyor WIP
 
 ## Media Preservation Frontend (MPF)
 
-MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, DiscImageCreator, or dd for Windows in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
+MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreato in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
 ### System Requirements
 
@@ -27,7 +27,7 @@ MPF is the main, UI-centric application of the MPF suite. This program allows us
     ```
     - Alternatively, look at this [StackOverflow question](https://stackoverflow.com/questions/403731/strong-name-validation-failed) for more information.
 
-- .NET Framework 4.8 or .NET 6.0 Runtimes
+- .NET Framework 4.8 .NET 6.0, or .NET 7.0 Runtimes
 - As much hard drive space as the amount of discs you will be dumping (20+ GB recommended)
 
 Ensure that your operating system is as up-to-date as possible, since some features may rely on those updates.
@@ -59,7 +59,7 @@ dotnet build MPF\MPF.csproj --framework net6.0-windows --runtime [win-x64]
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
-MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, dd for Windows, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
+MPF.Check is a commandline-only program that allows users to generate submission information from their personal rips. This program supports the outputs from Redumper, Aaru, DiscImageCreator, Cleanrip, and UmdImageCreator. Running this program without any parameters will display the help text, including all supported parameters.
 
 ### System Requirements
 
