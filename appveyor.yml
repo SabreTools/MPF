@@ -109,11 +109,11 @@ after_build:
 
 # Create MPF Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net48\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net48.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF-dbg_net48.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_win-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF-dbg_net6.0_win-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net7.0-windows\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net7.0_win-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF-dbg_net7.0_win-x64.zip *
 
 # # Create MPF Release archives
 # - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Release\net48\publish\
@@ -125,19 +125,19 @@ after_build:
 
 # Create MPF.Check Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net48\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net48.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net48.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0_win-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net6.0_win-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\linux-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0_linux-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net6.0_linux-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\osx-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0_osx-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net6.0_osx-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net7.0\win-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_win-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net7.0_win-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net7.0\linux-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_linux-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net7.0_linux-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net7.0\osx-x64\publish\
-- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_osx-x64.zip *
+- 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check-dbg_net7.0_osx-x64.zip *
 
 # # Create MPF.Check Release archives
 # - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net48\publish\
@@ -165,12 +165,12 @@ on_failure:
 
 # artifact linking
 artifacts:
-- path: MPF_net48.zip
-  name: MPF (.NET Framework 4.8)
-- path: MPF_net6.0_win-x64.zip
-  name: MPF (.NET 6.0, Windows x64)
-- path: MPF_net7.0_win-x64.zip
-  name: MPF (.NET 7.0, Windows x64)
+- path: MPF-dbg_net48.zip
+  name: MPF (.NET Framework 4.8, Debug)
+- path: MPF-dbg_net6.0_win-x64.zip
+  name: MPF (.NET 6.0, Debug, Windows x64)
+- path: MPF-dbg_net7.0_win-x64.zip
+  name: MPF (.NET 7.0, Debug, Windows x64)
 
 # - path: MPF_net48.zip
 #   name: MPF (.NET Framework 4.8, Release)
@@ -179,20 +179,20 @@ artifacts:
 # - path: MPF_net7.0_win-x64.zip
 #   name: MPF (.NET 7.0, Release, Windows x64)
 
-- path: MPF.Check_net48.zip
-  name: MPF Check (.NET Framework 4.8)
-- path: MPF.Check_net6.0_win-x64.zip
-  name: MPF.Check (.NET 6.0, Windows x64)
-- path: MPF.Check_net6.0_linux-x64.zip
-  name: MPF.Check (.NET 6.0, Linux x64)
-- path: MPF.Check_net6.0_osx-x64.zip
-  name: MPF.Check (.NET 6.0, OSX x64)
-- path: MPF.Check_net7.0_win-x64.zip
-  name: MPF.Check (.NET 7.0, Windows x64)
-- path: MPF.Check_net7.0_linux-x64.zip
-  name: MPF.Check (.NET 7.0, Linux x64)
-- path: MPF.Check_net7.0_osx-x64.zip
-  name: MPF.Check (.NET 7.0, OSX x64)
+- path: MPF.Check-dbg_net48.zip
+  name: MPF Check (.NET Framework 4.8, Debug)
+- path: MPF.Check-dbg_net6.0_win-x64.zip
+  name: MPF.Check (.NET 6.0, Debug, Windows x64)
+- path: MPF.Check-dbg_net6.0_linux-x64.zip
+  name: MPF.Check (.NET 6.0, Debug, Linux x64)
+- path: MPF.Check-dbg_net6.0_osx-x64.zip
+  name: MPF.Check (.NET 6.0, Debug, OSX x64)
+- path: MPF.Check-dbg_net7.0_win-x64.zip
+  name: MPF.Check (.NET 7.0, Debug, Windows x64)
+- path: MPF.Check-dbg_net7.0_linux-x64.zip
+  name: MPF.Check (.NET 7.0, Debug, Linux x64)
+- path: MPF.Check-dbg_net7.0_osx-x64.zip
+  name: MPF.Check (.NET 7.0, Debug, OSX x64)
 
 # - path: MPF.Check_net48.zip
 #   name: MPF Check (.NET Framework 4.8, Release)

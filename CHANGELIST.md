@@ -4,6 +4,7 @@
 - Update to MMI 3.0.0-preview.2
 - Remove errant character from script
 - Add placeholders for release builds
+- Fully sync AppVeyor build with script
 
 ### 2.6.5 (2023-09-27)
 
