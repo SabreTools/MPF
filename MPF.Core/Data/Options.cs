@@ -8,7 +8,10 @@ namespace MPF.Core.Data
 {
     public class Options : IDictionary<string, string>
     {
-        private Dictionary<string, string> _settings;
+        /// <summary>
+        /// All settings in the form of a dictionary
+        /// </summary>
+        public Dictionary<string, string> Settings { get; private set; }
 
         #region Internal Program
 
@@ -17,8 +20,8 @@ namespace MPF.Core.Data
         /// </summary>
         public string AaruPath
         {
-            get { return GetStringSetting(_settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
-            set { _settings["AaruPath"] = value; }
+            get { return GetStringSetting(Settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
+            set { Settings["AaruPath"] = value; }
         }
 
         /// <summary>
@@ -26,8 +29,8 @@ namespace MPF.Core.Data
         /// </summary>
         public string DiscImageCreatorPath
         {
-            get { return GetStringSetting(_settings, "DiscImageCreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
-            set { _settings["DiscImageCreatorPath"] = value; }
+            get { return GetStringSetting(Settings, "DiscImageCreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
+            set { Settings["DiscImageCreatorPath"] = value; }
         }
 
         /// <summary>
@@ -35,8 +38,8 @@ namespace MPF.Core.Data
         /// </summary>
         public string RedumperPath
         {
-            get { return GetStringSetting(_settings, "RedumperPath", "Programs\\Redumper\\redumper.exe"); }
-            set { _settings["RedumperPath"] = value; }
+            get { return GetStringSetting(Settings, "RedumperPath", "Programs\\Redumper\\redumper.exe"); }
+            set { Settings["RedumperPath"] = value; }
         }
 
         /// <summary>
@@ -46,13 +49,13 @@ namespace MPF.Core.Data
         {
             get
             {
-                string valueString = GetStringSetting(_settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
+                string valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
                 var valueEnum = EnumConverter.ToInternalProgram(valueString);
                 return valueEnum == InternalProgram.NONE ? InternalProgram.DiscImageCreator : valueEnum;
             }
             set
             {
-                _settings["InternalProgram"] = value.ToString();
+                Settings["InternalProgram"] = value.ToString();
             }
         }
 
@@ -65,8 +68,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool EnableDarkMode
         {
-            get { return GetBooleanSetting(_settings, "EnableDarkMode", false); }
-            set { _settings["EnableDarkMode"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "EnableDarkMode", false); }
+            set { Settings["EnableDarkMode"] = value.ToString(); }
         }
 
         /// <summary>
@@ -74,8 +77,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool CheckForUpdatesOnStartup
         {
-            get { return GetBooleanSetting(_settings, "CheckForUpdatesOnStartup", true); }
-            set { _settings["CheckForUpdatesOnStartup"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "CheckForUpdatesOnStartup", true); }
+            set { Settings["CheckForUpdatesOnStartup"] = value.ToString(); }
         }
 
         /// <summary>
@@ -83,8 +86,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool FastUpdateLabel
         {
-            get { return GetBooleanSetting(_settings, "FastUpdateLabel", false); }
-            set { _settings["FastUpdateLabel"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "FastUpdateLabel", false); }
+            set { Settings["FastUpdateLabel"] = value.ToString(); }
         }
 
         /// <summary>
@@ -92,8 +95,8 @@ namespace MPF.Core.Data
         /// </summary>
         public string DefaultOutputPath
         {
-            get { return GetStringSetting(_settings, "DefaultOutputPath", "ISO"); }
-            set { _settings["DefaultOutputPath"] = value; }
+            get { return GetStringSetting(Settings, "DefaultOutputPath", "ISO"); }
+            set { Settings["DefaultOutputPath"] = value; }
         }
 
         /// <summary>
@@ -103,13 +106,13 @@ namespace MPF.Core.Data
         {
             get
             {
-                string valueString = GetStringSetting(_settings, "DefaultSystem", null);
+                string valueString = GetStringSetting(Settings, "DefaultSystem", null);
                 var valueEnum = Extensions.ToRedumpSystem(valueString);
                 return valueEnum;
             }
             set
             {
-                _settings["DefaultSystem"] = value.LongName();
+                Settings["DefaultSystem"] = value.LongName();
             }
         }
 
@@ -119,8 +122,8 @@ namespace MPF.Core.Data
         /// <remarks>This is a hidden setting</remarks>
         public bool ShowDebugViewMenuItem
         {
-            get { return GetBooleanSetting(_settings, "ShowDebugViewMenuItem", false); }
-            set { _settings["ShowDebugViewMenuItem"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "ShowDebugViewMenuItem", false); }
+            set { Settings["ShowDebugViewMenuItem"] = value.ToString(); }
         }
 
         #endregion
@@ -132,8 +135,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedCD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedCD", 24); }
-            set { _settings["PreferredDumpSpeedCD"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "PreferredDumpSpeedCD", 24); }
+            set { Settings["PreferredDumpSpeedCD"] = value.ToString(); }
         }
 
         /// <summary>
@@ -141,8 +144,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedDVD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedDVD", 16); }
-            set { _settings["PreferredDumpSpeedDVD"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "PreferredDumpSpeedDVD", 16); }
+            set { Settings["PreferredDumpSpeedDVD"] = value.ToString(); }
         }
 
         /// <summary>
@@ -150,8 +153,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedHDDVD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedHDDVD", 8); }
-            set { _settings["PreferredDumpSpeedHDDVD"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "PreferredDumpSpeedHDDVD", 8); }
+            set { Settings["PreferredDumpSpeedHDDVD"] = value.ToString(); }
         }
 
         /// <summary>
@@ -159,8 +162,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int PreferredDumpSpeedBD
         {
-            get { return GetInt32Setting(_settings, "PreferredDumpSpeedBD", 8); }
-            set { _settings["PreferredDumpSpeedBD"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "PreferredDumpSpeedBD", 8); }
+            set { Settings["PreferredDumpSpeedBD"] = value.ToString(); }
         }
 
         #endregion
@@ -172,8 +175,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool AaruEnableDebug
         {
-            get { return GetBooleanSetting(_settings, "AaruEnableDebug", false); }
-            set { _settings["AaruEnableDebug"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "AaruEnableDebug", false); }
+            set { Settings["AaruEnableDebug"] = value.ToString(); }
         }
 
         /// <summary>
@@ -181,8 +184,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool AaruEnableVerbose
         {
-            get { return GetBooleanSetting(_settings, "AaruEnableVerbose", false); }
-            set { _settings["AaruEnableVerbose"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "AaruEnableVerbose", false); }
+            set { Settings["AaruEnableVerbose"] = value.ToString(); }
         }
 
         /// <summary>
@@ -190,8 +193,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool AaruForceDumping
         {
-            get { return GetBooleanSetting(_settings, "AaruForceDumping", true); }
-            set { _settings["AaruForceDumping"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "AaruForceDumping", true); }
+            set { Settings["AaruForceDumping"] = value.ToString(); }
         }
 
         /// <summary>
@@ -199,8 +202,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int AaruRereadCount
         {
-            get { return GetInt32Setting(_settings, "AaruRereadCount", 5); }
-            set { _settings["AaruRereadCount"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "AaruRereadCount", 5); }
+            set { Settings["AaruRereadCount"] = value.ToString(); }
         }
 
         /// <summary>
@@ -208,8 +211,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool AaruStripPersonalData
         {
-            get { return GetBooleanSetting(_settings, "AaruStripPersonalData", false); }
-            set { _settings["AaruStripPersonalData"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "AaruStripPersonalData", false); }
+            set { Settings["AaruStripPersonalData"] = value.ToString(); }
         }
 
         #endregion
@@ -221,8 +224,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool DICMultiSectorRead
         {
-            get { return GetBooleanSetting(_settings, "DICMultiSectorRead", false); }
-            set { _settings["DICMultiSectorRead"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "DICMultiSectorRead", false); }
+            set { Settings["DICMultiSectorRead"] = value.ToString(); }
         }
 
         /// <summary>
@@ -230,8 +233,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int DICMultiSectorReadValue
         {
-            get { return GetInt32Setting(_settings, "DICMultiSectorReadValue", 0); }
-            set { _settings["DICMultiSectorReadValue"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "DICMultiSectorReadValue", 0); }
+            set { Settings["DICMultiSectorReadValue"] = value.ToString(); }
         }
 
         /// <summary>
@@ -244,8 +247,8 @@ namespace MPF.Core.Data
         /// </remarks>
         public bool DICParanoidMode
         {
-            get { return GetBooleanSetting(_settings, "DICParanoidMode", false); }
-            set { _settings["DICParanoidMode"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "DICParanoidMode", false); }
+            set { Settings["DICParanoidMode"] = value.ToString(); }
         }
 
         /// <summary>
@@ -253,8 +256,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool DICQuietMode
         {
-            get { return GetBooleanSetting(_settings, "DICQuietMode", false); }
-            set { _settings["DICQuietMode"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "DICQuietMode", false); }
+            set { Settings["DICQuietMode"] = value.ToString(); }
         }
 
         /// <summary>
@@ -262,8 +265,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int DICRereadCount
         {
-            get { return GetInt32Setting(_settings, "DICRereadCount", 20); }
-            set { _settings["DICRereadCount"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "DICRereadCount", 20); }
+            set { Settings["DICRereadCount"] = value.ToString(); }
         }
 
         /// <summary>
@@ -271,8 +274,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int DICDVDRereadCount
         {
-            get { return GetInt32Setting(_settings, "DICDVDRereadCount", 10); }
-            set { _settings["DICDVDRereadCount"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "DICDVDRereadCount", 10); }
+            set { Settings["DICDVDRereadCount"] = value.ToString(); }
         }
 
         /// <summary>
@@ -280,8 +283,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool DICResetDriveAfterDump
         {
-            get { return GetBooleanSetting(_settings, "DICResetDriveAfterDump", false); }
-            set { _settings["DICResetDriveAfterDump"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "DICResetDriveAfterDump", false); }
+            set { Settings["DICResetDriveAfterDump"] = value.ToString(); }
         }
 
         /// <summary>
@@ -289,8 +292,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool DICUseCMIFlag
         {
-            get { return GetBooleanSetting(_settings, "DICUseCMIFlag", false); }
-            set { _settings["DICUseCMIFlag"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "DICUseCMIFlag", false); }
+            set { Settings["DICUseCMIFlag"] = value.ToString(); }
         }
 
         #endregion
@@ -302,8 +305,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool RedumperEnableDebug
         {
-            get { return GetBooleanSetting(_settings, "RedumperEnableDebug", false); }
-            set { _settings["RedumperEnableDebug"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "RedumperEnableDebug", false); }
+            set { Settings["RedumperEnableDebug"] = value.ToString(); }
         }
 
         /// <summary>
@@ -311,8 +314,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool RedumperEnableVerbose
         {
-            get { return GetBooleanSetting(_settings, "RedumperEnableVerbose", false); }
-            set { _settings["RedumperEnableVerbose"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "RedumperEnableVerbose", false); }
+            set { Settings["RedumperEnableVerbose"] = value.ToString(); }
         }
 
         /// <summary>
@@ -320,8 +323,8 @@ namespace MPF.Core.Data
         /// </summary>
         public int RedumperRereadCount
         {
-            get { return GetInt32Setting(_settings, "RedumperRereadCount", 20); }
-            set { _settings["RedumperRereadCount"] = value.ToString(); }
+            get { return GetInt32Setting(Settings, "RedumperRereadCount", 20); }
+            set { Settings["RedumperRereadCount"] = value.ToString(); }
         }
 
         #endregion
@@ -333,8 +336,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool ScanForProtection
         {
-            get { return GetBooleanSetting(_settings, "ScanForProtection", true); }
-            set { _settings["ScanForProtection"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "ScanForProtection", true); }
+            set { Settings["ScanForProtection"] = value.ToString(); }
         }
 
         /// <summary>
@@ -342,8 +345,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool OutputSeparateProtectionFile
         {
-            get { return GetBooleanSetting(_settings, "OutputSeparateProtectionFile", true); }
-            set { _settings["OutputSeparateProtectionFile"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "OutputSeparateProtectionFile", true); }
+            set { Settings["OutputSeparateProtectionFile"] = value.ToString(); }
         }
 
         /// <summary>
@@ -351,8 +354,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool AddPlaceholders
         {
-            get { return GetBooleanSetting(_settings, "AddPlaceholders", true); }
-            set { _settings["AddPlaceholders"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "AddPlaceholders", true); }
+            set { Settings["AddPlaceholders"] = value.ToString(); }
         }
 
         /// <summary>
@@ -360,8 +363,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool PromptForDiscInformation
         {
-            get { return GetBooleanSetting(_settings, "PromptForDiscInformation", true); }
-            set { _settings["PromptForDiscInformation"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "PromptForDiscInformation", true); }
+            set { Settings["PromptForDiscInformation"] = value.ToString(); }
         }
 
         /// <summary>
@@ -369,8 +372,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool PullAllInformation
         {
-            get { return GetBooleanSetting(_settings, "PullAllInformation", false); }
-            set { _settings["PullAllInformation"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "PullAllInformation", false); }
+            set { Settings["PullAllInformation"] = value.ToString(); }
         }
 
         /// <summary>
@@ -378,8 +381,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool EnableTabsInInputFields
         {
-            get { return GetBooleanSetting(_settings, "EnableTabsInInputFields", false); }
-            set { _settings["EnableTabsInInputFields"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "EnableTabsInInputFields", false); }
+            set { Settings["EnableTabsInInputFields"] = value.ToString(); }
         }
 
         /// <summary>
@@ -387,8 +390,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool EnableRedumpCompatibility
         {
-            get { return GetBooleanSetting(_settings, "EnableRedumpCompatibility", true); }
-            set { _settings["EnableRedumpCompatibility"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "EnableRedumpCompatibility", true); }
+            set { Settings["EnableRedumpCompatibility"] = value.ToString(); }
         }
 
         /// <summary>
@@ -396,8 +399,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool ShowDiscEjectReminder
         {
-            get { return GetBooleanSetting(_settings, "ShowDiscEjectReminder", true); }
-            set { _settings["ShowDiscEjectReminder"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "ShowDiscEjectReminder", true); }
+            set { Settings["ShowDiscEjectReminder"] = value.ToString(); }
         }
 
         /// <summary>
@@ -405,8 +408,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool EjectAfterDump
         {
-            get { return GetBooleanSetting(_settings, "EjectAfterDump", false); }
-            set { _settings["EjectAfterDump"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "EjectAfterDump", false); }
+            set { Settings["EjectAfterDump"] = value.ToString(); }
         }
 
         /// <summary>
@@ -414,8 +417,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool IgnoreFixedDrives
         {
-            get { return GetBooleanSetting(_settings, "IgnoreFixedDrives", true); }
-            set { _settings["IgnoreFixedDrives"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "IgnoreFixedDrives", true); }
+            set { Settings["IgnoreFixedDrives"] = value.ToString(); }
         }
 
         /// <summary>
@@ -423,8 +426,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool ToolsInSeparateWindow
         {
-            get { return GetBooleanSetting(_settings, "ToolsInSeparateWindow", true); }
-            set { _settings["ToolsInSeparateWindow"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "ToolsInSeparateWindow", true); }
+            set { Settings["ToolsInSeparateWindow"] = value.ToString(); }
         }
 
         /// <summary>
@@ -432,8 +435,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool OutputSubmissionJSON
         {
-            get { return GetBooleanSetting(_settings, "OutputSubmissionJSON", false); }
-            set { _settings["OutputSubmissionJSON"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "OutputSubmissionJSON", false); }
+            set { Settings["OutputSubmissionJSON"] = value.ToString(); }
         }
 
         /// <summary>
@@ -441,8 +444,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool IncludeArtifacts
         {
-            get { return GetBooleanSetting(_settings, "IncludeArtifacts", false); }
-            set { _settings["IncludeArtifacts"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "IncludeArtifacts", false); }
+            set { Settings["IncludeArtifacts"] = value.ToString(); }
         }
 
         /// <summary>
@@ -450,8 +453,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool CompressLogFiles
         {
-            get { return GetBooleanSetting(_settings, "CompressLogFiles", true); }
-            set { _settings["CompressLogFiles"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "CompressLogFiles", true); }
+            set { Settings["CompressLogFiles"] = value.ToString(); }
         }
 
         #endregion
@@ -463,8 +466,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool SkipMediaTypeDetection
         {
-            get { return GetBooleanSetting(_settings, "SkipMediaTypeDetection", false); }
-            set { _settings["SkipMediaTypeDetection"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "SkipMediaTypeDetection", false); }
+            set { Settings["SkipMediaTypeDetection"] = value.ToString(); }
         }
 
         /// <summary>
@@ -472,8 +475,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool SkipSystemDetection
         {
-            get { return GetBooleanSetting(_settings, "SkipSystemDetection", false); }
-            set { _settings["SkipSystemDetection"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "SkipSystemDetection", false); }
+            set { Settings["SkipSystemDetection"] = value.ToString(); }
         }
 
         #endregion
@@ -485,8 +488,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool ScanArchivesForProtection
         {
-            get { return GetBooleanSetting(_settings, "ScanArchivesForProtection", true); }
-            set { _settings["ScanArchivesForProtection"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "ScanArchivesForProtection", true); }
+            set { Settings["ScanArchivesForProtection"] = value.ToString(); }
         }
 
         /// <summary>
@@ -494,8 +497,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool ScanPackersForProtection
         {
-            get { return GetBooleanSetting(_settings, "ScanPackersForProtection", false); }
-            set { _settings["ScanPackersForProtection"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "ScanPackersForProtection", false); }
+            set { Settings["ScanPackersForProtection"] = value.ToString(); }
         }
 
         /// <summary>
@@ -503,8 +506,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool IncludeDebugProtectionInformation
         {
-            get { return GetBooleanSetting(_settings, "IncludeDebugProtectionInformation", false); }
-            set { _settings["IncludeDebugProtectionInformation"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "IncludeDebugProtectionInformation", false); }
+            set { Settings["IncludeDebugProtectionInformation"] = value.ToString(); }
         }
 
         #endregion
@@ -516,8 +519,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool VerboseLogging
         {
-            get { return GetBooleanSetting(_settings, "VerboseLogging", true); }
-            set { _settings["VerboseLogging"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "VerboseLogging", true); }
+            set { Settings["VerboseLogging"] = value.ToString(); }
         }
 
         /// <summary>
@@ -525,8 +528,8 @@ namespace MPF.Core.Data
         /// </summary>
         public bool OpenLogWindowAtStartup
         {
-            get { return GetBooleanSetting(_settings, "OpenLogWindowAtStartup", true); }
-            set { _settings["OpenLogWindowAtStartup"] = value.ToString(); }
+            get { return GetBooleanSetting(Settings, "OpenLogWindowAtStartup", true); }
+            set { Settings["OpenLogWindowAtStartup"] = value.ToString(); }
         }
 
         #endregion
@@ -535,15 +538,15 @@ namespace MPF.Core.Data
 
         public string RedumpUsername
         {
-            get { return GetStringSetting(_settings, "RedumpUsername", ""); }
-            set { _settings["RedumpUsername"] = value; }
+            get { return GetStringSetting(Settings, "RedumpUsername", ""); }
+            set { Settings["RedumpUsername"] = value; }
         }
 
         // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
         public string RedumpPassword
         {
-            get { return GetStringSetting(_settings, "RedumpPassword", ""); }
-            set { _settings["RedumpPassword"] = value; }
+            get { return GetStringSetting(Settings, "RedumpPassword", ""); }
+            set { Settings["RedumpPassword"] = value; }
         }
 
         /// <summary>
@@ -559,7 +562,7 @@ namespace MPF.Core.Data
         /// <param name="settings"></param>
         public Options(Dictionary<string, string> settings = null)
         {
-            this._settings = settings ?? new Dictionary<string, string>();
+            this.Settings = settings ?? new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -568,16 +571,7 @@ namespace MPF.Core.Data
         /// <param name="source"></param>
         public Options(Options source)
         {
-            _settings = new Dictionary<string, string>(source._settings);
-        }
-
-        /// <summary>
-        /// Set all fields from an existing Options object
-        /// </summary>
-        /// <param name="source"></param>
-        public void SetFromExisting(Options source)
-        {
-            _settings = new Dictionary<string, string>(source._settings);
+            Settings = new Dictionary<string, string>(source.Settings);
         }
 
         #region Helpers
@@ -645,41 +639,41 @@ namespace MPF.Core.Data
 
         #region IDictionary implementations
 
-        public ICollection<string> Keys => _settings.Keys;
+        public ICollection<string> Keys => Settings.Keys;
 
-        public ICollection<string> Values => _settings.Values;
+        public ICollection<string> Values => Settings.Values;
 
-        public int Count => _settings.Count;
+        public int Count => Settings.Count;
 
-        public bool IsReadOnly => ((IDictionary<string, string>)_settings).IsReadOnly;
+        public bool IsReadOnly => ((IDictionary<string, string>)Settings).IsReadOnly;
 
         public string this[string key]
         {
-            get { return (_settings.ContainsKey(key) ? _settings[key] : null); }
-            set { _settings[key] = value; }
+            get { return (Settings.ContainsKey(key) ? Settings[key] : null); }
+            set { Settings[key] = value; }
         }
 
-        public bool ContainsKey(string key) => _settings.ContainsKey(key);
+        public bool ContainsKey(string key) => Settings.ContainsKey(key);
 
-        public void Add(string key, string value) => _settings.Add(key, value);
+        public void Add(string key, string value) => Settings.Add(key, value);
 
-        public bool Remove(string key) => _settings.Remove(key);
+        public bool Remove(string key) => Settings.Remove(key);
 
-        public bool TryGetValue(string key, out string value) => _settings.TryGetValue(key, out value);
+        public bool TryGetValue(string key, out string value) => Settings.TryGetValue(key, out value);
 
-        public void Add(KeyValuePair<string, string> item) => _settings.Add(item.Key, item.Value);
+        public void Add(KeyValuePair<string, string> item) => Settings.Add(item.Key, item.Value);
 
-        public void Clear() => _settings.Clear();
+        public void Clear() => Settings.Clear();
 
-        public bool Contains(KeyValuePair<string, string> item) => ((IDictionary<string, string>)_settings).Contains(item);
+        public bool Contains(KeyValuePair<string, string> item) => ((IDictionary<string, string>)Settings).Contains(item);
 
-        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => ((IDictionary<string, string>)_settings).CopyTo(array, arrayIndex);
+        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => ((IDictionary<string, string>)Settings).CopyTo(array, arrayIndex);
 
-        public bool Remove(KeyValuePair<string, string> item) => ((IDictionary<string, string>)_settings).Remove(item);
+        public bool Remove(KeyValuePair<string, string> item) => ((IDictionary<string, string>)Settings).Remove(item);
 
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => _settings.GetEnumerator();
+        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Settings.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => _settings.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Settings.GetEnumerator();
 
         #endregion
     }

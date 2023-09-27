@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
+using System.IO;
 using MPF.Core.Converters;
 using MPF.Core.Data;
+using Newtonsoft.Json;
 
 namespace MPF.Core.Utilities
 {
     public static class OptionsLoader
     {
+        private const string ConfigurationPath = "config.json";
+
         #region Arguments
 
         /// <summary>
@@ -143,17 +146,16 @@ namespace MPF.Core.Utilities
         /// </summary>
         public static Options LoadFromConfig()
         {
-            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-
-            var settings = configFile.AppSettings.Settings;
-            var dict = new Dictionary<string, string>();
-
-            foreach (string key in settings.AllKeys)
+            if (!File.Exists(ConfigurationPath))
             {
-                dict[key] = settings[key]?.Value ?? string.Empty;
+                _ = File.Create(ConfigurationPath);
+                return new Options();
             }
 
-            return new Options(dict);
+            var serializer = JsonSerializer.Create();
+            var reader = new StreamReader(ConfigurationPath);
+            var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
+            return new Options(settings);
         }
 
         /// <summary>
@@ -161,16 +163,10 @@ namespace MPF.Core.Utilities
         /// </summary>
         public static void SaveToConfig(Options options)
         {
-            Configuration configFile = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-
-            // Loop through all settings in Options and save them, overwriting existing settings
-            foreach (var kvp in options)
-            {
-                configFile.AppSettings.Settings.Remove(kvp.Key);
-                configFile.AppSettings.Settings.Add(kvp.Key, kvp.Value);
-            }
-
-            configFile.Save(ConfigurationSaveMode.Modified);
+            var serializer = JsonSerializer.Create();
+            var sw = new StreamWriter(ConfigurationPath) { AutoFlush = true };
+            var writer = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
+            serializer.Serialize(writer, options.Settings, typeof(Dictionary<string, string>));
         }
 
         #endregion

@@ -8,6 +8,7 @@
 - Stop compiling Chime finally
 - Address some warnings and infos
 - Add setting for pulling comment/contents
+- Move to config.json
 
 ### 2.6.5 (2023-09-27)
 
