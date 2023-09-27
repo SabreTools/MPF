@@ -50,13 +50,11 @@ dotnet restore
 msbuild MPF\MPF.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
 ```
 
-To build for .NET 6.0 (Windows only), ensure that the .NET 6.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+To build for .NET 6.0 or .NET 7.0 (Windows only), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
 
 ```
-dotnet build MPF\MPF.csproj --framework net6.0-windows --runtime [win7-x64|win8-x64|win81-x64|win10-x64]
+dotnet build MPF\MPF.csproj --framework net6.0-windows --runtime [win-x64]
 ```
-
-Choose one of `[win7-x64|win8-x64|win81-x64|win10-x64]` depending on the machine you are targeting. `win10-x64` also includes Windows 11.
 
 
 ## Media Preservation Frontend Checker (MPF.Check)
@@ -66,7 +64,7 @@ MPF.Check is a commandline-only program that allows users to generate submission
 ### System Requirements
 
 - Windows 8.1 (x86 or x64) or newer, GNU/Linux x64, or OSX x64
-- .NET Framework 4.8 (Windows or `mono` only) or .NET 6.0 Runtimes
+- .NET Framework 4.8 (Windows or `mono` only), .NET 6.0, or .NET 7.0 Runtimes
 
 ### Build Instructions
 
@@ -77,13 +75,13 @@ dotnet restore
 msbuild MPF.Check\MPF.Check.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
 ```
 
-To build for .NET 6.0 (All supported OSes), ensure that the .NET 6.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
+To build for .NET 6.0 and .NET 7.0 (All supported OSes), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 ```
-dotnet build MPF.Check\MPF.Check.csproj --framework net6.0 --runtime [win7-x64|win8-x64|win81-x64|win10-x64|linux-x64|osx-x64]
+dotnet build MPF.Check\MPF.Check.csproj --framework net6.0 --runtime [win-x64linux-x64|osx-x64]
 ```
 
-Choose one of `[win7-x64|win8-x64|win81-x64|win10-x64|linux-x64|osx-x64]` depending on the machine you are targeting. `win10-x64` also includes Windows 11.
+Choose one of `[win-x64|linux-x64|osx-x64]` depending on the machine you are targeting.
 
 ## Information
 
