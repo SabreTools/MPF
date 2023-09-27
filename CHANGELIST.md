@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.6.5 (2023-09-27)
 
 - Normalize Redumper CSS output
 - Update redumper to build 219
