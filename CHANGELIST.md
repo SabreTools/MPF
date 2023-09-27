@@ -9,6 +9,7 @@
 - Add release publish scripts
 - Handle invalid characters when changing program
 - Fix options not saving on update
+- Combine build scripts
 
 ### 2.6.4 (2023-09-25)
 

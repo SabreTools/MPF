@@ -19,8 +19,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.github\ISSUE_TEMPLATE\informational.md = .github\ISSUE_TEMPLATE\informational.md
 		.github\ISSUE_TEMPLATE\issue-report.md = .github\ISSUE_TEMPLATE\issue-report.md
 		publish-nix.sh = publish-nix.sh
-		publish-release-nix.sh = publish-release-nix.sh
-		publish-release-win.bat = publish-release-win.bat
 		publish-win.bat = publish-win.bat
 		README.md = README.md
 	EndProjectSection
