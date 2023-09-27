@@ -1,4 +1,6 @@
-﻿using System;
+﻿#if FALSE
+
+using System;
 
 namespace MPF.Core.Utilities
 {
@@ -394,3 +396,5 @@ namespace MPF.Core.Utilities
         }
     }
 }
+
+#endif

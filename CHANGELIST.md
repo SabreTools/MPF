@@ -5,6 +5,7 @@
 - Remove errant character from script
 - Add placeholders for release builds
 - Fully sync AppVeyor build with script
+- Stop compiling Chime finally
 
 ### 2.6.5 (2023-09-27)
 
