@@ -1247,6 +1247,7 @@ namespace MPF.UI.Core.ViewModels
             var discInformationWindow = new DiscInformationWindow(this.Options, submissionInfo)
             {
                 Owner = this.Parent,
+                Topmost = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
             bool? result = discInformationWindow.ShowDialog();

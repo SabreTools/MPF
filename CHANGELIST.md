@@ -10,6 +10,7 @@
 - Handle invalid characters when changing program
 - Fix options not saving on update
 - Combine build scripts
+- Force information window to top
 
 ### 2.6.4 (2023-09-25)
 
