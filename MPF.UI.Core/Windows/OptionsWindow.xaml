@@ -181,6 +181,11 @@
                                      ToolTip="Enable showing the disc information output after dumping" Margin="0,4"
                                       />
 
+                                <CheckBox VerticalAlignment="Center" Content="Pull All Information"
+                                     IsChecked="{Binding Options.PullAllInformation}"
+                                     ToolTip="Enable pulling all comment and content data after dumping" Margin="0,4"
+                                      />
+
                                 <CheckBox VerticalAlignment="Center" Content="Enable Tab Input"
                                      IsChecked="{Binding Options.EnableTabsInInputFields}"
                                      ToolTip="Enable entering tabs in supported input fields instead of tab navigation" Margin="0,4"

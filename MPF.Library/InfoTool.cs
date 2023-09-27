@@ -576,7 +576,7 @@ namespace MPF.Library
             }
         }
 
-#endregion
+        #endregion
 
         #region Information Output
 
@@ -1218,7 +1218,7 @@ namespace MPF.Library
             return files;
         }
 
-#endregion
+        #endregion
 
         #region Normalization
 
@@ -1905,14 +1905,15 @@ namespace MPF.Library
         /// <param name="wc">RedumpWebClient for making the connection</param>
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="id">Redump disc ID to retrieve</param>
+        /// <param name="includeAllData">True to include all pullable information, false to do bare minimum</param>
 #if NET48
-        private static bool FillFromId(RedumpWebClient wc, SubmissionInfo info, int id)
+        private static bool FillFromId(RedumpWebClient wc, SubmissionInfo info, int id, bool includeAllData)
         {
             string discData = wc.DownloadSingleSiteID(id);
             if (string.IsNullOrEmpty(discData))
                 return false;
 #else
-        private async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id)
+        private async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id, bool includeAllData)
         {
             string discData = await wc.DownloadSingleSiteID(id);
             if (string.IsNullOrEmpty(discData))
@@ -1920,7 +1921,7 @@ namespace MPF.Library
 #endif
 
             // Title, Disc Number/Letter, Disc Title
-            var match = SabreTools.RedumpLib.Data.Constants.TitleRegex.Match(discData);
+            var match = Constants.TitleRegex.Match(discData);
             if (match.Success)
             {
                 string title = WebUtility.HtmlDecode(match.Groups[1].Value);
@@ -1934,7 +1935,7 @@ namespace MPF.Library
 #else
                     info.CommonDiscInfo.Title = title[..firstParenLocation];
 #endif
-                    var subMatches = SabreTools.RedumpLib.Data.Constants.DiscNumberLetterRegex.Matches(title);
+                    var subMatches = Constants.DiscNumberLetterRegex.Matches(title);
                     foreach (Match subMatch in subMatches.Cast<Match>())
                     {
                         var subMatchValue = subMatch.Groups[1].Value;
@@ -1956,14 +1957,14 @@ namespace MPF.Library
             }
 
             // Foreign Title
-            match = SabreTools.RedumpLib.Data.Constants.ForeignTitleRegex.Match(discData);
+            match = Constants.ForeignTitleRegex.Match(discData);
             if (match.Success)
                 info.CommonDiscInfo.ForeignTitleNonLatin = WebUtility.HtmlDecode(match.Groups[1].Value);
             else
                 info.CommonDiscInfo.ForeignTitleNonLatin = null;
 
             // Category
-            match = SabreTools.RedumpLib.Data.Constants.CategoryRegex.Match(discData);
+            match = Constants.CategoryRegex.Match(discData);
             if (match.Success)
                 info.CommonDiscInfo.Category = Extensions.ToDiscCategory(match.Groups[1].Value);
             else
@@ -1972,13 +1973,13 @@ namespace MPF.Library
             // Region
             if (info.CommonDiscInfo.Region == null)
             {
-                match = SabreTools.RedumpLib.Data.Constants.RegionRegex.Match(discData);
+                match = Constants.RegionRegex.Match(discData);
                 if (match.Success)
                     info.CommonDiscInfo.Region = Extensions.ToRegion(match.Groups[1].Value);
             }
 
             // Languages
-            var matches = SabreTools.RedumpLib.Data.Constants.LanguagesRegex.Matches(discData);
+            var matches = Constants.LanguagesRegex.Matches(discData);
             if (matches.Count > 0)
             {
                 var tempLanguages = new List<Language?>();
@@ -1991,15 +1992,18 @@ namespace MPF.Library
             }
 
             // Serial
-            // TODO: Re-enable if there's a way of verifying against a disc
-            //match = Constants.SerialRegex.Match(discData);
-            //if (match.Success)
-            //    info.CommonDiscInfo.Serial = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
+            if (includeAllData)
+            {
+                // TODO: Re-enable if there's a way of verifying against a disc
+                //match = Constants.SerialRegex.Match(discData);
+                //if (match.Success)
+                //    info.CommonDiscInfo.Serial = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
+            }
 
             // Error count
             if (string.IsNullOrEmpty(info.CommonDiscInfo.ErrorsCount))
             {
-                match = SabreTools.RedumpLib.Data.Constants.ErrorCountRegex.Match(discData);
+                match = Constants.ErrorCountRegex.Match(discData);
                 if (match.Success)
                     info.CommonDiscInfo.ErrorsCount = match.Groups[1].Value;
             }
@@ -2007,13 +2011,13 @@ namespace MPF.Library
             // Version
             if (info.VersionAndEditions.Version == null)
             {
-                match = SabreTools.RedumpLib.Data.Constants.VersionRegex.Match(discData);
+                match = Constants.VersionRegex.Match(discData);
                 if (match.Success)
                     info.VersionAndEditions.Version = $"(VERIFY THIS) {WebUtility.HtmlDecode(match.Groups[1].Value)}";
             }
 
             // Dumpers
-            matches = SabreTools.RedumpLib.Data.Constants.DumpersRegex.Matches(discData);
+            matches = Constants.DumpersRegex.Matches(discData);
             if (matches.Count > 0)
             {
                 // Start with any currently listed dumpers
@@ -2035,212 +2039,218 @@ namespace MPF.Library
             // TODO: Unify handling of fields that can include site codes (Comments/Contents)
 
             // Comments
-            match = SabreTools.RedumpLib.Data.Constants.CommentsRegex.Match(discData);
-            if (match.Success)
+            if (includeAllData)
             {
-                // Process the old comments block
-                string oldComments = info.CommonDiscInfo.Comments
-                    + (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
-                    + WebUtility.HtmlDecode(match.Groups[1].Value)
-                        .Replace("\r\n", "\n")
-                        .Replace("<br />\n", "\n")
-                        .Replace("<br />", string.Empty)
-                        .Replace("</div>", string.Empty)
-                        .Replace("[+]", string.Empty)
-                        .ReplaceHtmlWithSiteCodes();
-                oldComments = Regex.Replace(oldComments, @"<div .*?>", string.Empty);
-
-                // Create state variables
-                bool addToLast = false;
-                SiteCode? lastSiteCode = null;
-                string newComments = string.Empty;
-
-                // Process the comments block line-by-line
-                string[] commentsSeparated = oldComments.Split('\n');
-                for (int i = 0; i < commentsSeparated.Length; i++)
+                match = Constants.CommentsRegex.Match(discData);
+                if (match.Success)
                 {
-                    string commentLine = commentsSeparated[i].Trim();
+                    // Process the old comments block
+                    string oldComments = info.CommonDiscInfo.Comments
+                        + (string.IsNullOrEmpty(info.CommonDiscInfo.Comments) ? string.Empty : "\n")
+                        + WebUtility.HtmlDecode(match.Groups[1].Value)
+                            .Replace("\r\n", "\n")
+                            .Replace("<br />\n", "\n")
+                            .Replace("<br />", string.Empty)
+                            .Replace("</div>", string.Empty)
+                            .Replace("[+]", string.Empty)
+                            .ReplaceHtmlWithSiteCodes();
+                    oldComments = Regex.Replace(oldComments, @"<div .*?>", string.Empty);
 
-                    // If we have an empty line, we want to treat this as intentional
-                    if (string.IsNullOrWhiteSpace(commentLine))
+                    // Create state variables
+                    bool addToLast = false;
+                    SiteCode? lastSiteCode = null;
+                    string newComments = string.Empty;
+
+                    // Process the comments block line-by-line
+                    string[] commentsSeparated = oldComments.Split('\n');
+                    for (int i = 0; i < commentsSeparated.Length; i++)
                     {
-                        addToLast = false;
-                        lastSiteCode = null;
-                        newComments += $"{commentLine}\n";
-                        continue;
-                    }
+                        string commentLine = commentsSeparated[i].Trim();
 
-                    // Otherwise, we need to find what tag is in use
-                    bool foundTag = false;
-                    foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
-                    {
-                        // If we have a null site code, just skip
-                        if (siteCode == null)
-                            continue;
-
-                        // If the line doesn't contain this tag, just skip
-                        if (!commentLine.Contains(siteCode.ShortName()))
-                            continue;
-
-                        // Mark as having found a tag
-                        foundTag = true;
-
-                        // Cache the current site code
-                        lastSiteCode = siteCode;
-
-                        // A subset of tags can be multiline
-                        addToLast = IsMultiLine(siteCode);
-
-                        // Skip certain site codes because of data issues
-                        switch (siteCode)
+                        // If we have an empty line, we want to treat this as intentional
+                        if (string.IsNullOrWhiteSpace(commentLine))
                         {
-                            // Multiple
-                            case SiteCode.InternalSerialName:
-                            case SiteCode.Multisession:
-                            case SiteCode.VolumeLabel:
-                                continue;
-
-                            // Audio CD
-                            case SiteCode.RingNonZeroDataStart:
-                            case SiteCode.UniversalHash:
-                                continue;
-
-                            // Microsoft Xbox and Xbox 360
-                            case SiteCode.DMIHash:
-                            case SiteCode.PFIHash:
-                            case SiteCode.SSHash:
-                            case SiteCode.SSVersion:
-                            case SiteCode.XMID:
-                            case SiteCode.XeMID:
-                                continue;
-
-                            // Microsoft Xbox One and Series X/S
-                            case SiteCode.Filename:
-                                continue;
-
-                            // Nintendo Gamecube
-                            case SiteCode.InternalName:
-                                continue;
-                        }
-
-                        // If we don't already have this site code, add it to the dictionary
-                        if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode.Value))
-                            info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
-
-                        // Otherwise, append the value to the existing key
-                        else
-                            info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
-
-                        break;
-                    }
-
-                    // If we didn't find a known tag, just add the line, just in case
-                    if (!foundTag)
-                    {
-                        if (addToLast && lastSiteCode != null)
-                        {
-                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value]))
-                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += "\n";
-
-                            info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += commentLine;
-                        }
-                        else
-                        {
+                            addToLast = false;
+                            lastSiteCode = null;
                             newComments += $"{commentLine}\n";
+                            continue;
+                        }
+
+                        // Otherwise, we need to find what tag is in use
+                        bool foundTag = false;
+                        foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
+                        {
+                            // If we have a null site code, just skip
+                            if (siteCode == null)
+                                continue;
+
+                            // If the line doesn't contain this tag, just skip
+                            if (!commentLine.Contains(siteCode.ShortName()))
+                                continue;
+
+                            // Mark as having found a tag
+                            foundTag = true;
+
+                            // Cache the current site code
+                            lastSiteCode = siteCode;
+
+                            // A subset of tags can be multiline
+                            addToLast = IsMultiLine(siteCode);
+
+                            // Skip certain site codes because of data issues
+                            switch (siteCode)
+                            {
+                                // Multiple
+                                case SiteCode.InternalSerialName:
+                                case SiteCode.Multisession:
+                                case SiteCode.VolumeLabel:
+                                    continue;
+
+                                // Audio CD
+                                case SiteCode.RingNonZeroDataStart:
+                                case SiteCode.UniversalHash:
+                                    continue;
+
+                                // Microsoft Xbox and Xbox 360
+                                case SiteCode.DMIHash:
+                                case SiteCode.PFIHash:
+                                case SiteCode.SSHash:
+                                case SiteCode.SSVersion:
+                                case SiteCode.XMID:
+                                case SiteCode.XeMID:
+                                    continue;
+
+                                // Microsoft Xbox One and Series X/S
+                                case SiteCode.Filename:
+                                    continue;
+
+                                // Nintendo Gamecube
+                                case SiteCode.InternalName:
+                                    continue;
+                            }
+
+                            // If we don't already have this site code, add it to the dictionary
+                            if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode.Value))
+                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+
+                            // Otherwise, append the value to the existing key
+                            else
+                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+
+                            break;
+                        }
+
+                        // If we didn't find a known tag, just add the line, just in case
+                        if (!foundTag)
+                        {
+                            if (addToLast && lastSiteCode != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value]))
+                                    info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += "\n";
+
+                                info.CommonDiscInfo.CommentsSpecialFields[lastSiteCode.Value] += commentLine;
+                            }
+                            else
+                            {
+                                newComments += $"{commentLine}\n";
+                            }
                         }
                     }
-                }
 
-                // Set the new comments field
-                info.CommonDiscInfo.Comments = newComments;
+                    // Set the new comments field
+                    info.CommonDiscInfo.Comments = newComments;
+                }
             }
 
             // Contents
-            match = SabreTools.RedumpLib.Data.Constants.ContentsRegex.Match(discData);
-            if (match.Success)
+            if (includeAllData)
             {
-                // Process the old contents block
-                string oldContents = info.CommonDiscInfo.Contents
-                    + (string.IsNullOrEmpty(info.CommonDiscInfo.Contents) ? string.Empty : "\n")
-                    + WebUtility.HtmlDecode(match.Groups[1].Value)
-                        .Replace("\r\n", "\n")
-                        .Replace("<br />\n", "\n")
-                        .Replace("<br />", string.Empty)
-                        .Replace("</div>", string.Empty)
-                        .Replace("[+]", string.Empty)
-                        .ReplaceHtmlWithSiteCodes();
-                oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
-
-                // Create state variables
-                bool addToLast = false;
-                SiteCode? lastSiteCode = null;
-                string newContents = string.Empty;
-
-                // Process the contents block line-by-line
-                string[] contentsSeparated = oldContents.Split('\n');
-                for (int i = 0; i < contentsSeparated.Length; i++)
+                match = Constants.ContentsRegex.Match(discData);
+                if (match.Success)
                 {
-                    string contentLine = contentsSeparated[i].Trim();
+                    // Process the old contents block
+                    string oldContents = info.CommonDiscInfo.Contents
+                        + (string.IsNullOrEmpty(info.CommonDiscInfo.Contents) ? string.Empty : "\n")
+                        + WebUtility.HtmlDecode(match.Groups[1].Value)
+                            .Replace("\r\n", "\n")
+                            .Replace("<br />\n", "\n")
+                            .Replace("<br />", string.Empty)
+                            .Replace("</div>", string.Empty)
+                            .Replace("[+]", string.Empty)
+                            .ReplaceHtmlWithSiteCodes();
+                    oldContents = Regex.Replace(oldContents, @"<div .*?>", string.Empty);
 
-                    // If we have an empty line, we want to treat this as intentional
-                    if (string.IsNullOrWhiteSpace(contentLine))
+                    // Create state variables
+                    bool addToLast = false;
+                    SiteCode? lastSiteCode = null;
+                    string newContents = string.Empty;
+
+                    // Process the contents block line-by-line
+                    string[] contentsSeparated = oldContents.Split('\n');
+                    for (int i = 0; i < contentsSeparated.Length; i++)
                     {
-                        addToLast = false;
-                        lastSiteCode = null;
-                        newContents += $"{contentLine}\n";
-                        continue;
-                    }
+                        string contentLine = contentsSeparated[i].Trim();
 
-                    // Otherwise, we need to find what tag is in use
-                    bool foundTag = false;
-                    foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
-                    {
-                        // If we have a null site code, just skip
-                        if (siteCode == null)
-                            continue;
-
-                        // If the line doesn't contain this tag, just skip
-                        if (!contentLine.Contains(siteCode.ShortName()))
-                            continue;
-
-                        // Cache the current site code
-                        lastSiteCode = siteCode;
-
-                        // If we don't already have this site code, add it to the dictionary
-                        if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode.Value))
-                            info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
-
-                        // A subset of tags can be multiline
-                        addToLast = IsMultiLine(siteCode);
-
-                        // Mark as having found a tag
-                        foundTag = true;
-                        break;
-                    }
-
-                    // If we didn't find a known tag, just add the line, just in case
-                    if (!foundTag)
-                    {
-                        if (addToLast && lastSiteCode != null)
+                        // If we have an empty line, we want to treat this as intentional
+                        if (string.IsNullOrWhiteSpace(contentLine))
                         {
-                            if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value]))
-                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += "\n";
-
-                            info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += contentLine;
-                        }
-                        else
-                        {
+                            addToLast = false;
+                            lastSiteCode = null;
                             newContents += $"{contentLine}\n";
+                            continue;
+                        }
+
+                        // Otherwise, we need to find what tag is in use
+                        bool foundTag = false;
+                        foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
+                        {
+                            // If we have a null site code, just skip
+                            if (siteCode == null)
+                                continue;
+
+                            // If the line doesn't contain this tag, just skip
+                            if (!contentLine.Contains(siteCode.ShortName()))
+                                continue;
+
+                            // Cache the current site code
+                            lastSiteCode = siteCode;
+
+                            // If we don't already have this site code, add it to the dictionary
+                            if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode.Value))
+                                info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+
+                            // A subset of tags can be multiline
+                            addToLast = IsMultiLine(siteCode);
+
+                            // Mark as having found a tag
+                            foundTag = true;
+                            break;
+                        }
+
+                        // If we didn't find a known tag, just add the line, just in case
+                        if (!foundTag)
+                        {
+                            if (addToLast && lastSiteCode != null)
+                            {
+                                if (!string.IsNullOrWhiteSpace(info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value]))
+                                    info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += "\n";
+
+                                info.CommonDiscInfo.ContentsSpecialFields[lastSiteCode.Value] += contentLine;
+                            }
+                            else
+                            {
+                                newContents += $"{contentLine}\n";
+                            }
                         }
                     }
-                }
 
-                // Set the new contents field
-                info.CommonDiscInfo.Contents = newContents;
+                    // Set the new contents field
+                    info.CommonDiscInfo.Contents = newContents;
+                }
             }
 
             // Added
-            match = SabreTools.RedumpLib.Data.Constants.AddedRegex.Match(discData);
+            match = Constants.AddedRegex.Match(discData);
             if (match.Success)
             {
                 if (DateTime.TryParse(match.Groups[1].Value, out DateTime added))
@@ -2250,7 +2260,7 @@ namespace MPF.Library
             }
 
             // Last Modified
-            match = SabreTools.RedumpLib.Data.Constants.LastModifiedRegex.Match(discData);
+            match = Constants.LastModifiedRegex.Match(discData);
             if (match.Success)
             {
                 if (DateTime.TryParse(match.Groups[1].Value, out DateTime lastModified))
@@ -2408,9 +2418,9 @@ namespace MPF.Library
                     // Fill in the fields from the existing ID
                     resultProgress?.Report(Result.Success($"Filling fields from existing ID {fullyMatchedIDs[i]}..."));
 #if NET48
-                    FillFromId(wc, info, fullyMatchedIDs[i]);
+                    FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
 #else
-                    _ = await FillFromId(wc, info, fullyMatchedIDs[i]);
+                    _ = await FillFromId(wc, info, fullyMatchedIDs[i], options.PullAllInformation);
 #endif
                     resultProgress?.Report(Result.Success("Information filling complete!"));
 
@@ -2499,9 +2509,9 @@ namespace MPF.Library
                 while (true)
                 {
 #if NET48
-                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(SabreTools.RedumpLib.Data.Constants.QuickSearchUrl, query, pageNumber++));
+                    List<int> pageIds = wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
 #else
-                    List<int> pageIds = await wc.CheckSingleSitePage(string.Format(SabreTools.RedumpLib.Data.Constants.QuickSearchUrl, query, pageNumber++));
+                    List<int> pageIds = await wc.CheckSingleSitePage(string.Format(Constants.QuickSearchUrl, query, pageNumber++));
 #endif
                     ids.AddRange(pageIds);
                     if (pageIds.Count <= 1)
@@ -2643,7 +2653,7 @@ namespace MPF.Library
                 return false;
 
             // Discs with only 1 track don't have a track count listed
-            var match = SabreTools.RedumpLib.Data.Constants.TrackCountRegex.Match(discData);
+            var match = Constants.TrackCountRegex.Match(discData);
             if (!match.Success && localCount == 1)
                 return true;
             else if (!match.Success)
@@ -2657,7 +2667,7 @@ namespace MPF.Library
             return localCount == remoteCount;
         }
 
-#endregion
+        #endregion
 
         #region Helpers
 
@@ -2903,6 +2913,6 @@ namespace MPF.Library
             return sorted;
         }
 
-#endregion
+        #endregion
     }
 }

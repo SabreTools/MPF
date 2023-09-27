@@ -365,6 +365,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Pull all information from Redump if signed in
+        /// </summary>
+        public bool PullAllInformation
+        {
+            get { return GetBooleanSetting(_settings, "PullAllInformation", false); }
+            set { _settings["PullAllInformation"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Enable tabs in all input fields
         /// </summary>
         public bool EnableTabsInInputFields

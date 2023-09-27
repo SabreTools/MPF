@@ -7,6 +7,7 @@
 - Fully sync AppVeyor build with script
 - Stop compiling Chime finally
 - Address some warnings and infos
+- Add setting for pulling comment/contents
 
 ### 2.6.5 (2023-09-27)
 
