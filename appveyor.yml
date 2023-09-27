@@ -24,9 +24,13 @@ before_build:
 build_script:
   - dotnet restore
 
-  # .NET Framework 4.8
+  # .NET Framework 4.8 Debug
   - msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
   - msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
+
+  # # .NET Framework 4.8 Release
+  # - msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64
+  # - msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64
 
   # .NET 6.0 Debug
   - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 --self-contained true -p:PublishSingleFile=true
@@ -34,11 +38,23 @@ build_script:
   - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 --self-contained true -p:PublishSingleFile=true
   - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained true -p:PublishSingleFile=true
 
+  # # .NET 6.0 Release
+  # - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
+  # - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
+  # - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true -p:PublishSingleFile=true
+  # - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true -p:PublishSingleFile=true
+
   # .NET 7.0 Debug
   - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 --self-contained true -p:PublishSingleFile=true
   - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 --self-contained true -p:PublishSingleFile=true
   - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 --self-contained true -p:PublishSingleFile=true
   - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained true -p:PublishSingleFile=true
+
+  # # .NET 7.0 Release
+  # - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
+  # - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
+  # - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true -p:PublishSingleFile=true
+  # - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true -p:PublishSingleFile=true
 
 # post-build step
 after_build:
@@ -48,18 +64,27 @@ after_build:
 - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net48\publish\Programs\Aaru *
 - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Aaru *
 - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Aaru *
+# - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Release\net48\publish\Programs\Aaru *
+# - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Aaru *
+# - 7z x aaru-5.3.2_windows_x64.zip -oMPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Aaru *
 
 # DiscImageCreator
 - ps: appveyor DownloadFile https://github.com/saramibreak/DiscImageCreator/files/11660558/DiscImageCreator_20230606.zip
 - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net48\publish\Programs\Creator Release_ANSI\*
 - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
 - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
+# - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Release\net48\publish\Programs\Creator Release_ANSI\*
+# - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
+# - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
 - ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_219/redumper-2023.09.26_build219-win64.zip
 - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Debug\net48\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
 - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
 - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
+# - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Release\net48\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
+# - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
+# - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
 
 # # Subdump
 # - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
@@ -72,6 +97,15 @@ after_build:
 # - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net7.0-windows *
 # - mkdir MPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Subdump
 # - mv MPF\bin\Debug\net7.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Subdump\subdump.exe
+# - 7z e subdump_fua_0x28.zip -oMPF\bin\Release\net48\publish *
+# - mkdir MPF\bin\Release\net48\publish\Programs\Subdump
+# - mv MPF\bin\Release\net48\publish\subdump_fua_0x28.exe MPF\bin\Release\net48\publish\Programs\Subdump\subdump.exe
+# - 7z e subdump_fua_0x28.zip -oMPF\bin\Release\net6.0-windows *
+# - mkdir MPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Subdump
+# - mv MPF\bin\Release\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Subdump\subdump.exe
+# - 7z e subdump_fua_0x28.zip -oMPF\bin\Release\net7.0-windows *
+# - mkdir MPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Subdump
+# - mv MPF\bin\Release\net7.0-windows\subdump_fua_0x28.exe MPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Subdump\subdump.exe 
 
 # Create MPF Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net48\publish\
@@ -80,6 +114,14 @@ after_build:
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_win-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net7.0-windows\win-x64\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net7.0_win-x64.zip *
+
+# # Create MPF Release archives
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Release\net48\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net48.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Release\net6.0-windows\win-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net6.0_win-x64.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Release\net7.0-windows\win-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF_net7.0_win-x64.zip *
 
 # Create MPF.Check Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net48\publish\
@@ -96,6 +138,22 @@ after_build:
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_linux-x64.zip *
 - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Debug\net7.0\osx-x64\publish\
 - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_osx-x64.zip *
+
+# # Create MPF.Check Release archives
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net48\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net48.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net6.0\win-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0_win-x64.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net6.0\linux-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0_linux-x64.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net6.0\osx-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net6.0_osx-x64.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net7.0\win-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_win-x64.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net7.0\linux-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_linux-x64.zip *
+# - cd %APPVEYOR_BUILD_FOLDER%\MPF.Check\bin\Release\net7.0\osx-x64\publish\
+# - 7z a -tzip %APPVEYOR_BUILD_FOLDER%\MPF.Check_net7.0_osx-x64.zip *
 
 # success/failure tracking
 on_success:
@@ -114,6 +172,13 @@ artifacts:
 - path: MPF_net7.0_win-x64.zip
   name: MPF (.NET 7.0, Windows x64)
 
+# - path: MPF_net48.zip
+#   name: MPF (.NET Framework 4.8, Release)
+# - path: MPF_net6.0_win-x64.zip
+#   name: MPF (.NET 6.0, Release, Windows x64)
+# - path: MPF_net7.0_win-x64.zip
+#   name: MPF (.NET 7.0, Release, Windows x64)
+
 - path: MPF.Check_net48.zip
   name: MPF Check (.NET Framework 4.8)
 - path: MPF.Check_net6.0_win-x64.zip
@@ -128,3 +193,18 @@ artifacts:
   name: MPF.Check (.NET 7.0, Linux x64)
 - path: MPF.Check_net7.0_osx-x64.zip
   name: MPF.Check (.NET 7.0, OSX x64)
+
+# - path: MPF.Check_net48.zip
+#   name: MPF Check (.NET Framework 4.8, Release)
+# - path: MPF.Check_net6.0_win-x64.zip
+#   name: MPF.Check (.NET 6.0, Release, Windows x64)
+# - path: MPF.Check_net6.0_linux-x64.zip
+#   name: MPF.Check (.NET 6.0, Release, Linux x64)
+# - path: MPF.Check_net6.0_osx-x64.zip
+#   name: MPF.Check (.NET 6.0, Release, OSX x64)
+# - path: MPF.Check_net7.0_win-x64.zip
+#   name: MPF.Check (.NET 7.0, Release, Windows x64)
+# - path: MPF.Check_net7.0_linux-x64.zip
+#   name: MPF.Check (.NET 7.0, Release, Linux x64)
+# - path: MPF.Check_net7.0_osx-x64.zip
+#   name: MPF.Check (.NET 7.0, Release, OSX x64)
