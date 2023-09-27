@@ -113,7 +113,11 @@ namespace MPF.Core.Data
 
             // Sanitize a Windows-formatted long device path
             if (devicePath.StartsWith("\\\\.\\"))
+#if NET48
                 devicePath = devicePath.Substring("\\\\.\\".Length);
+#else
+                devicePath = devicePath["\\\\.\\".Length..];
+#endif
 
             // Create and validate the drive info object
             var driveInfo = new DriveInfo(devicePath);
@@ -184,7 +188,7 @@ namespace MPF.Core.Data
 #if NET6_0_OR_GREATER
             else
                 return GetMediaTypeFromSize();
-#endif
+#else
 
             // Get the current drive information
             string deviceId = null;
@@ -207,8 +211,6 @@ namespace MPF.Core.Data
                     return (null, "Device could not be found");
                 else if (!loaded)
                     return (null, "Device is not reporting media loaded");
-
-#if NETFRAMEWORK
 
                 MsftDiscMaster2 discMaster = new MsftDiscMaster2();
                 deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
@@ -237,17 +239,12 @@ namespace MPF.Core.Data
 
                 var media = dataWriter.CurrentPhysicalMediaType;
                 return (media.IMAPIToMediaType(), null);
-
-#else
-
-                return (null, "IMAPI2 recorder not supported");
-
-#endif
             }
             catch (Exception ex)
             {
                 return (null, ex.Message);
             }
+#endif
         }
 
         /// <summary>
@@ -605,7 +602,7 @@ namespace MPF.Core.Data
             // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
             // Create an output drive list
-            List<Drive> drives = new List<Drive>();
+            var drives = new List<Drive>();
 
             // Get all standard supported drive types
             try

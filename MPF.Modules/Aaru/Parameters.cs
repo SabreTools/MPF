@@ -13,6 +13,9 @@ using SabreTools.Models.CueSheets;
 using SabreTools.RedumpLib.Data;
 using Schemas;
 
+// Ignore "Type or member is obsolete"
+#pragma warning disable CS0618
+
 namespace MPF.Modules.Aaru
 {
     /// <summary>

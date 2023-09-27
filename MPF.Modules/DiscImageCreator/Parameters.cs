@@ -281,32 +281,31 @@ namespace MPF.Modules.DiscImageCreator
                     }
 
                     // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Doesn't output on Linux
-                        if (!File.Exists($"{basePath}.c2"))
-                            missingFiles.Add($"{basePath}.c2");
+                    //{
+                    //    // Doesn't output on Linux
+                    //    if (!File.Exists($"{basePath}.c2"))
+                    //        missingFiles.Add($"{basePath}.c2");
 
-                        // Doesn't output on Linux
-                        if (!File.Exists($"{basePath}_c2Error.txt"))
-                            missingFiles.Add($"{basePath}_c2Error.txt");
+                    //    // Doesn't output on Linux
+                    //    if (!File.Exists($"{basePath}_c2Error.txt"))
+                    //        missingFiles.Add($"{basePath}_c2Error.txt");
 
-                        // Replaced by timestamp-named file
-                        if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles.Add($"{basePath}_cmd.txt");
+                    //    // Replaced by timestamp-named file
+                    //    if (!File.Exists($"{basePath}_cmd.txt"))
+                    //        missingFiles.Add($"{basePath}_cmd.txt");
 
-                        // Not guaranteed output
-                        if (!File.Exists($"{basePath}_subIntention.txt"))
-                            missingFiles.Add($"{basePath}_subIntention.txt");
+                    //    // Not guaranteed output
+                    //    if (!File.Exists($"{basePath}_subIntention.txt"))
+                    //        missingFiles.Add($"{basePath}_subIntention.txt");
 
-                        // Not guaranteed output
-                        if (File.Exists($"{basePath}_suppl.dat"))
-                            missingFiles.Add($"{basePath}_suppl.dat");
+                    //    // Not guaranteed output
+                    //    if (File.Exists($"{basePath}_suppl.dat"))
+                    //        missingFiles.Add($"{basePath}_suppl.dat");
 
-                        // Not guaranteed output (at least PCE)
-                        if (!File.Exists($"{basePath}.toc"))
-                            missingFiles.Add($"{basePath}.toc");
-                    }
+                    //    // Not guaranteed output (at least PCE)
+                    //    if (!File.Exists($"{basePath}.toc"))
+                    //        missingFiles.Add($"{basePath}.toc");
+                    //}
 
                     break;
 
@@ -332,24 +331,23 @@ namespace MPF.Modules.DiscImageCreator
                     }                    
 
                     // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Replaced by timestamp-named file
-                        if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles.Add($"{basePath}_cmd.txt");
+                    //{
+                    //    // Replaced by timestamp-named file
+                    //    if (!File.Exists($"{basePath}_cmd.txt"))
+                    //        missingFiles.Add($"{basePath}_cmd.txt");
 
-                        // Not guaranteed output
-                        if (File.Exists($"{basePath}_CSSKey.txt"))
-                            missingFiles.Add($"{basePath}_CSSKey.txt");
+                    //    // Not guaranteed output
+                    //    if (File.Exists($"{basePath}_CSSKey.txt"))
+                    //        missingFiles.Add($"{basePath}_CSSKey.txt");
 
-                        // Only output for some parameters
-                        if (File.Exists($"{basePath}.raw"))
-                            missingFiles.Add($"{basePath}.raw");
+                    //    // Only output for some parameters
+                    //    if (File.Exists($"{basePath}.raw"))
+                    //        missingFiles.Add($"{basePath}.raw");
 
-                        // Not guaranteed output
-                        if (File.Exists($"{basePath}_suppl.dat"))
-                            missingFiles.Add($"{basePath}_suppl.dat");
-                    }
+                    //    // Not guaranteed output
+                    //    if (File.Exists($"{basePath}_suppl.dat"))
+                    //        missingFiles.Add($"{basePath}_suppl.dat");
+                    //}
 
                     break;
 
@@ -365,12 +363,11 @@ namespace MPF.Modules.DiscImageCreator
                     }
 
                     // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Replaced by timestamp-named file
-                        if (!File.Exists($"{basePath}_cmd.txt"))
-                            missingFiles.Add($"{basePath}_cmd.txt");
-                    }
+                    //{
+                    //    // Replaced by timestamp-named file
+                    //    if (!File.Exists($"{basePath}_cmd.txt"))
+                    //        missingFiles.Add($"{basePath}_cmd.txt");
+                    //}
 
                     break;
 

@@ -13,7 +13,6 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Modules;
 using Newtonsoft.Json;
-using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
@@ -68,7 +67,7 @@ namespace MPF.Library
 
             // Create the SubmissionInfo object with all user-inputted values by default
             string combinedBase = Path.Combine(outputDirectory, outputFilename);
-            SubmissionInfo info = new SubmissionInfo()
+            var info = new SubmissionInfo()
             {
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
@@ -520,11 +519,11 @@ namespace MPF.Library
             if (string.IsNullOrWhiteSpace(hashData))
                 return false;
 
-            Regex hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
+            var hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
             Match m = hashreg.Match(hashData);
             if (m.Success)
             {
-                Int64.TryParse(m.Groups[1].Value, out size);
+                _ = Int64.TryParse(m.Groups[1].Value, out size);
                 crc32 = m.Groups[2].Value;
                 md5 = m.Groups[3].Value;
                 sha1 = m.Groups[4].Value;
@@ -623,10 +622,11 @@ namespace MPF.Library
                 zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
                 foreach (string file in files)
                 {
-                    string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 #if NET48
+                    string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                     zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
 #else
+                    string entryName = file[outputDirectory.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                     zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
 #endif
 
@@ -672,7 +672,7 @@ namespace MPF.Library
                 bool reverseOrder = system.HasReversedRingcodes();
 
                 // Common Disc Info section
-                List<string> output = new List<string> { "Common Disc Info:" };
+                var output = new List<string> { "Common Disc Info:" };
                 AddIfExists(output, Template.TitleField, info.CommonDiscInfo.Title, 1);
                 AddIfExists(output, Template.ForeignTitleField, info.CommonDiscInfo.ForeignTitleNonLatin, 1);
                 AddIfExists(output, Template.DiscNumberField, info.CommonDiscInfo.DiscNumberLetter, 1);
@@ -691,7 +691,7 @@ namespace MPF.Library
                 AddIfExists(output, Template.PartiallyMatchingIDsField, info.PartiallyMatchedIDs, 1);
                 AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName() ?? "SPACE! (CHANGE THIS)", 1);
                 AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName() ?? "SILENCE! (CHANGE THIS)").ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? new LanguageSelection?[] { }).Select(l => l.LongName()).ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? Array.Empty<LanguageSelection?>()).Select(l => l.LongName()).ToArray(), 1);
                 AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo.Serial, 1);
 
                 // All ringcode information goes in an indented area
@@ -1016,7 +1016,7 @@ namespace MPF.Library
             // Now write out to a generic file
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                using (var sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
                     {
@@ -1070,7 +1070,7 @@ namespace MPF.Library
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // We don't care what the error is right now
                 return false;
@@ -1094,7 +1094,7 @@ namespace MPF.Library
             // Now write out to a generic file
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!protectionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                using (var sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!protectionInfo.txt"), FileMode.Create, FileAccess.Write)))
                 {
                     foreach (var kvp in info.CopyProtection.FullProtections)
                     {
@@ -1102,7 +1102,7 @@ namespace MPF.Library
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
                 // We don't care what the error is right now
                 return false;
@@ -1144,7 +1144,11 @@ namespace MPF.Library
 
             // If the value contains a newline
             value = value.Replace("\r\n", "\n");
+#if NET48
             if (value.Contains("\n"))
+#else
+            if (value.Contains('\n'))
+#endif
             {
                 output.Add(prefix + key + ":"); output.Add("");
                 string[] values = value.Split('\n');
@@ -1187,7 +1191,7 @@ namespace MPF.Library
         private static void AddIfExists(List<string> output, string key, List<int> value, int indent)
         {
             // If there's no valid value to write
-            if (value == null || value.Count() == 0)
+            if (value == null || value.Count == 0)
                 return;
 
             AddIfExists(output, key, string.Join(", ", value.Select(o => o.ToString())), indent);
@@ -1200,7 +1204,7 @@ namespace MPF.Library
         /// <returns>List of all log file paths, empty otherwise</returns>
         private static List<string> GetGeneratedFilePaths(string outputDirectory)
         {
-            List<string> files = new List<string>();
+            var files = new List<string>();
 
             if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
                 files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
@@ -1214,7 +1218,7 @@ namespace MPF.Library
             return files;
         }
 
-        #endregion
+#endregion
 
         #region Normalization
 
@@ -1588,7 +1592,7 @@ namespace MPF.Library
 
             // Insert the first item if we have a `:` or `-`
             bool itemInserted = false;
-            StringBuilder newTitleBuilder = new StringBuilder();
+            var newTitleBuilder = new StringBuilder();
             for (int i = 1; i < splitTitle.Length; i++)
             {
                 string segment = splitTitle[i];
@@ -1726,7 +1730,7 @@ namespace MPF.Library
         /// <remarks>Not currently working</remarks>
         private static SubmissionInfo CreateFromID(string discData)
         {
-            SubmissionInfo info = new SubmissionInfo()
+            var info = new SubmissionInfo()
             {
                 CommonDiscInfo = new CommonDiscInfoSection(),
                 VersionAndEditions = new VersionAndEditionsSection(),
@@ -1739,7 +1743,7 @@ namespace MPF.Library
             try
             {
                 // Load the current disc page into an XML document
-                XmlDocument redumpPage = new XmlDocument() { PreserveWhitespace = true };
+                var redumpPage = new XmlDocument() { PreserveWhitespace = true };
                 redumpPage.LoadXml(discData);
 
                 // If the current page isn't valid, we can't parse it
@@ -1925,9 +1929,13 @@ namespace MPF.Library
                 int firstParenLocation = title.IndexOf(" (");
                 if (firstParenLocation >= 0)
                 {
+#if NET48
                     info.CommonDiscInfo.Title = title.Substring(0, firstParenLocation);
+#else
+                    info.CommonDiscInfo.Title = title[..firstParenLocation];
+#endif
                     var subMatches = SabreTools.RedumpLib.Data.Constants.DiscNumberLetterRegex.Matches(title);
-                    foreach (Match subMatch in subMatches)
+                    foreach (Match subMatch in subMatches.Cast<Match>())
                     {
                         var subMatchValue = subMatch.Groups[1].Value;
 
@@ -1973,9 +1981,11 @@ namespace MPF.Library
             var matches = SabreTools.RedumpLib.Data.Constants.LanguagesRegex.Matches(discData);
             if (matches.Count > 0)
             {
-                List<Language?> tempLanguages = new List<Language?>();
-                foreach (Match submatch in matches)
+                var tempLanguages = new List<Language?>();
+                foreach (Match submatch in matches.Cast<Match>())
+                {
                     tempLanguages.Add(Extensions.ToLanguage(submatch.Groups[1].Value));
+                }
 
                 info.CommonDiscInfo.Languages = tempLanguages.Where(l => l != null).ToArray();
             }
@@ -2007,15 +2017,17 @@ namespace MPF.Library
             if (matches.Count > 0)
             {
                 // Start with any currently listed dumpers
-                List<string> tempDumpers = new List<string>();
+                var tempDumpers = new List<string>();
                 if (info.DumpersAndStatus.Dumpers.Length > 0)
                 {
                     foreach (string dumper in info.DumpersAndStatus.Dumpers)
                         tempDumpers.Add(dumper);
                 }
 
-                foreach (Match submatch in matches)
+                foreach (Match submatch in matches.Cast<Match>())
+                {
                     tempDumpers.Add(WebUtility.HtmlDecode(submatch.Groups[1].Value));
+                }
 
                 info.DumpersAndStatus.Dumpers = tempDumpers.ToArray();
             }
@@ -2267,9 +2279,9 @@ namespace MPF.Library
             info.PartiallyMatchedIDs = new List<int>();
 
 #if NET48
-            using (RedumpWebClient wc = new RedumpWebClient())
+            using (var wc = new RedumpWebClient())
 #else
-            using (RedumpHttpClient wc = new RedumpHttpClient())
+            using (var wc = new RedumpHttpClient())
 #endif
             {
                 // Login to Redump
@@ -2410,7 +2422,7 @@ namespace MPF.Library
                 // Clear out fully matched IDs from the partial list
                 if (info.FullyMatchedID.HasValue)
                 {
-                    if (info.PartiallyMatchedIDs.Count() == 1)
+                    if (info.PartiallyMatchedIDs.Count == 1)
                         info.PartiallyMatchedIDs = null;
                     else
                         info.PartiallyMatchedIDs.Remove(info.FullyMatchedID.Value);
@@ -2466,7 +2478,7 @@ namespace MPF.Library
         private async static Task<List<int>> ListSearchResults(RedumpHttpClient wc, string query, bool filterForwardSlashes = true)
 #endif
         {
-            List<int> ids = new List<int>();
+            var ids = new List<int>();
 
             // Strip quotes
             query = query.Trim('"', '\'');
@@ -2575,7 +2587,11 @@ namespace MPF.Library
             }
 
             // Format the universal hash for finding within the comments
+#if NET48
             universalHash = $"{universalHash.Substring(0, universalHash.Length - 1)}/comments/only";
+#else
+            universalHash = $"{universalHash[..^1]}/comments/only";
+#endif
 
             // Get all matching IDs for the hash
 #if NET48
@@ -2641,7 +2657,7 @@ namespace MPF.Library
             return localCount == remoteCount;
         }
 
-        #endregion
+#endregion
 
         #region Helpers
 

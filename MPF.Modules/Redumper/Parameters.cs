@@ -181,7 +181,7 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override (bool, List<string>) CheckAllOutputFilesExist(string basePath, bool preCheck)
         {
-            List<string> missingFiles = new List<string>();
+            var missingFiles = new List<string>();
 
             switch (this.Type)
             {
@@ -208,12 +208,11 @@ namespace MPF.Modules.Redumper
                     }
 
                     // Removed or inconsistent files
-                    if (false)
-                    {
-                        // Depends on the disc
-                        if (!File.Exists($"{basePath}.cdtext"))
-                            missingFiles.Add($"{basePath}.cdtext");
-                    }
+                    //{
+                    //    // Depends on the disc
+                    //    if (!File.Exists($"{basePath}.cdtext"))
+                    //        missingFiles.Add($"{basePath}.cdtext");
+                    //}
 
                     break;
 
@@ -351,7 +350,7 @@ namespace MPF.Modules.Redumper
                     break;
 
                 case RedumpSystem.SegaMegaCDSegaCD:
-                    info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out string scdBuildDate, out string scdSerial, out string scdRegion) ?? string.Empty;
+                    info.Extras.Header = GetSegaCDHeader($"{basePath}.log", out string scdBuildDate, out string scdSerial, out string _) ?? string.Empty;
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = scdSerial ?? string.Empty;
                     info.CommonDiscInfo.EXEDateBuildDate = scdBuildDate ?? string.Empty;
                     // TODO: Support region setting from parsed value
@@ -477,10 +476,14 @@ namespace MPF.Modules.Redumper
         /// </remarks>
         public override string GenerateParameters()
         {
-            List<string> parameters = new List<string>();
+            var parameters = new List<string>();
 
+#if NET48
             if (ModeValues == null)
                 ModeValues = new List<string> { CommandStrings.NONE };
+#else
+            ModeValues ??= new List<string> { CommandStrings.NONE };
+#endif
 
             // Modes
             parameters.AddRange(ModeValues);
@@ -759,7 +762,7 @@ namespace MPF.Modules.Redumper
         /// <inheritdoc/>
         public override List<string> GetLogFilePaths(string basePath)
         {
-            List<string> logFiles = new List<string>();
+            var logFiles = new List<string>();
 
             switch (this.Type)
             {
@@ -1264,17 +1267,29 @@ namespace MPF.Modules.Redumper
                     {
                         if (line.StartsWith("protection system type"))
                         {
+#if NET48
                             copyrightProtectionSystemType = line.Substring("protection system type: ".Length);
+#else
+                            copyrightProtectionSystemType = line["protection system type: ".Length..];
+#endif
                             if (copyrightProtectionSystemType == "none" || copyrightProtectionSystemType == "<none>")
                                 copyrightProtectionSystemType = "No";
                         }
                         else if (line.StartsWith("region management information:"))
                         {
+#if NET48
                             region = line.Substring("region management information: ".Length);
+#else
+                            region = line["region management information: ".Length..];
+#endif
                         }
                         else if (line.StartsWith("disc key"))
                         {
+#if NET48
                             decryptedDiscKey = line.Substring("disc key: ".Length).Replace(':', ' ');
+#else
+                            decryptedDiscKey = line["disc key: ".Length..].Replace(':', ' ');
+#endif
                         }
                         else if (line.StartsWith("title keys"))
                         {
@@ -1416,7 +1431,11 @@ namespace MPF.Modules.Redumper
                         else if (line.StartsWith("layer break:"))
                         {
                             // layer break: <layerbreak>
+#if NET48
                             layerbreak = line.Substring("layer break: ".Length).Trim();
+#else
+                            layerbreak = line["layer break: ".Length..].Trim();
+#endif
                         }
 
                         // Dual-layer discs have a regular layerbreak (old)
@@ -1424,7 +1443,11 @@ namespace MPF.Modules.Redumper
                         {
                             // data { LBA: <startLBA> .. <endLBA>, length: <length>, hLBA: <startLBA> .. <endLBA> }
                             string[] split = line.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
-                            layerbreak = layerbreak == null ? split[7].TrimEnd(',') : layerbreak;
+#if NET48
+                            layerbreak = layerbreak ?? split[7].TrimEnd(',');
+#else
+                            layerbreak ??= split[7].TrimEnd(',');
+#endif
                         }
                     }
 
@@ -1471,11 +1494,19 @@ namespace MPF.Modules.Redumper
 
                         // Store the first session range
                         if (line.Contains("session 1:"))
+#if NET48
                             firstSession = line.Substring("session 1: ".Length).Trim();
+#else
+                            firstSession = line["session 1: ".Length..].Trim();
+#endif
 
                         // Store the secomd session range
                         else if (line.Contains("session 2:"))
+#if NET48
                             secondSession = line.Substring("session 2: ".Length).Trim();
+#else
+                            secondSession = line["session 2: ".Length..].Trim();
+#endif
                     }
 
                     // If either is blank, we don't have multisession
@@ -1710,7 +1741,11 @@ namespace MPF.Modules.Redumper
                     {
                         line = sr.ReadLine().TrimStart();
                         if (line.StartsWith("non-zero data sample range"))
+#if NET48
                             return line.Substring("non-zero data sample range: [".Length).Trim().Split(' ')[0];
+#else
+                            return line["non-zero data sample range: [".Length..].Trim().Split(' ')[0];
+#endif
                     }
 
                     // We couldn't detect it then
@@ -1742,11 +1777,19 @@ namespace MPF.Modules.Redumper
             try
             {
                 string[] header = segaHeader.Split('\n');
+#if NET48
                 string serialVersionLine = header[2].Substring(58);
                 string dateLine = header[3].Substring(58);
                 serial = serialVersionLine.Substring(0, 10).Trim();
                 version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
                 date = dateLine.Substring(0, 8);
+#else
+                string serialVersionLine = header[2][58..];
+                string dateLine = header[3][58..];
+                serial = serialVersionLine[..10].Trim();
+                version = serialVersionLine.Substring(10, 6).TrimStart('V', 'v');
+                date = dateLine[..8];
+#endif
                 date = $"{date[0]}{date[1]}{date[2]}{date[3]}-{date[4]}{date[5]}-{date[6]}{date[7]}";
                 return true;
             }
@@ -1835,19 +1878,35 @@ namespace MPF.Modules.Redumper
                         line = sr.ReadLine().TrimStart();
                         if (line.StartsWith("build date:"))
                         {
+#if NET48
                             buildDate = line.Substring("build date: ".Length).Trim();
+#else
+                            buildDate = line["build date: ".Length..].Trim();
+#endif
                         }
                         else if (line.StartsWith("serial:"))
                         {
+#if NET48
                             serial = line.Substring("serial: ".Length).Trim();
+#else
+                            serial = line["serial: ".Length..].Trim();
+#endif
                         }
                         else if (line.StartsWith("region:"))
                         {
+#if NET48
                             region = line.Substring("region: ".Length).Trim();
+#else
+                            region = line["region: ".Length..].Trim();
+#endif
                         }
                         else if (line.StartsWith("regions:"))
                         {
+#if NET48
                             region = line.Substring("regions: ".Length).Trim();
+#else
+                            region = line["regions: ".Length..].Trim();
+#endif
                         }
                         else if (line.StartsWith("header:"))
                         {
@@ -1895,7 +1954,11 @@ namespace MPF.Modules.Redumper
                     {
                         line = sr.ReadLine().TrimStart();
                         if (line.StartsWith("Universal Hash"))
+#if NET48
                             return line.Substring("Universal Hash (SHA-1): ".Length).Trim();
+#else
+                            return line["Universal Hash (SHA-1): ".Length..].Trim();
+#endif
                     }
 
                     // We couldn't detect it then
@@ -1930,7 +1993,11 @@ namespace MPF.Modules.Redumper
                     {
                         line = sr.ReadLine().TrimStart();
                         if (line.StartsWith("disc write offset"))
+#if NET48
                             return line.Substring("disc write offset: ".Length).Trim();
+#else
+                            return line["disc write offset: ".Length..].Trim();
+#endif
                     }
 
                     // We couldn't detect it then

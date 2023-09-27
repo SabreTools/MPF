@@ -35,7 +35,7 @@
     <ProjectReference Include="..\MPF.UI.Core\MPF.UI.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net48'">
     <Reference Include="PresentationFramework.Aero" />
   </ItemGroup>
 

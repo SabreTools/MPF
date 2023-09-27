@@ -278,8 +278,8 @@ namespace MPF.Modules
             // Start processing tasks, if necessary
             if (!separateWindow)
             {
-                Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
-                Logging.OutputToLog(process.StandardError, this, ReportStatus);
+                _ = Logging.OutputToLog(process.StandardOutput, this, ReportStatus);
+                _ = Logging.OutputToLog(process.StandardError, this, ReportStatus);
             }
 
             process.WaitForExit();
@@ -1107,8 +1107,7 @@ namespace MPF.Modules
                     datString += $"<rom name=\"{rom.Name}\" size=\"{rom.Size}\" crc=\"{rom.Crc}\" md5=\"{rom.Md5}\" sha1=\"{rom.Sha1}\" />\n";
                 }
 
-                datString.TrimEnd('\n');
-                return datString;
+                return datString.TrimEnd('\n');
             }
             catch
             {
@@ -1149,7 +1148,7 @@ namespace MPF.Modules
                 if (xtr == null)
                     return null;
 
-                XmlSerializer serializer = new XmlSerializer(typeof(Datafile));
+                var serializer = new XmlSerializer(typeof(Datafile));
                 Datafile obj = serializer.Deserialize(xtr) as Datafile;
 
                 return obj;
@@ -1203,7 +1202,7 @@ namespace MPF.Modules
             try
             {
                 // Get a list of hashers to run over the buffer
-                List<Hasher> hashers = new List<Hasher>
+                var hashers = new List<Hasher>
                 {
                     new Hasher(Hash.CRC),
                     new Hasher(Hash.MD5),
@@ -1275,7 +1274,7 @@ namespace MPF.Modules
 
                 return true;
             }
-            catch (IOException ex)
+            catch (IOException)
             {
                 return false;
             }
@@ -1283,8 +1282,6 @@ namespace MPF.Modules
             {
                 input.Dispose();
             }
-
-            return false;
         }
 
         /// <summary>
@@ -1317,11 +1314,11 @@ namespace MPF.Modules
 
             // TODO: Use deserialization to Rom instead of Regex
 
-            Regex hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
+            var hashreg = new Regex(@"<rom name="".*?"" size=""(.*?)"" crc=""(.*?)"" md5=""(.*?)"" sha1=""(.*?)""");
             Match m = hashreg.Match(hashData);
             if (m.Success)
             {
-                Int64.TryParse(m.Groups[1].Value, out size);
+                _ = Int64.TryParse(m.Groups[1].Value, out size);
                 crc32 = m.Groups[2].Value;
                 md5 = m.Groups[3].Value;
                 sha1 = m.Groups[4].Value;
@@ -1347,7 +1344,7 @@ namespace MPF.Modules
 
             var rom = datafile.Games[0].Roms[0];
 
-            Int64.TryParse(rom.Size, out size);
+            _ = Int64.TryParse(rom.Size, out size);
             crc32 = rom.Crc;
             md5 = rom.Md5;
             sha1 = rom.Sha1;
@@ -1369,7 +1366,11 @@ namespace MPF.Modules
             if (di?.Units == null || di.Units.Length <= 1)
                 return false;
 
+#if NET48
             int ReadFromArrayBigEndian(byte[] bytes, int offset)
+#else
+            static int ReadFromArrayBigEndian(byte[] bytes, int offset)
+#endif
             {
                 var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
                 byte[] rev = span.ToArray();
@@ -1498,8 +1499,8 @@ namespace MPF.Modules
                 return false;
 
             // Fix the Y2K timestamp issue
-            FileInfo fi = new FileInfo(exePath);
-            DateTime dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
+            var fi = new FileInfo(exePath);
+            var dt = new DateTime(fi.LastWriteTimeUtc.Year >= 1900 && fi.LastWriteTimeUtc.Year < 1920 ? 2000 + fi.LastWriteTimeUtc.Year % 100 : fi.LastWriteTimeUtc.Year,
                 fi.LastWriteTimeUtc.Month, fi.LastWriteTimeUtc.Day);
             date = dt.ToString("yyyy-MM-dd");
 
@@ -1558,7 +1559,7 @@ namespace MPF.Modules
             // Let's try reading PARAM.SFO to find the serial at the end of the file
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
                 {
                     br.BaseStream.Seek(-0x18, SeekOrigin.End);
                     return new string(br.ReadChars(9));
@@ -1595,7 +1596,7 @@ namespace MPF.Modules
             // Let's try reading PARAM.SFO to find the version at the end of the file
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
                 {
                     br.BaseStream.Seek(-0x08, SeekOrigin.End);
                     return new string(br.ReadChars(5));
@@ -1632,7 +1633,7 @@ namespace MPF.Modules
             // Let's try reading param.sfo to find the serial at the end of the file
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
                 {
                     br.BaseStream.Seek(-0x14, SeekOrigin.End);
                     return new string(br.ReadChars(9));
@@ -1669,7 +1670,7 @@ namespace MPF.Modules
             // Let's try reading param.sfo to find the version at the end of the file
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramSfoPath)))
+                using (var br = new BinaryReader(File.OpenRead(paramSfoPath)))
                 {
                     br.BaseStream.Seek(-0x08, SeekOrigin.End);
                     return new string(br.ReadChars(5));
@@ -1706,7 +1707,7 @@ namespace MPF.Modules
             // Let's try reading param.json to find the serial in the unencrypted JSON
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                using (var br = new BinaryReader(File.OpenRead(paramJsonPath)))
                 {
                     br.BaseStream.Seek(0x82E, SeekOrigin.Begin);
                     return new string(br.ReadChars(9));
@@ -1743,7 +1744,7 @@ namespace MPF.Modules
             // Let's try reading param.json to find the version in the unencrypted JSON
             try
             {
-                using (BinaryReader br = new BinaryReader(File.OpenRead(paramJsonPath)))
+                using (var br = new BinaryReader(File.OpenRead(paramJsonPath)))
                 {
                     br.BaseStream.Seek(0x89E, SeekOrigin.Begin);
                     return new string(br.ReadChars(5));
@@ -1756,7 +1757,7 @@ namespace MPF.Modules
             }
         }
 
-        #endregion
+#endregion
 
         #region Category Extraction
 
