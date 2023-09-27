@@ -1033,8 +1033,9 @@ namespace MPF.UI.Core.ViewModels
             else if (driveChanged)
             {
                 string label = drive?.FormattedVolumeLabel ?? systemType.LongName();
-                string oldFilename = Path.GetFileNameWithoutExtension(this.Parent.OutputPathTextBox.Text);
-                string directory = Path.GetDirectoryName(this.Parent.OutputPathTextBox.Text);
+                string oldPath = InfoTool.NormalizeOutputPaths(this.Parent.OutputPathTextBox.Text, false);
+                string oldFilename = Path.GetFileNameWithoutExtension(oldPath);
+                string directory = Path.GetDirectoryName(oldPath);
                 string filename = $"{label}{extension ?? ".bin"}";
 
                 // If the previous path included the label
@@ -1051,8 +1052,9 @@ namespace MPF.UI.Core.ViewModels
             // Otherwise, reset the extension of the currently set path
             else
             {
-                string filename = Path.GetFileNameWithoutExtension(this.Parent.OutputPathTextBox.Text);
-                string directory = Path.GetDirectoryName(this.Parent.OutputPathTextBox.Text);
+                string oldPath = InfoTool.NormalizeOutputPaths(this.Parent.OutputPathTextBox.Text, false);
+                string filename = Path.GetFileNameWithoutExtension(oldPath);
+                string directory = Path.GetDirectoryName(oldPath);
                 filename = $"{filename}{extension ?? ".bin"}";
 
                 this.Parent.OutputPathTextBox.Text = Path.Combine(directory, filename);
@@ -1089,9 +1091,7 @@ namespace MPF.UI.Core.ViewModels
             // Disable change handling
             DisableEventHandlers();
 
-            string trimmedPath = Env.Parameters.OutputPath?.Trim('"') ?? string.Empty;
-            trimmedPath = InfoTool.NormalizeOutputPaths(trimmedPath);
-            this.Parent.OutputPathTextBox.Text = trimmedPath;
+            this.Parent.OutputPathTextBox.Text = InfoTool.NormalizeOutputPaths(Env.Parameters.OutputPath, true);
 
             MediaType? mediaType = Env.Parameters.GetMediaType();
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);

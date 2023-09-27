@@ -105,7 +105,7 @@ namespace MPF.Library
             this.Options = options;
 
             // Output paths
-            this.OutputPath = InfoTool.NormalizeOutputPaths(outputPath);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(outputPath, true);
 
             // UI information
             this.Drive = drive;
@@ -131,7 +131,7 @@ namespace MPF.Library
             try
             {
                 // Normalize the output path
-                string outputPath = InfoTool.NormalizeOutputPaths(this.OutputPath);
+                string outputPath = InfoTool.NormalizeOutputPaths(this.OutputPath, true);
 
                 // Replace all instances in the output directory
                 string outputDirectory = Path.GetDirectoryName(outputPath);
@@ -498,7 +498,7 @@ namespace MPF.Library
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
-            this.OutputPath = InfoTool.NormalizeOutputPaths(this.OutputPath);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(this.OutputPath, true);
 
             // Validate that the output path isn't on the dumping drive
             if (this.OutputPath[0] == Drive.Letter)

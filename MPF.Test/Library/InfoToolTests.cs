@@ -63,7 +63,7 @@ namespace MPF.Test.Library
             if (!string.IsNullOrWhiteSpace(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);
 
-            string actualPath = InfoTool.NormalizeOutputPaths(outputPath);
+            string actualPath = InfoTool.NormalizeOutputPaths(outputPath, false);
             Assert.Equal(expectedPath, actualPath);
         }
 

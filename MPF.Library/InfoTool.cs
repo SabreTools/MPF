@@ -1682,16 +1682,20 @@ namespace MPF.Library
         /// Normalize a split set of paths
         /// </summary>
         /// <param name="path">Path value to normalize</param>
-        public static string NormalizeOutputPaths(string path)
+        public static string NormalizeOutputPaths(string path, bool getFullPath)
         {
             // The easy way
             try
             {
-                // Trim quotes from the path
-                path = path.Trim('"');
+                // If we have an invalid path
+                if (string.IsNullOrWhiteSpace(path))
+                    return string.Empty;
+
+                // Remove quotes from path
+                path = path.Replace("\"", string.Empty);
 
                 // Try getting the combined path and returning that directly
-                string fullPath = Path.GetFullPath(path);
+                string fullPath = getFullPath ? Path.GetFullPath(path) : path;
                 string fullDirectory = Path.GetDirectoryName(fullPath);
                 string fullFile = Path.GetFileName(fullPath);
 
