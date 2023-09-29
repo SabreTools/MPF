@@ -1586,9 +1586,9 @@ namespace MPF.Modules.Redumper
                         if (line == null)
                             return false;
 
-                        if (line.StartsWith("EDC: no"))
+                        if (line.Contains("EDC: no"))
                             return false;
-                        else if (line.StartsWith("EDC: yes"))
+                        else if (line.Contains("EDC: yes"))
                             return true;
 
                         line = sr.ReadLine().Trim();

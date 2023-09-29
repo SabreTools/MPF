@@ -15,7 +15,7 @@ For those who like to test the newest features, download the latest AppVeyor WIP
 
 ## Media Preservation Frontend (MPF)
 
-MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreato in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
+MPF is the main, UI-centric application of the MPF suite. This program allows users to use Redumper, Aaru, or DiscImageCreator in a more user-friendly way. Each backend dumping program is supported as fully as possible to ensure that all information is captured on output. There are many customization options and quality of life settings that can be access through the Options menu.
 
 ### System Requirements
 
