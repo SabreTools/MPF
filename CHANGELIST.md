@@ -12,6 +12,7 @@
 - Omit track 0.2 and 00.2 from hash search
 - Tweak README again
 - Fix redumper EDC detection output
+- Fix XGD4 PIC reading
 
 ### 2.6.5 (2023-09-27)
 
