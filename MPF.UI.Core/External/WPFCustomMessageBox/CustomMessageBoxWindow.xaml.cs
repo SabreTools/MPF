@@ -91,7 +91,9 @@ namespace WPFCustomMessageBox
             InitializeComponent();
 
             _removeTitleBarIcon = removeTitleBarIcon;
-            Topmost = true;
+            Focusable = true;
+            ShowActivated = true;
+            ShowInTaskbar = true;
 
             if (owner != null)
             {

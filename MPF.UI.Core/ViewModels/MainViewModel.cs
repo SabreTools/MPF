@@ -507,8 +507,10 @@ namespace MPF.UI.Core.ViewModels
         {
             var optionsWindow = new OptionsWindow(this.Options)
             {
+                Focusable = true,
                 Owner = this.Parent,
-                Topmost = true,
+                ShowActivated = true,
+                ShowInTaskbar = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
             optionsWindow.Closed += OnOptionsUpdated;
@@ -1251,8 +1253,10 @@ namespace MPF.UI.Core.ViewModels
 
             var discInformationWindow = new DiscInformationWindow(this.Options, submissionInfo)
             {
+                Focusable = true,
                 Owner = this.Parent,
-                Topmost = true,
+                ShowActivated = true,
+                ShowInTaskbar = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
             bool? result = discInformationWindow.ShowDialog();
