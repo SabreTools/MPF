@@ -50,8 +50,8 @@ namespace MPF.Test.Library
         }
 
         [Theory]
-        [InlineData(null, null)]
-        [InlineData(" ", " ")]
+        [InlineData(null, "")]
+        [InlineData(" ", "")]
         [InlineData("super\\blah.bin", "super\\blah.bin")]
         [InlineData("super\\hero\\blah.bin", "super\\hero\\blah.bin")]
         [InlineData("super.hero\\blah.bin", "super.hero\\blah.bin")]
@@ -63,7 +63,7 @@ namespace MPF.Test.Library
             if (!string.IsNullOrWhiteSpace(expectedPath))
                 expectedPath = Path.GetFullPath(expectedPath);
 
-            string actualPath = InfoTool.NormalizeOutputPaths(outputPath, false);
+            string actualPath = InfoTool.NormalizeOutputPaths(outputPath, true);
             Assert.Equal(expectedPath, actualPath);
         }
 
