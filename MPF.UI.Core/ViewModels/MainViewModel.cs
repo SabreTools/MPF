@@ -940,7 +940,12 @@ namespace MPF.UI.Core.ViewModels
             if (Drives == null || Drives.Count == 0 || this.Parent.DriveLetterComboBox.SelectedIndex == -1)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLog("Skipping system type detection because no valid drives found!");
+                    this.Logger.VerboseLogLn("Skipping system type detection because no valid drives found!");
+            }
+            else if ((this.Parent.DriveLetterComboBox.SelectedItem as Drive)?.MarkedActive != true)
+            {
+                if (this.Options.VerboseLogging)
+                    this.Logger.VerboseLogLn("Skipping system type detection because drive not marked as active!");
             }
             else if (!this.Options.SkipSystemDetection)
             {
@@ -960,7 +965,7 @@ namespace MPF.UI.Core.ViewModels
             {
                 var currentSystem = this.Options.DefaultSystem;
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLog($"System detection disabled, setting to default of {currentSystem.LongName()}.");
+                    this.Logger.VerboseLogLn($"System detection disabled, setting to default of {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
                 this.Parent.SystemTypeComboBox.SelectedIndex = sysIndex;
             }
@@ -1120,7 +1125,7 @@ namespace MPF.UI.Core.ViewModels
 
             // Pull the drive letter from the UI directly, just in case
             var drive = this.Parent.DriveLetterComboBox.SelectedItem as Drive;
-            if (drive.Letter != default(char))
+            if (drive != null && drive.Letter != default(char))
             {
                 if (this.Options.VerboseLogging)
                     this.Logger.VerboseLogLn($"Scanning for copy protection in {drive.Letter}");

@@ -15,6 +15,7 @@
 - Fix XGD4 PIC reading
 - Ensure popups are topmost
 - Try out more UI functionality
+- Skip system detection on inactive drives
 
 ### 2.6.5 (2023-09-27)
 
