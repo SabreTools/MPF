@@ -3,13 +3,9 @@
   <PropertyGroup>
     <TargetFrameworks>net48;net6.0;net7.0</TargetFrameworks>
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
-    <AssemblyName>MPF.Library</AssemblyName>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
-    <RepositoryUrl>https://github.com/SabreTools/MPF</RepositoryUrl>
     <Version>2.6.5</Version>
-    <IncludeSource>true</IncludeSource>
-    <IncludeSymbols>true</IncludeSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
