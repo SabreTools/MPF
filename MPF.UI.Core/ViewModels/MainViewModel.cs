@@ -505,7 +505,12 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         public void ShowOptionsWindow()
         {
-            var optionsWindow = new OptionsWindow(this.Options) { Owner = this.Parent };
+            var optionsWindow = new OptionsWindow(this.Options)
+            {
+                Owner = this.Parent,
+                Topmost = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }

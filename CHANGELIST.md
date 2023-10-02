@@ -13,6 +13,7 @@
 - Tweak README again
 - Fix redumper EDC detection output
 - Fix XGD4 PIC reading
+- Ensure popups are topmost
 
 ### 2.6.5 (2023-09-27)
 
