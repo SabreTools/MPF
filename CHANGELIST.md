@@ -18,6 +18,7 @@
 - Skip system detection on inactive drives
 - Fix path tests
 - Clean up csproj files
+- Update redumper to build 221
 
 ### 2.6.5 (2023-09-27)
 

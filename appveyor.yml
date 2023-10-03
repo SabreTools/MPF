@@ -78,34 +78,13 @@ after_build:
 # - 7z e DiscImageCreator_20230606.zip -oMPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Creator Release_ANSI\*
 
 # Redumper
-- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_219/redumper-2023.09.26_build219-win64.zip
-- 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Debug\net48\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
-- 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
-- 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
-# - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Release\net48\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
-# - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
-# - 7z e redumper-2023.09.26_build219-win64.zip -oMPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Redumper redumper-2023.09.26_build219-win64\bin\*
-
-# # Subdump
-# - ps: appveyor DownloadFile https://archive.org/download/subdump_fua_0x28/subdump_fua_0x28.zip
-# - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net48\publish *
-# - mkdir MPF\bin\Debug\net48\publish\Programs\Subdump
-# - mv MPF\bin\Debug\net48\publish\subdump_fua_0x28.exe MPF\bin\Debug\net48\publish\Programs\Subdump\subdump.exe
-# - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net6.0-windows *
-# - mkdir MPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Subdump
-# - mv MPF\bin\Debug\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Subdump\subdump.exe
-# - 7z e subdump_fua_0x28.zip -oMPF\bin\Debug\net7.0-windows *
-# - mkdir MPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Subdump
-# - mv MPF\bin\Debug\net7.0-windows\subdump_fua_0x28.exe MPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Subdump\subdump.exe
-# - 7z e subdump_fua_0x28.zip -oMPF\bin\Release\net48\publish *
-# - mkdir MPF\bin\Release\net48\publish\Programs\Subdump
-# - mv MPF\bin\Release\net48\publish\subdump_fua_0x28.exe MPF\bin\Release\net48\publish\Programs\Subdump\subdump.exe
-# - 7z e subdump_fua_0x28.zip -oMPF\bin\Release\net6.0-windows *
-# - mkdir MPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Subdump
-# - mv MPF\bin\Release\net6.0-windows\subdump_fua_0x28.exe MPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Subdump\subdump.exe
-# - 7z e subdump_fua_0x28.zip -oMPF\bin\Release\net7.0-windows *
-# - mkdir MPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Subdump
-# - mv MPF\bin\Release\net7.0-windows\subdump_fua_0x28.exe MPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Subdump\subdump.exe 
+- ps: appveyor DownloadFile https://github.com/superg/redumper/releases/download/build_221/redumper-2023.10.02_build221-win64.zip
+- 7z e redumper-2023.10.02_build221-win64.zip -oMPF\bin\Debug\net48\publish\Programs\Redumper redumper-2023.10.02_build221-win64\bin\*
+- 7z e redumper-2023.10.02_build221-win64.zip -oMPF\bin\Debug\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.10.02_build221-win64\bin\*
+- 7z e redumper-2023.10.02_build221-win64.zip -oMPF\bin\Debug\net7.0-windows\win-x64\publish\Programs\Redumper redumper-2023.10.02_build221-win64\bin\*
+# - 7z e redumper-2023.10.02_build221-win64.zip -oMPF\bin\Release\net48\publish\Programs\Redumper redumper-2023.10.02_build221-win64\bin\*
+# - 7z e redumper-2023.10.02_build221-win64.zip -oMPF\bin\Release\net6.0-windows\win-x64\publish\Programs\Redumper redumper-2023.10.02_build221-win64\bin\*
+# - 7z e redumper-2023.10.02_build221-win64.zip -oMPF\bin\Release\net7.0-windows\win-x64\publish\Programs\Redumper redumper-2023.10.02_build221-win64\bin\*
 
 # Create MPF Debug archives
 - cd %APPVEYOR_BUILD_FOLDER%\MPF\bin\Debug\net48\publish\

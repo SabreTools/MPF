@@ -69,5 +69,6 @@ namespace MPF.Modules.Redumper
         public const string RefineSubchannel = "--refine-subchannel";
         public const string Skip = "--skip";
         public const string DumpReadSize = "--dump-read-size";
+        public const string OverreadLeadout = "--overread-leadout";
     }
 }

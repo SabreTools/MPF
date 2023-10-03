@@ -695,6 +695,10 @@ namespace MPF.Modules.Redumper
                     parameters.Add($"{FlagStrings.DumpReadSize}={DumpReadSizeValue}");
             }
 
+            // Overread Leadout
+            if (this[FlagStrings.OverreadLeadout] == true)
+                parameters.Add(FlagStrings.OverreadLeadout);
+
             #endregion
 
             return string.Join(" ", parameters);
@@ -752,6 +756,7 @@ namespace MPF.Modules.Redumper
                     FlagStrings.RefineSubchannel,
                     FlagStrings.Skip,
                     FlagStrings.DumpReadSize,
+                    FlagStrings.OverreadLeadout,
                 },
             };
         }
@@ -1147,6 +1152,9 @@ namespace MPF.Modules.Redumper
                 intValue = ProcessInt32Parameter(parts, FlagStrings.DumpReadSize, ref i);
                 if (!string.IsNullOrWhiteSpace(stringValue))
                     DumpReadSizeValue = intValue;
+
+                // Overread Leadout
+                ProcessFlagParameter(parts, FlagStrings.OverreadLeadout, ref i);
 
                 #endregion
             }
