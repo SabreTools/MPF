@@ -5,6 +5,7 @@
 - Add note about git being required
 - Try out using version number in AppVeyor
 - Job number not build ID
+- Fix errant space in variable name
 
 ### 2.6.6 (2023-10-04)
 
