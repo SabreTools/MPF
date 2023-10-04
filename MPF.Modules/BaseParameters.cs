@@ -1204,7 +1204,7 @@ namespace MPF.Modules
                 // Get a list of hashers to run over the buffer
                 var hashers = new List<Hasher>
                 {
-                    new Hasher(Hash.CRC),
+                    new Hasher(Hash.CRC32),
                     new Hasher(Hash.MD5),
                     new Hasher(Hash.SHA1),
                     new Hasher(Hash.SHA256),
@@ -1261,7 +1261,7 @@ namespace MPF.Modules
                 Parallel.ForEach(hashers, h => h.Terminate());
 
                 // Get the results
-                crc32 = hashers.First(h => h.HashType == Hash.CRC).GetHashString();
+                crc32 = hashers.First(h => h.HashType == Hash.CRC32).GetHashString();
                 md5 = hashers.First(h => h.HashType == Hash.MD5).GetHashString();
                 sha1 = hashers.First(h => h.HashType == Hash.SHA1).GetHashString();
                 //sha256 = hashers.First(h => h.HashType == Hash.SHA256).GetHashString();

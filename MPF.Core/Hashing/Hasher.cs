@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Hashing;
 using System.Linq;
 using System.Security.Cryptography;
 
@@ -10,7 +11,7 @@ namespace MPF.Core.Hashing
     [Flags]
     public enum Hash
     {
-        CRC = 1 << 0,
+        CRC32 = 1 << 0,
         MD5 = 1 << 1,
         SHA1 = 1 << 2,
         SHA256 = 1 << 3,
@@ -18,8 +19,8 @@ namespace MPF.Core.Hashing
         SHA512 = 1 << 5,
 
         // Special combinations
-        Standard = CRC | MD5 | SHA1,
-        All = CRC | MD5 | SHA1 | SHA256 | SHA384 | SHA512,
+        Standard = CRC32 | MD5 | SHA1,
+        All = CRC32 | MD5 | SHA1 | SHA256 | SHA384 | SHA512,
     }
 
     /// <summary>
@@ -28,7 +29,7 @@ namespace MPF.Core.Hashing
     public class Hasher
     {
         public Hash HashType { get; private set; }
-        private IDisposable _hasher; 
+        private object _hasher; 
 
         public Hasher(Hash hashType)
         {
@@ -43,8 +44,8 @@ namespace MPF.Core.Hashing
         {
             switch (HashType)
             {
-                case Hash.CRC:
-                    _hasher = new OptimizedCRC();
+                case Hash.CRC32:
+                    _hasher = new Crc32();
                     break;
 
                 case Hash.MD5:
@@ -71,7 +72,8 @@ namespace MPF.Core.Hashing
 
         public void Dispose()
         {
-            _hasher.Dispose();
+            if (_hasher is IDisposable disposable)
+                disposable.Dispose();
         }
 
         /// <summary>
@@ -81,8 +83,8 @@ namespace MPF.Core.Hashing
         {
             switch (HashType)
             {
-                case Hash.CRC:
-                    (_hasher as OptimizedCRC).Update(buffer, 0, size);
+                case Hash.CRC32:
+                    (_hasher as NonCryptographicHashAlgorithm).Append(buffer);
                     break;
 
                 case Hash.MD5:
@@ -103,8 +105,8 @@ namespace MPF.Core.Hashing
             byte[] emptyBuffer = new byte[0];
             switch (HashType)
             {
-                case Hash.CRC:
-                    (_hasher as OptimizedCRC).Update(emptyBuffer, 0, 0);
+                case Hash.CRC32:
+                    (_hasher as NonCryptographicHashAlgorithm).Append(emptyBuffer);
                     break;
 
                 case Hash.MD5:
@@ -124,8 +126,8 @@ namespace MPF.Core.Hashing
         {
             switch (HashType)
             {
-                case Hash.CRC:
-                    return BitConverter.GetBytes((_hasher as OptimizedCRC).Value).Reverse().ToArray();
+                case Hash.CRC32:
+                    return (_hasher as NonCryptographicHashAlgorithm).GetCurrentHash().Reverse().ToArray();
 
                 case Hash.MD5:
                 case Hash.SHA1:

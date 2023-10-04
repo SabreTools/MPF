@@ -36,6 +36,7 @@
     <PackageReference Include="SabreTools.Models" Version="1.1.4" />
     <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="SabreTools.Serialization" Version="1.1.6" />
+    <PackageReference Include="System.IO.Hashing" Version="7.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
