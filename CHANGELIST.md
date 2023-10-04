@@ -1,5 +1,6 @@
 ### WIP (xxxx-xx-xx)
 - Attempt to replace NRT
+- Try alternate archive naming
 
 ### 2.6.6 (2023-10-04)
 

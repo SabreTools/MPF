@@ -52,40 +52,40 @@ dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self
 
 # Create MPF Debug archives
 #cd $BUILD_FOLDER/MPF/bin/Debug/net6.0-windows/win-x64/publish/
-#zip -r $BUILD_FOLDER/MPF-dbg_net6.0_win-x64.zip .
+#zip -r $BUILD_FOLDER/MPF_net6.0_win-x64_debug.zip .
 #cd $BUILD_FOLDER/MPF/bin/Debug/net7.0-windows/win-x64/publish/
-#zip -r $BUILD_FOLDER/MPF-dbg_net7.0_win-x64.zip .
+#zip -r $BUILD_FOLDER/MPF_net7.0_win-x64_debug.zip .
 
 # Create MPF Release archives
 #cd $BUILD_FOLDER/MPF/bin/Release/net6.0-windows/win-x64/publish/
-#zip -r $BUILD_FOLDER/MPF_net6.0_win-x64.zip .
+#zip -r $BUILD_FOLDER/MPF_net6.0_win-x64_release.zip .
 #cd $BUILD_FOLDER/MPF/bin/Release/net7.0-windows/win-x64/publish/
-#zip -r $BUILD_FOLDER/MPF_net7.0_win-x64.zip .
+#zip -r $BUILD_FOLDER/MPF_net7.0_win-x64_release.zip .
 
 # Create MPF.Check Debug archives
 cd $BUILD_FOLDER/MPF.Check/bin/Debug/net6.0/win-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check-dbg_net6.0_win-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net6.0_win-x64_debug.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Debug/net6.0/linux-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check-dbg_net6.0_linux-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net6.0_linux-x64_debug.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Debug/net6.0/osx-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check-dbg_net6.0_osx-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net6.0_osx-x64_debug.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Debug/net7.0/win-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check-dbg_net7.0_win-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net7.0_win-x64_debug.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Debug/net7.0/linux-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check-dbg_net7.0_linux-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net7.0_linux-x64_debug.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Debug/net7.0/osx-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check-dbg_net7.0_osx-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net7.0_osx-x64_debug.zip .
 
 # Create MPF.Check Release archives
 cd $BUILD_FOLDER/MPF.Check/bin/Release/net6.0/win-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check_net6.0_win-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net6.0_win-x64_release.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Release/net6.0/linux-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check_net6.0_linux-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net6.0_linux-x64_release.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Release/net6.0/osx-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check_net6.0_osx-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net6.0_osx-x64_release.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Release/net7.0/win-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check_net7.0_win-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net7.0_win-x64_release.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Release/net7.0/linux-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check_net7.0_linux-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net7.0_linux-x64_release.zip .
 cd $BUILD_FOLDER/MPF.Check/bin/Release/net7.0/osx-x64/publish/
-zip -r $BUILD_FOLDER/MPF.Check_net7.0_osx-x64.zip .
+zip -r $BUILD_FOLDER/MPF.Check_net7.0_osx-x64_release.zip .
