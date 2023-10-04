@@ -2,6 +2,7 @@
 - Attempt to replace NRT
 - Try alternate archive naming
 - Publish, but don't package, release builds
+- Add note about git being required
 
 ### 2.6.6 (2023-10-04)
 

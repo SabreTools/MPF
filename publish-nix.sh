@@ -3,6 +3,7 @@
 # This batch file assumes the following:
 # - .NET 7.0 (or newer) SDK is installed and in PATH
 # - zip is installed and in PATH
+# - Git is installed and in PATH
 # - The relevant commandline programs are already downloaded
 #   and put into their respective folders
 #
