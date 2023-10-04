@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.6.6 (2023-10-04)
 
 - Update Nuget packages
 - Update to MMI 3.0.0-preview.2
