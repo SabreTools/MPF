@@ -1,6 +1,7 @@
 ### WIP (xxxx-xx-xx)
 - Attempt to replace NRT
 - Try alternate archive naming
+- Publish, but don't package, release builds
 
 ### 2.6.6 (2023-10-04)
 
