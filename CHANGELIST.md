@@ -20,6 +20,7 @@
 - Clean up csproj files
 - Update redumper to build 221
 - Ensure multisession info is populated
+- Be clearer with protection outputs
 
 ### 2.6.5 (2023-09-27)
 

@@ -66,7 +66,7 @@ namespace MPF.Library
         {
             // If the filtered list is empty in some way, return
             if (protections == null || !protections.Any())
-                return "None found";
+                return "None found [OMIT FROM SUBMISSION]";
 
             // Get an ordered list of distinct found protections
             var orderedDistinctProtections = protections
@@ -77,7 +77,7 @@ namespace MPF.Library
             // Sanitize and join protections for writing
             string protectionString = SanitizeFoundProtections(orderedDistinctProtections);
             if (string.IsNullOrWhiteSpace(protectionString))
-                return "None found";
+                return "None found [OMIT FROM SUBMISSION]";
 
             return protectionString;
         }
@@ -132,6 +132,15 @@ namespace MPF.Library
         /// <param name="foundProtections">Enumerable of found protections</param>
         public static string SanitizeFoundProtections(IEnumerable<string> foundProtections)
         {
+            // EXCEPTIONS
+            if (foundProtections.Any(p => p.StartsWith("[Exception opening file")))
+            {
+                foundProtections = foundProtections.Where(p => !p.StartsWith("[Exception opening file"));
+                foundProtections = foundProtections
+                    .Prepend("Exception occurred while scanning [RESCAN NEEDED]")
+                    .OrderBy(p => p);
+            }
+
             // ActiveMARK
             if (foundProtections.Any(p => p == "ActiveMARK 5") && foundProtections.Any(p => p == "ActiveMARK"))
                 foundProtections = foundProtections.Where(p => p != "ActiveMARK");
