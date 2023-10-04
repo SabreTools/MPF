@@ -13,47 +13,50 @@ REM in an unpredictable way and result in an incomplete output.
 REM Set the current directory as a variable
 set BUILD_FOLDER=%~dp0
 
+REM Set the current commit hash
+for /f %%i in ('git log --pretty^=%%H -1') do set COMMIT=%%i
+
 REM Restore Nuget packages for all builds
 echo Restoring Nuget packages
 dotnet restore
 
 REM .NET Framework 4.8 Debug
 echo Building .NET Framework 4.8 debug
-msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
-msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
+msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
+msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
 
 REM .NET Framework 4.8 Release
 echo Building .NET Framework 4.8 release
-msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64
-msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48  -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64
+msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
+msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48  -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
 
 REM .NET 6.0 Debug
 echo Building .NET 6.0 debug
-dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained true -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM .NET 6.0 Release
 echo Building .NET 6.0 release
-dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM .NET 7.0 Debug
 echo Building .NET 7.0 debug
-dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained true -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM .NET 7.0 Release
 echo Building .NET 7.0 release
-dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM Create MPF Debug archives
 cd %BUILD_FOLDER%\MPF\bin\Debug\net48\publish\

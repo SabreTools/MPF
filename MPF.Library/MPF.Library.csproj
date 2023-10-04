@@ -5,14 +5,8 @@
     <RuntimeIdentifiers>win-x64;linux-x64;osx-x64</RuntimeIdentifiers>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
-    <Version>2.6.6</Version>
+    <VersionPrefix>2.6.6</VersionPrefix>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NrtRevisionFormat>$(Version)-{chash:8}</NrtRevisionFormat>
-    <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
-    <NrtShowRevision>false</NrtShowRevision>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,10 +24,6 @@
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
     <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
-    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   
   <ItemGroup>

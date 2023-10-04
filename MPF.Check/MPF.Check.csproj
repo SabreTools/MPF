@@ -8,13 +8,7 @@
     <Description>Validator for various dumping programs</Description>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
-    <Version>2.6.6</Version>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NrtRevisionFormat>$(Version)-{chash:8}</NrtRevisionFormat>
-    <NrtResolveSimpleAttributes>true</NrtResolveSimpleAttributes>
-    <NrtShowRevision>false</NrtShowRevision>
+    <VersionPrefix>2.6.6</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,10 +25,6 @@
       <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
-    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   
   <ItemGroup>

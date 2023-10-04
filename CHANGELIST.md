@@ -1,3 +1,6 @@
+### WIP (xxxx-xx-xx)
+- Attempt to replace NRT
+
 ### 2.6.6 (2023-10-04)
 
 - Update Nuget packages
