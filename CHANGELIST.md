@@ -6,6 +6,7 @@
 - Try out using version number in AppVeyor
 - Job number not build ID
 - Fix errant space in variable name
+- Build number not job number
 
 ### 2.6.6 (2023-10-04)
 
