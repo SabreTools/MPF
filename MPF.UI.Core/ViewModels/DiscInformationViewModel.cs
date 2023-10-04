@@ -292,14 +292,14 @@ namespace MPF.UI.Core.ViewModels
                 Parent.DiscOffset.Text = SubmissionInfo.TracksAndWriteOffsets.OtherWriteOffsets;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.DMIHash) != true)
                 Parent.DMIHash.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.ErrorsCount))
-                Parent.ErrorsCount.Visibility = Visibility.Collapsed;
-            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.EXEDateBuildDate))
-                Parent.EXEDateBuildDate.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.EDC?.EDC == null)
                 Parent.EDC.Visibility = Visibility.Collapsed;
             else
                 Parent.EDC.Text = SubmissionInfo.EDC.EDC.LongName();
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.ErrorsCount))
+                Parent.ErrorsCount.Visibility = Visibility.Collapsed;
+            if (string.IsNullOrWhiteSpace(SubmissionInfo?.CommonDiscInfo?.EXEDateBuildDate))
+                Parent.EXEDateBuildDate.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Filename) != true)
                 Parent.Filename.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.Header))
@@ -308,6 +308,8 @@ namespace MPF.UI.Core.ViewModels
                 Parent.InternalName.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.InternalSerialName) != true)
                 Parent.InternalSerialName.Visibility = Visibility.Collapsed;
+            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Multisession) != true)
+                Parent.Multisession.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CopyProtection?.LibCrypt == null)
                 Parent.LibCrypt.Visibility = Visibility.Collapsed;
             else
@@ -320,8 +322,6 @@ namespace MPF.UI.Core.ViewModels
                 Parent.PIC.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.Extras?.PVD))
                 Parent.PVD.Visibility = Visibility.Collapsed;
-            if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.Multisession) != true)
-                Parent.Multisession.Visibility = Visibility.Collapsed;
             if (SubmissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.RingNonZeroDataStart) != true)
                 Parent.RingNonZeroDataStart.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(SubmissionInfo?.CopyProtection?.SecuROMData))

@@ -440,7 +440,8 @@ namespace MPF.Modules.DiscImageCreator
 
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}_disc.txt") ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
+                    if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
                     // Attempt to get the universal hash, if it's an audio disc
                     if (this.System.IsAudio())

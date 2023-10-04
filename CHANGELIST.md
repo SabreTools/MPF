@@ -19,6 +19,7 @@
 - Fix path tests
 - Clean up csproj files
 - Update redumper to build 221
+- Ensure multisession info is populated
 
 ### 2.6.5 (2023-09-27)
 

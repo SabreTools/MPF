@@ -274,7 +274,8 @@ namespace MPF.Modules.Redumper
 
                     // Attempt to get multisession data
                     string cdMultiSessionInfo = GetMultisessionInformation($"{basePath}.log") ?? string.Empty;
-                    info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
+                    if (!string.IsNullOrWhiteSpace(cdMultiSessionInfo))
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Multisession] = cdMultiSessionInfo;
 
                     // Attempt to get the universal hash, if it's an audio disc
                     if (this.System.IsAudio())
