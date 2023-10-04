@@ -3,6 +3,7 @@
 - Try alternate archive naming
 - Publish, but don't package, release builds
 - Add note about git being required
+- Try out using version number in AppVeyor
 
 ### 2.6.6 (2023-10-04)
 
