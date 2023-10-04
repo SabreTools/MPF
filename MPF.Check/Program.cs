@@ -14,15 +14,6 @@ namespace MPF.Check
     {
         public static void Main(string[] args)
         {
-            // TEMP SHIT CODE
-
-            Drive drive = Drive.Create(InternalDriveType.Optical, "D:\\");
-            byte[] data = drive.ReadSector(0);
-            Console.WriteLine(data);
-
-            // END TEMP SHIT CODE
-
-
             // Try processing the standalone arguments
             if (ProcessStandaloneArguments(args))
                 return;
