@@ -127,7 +127,7 @@ namespace MPF.Core.Hashing
             switch (HashType)
             {
                 case Hash.CRC32:
-                    return (_hasher as NonCryptographicHashAlgorithm).GetCurrentHash().Reverse().ToArray();
+                    return (_hasher as NonCryptographicHashAlgorithm).GetCurrentHash();
 
                 case Hash.MD5:
                 case Hash.SHA1:

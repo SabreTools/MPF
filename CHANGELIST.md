@@ -8,6 +8,7 @@
 - Fix errant space in variable name
 - Build number not job number
 - Use System.IO.Hashing for CRC32
+- Don't reverse the CRC32 output
 
 ### 2.6.6 (2023-10-04)
 
