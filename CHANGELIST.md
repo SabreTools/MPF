@@ -11,6 +11,7 @@
 - Don't reverse the CRC32 output
 - Add submission info preamble
 - Fix missing comma
+- Remove IMAPI2 with no substitution
 
 ### 2.6.6 (2023-10-04)
 

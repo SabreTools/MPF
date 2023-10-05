@@ -23,13 +23,13 @@ dotnet restore
 
 REM .NET Framework 4.8 Debug
 echo Building .NET Framework 4.8 debug
-msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
-msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
+dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 --self-contained true --version-suffix %COMMIT%
+dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 --self-contained true --version-suffix %COMMIT%
 
 REM .NET Framework 4.8 Release
 echo Building .NET Framework 4.8 release
-msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
-msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48  -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
+dotnet publish MPF\MPF.csproj -f net48 -c Release -r win7-x64 --self-contained true --version-suffix %COMMIT%
+dotnet publish MPF.Check\MPF.Check.csproj -f net48 -c Release -r win7-x64 --self-contained true --version-suffix %COMMIT%
 
 REM .NET 6.0 Debug
 echo Building .NET 6.0 debug
@@ -60,7 +60,7 @@ dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --se
 dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM Create MPF Debug archives
-cd %BUILD_FOLDER%\MPF\bin\Debug\net48\publish\
+cd %BUILD_FOLDER%\MPF\bin\Debug\net48\win7-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF_net48_debug.zip *
 cd %BUILD_FOLDER%\MPF\bin\Debug\net6.0-windows\win-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF_net6.0_win-x64_debug.zip *
@@ -68,7 +68,7 @@ cd %BUILD_FOLDER%\MPF\bin\Debug\net7.0-windows\win-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF_net7.0_win-x64_debug.zip *
 
 REM Create MPF Release archives
-cd %BUILD_FOLDER%\MPF\bin\Release\net48\publish\
+cd %BUILD_FOLDER%\MPF\bin\Release\net48\win7-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF_net48_release.zip *
 cd %BUILD_FOLDER%\MPF\bin\Release\net6.0-windows\win-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF_net6.0_win-x64_release.zip *
@@ -76,7 +76,7 @@ cd %BUILD_FOLDER%\MPF\bin\Release\net7.0-windows\win-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF_net7.0_win-x64_release.zip *
 
 REM Create MPF.Check Debug archives
-cd %BUILD_FOLDER%\MPF.Check\bin\Debug\net48\publish\
+cd %BUILD_FOLDER%\MPF.Check\bin\Debug\net48\win7-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF.Check_net48_debug.zip *
 cd %BUILD_FOLDER%\MPF.Check\bin\Debug\net6.0\win-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF.Check_net6.0_win-x64_debug.zip *
@@ -92,7 +92,7 @@ cd %BUILD_FOLDER%\MPF.Check\bin\Debug\net7.0\osx-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF.Check_net7.0_osx-x64_debug.zip *
 
 REM Create MPF.Check Release archives
-cd %BUILD_FOLDER%\MPF.Check\bin\Release\net48\publish\
+cd %BUILD_FOLDER%\MPF.Check\bin\Release\net48\win7-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF.Check_net48_release.zip *
 cd %BUILD_FOLDER%\MPF.Check\bin\Release\net6.0\win-x64\publish\
 7z a -tzip %BUILD_FOLDER%\MPF.Check_net6.0_win-x64_release.zip *

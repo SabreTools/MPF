@@ -3,22 +3,11 @@
     "tasks": [
         {
             "label": "build",
-            "command": "msbuild",
+            "command": "dotnet",
             "type": "process",
             "args": [
+                "build",
                 "${workspaceFolder}/MPF.sln",
-                "-property:RuntimeIdentifiers=win7-x64"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "publish",
-            "command": "msbuild",
-            "type": "process",
-            "args": [
-                "${workspaceFolder}/MPF/MPF.csproj",
-                "-target:Publish",
-                "-property:RuntimeIdentifiers=win7-x64"
             ],
             "problemMatcher": "$msCompile"
         },
