@@ -8,18 +8,6 @@ pull_requests:
 # vm template
 image: Visual Studio 2022
 
-# environment variables
-environment:
-  EnableNuGetPackageRestore: true
-
-# install dependencies
-install:
-- ps: appveyor DownloadFile https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
-
-# pre-build script
-before_build:
-- nuget restore
-
 # build step
 build_script:
   - dotnet restore
