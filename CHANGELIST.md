@@ -16,6 +16,7 @@
 - Slight reorganization of code
 - Update README with support information
 - Remove msbuild-specific AppVeyor items
+- Be trickier when it comes to type from size
 
 ### 2.6.6 (2023-10-04)
 

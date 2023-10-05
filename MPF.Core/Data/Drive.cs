@@ -516,10 +516,16 @@ namespace MPF.Core.Data
         {
             if (this.TotalSize >= 0 && this.TotalSize < 800_000_000 && this.DriveFormat == "CDFS")
                 return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 0 && this.TotalSize < 400_000_000 && this.DriveFormat == "UDF")
+                return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 800_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "CDFS")
+                return (MediaType.DVD, null);
             else if (this.TotalSize >= 400_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
                 return (MediaType.DVD, null);
-            else
+            else if (this.TotalSize > 8_540_000_000)
                 return (MediaType.BluRay, null);
+
+            return (null, "Size and filesystem combination could not help determine media type!");
         }
 
         /// <summary>
