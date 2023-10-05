@@ -175,7 +175,6 @@ namespace MPF.Core.Data
         public (MediaType?, string) GetMediaType()
         {
             // Take care of the non-optical stuff first
-            // TODO: See if any of these can be more granular, like Optical is
             if (this.InternalDriveType == Data.InternalDriveType.Floppy)
                 return (MediaType.FloppyDisk, null);
             else if (this.InternalDriveType == Data.InternalDriveType.HardDisk)

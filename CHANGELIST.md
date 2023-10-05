@@ -12,6 +12,7 @@
 - Add submission info preamble
 - Fix missing comma
 - Remove IMAPI2 with no substitution
+- Remove framework exceptions
 
 ### 2.6.6 (2023-10-04)
 
