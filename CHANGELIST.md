@@ -14,6 +14,7 @@
 - Remove IMAPI2 with no substitution
 - Remove framework exceptions
 - Slight reorganization of code
+- Update README with support information
 
 ### 2.6.6 (2023-10-04)
 
