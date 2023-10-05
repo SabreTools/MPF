@@ -9,6 +9,7 @@
 - Build number not job number
 - Use System.IO.Hashing for CRC32
 - Don't reverse the CRC32 output
+- Add submission info preamble
 
 ### 2.6.6 (2023-10-04)
 

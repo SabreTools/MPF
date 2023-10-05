@@ -671,8 +671,17 @@ namespace MPF.Library
                 var system = info.CommonDiscInfo.System;
                 bool reverseOrder = system.HasReversedRingcodes();
 
+                // Preamble for submission
+                var output = new List<string>
+                {
+                    "Users who wish to submit this information to Redump must ensure that all of the fields below are accurate for the exact media they have.",
+                    "Please double-check to ensure that there are no fields that need verification, such as the version or copy protection.",
+                    "If there are no fields in need of verification or all fields are accurate, this preamble can be removed before submission."
+                    "",
+                };
+
                 // Common Disc Info section
-                var output = new List<string> { "Common Disc Info:" };
+                output.Add("Common Disc Info:");
                 AddIfExists(output, Template.TitleField, info.CommonDiscInfo.Title, 1);
                 AddIfExists(output, Template.ForeignTitleField, info.CommonDiscInfo.ForeignTitleNonLatin, 1);
                 AddIfExists(output, Template.DiscNumberField, info.CommonDiscInfo.DiscNumberLetter, 1);
