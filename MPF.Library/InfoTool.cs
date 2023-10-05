@@ -676,7 +676,7 @@ namespace MPF.Library
                 {
                     "Users who wish to submit this information to Redump must ensure that all of the fields below are accurate for the exact media they have.",
                     "Please double-check to ensure that there are no fields that need verification, such as the version or copy protection.",
-                    "If there are no fields in need of verification or all fields are accurate, this preamble can be removed before submission."
+                    "If there are no fields in need of verification or all fields are accurate, this preamble can be removed before submission.",
                     "",
                 };
 
