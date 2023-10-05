@@ -175,14 +175,18 @@ namespace MPF.Core.Data
         public (MediaType?, string) GetMediaType()
         {
             // Take care of the non-optical stuff first
-            if (this.InternalDriveType == Data.InternalDriveType.Floppy)
-                return (MediaType.FloppyDisk, null);
-            else if (this.InternalDriveType == Data.InternalDriveType.HardDisk)
-                return (MediaType.HardDisk, null);
-            else if (this.InternalDriveType == Data.InternalDriveType.Removable)
-                return (MediaType.FlashDrive, null);
-            else
-                return GetMediaTypeFromSize();
+            switch (this.InternalDriveType)
+            {
+                case Data.InternalDriveType.Floppy:
+                    return (MediaType.FloppyDisk, null);
+                case Data.InternalDriveType.HardDisk:
+                    return (MediaType.HardDisk, null);
+                case Data.InternalDriveType.Removable:
+                    return (MediaType.FlashDrive, null);
+            }
+
+            // Handle optical media
+            return GetMediaTypeFromSize();
         }
 
         /// <summary>

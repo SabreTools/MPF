@@ -13,6 +13,7 @@
 - Fix missing comma
 - Remove IMAPI2 with no substitution
 - Remove framework exceptions
+- Slight reorganization of code
 
 ### 2.6.6 (2023-10-04)
 
