@@ -877,7 +877,7 @@ namespace MPF.UI.Core.ViewModels
             {
                 if (this.Options.VerboseLogging)
                     this.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}] using size and filesystem.. ");
-                (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType();
+                (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType(currentSystem);
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null && this.Options.VerboseLogging)

@@ -19,6 +19,7 @@
 - Remove msbuild-specific AppVeyor items
 - Be trickier when it comes to type from size
 - Fix "detected" message
+- Be smarter about media type based on system
 
 ### 2.6.6 (2023-10-04)
 

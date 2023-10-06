@@ -171,8 +171,9 @@ namespace MPF.Core.Data
         /// <summary>
         /// Get the current media type from drive letter
         /// </summary>
+        /// <param name="system"></param>
         /// <returns></returns>
-        public (MediaType?, string) GetMediaType()
+        public (MediaType?, string) GetMediaType(RedumpSystem? system)
         {
             // Take care of the non-optical stuff first
             switch (this.InternalDriveType)
@@ -185,8 +186,68 @@ namespace MPF.Core.Data
                     return (MediaType.FlashDrive, null);
             }
 
-            // Handle optical media
-            return GetMediaTypeFromSize();
+            // Some systems should default to certain media types
+            switch (system)
+            {
+                // CD
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
+                case RedumpSystem.PhilipsCDi:
+                case RedumpSystem.SegaDreamcast:
+                case RedumpSystem.SegaSaturn:
+                case RedumpSystem.SonyPlayStation:
+                case RedumpSystem.VideoCD:
+                    return (MediaType.CDROM, null);
+
+                // DVD
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.DVDVideo:
+                case RedumpSystem.MicrosoftXbox:
+                case RedumpSystem.MicrosoftXbox360:
+                    return (MediaType.DVD, null);
+
+                // HD-DVD
+                case RedumpSystem.HDDVDVideo:
+                    return (MediaType.HDDVD, null);
+
+                // Blu-ray
+                case RedumpSystem.BDVideo:
+                case RedumpSystem.MicrosoftXboxOne:
+                case RedumpSystem.MicrosoftXboxSeriesXS:
+                case RedumpSystem.SonyPlayStation3:
+                case RedumpSystem.SonyPlayStation4:
+                case RedumpSystem.SonyPlayStation5:
+                    return (MediaType.BluRay, null);
+
+                // GameCube
+                case RedumpSystem.NintendoGameCube:
+                    return (MediaType.NintendoGameCubeGameDisc, null);
+
+                // Wii
+                case RedumpSystem.NintendoWii:
+                    return (MediaType.NintendoWiiOpticalDisc, null);
+
+                // WiiU
+                case RedumpSystem.NintendoWiiU:
+                    return (MediaType.NintendoWiiUOpticalDisc, null);
+
+                // PSP
+                case RedumpSystem.SonyPlayStationPortable:
+                    return (MediaType.UMD, null);
+            }
+
+            // Handle optical media by size and filesystem
+            if (this.TotalSize >= 0 && this.TotalSize < 800_000_000 && this.DriveFormat == "CDFS")
+                return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 0 && this.TotalSize < 400_000_000 && this.DriveFormat == "UDF")
+                return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 800_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "CDFS")
+                return (MediaType.DVD, null);
+            else if (this.TotalSize >= 400_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
+                return (MediaType.DVD, null);
+            else if (this.TotalSize > 8_540_000_000)
+                return (MediaType.BluRay, null);
+
+            return (null, "Could not determine media type!");
         }
 
         /// <summary>
@@ -507,26 +568,6 @@ namespace MPF.Core.Data
         #endregion
 
         #region Helpers
-
-        /// <summary>
-        /// Get the media type for a device path based on size
-        /// </summary>
-        /// <returns>MediaType, null on error</returns>
-        private (MediaType?, string) GetMediaTypeFromSize()
-        {
-            if (this.TotalSize >= 0 && this.TotalSize < 800_000_000 && this.DriveFormat == "CDFS")
-                return (MediaType.CDROM, null);
-            else if (this.TotalSize >= 0 && this.TotalSize < 400_000_000 && this.DriveFormat == "UDF")
-                return (MediaType.CDROM, null);
-            else if (this.TotalSize >= 800_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "CDFS")
-                return (MediaType.DVD, null);
-            else if (this.TotalSize >= 400_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
-                return (MediaType.DVD, null);
-            else if (this.TotalSize > 8_540_000_000)
-                return (MediaType.BluRay, null);
-
-            return (null, "Size and filesystem combination could not help determine media type!");
-        }
 
         /// <summary>
         /// Get all current attached Drives
