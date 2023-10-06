@@ -893,7 +893,7 @@ namespace MPF.UI.Core.ViewModels
                 else
                 {
                     if (this.Options.VerboseLogging)
-                        this.Logger.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
+                        this.Logger.VerboseLogLn($"Detected {detectedMediaType.LongName()}.");
                     CurrentMediaType = detectedMediaType;
                 }
             }
