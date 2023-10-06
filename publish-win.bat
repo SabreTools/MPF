@@ -28,8 +28,8 @@ msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net
 
 REM .NET Framework 4.8 Release
 echo Building .NET Framework 4.8 release
-msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
-msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48  -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
+msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:DebugType=None -property:DebugSymbols=False -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
+msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48  -property:Configuration=Release -property:DebugType=None -property:DebugSymbols=False -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%COMMIT%
 
 REM .NET 6.0 Debug
 echo Building .NET 6.0 debug
