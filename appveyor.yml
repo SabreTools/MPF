@@ -29,8 +29,8 @@ build_script:
   - msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%APPVEYOR_REPO_COMMIT%
 
   # .NET Framework 4.8 Release
-  - msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%APPVEYOR_REPO_COMMIT%
-  - msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%APPVEYOR_REPO_COMMIT%
+  - msbuild MPF\MPF.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:DebugType=None -property:DebugSymbols=False -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%APPVEYOR_REPO_COMMIT%
+  - msbuild MPF.Check\MPF.Check.csproj -target:Publish -property:TargetFramework=net48 -property:Configuration=Release -property:DebugType=None -property:DebugSymbols=False -property:RuntimeIdentifiers=win7-x64 -property:VersionSuffix=%APPVEYOR_REPO_COMMIT%
 
   # .NET 6.0 Debug
   - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
