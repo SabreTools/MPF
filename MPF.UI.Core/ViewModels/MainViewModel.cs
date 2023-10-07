@@ -9,6 +9,7 @@ using MPF.Core;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
+using MPF.UI.Core.UserControls;
 using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
@@ -28,7 +29,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// LogViewModel associated with the parent window
         /// </summary>
-        public LogViewModel Logger => Parent.LogOutput.LogViewModel;
+        public LogOutput Logger => Parent.LogOutput;
 
         /// <summary>
         /// Access to the current options
