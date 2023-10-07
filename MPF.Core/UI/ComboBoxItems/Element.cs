@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MPF.Core.Converters;
 
-namespace MPF.UI.Core.ComboBoxItems
+namespace MPF.Core.UI.ComboBoxItems
 {
     /// <summary>
     /// A generic combo box element

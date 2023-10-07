@@ -8,7 +8,7 @@ using BurnOutSharp;
 using MPF.Core;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using MPF.UI.Core.ComboBoxItems;
+using MPF.Core.UI.ComboBoxItems;
 using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;

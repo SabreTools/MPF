@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MPF.Core.Utilities;
-using MPF.UI.Core.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.UI.Core.ComboBoxItems
+namespace MPF.Core.UI.ComboBoxItems
 {
     /// <summary>
     /// Represents a single item in the System combo box
     /// </summary>
     public class RedumpSystemComboBoxItem : IElement
     {
+#if NET48
         private readonly object Data;
+#else
+        private readonly object? Data;
+#endif
 
         public RedumpSystemComboBoxItem(RedumpSystem? system) => Data = system;
         public RedumpSystemComboBoxItem(SystemCategory? category) => Data = category;

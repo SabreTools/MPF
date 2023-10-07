@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Windows;
 using MPF.Core.Data;
+using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
-using MPF.UI.Core.ComboBoxItems;
 using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Data;
 
@@ -809,7 +809,7 @@ namespace MPF.UI.Core.ViewModels
             }
         }
 
-#endregion
+        #endregion
 
         #region Event Handlers
 

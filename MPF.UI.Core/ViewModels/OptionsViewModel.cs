@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using MPF.Core.Data;
-using MPF.UI.Core.ComboBoxItems;
+using MPF.Core.UI.ComboBoxItems;
 using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Web;
 using WPFCustomMessageBox;

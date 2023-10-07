@@ -26,6 +26,7 @@
 - Allow nullability for modern .NET
 - Fix failing tests
 - Remove unnecessary include
+- Move element items to Core
 
 ### 2.6.6 (2023-10-04)
 
