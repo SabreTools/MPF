@@ -29,6 +29,7 @@
 - Move element items to Core
 - Move LogLevel enumeration
 - Split logging code a bit more
+- Split info window code a bit more
 
 ### 2.6.6 (2023-10-04)
 
