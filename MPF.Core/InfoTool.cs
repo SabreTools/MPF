@@ -11,13 +11,13 @@ using System.Xml;
 using BurnOutSharp;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using MPF.Modules;
+using MPF.Core.Modules;
 using Newtonsoft.Json;
 using SabreTools.RedumpLib.Data;
 using SabreTools.RedumpLib.Web;
 using Formatting = Newtonsoft.Json.Formatting;
 
-namespace MPF.Library
+namespace MPF.Core
 {
     public static class InfoTool
     {

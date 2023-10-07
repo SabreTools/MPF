@@ -10,11 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="MPF.Test" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BurnOutSharp" PrivateAssets="build; analyzers" ExcludeAssets="contentFiles" Version="2.8.0" GeneratePathProperty="true">
+      <IncludeAssets>runtime; compile; build; native; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Management.Infrastructure" Version="3.0.0-preview.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SabreTools.Models" Version="1.1.4" />
     <PackageReference Include="SabreTools.RedumpLib" Version="1.1.1" />
     <PackageReference Include="SabreTools.Serialization" Version="1.1.6" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+    <PackageReference Include="System.IO.Compression.ZipFile" Version="4.3.0" />
     <PackageReference Include="System.IO.Hashing" Version="7.0.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>

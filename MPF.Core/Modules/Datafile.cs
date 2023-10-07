@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace MPF.Modules
+namespace MPF.Core.Modules
 {
     [XmlRoot("datafile")]
     public class Datafile

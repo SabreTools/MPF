@@ -8,7 +8,7 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Modules.Redumper
+namespace MPF.Core.Modules.Redumper
 {
     /// <summary>
     /// Represents a generic set of Redumper parameters

@@ -1,6 +1,6 @@
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Modules.DiscImageCreator
+namespace MPF.Core.Modules.DiscImageCreator
 {
     public static class Converters
     {

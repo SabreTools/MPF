@@ -6,7 +6,7 @@ using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Modules.UmdImageCreator
+namespace MPF.Core.Modules.UmdImageCreator
 {
     /// <summary>
     /// Represents a generic set of UmdImageCreator parameters

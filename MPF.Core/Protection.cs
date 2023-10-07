@@ -8,7 +8,7 @@ using BinaryObjectScanner.Protection;
 using BurnOutSharp;
 using psxt001z;
 
-namespace MPF.Library
+namespace MPF.Core
 {
     public static class Protection
     {

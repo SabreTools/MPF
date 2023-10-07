@@ -7,8 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MPF\MPF.csproj" />
-    <ProjectReference Include="..\MPF.Library\MPF.Library.csproj" />
-    <ProjectReference Include="..\MPF.Modules\MPF.Modules.csproj" />
   </ItemGroup>
 
   <ItemGroup>

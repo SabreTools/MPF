@@ -16,7 +16,7 @@ using Schemas;
 // Ignore "Type or member is obsolete"
 #pragma warning disable CS0618
 
-namespace MPF.Modules.Aaru
+namespace MPF.Core.Modules.Aaru
 {
     /// <summary>
     /// Represents a generic set of Aaru parameters

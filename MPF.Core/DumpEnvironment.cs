@@ -4,12 +4,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using BurnOutSharp;
+using MPF.Core;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
-using MPF.Modules;
+using MPF.Core.Modules;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Library
+namespace MPF.Core
 {
     /// <summary>
     /// Represents the state of all settings to be used during dumping

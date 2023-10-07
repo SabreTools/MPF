@@ -7,7 +7,7 @@ using MPF.Core.Converters;
 using MPF.Core.Data;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Modules.CleanRip
+namespace MPF.Core.Modules.CleanRip
 {
     /// <summary>
     /// Represents a generic set of CleanRip parameters

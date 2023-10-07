@@ -9,7 +9,7 @@ using MPF.Core.Utilities;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Modules.DiscImageCreator
+namespace MPF.Core.Modules.DiscImageCreator
 {
     /// <summary>
     /// Represents a generic set of DiscImageCreator parameters

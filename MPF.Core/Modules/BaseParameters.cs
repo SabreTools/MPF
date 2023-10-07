@@ -15,7 +15,7 @@ using MPF.Core.Utilities;
 using SabreTools.Models.PIC;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.Modules
+namespace MPF.Core.Modules
 {
     public abstract class BaseParameters
     {
