@@ -21,6 +21,7 @@
 - Fix "detected" message
 - Be smarter about media type based on system
 - Consolidate into MPF.Core
+- Fix failing tests
 
 ### 2.6.6 (2023-10-04)
 
