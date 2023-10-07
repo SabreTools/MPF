@@ -22,6 +22,8 @@
 - Be smarter about media type based on system
 - Consolidate into MPF.Core
 - Fix failing tests
+- Remove debug symbols in release builds (Deterous)
+- Allow nullability for modern .NET
 
 ### 2.6.6 (2023-10-04)
 

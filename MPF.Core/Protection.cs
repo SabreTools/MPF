@@ -19,7 +19,11 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Set of all detected copy protections with an optional error string</returns>
-        public static async Task<(Dictionary<string, List<string>>, string)> RunProtectionScanOnPath(string path, Core.Data.Options options, IProgress<ProtectionProgress> progress = null)
+#if NET48
+        public static async Task<(Dictionary<string, List<string>>, string)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<ProtectionProgress> progress = null)
+#else
+        public static async Task<(Dictionary<string, List<string>>?, string?)> RunProtectionScanOnPath(string path, Data.Options options, IProgress<ProtectionProgress>? progress = null)
+#endif
         {
             try
             {
@@ -62,7 +66,11 @@ namespace MPF.Core
         /// </summary>
         /// <param name="protections">Dictionary of file to list of protection mappings</param>
         /// <returns>Detected protections, if any</returns>
+#if NET48
         public static string FormatProtections(Dictionary<string, List<string>> protections)
+#else
+        public static string? FormatProtections(Dictionary<string, List<string>>? protections)
+#endif
         {
             // If the filtered list is empty in some way, return
             if (protections == null || !protections.Any())

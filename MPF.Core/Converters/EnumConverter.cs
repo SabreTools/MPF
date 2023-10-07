@@ -38,7 +38,11 @@ namespace MPF.Core.Converters
         /// <summary>
         /// Long name method cache
         /// </summary>
+#if NET48
         private static readonly ConcurrentDictionary<Type, MethodInfo> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo>();
+#else
+        private static readonly ConcurrentDictionary<Type, MethodInfo?> LongNameMethods = new ConcurrentDictionary<Type, MethodInfo?>();
+#endif
 
         /// <summary>
         /// Get the string representation of a generic enumerable value
@@ -49,12 +53,12 @@ namespace MPF.Core.Converters
         {
             try
             {
-                var sourceType = value?.GetType();
+                var sourceType = value.GetType();
                 sourceType = Nullable.GetUnderlyingType(sourceType) ?? sourceType;
 
-                if (!LongNameMethods.TryGetValue(sourceType, out MethodInfo method))
+                if (!LongNameMethods.TryGetValue(sourceType, out var method))
                 {
-                    method = typeof(SabreTools.RedumpLib.Data.Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
+                    method = typeof(Extensions).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
                     if (method == null)
                         method = typeof(EnumConverter).GetMethod("LongName", new[] { typeof(Nullable<>).MakeGenericType(sourceType) });
 
@@ -62,7 +66,7 @@ namespace MPF.Core.Converters
                 }
 
                 if (method != null)
-                    return method.Invoke(null, new[] { value }) as string;
+                    return method.Invoke(null, new[] { value }) as string ?? string.Empty;
                 else
                     return string.Empty;
             }
@@ -112,7 +116,7 @@ namespace MPF.Core.Converters
             }
         }
 
-        #endregion
+#endregion
 
         #region Convert From String
 
@@ -121,9 +125,13 @@ namespace MPF.Core.Converters
         /// </summary>
         /// <param name="internalProgram">String value to convert</param>
         /// <returns>InternalProgram represented by the string, if possible</returns>
+#if NET48
         public static InternalProgram ToInternalProgram(string internalProgram)
+#else
+        public static InternalProgram ToInternalProgram(string? internalProgram)
+#endif
         {
-            switch (internalProgram.ToLowerInvariant())
+            switch (internalProgram?.ToLowerInvariant())
             {
                 // Dumping support
                 case "aaru":

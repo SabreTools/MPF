@@ -42,7 +42,7 @@ namespace MPF.Core.Data
         public void Enqueue(T item)
         {
             // Only accept new data when not cancelled
-            if (!this.TokenSource.IsCancellationRequested)
+            if (item != null && !this.TokenSource.IsCancellationRequested)
                 this.InternalQueue.Enqueue(item);
         }
 
@@ -64,7 +64,7 @@ namespace MPF.Core.Data
                 }
 
                 // Get the next item from the queue
-                if (!this.InternalQueue.TryDequeue(out T nextItem))
+                if (!this.InternalQueue.TryDequeue(out var nextItem))
                     continue;
 
                 // Invoke the lambda, if possible

@@ -26,10 +26,18 @@ namespace MPF.Core.Modules.Aaru
         #region Generic Dumping Information
 
         /// <inheritdoc/>
+#if NET48
         public override string InputPath => InputValue;
+#else
+        public override string? InputPath => InputValue;
+#endif
 
         /// <inheritdoc/>
+#if NET48
         public override string OutputPath => OutputValue;
+#else
+        public override string? OutputPath => OutputValue;
+#endif
 
         /// <inheritdoc/>
         public override int? Speed
@@ -51,69 +59,177 @@ namespace MPF.Core.Modules.Aaru
 
         public int? BlockSizeValue { get; set; }
 
+#if NET48
         public string CommentsValue { get; set; }
+#else
+        public string? CommentsValue { get; set; }
+#endif
 
+#if NET48
         public string CreatorValue { get; set; }
+#else
+        public string? CreatorValue { get; set; }
+#endif
 
         public int? CountValue { get; set; }
 
+#if NET48
         public string DriveManufacturerValue { get; set; }
+#else
+        public string? DriveManufacturerValue { get; set; }
+#endif
 
+#if NET48
         public string DriveModelValue { get; set; }
+#else
+        public string? DriveModelValue { get; set; }
+#endif
 
+#if NET48
         public string DriveRevisionValue { get; set; }
+#else
+        public string? DriveRevisionValue { get; set; }
+#endif
 
+#if NET48
         public string DriveSerialValue { get; set; }
+#else
+        public string? DriveSerialValue { get; set; }
+#endif
 
+#if NET48
         public string EncodingValue { get; set; }
+#else
+        public string? EncodingValue { get; set; }
+#endif
 
+#if NET48
         public string FormatConvertValue { get; set; }
+#else
+        public string? FormatConvertValue { get; set; }
+#endif
 
+#if NET48
         public string FormatDumpValue { get; set; }
+#else
+        public string? FormatDumpValue { get; set; }
+#endif
 
+#if NET48
         public string GeometryValue { get; set; }
+#else
+        public string? GeometryValue { get; set; }
+#endif
 
+#if NET48
         public string ImgBurnLogValue { get; set; }
+#else
+        public string? ImgBurnLogValue { get; set; }
+#endif
 
+#if NET48
         public string InputValue { get; set; }
+#else
+        public string? InputValue { get; set; }
+#endif
 
+#if NET48
         public string Input1Value { get; set; }
+#else
+        public string? Input1Value { get; set; }
+#endif
 
+#if NET48
         public string Input2Value { get; set; }
+#else
+        public string? Input2Value { get; set; }
+#endif
 
         public long? LengthValue { get; set; }
 
         public int? MaxBlocksValue { get; set; }
 
+#if NET48
         public string MediaBarcodeValue { get; set; }
+#else
+        public string? MediaBarcodeValue { get; set; }
+#endif
 
         public int? MediaLastSequenceValue { get; set; }
 
+#if NET48
         public string MediaManufacturerValue { get; set; }
+#else
+        public string? MediaManufacturerValue { get; set; }
+#endif
 
+#if NET48
         public string MediaModelValue { get; set; }
+#else
+        public string? MediaModelValue { get; set; }
+#endif
 
+#if NET48
         public string MediaPartNumberValue { get; set; }
+#else
+        public string? MediaPartNumberValue { get; set; }
+#endif
 
         public int? MediaSequenceValue { get; set; }
 
+#if NET48
         public string MediaSerialValue { get; set; }
+#else
+        public string? MediaSerialValue { get; set; }
+#endif
 
+#if NET48
         public string MediaTitleValue { get; set; }
+#else
+        public string? MediaTitleValue { get; set; }
+#endif
 
+#if NET48
         public string MHDDLogValue { get; set; }
+#else
+        public string? MHDDLogValue { get; set; }
+#endif
 
+#if NET48
         public string NamespaceValue { get; set; }
+#else
+        public string? NamespaceValue { get; set; }
+#endif
 
+#if NET48
         public string OptionsValue { get; set; }
+#else
+        public string? OptionsValue { get; set; }
+#endif
 
+#if NET48
         public string OutputValue { get; set; }
+#else
+        public string? OutputValue { get; set; }
+#endif
 
+#if NET48
         public string OutputPrefixValue { get; set; }
+#else
+        public string? OutputPrefixValue { get; set; }
+#endif
 
+#if NET48
         public string RemoteHostValue { get; set; }
+#else
+        public string? RemoteHostValue { get; set; }
+#endif
 
+#if NET48
         public string ResumeFileValue { get; set; }
+#else
+        public string? ResumeFileValue { get; set; }
+#endif
 
         public short? RetryPassesValue { get; set; }
 
@@ -123,11 +239,19 @@ namespace MPF.Core.Modules.Aaru
 
         public long? StartValue { get; set; }
 
+#if NET48
         public string SubchannelValue { get; set; }
+#else
+        public string? SubchannelValue { get; set; }
+#endif
 
         public short? WidthValue { get; set; }
 
+#if NET48
         public string XMLSidecarValue { get; set; }
+#else
+        public string? XMLSidecarValue { get; set; }
+#endif
 
         #endregion
 
@@ -198,9 +322,10 @@ namespace MPF.Core.Modules.Aaru
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Fill in submission info specifics for Aaru
-            string outputDirectory = Path.GetDirectoryName(basePath);
+            var outputDirectory = Path.GetDirectoryName(basePath);
 
             // TODO: Determine if there's an Aaru version anywhere
+            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
             info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + ".cicm.xml")?.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -208,7 +333,7 @@ namespace MPF.Core.Modules.Aaru
             var sidecar = GenerateSidecar(basePath + ".cicm.xml");
 
             // Fill in the hardware data
-            if (GetHardwareInfo(sidecar, out string manufacturer, out string model, out string firmware))
+            if (GetHardwareInfo(sidecar, out var manufacturer, out var model, out var firmware))
             {
                 info.DumpingInfo.Manufacturer = manufacturer;
                 info.DumpingInfo.Model = model;
@@ -216,7 +341,7 @@ namespace MPF.Core.Modules.Aaru
             }
 
             // Fill in the disc type data
-            if (GetDiscType(sidecar, out string discType, out string discSubType))
+            if (GetDiscType(sidecar, out var discType, out var discSubType))
             {
                 string fullDiscType = string.Empty;
                 if (!string.IsNullOrWhiteSpace(discType) && !string.IsNullOrWhiteSpace(discSubType))
@@ -230,9 +355,10 @@ namespace MPF.Core.Modules.Aaru
             }
 
             // Get the Datafile information
-            Datafile datafile = GenerateDatafile(sidecar, basePath);
+            var datafile = GenerateDatafile(sidecar, basePath);
 
             // Fill in the hash data
+            if (info.TracksAndWriteOffsets == null) info.TracksAndWriteOffsets = new TracksAndWriteOffsetsSection();
             info.TracksAndWriteOffsets.ClrMameProData = GenerateDatfile(datafile);
 
             switch (this.Type)
@@ -247,6 +373,7 @@ namespace MPF.Core.Modules.Aaru
                     if (File.Exists(basePath + ".resume.xml"))
                         errorCount = GetErrorCount(basePath + ".resume.xml");
 
+                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
                     info.CommonDiscInfo.ErrorsCount = (errorCount == -1 ? "Error retrieving error count" : errorCount.ToString());
 
                     info.TracksAndWriteOffsets.Cuesheet = GenerateCuesheet(sidecar, basePath) ?? string.Empty;
@@ -259,8 +386,10 @@ namespace MPF.Core.Modules.Aaru
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
+                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+
                     // Get the individual hash data, as per internal
-                    if (GetISOHashValues(datafile, out long size, out string crc32, out string md5, out string sha1))
+                    if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
                     {
                         info.SizeAndChecksums.Size = size;
                         info.SizeAndChecksums.CRC32 = crc32;
@@ -273,7 +402,11 @@ namespace MPF.Core.Modules.Aaru
                     //info.Extras.PVD = GeneratePVD(sidecar) ?? "Disc has no PVD";
 
                     // Deal with the layerbreak
+#if NET48
                     string layerbreak = null;
+#else
+                    string? layerbreak = null;
+#endif
                     if (this.Type == MediaType.DVD)
                         layerbreak = GetLayerbreak(sidecar) ?? string.Empty;
                     else if (this.Type == MediaType.BluRay)
@@ -307,34 +440,51 @@ namespace MPF.Core.Modules.Aaru
 
                 case RedumpSystem.DVDAudio:
                 case RedumpSystem.DVDVideo:
+                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     info.CopyProtection.Protection = GetDVDProtection(sidecar) ?? string.Empty;
                     break;
 
                 case RedumpSystem.KonamiPython2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string pythonTwoSerial, out Region? pythonTwoRegion, out string pythonTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out var pythonTwoSerial, out Region? pythonTwoRegion, out var pythonTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = pythonTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? pythonTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = pythonTwoDate;
                     }
 
+                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.MicrosoftXbox:
-                    if (GetXgdAuxInfo(sidecar, out string xgd1DMIHash, out string xgd1PFIHash, out string xgd1SSHash, out string ss, out string xgd1SSVer))
+                    if (GetXgdAuxInfo(sidecar, out var xgd1DMIHash, out var xgd1PFIHash, out var xgd1SSHash, out var ss, out var xgd1SSVer))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer;
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd1DMIHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd1PFIHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd1SSHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd1SSVer ?? string.Empty;
+                        if (info.Extras == null) info.Extras = new ExtrasSection();
                         info.Extras.SecuritySectorRanges = ss ?? string.Empty;
                     }
 
-                    if (GetXboxDMIInfo(sidecar, out string serial, out string version, out Region? region))
+                    if (GetXboxDMIInfo(sidecar, out var serial, out var version, out Region? region))
                     {
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
                         info.CommonDiscInfo.Serial = serial ?? string.Empty;
+                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                         info.VersionAndEditions.Version = version ?? string.Empty;
                         info.CommonDiscInfo.Region = region;
                     }
@@ -342,27 +492,42 @@ namespace MPF.Core.Modules.Aaru
                     break;
 
                 case RedumpSystem.MicrosoftXbox360:
-                    if (GetXgdAuxInfo(sidecar, out string xgd23DMIHash, out string xgd23PFIHash, out string xgd23SSHash, out string ss360, out string xgd23SSVer))
+                    if (GetXgdAuxInfo(sidecar, out var xgd23DMIHash, out var xgd23PFIHash, out var xgd23SSHash, out var ss360, out var xgd23SSVer))
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash;
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer;
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.DMIHash] = xgd23DMIHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.PFIHash] = xgd23PFIHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSHash] = xgd23SSHash ?? string.Empty;
+                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.SSVersion] = xgd23SSVer ?? string.Empty;
+                        if (info.Extras == null) info.Extras = new ExtrasSection();
                         info.Extras.SecuritySectorRanges = ss360 ?? string.Empty;
                     }
 
-                    if (GetXbox360DMIInfo(sidecar, out string serial360, out string version360, out Region? region360))
+                    if (GetXbox360DMIInfo(sidecar, out var serial360, out var version360, out Region? region360))
                     {
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
                         info.CommonDiscInfo.Serial = serial360 ?? string.Empty;
+                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                         info.VersionAndEditions.Version = version360 ?? string.Empty;
                         info.CommonDiscInfo.Region = region360;
                     }
                     break;
 
                 case RedumpSystem.SonyPlayStation:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationSerial, out Region? playstationRegion, out string playstationDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationSerial, out Region? playstationRegion, out var playstationDate))
                     {
                         // Ensure internal serial is pulled from local data
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationDate;
@@ -371,29 +536,57 @@ namespace MPF.Core.Modules.Aaru
                     break;
 
                 case RedumpSystem.SonyPlayStation2:
-                    if (GetPlayStationExecutableInfo(drive?.Letter, out string playstationTwoSerial, out Region? playstationTwoRegion, out string playstationTwoDate))
+                    if (GetPlayStationExecutableInfo(drive?.Letter, out var playstationTwoSerial, out Region? playstationTwoRegion, out var playstationTwoDate))
                     {
                         // Ensure internal serial is pulled from local data
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = playstationTwoSerial ?? string.Empty;
                         info.CommonDiscInfo.Region = info.CommonDiscInfo.Region ?? playstationTwoRegion;
                         info.CommonDiscInfo.EXEDateBuildDate = playstationTwoDate;
                     }
 
+                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                     info.VersionAndEditions.Version = GetPlayStation2Version(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
+                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                     info.VersionAndEditions.Version = GetPlayStation3Version(drive?.Letter) ?? string.Empty;
+                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation3Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation4:
+                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                     info.VersionAndEditions.Version = GetPlayStation4Version(drive?.Letter) ?? string.Empty;
+                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation4Serial(drive?.Letter) ?? string.Empty;
                     break;
 
                 case RedumpSystem.SonyPlayStation5:
+                    if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                     info.VersionAndEditions.Version = GetPlayStation5Version(drive?.Letter) ?? string.Empty;
+                    if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                    if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                     info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalSerialName] = GetPlayStation5Serial(drive?.Letter) ?? string.Empty;
                     break;
             }
@@ -401,23 +594,28 @@ namespace MPF.Core.Modules.Aaru
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
+                if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
                 if (File.Exists(basePath + ".cicm.xml"))
-                    info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml"));
+                    info.Artifacts["cicm"] = GetBase64(GetFullFile(basePath + ".cicm.xml")) ?? string.Empty;
                 if (File.Exists(basePath + ".ibg"))
                     info.Artifacts["ibg"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".ibg"));
                 if (File.Exists(basePath + ".log"))
-                    info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log"));
+                    info.Artifacts["log"] = GetBase64(GetFullFile(basePath + ".log")) ?? string.Empty;
                 if (File.Exists(basePath + ".mhddlog.bin"))
                     info.Artifacts["mhddlog_bin"] = Convert.ToBase64String(File.ReadAllBytes(basePath + ".mhddlog.bin"));
                 if (File.Exists(basePath + ".resume.xml"))
-                    info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml"));
+                    info.Artifacts["resume"] = GetBase64(GetFullFile(basePath + ".resume.xml")) ?? string.Empty;
                 if (File.Exists(basePath + ".sub.log"))
-                    info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log"));
+                    info.Artifacts["sub_log"] = GetBase64(GetFullFile(basePath + ".sub.log")) ?? string.Empty;
             }
         }
 
         /// <inheritdoc/>
+#if NET48
         public override string GenerateParameters()
+#else
+        public override string? GenerateParameters()
+#endif
         {
             List<string> parameters = new List<string>();
 
@@ -1677,7 +1875,11 @@ namespace MPF.Core.Modules.Aaru
                 short? shortValue = null;
                 int? intValue = null;
                 long? longValue = null;
+#if NET48
                 string stringValue = null;
+#else
+                string? stringValue = null;
+#endif
 
                 // Keep a count of keys to determine if we should break out to filename handling or not
                 int keyCount = Keys.Count();
@@ -2135,7 +2337,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="baseCommand">Command string to normalize</param>
         /// <returns>Normalized command</returns>
+#if NET48
         private string NormalizeCommand(List<string> parts, ref int start)
+#else
+        private string? NormalizeCommand(List<string> parts, ref int start)
+#endif
         {
             // Invalid start means invalid command
             if (start < 0 || start >= parts.Count)
@@ -2146,7 +2352,7 @@ namespace MPF.Core.Modules.Aaru
             if (start + 1 < parts.Count)
                 partTwo = parts[start + 1];
 
-            string normalized = NormalizeCommand($"{partOne} {partTwo}".Trim());
+            var normalized = NormalizeCommand($"{partOne} {partTwo}".Trim());
 
             // Null normalization means invalid command
             if (normalized == null)
@@ -2164,7 +2370,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="baseCommand">Command string to normalize</param>
         /// <returns>Normalized command</returns>
+#if NET48
         private string NormalizeCommand(string baseCommand)
+#else
+        private string? NormalizeCommand(string baseCommand)
+#endif
         {
             // If the base command is inavlid, just return nulls
             if (string.IsNullOrWhiteSpace(baseCommand))
@@ -2172,7 +2382,11 @@ namespace MPF.Core.Modules.Aaru
 
             // Split the command otherwise
             string[] splitCommand = baseCommand.Split(' ');
+#if NET48
             string family, command;
+#else
+            string? family, command;
+#endif
 
 
             // For commands with a family
@@ -2436,7 +2650,11 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <param name="basePath">Base path for determining file names</param>
         /// <returns>String containing the cuesheet, null on error</returns>
+#if NET48
         private string GenerateCuesheet(CICMMetadataType cicmSidecar, string basePath)
+#else
+        private string? GenerateCuesheet(CICMMetadataType? cicmSidecar, string basePath)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -2559,6 +2777,9 @@ namespace MPF.Core.Modules.Aaru
             if (cueSheet != null && cueSheet != default)
             {
                 var ms = new SabreTools.Serialization.Streams.CueSheet().Serialize(cueSheet);
+                if (ms == null)
+                    return null;
+
                 using (var sr = new StreamReader(ms))
                 {
                     return sr.ReadToEnd();
@@ -2574,7 +2795,11 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <param name="basePath">Base path for determining file names</param>
         /// <returns>String containing the datfile, null on error</returns>
+#if NET48
         private static string GenerateDatfile(CICMMetadataType cicmSidecar, string basePath)
+#else
+        private static string? GenerateDatfile(CICMMetadataType? cicmSidecar, string basePath)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -2682,7 +2907,11 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <param name="basePath">Base path for determining file names</param>
         /// <returns>Datafile containing the hash information, null on error</returns>
+#if NET48
         private static Datafile GenerateDatafile(CICMMetadataType cicmSidecar, string basePath)
+#else
+        private static Datafile? GenerateDatafile(CICMMetadataType? cicmSidecar, string basePath)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -2819,19 +3048,23 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>String containing the PVD, null on error</returns>
+#if NET48
         private static string GeneratePVD(CICMMetadataType cicmSidecar)
+#else
+        private static string? GeneratePVD(CICMMetadataType? cicmSidecar)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
                 return null;
 
             // Process OpticalDisc, if possible
-            if (cicmSidecar.OpticalDisc != null || cicmSidecar.OpticalDisc.Length > 0)
+            if (cicmSidecar.OpticalDisc != null && cicmSidecar.OpticalDisc.Length > 0)
             {
                 // Loop through each OpticalDisc in the metadata
                 foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
                 {
-                    byte[] pvdData = GeneratePVDData(opticalDisc);
+                    var pvdData = GeneratePVDData(opticalDisc);
 
                     // If we got a null value, we skip this disc
                     if (pvdData == null)
@@ -2858,7 +3091,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="opticalDisc">OpticalDisc type from CICM Sidecar data</param>
         /// <returns>Byte array representing the PVD, null on error</returns>
+#if NET48
         private static byte[] GeneratePVDData(OpticalDiscType opticalDisc)
+#else
+        private static byte[]? GeneratePVDData(OpticalDiscType? opticalDisc)
+#endif
         {
             // Required variables
             DateTime creation = DateTime.MinValue;
@@ -2867,7 +3104,7 @@ namespace MPF.Core.Modules.Aaru
             DateTime effective = DateTime.MinValue;
 
             // If there are no tracks, we can't get a PVD
-            if (opticalDisc.Track == null || opticalDisc.Track.Length == 0)
+            if (opticalDisc?.Track == null || opticalDisc.Track.Length == 0)
                 return null;
 
             // Take the first track only
@@ -2995,7 +3232,11 @@ namespace MPF.Core.Modules.Aaru
         /// <param name="row">Row ID for outputting</param>
         /// <param name="bytes">Byte span representing the data to write</param>
         /// <returns>Formatted string representing the sector line</returns>
+#if NET48
         private static string GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
+#else
+        private static string? GenerateSectorOutputLine(string row, ReadOnlySpan<byte> bytes)
+#endif
         {
             // If the data isn't correct, return null
             if (bytes == null || bytes.Length != 16)
@@ -3017,7 +3258,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Object containing the data, null on error</returns>
+#if NET48
         private static CICMMetadataType GenerateSidecar(string cicmSidecar)
+#else
+        private static CICMMetadataType? GenerateSidecar(string cicmSidecar)
+#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(cicmSidecar))
@@ -3039,9 +3284,7 @@ namespace MPF.Core.Modules.Aaru
                 return null;
 
             XmlSerializer serializer = new XmlSerializer(typeof(CICMMetadataType));
-            CICMMetadataType obj = serializer.Deserialize(xtr) as CICMMetadataType;
-
-            return obj;
+            return serializer.Deserialize(xtr) as CICMMetadataType;
         }
 
         /// <summary>
@@ -3049,7 +3292,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True if disc type info was set, false otherwise</returns>
+#if NET48
         private static bool GetDiscType(CICMMetadataType cicmSidecar, out string discType, out string discSubType)
+#else
+        private static bool GetDiscType(CICMMetadataType? cicmSidecar, out string? discType, out string? discSubType)
+#endif
         {
             // Set the default values
             discType = null; discSubType = null;
@@ -3080,7 +3327,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Formatted string representing the DVD protection, null on error</returns>
+#if NET48
         private static string GetDVDProtection(CICMMetadataType cicmSidecar)
+#else
+        private static string? GetDVDProtection(CICMMetadataType? cicmSidecar)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3146,10 +3397,12 @@ namespace MPF.Core.Modules.Aaru
                     // Read in the error count whenever we find it
                     while (!sr.EndOfStream)
                     {
-                        string line = sr.ReadLine().Trim();
+                        var line = sr.ReadLine()?.Trim();
 
                         // Initialize on seeing the open tag
-                        if (line.StartsWith("<BadBlocks>"))
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+                        else if (line.StartsWith("<BadBlocks>"))
                             totalErrors = 0;
                         else if (line.StartsWith("</BadBlocks>"))
                             return totalErrors ?? -1;
@@ -3173,7 +3426,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True if hardware info was set, false otherwise</returns>
+#if NET48
         private static bool GetHardwareInfo(CICMMetadataType cicmSidecar, out string manufacturer, out string model, out string firmware)
+#else
+        private static bool GetHardwareInfo(CICMMetadataType? cicmSidecar, out string? manufacturer, out string? model, out string? firmware)
+#endif
         {
             // Set the default values
             manufacturer = null; model = null; firmware = null;
@@ -3217,7 +3474,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Layerbreak if possible, null on error</returns>
+#if NET48
         private static string GetLayerbreak(CICMMetadataType cicmSidecar)
+#else
+        private static string? GetLayerbreak(CICMMetadataType? cicmSidecar)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3228,7 +3489,11 @@ namespace MPF.Core.Modules.Aaru
                 return null;
 
             // Setup the layerbreak
+#if NET48
             string layerbreak = null;
+#else
+            string? layerbreak = null;
+#endif
 
             // Find and return the layerbreak, if possible
             foreach (OpticalDiscType opticalDisc in cicmSidecar.OpticalDisc)
@@ -3248,7 +3513,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>Sample write offset if possible, null on error</returns>
+#if NET48
         private static string GetWriteOffset(CICMMetadataType cicmSidecar)
+#else
+        private static string? GetWriteOffset(CICMMetadataType? cicmSidecar)
+#endif
         {
             // If the object is null, we can't get information from it
             if (cicmSidecar == null)
@@ -3276,7 +3545,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
+#if NET48
         private static bool GetXgdAuxInfo(CICMMetadataType cicmSidecar, out string dmihash, out string pfihash, out string sshash, out string ss, out string ssver)
+#else
+        private static bool GetXgdAuxInfo(CICMMetadataType? cicmSidecar, out string? dmihash, out string? pfihash, out string? sshash, out string? ss, out string? ssver)
+#endif
         {
             dmihash = null; pfihash = null; sshash = null; ss = null; ssver = null;
 
@@ -3371,7 +3644,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
+#if NET48
         private static bool GetXboxDMIInfo(CICMMetadataType cicmSidecar, out string serial, out string version, out Region? region)
+#else
+        private static bool GetXboxDMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out Region? region)
+#endif
         {
             serial = null; version = null; region = Region.World;
 
@@ -3419,7 +3696,11 @@ namespace MPF.Core.Modules.Aaru
         /// </summary>
         /// <param name="cicmSidecar">CICM Sidecar data generated by Aaru</param>
         /// <returns>True on successful extraction of info, false otherwise</returns>
+#if NET48
         private static bool GetXbox360DMIInfo(CICMMetadataType cicmSidecar, out string serial, out string version, out Region? region)
+#else
+        private static bool GetXbox360DMIInfo(CICMMetadataType? cicmSidecar, out string? serial, out string? version, out Region? region)
+#endif
         {
             serial = null; version = null; region = Region.World;
 

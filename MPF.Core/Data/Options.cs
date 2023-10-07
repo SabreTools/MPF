@@ -1,24 +1,34 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using MPF.Core.Converters;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data
 {
-    public class Options : IDictionary<string, string>
+#if NET48
+    public class Options
+#else
+    public class Options
+#endif
     {
         /// <summary>
         /// All settings in the form of a dictionary
         /// </summary>
+#if NET48
         public Dictionary<string, string> Settings { get; private set; }
+#else
+        public Dictionary<string, string?> Settings { get; private set; }
+#endif
 
         #region Internal Program
 
         /// <summary>
         /// Path to Aaru
         /// </summary>
+#if NET48
         public string AaruPath
+#else
+        public string? AaruPath
+#endif
         {
             get { return GetStringSetting(Settings, "AaruPath", "Programs\\Aaru\\Aaru.exe"); }
             set { Settings["AaruPath"] = value; }
@@ -27,7 +37,11 @@ namespace MPF.Core.Data
         /// <summary>
         /// Path to DiscImageCreator
         /// </summary>
+#if NET48
         public string DiscImageCreatorPath
+#else
+        public string? DiscImageCreatorPath
+#endif
         {
             get { return GetStringSetting(Settings, "DiscImageCreatorPath", "Programs\\Creator\\DiscImageCreator.exe"); }
             set { Settings["DiscImageCreatorPath"] = value; }
@@ -36,7 +50,11 @@ namespace MPF.Core.Data
         /// <summary>
         /// Path to Redumper
         /// </summary>
+#if NET48
         public string RedumperPath
+#else
+        public string? RedumperPath
+#endif
         {
             get { return GetStringSetting(Settings, "RedumperPath", "Programs\\Redumper\\redumper.exe"); }
             set { Settings["RedumperPath"] = value; }
@@ -49,7 +67,7 @@ namespace MPF.Core.Data
         {
             get
             {
-                string valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
+                var valueString = GetStringSetting(Settings, "InternalProgram", InternalProgram.DiscImageCreator.ToString());
                 var valueEnum = EnumConverter.ToInternalProgram(valueString);
                 return valueEnum == InternalProgram.NONE ? InternalProgram.DiscImageCreator : valueEnum;
             }
@@ -93,7 +111,11 @@ namespace MPF.Core.Data
         /// <summary>
         /// Default output path for dumps
         /// </summary>
+#if NET48
         public string DefaultOutputPath
+#else
+        public string? DefaultOutputPath
+#endif
         {
             get { return GetStringSetting(Settings, "DefaultOutputPath", "ISO"); }
             set { Settings["DefaultOutputPath"] = value; }
@@ -106,8 +128,8 @@ namespace MPF.Core.Data
         {
             get
             {
-                string valueString = GetStringSetting(Settings, "DefaultSystem", null);
-                var valueEnum = Extensions.ToRedumpSystem(valueString);
+                var valueString = GetStringSetting(Settings, "DefaultSystem", null);
+                var valueEnum = Extensions.ToRedumpSystem(valueString ?? string.Empty);
                 return valueEnum;
             }
             set
@@ -536,16 +558,27 @@ namespace MPF.Core.Data
 
         #region Redump Login Information
 
+#if NET48
         public string RedumpUsername
+#else
+        public string? RedumpUsername
+#endif
         {
             get { return GetStringSetting(Settings, "RedumpUsername", ""); }
             set { Settings["RedumpUsername"] = value; }
         }
 
         // TODO: Figure out a way to keep this encrypted in some way, BASE64 to start?
+#if NET48
         public string RedumpPassword
+#else
+        public string? RedumpPassword
+#endif
         {
-            get { return GetStringSetting(Settings, "RedumpPassword", ""); }
+            get
+            {
+                return GetStringSetting(Settings, "RedumpPassword", "");
+            }
             set { Settings["RedumpPassword"] = value; }
         }
 
@@ -560,9 +593,17 @@ namespace MPF.Core.Data
         /// Constructor taking a dictionary for settings
         /// </summary>
         /// <param name="settings"></param>
+#if NET48
         public Options(Dictionary<string, string> settings = null)
+#else
+        public Options(Dictionary<string, string?>? settings = null)
+#endif
         {
+#if NET48
             this.Settings = settings ?? new Dictionary<string, string>();
+#else
+            this.Settings = settings ?? new Dictionary<string, string?>();
+#endif
         }
 
         /// <summary>
@@ -571,7 +612,24 @@ namespace MPF.Core.Data
         /// <param name="source"></param>
         public Options(Options source)
         {
+#if NET48
             Settings = new Dictionary<string, string>(source.Settings);
+#else
+            Settings = new Dictionary<string, string?>(source.Settings);
+#endif
+        }
+
+        /// <summary>
+        /// Accessor for the internal dictionary
+        /// </summary>
+#if NET48
+        public string this[string key]
+#else
+        public string? this[string key]
+#endif
+        {
+            get => this.Settings[key];
+            set => this.Settings[key] = value;
         }
 
         #region Helpers
@@ -583,11 +641,15 @@ namespace MPF.Core.Data
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
+#if NET48
         private bool GetBooleanSetting(Dictionary<string, string> settings, string key, bool defaultValue)
+#else
+        private bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
+#endif
         {
             if (settings.ContainsKey(key))
             {
-                if (Boolean.TryParse(settings[key], out bool value))
+                if (bool.TryParse(settings[key], out bool value))
                     return value;
                 else
                     return defaultValue;
@@ -605,11 +667,15 @@ namespace MPF.Core.Data
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
+#if NET48
         private int GetInt32Setting(Dictionary<string, string> settings, string key, int defaultValue)
+#else
+        private int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
+#endif
         {
             if (settings.ContainsKey(key))
             {
-                if (Int32.TryParse(settings[key], out int value))
+                if (int.TryParse(settings[key], out int value))
                     return value;
                 else
                     return defaultValue;
@@ -627,53 +693,17 @@ namespace MPF.Core.Data
         /// <param name="key">Setting key to get a value for</param>
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
+#if NET48
         private string GetStringSetting(Dictionary<string, string> settings, string key, string defaultValue)
+#else
+        private string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
+#endif
         {
             if (settings.ContainsKey(key))
                 return settings[key];
             else
                 return defaultValue;
         }
-
-        #endregion
-
-        #region IDictionary implementations
-
-        public ICollection<string> Keys => Settings.Keys;
-
-        public ICollection<string> Values => Settings.Values;
-
-        public int Count => Settings.Count;
-
-        public bool IsReadOnly => ((IDictionary<string, string>)Settings).IsReadOnly;
-
-        public string this[string key]
-        {
-            get { return (Settings.ContainsKey(key) ? Settings[key] : null); }
-            set { Settings[key] = value; }
-        }
-
-        public bool ContainsKey(string key) => Settings.ContainsKey(key);
-
-        public void Add(string key, string value) => Settings.Add(key, value);
-
-        public bool Remove(string key) => Settings.Remove(key);
-
-        public bool TryGetValue(string key, out string value) => Settings.TryGetValue(key, out value);
-
-        public void Add(KeyValuePair<string, string> item) => Settings.Add(item.Key, item.Value);
-
-        public void Clear() => Settings.Clear();
-
-        public bool Contains(KeyValuePair<string, string> item) => ((IDictionary<string, string>)Settings).Contains(item);
-
-        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex) => ((IDictionary<string, string>)Settings).CopyTo(array, arrayIndex);
-
-        public bool Remove(KeyValuePair<string, string> item) => ((IDictionary<string, string>)Settings).Remove(item);
-
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator() => Settings.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => Settings.GetEnumerator();
 
         #endregion
     }

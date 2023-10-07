@@ -48,7 +48,11 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// <param name="baseCommand">Command value to check</param>
         /// <returns>MediaType if possible, null on error</returns>
         /// <remarks>This takes the "safe" route by assuming the larger of any given format</remarks>
+#if NET48
         public static MediaType? ToMediaType(string baseCommand)
+#else
+        public static MediaType? ToMediaType(string? baseCommand)
+#endif
         {
             switch (baseCommand)
             {
@@ -86,7 +90,11 @@ namespace MPF.Core.Modules.DiscImageCreator
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
+#if NET48
         public static string Extension(MediaType? type)
+#else
+        public static string? Extension(MediaType? type)
+#endif
         {
             switch (type)
             {

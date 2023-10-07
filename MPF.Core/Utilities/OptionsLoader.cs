@@ -15,7 +15,11 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Load the current set of options from application arguments
         /// </summary>
+#if NET48
         public static (Options, string, int) LoadFromArguments(string[] args, int startIndex = 0)
+#else
+        public static (Options, string?, int) LoadFromArguments(string[] args, int startIndex = 0)
+#endif
         {
             // Create the output values with defaults
             var options = new Options()
@@ -27,7 +31,11 @@ namespace MPF.Core.Utilities
                 CompressLogFiles = false,
             };
 
+#if NET48
             string parsedPath = null;
+#else
+            string? parsedPath = null;
+#endif
 
             // These values require multiple parts to be active
             bool scan = false, protectFile = false;
@@ -154,7 +162,11 @@ namespace MPF.Core.Utilities
 
             var serializer = JsonSerializer.Create();
             var reader = new StreamReader(ConfigurationPath);
+#if NET48
             var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string>)) as Dictionary<string, string>;
+#else
+            var settings = serializer.Deserialize(reader, typeof(Dictionary<string, string?>)) as Dictionary<string, string?>;
+#endif
             return new Options(settings);
         }
 

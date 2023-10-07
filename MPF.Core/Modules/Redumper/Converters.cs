@@ -11,7 +11,11 @@ namespace MPF.Core.Modules.Redumper
         /// </summary>
         /// <param name="type">MediaType value to check</param>
         /// <returns>Valid extension (with leading '.'), null on error</returns>
+#if NET48
         public static string Extension(MediaType? type)
+#else
+        public static string? Extension(MediaType? type)
+#endif
         {
             switch (type)
             {

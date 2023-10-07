@@ -29,12 +29,20 @@ namespace MPF.Core.Data
         /// <summary>
         /// Drive partition format
         /// </summary>
+#if NET48
         public string DriveFormat { get; private set; } = null;
+#else
+        public string? DriveFormat { get; private set; } = null;
+#endif
 
         /// <summary>
         /// Windows drive path
         /// </summary>
+#if NET48
         public string Name { get; private set; } = null;
+#else
+        public string? Name { get; private set; } = null;
+#endif
 
         /// <summary>
         /// Represents if Windows has marked the drive as active
@@ -50,7 +58,11 @@ namespace MPF.Core.Data
         /// Media label as read by Windows
         /// </summary>
         /// <remarks>The try/catch is needed because Windows will throw an exception if the drive is not marked as active</remarks>
+#if NET48
         public string VolumeLabel { get; private set; } = null;
+#else
+        public string? VolumeLabel { get; private set; } = null;
+#endif
 
         #endregion
 
@@ -59,7 +71,11 @@ namespace MPF.Core.Data
         /// <summary>
         /// Media label as read by Windows, formatted to avoid odd outputs
         /// </summary>
+#if NET48
         public string FormattedVolumeLabel
+#else
+        public string? FormattedVolumeLabel
+#endif
         {
             get
             {
@@ -96,7 +112,11 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="driveType">InternalDriveType value representing the drive type</param>
         /// <param name="devicePath">Path to the device according to the local machine</param>
+#if NET48
         public static Drive Create(InternalDriveType? driveType, string devicePath)
+#else
+        public static Drive? Create(InternalDriveType? driveType, string devicePath)
+#endif
         {
             // Create a new, empty drive object
             var drive = new Drive()
@@ -131,7 +151,11 @@ namespace MPF.Core.Data
         /// Populate all fields from a DriveInfo object
         /// </summary>
         /// <param name="driveInfo">DriveInfo object to populate from</param>
+#if NET48
         private void PopulateFromDriveInfo(DriveInfo driveInfo)
+#else
+        private void PopulateFromDriveInfo(DriveInfo? driveInfo)
+#endif
         {
             // If we have an invalid DriveInfo, just return
             if (driveInfo == null || driveInfo == default)
@@ -161,10 +185,14 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
         /// <returns>Active drives, matched to labels, if possible</returns>
+#if NET48
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
+#else
+        public static List<Drive?> CreateListOfDrives(bool ignoreFixedDrives)
+#endif
         {
             var drives = GetDriveList(ignoreFixedDrives);
-            drives = drives?.OrderBy(i => i.Letter)?.ToList();
+            drives = drives.OrderBy(i => i == null ? '\0' : i.Letter).ToList();
             return drives;
         }
 
@@ -173,7 +201,11 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="system"></param>
         /// <returns></returns>
+#if NET48
         public (MediaType?, string) GetMediaType(RedumpSystem? system)
+#else
+        public (MediaType?, string?) GetMediaType(RedumpSystem? system)
+#endif
         {
             // Take care of the non-optical stuff first
             switch (this.InternalDriveType)
@@ -336,7 +368,7 @@ namespace MPF.Core.Data
             // Sega Saturn
             try
             {
-                byte[] sector = ReadSector(0);
+                var sector = ReadSector(0);
                 if (sector != null)
                 {
                     if (sector.StartsWith(Interface.SaturnSectorZeroStart))
@@ -520,7 +552,11 @@ namespace MPF.Core.Data
         /// <param name="num">Sector number, non-negative</param>
         /// <param name="size">Size of a sector in bytes</param>
         /// <returns>Byte array representing the sector, null on error</returns>
+#if NET48
         public byte[] ReadSector(long num, int size = 2048)
+#else
+        public byte[]? ReadSector(long num, int size = 2048)
+#endif
         {
             // Missing drive leter is not supported
             if (string.IsNullOrEmpty(this.Name))
@@ -531,7 +567,11 @@ namespace MPF.Core.Data
                 return null;
 
             // Wrap the following in case of device access errors
+#if NET48
             Stream fs = null;
+#else
+            Stream? fs = null;
+#endif
             try
             {
                 // Open the drive as a device
@@ -578,7 +618,11 @@ namespace MPF.Core.Data
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// </remarks>
+#if NET48
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
+#else
+        private static List<Drive?> GetDriveList(bool ignoreFixedDrives)
+#endif
         {
             var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
             if (!ignoreFixedDrives)
@@ -591,7 +635,11 @@ namespace MPF.Core.Data
             // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
             // Create an output drive list
+#if NET48
             var drives = new List<Drive>();
+#else
+            var drives = new List<Drive?>();
+#endif
 
             // Get all standard supported drive types
             try
@@ -618,8 +666,8 @@ namespace MPF.Core.Data
                     uint? mediaType = properties["MediaType"]?.Value as uint?;
                     if (mediaType != null && ((mediaType > 0 && mediaType < 11) || (mediaType > 12 && mediaType < 22)))
                     {
-                        char devId = (properties["Caption"].Value as string)[0];
-                        drives.ForEach(d => { if (d.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
+                        char devId = (properties["Caption"].Value as string ?? string.Empty)[0];
+                        drives.ForEach(d => { if (d?.Letter == devId) { d.InternalDriveType = Data.InternalDriveType.Floppy; } });
                     }
                 }
             }

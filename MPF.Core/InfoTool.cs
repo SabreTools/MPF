@@ -35,30 +35,40 @@ namespace MPF.Core
         /// <param name="resultProgress">Optional result progress callback</param>
         /// <param name="protectionProgress">Optional protection progress callback</param>
         /// <returns>SubmissionInfo populated based on outputs, null on error</returns>
+#if NET48
         public static async Task<SubmissionInfo> ExtractOutputInformation(
-            string outputPath,
+#else
+        public static async Task<SubmissionInfo?> ExtractOutputInformation(
+#endif
+        string outputPath,
             Drive drive,
             RedumpSystem? system,
             MediaType? mediaType,
-            Core.Data.Options options,
+            Data.Options options,
+#if NET48
             BaseParameters parameters,
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null)
+#else
+            BaseParameters? parameters,
+            IProgress<Result>? resultProgress = null,
+            IProgress<ProtectionProgress>? protectionProgress = null)
+#endif
         {
             // Ensure the current disc combination should exist
             if (!system.MediaTypes().Contains(mediaType))
                 return null;
 
             // Split the output path for easier use
-            string outputDirectory = Path.GetDirectoryName(outputPath);
+            var outputDirectory = Path.GetDirectoryName(outputPath);
             string outputFilename = Path.GetFileName(outputPath);
 
             // Check that all of the relevant files are there
             (bool foundFiles, List<string> missingFiles) = FoundAllFiles(outputDirectory, outputFilename, parameters, false);
             if (!foundFiles)
             {
-                resultProgress.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
-                resultProgress.Report(Result.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
+                resultProgress?.Report(Result.Failure($"There were files missing from the output:\n{string.Join("\n", missingFiles)}"));
+                resultProgress?.Report(Result.Failure($"This may indicate an issue with the hardware or media, including unsupported devices.\nPlease see dumping program documentation for more details."));
                 return null;
             }
 
@@ -66,7 +76,12 @@ namespace MPF.Core
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Create the SubmissionInfo object with all user-inputted values by default
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            string combinedBase;
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                combinedBase = outputFilename;
+            else
+                combinedBase = Path.Combine(outputDirectory, outputFilename);
+
             var info = new SubmissionInfo()
             {
                 CommonDiscInfo = new CommonDiscInfoSection()
@@ -104,7 +119,7 @@ namespace MPF.Core
             };
 
             // Get specific tool output handling
-            parameters.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
+            parameters?.GenerateSubmissionInfo(info, options, combinedBase, drive, options.IncludeArtifacts);
 
             // Get a list of matching IDs for each line in the DAT
             if (!string.IsNullOrEmpty(info.TracksAndWriteOffsets.ClrMameProData) && options.HasRedumpLogin)
@@ -115,11 +130,11 @@ namespace MPF.Core
 #endif
 
             // If we have both ClrMamePro and Size and Checksums data, remove the ClrMamePro
-            if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums.CRC32))
+            if (!string.IsNullOrWhiteSpace(info.SizeAndChecksums?.CRC32))
                 info.TracksAndWriteOffsets.ClrMameProData = null;
 
             // Add the volume label to comments, if possible or necessary
-            if (drive != null && drive.GetRedumpSystemFromVolumeLabel() == null)
+            if (drive?.VolumeLabel != null && drive.GetRedumpSystemFromVolumeLabel() == null)
                 info.CommonDiscInfo.CommentsSpecialFields[SiteCode.VolumeLabel] = drive.VolumeLabel;
 
             // Extract info based generically on MediaType
@@ -138,6 +153,8 @@ namespace MPF.Core
                 case MediaType.DVD:
                 case MediaType.HDDVD:
                 case MediaType.BluRay:
+                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
@@ -172,10 +189,13 @@ namespace MPF.Core
                     info.CommonDiscInfo.Layer0MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer0AdditionalMould = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
+                    if (info.Extras == null) info.Extras = new ExtrasSection();
                     info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
                     break;
 
                 case MediaType.NintendoWiiOpticalDisc:
+                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
+
                     // If we have a single-layer disc
                     if (info.SizeAndChecksums.Layerbreak == default)
                     {
@@ -201,6 +221,7 @@ namespace MPF.Core
                         info.CommonDiscInfo.Layer1MouldSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     }
 
+                    if (info.Extras == null) info.Extras = new ExtrasSection();
                     info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.Extras.BCA = info.Extras.BCA ?? (options.AddPlaceholders ? Template.RequiredValue : string.Empty);
 
@@ -217,6 +238,7 @@ namespace MPF.Core
                     info.CommonDiscInfo.Layer1MasteringSID = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     info.CommonDiscInfo.Layer1ToolstampMasteringCode = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
 
+                    if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
                     info.SizeAndChecksums.CRC32 = info.SizeAndChecksums.CRC32 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.SizeAndChecksums.MD5 = info.SizeAndChecksums.MD5 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
                     info.SizeAndChecksums.SHA1 = info.SizeAndChecksums.SHA1 ?? (options.AddPlaceholders ? Template.RequiredValue + " [Not automatically generated for UMD]" : string.Empty);
@@ -239,9 +261,15 @@ namespace MPF.Core
                 case RedumpSystem.RainbowDisc:
                 case RedumpSystem.SonyElectronicBook:
                     resultProgress?.Report(Result.Success("Running copy protection scan... this might take a while!"));
-                    (string protectionString, Dictionary<string, List<string>> fullProtections) = await GetCopyProtection(drive, options, protectionProgress);
+                    var (protectionString, fullProtections) = await GetCopyProtection(drive, options, protectionProgress);
+
+                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     info.CopyProtection.Protection = protectionString;
-                    info.CopyProtection.FullProtections = fullProtections;
+#if NET48
+                    info.CopyProtection.FullProtections = fullProtections ?? new Dictionary<string, List<string>>();
+#else
+                    info.CopyProtection.FullProtections = fullProtections as Dictionary<string, List<string>?> ?? new Dictionary<string, List<string>?>();
+#endif
                     resultProgress?.Report(Result.Success("Copy protection scan complete!"));
 
                     break;
@@ -259,6 +287,7 @@ namespace MPF.Core
 
                 case RedumpSystem.BDVideo:
                     info.CommonDiscInfo.Category = info.CommonDiscInfo.Category ?? DiscCategory.BonusDiscs;
+                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
 
@@ -318,21 +347,27 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.MicrosoftXboxOne:
-                    string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
-                    if (drive != null && Directory.Exists(xboxOneMsxcPath))
+                    if (drive != null)
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
-                            Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                        string xboxOneMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
+                        if (drive != null && Directory.Exists(xboxOneMsxcPath))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
+                                Directory.GetFiles(xboxOneMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                        }
                     }
 
                     break;
 
                 case RedumpSystem.MicrosoftXboxSeriesXS:
-                    string xboxSeriesXMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
-                    if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
+                    if (drive != null)
                     {
-                        info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
-                            Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                        string xboxSeriesXMsxcPath = Path.Combine($"{drive.Letter}:\\", "MSXC");
+                        if (drive != null && Directory.Exists(xboxSeriesXMsxcPath))
+                        {
+                            info.CommonDiscInfo.CommentsSpecialFields[SiteCode.Filename] = string.Join("\n",
+                                Directory.GetFiles(xboxSeriesXMsxcPath, "*", SearchOption.TopDirectoryOnly).Select(Path.GetFileName));
+                        }
                     }
 
                     break;
@@ -389,6 +424,7 @@ namespace MPF.Core
 
                 case RedumpSystem.SonyPlayStation:
                     // Only check the disc if the dumping program couldn't detect
+                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     if (drive != null && info.CopyProtection.AntiModchip == YesNo.NULL)
                     {
                         resultProgress?.Report(Result.Success("Checking for anti-modchip strings... this might take a while!"));
@@ -397,7 +433,7 @@ namespace MPF.Core
                     }
 
                     // Special case for DIC only
-                    if (parameters.InternalProgram == InternalProgram.DiscImageCreator)
+                    if (parameters?.InternalProgram == InternalProgram.DiscImageCreator)
                     {
                         resultProgress?.Report(Result.Success("Checking for LibCrypt status... this might take a while!"));
                         GetLibCryptDetected(info, combinedBase);
@@ -411,6 +447,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.SonyPlayStation3:
+                    if (info.Extras == null) info.Extras = new ExtrasSection();
                     info.Extras.DiscKey = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     info.Extras.DiscID = options.AddPlaceholders ? Template.RequiredValue : string.Empty;
                     break;
@@ -420,6 +457,7 @@ namespace MPF.Core
                     break;
 
                 case RedumpSystem.ZAPiTGamesGameWaveFamilyEntertainmentSystem:
+                    if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
                     info.CopyProtection.Protection = options.AddPlaceholders ? Template.RequiredIfExistsValue : string.Empty;
                     break;
             }
@@ -447,13 +485,25 @@ namespace MPF.Core
         /// <param name="parameters">Parameters object representing what to send to the internal program</param>
         /// <param name="preCheck">True if this is a check done before a dump, false if done after</param>
         /// <returns>Tuple of true if all required files exist, false otherwise and a list representing missing files</returns>
+#if NET48
         public static (bool, List<string>) FoundAllFiles(string outputDirectory, string outputFilename, BaseParameters parameters, bool preCheck)
+#else
+        public static (bool, List<string>) FoundAllFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters, bool preCheck)
+#endif
         {
+            // If there are no parameters set
+            if (parameters == null)
+                return (false, new List<string>());
+
             // First, sanitized the output filename to strip off any potential extension
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
 
             // Then get the base path for all checking
-            string basePath = Path.Combine(outputDirectory, outputFilename);
+            string basePath;
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                basePath = outputFilename;
+            else
+                basePath = Path.Combine(outputDirectory, outputFilename);
 
             // Finally, let the parameters say if all files exist
             return parameters.CheckAllOutputFilesExist(basePath, preCheck);
@@ -474,11 +524,15 @@ namespace MPF.Core
         /// <param name="options">Options object that determines what to scan</param>
         /// <param name="progress">Optional progress callback</param>
         /// <returns>Detected copy protection(s) if possible, null on error</returns>
-        private static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Core.Data.Options options, IProgress<ProtectionProgress> progress = null)
+#if NET48
+        private static async Task<(string, Dictionary<string, List<string>>)> GetCopyProtection(Drive drive, Data.Options options, IProgress<ProtectionProgress> progress = null)
+#else
+        private static async Task<(string?, Dictionary<string, List<string>>?)> GetCopyProtection(Drive? drive, Data.Options options, IProgress<ProtectionProgress>? progress = null)
+#endif
         {
             if (options.ScanForProtection && drive != null)
             {
-                (var protection, string _) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
+                (var protection, _) = await Protection.RunProtectionScanOnPath($"{drive.Letter}:\\", options, progress);
                 return (Protection.FormatProtections(protection), protection);
             }
 
@@ -491,7 +545,11 @@ namespace MPF.Core
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
+#if NET48
         private static string GetFullFile(string filename, bool binary = false)
+#else
+        private static string? GetFullFile(string filename, bool binary = false)
+#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -512,7 +570,11 @@ namespace MPF.Core
         /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
+#if NET48
         private static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
+#else
+        private static bool GetISOHashValues(string hashData, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -544,6 +606,7 @@ namespace MPF.Core
         private static void GetLibCryptDetected(SubmissionInfo info, string basePath)
         {
             bool? psLibCryptStatus = Protection.GetLibCryptDetected(basePath + ".sub");
+            if (info.CopyProtection == null) info.CopyProtection = new CopyProtectionSection();
             if (psLibCryptStatus == true)
             {
                 // Guard against false positives
@@ -587,11 +650,24 @@ namespace MPF.Core
         /// <param name="outputFilename">Output filename to use as the base path</param>
         /// <param name="parameters">Parameters object to use to derive log file paths</param>
         /// <returns>True if the process succeeded, false otherwise</returns>
+#if NET48
         public static (bool, string) CompressLogFiles(string outputDirectory, string outputFilename, BaseParameters parameters)
+#else
+        public static (bool, string) CompressLogFiles(string? outputDirectory, string outputFilename, BaseParameters? parameters)
+#endif
         {
+            // If there are no parameters
+            if (parameters == null)
+                return (false, "No parameters provided!");
+
             // Prepare the necessary paths
             outputFilename = Path.GetFileNameWithoutExtension(outputFilename);
-            string combinedBase = Path.Combine(outputDirectory, outputFilename);
+            string combinedBase;
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                combinedBase = outputFilename;
+            else
+                combinedBase = Path.Combine(outputDirectory, outputFilename);
+
             string archiveName = combinedBase + "_logs.zip";
 
             // Get the list of log files from the parameters object
@@ -616,19 +692,30 @@ namespace MPF.Core
             }
 
             // Add the log files to the archive and delete the uncompressed file after
+#if NET48
             ZipArchive zf = null;
+#else
+            ZipArchive? zf = null;
+#endif
             try
             {
                 zf = ZipFile.Open(archiveName, ZipArchiveMode.Create);
                 foreach (string file in files)
                 {
+                    if (string.IsNullOrWhiteSpace(outputDirectory))
+                    {
+                        zf.CreateEntryFromFile(file, file, CompressionLevel.Optimal);
+                    }
+                    else
+                    {
 #if NET48
-                    string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                    zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
+                        string entryName = file.Substring(outputDirectory.Length).TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.Optimal);
 #else
-                    string entryName = file[outputDirectory.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                    zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
+                        string entryName = file[outputDirectory.Length..].TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                        zf.CreateEntryFromFile(file, entryName, CompressionLevel.SmallestSize);
 #endif
+                    }
 
                     // If the file is MPF-specific, don't delete
                     if (mpfFiles.Contains(file))
@@ -659,7 +746,11 @@ namespace MPF.Core
         /// <param name="info">Information object that should contain normalized values</param>
         /// <param name="options">Options object representing user-defined options</param>
         /// <returns>List of strings representing each line of an output file, null on error</returns>
-        public static (List<string>, string) FormatOutputData(SubmissionInfo info, Core.Data.Options options)
+#if NET48
+        public static (List<string>, string) FormatOutputData(SubmissionInfo info, Data.Options options)
+#else
+        public static (List<string>?, string?) FormatOutputData(SubmissionInfo? info, Data.Options options)
+#endif
         {
             // Check to see if the inputs are valid
             if (info == null)
@@ -668,7 +759,7 @@ namespace MPF.Core
             try
             {
                 // Sony-printed discs have layers in the opposite order
-                var system = info.CommonDiscInfo.System;
+                var system = info.CommonDiscInfo?.System;
                 bool reverseOrder = system.HasReversedRingcodes();
 
                 // Preamble for submission
@@ -682,120 +773,120 @@ namespace MPF.Core
 
                 // Common Disc Info section
                 output.Add("Common Disc Info:");
-                AddIfExists(output, Template.TitleField, info.CommonDiscInfo.Title, 1);
-                AddIfExists(output, Template.ForeignTitleField, info.CommonDiscInfo.ForeignTitleNonLatin, 1);
-                AddIfExists(output, Template.DiscNumberField, info.CommonDiscInfo.DiscNumberLetter, 1);
-                AddIfExists(output, Template.DiscTitleField, info.CommonDiscInfo.DiscTitle, 1);
-                AddIfExists(output, Template.SystemField, info.CommonDiscInfo.System.LongName(), 1);
+                AddIfExists(output, Template.TitleField, info.CommonDiscInfo?.Title, 1);
+                AddIfExists(output, Template.ForeignTitleField, info.CommonDiscInfo?.ForeignTitleNonLatin, 1);
+                AddIfExists(output, Template.DiscNumberField, info.CommonDiscInfo?.DiscNumberLetter, 1);
+                AddIfExists(output, Template.DiscTitleField, info.CommonDiscInfo?.DiscTitle, 1);
+                AddIfExists(output, Template.SystemField, info.CommonDiscInfo?.System.LongName(), 1);
                 AddIfExists(output, Template.MediaTypeField, GetFixedMediaType(
-                        info.CommonDiscInfo.Media.ToMediaType(),
-                        info.SizeAndChecksums.PICIdentifier,
-                        info.SizeAndChecksums.Size,
-                        info.SizeAndChecksums.Layerbreak,
-                        info.SizeAndChecksums.Layerbreak2,
-                        info.SizeAndChecksums.Layerbreak3),
+                        info.CommonDiscInfo?.Media.ToMediaType(),
+                        info.SizeAndChecksums?.PICIdentifier,
+                        info.SizeAndChecksums?.Size,
+                        info.SizeAndChecksums?.Layerbreak,
+                        info.SizeAndChecksums?.Layerbreak2,
+                        info.SizeAndChecksums?.Layerbreak3),
                     1);
-                AddIfExists(output, Template.CategoryField, info.CommonDiscInfo.Category.LongName(), 1);
+                AddIfExists(output, Template.CategoryField, info.CommonDiscInfo?.Category.LongName(), 1);
                 AddIfExists(output, Template.FullyMatchingIDField, info.FullyMatchedID?.ToString(), 1);
                 AddIfExists(output, Template.PartiallyMatchingIDsField, info.PartiallyMatchedIDs, 1);
-                AddIfExists(output, Template.RegionField, info.CommonDiscInfo.Region.LongName() ?? "SPACE! (CHANGE THIS)", 1);
-                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo.Languages ?? new Language?[] { null }).Select(l => l.LongName() ?? "SILENCE! (CHANGE THIS)").ToArray(), 1);
-                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo.LanguageSelection ?? Array.Empty<LanguageSelection?>()).Select(l => l.LongName()).ToArray(), 1);
-                AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo.Serial, 1);
+                AddIfExists(output, Template.RegionField, info.CommonDiscInfo?.Region.LongName() ?? "SPACE! (CHANGE THIS)", 1);
+                AddIfExists(output, Template.LanguagesField, (info.CommonDiscInfo?.Languages ?? new Language?[] { null }).Select(l => l.LongName() ?? "SILENCE! (CHANGE THIS)").ToArray(), 1);
+                AddIfExists(output, Template.PlaystationLanguageSelectionViaField, (info.CommonDiscInfo?.LanguageSelection ?? Array.Empty<LanguageSelection?>()).Select(l => l.LongName()).ToArray(), 1);
+                AddIfExists(output, Template.DiscSerialField, info.CommonDiscInfo?.Serial, 1);
 
                 // All ringcode information goes in an indented area
                 output.Add(""); output.Add("\tRingcode Information:"); output.Add("");
 
                 // If we have a triple-layer disc
-                if (info.SizeAndChecksums.Layerbreak3 != default)
+                if (info.SizeAndChecksums?.Layerbreak3 != default && info.SizeAndChecksums?.Layerbreak3 != default(long))
                 {
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 0);
-                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo?.Layer0MasteringRing, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo?.Layer0MasteringSID, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo?.Layer0ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer0MouldSID, 0);
+                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer0AdditionalMould, 0);
 
-                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 0);
-                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 0);
-                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 0);
-                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 0);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo?.Layer1MasteringRing, 0);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo?.Layer1MasteringSID, 0);
+                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo?.Layer1ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer1MouldSID, 0);
+                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer1AdditionalMould, 0);
 
-                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo.Layer2MasteringRing, 0);
-                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 0);
-                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Layer 2 " + Template.MasteringRingField, info.CommonDiscInfo?.Layer2MasteringRing, 0);
+                    AddIfExists(output, "Layer 2 " + Template.MasteringSIDField, info.CommonDiscInfo?.Layer2MasteringSID, 0);
+                    AddIfExists(output, "Layer 2 " + Template.ToolstampField, info.CommonDiscInfo?.Layer2ToolstampMasteringCode, 0);
 
-                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer3MasteringRing, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer3MasteringSID, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo.Layer3ToolstampMasteringCode, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo?.Layer3MasteringRing, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo?.Layer3MasteringSID, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 3 (Inner) " : "Layer 3 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo?.Layer3ToolstampMasteringCode, 0);
                 }
                 // If we have a triple-layer disc
-                else if (info.SizeAndChecksums.Layerbreak2 != default)
+                else if (info.SizeAndChecksums?.Layerbreak2 != default && info.SizeAndChecksums?.Layerbreak2 != default(long))
                 {
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 0);
-                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo?.Layer0MasteringRing, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo?.Layer0MasteringSID, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo?.Layer0ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer0MouldSID, 0);
+                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer0AdditionalMould, 0);
 
-                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 0);
-                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 0);
-                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 0);
-                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 0);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringRingField, info.CommonDiscInfo?.Layer1MasteringRing, 0);
+                    AddIfExists(output, "Layer 1 " + Template.MasteringSIDField, info.CommonDiscInfo?.Layer1MasteringSID, 0);
+                    AddIfExists(output, "Layer 1 " + Template.ToolstampField, info.CommonDiscInfo?.Layer1ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer1MouldSID, 0);
+                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer1AdditionalMould, 0);
 
-                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer2MasteringRing, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer2MasteringSID, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo.Layer2ToolstampMasteringCode, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo?.Layer2MasteringRing, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo?.Layer2MasteringSID, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 2 (Inner) " : "Layer 2 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo?.Layer2ToolstampMasteringCode, 0);
                 }
                 // If we have a dual-layer disc
-                else if (info.SizeAndChecksums.Layerbreak != default)
+                else if (info.SizeAndChecksums?.Layerbreak != default && info.SizeAndChecksums?.Layerbreak != default(long))
                 {
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 0);
-                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringRingField, info.CommonDiscInfo?.Layer0MasteringRing, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.MasteringSIDField, info.CommonDiscInfo?.Layer0MasteringSID, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 0 (Outer) " : "Layer 0 (Inner) ") + Template.ToolstampField, info.CommonDiscInfo?.Layer0ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer0MouldSID, 0);
+                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer0AdditionalMould, 0);
 
-                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 0);
-                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 0);
-                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.MasteringRingField, info.CommonDiscInfo?.Layer1MasteringRing, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.MasteringSIDField, info.CommonDiscInfo?.Layer1MasteringSID, 0);
+                    AddIfExists(output, (reverseOrder ? "Layer 1 (Inner) " : "Layer 1 (Outer) ") + Template.ToolstampField, info.CommonDiscInfo?.Layer1ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer1MouldSID, 0);
+                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer1AdditionalMould, 0);
                 }
                 // If we have a single-layer disc
                 else
                 {
-                    AddIfExists(output, "Data Side " + Template.MasteringRingField, info.CommonDiscInfo.Layer0MasteringRing, 0);
-                    AddIfExists(output, "Data Side " + Template.MasteringSIDField, info.CommonDiscInfo.Layer0MasteringSID, 0);
-                    AddIfExists(output, "Data Side " + Template.ToolstampField, info.CommonDiscInfo.Layer0ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer0MouldSID, 0);
-                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer0AdditionalMould, 0);
+                    AddIfExists(output, "Data Side " + Template.MasteringRingField, info.CommonDiscInfo?.Layer0MasteringRing, 0);
+                    AddIfExists(output, "Data Side " + Template.MasteringSIDField, info.CommonDiscInfo?.Layer0MasteringSID, 0);
+                    AddIfExists(output, "Data Side " + Template.ToolstampField, info.CommonDiscInfo?.Layer0ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Data Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer0MouldSID, 0);
+                    AddIfExists(output, "Data Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer0AdditionalMould, 0);
 
-                    AddIfExists(output, "Label Side " + Template.MasteringRingField, info.CommonDiscInfo.Layer1MasteringRing, 0);
-                    AddIfExists(output, "Label Side " + Template.MasteringSIDField, info.CommonDiscInfo.Layer1MasteringSID, 0);
-                    AddIfExists(output, "Label Side " + Template.ToolstampField, info.CommonDiscInfo.Layer1ToolstampMasteringCode, 0);
-                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo.Layer1MouldSID, 0);
-                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo.Layer1AdditionalMould, 0);
+                    AddIfExists(output, "Label Side " + Template.MasteringRingField, info.CommonDiscInfo?.Layer1MasteringRing, 0);
+                    AddIfExists(output, "Label Side " + Template.MasteringSIDField, info.CommonDiscInfo?.Layer1MasteringSID, 0);
+                    AddIfExists(output, "Label Side " + Template.ToolstampField, info.CommonDiscInfo?.Layer1ToolstampMasteringCode, 0);
+                    AddIfExists(output, "Label Side " + Template.MouldSIDField, info.CommonDiscInfo?.Layer1MouldSID, 0);
+                    AddIfExists(output, "Label Side " + Template.AdditionalMouldField, info.CommonDiscInfo?.Layer1AdditionalMould, 0);
                 }
 
                 output.Add("");
-                AddIfExists(output, Template.BarcodeField, info.CommonDiscInfo.Barcode, 1);
-                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo.EXEDateBuildDate, 1);
-                AddIfExists(output, Template.ErrorCountField, info.CommonDiscInfo.ErrorsCount, 1);
-                AddIfExists(output, Template.CommentsField, info.CommonDiscInfo.Comments.Trim(), 1);
-                AddIfExists(output, Template.ContentsField, info.CommonDiscInfo.Contents.Trim(), 1);
+                AddIfExists(output, Template.BarcodeField, info.CommonDiscInfo?.Barcode, 1);
+                AddIfExists(output, Template.EXEDateBuildDate, info.CommonDiscInfo?.EXEDateBuildDate, 1);
+                AddIfExists(output, Template.ErrorCountField, info.CommonDiscInfo?.ErrorsCount, 1);
+                AddIfExists(output, Template.CommentsField, info.CommonDiscInfo?.Comments?.Trim(), 1);
+                AddIfExists(output, Template.ContentsField, info.CommonDiscInfo?.Contents?.Trim(), 1);
 
                 // Version and Editions section
                 output.Add(""); output.Add("Version and Editions:");
-                AddIfExists(output, Template.VersionField, info.VersionAndEditions.Version, 1);
-                AddIfExists(output, Template.EditionField, info.VersionAndEditions.OtherEditions, 1);
+                AddIfExists(output, Template.VersionField, info.VersionAndEditions?.Version, 1);
+                AddIfExists(output, Template.EditionField, info.VersionAndEditions?.OtherEditions, 1);
 
                 // EDC section
-                if (info.CommonDiscInfo.System == RedumpSystem.SonyPlayStation)
+                if (info.CommonDiscInfo?.System == RedumpSystem.SonyPlayStation)
                 {
                     output.Add(""); output.Add("EDC:");
-                    AddIfExists(output, Template.PlayStationEDCField, info.EDC.EDC.LongName(), 1);
+                    AddIfExists(output, Template.PlayStationEDCField, info.EDC?.EDC.LongName(), 1);
                 }
 
                 // Parent/Clone Relationship section
@@ -804,7 +895,7 @@ namespace MPF.Core
                 // AddIfExists(output, Template.RegionalParentField, info.RegionalParent.ToString());
 
                 // Extras section
-                if (info.Extras.PVD != null || info.Extras.PIC != null || info.Extras.BCA != null || info.Extras.SecuritySectorRanges != null)
+                if (info.Extras?.PVD != null || info.Extras?.PIC != null || info.Extras?.BCA != null || info.Extras?.SecuritySectorRanges != null)
                 {
                     output.Add(""); output.Add("Extras:");
                     AddIfExists(output, Template.PVDField, info.Extras.PVD?.Trim(), 1);
@@ -817,14 +908,14 @@ namespace MPF.Core
                 }
 
                 // Copy Protection section
-                if (!string.IsNullOrWhiteSpace(info.CopyProtection.Protection)
-                    || (info.CopyProtection.AntiModchip != null && info.CopyProtection.AntiModchip != YesNo.NULL)
-                    || (info.CopyProtection.LibCrypt != null && info.CopyProtection.LibCrypt != YesNo.NULL)
-                    || !string.IsNullOrWhiteSpace(info.CopyProtection.LibCryptData)
-                    || !string.IsNullOrWhiteSpace(info.CopyProtection.SecuROMData))
+                if (!string.IsNullOrWhiteSpace(info.CopyProtection?.Protection)
+                    || (info.CopyProtection?.AntiModchip != null && info.CopyProtection.AntiModchip != YesNo.NULL)
+                    || (info.CopyProtection?.LibCrypt != null && info.CopyProtection.LibCrypt != YesNo.NULL)
+                    || !string.IsNullOrWhiteSpace(info.CopyProtection?.LibCryptData)
+                    || !string.IsNullOrWhiteSpace(info.CopyProtection?.SecuROMData))
                 {
                     output.Add(""); output.Add("Copy Protection:");
-                    if (info.CommonDiscInfo.System == RedumpSystem.SonyPlayStation)
+                    if (info.CommonDiscInfo?.System == RedumpSystem.SonyPlayStation)
                     {
                         AddIfExists(output, Template.PlayStationAntiModchipField, info.CopyProtection.AntiModchip.LongName(), 1);
                         AddIfExists(output, Template.PlayStationLibCryptField, info.CopyProtection.LibCrypt.LongName(), 1);
@@ -841,12 +932,12 @@ namespace MPF.Core
                 // AddIfExists(output, Template.OtherDumpersField, info.OtherDumpers);
 
                 // Tracks and Write Offsets section
-                if (!string.IsNullOrWhiteSpace(info.TracksAndWriteOffsets.ClrMameProData))
+                if (!string.IsNullOrWhiteSpace(info.TracksAndWriteOffsets?.ClrMameProData))
                 {
                     output.Add(""); output.Add("Tracks and Write Offsets:");
                     AddIfExists(output, Template.DATField, info.TracksAndWriteOffsets.ClrMameProData + "\n", 1);
                     AddIfExists(output, Template.CuesheetField, info.TracksAndWriteOffsets.Cuesheet, 1);
-                    string offset = info.TracksAndWriteOffsets.OtherWriteOffsets;
+                    var offset = info.TracksAndWriteOffsets.OtherWriteOffsets;
                     if (Int32.TryParse(offset, out int i))
                         offset = i.ToString("+#;-#;0");
 
@@ -859,29 +950,33 @@ namespace MPF.Core
 
                     // Gross hack because of automatic layerbreaks in Redump
                     if (!options.EnableRedumpCompatibility
-                        || (info.CommonDiscInfo.Media.ToMediaType() != MediaType.BluRay
-                            && !info.CommonDiscInfo.System.IsXGD()))
+                        || (info.CommonDiscInfo?.Media.ToMediaType() != MediaType.BluRay
+                            && info.CommonDiscInfo?.System.IsXGD() == false))
                     {
-                        AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums.Layerbreak == default ? null : info.SizeAndChecksums.Layerbreak.ToString()), 1);
+                        AddIfExists(output, Template.LayerbreakField, (info.SizeAndChecksums?.Layerbreak == default && info.SizeAndChecksums?.Layerbreak != default(long) ? null : info.SizeAndChecksums?.Layerbreak.ToString()), 1);
                     }
 
-                    AddIfExists(output, Template.SizeField, info.SizeAndChecksums.Size.ToString(), 1);
-                    AddIfExists(output, Template.CRC32Field, info.SizeAndChecksums.CRC32, 1);
-                    AddIfExists(output, Template.MD5Field, info.SizeAndChecksums.MD5, 1);
-                    AddIfExists(output, Template.SHA1Field, info.SizeAndChecksums.SHA1, 1);
+                    AddIfExists(output, Template.SizeField, info.SizeAndChecksums?.Size.ToString(), 1);
+                    AddIfExists(output, Template.CRC32Field, info.SizeAndChecksums?.CRC32, 1);
+                    AddIfExists(output, Template.MD5Field, info.SizeAndChecksums?.MD5, 1);
+                    AddIfExists(output, Template.SHA1Field, info.SizeAndChecksums?.SHA1, 1);
                 }
 
                 // Dumping Info section
                 output.Add(""); output.Add("Dumping Info:");
-                AddIfExists(output, Template.DumpingProgramField, info.DumpingInfo.DumpingProgram, 1);
-                AddIfExists(output, Template.DumpingDateField, info.DumpingInfo.DumpingDate, 1);
-                AddIfExists(output, Template.DumpingDriveManufacturer, info.DumpingInfo.Manufacturer, 1);
-                AddIfExists(output, Template.DumpingDriveModel, info.DumpingInfo.Model, 1);
-                AddIfExists(output, Template.DumpingDriveFirmware, info.DumpingInfo.Firmware, 1);
-                AddIfExists(output, Template.ReportedDiscType, info.DumpingInfo.ReportedDiscType, 1);
+                AddIfExists(output, Template.DumpingProgramField, info.DumpingInfo?.DumpingProgram, 1);
+                AddIfExists(output, Template.DumpingDateField, info.DumpingInfo?.DumpingDate, 1);
+                AddIfExists(output, Template.DumpingDriveManufacturer, info.DumpingInfo?.Manufacturer, 1);
+                AddIfExists(output, Template.DumpingDriveModel, info.DumpingInfo?.Model, 1);
+                AddIfExists(output, Template.DumpingDriveFirmware, info.DumpingInfo?.Firmware, 1);
+                AddIfExists(output, Template.ReportedDiscType, info.DumpingInfo?.ReportedDiscType, 1);
 
                 // Make sure there aren't any instances of two blank lines in a row
+#if NET48
                 string last = null;
+#else
+                string? last = null;
+#endif
                 for (int i = 0; i < output.Count;)
                 {
                     if (output[i] == last && string.IsNullOrWhiteSpace(last))
@@ -914,7 +1009,11 @@ namespace MPF.Core
         /// <param name="layerbreak3">Third layerbreak value, as applicable</param>
         /// <returns>String representation of the media, including layer specification</returns>
         /// TODO: Figure out why we have this and NormalizeDiscType as well
-        public static string GetFixedMediaType(MediaType? mediaType, string picIdentifier, long size, long layerbreak, long layerbreak2, long layerbreak3)
+#if NET48
+        public static string GetFixedMediaType(MediaType? mediaType, string picIdentifier, long? size, long? layerbreak, long? layerbreak2, long? layerbreak3)
+#else
+        public static string? GetFixedMediaType(MediaType? mediaType, string? picIdentifier, long? size, long? layerbreak, long? layerbreak2, long? layerbreak3)
+#endif
         {
             switch (mediaType)
             {
@@ -925,15 +1024,15 @@ namespace MPF.Core
                         return $"{mediaType.LongName()}-5";
 
                 case MediaType.BluRay:
-                    if (layerbreak3 != default)
+                    if (layerbreak3 != default && layerbreak3 != default(long))
                         return $"{mediaType.LongName()}-128";
-                    else if (layerbreak2 != default)
+                    else if (layerbreak2 != default && layerbreak2 != default(long))
                         return $"{mediaType.LongName()}-100";
-                    else if (layerbreak != default && picIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
+                    else if (layerbreak != default && layerbreak != default(long) && picIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
                         return $"{mediaType.LongName()}-66";
-                    else if (layerbreak != default && size > 53_687_063_712)
+                    else if (layerbreak != default && layerbreak != default(long) && size > 53_687_063_712)
                         return $"{mediaType.LongName()}-66";
-                    else if (layerbreak != default)
+                    else if (layerbreak != default && layerbreak != default(long))
                         return $"{mediaType.LongName()}-50";
                     else if (picIdentifier == SabreTools.Models.PIC.Constants.DiscTypeIdentifierROMUltra)
                         return $"{mediaType.LongName()}-33";
@@ -943,7 +1042,7 @@ namespace MPF.Core
                         return $"{mediaType.LongName()}-25";
 
                 case MediaType.UMD:
-                    if (layerbreak != default)
+                    if (layerbreak != default && layerbreak != default(long))
                         return $"{mediaType.LongName()}-DL";
                     else
                         return $"{mediaType.LongName()}-SL";
@@ -957,8 +1056,16 @@ namespace MPF.Core
         /// Process any fields that have to be combined
         /// </summary>
         /// <param name="info">Information object to normalize</param>
+#if NET48
         public static void ProcessSpecialFields(SubmissionInfo info)
+#else
+        public static void ProcessSpecialFields(SubmissionInfo? info)
+#endif
         {
+            // If there is no submission info
+            if (info == null)
+                return;
+
             // Process the comments field
             if (info.CommonDiscInfo?.CommentsSpecialFields != null && info.CommonDiscInfo.CommentsSpecialFields?.Any() == true)
             {
@@ -1016,7 +1123,11 @@ namespace MPF.Core
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="lines">Preformatted list of lines to write out to the file</param>
         /// <returns>True on success, false on error</returns>
+#if NET48
         public static (bool, string) WriteOutputData(string outputDirectory, List<string> lines)
+#else
+        public static (bool, string) WriteOutputData(string? outputDirectory, List<string>? lines)
+#endif
         {
             // Check to see if the inputs are valid
             if (lines == null)
@@ -1025,7 +1136,14 @@ namespace MPF.Core
             // Now write out to a generic file
             try
             {
-                using (var sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!submissionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                // Get the file path
+                string path;
+                if (string.IsNullOrWhiteSpace(outputDirectory))
+                    path = "!submissionInfo.txt";
+                else
+                    path = Path.Combine(outputDirectory, "!submissionInfo.txt");
+
+                using (var sw = new StreamWriter(File.Open(path, FileMode.Create, FileAccess.Write)))
                 {
                     foreach (string line in lines)
                     {
@@ -1048,7 +1166,11 @@ namespace MPF.Core
         /// <param name="info">SubmissionInfo object representing the JSON to write out to the file</param>
         /// <param name="includedArtifacts">True if artifacts were included, false otherwise</param>
         /// <returns>True on success, false on error</returns>
+#if NET48
         public static bool WriteOutputData(string outputDirectory, SubmissionInfo info, bool includedArtifacts)
+#else
+        public static bool WriteOutputData(string? outputDirectory, SubmissionInfo? info, bool includedArtifacts)
+#endif
         {
             // Check to see if the input is valid
             if (info == null)
@@ -1063,7 +1185,13 @@ namespace MPF.Core
                 // If we included artifacts, write to a GZip-compressed file
                 if (includedArtifacts)
                 {
-                    using (var fs = File.Create(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
+                    string file;
+                    if (string.IsNullOrWhiteSpace(outputDirectory))
+                        file = "!submissionInfo.json.gz";
+                    else
+                        file = Path.Combine(outputDirectory, "!submissionInfo.json.gz");
+
+                    using (var fs = File.Create(file))
                     using (var gs = new GZipStream(fs, CompressionMode.Compress))
                     {
                         gs.Write(jsonBytes, 0, jsonBytes.Length);
@@ -1073,7 +1201,13 @@ namespace MPF.Core
                 // Otherwise, write out to a normal JSON
                 else
                 {
-                    using (var fs = File.Create(Path.Combine(outputDirectory, "!submissionInfo.json")))
+                    string file;
+                    if (string.IsNullOrWhiteSpace(outputDirectory))
+                        file = "!submissionInfo.json";
+                    else
+                        file = Path.Combine(outputDirectory, "!submissionInfo.json");
+
+                    using (var fs = File.Create(file))
                     {
                         fs.Write(jsonBytes, 0, jsonBytes.Length);
                     }
@@ -1094,7 +1228,11 @@ namespace MPF.Core
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <param name="info">SubmissionInfo object containing the protection information</param>
         /// <returns>True on success, false on error</returns>
+#if NET48
         public static bool WriteProtectionData(string outputDirectory, SubmissionInfo info)
+#else
+        public static bool WriteProtectionData(string? outputDirectory, SubmissionInfo? info)
+#endif
         {
             // Check to see if the inputs are valid
             if (info?.CopyProtection?.FullProtections == null || !info.CopyProtection.FullProtections.Any())
@@ -1103,11 +1241,20 @@ namespace MPF.Core
             // Now write out to a generic file
             try
             {
-                using (var sw = new StreamWriter(File.Open(Path.Combine(outputDirectory, "!protectionInfo.txt"), FileMode.Create, FileAccess.Write)))
+                string file;
+                if (string.IsNullOrWhiteSpace(outputDirectory))
+                    file = "!protectionInfo.txt";
+                else
+                    file = Path.Combine(outputDirectory, "!protectionInfo.txt");
+
+                using (var sw = new StreamWriter(File.Open(file, FileMode.Create, FileAccess.Write)))
                 {
                     foreach (var kvp in info.CopyProtection.FullProtections)
                     {
-                        sw.WriteLine($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
+                        if (kvp.Value == null)
+                            sw.WriteLine($"{kvp.Key}: None");
+                        else
+                            sw.WriteLine($"{kvp.Key}: {string.Join(", ", kvp.Value)}");
                     }
                 }
             }
@@ -1127,7 +1274,11 @@ namespace MPF.Core
         /// <param name="key">Name of the output key to write</param>
         /// <param name="value">Name of the output value to write</param>
         /// <param name="indent">Number of tabs to indent the line</param>
+#if NET48
         private static void AddIfExists(List<string> output, string key, string value, int indent)
+#else
+        private static void AddIfExists(List<string> output, string key, string? value, int indent)
+#endif
         {
             // If there's no valid value to write
             if (value == null)
@@ -1181,7 +1332,11 @@ namespace MPF.Core
         /// <param name="key">Name of the output key to write</param>
         /// <param name="value">Name of the output value to write</param>
         /// <param name="indent">Number of tabs to indent the line</param>
+#if NET48
         private static void AddIfExists(List<string> output, string key, string[] value, int indent)
+#else
+        private static void AddIfExists(List<string> output, string key, string?[]? value, int indent)
+#endif
         {
             // If there's no valid value to write
             if (value == null || value.Length == 0)
@@ -1197,7 +1352,11 @@ namespace MPF.Core
         /// <param name="key">Name of the output key to write</param>
         /// <param name="value">Name of the output value to write</param>
         /// <param name="indent">Number of tabs to indent the line</param>
+#if NET48
         private static void AddIfExists(List<string> output, string key, List<int> value, int indent)
+#else
+        private static void AddIfExists(List<string> output, string key, List<int>? value, int indent)
+#endif
         {
             // If there's no valid value to write
             if (value == null || value.Count == 0)
@@ -1211,18 +1370,36 @@ namespace MPF.Core
         /// </summary>
         /// <param name="outputDirectory">Output folder to write to</param>
         /// <returns>List of all log file paths, empty otherwise</returns>
+#if NET48
         private static List<string> GetGeneratedFilePaths(string outputDirectory)
+#else
+        private static List<string> GetGeneratedFilePaths(string? outputDirectory)
+#endif
         {
             var files = new List<string>();
 
-            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
-                files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
-            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
-                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
-            if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
-                files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
-            if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
-                files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+            {
+                if (File.Exists("!submissionInfo.txt"))
+                    files.Add("!submissionInfo.txt");
+                if (File.Exists("!submissionInfo.json"))
+                    files.Add("!submissionInfo.json");
+                if (File.Exists("!submissionInfo.json.gz"))
+                    files.Add("!submissionInfo.json.gz");
+                if (File.Exists("!protectionInfo.txt"))
+                    files.Add("!protectionInfo.txt");
+            }
+            else
+            {
+                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.txt")))
+                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.txt"));
+                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json")))
+                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.json"));
+                if (File.Exists(Path.Combine(outputDirectory, "!submissionInfo.json.gz")))
+                    files.Add(Path.Combine(outputDirectory, "!submissionInfo.json.gz"));
+                if (File.Exists(Path.Combine(outputDirectory, "!protectionInfo.txt")))
+                    files.Add(Path.Combine(outputDirectory, "!protectionInfo.txt"));
+            }
 
             return files;
         }
@@ -1632,7 +1809,7 @@ namespace MPF.Core
         public static void NormalizeDiscType(SubmissionInfo info)
         {
             // If we have nothing valid, do nothing
-            if (info?.CommonDiscInfo?.Media == null)
+            if (info?.CommonDiscInfo?.Media == null || info?.SizeAndChecksums == null)
                 return;
 
             switch (info.CommonDiscInfo.Media)
@@ -1709,18 +1886,24 @@ namespace MPF.Core
 
                 // Try getting the combined path and returning that directly
                 string fullPath = getFullPath ? Path.GetFullPath(path) : path;
-                string fullDirectory = Path.GetDirectoryName(fullPath);
+                var fullDirectory = Path.GetDirectoryName(fullPath);
                 string fullFile = Path.GetFileName(fullPath);
 
                 // Remove invalid path characters
-                foreach (char c in Path.GetInvalidPathChars())
-                    fullDirectory = fullDirectory.Replace(c, '_');
+                if (fullDirectory != null)
+                {
+                    foreach (char c in Path.GetInvalidPathChars())
+                        fullDirectory = fullDirectory.Replace(c, '_');
+                }
 
                 // Remove invalid filename characters
                 foreach (char c in Path.GetInvalidFileNameChars())
                     fullFile = fullFile.Replace(c, '_');
 
-                return Path.Combine(fullDirectory, fullFile);
+                if (string.IsNullOrWhiteSpace(fullDirectory))
+                    return fullFile;
+                else
+                    return Path.Combine(fullDirectory, fullFile);
             }
             catch { }
 
@@ -1737,7 +1920,11 @@ namespace MPF.Core
         /// <param name="discData">String containing the HTML disc data</param>
         /// <returns>Filled SubmissionInfo object on success, null on error</returns>
         /// <remarks>Not currently working</remarks>
+#if NET48
         private static SubmissionInfo CreateFromID(string discData)
+#else
+        private static SubmissionInfo? CreateFromID(string discData)
+#endif
         {
             var info = new SubmissionInfo()
             {
@@ -1760,12 +1947,16 @@ namespace MPF.Core
                     return null;
 
                 // Get the body node, if possible
-                XmlNode bodyNode = redumpPage["html"]?["body"];
+                var bodyNode = redumpPage["html"]?["body"];
                 if (bodyNode == null || !bodyNode.HasChildNodes)
                     return null;
 
                 // Loop through and get the main node, if possible
+#if NET48
                 XmlNode mainNode = null;
+#else
+                XmlNode? mainNode = null;
+#endif
                 foreach (XmlNode tempNode in bodyNode.ChildNodes)
                 {
                     // We only care about div elements
@@ -1836,12 +2027,16 @@ namespace MPF.Core
                                         if (gameInfoNode["th"] == null || gameInfoNode["td"] == null)
                                             continue;
 
-                                        XmlNode gameInfoNodeHeader = gameInfoNode["th"];
-                                        XmlNode gameInfoNodeData = gameInfoNode["td"];
+                                        var gameInfoNodeHeader = gameInfoNode["th"];
+                                        var gameInfoNodeData = gameInfoNode["td"];
 
-                                        if (string.Equals(gameInfoNodeHeader.InnerText, "System", StringComparison.OrdinalIgnoreCase))
+                                        if (gameInfoNodeHeader == null || gameInfoNodeData == null)
                                         {
-                                            info.CommonDiscInfo.System = Extensions.ToRedumpSystem(gameInfoNodeData["a"]?.InnerText);
+                                            // No-op for invalid data
+                                        }
+                                        else if (string.Equals(gameInfoNodeHeader.InnerText, "System", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            info.CommonDiscInfo.System = Extensions.ToRedumpSystem(gameInfoNodeData["a"]?.InnerText ?? string.Empty);
                                         }
                                         else if (string.Equals(gameInfoNodeHeader.InnerText, "Media", StringComparison.OrdinalIgnoreCase))
                                         {
@@ -1924,7 +2119,14 @@ namespace MPF.Core
 #else
         private async static Task<bool> FillFromId(RedumpHttpClient wc, SubmissionInfo info, int id, bool includeAllData)
         {
-            string discData = await wc.DownloadSingleSiteID(id);
+            // Ensure that required sections exist
+            if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
+            if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+            if (info.CommonDiscInfo.ContentsSpecialFields == null) info.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode, string>();
+            if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
+            if (info.DumpersAndStatus == null) info.DumpersAndStatus = new DumpersAndStatusSection();
+
+            var discData = await wc.DownloadSingleSiteID(id);
             if (string.IsNullOrEmpty(discData))
                 return false;
 #endif
@@ -2031,7 +2233,7 @@ namespace MPF.Core
             {
                 // Start with any currently listed dumpers
                 var tempDumpers = new List<string>();
-                if (info.DumpersAndStatus.Dumpers.Length > 0)
+                if (info.DumpersAndStatus.Dumpers != null && info.DumpersAndStatus.Dumpers.Length > 0)
                 {
                     foreach (string dumper in info.DumpersAndStatus.Dumpers)
                         tempDumpers.Add(dumper);
@@ -2094,7 +2296,8 @@ namespace MPF.Core
                                 continue;
 
                             // If the line doesn't contain this tag, just skip
-                            if (!commentLine.Contains(siteCode.ShortName()))
+                            var shortName = siteCode.ShortName();
+                            if (shortName == null || !commentLine.Contains(shortName))
                                 continue;
 
                             // Mark as having found a tag
@@ -2140,11 +2343,11 @@ namespace MPF.Core
 
                             // If we don't already have this site code, add it to the dictionary
                             if (!info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(siteCode.Value))
-                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {commentLine.Replace(shortName, string.Empty).Trim()}";
 
                             // Otherwise, append the value to the existing key
                             else
-                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] += $", {commentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+                                info.CommonDiscInfo.CommentsSpecialFields[siteCode.Value] += $", {commentLine.Replace(shortName, string.Empty).Trim()}";
 
                             break;
                         }
@@ -2218,7 +2421,8 @@ namespace MPF.Core
                                 continue;
 
                             // If the line doesn't contain this tag, just skip
-                            if (!contentLine.Contains(siteCode.ShortName()))
+                            var shortName = siteCode.ShortName();
+                            if (shortName == null || !contentLine.Contains(shortName))
                                 continue;
 
                             // Cache the current site code
@@ -2226,7 +2430,7 @@ namespace MPF.Core
 
                             // If we don't already have this site code, add it to the dictionary
                             if (!info.CommonDiscInfo.ContentsSpecialFields.ContainsKey(siteCode.Value))
-                                info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(siteCode.ShortName(), string.Empty).Trim()}";
+                                info.CommonDiscInfo.ContentsSpecialFields[siteCode.Value] = $"(VERIFY THIS) {contentLine.Replace(shortName, string.Empty).Trim()}";
 
                             // A subset of tags can be multiline
                             addToLast = IsMultiLine(siteCode);
@@ -2288,12 +2492,17 @@ namespace MPF.Core
         /// <param name="info">Existing SubmissionInfo object to fill</param>
         /// <param name="resultProgress">Optional result progress callback</param>
 #if NET48
-        private static bool FillFromRedump(Core.Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        private static bool FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
 #else
-        private async static Task<bool> FillFromRedump(Core.Data.Options options, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        private async static Task<bool> FillFromRedump(Data.Options options, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #endif
         {
+            // If no username is provided
+            if (string.IsNullOrWhiteSpace(options.RedumpUsername) || string.IsNullOrWhiteSpace(options.RedumpPassword))
+                return false;
+
             // Set the current dumper based on username
+            if (info.DumpersAndStatus == null) info.DumpersAndStatus = new DumpersAndStatusSection();
             info.DumpersAndStatus.Dumpers = new string[] { options.RedumpUsername };
             info.PartiallyMatchedIDs = new List<int>();
 
@@ -2322,13 +2531,17 @@ namespace MPF.Core
 
                 // Setup the full-track checks
                 bool allFound = true;
+#if NET48
                 List<int> fullyMatchedIDs = null;
+#else
+                List<int>? fullyMatchedIDs = null;
+#endif
 
                 // Loop through all of the hashdata to find matching IDs
                 resultProgress?.Report(Result.Success("Finding disc matches on Redump..."));
-                string[] splitData = info.TracksAndWriteOffsets.ClrMameProData.TrimEnd('\n').Split('\n');
-                int trackCount = splitData.Length;
-                foreach (string hashData in splitData)
+                var splitData = info.TracksAndWriteOffsets?.ClrMameProData?.TrimEnd('\n')?.Split('\n');
+                int trackCount = splitData?.Length ?? 0;
+                foreach (string hashData in splitData ?? Array.Empty<string>())
                 {
                     // Catch any errant blank lines
                     if (string.IsNullOrWhiteSpace(hashData))
@@ -2354,7 +2567,7 @@ namespace MPF.Core
 #if NET48
                     (bool singleFound, List<int> foundIds) = ValidateSingleTrack(wc, info, hashData, resultProgress);
 #else
-                    (bool singleFound, List<int> foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
+                    (bool singleFound, var foundIds) = await ValidateSingleTrack(wc, info, hashData, resultProgress);
 #endif
 
                     // Ensure that all tracks are found
@@ -2376,12 +2589,12 @@ namespace MPF.Core
                 }
 
                 // If we don't have any matches but we have a universal hash
-                if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.UniversalHash))
+                if (!info.PartiallyMatchedIDs.Any() && info.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) == true)
                 {
 #if NET48
                     (bool singleFound, List<int> foundIds) = ValidateUniversalHash(wc, info, resultProgress);
 #else
-                    (bool singleFound, List<int> foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
+                    (bool singleFound, var foundIds) = await ValidateUniversalHash(wc, info, resultProgress);
 #endif
 
                     // Ensure that the hash is found
@@ -2405,12 +2618,12 @@ namespace MPF.Core
                     .OrderBy(id => id)
                     .ToList();
 
-                resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs.Count > 0
+                resultProgress?.Report(Result.Success("Match finding complete! " + (fullyMatchedIDs != null && fullyMatchedIDs.Count > 0
                     ? "Fully Matched IDs: " + string.Join(",", fullyMatchedIDs)
                     : "No matches found")));
 
                 // Exit early if one failed or there are no matched IDs
-                if (!allFound || fullyMatchedIDs.Count == 0)
+                if (!allFound || fullyMatchedIDs == null || fullyMatchedIDs.Count == 0)
                     return false;
 
                 // Find the first matched ID where the track count matches, we can grab a bunch of info from it
@@ -2465,7 +2678,9 @@ namespace MPF.Core
 
             foreach (SiteCode? siteCode in Enum.GetValues(typeof(SiteCode)))
             {
-                text = text.Replace(siteCode.LongName(), siteCode.ShortName());
+                var longname = siteCode.LongName();
+                if (!string.IsNullOrEmpty(longname))
+                    text = text.Replace(longname, siteCode.ShortName());
             }
 
             // For some outdated tags, we need to use alternate names
@@ -2496,9 +2711,13 @@ namespace MPF.Core
 #if NET48
         private static List<int> ListSearchResults(RedumpWebClient wc, string query, bool filterForwardSlashes = true)
 #else
-        private async static Task<List<int>> ListSearchResults(RedumpHttpClient wc, string query, bool filterForwardSlashes = true)
+        private async static Task<List<int>?> ListSearchResults(RedumpHttpClient wc, string? query, bool filterForwardSlashes = true)
 #endif
         {
+            // If there is an invalid query
+            if (string.IsNullOrWhiteSpace(query))
+                return null;
+
             var ids = new List<int>();
 
             // Strip quotes
@@ -2549,11 +2768,11 @@ namespace MPF.Core
 #if NET48
         private static (bool, List<int>) ValidateSingleTrack(RedumpWebClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
 #else
-        private async static Task<(bool, List<int>)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result> resultProgress = null)
+        private async static Task<(bool, List<int>?)> ValidateSingleTrack(RedumpHttpClient wc, SubmissionInfo info, string hashData, IProgress<Result>? resultProgress = null)
 #endif
         {
             // If the line isn't parseable, we can't validate
-            if (!GetISOHashValues(hashData, out long _, out string _, out string _, out string sha1))
+            if (!GetISOHashValues(hashData, out long _, out var _, out var _, out var sha1))
             {
                 resultProgress?.Report(Result.Failure("Line could not be parsed for hash data"));
                 return (false, null);
@@ -2563,7 +2782,7 @@ namespace MPF.Core
 #if NET48
             List<int> newIds = ListSearchResults(wc, sha1);
 #else
-            List<int> newIds = await ListSearchResults(wc, sha1);
+            var newIds = await ListSearchResults(wc, sha1);
 #endif
 
             // If we got null back, there was an error
@@ -2578,7 +2797,7 @@ namespace MPF.Core
                 return (false, null);
 
             // Join the list of found IDs to the existing list, if possible
-            if (info.PartiallyMatchedIDs.Any())
+            if (info.PartiallyMatchedIDs != null && info.PartiallyMatchedIDs.Any())
                 info.PartiallyMatchedIDs.AddRange(newIds);
             else
                 info.PartiallyMatchedIDs = newIds;
@@ -2596,11 +2815,18 @@ namespace MPF.Core
 #if NET48
         private static (bool, List<int>) ValidateUniversalHash(RedumpWebClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
 #else
-        private async static Task<(bool, List<int>)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result> resultProgress = null)
+        private async static Task<(bool, List<int>?)> ValidateUniversalHash(RedumpHttpClient wc, SubmissionInfo info, IProgress<Result>? resultProgress = null)
 #endif
         {
+            // If we don't have special fields
+            if (info.CommonDiscInfo?.CommentsSpecialFields == null)
+            {
+                resultProgress?.Report(Result.Failure("Universal hash was missing"));
+                return (false, null);
+            }
+
             // If we don't have a universal hash
-            string universalHash = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
+            var universalHash = info.CommonDiscInfo.CommentsSpecialFields[SiteCode.UniversalHash];
             if (string.IsNullOrEmpty(universalHash))
             {
                 resultProgress?.Report(Result.Failure("Universal hash was missing"));
@@ -2618,7 +2844,7 @@ namespace MPF.Core
 #if NET48
             List<int> newIds = ListSearchResults(wc, universalHash, filterForwardSlashes: false);
 #else
-            List<int> newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
+            var newIds = await ListSearchResults(wc, universalHash, filterForwardSlashes: false);
 #endif
 
             // If we got null back, there was an error
@@ -2633,7 +2859,7 @@ namespace MPF.Core
                 return (false, null);
 
             // Join the list of found IDs to the existing list, if possible
-            if (info.PartiallyMatchedIDs.Any())
+            if (info.PartiallyMatchedIDs != null && info.PartiallyMatchedIDs.Any())
                 info.PartiallyMatchedIDs.AddRange(newIds);
             else
                 info.PartiallyMatchedIDs = newIds;
@@ -2658,7 +2884,7 @@ namespace MPF.Core
 #if NET48
             string discData = wc.DownloadSingleSiteID(id);
 #else
-            string discData = await wc.DownloadSingleSiteID(id);
+            string? discData = await wc.DownloadSingleSiteID(id);
 #endif
             if (string.IsNullOrEmpty(discData))
                 return false;

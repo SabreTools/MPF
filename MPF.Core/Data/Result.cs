@@ -30,7 +30,11 @@
         /// Create a success result with a custom message
         /// </summary>
         /// <param name="message">String to add as a message</param>
+#if NET48
         public static Result Success(string message) => new Result(true, message);
+#else
+        public static Result Success(string? message) => new Result(true, message ?? string.Empty);
+#endif
 
         /// <summary>
         /// Create a default failure result with no message
@@ -42,7 +46,11 @@
         /// Create a failure result with a custom message
         /// </summary>
         /// <param name="message">String to add as a message</param>
+#if NET48
         public static Result Failure(string message) => new Result(false, message);
+#else
+        public static Result Failure(string? message) => new Result(false, message ?? string.Empty);
+#endif
 
         /// <summary>
         /// Results can be compared to boolean values based on the success value

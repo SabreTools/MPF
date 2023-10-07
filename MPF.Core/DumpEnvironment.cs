@@ -51,36 +51,52 @@ namespace MPF.Core
         /// <summary>
         /// Options object representing user-defined options
         /// </summary>
-        public Core.Data.Options Options { get; private set; }
+        public Data.Options Options { get; private set; }
 
         /// <summary>
         /// Parameters object representing what to send to the internal program
         /// </summary>
+#if NET48
         public BaseParameters Parameters { get; private set; }
+#else
+        public BaseParameters? Parameters { get; private set; }
+#endif
 
         #endregion
-        
+
         #region Event Handlers
 
         /// <summary>
         /// Generic way of reporting a message
         /// </summary>
+#if NET48
         public EventHandler<string> ReportStatus;
+#else
+        public EventHandler<string>? ReportStatus;
+#endif
 
         /// <summary>
         /// Queue of items that need to be logged
         /// </summary>
+#if NET48
         private ProcessingQueue<string> outputQueue;
+#else
+        private ProcessingQueue<string>? outputQueue;
+#endif
 
         /// <summary>
         /// Event handler for data returned from a process
         /// </summary>
-        private void OutputToLog(object proc, string args) => outputQueue.Enqueue(args);
+#if NET48
+        private void OutputToLog(object proc, string args) => outputQueue?.Enqueue(args);
+#else
+        private void OutputToLog(object? proc, string args) => outputQueue?.Enqueue(args);
+#endif
 
         /// <summary>
         /// Process the outputs in the queue
         /// </summary>
-        private void ProcessOutputs(string nextOutput) => ReportStatus.Invoke(this, nextOutput);
+        private void ProcessOutputs(string nextOutput) => ReportStatus?.Invoke(this, nextOutput);
 
         #endregion
 
@@ -94,7 +110,7 @@ namespace MPF.Core
         /// <param name="type"></param>
         /// <param name="internalProgram"></param>
         /// <param name="parameters"></param>
-        public DumpEnvironment(Core.Data.Options options,
+        public DumpEnvironment(Data.Options options,
             string outputPath,
             Drive drive,
             RedumpSystem? system,
@@ -113,7 +129,7 @@ namespace MPF.Core
             this.System = system ?? options.DefaultSystem;
             this.Type = type ?? MediaType.NONE;
             this.InternalProgram = internalProgram ?? options.InternalProgram;
-            
+
             // Dumping program
             SetParameters(parameters);
         }
@@ -126,7 +142,7 @@ namespace MPF.Core
         public void AdjustPathsForDiscImageCreator()
         {
             // Only DiscImageCreator has issues with paths
-            if (this.Parameters.InternalProgram != InternalProgram.DiscImageCreator)
+            if (this.Parameters?.InternalProgram != InternalProgram.DiscImageCreator)
                 return;
 
             try
@@ -135,8 +151,8 @@ namespace MPF.Core
                 string outputPath = InfoTool.NormalizeOutputPaths(this.OutputPath, true);
 
                 // Replace all instances in the output directory
-                string outputDirectory = Path.GetDirectoryName(outputPath);
-                outputDirectory = outputDirectory.Replace(".", "_");
+                var outputDirectory = Path.GetDirectoryName(outputPath);
+                outputDirectory = outputDirectory?.Replace(".", "_");
 
                 // Replace all instances in the output filename
                 string outputFilename = Path.GetFileNameWithoutExtension(outputPath);
@@ -146,10 +162,20 @@ namespace MPF.Core
                 string outputExtension = Path.GetExtension(outputPath).TrimStart('.');
 
                 // Rebuild the output path
-                if (!string.IsNullOrWhiteSpace(outputExtension))
-                    this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
+                if (string.IsNullOrWhiteSpace(outputDirectory))
+                {
+                    if (string.IsNullOrWhiteSpace(outputExtension))
+                        this.OutputPath = outputFilename;
+                    else
+                        this.OutputPath = $"{outputFilename}.{outputExtension}";
+                }
                 else
-                    this.OutputPath = Path.Combine(outputDirectory, outputFilename);
+                {
+                    if (string.IsNullOrWhiteSpace(outputExtension))
+                        this.OutputPath = Path.Combine(outputDirectory, outputFilename);
+                    else
+                        this.OutputPath = Path.Combine(outputDirectory, $"{outputFilename}.{outputExtension}");
+                }
 
                 // Assign the path to the filename as well for dumping
                 ((Modules.DiscImageCreator.Parameters)this.Parameters).Filename = this.OutputPath;
@@ -198,8 +224,11 @@ namespace MPF.Core
             }
 
             // Set system and type
-            this.Parameters.System = this.System;
-            this.Parameters.Type = this.Type;
+            if (this.Parameters != null)
+            {
+                this.Parameters.System = this.System;
+                this.Parameters.Type = this.Type;
+            }
         }
 
         /// <summary>
@@ -207,7 +236,11 @@ namespace MPF.Core
         /// </summary>
         /// <param name="driveSpeed">Nullable int representing the drive speed</param>
         /// <returns>String representing the params, null on error</returns>
+#if NET48
         public string GetFullParameters(int? driveSpeed)
+#else
+        public string? GetFullParameters(int? driveSpeed)
+#endif
         {
             // Populate with the correct params for inputs (if we're not on the default option)
             if (System != null && Type != MediaType.NONE)
@@ -251,26 +284,42 @@ namespace MPF.Core
         /// <summary>
         /// Cancel an in-progress dumping process
         /// </summary>
-        public void CancelDumping() => Parameters.KillInternalProgram();
+        public void CancelDumping() => Parameters?.KillInternalProgram();
 
         /// <summary>
         /// Eject the disc using DiscImageCreator
         /// </summary>
+#if NET48
         public async Task<string> EjectDisc() =>
-            await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
+#else
+        public async Task<string?> EjectDisc() =>
+#endif
+        await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Eject);
 
         /// <summary>
         /// Reset the current drive using DiscImageCreator
         /// </summary>
+#if NET48
         public async Task<string> ResetDrive() =>
+#else
+        public async Task<string?> ResetDrive() =>
+#endif
             await RunStandaloneDiscImageCreatorCommand(Modules.DiscImageCreator.CommandStrings.Reset);
 
         /// <summary>
         /// Execute the initial invocation of the dumping programs
         /// </summary>
         /// <param name="progress">Optional result progress callback</param>
+#if NET48
         public async Task<Result> Run(IProgress<Result> progress = null)
+#else
+        public async Task<Result> Run(IProgress<Result>? progress = null)
+#endif
         {
+            // If we don't have parameters
+            if (this.Parameters == null)
+                return Result.Failure("Error! Current configuration is not supported!");
+
             // Check that we have the basics for dumping
             Result result = IsValidForDump();
             if (!result)
@@ -280,12 +329,17 @@ namespace MPF.Core
             if (!Options.ToolsInSeparateWindow)
             {
                 outputQueue = new ProcessingQueue<string>(ProcessOutputs);
-                Parameters.ReportStatus += OutputToLog;
+                if (Parameters.ReportStatus != null)
+                    Parameters.ReportStatus += OutputToLog;
             }
 
             // Execute internal tool
             progress?.Report(Result.Success($"Executing {this.InternalProgram}... {(Options.ToolsInSeparateWindow ? "please wait!" : "see log for output!")}"));
-            Directory.CreateDirectory(Path.GetDirectoryName(this.OutputPath));
+
+            var directoryName = Path.GetDirectoryName(this.OutputPath);
+            if (!string.IsNullOrWhiteSpace(directoryName))
+                Directory.CreateDirectory(directoryName);
+
             await Task.Run(() => Parameters.ExecuteInternalProgram(Options.ToolsInSeparateWindow));
             progress?.Report(Result.Success($"{this.InternalProgram} has finished!"));
 
@@ -297,7 +351,7 @@ namespace MPF.Core
             // Remove event handler if needed
             if (!Options.ToolsInSeparateWindow)
             {
-                outputQueue.Dispose();
+                outputQueue?.Dispose();
                 Parameters.ReportStatus -= OutputToLog;
             }
 
@@ -312,15 +366,21 @@ namespace MPF.Core
         /// <param name="processUserInfo">Optional user prompt to deal with submission information</param>
         /// <returns>Result instance with the outcome</returns>
         public async Task<Result> VerifyAndSaveDumpOutput(
+#if NET48
             IProgress<Result> resultProgress = null,
             IProgress<ProtectionProgress> protectionProgress = null,
             Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo = null)
+#else
+            IProgress<Result>? resultProgress = null,
+            IProgress<ProtectionProgress>? protectionProgress = null,
+            Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? processUserInfo = null)
+#endif
         {
             resultProgress?.Report(Result.Success("Gathering submission information... please wait!"));
 
             // Get the output directory and filename separately
-            string outputDirectory = Path.GetDirectoryName(this.OutputPath);
-            string outputFilename = Path.GetFileName(this.OutputPath);
+            var outputDirectory = Path.GetDirectoryName(this.OutputPath);
+            var outputFilename = Path.GetFileName(this.OutputPath);
 
             // Check to make sure that the output had all the correct files
             (bool foundFiles, List<string> missingFiles) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, this.Parameters, false);
@@ -332,7 +392,7 @@ namespace MPF.Core
 
             // Extract the information from the output files
             resultProgress?.Report(Result.Success("Extracting output information from output files..."));
-            SubmissionInfo submissionInfo = await InfoTool.ExtractOutputInformation(
+            var submissionInfo = await InfoTool.ExtractOutputInformation(
                 this.OutputPath,
                 this.Drive,
                 this.System,
@@ -378,7 +438,7 @@ namespace MPF.Core
 
             // Format the information for the text output
             resultProgress?.Report(Result.Success("Formatting information..."));
-            (List<string> formattedValues, string formatResult) = InfoTool.FormatOutputData(submissionInfo, this.Options);
+            (var formattedValues, var formatResult) = InfoTool.FormatOutputData(submissionInfo, this.Options);
             if (formattedValues == null)
                 resultProgress?.Report(Result.Success(formatResult));
             else
@@ -435,7 +495,7 @@ namespace MPF.Core
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
-            bool parametersValid = Parameters.IsValid();
+            bool parametersValid = Parameters?.IsValid() ?? false;
             bool floppyValid = !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk);
 
             // TODO: HardDisk being in the Removable category is a hack, fix this later
@@ -495,7 +555,7 @@ namespace MPF.Core
         private Result IsValidForDump()
         {
             // Validate that everything is good
-            if (!ParametersValid())
+            if (this.Parameters == null || !ParametersValid())
                 return Result.Failure("Error! Current configuration is not supported!");
 
             // Fix the output paths, just in case
@@ -540,7 +600,11 @@ namespace MPF.Core
         /// </summary>
         /// <param name="command">Command string to run</param>
         /// <returns>The output of the command on success, null on error</returns>
+#if NET48
         private async Task<string> RunStandaloneDiscImageCreatorCommand(string command)
+#else
+        private async Task<string?> RunStandaloneDiscImageCreatorCommand(string command)
+#endif
         {
             // Validate that DiscImageCreator is all set
             if (!RequiredProgramsExist())
@@ -562,6 +626,6 @@ namespace MPF.Core
             return await ExecuteInternalProgram(parameters);
         }
 
-        #endregion
+#endregion
     }
 }

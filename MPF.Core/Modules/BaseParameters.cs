@@ -25,7 +25,11 @@ namespace MPF.Core.Modules
         /// Geneeic way of reporting a message
         /// </summary>
         /// <param name="message">String value to report</param>
+#if NET48
         public EventHandler<string> ReportStatus;
+#else
+        public EventHandler<string>? ReportStatus;
+#endif
 
         #endregion
 
@@ -34,7 +38,11 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Base command to run
         /// </summary>
+#if NET48
         public string BaseCommand { get; set; }
+#else
+        public string? BaseCommand { get; set; }
+#endif
 
         /// <summary>
         /// Set of flags to pass to the executable
@@ -63,7 +71,11 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Process to track external program
         /// </summary>
+#if NET48
         private Process process;
+#else
+        private Process? process;
+#endif
 
         #endregion
 
@@ -72,18 +84,30 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Command to flag support mappings
         /// </summary>
+#if NET48
         public Dictionary<string, List<string>> CommandSupport => GetCommandSupport();
+#else
+        public Dictionary<string, List<string>>? CommandSupport => GetCommandSupport();
+#endif
 
         /// <summary>
         /// Input path for operations
         /// </summary>
+#if NET48
         public virtual string InputPath => null;
+#else
+        public virtual string? InputPath => null;
+#endif
 
         /// <summary>
         /// Output path for operations
         /// </summary>
         /// <returns>String representing the path, null on error</returns>
+#if NET48
         public virtual string OutputPath => null;
+#else
+        public virtual string? OutputPath => null;
+#endif
 
         /// <summary>
         /// Get the processing speed from the implementation
@@ -97,7 +121,11 @@ namespace MPF.Core.Modules
         /// <summary>
         /// Path to the executable
         /// </summary>
+#if NET48
         public string ExecutablePath { get; set; }
+#else
+        public string? ExecutablePath { get; set; }
+#endif
 
         /// <summary>
         /// Program that this set of parameters represents
@@ -171,20 +199,32 @@ namespace MPF.Core.Modules
         /// Get all commands mapped to the supported flags
         /// </summary>
         /// <returns>Mappings from command to supported flags</returns>
+#if NET48
         public virtual Dictionary<string, List<string>> GetCommandSupport() => null;
+#else
+        public virtual Dictionary<string, List<string>>? GetCommandSupport() => null;
+#endif
 
         /// <summary>
         /// Blindly generate a parameter string based on the inputs
         /// </summary>
         /// <returns>Parameter string for invocation, null on error</returns>
+#if NET48
         public virtual string GenerateParameters() => null;
+#else
+        public virtual string? GenerateParameters() => null;
+#endif
 
         /// <summary>
         /// Get the default extension for a given media type
         /// </summary>
         /// <param name="mediaType">MediaType value to check</param>
         /// <returns>String representing the media type, null on error</returns>
+#if NET48
         public virtual string GetDefaultExtension(MediaType? mediaType) => null;
+#else
+        public virtual string? GetDefaultExtension(MediaType? mediaType) => null;
+#endif
 
         /// <summary>
         /// Generate a list of all log files generated
@@ -320,7 +360,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="content">String content to encode</param>
         /// <returns>Base64-encoded contents, if possible</returns>
+#if NET48
         protected static string GetBase64(string content)
+#else
+        protected static string? GetBase64(string? content)
+#endif
         {
             if (string.IsNullOrEmpty(content))
                 return null;
@@ -335,7 +379,11 @@ namespace MPF.Core.Modules
         /// <param name="filename">file location</param>
         /// <param name="binary">True if should read as binary, false otherwise (default)</param>
         /// <returns>Full text of the file, null on error</returns>
+#if NET48
         protected static string GetFullFile(string filename, bool binary = false)
+#else
+        protected static string? GetFullFile(string filename, bool binary = false)
+#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(filename))
@@ -465,7 +513,11 @@ namespace MPF.Core.Modules
         /// <param name="longFlagString">Long flag string, if available</param>
         /// <param name="i">Reference to the position in the parts</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+#if NET48
         protected bool ProcessFlagParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i)
+#else
+        protected bool ProcessFlagParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i)
+#endif
         {
             if (parts == null)
                 return false;
@@ -501,7 +553,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>True if the parameter was processed successfully or skipped, false otherwise</returns>
+#if NET48
         protected bool ProcessBooleanParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected bool ProcessBooleanParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return false;
@@ -576,7 +632,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>SByte value if success, SByte.MinValue if skipped, null on error/returns>
+#if NET48
         protected sbyte? ProcessInt8Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected sbyte? ProcessInt8Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return null;
@@ -654,7 +714,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int16 value if success, Int16.MinValue if skipped, null on error/returns>
+#if NET48
         protected short? ProcessInt16Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected short? ProcessInt16Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return null;
@@ -731,7 +795,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int32 value if success, Int32.MinValue if skipped, null on error/returns>
+#if NET48
         protected int? ProcessInt32Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected int? ProcessInt32Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return null;
@@ -808,7 +876,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Int64 value if success, Int64.MinValue if skipped, null on error/returns>
+#if NET48
         protected long? ProcessInt64Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected long? ProcessInt64Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return null;
@@ -873,8 +945,12 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
+#if NET48
         protected string ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
-            => ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
+#else
+        protected string? ProcessStringParameter(List<string> parts, string flagString, ref int i, bool missingAllowed = false)
+#endif
+        => ProcessStringParameter(parts, null, flagString, ref i, missingAllowed);
 
         /// <summary>
         /// Process a string parameter
@@ -885,7 +961,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>String value if possible, string.Empty on missing, null on error</returns>
+#if NET48
         protected string ProcessStringParameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected string? ProcessStringParameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return null;
@@ -960,7 +1040,11 @@ namespace MPF.Core.Modules
         /// <param name="i">Reference to the position in the parts</param>
         /// <param name="missingAllowed">True if missing values are allowed, false otherwise</param>
         /// <returns>Byte value if success, Byte.MinValue if skipped, null on error/returns>
+#if NET48
         protected byte? ProcessUInt8Parameter(List<string> parts, string shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#else
+        protected byte? ProcessUInt8Parameter(List<string> parts, string? shortFlagString, string longFlagString, ref int i, bool missingAllowed = false)
+#endif
         {
             if (parts == null)
                 return null;
@@ -1089,17 +1173,23 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="datafile">.dat file location</param>
         /// <returns>Relevant pieces of the datfile, null on error</returns>
+#if NET48
         protected static string GenerateDatfile(Datafile datafile)
+#else
+        protected static string? GenerateDatfile(Datafile? datafile)
+#endif
         {
             // If we don't have a valid datafile, we can't do anything
-            if (datafile?.Games == null || datafile.Games.Length == 0 || datafile.Games[0]?.Roms == null || datafile.Games[0].Roms.Length == 0)
+            if (datafile?.Games == null || datafile.Games.Length == 0)
+                return null;
+
+            var roms = datafile.Games[0].Roms;
+            if (roms == null || roms.Length == 0)
                 return null;
 
             // Otherwise, reconstruct the hash data with only the required info
             try
             {
-                var roms = datafile.Games[0].Roms;
-
                 string datString = string.Empty;
                 for (int i = 0; i < roms.Length; i++)
                 {
@@ -1121,7 +1211,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="dat">Path to the DAT file to parse</param>
         /// <returns>Filled Datafile on success, null on error</returns>
+#if NET48
         protected static Datafile GetDatafile(string dat)
+#else
+        protected static Datafile? GetDatafile(string? dat)
+#endif
         {
             // If there's no path, we can't read the file
             if (string.IsNullOrWhiteSpace(dat))
@@ -1149,9 +1243,7 @@ namespace MPF.Core.Modules
                     return null;
 
                 var serializer = new XmlSerializer(typeof(Datafile));
-                Datafile obj = serializer.Deserialize(xtr) as Datafile;
-
-                return obj;
+                return serializer.Deserialize(xtr) as Datafile;
             }
             catch
             {
@@ -1166,7 +1258,11 @@ namespace MPF.Core.Modules
         /// <param name="pic">Path to a PIC.bin file</param>
         /// <returns>Filled DiscInformation on success, null on error</returns>
         /// <remarks>This omits the emergency brake information, if it exists</remarks>
+#if NET48
         protected static DiscInformation GetDiscInformation(string pic)
+#else
+        protected static DiscInformation? GetDiscInformation(string pic)
+#endif
         {
             try
             {
@@ -1184,7 +1280,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="filename">Path to the input file</param>
         /// <returns>True if hashing was successful, false otherwise</returns>
+#if NET48
         protected static bool GetFileHashes(string filename, out long size, out string crc32, out string md5, out string sha1)
+#else
+        protected static bool GetFileHashes(string filename, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
         {
             // Set all initial values
             size = -1; crc32 = null; md5 = null; sha1 = null;
@@ -1289,7 +1389,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="filename">Path to the input file</param>
         /// <returns>Filled DateTime on success, null on failure</returns>
+#if NET48
         protected static DateTime? GetFileModifiedDate(string filename, bool fallback = false)
+#else
+        protected static DateTime? GetFileModifiedDate(string? filename, bool fallback = false)
+#endif
         {
             if (string.IsNullOrWhiteSpace(filename))
                 return fallback ? (DateTime?)DateTime.UtcNow : null;
@@ -1305,7 +1409,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="hashData">String representing the combined hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
+#if NET48
         protected static bool GetISOHashValues(string hashData, out long size, out string crc32, out string md5, out string sha1)
+#else
+        protected static bool GetISOHashValues(string? hashData, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
@@ -1335,14 +1443,22 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="datafile">Datafile represenging the hash data</param>
         /// <returns>True if extraction was successful, false otherwise</returns>
+#if NET48
         protected static bool GetISOHashValues(Datafile datafile, out long size, out string crc32, out string md5, out string sha1)
+#else
+        protected static bool GetISOHashValues(Datafile? datafile, out long size, out string? crc32, out string? md5, out string? sha1)
+#endif
         {
             size = -1; crc32 = null; md5 = null; sha1 = null;
 
-            if (datafile?.Games == null || datafile.Games.Length == 0 || datafile.Games[0].Roms.Length == 0)
+            if (datafile?.Games == null || datafile.Games.Length == 0)
                 return false;
 
-            var rom = datafile.Games[0].Roms[0];
+            var roms = datafile.Games[0].Roms;
+            if (roms == null || roms.Length == 0)
+                return false;
+
+            var rom = roms[0];
 
             _ = Int64.TryParse(rom.Size, out size);
             crc32 = rom.Crc;
@@ -1357,7 +1473,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="di">Disc information containing unformatted data</param>
         /// <returns>True if layerbreak info was set, false otherwise</returns>
+#if NET48
         protected static bool GetLayerbreaks(DiscInformation di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+#else
+        protected static bool GetLayerbreaks(DiscInformation? di, out long? layerbreak1, out long? layerbreak2, out long? layerbreak3)
+#endif
         {
             // Set the default values
             layerbreak1 = null; layerbreak2 = null; layerbreak3 = null;
@@ -1369,9 +1489,12 @@ namespace MPF.Core.Modules
 #if NET48
             int ReadFromArrayBigEndian(byte[] bytes, int offset)
 #else
-            static int ReadFromArrayBigEndian(byte[] bytes, int offset)
+            static int ReadFromArrayBigEndian(byte[]? bytes, int offset)
 #endif
             {
+                if (bytes == null)
+                    return default;
+
                 var span = new ReadOnlySpan<byte>(bytes, offset, 0x04);
                 byte[] rev = span.ToArray();
                 Array.Reverse(rev);
@@ -1381,24 +1504,24 @@ namespace MPF.Core.Modules
             // Layerbreak 1 (2+ layers)
             if (di.Units.Length >= 2)
             {
-                long offset = ReadFromArrayBigEndian(di.Units[0].Body.FormatDependentContents, 0x0C);
-                long value = ReadFromArrayBigEndian(di.Units[0].Body.FormatDependentContents, 0x10);
+                long offset = ReadFromArrayBigEndian(di.Units[0]?.Body?.FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[0]?.Body?.FormatDependentContents, 0x10);
                 layerbreak1 = value - offset + 2;
             }
 
             // Layerbreak 2 (3+ layers)
             if (di.Units.Length >= 3)
             {
-                long offset = ReadFromArrayBigEndian(di.Units[1].Body.FormatDependentContents, 0x0C);
-                long value = ReadFromArrayBigEndian(di.Units[1].Body.FormatDependentContents, 0x10);
+                long offset = ReadFromArrayBigEndian(di.Units[1]?.Body?.FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[1]?.Body?.FormatDependentContents, 0x10);
                 layerbreak2 = layerbreak1 + value - offset + 2;
             }
 
             // Layerbreak 3 (4 layers)
             if (di.Units.Length >= 4)
             {
-                long offset = ReadFromArrayBigEndian(di.Units[2].Body.FormatDependentContents, 0x0C);
-                long value = ReadFromArrayBigEndian(di.Units[2].Body.FormatDependentContents, 0x10);
+                long offset = ReadFromArrayBigEndian(di.Units[2]?.Body?.FormatDependentContents, 0x0C);
+                long value = ReadFromArrayBigEndian(di.Units[2]?.Body?.FormatDependentContents, 0x10);
                 layerbreak3 = layerbreak2 + value - offset + 2;
             }
 
@@ -1410,14 +1533,18 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="di">Disc information containing the data</param>
         /// <returns>String representing the PIC identifier, null on error</returns>
+#if NET48
         protected static string GetPICIdentifier(DiscInformation di)
+#else
+        protected static string? GetPICIdentifier(DiscInformation? di)
+#endif
         {
             // If we don't have valid disc information, we can't do anything
             if (di?.Units == null || di.Units.Length <= 1)
                 return null;
 
             // We assume the identifier is consistent across all units
-            return di.Units[0].Body.DiscTypeIdentifier;
+            return di.Units[0]?.Body?.DiscTypeIdentifier;
         }
 
         /// <summary>
@@ -1428,7 +1555,11 @@ namespace MPF.Core.Modules
         /// <param name="region">Output region, if possible</param>
         /// <param name="date">Output EXE date in "yyyy-mm-dd" format if possible, null on error</param>
         /// <returns></returns>
+#if NET48
         protected static bool GetPlayStationExecutableInfo(char? driveLetter, out string serial, out Region? region, out string date)
+#else
+        protected static bool GetPlayStationExecutableInfo(char? driveLetter, out string? serial, out Region? region, out string? date)
+#endif
         {
             serial = null; region = null; date = null;
 
@@ -1446,7 +1577,11 @@ namespace MPF.Core.Modules
             string systemCnfPath = Path.Combine(drivePath, "SYSTEM.CNF");
 
             // Try both of the common paths that contain information
+#if NET48
             string exeName = null;
+#else
+            string? exeName = null;
+#endif
 
             // Read the CNF file as an INI file
             var systemCnf = new IniFile(systemCnfPath);
@@ -1512,7 +1647,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation2Version(char? driveLetter)
+#else
+        protected static string? GetPlayStation2Version(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1540,7 +1679,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation3Serial(char? driveLetter)
+#else
+        protected static string? GetPlayStation3Serial(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1577,7 +1720,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation3Version(char? driveLetter)
+#else
+        protected static string? GetPlayStation3Version(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1614,7 +1761,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation4Serial(char? driveLetter)
+#else
+        protected static string? GetPlayStation4Serial(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1645,13 +1796,17 @@ namespace MPF.Core.Modules
                 return null;
             }
         }
-        
+
         /// <summary>
         /// Get the version from a PlayStation 4 disc, if possible
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation4Version(char? driveLetter)
+#else
+        protected static string? GetPlayStation4Version(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1688,7 +1843,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Internal disc serial if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation5Serial(char? driveLetter)
+#else
+        protected static string? GetPlayStation5Serial(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1725,7 +1884,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="driveLetter">Drive letter to use to check</param>
         /// <returns>Game version if possible, null on error</returns>
+#if NET48
         protected static string GetPlayStation5Version(char? driveLetter)
+#else
+        protected static string? GetPlayStation5Version(char? driveLetter)
+#endif
         {
             // If there's no drive letter, we can't do this part
             if (driveLetter == null)
@@ -1757,7 +1920,7 @@ namespace MPF.Core.Modules
             }
         }
 
-#endregion
+        #endregion
 
         #region Category Extraction
 
@@ -1800,7 +1963,7 @@ namespace MPF.Core.Modules
                     case 'E': return Region.Europe;
                     case 'K': return Region.SouthKorea;
                     case 'U': return Region.UnitedStatesOfAmerica;
-                    case 'P': 
+                    case 'P':
                         // Region of S_P_ serials may be Japan, Asia, or SouthKorea
                         switch (serial[3])
                         {

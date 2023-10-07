@@ -17,17 +17,29 @@ namespace MPF.Core.Data
         /// <summary>
         /// Raw XMID/XeMID string that all other information is derived from
         /// </summary>
+#if NET48
         public string RawXMID { get; private set; }
+#else
+        public string? RawXMID { get; private set; }
+#endif
 
         /// <summary>
         /// XGD1 XMID
         /// </summary>
+#if NET48
         public SabreTools.Models.Xbox.XMID XMID { get; private set; }
+#else
+        public SabreTools.Models.Xbox.XMID? XMID { get; private set; }
+#endif
 
         /// <summary>
         /// XGD2/3 XeMID
         /// </summary>
+#if NET48
         public SabreTools.Models.Xbox.XeMID XeMID { get; private set; }
+#else
+        public SabreTools.Models.Xbox.XeMID? XeMID { get; private set; }
+#endif
 
         #endregion
 
@@ -58,7 +70,11 @@ namespace MPF.Core.Data
         /// Get the human-readable serial string
         /// </summary>
         /// <returns>Formatted serial string, null on error</returns>
+#if NET48
         public string GetSerial()
+#else
+        public string? GetSerial()
+#endif
         {
             if (!this.Initialized)
                 return null;
@@ -86,7 +102,11 @@ namespace MPF.Core.Data
         /// </summary>
         /// <returns>Formatted version string, null on error</returns>
         /// <remarks>This may differ for XGD2/3 in the future</remarks>
+#if NET48
         public string GetVersion()
+#else
+        public string? GetVersion()
+#endif
         {
             if (!this.Initialized)
                 return null;
@@ -160,7 +180,7 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="region">Character denoting the region</param>
         /// <returns>Region, if possible</returns>
-        public static Region? GetRegion(char region)
+        public static Region? GetRegion(char? region)
         {
             switch (region)
             {

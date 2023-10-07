@@ -14,7 +14,11 @@ namespace MPF.Core.Utilities
         /// <param name="reader">TextReader representing the input</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
+#if NET48
         public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string> handler)
+#else
+        public static async Task OutputToLog(TextReader reader, object baseClass, EventHandler<string>? handler)
+#endif
         {
             // Initialize the required variables
             char[] buffer = new char[256];
@@ -63,7 +67,11 @@ namespace MPF.Core.Utilities
         /// <param name="line">Current line to process</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
+#if NET48
         private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<string> handler)
+#else
+        private static void ProcessNewLines(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
+#endif
         {
             line = line.Replace("\r\n", "\n");
             var split = line.Split('\n');
@@ -105,7 +113,11 @@ namespace MPF.Core.Utilities
         /// <param name="line">Current line to process</param>
         /// <param name="baseClass">Invoking class, passed on to the event handler</param>
         /// <param name="handler">Event handler to be invoked to write to log</param>
+#if NET48
         private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<string> handler)
+#else
+        private static void ProcessCarriageReturns(StringBuilder sb, string line, object baseClass, EventHandler<string>? handler)
+#endif
         {
             var split = line.Split('\r');
 

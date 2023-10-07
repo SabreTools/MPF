@@ -63,14 +63,16 @@ namespace MPF.Core.Modules.CleanRip
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
         {
             // TODO: Determine if there's a CleanRip version anywhere
+            if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();
             info.DumpingInfo.DumpingProgram = EnumConverter.LongName(this.InternalProgram);
             info.DumpingInfo.DumpingDate = GetFileModifiedDate(basePath + "-dumpinfo.txt")?.ToString("yyyy-MM-dd HH:mm:ss");
 
-            Datafile datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
-            
+            var datafile = GenerateCleanripDatafile(basePath + ".iso", basePath + "-dumpinfo.txt");
+
             // Get the individual hash data, as per internal
-            if (GetISOHashValues(datafile, out long size, out string crc32, out string md5, out string sha1))
+            if (GetISOHashValues(datafile, out long size, out var crc32, out var md5, out var sha1))
             {
+                if (info.SizeAndChecksums == null) info.SizeAndChecksums = new SizeAndChecksumsSection();
                 info.SizeAndChecksums.Size = size;
                 info.SizeAndChecksums.CRC32 = crc32;
                 info.SizeAndChecksums.MD5 = md5;
@@ -79,7 +81,7 @@ namespace MPF.Core.Modules.CleanRip
                 // Dual-layer discs have the same size and layerbreak
                 if (size == 8511160320)
                     info.SizeAndChecksums.Layerbreak = 2084960;
-            }            
+            }
 
             // Extract info based generically on MediaType
             switch (this.Type)
@@ -88,12 +90,22 @@ namespace MPF.Core.Modules.CleanRip
                 case MediaType.NintendoGameCubeGameDisc:
                 case MediaType.NintendoWiiOpticalDisc:
                     if (File.Exists(basePath + ".bca"))
-                        info.Extras.BCA = GetBCA(basePath + ".bca");
-
-                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out string gcVersion, out string gcName))
                     {
+                        if (info.Extras == null) info.Extras = new ExtrasSection();
+                        info.Extras.BCA = GetBCA(basePath + ".bca");
+                    }
+
+                    if (GetGameCubeWiiInformation(basePath + "-dumpinfo.txt", out Region? gcRegion, out var gcVersion, out var gcName))
+                    {
+                        if (info.CommonDiscInfo == null) info.CommonDiscInfo = new CommonDiscInfoSection();
                         info.CommonDiscInfo.Region = gcRegion ?? info.CommonDiscInfo.Region;
+                        if (info.VersionAndEditions == null) info.VersionAndEditions = new VersionAndEditionsSection();
                         info.VersionAndEditions.Version = gcVersion ?? info.VersionAndEditions.Version;
+#if NET48
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
+#else
+                        if (info.CommonDiscInfo.CommentsSpecialFields == null) info.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
+#endif
                         info.CommonDiscInfo.CommentsSpecialFields[SiteCode.InternalName] = gcName ?? string.Empty;
                     }
 
@@ -103,10 +115,11 @@ namespace MPF.Core.Modules.CleanRip
             // Fill in any artifacts that exist, Base64-encoded, if we need to
             if (includeArtifacts)
             {
+                if (info.Artifacts == null) info.Artifacts = new Dictionary<string, string>();
                 if (File.Exists(basePath + ".bca"))
-                    info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true));
+                    info.Artifacts["bca"] = GetBase64(GetFullFile(basePath + ".bca", binary: true)) ?? string.Empty;
                 if (File.Exists(basePath + "-dumpinfo.txt"))
-                    info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt"));
+                    info.Artifacts["dumpinfo"] = GetBase64(GetFullFile(basePath + "-dumpinfo.txt")) ?? string.Empty;
             }
         }
 
@@ -140,7 +153,11 @@ namespace MPF.Core.Modules.CleanRip
         /// <param name="iso">Path to ISO file</param>
         /// <param name="dumpinfo">Path to discinfo file</param>
         /// <returns></returns>
+#if NET48
         private static Datafile GenerateCleanripDatafile(string iso, string dumpinfo)
+#else
+        private static Datafile? GenerateCleanripDatafile(string iso, string dumpinfo)
+#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dumpinfo))
@@ -156,14 +173,16 @@ namespace MPF.Core.Modules.CleanRip
                 try
                 {
                     // Make sure this file is a dumpinfo
-                    if (!sr.ReadLine().Contains("--File Generated by CleanRip"))
+                    if (sr.ReadLine()?.Contains("--File Generated by CleanRip") != true)
                         return null;
 
                     // Read all lines and gather dat information
                     while (!sr.EndOfStream)
                     {
-                        string line = sr.ReadLine().Trim();
-                        if (line.StartsWith("CRC32"))
+                        var line = sr.ReadLine()?.Trim();
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+                        else if (line.StartsWith("CRC32"))
                             crc = line.Substring(7).ToLowerInvariant();
                         else if (line.StartsWith("MD5"))
                             md5 = line.Substring(5);
@@ -199,7 +218,11 @@ namespace MPF.Core.Modules.CleanRip
         /// <param name="bcaPath">Path to the BCA file associated with the dump</param>
         /// <returns>BCA data as a hex string if possible, null on error</returns>
         /// <remarks>https://stackoverflow.com/questions/9932096/add-separator-to-string-at-every-n-characters</remarks>
+#if NET48
         private static string GetBCA(string bcaPath)
+#else
+        private static string? GetBCA(string bcaPath)
+#endif
         {
             // If the file doesn't exist, we can't get the info
             if (!File.Exists(bcaPath))
@@ -207,7 +230,10 @@ namespace MPF.Core.Modules.CleanRip
 
             try
             {
-                string hex = GetFullFile(bcaPath, true);
+                var hex = GetFullFile(bcaPath, true);
+                if (hex == null)
+                    return null;
+
                 return Regex.Replace(hex, ".{32}", "$0\n");
             }
             catch
@@ -223,7 +249,11 @@ namespace MPF.Core.Modules.CleanRip
         /// <param name="iso">Path to ISO file</param>
         /// <param name="dumpinfo">Path to discinfo file</param>
         /// <returns></returns>
+#if NET48
         private static string GetCleanripDatfile(string iso, string dumpinfo)
+#else
+        private static string? GetCleanripDatfile(string iso, string dumpinfo)
+#endif
         {
             // If the file doesn't exist, we can't get info from it
             if (!File.Exists(dumpinfo))
@@ -239,14 +269,16 @@ namespace MPF.Core.Modules.CleanRip
                 try
                 {
                     // Make sure this file is a dumpinfo
-                    if (!sr.ReadLine().Contains("--File Generated by CleanRip"))
+                    if (sr.ReadLine()?.Contains("--File Generated by CleanRip") != true)
                         return null;
 
                     // Read all lines and gather dat information
                     while (!sr.EndOfStream)
                     {
-                        string line = sr.ReadLine().Trim();
-                        if (line.StartsWith("CRC32"))
+                        var line = sr.ReadLine()?.Trim();
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+                        else if (line.StartsWith("CRC32"))
                             crc = line.Substring(7).ToLowerInvariant();
                         else if (line.StartsWith("MD5"))
                             md5 = line.Substring(5);
@@ -272,7 +304,11 @@ namespace MPF.Core.Modules.CleanRip
         /// <param name="version">Output internal version of the game</param>
         /// <param name="name">Output internal name of the game</param>
         /// <returns></returns>
+#if NET48
         private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string version, out string name)
+#else
+        private static bool GetGameCubeWiiInformation(string dumpinfo, out Region? region, out string? version, out string? name)
+#endif
         {
             region = null; version = null; name = null;
 
@@ -285,14 +321,18 @@ namespace MPF.Core.Modules.CleanRip
                 try
                 {
                     // Make sure this file is a dumpinfo
-                    if (!sr.ReadLine().Contains("--File Generated by CleanRip"))
+                    if (sr.ReadLine()?.Contains("--File Generated by CleanRip") != true)
                         return false;
 
                     // Read all lines and gather dat information
                     while (!sr.EndOfStream)
                     {
-                        string line = sr.ReadLine().Trim();
-                        if (line.StartsWith("Version"))
+                        var line = sr.ReadLine()?.Trim();
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            continue;
+                        }
+                        else if (line.StartsWith("Version"))
                         {
                             version = line.Substring("Version: ".Length);
                         }

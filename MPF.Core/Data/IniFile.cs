@@ -21,7 +21,7 @@ namespace MPF.Core.Data
                 if (_keyValuePairs.ContainsKey(key))
                     return _keyValuePairs[key];
 
-                return null;
+                return string.Empty;
             }
             set
             {
@@ -104,10 +104,16 @@ namespace MPF.Core.Data
                     string section = string.Empty;
                     while (!sr.EndOfStream)
                     {
-                        string line = sr.ReadLine().Trim();
+                        var line = sr.ReadLine()?.Trim();
+
+                        // Empty lines are skipped
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            // No-op, we don't process empty lines
+                        }
 
                         // Comments start with ';'
-                        if (line.StartsWith(";"))
+                        else if (line.StartsWith(";"))
                         {
                             // No-op, we don't process comments
                         }
@@ -245,7 +251,9 @@ namespace MPF.Core.Data
 
         public bool TryGetValue(string key, out string value)
         {
-            return ((IDictionary<string, string>)_keyValuePairs).TryGetValue(key.ToLowerInvariant(), out value);
+            bool result = ((IDictionary<string, string>)_keyValuePairs).TryGetValue(key.ToLowerInvariant(), out var temp);
+            value = temp ?? string.Empty;
+            return result;
         }
 
         public void Add(KeyValuePair<string, string> item)

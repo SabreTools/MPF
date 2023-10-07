@@ -29,7 +29,12 @@ namespace MPF.Core.Hashing
     public class Hasher
     {
         public Hash HashType { get; private set; }
-        private object _hasher; 
+
+#if NET48
+        private object _hasher;
+#else
+        private object? _hasher;
+#endif
 
         public Hasher(Hash hashType)
         {
@@ -84,7 +89,7 @@ namespace MPF.Core.Hashing
             switch (HashType)
             {
                 case Hash.CRC32:
-                    (_hasher as NonCryptographicHashAlgorithm).Append(buffer);
+                    (_hasher as NonCryptographicHashAlgorithm)?.Append(buffer);
                     break;
 
                 case Hash.MD5:
@@ -92,7 +97,7 @@ namespace MPF.Core.Hashing
                 case Hash.SHA256:
                 case Hash.SHA384:
                 case Hash.SHA512:
-                    (_hasher as HashAlgorithm).TransformBlock(buffer, 0, size, null, 0);
+                    (_hasher as HashAlgorithm)?.TransformBlock(buffer, 0, size, null, 0);
                     break;
             }
         }
@@ -106,7 +111,7 @@ namespace MPF.Core.Hashing
             switch (HashType)
             {
                 case Hash.CRC32:
-                    (_hasher as NonCryptographicHashAlgorithm).Append(emptyBuffer);
+                    (_hasher as NonCryptographicHashAlgorithm)?.Append(emptyBuffer);
                     break;
 
                 case Hash.MD5:
@@ -114,7 +119,7 @@ namespace MPF.Core.Hashing
                 case Hash.SHA256:
                 case Hash.SHA384:
                 case Hash.SHA512:
-                    (_hasher as HashAlgorithm).TransformFinalBlock(emptyBuffer, 0, 0);
+                    (_hasher as HashAlgorithm)?.TransformFinalBlock(emptyBuffer, 0, 0);
                     break;
             }
         }
@@ -122,19 +127,26 @@ namespace MPF.Core.Hashing
         /// <summary>
         /// Get internal hash as a byte array
         /// </summary>
+#if NET48
         public byte[] GetHash()
+#else
+        public byte[]? GetHash()
+#endif
         {
+            if (_hasher == null)
+                return null;
+
             switch (HashType)
             {
                 case Hash.CRC32:
-                    return (_hasher as NonCryptographicHashAlgorithm).GetCurrentHash();
+                    return (_hasher as NonCryptographicHashAlgorithm)?.GetCurrentHash();
 
                 case Hash.MD5:
                 case Hash.SHA1:
                 case Hash.SHA256:
                 case Hash.SHA384:
                 case Hash.SHA512:
-                    return (_hasher as HashAlgorithm).Hash;
+                    return (_hasher as HashAlgorithm)?.Hash;
             }
 
             return null;
@@ -143,12 +155,16 @@ namespace MPF.Core.Hashing
         /// <summary>
         /// Get internal hash as a string
         /// </summary>
+#if NET48
         public string GetHashString()
+#else
+        public string? GetHashString()
+#endif
         {
-            byte[] hash = GetHash();
+            var hash = GetHash();
             if (hash == null)
                 return null;
-            
+
             return ByteArrayToString(hash);
         }
 
@@ -158,7 +174,11 @@ namespace MPF.Core.Hashing
         /// <param name="bytes">Byte array to convert</param>
         /// <returns>Hex string representing the byte array</returns>
         /// <link>http://stackoverflow.com/questions/311165/how-do-you-convert-byte-array-to-hexadecimal-string-and-vice-versa</link>
+#if NET48
         private static string ByteArrayToString(byte[] bytes)
+#else
+        private static string? ByteArrayToString(byte[]? bytes)
+#endif
         {
             // If we get null in, we send null out
             if (bytes == null)

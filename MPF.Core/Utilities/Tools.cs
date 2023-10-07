@@ -130,16 +130,23 @@ namespace MPF.Core.Utilities
         /// String representing the message to display the the user.
         /// String representing the new release URL.
         /// </returns>
+#if NET48
         public static (bool different, string message, string url) CheckForNewVersion()
+#else
+        public static (bool different, string message, string? url) CheckForNewVersion()
+#endif
         {
             try
             {
                 // Get current assembly version
-                var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
+                var assemblyVersion = Assembly.GetEntryAssembly()?.GetName()?.Version;
+                if (assemblyVersion == null)
+                    return (false, "Assembly version could not be determined", null);
+
                 string version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}" + (assemblyVersion.Build != 0 ? $".{assemblyVersion.Build}" : string.Empty);
 
                 // Get the latest tag from GitHub
-                (string tag, string url) = GetRemoteVersionAndUrl();
+                var (tag, url) = GetRemoteVersionAndUrl();
                 bool different = version != tag;
 
                 string message = $"Local version: {version}"
@@ -159,12 +166,20 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Get the current informational version formatted as a string
         /// </summary>
+#if NET48
         public static string GetCurrentVersion()
+#else
+        public static string? GetCurrentVersion()
+#endif
         {
             try
             {
-                var assemblyVersion = Attribute.GetCustomAttribute(Assembly.GetEntryAssembly(), typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
-                return assemblyVersion.InformationalVersion;
+                var assembly = Assembly.GetEntryAssembly();
+                if (assembly == null)
+                    return null;
+
+                var assemblyVersion = Attribute.GetCustomAttribute(assembly, typeof(AssemblyInformationalVersionAttribute)) as AssemblyInformationalVersionAttribute;
+                return assemblyVersion?.InformationalVersion;
             }
             catch (Exception ex)
             {
@@ -175,9 +190,13 @@ namespace MPF.Core.Utilities
         /// <summary>
         /// Get the latest version of MPF from GitHub and the release URL
         /// </summary>
+#if NET48
         private static (string tag, string url) GetRemoteVersionAndUrl()
+#else
+        private static (string? tag, string? url) GetRemoteVersionAndUrl()
+#endif
         {
-#if NETFRAMEWORK
+#if NET48
             using (System.Net.WebClient wc = new System.Net.WebClient())
             {
                 wc.Headers["User-Agent"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0";
@@ -198,10 +217,16 @@ namespace MPF.Core.Utilities
                 string url = "https://api.github.com/repos/SabreTools/MPF/releases/latest";
                 var message = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
                 message.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:64.0) Gecko/20100101 Firefox/64.0");
-                string latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                var latestReleaseJsonString = hc.Send(message)?.Content?.ReadAsStringAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+                if (latestReleaseJsonString == null)
+                    return (null, null);
+
                 var latestReleaseJson = JObject.Parse(latestReleaseJsonString);
-                string latestTag = latestReleaseJson["tag_name"].ToString();
-                string releaseUrl = latestReleaseJson["html_url"].ToString();
+                if (latestReleaseJson == null)
+                    return (null, null);
+
+                var latestTag = latestReleaseJson["tag_name"]?.ToString();
+                var releaseUrl = latestReleaseJson["html_url"]?.ToString();
 
                 return (latestTag, releaseUrl);
             }
