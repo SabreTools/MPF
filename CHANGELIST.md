@@ -30,6 +30,7 @@
 - Move LogLevel enumeration
 - Split logging code a bit more
 - Split info window code a bit more
+- Clarify build instructions in README (Deterous)
 
 ### 2.6.6 (2023-10-04)
 
