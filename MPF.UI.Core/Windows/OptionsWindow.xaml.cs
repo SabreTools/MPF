@@ -20,12 +20,6 @@ namespace MPF.UI.Core.Windows
         {
             InitializeComponent();
             DataContext = new OptionsViewModel(this, options);
-
-#if NET6_0_OR_GREATER
-            this.SkipMediaTypeDetectionCheckBox.IsEnabled = false;
-            this.SkipMediaTypeDetectionCheckBox.IsChecked = false;
-            this.SkipMediaTypeDetectionCheckBox.ToolTip = "This feature is not enabled for .NET 6";
-#endif
         }
     }
 }

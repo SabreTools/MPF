@@ -1,4 +1,5 @@
 ### WIP (xxxx-xx-xx)
+
 - Attempt to replace NRT
 - Try alternate archive naming
 - Publish, but don't package, release builds
@@ -11,6 +12,14 @@
 - Don't reverse the CRC32 output
 - Add submission info preamble
 - Fix missing comma
+- Remove IMAPI2 with no substitution
+- Remove framework exceptions
+- Slight reorganization of code
+- Update README with support information
+- Remove msbuild-specific AppVeyor items
+- Be trickier when it comes to type from size
+- Fix "detected" message
+- Be smarter about media type based on system
 
 ### 2.6.6 (2023-10-04)
 

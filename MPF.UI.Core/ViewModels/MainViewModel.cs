@@ -865,7 +865,6 @@ namespace MPF.UI.Core.ViewModels
             if (defaultMediaType == MediaType.NONE)
                 defaultMediaType = MediaType.CDROM;
 
-#if NET48 || NETSTANDARD2_1
             // If we're skipping detection, set the default value
             if (this.Options.SkipMediaTypeDetection)
             {
@@ -877,8 +876,8 @@ namespace MPF.UI.Core.ViewModels
             else if (drive.MarkedActive)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}].. ");
-                (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType();
+                    this.Logger.VerboseLog($"Trying to detect media type for drive {drive.Letter} [{drive.DriveFormat}] using size and filesystem.. ");
+                (MediaType? detectedMediaType, string errorMessage) = drive.GetMediaType(currentSystem);
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null && this.Options.VerboseLogging)
@@ -894,7 +893,7 @@ namespace MPF.UI.Core.ViewModels
                 else
                 {
                     if (this.Options.VerboseLogging)
-                        this.Logger.VerboseLogLn($"Detected {CurrentMediaType.LongName()}.");
+                        this.Logger.VerboseLogLn($"Detected {detectedMediaType.LongName()}.");
                     CurrentMediaType = detectedMediaType;
                 }
             }
@@ -906,12 +905,6 @@ namespace MPF.UI.Core.ViewModels
                     this.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
-#else
-            // Media type detection on initialize is always disabled
-            if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Media type detection not available, defaulting to {defaultMediaType.LongName()}.");
-            CurrentMediaType = defaultMediaType;
-#endif
 
             // Ensure the UI gets updated
             this.Parent.UpdateLayout();

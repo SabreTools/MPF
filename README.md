@@ -34,28 +34,19 @@ Ensure that your operating system is as up-to-date as possible, since some featu
 
 ### Support Limitations
 
-.NET 6 has some known limitations that are documented in code and in some prior support tickets:
+The main UI has some known limitations that are documented in code and in some prior support tickets:
 
 - Windows-only due to reliance on WPF and Winforms
     - MAUI is not a viable alternative due to lack of out-of-box support for Linux
-    - Avalonia is being heavily considered
-- No media type detection due to lack of alternatives to IMAPI2
+    - Avalonia is being heavily considered as an alternative
 
 ### Build Instructions
 
-To build for .NET Framework 4.8 (Windows only), ensure that the .NET Framework 4.8 SDK is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+To build for .NET Framework 4.8, .NET 6.0, or .NET 7.0 (all Windows only), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
 
 ```
-dotnet restore
-msbuild MPF\MPF.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
+dotnet build MPF\MPF.csproj --framework [net48|net6.0-windows|net7.0-windows] --runtime [win-x64]
 ```
-
-To build for .NET 6.0 or .NET 7.0 (Windows only), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
-
-```
-dotnet build MPF\MPF.csproj --framework net6.0-windows --runtime [win-x64]
-```
-
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
@@ -68,17 +59,10 @@ MPF.Check is a commandline-only program that allows users to generate submission
 
 ### Build Instructions
 
-To build for .NET Framework 4.8 (Windows only), ensure that the .NET Framework 4.8 SDK is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, or Terminal:
+To build for .NET Framework 4.8 (Windows only), .NET 6.0, and .NET 7.0 (both all supported OSes), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
 
 ```
-dotnet restore
-msbuild MPF.Check\MPF.Check.csproj -property:TargetFramework=net48 -property:RuntimeIdentifiers=win7-x64
-```
-
-To build for .NET 6.0 and .NET 7.0 (All supported OSes), ensure that the .NET 7.0 SDK (or later) is installed and included in your PATH. Then, run the following commands from command prompt, Powershell, Terminal, or shell:
-
-```
-dotnet build MPF.Check\MPF.Check.csproj --framework net6.0 --runtime [win-x64linux-x64|osx-x64]
+dotnet build MPF.Check\MPF.Check.csproj --framework [net48|net6.0|net7.0] --runtime [win-x64linux-x64|osx-x64]
 ```
 
 Choose one of `[win-x64|linux-x64|osx-x64]` depending on the machine you are targeting.

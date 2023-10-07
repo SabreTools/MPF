@@ -7,9 +7,6 @@ using Microsoft.Management.Infrastructure.Generic;
 using MPF.Core.Converters;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
-#if NETFRAMEWORK
-using IMAPI2;
-#endif
 
 namespace MPF.Core.Data
 {
@@ -174,77 +171,83 @@ namespace MPF.Core.Data
         /// <summary>
         /// Get the current media type from drive letter
         /// </summary>
+        /// <param name="system"></param>
         /// <returns></returns>
-        public (MediaType?, string) GetMediaType()
+        public (MediaType?, string) GetMediaType(RedumpSystem? system)
         {
             // Take care of the non-optical stuff first
-            // TODO: See if any of these can be more granular, like Optical is
-            if (this.InternalDriveType == Data.InternalDriveType.Floppy)
-                return (MediaType.FloppyDisk, null);
-            else if (this.InternalDriveType == Data.InternalDriveType.HardDisk)
-                return (MediaType.HardDisk, null);
-            else if (this.InternalDriveType == Data.InternalDriveType.Removable)
-                return (MediaType.FlashDrive, null);
-#if NET6_0_OR_GREATER
-            else
-                return GetMediaTypeFromSize();
-#else
-
-            // Get the current drive information
-            string deviceId = null;
-            bool loaded = false;
-            try
+            switch (this.InternalDriveType)
             {
-                // Get the device ID first
-                CimSession session = CimSession.Create(null);
-                var collection = session.QueryInstances("root\\CIMV2", "WQL", $"SELECT * FROM Win32_CDROMDrive WHERE Id = '{this.Letter}:\'");
-
-                foreach (CimInstance instance in collection)
-                {
-                    CimKeyedCollection<CimProperty> properties = instance.CimInstanceProperties;
-                    deviceId = (string)properties["DeviceID"]?.Value;
-                    loaded = (bool)properties["MediaLoaded"]?.Value;
-                }
-
-                // If we got no valid device, we don't care and just return
-                if (deviceId == null)
-                    return (null, "Device could not be found");
-                else if (!loaded)
-                    return (null, "Device is not reporting media loaded");
-
-                MsftDiscMaster2 discMaster = new MsftDiscMaster2();
-                deviceId = deviceId.ToLower().Replace('\\', '#').Replace('/', '#');
-                string id = null;
-                foreach (var disc in discMaster)
-                {
-                    if (disc.ToString().Contains(deviceId))
-                        id = disc.ToString();
-                }
-
-                // If we couldn't find the drive, we don't care and return
-                if (id == null)
-                    return (null, "Device ID could not be found");
-
-                // Create the required objects for reading from the drive
-                MsftDiscRecorder2 recorder = new MsftDiscRecorder2();
-                recorder.InitializeDiscRecorder(id);
-                MsftDiscFormat2Data dataWriter = new MsftDiscFormat2Data();
-
-                // If the recorder is not supported, just return
-                if (!dataWriter.IsRecorderSupported(recorder))
-                    return (null, "IMAPI2 recorder not supported");
-
-                // Otherwise, set the recorder to get information from
-                dataWriter.Recorder = recorder;
-
-                var media = dataWriter.CurrentPhysicalMediaType;
-                return (media.IMAPIToMediaType(), null);
+                case Data.InternalDriveType.Floppy:
+                    return (MediaType.FloppyDisk, null);
+                case Data.InternalDriveType.HardDisk:
+                    return (MediaType.HardDisk, null);
+                case Data.InternalDriveType.Removable:
+                    return (MediaType.FlashDrive, null);
             }
-            catch (Exception ex)
+
+            // Some systems should default to certain media types
+            switch (system)
             {
-                return (null, ex.Message);
+                // CD
+                case RedumpSystem.Panasonic3DOInteractiveMultiplayer:
+                case RedumpSystem.PhilipsCDi:
+                case RedumpSystem.SegaDreamcast:
+                case RedumpSystem.SegaSaturn:
+                case RedumpSystem.SonyPlayStation:
+                case RedumpSystem.VideoCD:
+                    return (MediaType.CDROM, null);
+
+                // DVD
+                case RedumpSystem.DVDAudio:
+                case RedumpSystem.DVDVideo:
+                case RedumpSystem.MicrosoftXbox:
+                case RedumpSystem.MicrosoftXbox360:
+                    return (MediaType.DVD, null);
+
+                // HD-DVD
+                case RedumpSystem.HDDVDVideo:
+                    return (MediaType.HDDVD, null);
+
+                // Blu-ray
+                case RedumpSystem.BDVideo:
+                case RedumpSystem.MicrosoftXboxOne:
+                case RedumpSystem.MicrosoftXboxSeriesXS:
+                case RedumpSystem.SonyPlayStation3:
+                case RedumpSystem.SonyPlayStation4:
+                case RedumpSystem.SonyPlayStation5:
+                    return (MediaType.BluRay, null);
+
+                // GameCube
+                case RedumpSystem.NintendoGameCube:
+                    return (MediaType.NintendoGameCubeGameDisc, null);
+
+                // Wii
+                case RedumpSystem.NintendoWii:
+                    return (MediaType.NintendoWiiOpticalDisc, null);
+
+                // WiiU
+                case RedumpSystem.NintendoWiiU:
+                    return (MediaType.NintendoWiiUOpticalDisc, null);
+
+                // PSP
+                case RedumpSystem.SonyPlayStationPortable:
+                    return (MediaType.UMD, null);
             }
-#endif
+
+            // Handle optical media by size and filesystem
+            if (this.TotalSize >= 0 && this.TotalSize < 800_000_000 && this.DriveFormat == "CDFS")
+                return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 0 && this.TotalSize < 400_000_000 && this.DriveFormat == "UDF")
+                return (MediaType.CDROM, null);
+            else if (this.TotalSize >= 800_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "CDFS")
+                return (MediaType.DVD, null);
+            else if (this.TotalSize >= 400_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
+                return (MediaType.DVD, null);
+            else if (this.TotalSize > 8_540_000_000)
+                return (MediaType.BluRay, null);
+
+            return (null, "Could not determine media type!");
         }
 
         /// <summary>
@@ -565,20 +568,6 @@ namespace MPF.Core.Data
         #endregion
 
         #region Helpers
-
-        /// <summary>
-        /// Get the media type for a device path based on size
-        /// </summary>
-        /// <returns>MediaType, null on error</returns>
-        private (MediaType?, string) GetMediaTypeFromSize()
-        {
-            if (this.TotalSize >= 0 && this.TotalSize < 800_000_000 && this.DriveFormat == "CDFS")
-                return (MediaType.CDROM, null);
-            else if (this.TotalSize >= 400_000_000 && this.TotalSize <= 8_540_000_000 && this.DriveFormat == "UDF")
-                return (MediaType.DVD, null);
-            else
-                return (MediaType.BluRay, null);
-        }
 
         /// <summary>
         /// Get all current attached Drives
