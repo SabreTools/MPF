@@ -25,6 +25,7 @@
 - Remove debug symbols in release builds (Deterous)
 - Allow nullability for modern .NET
 - Fix failing tests
+- Remove unnecessary include
 
 ### 2.6.6 (2023-10-04)
 
