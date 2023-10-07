@@ -48,7 +48,7 @@ To build for .NET Framework 4.8, .NET 6.0, or .NET 7.0 (all Windows only), ensur
 dotnet build MPF\MPF.csproj --framework [net48|net6.0-windows|net7.0-windows] --runtime win-x64 --self-contained
 ```
 
-You may also run the `publish-win.bat` to build and package all variants MPF and MPF.Check at once. This script has the additional requirements of 7-zip commandline, Git for Windows, and .NET Framework 4.8 SDK being installed and in PATH.
+You may also run `publish-win.bat` (on Windows) or `publish-nix.sh` (on Linux) to build and package all variants MPF and MPF.Check at once. The Windows script additionally requires 7-zip commandline, Git for Windows, and .NET Framework 4.8 SDK to be installed and in PATH. The Linux script additionally requires `zip` and Git to be installed and in PATH.
 
 ## Media Preservation Frontend Checker (MPF.Check)
 
