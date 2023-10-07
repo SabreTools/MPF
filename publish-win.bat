@@ -23,41 +23,41 @@ dotnet restore
 
 REM .NET Framework 4.8 Debug
 echo Building .NET Framework 4.8 debug
-dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 --self-contained true --version-suffix %COMMIT%
-dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 --self-contained true --version-suffix %COMMIT%
+dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 -c Debug --self-contained true --version-suffix %COMMIT%
+dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 -c Debug --self-contained true --version-suffix %COMMIT%
 
 REM .NET Framework 4.8 Release
 echo Building .NET Framework 4.8 release
-dotnet publish MPF\MPF.csproj -f net48 -c Release -r win7-x64 --self-contained true --version-suffix %COMMIT%
-dotnet publish MPF.Check\MPF.Check.csproj -f net48 -c Release -r win7-x64 --self-contained true --version-suffix %COMMIT%
+dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:DebugType=None -p:DebugSymbols=false
 
 REM .NET 6.0 Debug
 echo Building .NET 6.0 debug
-dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM .NET 6.0 Release
 echo Building .NET 6.0 release
-dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
 REM .NET 7.0 Debug
 echo Building .NET 7.0 debug
-dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Debug --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
 
 REM .NET 7.0 Release
 echo Building .NET 7.0 release
-dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
-dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true
+dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
 REM Create MPF Debug archives
 cd %BUILD_FOLDER%\MPF\bin\Debug\net48\win7-x64\publish\
