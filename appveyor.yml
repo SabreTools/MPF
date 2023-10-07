@@ -13,36 +13,36 @@ build_script:
   - dotnet restore
 
   # .NET Framework 4.8 Debug
-  - dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT%
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT%
+  - dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT%
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT%
 
   # .NET Framework 4.8 Release
-  - dotnet publish MPF\MPF.csproj -f net48 -c Release -r win7-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT%
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net48 -c Release -r win7-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT%
+  - dotnet publish MPF\MPF.csproj -f net48 -r win7-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net48 -r win7-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:DebugType=None -p:DebugSymbols=false
 
   # .NET 6.0 Debug
-  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
 
   # .NET 6.0 Release
-  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
   # .NET 7.0 Debug
-  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
   - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Debug --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
 
   # .NET 7.0 Release
-  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
-  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true
+  - dotnet publish MPF\MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
+  - dotnet publish MPF.Check\MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix %APPVEYOR_REPO_COMMIT% -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false
 
 # post-build step
 after_build:
