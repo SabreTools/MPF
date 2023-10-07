@@ -1,4 +1,5 @@
-﻿using MPF.Core.Data;
+﻿using System;
+using MPF.Core.Data;
 using MPF.UI.Core.ViewModels;
 
 namespace MPF.UI.Core.Windows
@@ -19,7 +20,55 @@ namespace MPF.UI.Core.Windows
         public OptionsWindow(Options options)
         {
             InitializeComponent();
-            DataContext = new OptionsViewModel(this, options);
+            DataContext = new OptionsViewModel(options);
+
+            // Add handlers
+            AaruPathButton.Click += BrowseForPathClick;
+            DiscImageCreatorPathButton.Click += BrowseForPathClick;
+            DefaultOutputPathButton.Click += BrowseForPathClick;
+
+            AcceptButton.Click += OnAcceptClick;
+            CancelButton.Click += OnCancelClick;
+            RedumpLoginTestButton.Click += OnRedumpTestClick;
+
+            // Update UI with new values
+            OptionsViewModel.Load(this);
         }
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Handler for generic Click event
+        /// </summary>
+        private void BrowseForPathClick(object sender, EventArgs e) =>
+            OptionsViewModel.BrowseForPath(this, sender as System.Windows.Controls.Button);
+
+        /// <summary>
+        /// Handler for AcceptButton Click event
+        /// </summary>
+        private void OnAcceptClick(object sender, EventArgs e)
+        {
+            OptionsViewModel.Save(this);
+            Close();
+        }
+
+        /// <summary>
+        /// Handler for CancelButtom Click event
+        /// </summary>
+        private void OnCancelClick(object sender, EventArgs e)
+            => Close();
+
+        /// <summary>
+        /// Test Redump credentials for validity
+        /// </summary>
+#if NET48
+        private void OnRedumpTestClick(object sender, EventArgs e) =>
+            OptionsViewModel.TestRedumpLogin(this, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+#else
+        private async void OnRedumpTestClick(object sender, EventArgs e) =>
+            _ = await OptionsViewModel.TestRedumpLogin(this, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+#endif
+
+        #endregion
     }
 }

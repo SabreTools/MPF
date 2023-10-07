@@ -18,11 +18,6 @@ namespace MPF.UI.Core.ViewModels
         #region Fields
 
         /// <summary>
-        /// Parent OptionsWindow object
-        /// </summary>
-        public OptionsWindow Parent { get; }
-
-        /// <summary>
         /// Current set of options
         /// </summary>
         public Options Options { get; }
@@ -51,22 +46,9 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Constructor
         /// </summary>
-        public OptionsViewModel(OptionsWindow parent, Options baseOptions)
+        public OptionsViewModel(Options baseOptions)
         {
-            Parent = parent;
             Options = new Options(baseOptions);
-
-            // Add handlers
-            Parent.AaruPathButton.Click += BrowseForPathClick;
-            Parent.DiscImageCreatorPathButton.Click += BrowseForPathClick;
-            Parent.DefaultOutputPathButton.Click += BrowseForPathClick;
-
-            Parent.AcceptButton.Click += OnAcceptClick;
-            Parent.CancelButton.Click += OnCancelClick;
-            Parent.RedumpLoginTestButton.Click += OnRedumpTestClick;
-
-            // Update UI with new values
-            Load();
         }
 
         #region Load and Save
@@ -74,23 +56,23 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Load any options-related elements
         /// </summary>
-        private void Load()
+        internal void Load(OptionsWindow parent)
         {
-            Parent.InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Options.InternalProgram);
-            Parent.DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == Options.DefaultSystem);
-            Parent.RedumpPasswordBox.Password = Options.RedumpPassword;
+            parent.InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Options.InternalProgram);
+            parent.DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == Options.DefaultSystem);
+            parent.RedumpPasswordBox.Password = Options.RedumpPassword;
         }
 
         /// <summary>
         /// Save any options-related elements
         /// </summary>
-        private void Save()
+        internal void Save(OptionsWindow parent)
         {
-            var selectedInternalProgram = Parent.InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
+            var selectedInternalProgram = parent.InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
             Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
-            var selectedDefaultSystem = Parent.DefaultSystemComboBox.SelectedItem as RedumpSystemComboBoxItem;
+            var selectedDefaultSystem = parent.DefaultSystemComboBox.SelectedItem as RedumpSystemComboBoxItem;
             Options.DefaultSystem = selectedDefaultSystem?.Value ?? null;
-            Options.RedumpPassword = Parent.RedumpPasswordBox.Password;
+            Options.RedumpPassword = parent.RedumpPasswordBox.Password;
 
             SavedSettings = true;
         }
@@ -115,7 +97,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Browse and set a path based on the invoking button
         /// </summary>
-        private void BrowseForPath(System.Windows.Controls.Button button)
+        internal void BrowseForPath(Window parent, System.Windows.Controls.Button button)
         {
             // If the button is null, we can't do anything
             if (button == null)
@@ -127,7 +109,7 @@ namespace MPF.UI.Core.ViewModels
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
 
-            string currentPath = TextBoxForPathSetting(pathSettingName)?.Text;
+            string currentPath = TextBoxForPathSetting(parent, pathSettingName)?.Text;
             string initialDirectory = AppDomain.CurrentDomain.BaseDirectory;
             if (!shouldBrowseForPath && !string.IsNullOrEmpty(currentPath))
                 initialDirectory = Path.GetDirectoryName(Path.GetFullPath(currentPath));
@@ -157,7 +139,7 @@ namespace MPF.UI.Core.ViewModels
                     if (exists)
                     {
                         Options[pathSettingName] = path;
-                        TextBoxForPathSetting(pathSettingName).Text = path;
+                        TextBoxForPathSetting(parent, pathSettingName).Text = path;
                     }
                     else
                     {
@@ -173,37 +155,25 @@ namespace MPF.UI.Core.ViewModels
         }
 
         /// <summary>
-        /// Optionally save the current options and close the parent window
-        /// </summary>
-        private void OptionalSaveAndClose(bool save)
-        {
-            // Save if we're supposed to
-            if (save)
-                Save();
-
-            Parent.Close();
-        }
-
-        /// <summary>
         /// Test Redump login credentials
         /// </summary>
 #if NET48
-        private bool? TestRedumpLogin()
+        public bool? TestRedumpLogin(Window parent, string username, string password)
 #else
-        private async Task<bool?> TestRedumpLogin()
+        public async Task<bool?> TestRedumpLogin(Window parent, string username, string password)
 #endif
         {
 #if NET48
-            (bool? success, string message) = RedumpWebClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
+            (bool? success, string message) = RedumpWebClient.ValidateCredentials(username, password);
 #else
-            (bool? success, string message) = await RedumpHttpClient.ValidateCredentials(Parent.RedumpUsernameTextBox.Text, Parent.RedumpPasswordBox.Password);
+            (bool? success, string message) = await RedumpHttpClient.ValidateCredentials(username, password);
 #endif
             if (success == true)
-                CustomMessageBox.Show(Parent, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.Show(parent, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             else if (success == false)
-                CustomMessageBox.Show(Parent, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.Show(parent, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
             else
-                CustomMessageBox.Show(Parent, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                CustomMessageBox.Show(parent, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
             return success;
         }
@@ -236,41 +206,8 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         /// <param name="name">Setting name to find</param>
         /// <returns>TextBox for that setting</returns>
-        private System.Windows.Controls.TextBox TextBoxForPathSetting(string name) =>
-            Parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
-
-        #endregion
-
-        #region Event Handlers
-
-        /// <summary>
-        /// Handler for generic Click event
-        /// </summary>
-        private void BrowseForPathClick(object sender, EventArgs e) =>
-            BrowseForPath(sender as System.Windows.Controls.Button);
-
-        /// <summary>
-        /// Handler for AcceptButton Click event
-        /// </summary>
-        private void OnAcceptClick(object sender, EventArgs e) =>
-            OptionalSaveAndClose(true);
-
-        /// <summary>
-        /// Handler for CancelButtom Click event
-        /// </summary>
-        private void OnCancelClick(object sender, EventArgs e) =>
-            OptionalSaveAndClose(false);
-
-        /// <summary>
-        /// Test Redump credentials for validity
-        /// </summary>
-#if NET48
-        private void OnRedumpTestClick(object sender, EventArgs e) =>
-            TestRedumpLogin();
-#else
-        private async void OnRedumpTestClick(object sender, EventArgs e) =>
-            _ = await TestRedumpLogin();
-#endif
+        private System.Windows.Controls.TextBox TextBoxForPathSetting(Window parent, string name) =>
+            parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
         #endregion
     }
