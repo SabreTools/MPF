@@ -24,6 +24,7 @@
 - Fix failing tests
 - Remove debug symbols in release builds (Deterous)
 - Allow nullability for modern .NET
+- Fix failing tests
 
 ### 2.6.6 (2023-10-04)
 

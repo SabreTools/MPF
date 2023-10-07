@@ -1018,7 +1018,7 @@ namespace MPF.Core
             switch (mediaType)
             {
                 case MediaType.DVD:
-                    if (layerbreak != default)
+                    if (layerbreak != default && layerbreak != default(long))
                         return $"{mediaType.LongName()}-9";
                     else
                         return $"{mediaType.LongName()}-5";
