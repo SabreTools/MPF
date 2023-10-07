@@ -32,10 +32,10 @@ dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r osx-x64 --self-contained 
 
 # .NET 6.0 Release
 echo "Building .NET 6.0 release"
-#dotnet publish MPF/MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
-dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
-dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
-dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
+#dotnet publish MPF/MPF.csproj -f net6.0-windows -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r linux-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check/MPF.Check.csproj -f net6.0 -r osx-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
 
 # .NET 7.0 Debug
 echo "Building .NET 7.0 debug"
@@ -46,10 +46,10 @@ dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r osx-x64 --self-contained 
 
 # .NET 7.0 Release
 echo "Building .NET 7.0 release"
-#dotnet publish MPF/MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
-dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
-dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
-dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true
+#dotnet publish MPF/MPF.csproj -f net7.0-windows -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r win-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r linux-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
+dotnet publish MPF.Check/MPF.Check.csproj -f net7.0 -r osx-x64 -c Release --self-contained true --version-suffix $COMMIT -p:PublishSingleFile=true -p:PublishTrimmed=true -p:DebugType=None -p:DebugSymbols=false
 
 # Create MPF Debug archives
 #cd $BUILD_FOLDER/MPF/bin/Debug/net6.0-windows/win-x64/publish/
