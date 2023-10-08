@@ -34,6 +34,8 @@
 - Split options window code a bit more
 - Use binding for more disc info textboxes
 - Handle Redump password changing better
+- Refine options window bindings
+- Refine options window bindings further
 
 ### 2.6.6 (2023-10-04)
 

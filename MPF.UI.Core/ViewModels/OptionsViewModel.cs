@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
 using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Web;
-using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.ViewModels
 {
@@ -66,72 +61,12 @@ namespace MPF.UI.Core.ViewModels
         #region UI Commands
 
         /// <summary>
-        /// Browse and set a path based on the invoking button
-        /// </summary>
-        internal void BrowseForPath(Window parent, System.Windows.Controls.Button button)
-        {
-            // If the button is null, we can't do anything
-            if (button == null)
-                return;
-
-            // Strips button prefix to obtain the setting name
-            string pathSettingName = button.Name.Substring(0, button.Name.IndexOf("Button"));
-
-            // TODO: hack for now, then we'll see
-            bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
-
-            string currentPath = TextBoxForPathSetting(parent, pathSettingName)?.Text;
-            string initialDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            if (!shouldBrowseForPath && !string.IsNullOrEmpty(currentPath))
-                initialDirectory = Path.GetDirectoryName(Path.GetFullPath(currentPath));
-
-            CommonDialog dialog = shouldBrowseForPath
-                ? (CommonDialog)CreateFolderBrowserDialog()
-                : CreateOpenFileDialog(initialDirectory);
-            using (dialog)
-            {
-                DialogResult result = dialog.ShowDialog();
-                if (result == DialogResult.OK)
-                {
-                    string path = string.Empty;
-                    bool exists = false;
-
-                    if (shouldBrowseForPath && dialog is FolderBrowserDialog folderBrowserDialog)
-                    {
-                        path = folderBrowserDialog.SelectedPath;
-                        exists = Directory.Exists(path);
-                    }
-                    else if (dialog is OpenFileDialog openFileDialog)
-                    {
-                        path = openFileDialog.FileName;
-                        exists = File.Exists(path);
-                    }
-
-                    if (exists)
-                    {
-                        Options[pathSettingName] = path;
-                        TextBoxForPathSetting(parent, pathSettingName).Text = path;
-                    }
-                    else
-                    {
-                        CustomMessageBox.Show(
-                            "Specified path doesn't exist!",
-                            "Error",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error
-                        );
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Test Redump login credentials
         /// </summary>
 #if NET48
-        public (bool?, string) TestRedumpLogin(Window parent, string username, string password)
+        public (bool?, string) TestRedumpLogin(string username, string password)
 #else
-        public async Task<(bool?, string)> TestRedumpLogin(Window parent, string username, string password)
+        public async Task<(bool?, string)> TestRedumpLogin(string username, string password)
 #endif
         {
 #if NET48
@@ -140,37 +75,6 @@ namespace MPF.UI.Core.ViewModels
             return await RedumpHttpClient.ValidateCredentials(username, password);
 #endif
         }
-
-        #endregion
-
-        #region UI Functionality
-
-        /// <summary>
-        /// Create an open folder dialog box
-        /// </summary>
-        private static FolderBrowserDialog CreateFolderBrowserDialog() => new FolderBrowserDialog();
-
-        /// <summary>
-        /// Create an open file dialog box
-        /// </summary>
-        private static OpenFileDialog CreateOpenFileDialog(string initialDirectory)
-        {
-            return new OpenFileDialog()
-            {
-                InitialDirectory = initialDirectory,
-                Filter = "Executables (*.exe)|*.exe",
-                FilterIndex = 0,
-                RestoreDirectory = true,
-            };
-        }
-
-        /// <summary>
-        /// Find a TextBox by setting name
-        /// </summary>
-        /// <param name="name">Setting name to find</param>
-        /// <returns>TextBox for that setting</returns>
-        private System.Windows.Controls.TextBox TextBoxForPathSetting(Window parent, string name) =>
-            parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 
         #endregion
     }
