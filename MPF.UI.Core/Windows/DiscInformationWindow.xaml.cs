@@ -66,6 +66,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Enable tab entry on supported fields
         /// </summary>
+        /// TODO: See if these can be done by binding
         private void EnableTabsInInputFields()
         {
             // Additional Information
@@ -112,30 +113,24 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Hide any optional, read-only fields if they don't have a value
         /// </summary>
+        /// TODO: Figure out how to bind the PartiallyMatchedIDs array to a text box
+        /// TODO: Convert visibility to a binding
         private void HideReadOnlyFields(SubmissionInfo submissionInfo)
         {
             if (submissionInfo?.FullyMatchedID == null)
                 FullyMatchedID.Visibility = Visibility.Collapsed;
-            else
-                FullyMatchedID.Text = submissionInfo.FullyMatchedID.ToString();
             if (submissionInfo?.PartiallyMatchedIDs == null)
                 PartiallyMatchedIDs.Visibility = Visibility.Collapsed;
             else
                 PartiallyMatchedIDs.Text = string.Join(", ", submissionInfo.PartiallyMatchedIDs);
             if (submissionInfo?.CopyProtection?.AntiModchip == null)
                 AntiModchip.Visibility = Visibility.Collapsed;
-            else
-                AntiModchip.Text = submissionInfo.CopyProtection.AntiModchip.LongName();
             if (submissionInfo?.TracksAndWriteOffsets?.OtherWriteOffsets == null)
                 DiscOffset.Visibility = Visibility.Collapsed;
-            else
-                DiscOffset.Text = submissionInfo.TracksAndWriteOffsets.OtherWriteOffsets;
             if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.DMIHash) != true)
                 DMIHash.Visibility = Visibility.Collapsed;
             if (submissionInfo?.EDC?.EDC == null)
                 EDC.Visibility = Visibility.Collapsed;
-            else
-                EDC.Text = submissionInfo.EDC.EDC.LongName();
             if (string.IsNullOrWhiteSpace(submissionInfo?.CommonDiscInfo?.ErrorsCount))
                 ErrorsCount.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo?.CommonDiscInfo?.EXEDateBuildDate))
@@ -152,8 +147,6 @@ namespace MPF.UI.Core.Windows
                 Multisession.Visibility = Visibility.Collapsed;
             if (submissionInfo?.CopyProtection?.LibCrypt == null)
                 LibCrypt.Visibility = Visibility.Collapsed;
-            else
-                LibCrypt.Text = submissionInfo.CopyProtection.LibCrypt.LongName();
             if (string.IsNullOrWhiteSpace(submissionInfo?.CopyProtection?.LibCryptData))
                 LibCryptData.Visibility = Visibility.Collapsed;
             if (submissionInfo?.CommonDiscInfo?.CommentsSpecialFields.Keys.Contains(SiteCode.PFIHash) != true)
@@ -185,6 +178,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Update visible fields and sections based on the media type
         /// </summary>
+        /// TODO: See if these can be done by binding
         private void UpdateFromDiscType(SubmissionInfo submissionInfo)
         {
             // Sony-printed discs have layers in the opposite order
@@ -331,6 +325,7 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Update visible fields and sections based on the system type
         /// </summary>
+        /// TODO: See if these can be done by binding
         private void UpdateFromSystemType(SubmissionInfo submissionInfo)
         {
             var system = submissionInfo?.CommonDiscInfo?.System;
