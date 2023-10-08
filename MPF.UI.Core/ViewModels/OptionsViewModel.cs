@@ -56,23 +56,23 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Load any options-related elements
         /// </summary>
+        /// TODO: Convert selected list item to binding
         internal void Load(OptionsWindow parent)
         {
             parent.InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Options.InternalProgram);
             parent.DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == Options.DefaultSystem);
-            parent.RedumpPasswordBox.Password = Options.RedumpPassword;
         }
 
         /// <summary>
         /// Save any options-related elements
         /// </summary>
+        /// TODO: Convert selected list item to binding
         internal void Save(OptionsWindow parent)
         {
             var selectedInternalProgram = parent.InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
             Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
             var selectedDefaultSystem = parent.DefaultSystemComboBox.SelectedItem as RedumpSystemComboBoxItem;
             Options.DefaultSystem = selectedDefaultSystem?.Value ?? null;
-            Options.RedumpPassword = parent.RedumpPasswordBox.Password;
 
             SavedSettings = true;
         }

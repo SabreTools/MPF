@@ -33,6 +33,7 @@
 - Clarify build instructions in README (Deterous)
 - Split options window code a bit more
 - Use binding for more disc info textboxes
+- Handle Redump password changing better
 
 ### 2.6.6 (2023-10-04)
 

@@ -22,6 +22,9 @@ namespace MPF.UI.Core.Windows
             InitializeComponent();
             DataContext = new OptionsViewModel(options);
 
+            // Set initial value for binding
+            RedumpPasswordBox.Password = options.RedumpPassword;
+
             // Add handlers
             AaruPathButton.Click += BrowseForPathClick;
             DiscImageCreatorPathButton.Click += BrowseForPathClick;
@@ -29,6 +32,7 @@ namespace MPF.UI.Core.Windows
 
             AcceptButton.Click += OnAcceptClick;
             CancelButton.Click += OnCancelClick;
+            RedumpPasswordBox.PasswordChanged += OnPasswordChanged;
             RedumpLoginTestButton.Click += OnRedumpTestClick;
 
             // Update UI with new values
@@ -57,6 +61,14 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnCancelClick(object sender, EventArgs e)
             => Close();
+
+        /// <summary>
+        /// Handler for 
+        /// </summary>
+        private void OnPasswordChanged(object sender, EventArgs e)
+        {
+            OptionsViewModel.Options.RedumpPassword = RedumpPasswordBox.Password;
+        }
 
         /// <summary>
         /// Test Redump credentials for validity

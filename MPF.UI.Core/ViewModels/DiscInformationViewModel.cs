@@ -203,6 +203,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Load the current contents of the base SubmissionInfo to the UI
         /// </summary>
+        /// TODO: Convert selected list item to binding
         internal void Load(DiscInformationWindow parent)
         {
             parent.CategoryComboBox.SelectedIndex = Categories.FindIndex(r => r == SubmissionInfo.CommonDiscInfo.Category);
