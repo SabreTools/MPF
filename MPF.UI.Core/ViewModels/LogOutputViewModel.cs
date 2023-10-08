@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Threading;
 using MPF.Core.Data;
 
 namespace MPF.UI.Core.ViewModels
@@ -20,6 +20,11 @@ namespace MPF.UI.Core.ViewModels
         internal ProcessingQueue<LogLine> LogQueue { get; private set; }
 
         /// <summary>
+        /// Dispatcher from the parent view for invocation
+        /// </summary>
+        internal Dispatcher Dispatcher { get; private set; }
+
+        /// <summary>
         /// Paragraph backing the log
         /// </summary>
         private readonly Paragraph _paragraph;
@@ -29,7 +34,7 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         private Run lastLine = null;
 
-        public LogOutputViewModel()
+        public LogOutputViewModel(Dispatcher dispatcher)
         {
             // Update the internal state
             Document = new FlowDocument()
@@ -41,6 +46,7 @@ namespace MPF.UI.Core.ViewModels
 
             // Setup the processing queue
             LogQueue = new ProcessingQueue<LogLine>(ProcessLogLine);
+            Dispatcher = dispatcher;
         }
 
         /// <summary>
@@ -153,7 +159,7 @@ namespace MPF.UI.Core.ViewModels
         /// <param name="logLine">LogLine value to append</param>
         private void AppendToTextBox(LogLine logLine)
         {
-            Task.Run(() =>
+            Dispatcher.Invoke(() =>
             {
                 var run = logLine.GenerateRun();
                 _paragraph.Inlines.Add(run);
@@ -167,7 +173,7 @@ namespace MPF.UI.Core.ViewModels
         /// <param name="logLine">LogLine value to append</param>
         private void ReplaceLastLine(LogLine logLine)
         {
-            Task.Run(() =>
+            Dispatcher.Invoke(() =>
             {
                 lastLine.Text = logLine.Text;
                 lastLine.Foreground = logLine.GetForegroundColor();

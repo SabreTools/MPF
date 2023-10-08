@@ -38,6 +38,7 @@
 - Refine options window bindings further
 - Refine info window bindings further
 - Move decoupled view models
+- Fix log output
 
 ### 2.6.6 (2023-10-04)
 

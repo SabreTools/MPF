@@ -16,7 +16,7 @@ namespace MPF.UI.Core.UserControls
         public LogOutput()
         {
             InitializeComponent();
-            DataContext = new LogOutputViewModel();
+            DataContext = new LogOutputViewModel(Dispatcher);
 
             // Add handlers
             OutputViewer.SizeChanged += OutputViewerSizeChanged;
