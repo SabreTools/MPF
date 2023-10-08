@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:MPF.UI.Core.UserControls"
+        xmlns:core="clr-namespace:MPF.UI.Core"
         xmlns:redump="clr-namespace:SabreTools.RedumpLib.Data;assembly=SabreTools.RedumpLib"
         xmlns:windows="clr-namespace:MPF.UI.Core.Windows"
         mc:Ignorable="d"
@@ -11,6 +12,9 @@
         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
         BorderBrush="DarkGray" BorderThickness="2">
 
+    <Window.Resources>
+        <core:ElementConverter x:Key="ElementConverter" />
+    </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
     </WindowChrome.WindowChrome>
@@ -93,7 +97,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="CategoryLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Category" />
-                                        <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Categories}"
+                                        <ComboBox x:Name="CategoryComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding Categories}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Category, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
                                                   Style="{DynamicResource CustomComboBoxStyle}" />
                                     </Grid>
 
@@ -104,8 +109,9 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="RegionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Region" />
-                                        <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" ItemsSource="{Binding Regions}"
-                                          Style="{DynamicResource CustomComboBoxStyle}" />
+                                        <ComboBox x:Name="RegionComboBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding Regions}" SelectedItem="{Binding SubmissionInfo.CommonDiscInfo.Region, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                                  Style="{DynamicResource CustomComboBoxStyle}" />
                                     </Grid>
 
                                     <Grid>
@@ -115,7 +121,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="LanguagesLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Languages" />
-                                        <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding Languages}"
+                                        <ComboBox x:Name="LanguagesComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding Languages}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
@@ -132,7 +139,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label x:Name="LanguageSelectionLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Language Selection Via" />
-                                        <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch" ItemsSource="{Binding LanguageSelections}"
+                                        <ComboBox x:Name="LanguageSelectionComboBox" Grid.Row="0" Grid.Column="1" Height="24" HorizontalAlignment="Stretch"
+                                                  ItemsSource="{Binding LanguageSelections}"
                                           SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                             <ComboBox.ItemTemplate>
                                                 <DataTemplate>
@@ -179,7 +187,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="PostgapTypeCheckBox" Content="Postgap type (Form 2)" Margin="0,4"/>
+                                        <CheckBox Grid.Column="1" x:Name="PostgapTypeCheckBox" Content="Postgap type (Form 2)" Margin="0,4"
+                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)PostgapType], Mode=TwoWay}"/>
                                     </Grid>
                                     <controls:UserInput x:Name="SeriesTextBox" Label="Series"
                                                         Text="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)Series], Mode=TwoWay}"/>
@@ -190,7 +199,8 @@
                                         </Grid.ColumnDefinitions>
 
                                         <Label/>
-                                        <CheckBox Grid.Column="1" x:Name="VCDCheckBox" Content="V-CD" Margin="0,4"/>
+                                        <CheckBox Grid.Column="1" x:Name="VCDCheckBox" Content="V-CD" Margin="0,4"
+                                                  IsChecked="{Binding Path=SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[(redump:SiteCode)VCD], Mode=TwoWay}"/>
                                     </Grid>
                                 </StackPanel>
                             </GroupBox>

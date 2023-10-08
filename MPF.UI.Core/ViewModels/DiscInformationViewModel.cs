@@ -3,7 +3,6 @@ using System.Linq;
 using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
-using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.UI.Core.ViewModels
@@ -204,60 +203,24 @@ namespace MPF.UI.Core.ViewModels
         /// Load the current contents of the base SubmissionInfo to the UI
         /// </summary>
         /// TODO: Convert selected list item to binding
-        internal void Load(DiscInformationWindow parent)
+        internal void Load()
         {
-            parent.CategoryComboBox.SelectedIndex = Categories.FindIndex(r => r == SubmissionInfo.CommonDiscInfo.Category);
-            parent.RegionComboBox.SelectedIndex = Regions.FindIndex(r => r == SubmissionInfo.CommonDiscInfo.Region);
             if (SubmissionInfo.CommonDiscInfo.Languages != null)
                 Languages.ForEach(l => l.IsChecked = SubmissionInfo.CommonDiscInfo.Languages.Contains(l));
             if (SubmissionInfo.CommonDiscInfo.LanguageSelection != null)
                 LanguageSelections.ForEach(ls => ls.IsChecked = SubmissionInfo.CommonDiscInfo.LanguageSelection.Contains(ls));
-
-            // Comment Fields
-            if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields != null)
-            {
-                // Additional Information
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.PostgapType))
-                    parent.PostgapTypeCheckBox.IsChecked = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PostgapType] != null;
-                if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields.ContainsKey(SiteCode.VCD))
-                    parent.VCDCheckBox.IsChecked = SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VCD] != null;
-            }
         }
 
         /// <summary>
         /// Save the current contents of the UI to the base SubmissionInfo
         /// </summary>
         /// TODO: Convert selected list item to binding
-        internal void Save(DiscInformationWindow parent)
+        internal void Save()
         {
-            SubmissionInfo.CommonDiscInfo.Category = (parent.CategoryComboBox.SelectedItem as Element<DiscCategory>)?.Value ?? DiscCategory.Games;
-            SubmissionInfo.CommonDiscInfo.Region = (parent.RegionComboBox.SelectedItem as Element<Region>)?.Value ?? Region.World;
             SubmissionInfo.CommonDiscInfo.Languages = Languages.Where(l => l.IsChecked).Select(l => l?.Value).ToArray();
             if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
                 SubmissionInfo.CommonDiscInfo.Languages = new Language?[] { null };
             SubmissionInfo.CommonDiscInfo.LanguageSelection = LanguageSelections.Where(ls => ls.IsChecked).Select(ls => ls?.Value).ToArray();
-
-            // Initialize the dictionaries, if needed
-            if (SubmissionInfo.CommonDiscInfo.CommentsSpecialFields == null)
-#if NET48
-                SubmissionInfo.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                SubmissionInfo.CommonDiscInfo.CommentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
-            if (SubmissionInfo.CommonDiscInfo.ContentsSpecialFields == null)
-#if NET48
-                SubmissionInfo.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode?, string>();
-#else
-                SubmissionInfo.CommonDiscInfo.ContentsSpecialFields = new Dictionary<SiteCode, string>();
-#endif
-
-            #region Comment Fields
-
-            // Additional Information
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.PostgapType] = parent.PostgapTypeCheckBox.IsChecked?.ToString();
-            SubmissionInfo.CommonDiscInfo.CommentsSpecialFields[SiteCode.VCD] = parent.VCDCheckBox.IsChecked?.ToString();
-
-            #endregion
         }
 
         /// <summary>

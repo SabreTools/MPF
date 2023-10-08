@@ -24,7 +24,7 @@ namespace MPF.UI.Core.Windows
         {
             InitializeComponent();
             DataContext = new DiscInformationViewModel(options, submissionInfo);
-            DiscInformationViewModel.Load(this);
+            DiscInformationViewModel.Load();
 
             // Limit lists, if necessary
             if (options.EnableRedumpCompatibility)
@@ -346,7 +346,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnAcceptClick(object sender, RoutedEventArgs e)
         {
-            DiscInformationViewModel.Save(this);
+            DiscInformationViewModel.Save();
             DialogResult = true;
             Close();
         }
