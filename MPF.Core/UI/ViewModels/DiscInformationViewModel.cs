@@ -5,7 +5,7 @@ using MPF.Core.UI.ComboBoxItems;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.UI.Core.ViewModels
+namespace MPF.Core.UI.ViewModels
 {
     public class DiscInformationViewModel
     {
@@ -203,11 +203,11 @@ namespace MPF.UI.Core.ViewModels
         /// Load the current contents of the base SubmissionInfo to the UI
         /// </summary>
         /// TODO: Convert selected list item to binding
-        internal void Load()
+        public void Load()
         {
-            if (SubmissionInfo.CommonDiscInfo.Languages != null)
+            if (SubmissionInfo.CommonDiscInfo?.Languages != null)
                 Languages.ForEach(l => l.IsChecked = SubmissionInfo.CommonDiscInfo.Languages.Contains(l));
-            if (SubmissionInfo.CommonDiscInfo.LanguageSelection != null)
+            if (SubmissionInfo.CommonDiscInfo?.LanguageSelection != null)
                 LanguageSelections.ForEach(ls => ls.IsChecked = SubmissionInfo.CommonDiscInfo.LanguageSelection.Contains(ls));
         }
 
@@ -215,8 +215,9 @@ namespace MPF.UI.Core.ViewModels
         /// Save the current contents of the UI to the base SubmissionInfo
         /// </summary>
         /// TODO: Convert selected list item to binding
-        internal void Save()
+        public void Save()
         {
+            if (SubmissionInfo.CommonDiscInfo == null) SubmissionInfo.CommonDiscInfo = new CommonDiscInfoSection();
             SubmissionInfo.CommonDiscInfo.Languages = Languages.Where(l => l.IsChecked).Select(l => l?.Value).ToArray();
             if (!SubmissionInfo.CommonDiscInfo.Languages.Any())
                 SubmissionInfo.CommonDiscInfo.Languages = new Language?[] { null };
@@ -226,7 +227,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Repopulate the list of Languages based on Redump support
         /// </summary>
-        internal void SetRedumpLanguages()
+        public void SetRedumpLanguages()
         {
             this.Languages = RedumpLanguages.Select(l => new Element<Language>(l)).ToList();
         }
@@ -234,7 +235,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Repopulate the list of Regions based on Redump support
         /// </summary>
-        internal void SetRedumpRegions()
+        public void SetRedumpRegions()
         {
             this.Regions = RedumpRegions.Select(r => new Element<Region>(r)).ToList();
         }

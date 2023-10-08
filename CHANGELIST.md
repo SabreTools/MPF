@@ -37,6 +37,7 @@
 - Refine options window bindings
 - Refine options window bindings further
 - Refine info window bindings further
+- Move decoupled view models
 
 ### 2.6.6 (2023-10-04)
 

@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using System.Windows;
 using MPF.Core.Data;
+using MPF.Core.UI.ViewModels;
 using MPF.Core.Utilities;
-using MPF.UI.Core.ViewModels;
 using SabreTools.RedumpLib.Data;
 
 namespace MPF.UI.Core.Windows

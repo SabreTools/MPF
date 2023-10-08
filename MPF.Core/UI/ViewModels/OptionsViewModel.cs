@@ -5,7 +5,7 @@ using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Web;
 
-namespace MPF.UI.Core.ViewModels
+namespace MPF.Core.UI.ViewModels
 {
     public class OptionsViewModel
     {
@@ -19,7 +19,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Flag for if settings were saved or not
         /// </summary>
-        public bool SavedSettings { get; internal set; }
+        public bool SavedSettings { get; set; }
 
         #endregion
 
@@ -66,7 +66,7 @@ namespace MPF.UI.Core.ViewModels
 #if NET48
         public (bool?, string) TestRedumpLogin(string username, string password)
 #else
-        public async Task<(bool?, string)> TestRedumpLogin(string username, string password)
+        public async Task<(bool?, string?)> TestRedumpLogin(string username, string password)
 #endif
         {
 #if NET48
