@@ -9,7 +9,7 @@ namespace MPF.Core.UI.ComboBoxItems
     /// A generic combo box element
     /// </summary>
     /// <typeparam name="T">Enum type representing the possible values</typeparam>
-    public class Element<T> : IElement where T : struct, Enum
+    public class Element<T> : IEquatable<Element<T>>, IElement where T : struct, Enum
     {
         private readonly T Data;
 
@@ -46,6 +46,19 @@ namespace MPF.Core.UI.ComboBoxItems
             return Enum.GetValues(typeof(T))
                 .OfType<T>()
                 .Select(e => new Element<T>(e));
+        }
+
+        /// <inheritdoc/>
+#if NET48
+        public bool Equals(Element<T> other)
+#else
+        public bool Equals(Element<T>? other)
+#endif
+        {
+            if (other == null)
+                return false;
+
+            return Name == other.Name;
         }
     }
 }

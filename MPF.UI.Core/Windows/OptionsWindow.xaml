@@ -10,6 +10,9 @@
                         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SizeToContent="Height"
                         BorderBrush="DarkGray" BorderThickness="2">
 
+    <Window.Resources>
+        <core:ElementConverter x:Key="ElementConverter" />
+    </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
     </WindowChrome.WindowChrome>
@@ -99,26 +102,31 @@
                         </Grid.RowDefinitions>
 
                         <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Aaru Path" />
-                        <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Options.AaruPath}" VerticalContentAlignment="Center" />
+                        <TextBox x:Name="AaruPathTextBox" Grid.Row="0" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                 Text="{Binding Options.AaruPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="AaruPathButton" Grid.Row="0" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="DiscImageCreator Path" />
-                        <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Options.DiscImageCreatorPath}" VerticalContentAlignment="Center" />
+                        <TextBox x:Name="DiscImageCreatorPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                 Text="{Binding Options.DiscImageCreatorPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DiscImageCreatorPathButton" Grid.Row="1" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Redumper Path" />
-                        <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
+                        <TextBox x:Name="RedumperPathTextBox" Grid.Row="2" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                 Text="{Binding Options.RedumperPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="RedumperPathButton" Grid.Row="2" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Dumping Program" />
                         <ComboBox x:Name="InternalProgramComboBox" Grid.Row="3" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
-                                  ItemsSource="{Binding InternalPrograms}" Style="{DynamicResource CustomComboBoxStyle}" />
+                                  ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Options.InternalProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                  Style="{DynamicResource CustomComboBoxStyle}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right" Content="Default Output Path" />
-                        <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch" Text="{Binding Options.DefaultOutputPath}" VerticalContentAlignment="Center" />
+                        <TextBox x:Name="DefaultOutputPathTextBox" Grid.Row="4" Grid.Column="1" Height="22" HorizontalAlignment="Stretch"
+                                 Text="{Binding Options.DefaultOutputPath}" VerticalContentAlignment="Center" />
                         <Button x:Name="DefaultOutputPathButton" Grid.Row="4" Grid.Column="2" Height="22" Width="22" Content="..."
                                 Style="{DynamicResource CustomButtonStyle}" />
                     </Grid>
@@ -139,7 +147,9 @@
                                      />
 
                                 <Label VerticalAlignment="Center" Content="Default System:" HorizontalAlignment="Right" />
-                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left" ItemsSource="{Binding Systems}" SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                                <ComboBox x:Name="DefaultSystemComboBox" Height="22" Width="200" HorizontalAlignment="Left"
+                                          ItemsSource="{Binding Systems}" SelectedItem="{Binding Options.DefaultSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay}"
+                                          SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
                                     <ComboBox.ItemContainerStyle>
                                         <Style TargetType="{x:Type ComboBoxItem}">
                                             <Style.Triggers>

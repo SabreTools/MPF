@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Forms;
 using MPF.Core.Data;
 using MPF.Core.UI.ComboBoxItems;
-using MPF.UI.Core.Windows;
 using SabreTools.RedumpLib.Web;
 using WPFCustomMessageBox;
 
@@ -25,7 +24,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Flag for if settings were saved or not
         /// </summary>
-        public bool SavedSettings { get; private set; }
+        public bool SavedSettings { get; internal set; }
 
         #endregion
 
@@ -50,34 +49,6 @@ namespace MPF.UI.Core.ViewModels
         {
             Options = new Options(baseOptions);
         }
-
-        #region Load and Save
-
-        /// <summary>
-        /// Load any options-related elements
-        /// </summary>
-        /// TODO: Convert selected list item to binding
-        internal void Load(OptionsWindow parent)
-        {
-            parent.InternalProgramComboBox.SelectedIndex = InternalPrograms.FindIndex(r => r == Options.InternalProgram);
-            parent.DefaultSystemComboBox.SelectedIndex = Systems.FindIndex(r => r == Options.DefaultSystem);
-        }
-
-        /// <summary>
-        /// Save any options-related elements
-        /// </summary>
-        /// TODO: Convert selected list item to binding
-        internal void Save(OptionsWindow parent)
-        {
-            var selectedInternalProgram = parent.InternalProgramComboBox.SelectedItem as Element<InternalProgram>;
-            Options.InternalProgram = selectedInternalProgram?.Value ?? InternalProgram.DiscImageCreator;
-            var selectedDefaultSystem = parent.DefaultSystemComboBox.SelectedItem as RedumpSystemComboBoxItem;
-            Options.DefaultSystem = selectedDefaultSystem?.Value ?? null;
-
-            SavedSettings = true;
-        }
-
-        #endregion
 
         #region Population
 
@@ -158,24 +129,16 @@ namespace MPF.UI.Core.ViewModels
         /// Test Redump login credentials
         /// </summary>
 #if NET48
-        public bool? TestRedumpLogin(Window parent, string username, string password)
+        public (bool?, string) TestRedumpLogin(Window parent, string username, string password)
 #else
-        public async Task<bool?> TestRedumpLogin(Window parent, string username, string password)
+        public async Task<(bool?, string)> TestRedumpLogin(Window parent, string username, string password)
 #endif
         {
 #if NET48
-            (bool? success, string message) = RedumpWebClient.ValidateCredentials(username, password);
+            return RedumpWebClient.ValidateCredentials(username, password);
 #else
-            (bool? success, string message) = await RedumpHttpClient.ValidateCredentials(username, password);
+            return await RedumpHttpClient.ValidateCredentials(username, password);
 #endif
-            if (success == true)
-                CustomMessageBox.Show(parent, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            else if (success == false)
-                CustomMessageBox.Show(parent, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
-            else
-                CustomMessageBox.Show(parent, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-            return success;
         }
 
         #endregion

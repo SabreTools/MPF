@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Windows;
 using MPF.Core.Data;
 using MPF.UI.Core.ViewModels;
+using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.Windows
 {
@@ -34,9 +36,6 @@ namespace MPF.UI.Core.Windows
             CancelButton.Click += OnCancelClick;
             RedumpPasswordBox.PasswordChanged += OnPasswordChanged;
             RedumpLoginTestButton.Click += OnRedumpTestClick;
-
-            // Update UI with new values
-            OptionsViewModel.Load(this);
         }
 
         #region Event Handlers
@@ -52,7 +51,7 @@ namespace MPF.UI.Core.Windows
         /// </summary>
         private void OnAcceptClick(object sender, EventArgs e)
         {
-            OptionsViewModel.Save(this);
+            OptionsViewModel.SavedSettings = true;
             Close();
         }
 
@@ -60,7 +59,10 @@ namespace MPF.UI.Core.Windows
         /// Handler for CancelButtom Click event
         /// </summary>
         private void OnCancelClick(object sender, EventArgs e)
-            => Close();
+        {
+            OptionsViewModel.SavedSettings = false;
+            Close();
+        }
 
         /// <summary>
         /// Handler for 
@@ -74,12 +76,24 @@ namespace MPF.UI.Core.Windows
         /// Test Redump credentials for validity
         /// </summary>
 #if NET48
-        private void OnRedumpTestClick(object sender, EventArgs e) =>
-            OptionsViewModel.TestRedumpLogin(this, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+        private void OnRedumpTestClick(object sender, EventArgs e)
 #else
-        private async void OnRedumpTestClick(object sender, EventArgs e) =>
-            _ = await OptionsViewModel.TestRedumpLogin(this, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+        private async void OnRedumpTestClick(object sender, EventArgs e)
 #endif
+        {
+#if NET48
+            (bool? success, string message) = OptionsViewModel.TestRedumpLogin(this, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+#else
+            (bool? success, string message) = await OptionsViewModel.TestRedumpLogin(this, RedumpUsernameTextBox.Text, RedumpPasswordBox.Password);
+#endif
+
+            if (success == true)
+                CustomMessageBox.Show(this, message, "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            else if (success == false)
+                CustomMessageBox.Show(this, message, "Failure", MessageBoxButton.OK, MessageBoxImage.Error);
+            else
+                CustomMessageBox.Show(this, message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
 
         #endregion
     }

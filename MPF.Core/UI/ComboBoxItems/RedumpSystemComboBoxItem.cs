@@ -8,7 +8,7 @@ namespace MPF.Core.UI.ComboBoxItems
     /// <summary>
     /// Represents a single item in the System combo box
     /// </summary>
-    public class RedumpSystemComboBoxItem : IElement
+    public class RedumpSystemComboBoxItem : IEquatable<RedumpSystemComboBoxItem>, IElement
     {
 #if NET48
         private readonly object Data;
@@ -82,6 +82,19 @@ namespace MPF.Core.UI.ComboBoxItems
             }
 
             return systemsValues;
+        }
+
+        /// <inheritdoc/>
+#if NET48
+        public bool Equals(RedumpSystemComboBoxItem other)
+#else
+        public bool Equals(RedumpSystemComboBoxItem? other)
+#endif
+        {
+            if (other == null)
+                return false;
+
+            return Value == other.Value;
         }
     }
 }
