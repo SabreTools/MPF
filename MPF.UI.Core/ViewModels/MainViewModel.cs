@@ -49,6 +49,11 @@ namespace MPF.UI.Core.ViewModels
         private Action<LogLevel, string> _logger;
 
         /// <summary>
+        /// Detected media type, distinct from the selected one
+        /// </summary>
+        private MediaType? _detectedMediaType;
+
+        /// <summary>
         /// Current dumping environment
         /// </summary>
         private DumpEnvironment _environment;
@@ -484,6 +489,7 @@ namespace MPF.UI.Core.ViewModels
             OptionsMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
+            OutputPathTextBoxEnabled = true;
             DriveLetterComboBoxEnabled = true;
             DumpingProgramComboBoxEnabled = true;
             StartStopButtonEnabled = true;
@@ -626,9 +632,6 @@ namespace MPF.UI.Core.ViewModels
 
             // Reenable UI updates
             CanExecuteSelectionChanged = true;
-
-            // Force an update of the media type
-            this.ChangeMediaType(null, null);
         }
 
         /// <summary>
@@ -1154,6 +1157,7 @@ namespace MPF.UI.Core.ViewModels
                 else
                 {
                     VerboseLogLn($"Detected {detectedMediaType.LongName()}.");
+                    _detectedMediaType = detectedMediaType;
                     CurrentMediaType = detectedMediaType;
                 }
             }
@@ -1440,6 +1444,17 @@ namespace MPF.UI.Core.ViewModels
             // If we don't have any selected media types, we don't care and return
             if (MediaTypes == null)
                 return;
+
+            // If we have a detected media type, use that first
+            if (_detectedMediaType != null)
+            {
+                int detectedIndex = MediaTypes.FindIndex(kvp => kvp.Value == _detectedMediaType);
+                if (detectedIndex > -1)
+                {
+                    CurrentMediaType = _detectedMediaType;
+                    return;
+                }
+            }
 
             // If we have an invalid current type, we don't care and return
             if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
