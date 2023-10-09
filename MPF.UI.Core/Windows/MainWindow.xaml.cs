@@ -1,7 +1,6 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using MPF.Core.Data;
 using MPF.UI.Core.ViewModels;
 
 namespace MPF.UI.Core.Windows
@@ -26,10 +25,10 @@ namespace MPF.UI.Core.Windows
             base.OnContentRendered(e);
 
             // Disable buttons until we load fully
-            StartStopButton.IsEnabled = false;
-            MediaScanButton.IsEnabled = false;
-            UpdateVolumeLabel.IsEnabled = false;
-            CopyProtectScanButton.IsEnabled = false;
+            MainViewModel.StartStopButtonEnabled = false;
+            MainViewModel.MediaScanButtonEnabled = false;
+            MainViewModel.UpdateVolumeLabelEnabled = false;
+            MainViewModel.CopyProtectScanButtonEnabled = false;
 
             // Add the click handlers to the UI
             AddEventHandlers();
@@ -75,79 +74,20 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
-        /// Disable all UI elements during dumping
+        /// Show the Options window
         /// </summary>
-        public void DisableAllUIElements()
+        public void ShowOptionsWindow()
         {
-            OptionsMenuItem.IsEnabled = false;
-            SystemTypeComboBox.IsEnabled = false;
-            MediaTypeComboBox.IsEnabled = false;
-            OutputPathTextBox.IsEnabled = false;
-            OutputPathBrowseButton.IsEnabled = false;
-            DriveLetterComboBox.IsEnabled = false;
-            DriveSpeedComboBox.IsEnabled = false;
-            DumpingProgramComboBox.IsEnabled = false;
-            EnableParametersCheckBox.IsEnabled = false;
-            StartStopButton.Content = Interface.StopDumping;
-            MediaScanButton.IsEnabled = false;
-            UpdateVolumeLabel.IsEnabled = false;
-            CopyProtectScanButton.IsEnabled = false;
-        }
-
-        /// <summary>
-        /// Enable all UI elements after dumping
-        /// </summary>
-        public void EnableAllUIElements()
-        {
-            OptionsMenuItem.IsEnabled = true;
-            SystemTypeComboBox.IsEnabled = true;
-            MediaTypeComboBox.IsEnabled = true;
-            OutputPathTextBox.IsEnabled = true;
-            OutputPathBrowseButton.IsEnabled = true;
-            DriveLetterComboBox.IsEnabled = true;
-            DriveSpeedComboBox.IsEnabled = true;
-            DumpingProgramComboBox.IsEnabled = true;
-            EnableParametersCheckBox.IsEnabled = true;
-            StartStopButton.Content = Interface.StartDumping;
-            MediaScanButton.IsEnabled = true;
-            UpdateVolumeLabel.IsEnabled = true;
-            CopyProtectScanButton.IsEnabled = true;
-        }
-
-        /// <summary>
-        /// Toggle the parameters input box
-        /// </summary>
-        public void ToggleParameters()
-        {
-            if (EnableParametersCheckBox.IsChecked == true)
+            var optionsWindow = new OptionsWindow(MainViewModel.Options)
             {
-                SystemTypeComboBox.IsEnabled = false;
-                MediaTypeComboBox.IsEnabled = false;
-
-                OutputPathTextBox.IsEnabled = false;
-                OutputPathBrowseButton.IsEnabled = false;
-
-                MediaScanButton.IsEnabled = false;
-                UpdateVolumeLabel.IsEnabled = false;
-                CopyProtectScanButton.IsEnabled = false;
-
-                ParametersTextBox.IsEnabled = true;
-            }
-            else
-            {
-                ParametersTextBox.IsEnabled = false;
-                MainViewModel.ProcessCustomParameters();
-
-                SystemTypeComboBox.IsEnabled = true;
-                MediaTypeComboBox.IsEnabled = true;
-
-                OutputPathTextBox.IsEnabled = true;
-                OutputPathBrowseButton.IsEnabled = true;
-
-                MediaScanButton.IsEnabled = true;
-                UpdateVolumeLabel.IsEnabled = true;
-                CopyProtectScanButton.IsEnabled = true;
-            }
+                Focusable = true,
+                Owner = this,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            optionsWindow.Closed += MainViewModel.OnOptionsUpdated;
+            optionsWindow.Show();
         }
 
         #endregion
@@ -184,7 +124,7 @@ namespace MPF.UI.Core.Windows
         /// Handler for OptionsMenuItem Click event
         /// </summary>
         public void OptionsMenuItemClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.ShowOptionsWindow();
+            ShowOptionsWindow();
 
         #endregion
 
@@ -226,8 +166,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for EnableParametersCheckBox Click event
         /// </summary>
-        public void EnableParametersCheckBoxClick(object sender, RoutedEventArgs e) =>
-            ToggleParameters();
+        public void EnableParametersCheckBoxClick(object sender, RoutedEventArgs e)
+        {
+            if (MainViewModel.CanExecuteSelectionChanged)
+                MainViewModel.ToggleParameters();
+        }
 
         /// <summary>
         /// Handler for MediaScanButton Click event

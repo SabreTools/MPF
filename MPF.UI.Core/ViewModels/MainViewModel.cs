@@ -69,6 +69,20 @@ namespace MPF.UI.Core.ViewModels
         #region Properties
 
         /// <summary>
+        /// Indicates the status of the options menu item
+        /// </summary>
+        public bool OptionsMenuItemEnabled
+        {
+            get => _optionsMenuItemEnabled;
+            set
+            {
+                _optionsMenuItemEnabled = value;
+                TriggerPropertyChanged("OptionsMenuItemEnabled");
+            }
+        }
+        private bool _optionsMenuItemEnabled;
+
+        /// <summary>
         /// Currently selected system value
         /// </summary>
         public RedumpSystem? CurrentSystem
@@ -81,6 +95,20 @@ namespace MPF.UI.Core.ViewModels
             }
         }
         private RedumpSystem? _currentSystem;
+
+        /// <summary>
+        /// Indicates the status of the system type combo box
+        /// </summary>
+        public bool SystemTypeComboBoxEnabled
+        {
+            get => _systemTypeComboBoxEnabled;
+            set
+            {
+                _systemTypeComboBoxEnabled = value;
+                TriggerPropertyChanged("SystemTypeComboBoxEnabled");
+            }
+        }
+        private bool _systemTypeComboBoxEnabled;
 
         /// <summary>
         /// Currently selected media type value
@@ -97,6 +125,20 @@ namespace MPF.UI.Core.ViewModels
         private MediaType? _currentMediaType;
 
         /// <summary>
+        /// Indicates the status of the media type combo box
+        /// </summary>
+        public bool MediaTypeComboBoxEnabled
+        {
+            get => _mediaTypeComboBoxEnabled;
+            set
+            {
+                _mediaTypeComboBoxEnabled = value;
+                TriggerPropertyChanged("MediaTypeComboBoxEnabled");
+            }
+        }
+        private bool _mediaTypeComboBoxEnabled;
+
+        /// <summary>
         /// Currently provided output path
         /// </summary>
         public string OutputPath
@@ -109,6 +151,34 @@ namespace MPF.UI.Core.ViewModels
             }
         }
         private string _outputPath;
+
+        /// <summary>
+        /// Indicates the status of the output path text box
+        /// </summary>
+        public bool OutputPathTextBoxEnabled
+        {
+            get => _outputPathTextBoxEnabled;
+            set
+            {
+                _outputPathTextBoxEnabled = value;
+                TriggerPropertyChanged("OutputPathTextBoxEnabled");
+            }
+        }
+        private bool _outputPathTextBoxEnabled;
+
+        /// <summary>
+        /// Indicates the status of the output path browse button
+        /// </summary>
+        public bool OutputPathBrowseButtonEnabled
+        {
+            get => _outputPathBrowseButtonEnabled;
+            set
+            {
+                _outputPathBrowseButtonEnabled = value;
+                TriggerPropertyChanged("OutputPathBrowseButtonEnabled");
+            }
+        }
+        private bool _outputPathBrowseButtonEnabled;
 
         /// <summary>
         /// Currently selected drive value
@@ -125,6 +195,20 @@ namespace MPF.UI.Core.ViewModels
         private Drive _currentDrive;
 
         /// <summary>
+        /// Indicates the status of the drive combo box
+        /// </summary>
+        public bool DriveLetterComboBoxEnabled
+        {
+            get => _driveLetterComboBoxEnabled;
+            set
+            {
+                _driveLetterComboBoxEnabled = value;
+                TriggerPropertyChanged("DriveLetterComboBoxEnabled");
+            }
+        }
+        private bool _driveLetterComboBoxEnabled;
+
+        /// <summary>
         /// Currently selected drive speed value
         /// </summary>
         public int DriveSpeed
@@ -137,6 +221,20 @@ namespace MPF.UI.Core.ViewModels
             }
         }
         private int _driveSpeed;
+
+        /// <summary>
+        /// Indicates the status of the drive speed combo box
+        /// </summary>
+        public bool DriveSpeedComboBoxEnabled
+        {
+            get => _driveSpeedComboBoxEnabled;
+            set
+            {
+                _driveSpeedComboBoxEnabled = value;
+                TriggerPropertyChanged("DriveSpeedComboBoxEnabled");
+            }
+        }
+        private bool _driveSpeedComboBoxEnabled;
 
         /// <summary>
         /// Currently selected dumping program
@@ -153,6 +251,20 @@ namespace MPF.UI.Core.ViewModels
         private InternalProgram _currentProgram;
 
         /// <summary>
+        /// Indicates the status of the dumping program combo box
+        /// </summary>
+        public bool DumpingProgramComboBoxEnabled
+        {
+            get => _dumpingProgramComboBoxEnabled;
+            set
+            {
+                _dumpingProgramComboBoxEnabled = value;
+                TriggerPropertyChanged("DumpingProgramComboBoxEnabled");
+            }
+        }
+        private bool _dumpingProgramComboBoxEnabled;
+
+        /// <summary>
         /// Currently provided parameters
         /// </summary>
         public string Parameters
@@ -167,6 +279,104 @@ namespace MPF.UI.Core.ViewModels
         private string _parameters;
 
         /// <summary>
+        /// Indicates the status of the parameters text box
+        /// </summary>
+        public bool ParametersCheckBoxEnabled
+        {
+            get => _parametersCheckBoxEnabled;
+            set
+            {
+                _parametersCheckBoxEnabled = value;
+                TriggerPropertyChanged("ParametersCheckBoxEnabled");
+            }
+        }
+        private bool _parametersCheckBoxEnabled;
+
+        /// <summary>
+        /// Indicates the status of the parameters check box
+        /// </summary>
+        public bool EnableParametersCheckBoxEnabled
+        {
+            get => _enableParametersCheckBoxEnabled;
+            set
+            {
+                _enableParametersCheckBoxEnabled = value;
+                TriggerPropertyChanged("EnableParametersCheckBoxEnabled");
+            }
+        }
+        private bool _enableParametersCheckBoxEnabled;
+
+        /// <summary>
+        /// Indicates the status of the start/stop button
+        /// </summary>
+        public bool StartStopButtonEnabled
+        {
+            get => _startStopButtonEnabled;
+            set
+            {
+                _startStopButtonEnabled = value;
+                TriggerPropertyChanged("StartStopButtonEnabled");
+            }
+        }
+        private bool _startStopButtonEnabled;
+
+        /// <summary>
+        /// Current value for the start/stop dumping button
+        /// </summary>
+        public object StartStopButtonText
+        {
+            get => _startStopButtonText;
+            set
+            {
+                _startStopButtonText = value as string;
+                TriggerPropertyChanged("StartStopButtonText");
+            }
+        }
+        private string _startStopButtonText;
+
+        /// <summary>
+        /// Indicates the status of the media scan button
+        /// </summary>
+        public bool MediaScanButtonEnabled
+        {
+            get => _mediaScanButtonEnabled;
+            set
+            {
+                _mediaScanButtonEnabled = value;
+                TriggerPropertyChanged("MediaScanButtonEnabled");
+            }
+        }
+        private bool _mediaScanButtonEnabled;
+
+        /// <summary>
+        /// Indicates the status of the update volume label button
+        /// </summary>
+        public bool UpdateVolumeLabelEnabled
+        {
+            get => _updateVolumeLabelEnabled;
+            set
+            {
+                _updateVolumeLabelEnabled = value;
+                TriggerPropertyChanged("UpdateVolumeLabelEnabled");
+            }
+        }
+        private bool _updateVolumeLabelEnabled;
+
+        /// <summary>
+        /// Indicates the status of the copy protect scan button
+        /// </summary>
+        public bool CopyProtectScanButtonEnabled
+        {
+            get => _copyProtectScanButtonEnabled;
+            set
+            {
+                _copyProtectScanButtonEnabled = value;
+                TriggerPropertyChanged("CopyProtectScanButtonEnabled");
+            }
+        }
+        private bool _copyProtectScanButtonEnabled;
+
+        /// <summary>
         /// Currently displayed status
         /// </summary>
         public string Status
@@ -179,6 +389,20 @@ namespace MPF.UI.Core.ViewModels
             }
         }
         private string _status;
+
+        /// <summary>
+        /// Indicates the status of the log panel
+        /// </summary>
+        public bool LogPanelExpanded
+        {
+            get => _logPanelExpanded;
+            set
+            {
+                _logPanelExpanded = value;
+                TriggerPropertyChanged("LogPanelExpanded");
+            }
+        }
+        private bool _logPanelExpanded;
 
         #endregion
 
@@ -197,6 +421,20 @@ namespace MPF.UI.Core.ViewModels
             }
         }
         private List<Drive> _drives;
+
+        /// <summary>
+        /// Current list of drive speeds
+        /// </summary>
+        public List<int> DriveSpeeds
+        {
+            get => _driveSpeeds;
+            set
+            {
+                _driveSpeeds = value;
+                TriggerPropertyChanged("DriveSpeeds");
+            }
+        }
+        private List<int> _driveSpeeds;
 
         /// <summary>
         /// Current list of supported media types
@@ -248,6 +486,17 @@ namespace MPF.UI.Core.ViewModels
         public MainViewModel()
         {
             _options = OptionsLoader.LoadFromConfig();
+
+            OptionsMenuItemEnabled = true;
+            SystemTypeComboBoxEnabled = true;
+            MediaTypeComboBoxEnabled = true;
+            DriveLetterComboBoxEnabled = true;
+            DumpingProgramComboBoxEnabled = true;
+            StartStopButtonEnabled = true;
+            StartStopButtonText = Interface.StartDumping;
+            MediaScanButtonEnabled = true;
+            LogPanelExpanded = _options.OpenLogWindowAtStartup;
+
             MediaTypes = new List<Element<MediaType>>();
             Systems = RedumpSystemComboBoxItem.GenerateElements().ToList();
             InternalPrograms = new List<Element<InternalProgram>>();
@@ -305,8 +554,8 @@ namespace MPF.UI.Core.ViewModels
                 this.Logger.VerboseLogLn("Scanning for drives..");
 
             // Always enable the media scan
-            this.Parent.MediaScanButton.IsEnabled = true;
-            this.Parent.UpdateVolumeLabel.IsEnabled = true;
+            this.MediaScanButtonEnabled = true;
+            this.UpdateVolumeLabelEnabled = true;
 
             // If we have a selected drive, keep track of it
             char? lastSelectedDrive = this.CurrentDrive?.Letter;
@@ -339,14 +588,14 @@ namespace MPF.UI.Core.ViewModels
                 // Set the selected index
                 CurrentDrive = (index != -1 ? Drives[index] : Drives[0]);
                 this.Status = "Valid drive found! Choose your Media Type";
-                this.Parent.CopyProtectScanButton.IsEnabled = true;
+                this.CopyProtectScanButtonEnabled = true;
 
                 // Get the current system type
                 if (index != -1)
                     DetermineSystemType();
 
                 // Only enable the start/stop if we don't have the default selected
-                this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+                this.StartStopButtonEnabled = ShouldEnableDumpingButton();
             }
             else
             {
@@ -354,15 +603,12 @@ namespace MPF.UI.Core.ViewModels
                     this.Logger.VerboseLogLn("Found no drives");
                 this.CurrentDrive = null;
                 this.Status = "No valid drive found!";
-                this.Parent.StartStopButton.IsEnabled = false;
-                this.Parent.CopyProtectScanButton.IsEnabled = false;
+                this.StartStopButtonEnabled = false;
+                this.CopyProtectScanButtonEnabled = false;
             }
 
             // Reenable UI updates
             CanExecuteSelectionChanged = true;
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -381,26 +627,21 @@ namespace MPF.UI.Core.ViewModels
                     this.Logger.VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
                 MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
-
-                //this.Parent.MediaTypeComboBox.IsEnabled = MediaTypes.Count > 1;
-                this.Parent.MediaTypeComboBox.IsEnabled = true;
-
+                this.MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
                 this.CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
-                this.Parent.MediaTypeComboBox.SelectedIndex = (index > -1 ? index : 0);
             }
             else
             {
-                this.Parent.MediaTypeComboBox.IsEnabled = false;
-                this.Parent.MediaTypeComboBox.ItemsSource = null;
-                this.Parent.MediaTypeComboBox.SelectedIndex = -1;
+                this.MediaTypeComboBoxEnabled = false;
+                this.MediaTypes = null;
+                this.CurrentMediaType = null;
             }
 
             // Reenable UI updates
             CanExecuteSelectionChanged = true;
 
-            // Ensure the UI gets updated
+            // Force an update of the media type
             this.ChangeMediaType(null);
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -424,9 +665,6 @@ namespace MPF.UI.Core.ViewModels
 
             // Reenable UI updates
             CanExecuteSelectionChanged = true;
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         #endregion
@@ -676,38 +914,21 @@ namespace MPF.UI.Core.ViewModels
         }
 
         /// <summary>
-        /// Show the Options window
-        /// </summary>
-        public void ShowOptionsWindow()
-        {
-            var optionsWindow = new OptionsWindow(this.Options)
-            {
-                Focusable = true,
-                Owner = this.Parent,
-                ShowActivated = true,
-                ShowInTaskbar = true,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            optionsWindow.Closed += OnOptionsUpdated;
-            optionsWindow.Show();
-        }
-
-        /// <summary>
         /// Toggle the Start/Stop button
         /// </summary>
         public async void ToggleStartStop()
         {
             // Dump or stop the dump
-            if ((string)this.Parent.StartStopButton.Content == Interface.StartDumping)
+            if (this.StartStopButtonText as string == Interface.StartDumping)
             {
                 StartDumping();
             }
-            else if ((string)this.Parent.StartStopButton.Content == Interface.StopDumping)
+            else if (this.StartStopButtonText as string == Interface.StopDumping)
             {
                 if (this.Options.VerboseLogging)
                     this.Logger.VerboseLogLn("Canceling dumping process...");
                 Env.CancelDumping();
-                this.Parent.CopyProtectScanButton.IsEnabled = true;
+                this.CopyProtectScanButtonEnabled = true;
 
                 if (Env.Options.EjectAfterDump == true)
                 {
@@ -753,15 +974,14 @@ namespace MPF.UI.Core.ViewModels
         public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
         {
             // Disable the dumping button
-            this.Parent.StartStopButton.IsEnabled = false;
+            this.StartStopButtonEnabled = false;
 
             // Safely uncheck the parameters box, just in case
-            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
+            if (this.ParametersCheckBoxEnabled == true)
             {
-                this.Parent.EnableParametersCheckBox.Checked -= Parent.EnableParametersCheckBoxClick;
-                this.Parent.EnableParametersCheckBox.IsChecked = false;
-                this.Parent.ParametersTextBox.IsEnabled = false;
-                this.Parent.EnableParametersCheckBox.Checked += Parent.EnableParametersCheckBoxClick;
+                this.CanExecuteSelectionChanged = false;
+                this.ParametersCheckBoxEnabled = false;
+                this.CanExecuteSelectionChanged = true;
             }
 
             // Set the UI color scheme according to the options
@@ -769,9 +989,6 @@ namespace MPF.UI.Core.ViewModels
                 EnableDarkMode();
             else
                 EnableLightMode();
-
-            // Force the UI to reload after applying the theme
-            this.Parent.UpdateLayout();
 
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
@@ -781,20 +998,20 @@ namespace MPF.UI.Core.ViewModels
             if (rescanDrives)
             {
                 this.Status = "Creating drive list, please wait!";
-                await this.Parent.Dispatcher.InvokeAsync(() => PopulateDrives());
+                PopulateDrives();
             }
             else
             {
-                await this.Parent.Dispatcher.InvokeAsync(() => DetermineSystemType());
+                DetermineSystemType();
             }
 
             // Determine current media type, if possible
-            await this.Parent.Dispatcher.InvokeAsync(() => PopulateMediaType());
+            PopulateMediaType();
             CacheCurrentDiscType();
             SetCurrentDiscType();
 
             // Set the dumping program
-            await this.Parent.Dispatcher.InvokeAsync(() => PopulateInternalPrograms());
+            PopulateInternalPrograms();
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
@@ -806,7 +1023,7 @@ namespace MPF.UI.Core.ViewModels
             EnableEventHandlers();
 
             // Enable the dumping button, if necessary
-            this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+            this.StartStopButtonEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
@@ -816,15 +1033,14 @@ namespace MPF.UI.Core.ViewModels
         public void FastUpdateLabel(bool removeEventHandlers)
         {
             // Disable the dumping button
-            this.Parent.StartStopButton.IsEnabled = false;
+            this.StartStopButtonEnabled = false;
 
             // Safely uncheck the parameters box, just in case
-            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
+            if (this.ParametersCheckBoxEnabled == true)
             {
-                this.Parent.EnableParametersCheckBox.Checked -= Parent.EnableParametersCheckBoxClick;
-                this.Parent.EnableParametersCheckBox.IsChecked = false;
-                this.Parent.ParametersTextBox.IsEnabled = false;
-                this.Parent.EnableParametersCheckBox.Checked += Parent.EnableParametersCheckBoxClick;
+                this.CanExecuteSelectionChanged = false;
+                this.ParametersCheckBoxEnabled = false;
+                this.CanExecuteSelectionChanged = true;
             }
 
             // Remove event handlers to ensure ordering
@@ -843,7 +1059,7 @@ namespace MPF.UI.Core.ViewModels
             EnableEventHandlers();
 
             // Enable the dumping button, if necessary
-            this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
+            this.StartStopButtonEnabled = ShouldEnableDumpingButton();
         }
 
         /// <summary>
@@ -972,9 +1188,6 @@ namespace MPF.UI.Core.ViewModels
                     this.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -1019,7 +1232,7 @@ namespace MPF.UI.Core.ViewModels
                 if (currentSystem != null)
                 {
                     int sysIndex = Systems.FindIndex(s => s == currentSystem);
-                    this.Parent.SystemTypeComboBox.SelectedIndex = sysIndex;
+                    this.CurrentSystem = Systems[sysIndex];
                 }
             }
             else if (this.Options.SkipSystemDetection && this.Options.DefaultSystem != null)
@@ -1028,11 +1241,48 @@ namespace MPF.UI.Core.ViewModels
                 if (this.Options.VerboseLogging)
                     this.Logger.VerboseLogLn($"System detection disabled, setting to default of {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
-                this.Parent.SystemTypeComboBox.SelectedIndex = sysIndex;
+                this.CurrentSystem = Systems[sysIndex];
             }
+        }
 
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
+        /// <summary>
+        /// Disable all UI elements during dumping
+        /// </summary>
+        public void DisableAllUIElements()
+        {
+            OptionsMenuItemEnabled = false;
+            SystemTypeComboBoxEnabled = false;
+            MediaTypeComboBoxEnabled = false;
+            OutputPathTextBoxEnabled = false;
+            OutputPathBrowseButtonEnabled = false;
+            DriveLetterComboBoxEnabled = false;
+            DriveSpeedComboBoxEnabled = false;
+            DumpingProgramComboBoxEnabled = false;
+            EnableParametersCheckBoxEnabled = false;
+            StartStopButtonText = Interface.StopDumping;
+            MediaScanButtonEnabled = false;
+            UpdateVolumeLabelEnabled = false;
+            CopyProtectScanButtonEnabled = false;
+        }
+
+        /// <summary>
+        /// Enable all UI elements after dumping
+        /// </summary>
+        public void EnableAllUIElements()
+        {
+            OptionsMenuItemEnabled = true;
+            SystemTypeComboBoxEnabled = true;
+            MediaTypeComboBoxEnabled = true;
+            OutputPathTextBoxEnabled = true;
+            OutputPathBrowseButtonEnabled = true;
+            DriveLetterComboBoxEnabled = true;
+            DriveSpeedComboBoxEnabled = true;
+            DumpingProgramComboBoxEnabled = true;
+            EnableParametersCheckBoxEnabled = true;
+            StartStopButtonText = Interface.StartDumping;
+            MediaScanButtonEnabled = true;
+            UpdateVolumeLabelEnabled = true;
+            CopyProtectScanButtonEnabled = true;
         }
 
         /// <summary>
@@ -1051,21 +1301,18 @@ namespace MPF.UI.Core.ViewModels
             SetCurrentDiscType();
 
             // Enable or disable the button
-            this.Parent.StartStopButton.IsEnabled = result && ShouldEnableDumpingButton();
+            this.StartStopButtonEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            this.Parent.DriveSpeedComboBox.IsEnabled = Env.Type.DoesSupportDriveSpeed();
+            this.DriveSpeedComboBoxEnabled = Env.Type.DoesSupportDriveSpeed();
 
             // If input params are not enabled, generate the full parameters from the environment
-            if (!this.Parent.ParametersTextBox.IsEnabled)
+            if (!this.ParametersCheckBoxEnabled)
             {
-                string generated = Env.GetFullParameters((int?)this.Parent.DriveSpeedComboBox.SelectedItem);
+                string generated = Env.GetFullParameters(this.DriveSpeed);
                 if (generated != null)
                     this.Parameters = generated;
             }
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -1128,9 +1375,6 @@ namespace MPF.UI.Core.ViewModels
 
                 this.OutputPath = Path.Combine(directory, filename);
             }
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -1186,10 +1430,10 @@ namespace MPF.UI.Core.ViewModels
 
                 var tempContent = this.Status;
                 this.Status = "Scanning for copy protection... this might take a while!";
-                this.Parent.StartStopButton.IsEnabled = false;
-                this.Parent.MediaScanButton.IsEnabled = false;
-                this.Parent.UpdateVolumeLabel.IsEnabled = false;
-                this.Parent.CopyProtectScanButton.IsEnabled = false;
+                this.StartStopButtonEnabled = false;
+                this.MediaScanButtonEnabled = false;
+                this.UpdateVolumeLabelEnabled = false;
+                this.CopyProtectScanButtonEnabled = false;
 
                 var progress = new Progress<ProtectionProgress>();
                 progress.ProgressChanged += ProgressUpdated;
@@ -1204,7 +1448,7 @@ namespace MPF.UI.Core.ViewModels
                 //        this.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
                 //}
 
-                if (!this.Parent.LogPanel.IsExpanded)
+                if (!this.LogPanelExpanded)
                 {
                     if (string.IsNullOrEmpty(error))
                         CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1218,10 +1462,10 @@ namespace MPF.UI.Core.ViewModels
                     this.Logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
                 this.Status = tempContent;
-                this.Parent.StartStopButton.IsEnabled = ShouldEnableDumpingButton();
-                this.Parent.MediaScanButton.IsEnabled = true;
-                this.Parent.UpdateVolumeLabel.IsEnabled = true;
-                this.Parent.CopyProtectScanButton.IsEnabled = true;
+                this.StartStopButtonEnabled = ShouldEnableDumpingButton();
+                this.MediaScanButtonEnabled = true;
+                this.UpdateVolumeLabelEnabled = true;
+                this.CopyProtectScanButtonEnabled = true;
             }
         }
 
@@ -1240,9 +1484,6 @@ namespace MPF.UI.Core.ViewModels
                 this.Logger.VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
             this.CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -1251,10 +1492,9 @@ namespace MPF.UI.Core.ViewModels
         public void SetSupportedDriveSpeed()
         {
             // Set the drive speed list that's appropriate
-            var values = Interface.GetSpeedsForMediaType(CurrentMediaType);
-            this.Parent.DriveSpeedComboBox.ItemsSource = values;
+            this.DriveSpeeds = (List<int>)Interface.GetSpeedsForMediaType(CurrentMediaType);
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", values)}");
+                this.Logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds)}");
 
             // Set the selected speed
             int speed;
@@ -1283,9 +1523,6 @@ namespace MPF.UI.Core.ViewModels
             if (this.Options.VerboseLogging)
                 this.Logger.VerboseLogLn($"Setting drive speed to: {speed}");
             this.DriveSpeed = speed;
-
-            // Ensure the UI gets updated
-            this.Parent.UpdateLayout();
         }
 
         /// <summary>
@@ -1338,13 +1575,12 @@ namespace MPF.UI.Core.ViewModels
             Env.Drive.RefreshDrive();
 
             // If still in custom parameter mode, check that users meant to continue or not
-            if (this.Parent.EnableParametersCheckBox.IsChecked == true)
+            if (this.ParametersCheckBoxEnabled == true)
             {
                 MessageBoxResult result = CustomMessageBox.Show("It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", "Custom Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    this.Parent.EnableParametersCheckBox.IsChecked = false;
-                    this.Parent.ParametersTextBox.IsEnabled = false;
+                    this.ParametersCheckBoxEnabled = false;
                     ProcessCustomParameters();
                 }
                 else if (result == MessageBoxResult.Cancel)
@@ -1364,7 +1600,7 @@ namespace MPF.UI.Core.ViewModels
                     return;
 
                 // Disable all UI elements apart from dumping button
-                this.Parent.DisableAllUIElements();
+                DisableAllUIElements();
 
                 // Refresh the drive, if it wasn't null
                 Env.Drive?.RefreshDrive();
@@ -1395,7 +1631,7 @@ namespace MPF.UI.Core.ViewModels
                     this.Status = "Execution complete!";
 
                     // Reset all UI elements
-                    this.Parent.EnableAllUIElements();
+                    EnableAllUIElements();
                     return;
                 }
 
@@ -1418,7 +1654,40 @@ namespace MPF.UI.Core.ViewModels
             finally
             {
                 // Reset all UI elements
-                this.Parent.EnableAllUIElements();
+                EnableAllUIElements();
+            }
+        }
+
+        /// <summary>
+        /// Toggle the parameters input box
+        /// </summary>
+        public void ToggleParameters()
+        {
+            if (ParametersCheckBoxEnabled == true)
+            {
+                SystemTypeComboBoxEnabled = false;
+                MediaTypeComboBoxEnabled = false;
+
+                OutputPathTextBoxEnabled = false;
+                OutputPathBrowseButtonEnabled = false;
+
+                MediaScanButtonEnabled = false;
+                UpdateVolumeLabelEnabled = false;
+                CopyProtectScanButtonEnabled = false;
+            }
+            else
+            {
+                ProcessCustomParameters();
+
+                SystemTypeComboBoxEnabled = true;
+                MediaTypeComboBoxEnabled = true;
+
+                OutputPathTextBoxEnabled = true;
+                OutputPathBrowseButtonEnabled = true;
+
+                MediaScanButtonEnabled = true;
+                UpdateVolumeLabelEnabled = true;
+                CopyProtectScanButtonEnabled = true;
             }
         }
 
@@ -1492,7 +1761,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Handler for OptionsWindow OnUpdated event
         /// </summary>
-        private void OnOptionsUpdated(object sender, EventArgs e) =>
+        public void OnOptionsUpdated(object sender, EventArgs e) =>
             UpdateOptions(sender as OptionsWindow);
 
         #region Progress Reporting

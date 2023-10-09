@@ -40,6 +40,7 @@
 - Move decoupled view models
 - Fix log output
 - Start migrating MainViewModel
+- Perform most of MainViewModel changes
 
 ### 2.6.6 (2023-10-04)
 
