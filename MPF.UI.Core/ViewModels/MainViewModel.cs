@@ -12,6 +12,7 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
+using System.Threading.Tasks;
 using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.ViewModels
@@ -506,10 +507,6 @@ namespace MPF.UI.Core.ViewModels
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
-
-            // Check for updates, if necessary
-            if (Options.CheckForUpdatesOnStartup)
-                CheckForUpdates(showIfSame: false);
         }
 
         #region Property Updates
@@ -700,25 +697,38 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Check for available updates
         /// </summary>
-        /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
-        public void CheckForUpdates(bool showIfSame)
+        public (bool, string, string) CheckForUpdates()
         {
             (bool different, string message, string url) = Tools.CheckForNewVersion();
-
-            // If we have a new version, put it in the clipboard
-            if (different)
-                Clipboard.SetText(url);
 
             SecretLogLn(message);
             if (url == null)
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
 
-            if (showIfSame || different)
-                CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+            return (different, message, url);
         }
 
         /// <summary>
-        /// Build a dummy SubmissionInfo and display it for testing
+        /// Build the about text 
+        /// </summary>
+        /// <returns></returns>
+        public string CreateAboutText()
+        {
+            string aboutText = $"Media Preservation Frontend (MPF)"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}A community preservation frontend developed in C#."
+                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
+                + $"{Environment.NewLine}Originally created to help the Redump project."
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
+            SecretLogLn(aboutText);
+            return aboutText;
+        }
+
+        /// <summary>
+        /// Build a dummy SubmissionInfo
         /// </summary>
         public SubmissionInfo CreateDebugSubmissionInfo()
         {
@@ -869,25 +879,6 @@ namespace MPF.UI.Core.ViewModels
         /// Shutdown the current application
         /// </summary>
         public static void ExitApplication() => Application.Current.Shutdown();
-
-        /// <summary>
-        /// Show the About text popup
-        /// </summary>
-        public void ShowAboutText()
-        {
-            string aboutText = $"Media Preservation Frontend (MPF)"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}A community preservation frontend developed in C#."
-                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
-                + $"{Environment.NewLine}Originally created to help the Redump project."
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
-
-            SecretLogLn(aboutText);
-            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
 
         /// <summary>
         /// Toggle the Start/Stop button
@@ -1402,56 +1393,50 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
-        public async void ScanAndShowProtection()
+        public async Task<(string, string)> ScanAndShowProtection()
         {
             // Determine current environment, just in case
             if (_environment == null)
                 _environment = DetermineEnvironment();
 
-            // Pull the drive letter from the UI directly, just in case
-            if (this.CurrentDrive != null && this.CurrentDrive.Letter != default(char))
-            {
-                VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Letter}");
+            // If we don't have a valid drive
+            if (this.CurrentDrive == null || this.CurrentDrive.Letter == default(char))
+                return (null, "No valid drive found!");
 
-                var tempContent = this.Status;
-                this.Status = "Scanning for copy protection... this might take a while!";
-                this.StartStopButtonEnabled = false;
-                this.MediaScanButtonEnabled = false;
-                this.UpdateVolumeLabelEnabled = false;
-                this.CopyProtectScanButtonEnabled = false;
+            VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Letter}");
 
-                var progress = new Progress<ProtectionProgress>();
-                progress.ProgressChanged += ProgressUpdated;
-                (var protections, string error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Letter + ":\\", this.Options, progress);
-                string output = Protection.FormatProtections(protections);
+            var tempContent = this.Status;
+            this.Status = "Scanning for copy protection... this might take a while!";
+            this.StartStopButtonEnabled = false;
+            this.MediaScanButtonEnabled = false;
+            this.UpdateVolumeLabelEnabled = false;
+            this.CopyProtectScanButtonEnabled = false;
 
-                // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
-                //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
-                //{
-                //    ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
-                //    if (this.Options.VerboseLogging)
-                //        this.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
-                //}
+            var progress = new Progress<ProtectionProgress>();
+            progress.ProgressChanged += ProgressUpdated;
+            (var protections, string error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Letter + ":\\", this.Options, progress);
+            string output = Protection.FormatProtections(protections);
 
-                if (!this.LogPanelExpanded)
-                {
-                    if (string.IsNullOrEmpty(error))
-                        CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
-                    else
-                        CustomMessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
+            // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
+            //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
+            //{
+            //    ((Modules.DiscImageCreator.Parameters)Env.Parameters)[Modules.DiscImageCreator.FlagStrings.ScanFileProtect] = false;
+            //    if (this.Options.VerboseLogging)
+            //        this.Logger.VerboseLogLn($"SmartE detected, removing {Modules.DiscImageCreator.FlagStrings.ScanFileProtect} from parameters");
+            //}
 
-                if (string.IsNullOrEmpty(error))
-                    LogLn($"Detected the following protections in {this.CurrentDrive.Letter}:\r\n\r\n{output}");
-                else
-                    ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
+            if (string.IsNullOrEmpty(error))
+                LogLn($"Detected the following protections in {this.CurrentDrive.Letter}:\r\n\r\n{output}");
+            else
+                ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
-                this.Status = tempContent;
-                this.StartStopButtonEnabled = ShouldEnableDumpingButton();
-                this.MediaScanButtonEnabled = true;
-                this.UpdateVolumeLabelEnabled = true;
-                this.CopyProtectScanButtonEnabled = true;
-            }
+            this.Status = tempContent;
+            this.StartStopButtonEnabled = ShouldEnableDumpingButton();
+            this.MediaScanButtonEnabled = true;
+            this.UpdateVolumeLabelEnabled = true;
+            this.CopyProtectScanButtonEnabled = true;
+
+            return (output, error);
         }
 
         /// <summary>

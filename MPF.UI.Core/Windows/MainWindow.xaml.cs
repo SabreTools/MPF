@@ -43,6 +43,10 @@ namespace MPF.UI.Core.Windows
                 DebugViewMenuItem.Visibility = Visibility.Visible;
 
             MainViewModel.Init(LogOutput.EnqueueLog, ShowDiscInformationWindow);
+
+            // Check for updates, if necessary
+            if (MainViewModel.Options.CheckForUpdatesOnStartup)
+                CheckForUpdates(showIfSame: false);
         }
 
         #region UI Functionality
@@ -110,6 +114,22 @@ namespace MPF.UI.Core.Windows
             {
                 MainViewModel.OutputPath = fileDialog.FileName;
             }
+        }
+
+        /// <summary>
+        /// Check for available updates
+        /// </summary>
+        /// <param name="showIfSame">True to show the box even if it's the same, false to only show if it's different</param>
+        public void CheckForUpdates(bool showIfSame)
+        {
+            (bool different, string message, string url) = MainViewModel.CheckForUpdates();
+
+            // If we have a new version, put it in the clipboard
+            if (different)
+                Clipboard.SetText(url);
+
+            if (showIfSame || different)
+                CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -185,8 +205,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for AboutMenuItem Click event
         /// </summary>
-        public void AboutClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.ShowAboutText();
+        public void AboutClick(object sender, RoutedEventArgs e)
+        {
+            string aboutText = MainViewModel.CreateAboutText();
+            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
 
         /// <summary>
         /// Handler for AppExitMenuItem Click event
@@ -197,8 +220,8 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for CheckForUpdatesMenuItem Click event
         /// </summary>
-        public void CheckForUpdatesClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.CheckForUpdates(showIfSame: true);
+        public void CheckForUpdatesClick(object sender, RoutedEventArgs e)
+            => CheckForUpdates(showIfSame: true);
 
         /// <summary>
         /// Handler for DebugViewMenuItem Click event
@@ -219,8 +242,18 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for CopyProtectScanButton Click event
         /// </summary>
-        public void CopyProtectScanButtonClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.ScanAndShowProtection();
+        public async void CopyProtectScanButtonClick(object sender, RoutedEventArgs e)
+        {
+            (string output, string error) = await MainViewModel.ScanAndShowProtection();
+
+            if (!MainViewModel.LogPanelExpanded)
+            {
+                if (string.IsNullOrEmpty(error))
+                    CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                    CustomMessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         /// <summary>
         /// Handler for DriveLetterComboBox SelectionChanged event
