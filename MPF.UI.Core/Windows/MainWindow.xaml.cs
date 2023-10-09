@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Core;
-using MPF.UI.Core.ViewModels;
+using MPF.Core.UI.ViewModels;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
 using WinForms = System.Windows.Forms;
@@ -43,6 +43,12 @@ namespace MPF.UI.Core.Windows
                 DebugViewMenuItem.Visibility = Visibility.Visible;
 
             MainViewModel.Init(LogOutput.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
+
+            // Set the UI color scheme according to the options
+            if (MainViewModel.Options.EnableDarkMode)
+                EnableDarkMode();
+            else
+                EnableLightMode();
 
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
@@ -235,6 +241,24 @@ namespace MPF.UI.Core.Windows
             };
             optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
+        }
+
+        /// <summary>
+        /// Recolor all UI elements for light mode
+        /// </summary>
+        private static void EnableLightMode()
+        {
+            var theme = new LightModeTheme();
+            theme.Apply();
+        }
+
+        /// <summary>
+        /// Recolor all UI elements for dark mode
+        /// </summary>
+        private static void EnableDarkMode()
+        {
+            var theme = new DarkModeTheme();
+            theme.Apply();
         }
 
         #endregion

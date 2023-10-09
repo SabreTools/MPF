@@ -404,7 +404,11 @@ namespace MPF.Core.Modules.DiscImageCreator
         }
 
         /// <inheritdoc/>
+#if NET48
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
+#else
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+#endif
         {
             var outputDirectory = Path.GetDirectoryName(basePath);
 

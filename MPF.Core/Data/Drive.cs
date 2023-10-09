@@ -185,11 +185,7 @@ namespace MPF.Core.Data
         /// </summary>
         /// <param name="ignoreFixedDrives">True to ignore fixed drives from population, false otherwise</param>
         /// <returns>Active drives, matched to labels, if possible</returns>
-#if NET48
         public static List<Drive> CreateListOfDrives(bool ignoreFixedDrives)
-#else
-        public static List<Drive?> CreateListOfDrives(bool ignoreFixedDrives)
-#endif
         {
             var drives = GetDriveList(ignoreFixedDrives);
             drives = drives.OrderBy(i => i == null ? '\0' : i.Letter).ToList();
@@ -618,11 +614,7 @@ namespace MPF.Core.Data
         /// https://stackoverflow.com/questions/3060796/how-to-distinguish-between-usb-and-floppy-devices?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
         /// https://msdn.microsoft.com/en-us/library/aa394173(v=vs.85).aspx
         /// </remarks>
-#if NET48
         private static List<Drive> GetDriveList(bool ignoreFixedDrives)
-#else
-        private static List<Drive?> GetDriveList(bool ignoreFixedDrives)
-#endif
         {
             var desiredDriveTypes = new List<DriveType>() { DriveType.CDRom };
             if (!ignoreFixedDrives)
@@ -635,18 +627,14 @@ namespace MPF.Core.Data
             // https://github.com/aaru-dps/Aaru/blob/5164a154e2145941472f2ee0aeb2eff3338ecbb3/Aaru.Devices/Windows/ListDevices.cs#L66
 
             // Create an output drive list
-#if NET48
             var drives = new List<Drive>();
-#else
-            var drives = new List<Drive?>();
-#endif
 
             // Get all standard supported drive types
             try
             {
                 drives = DriveInfo.GetDrives()
                     .Where(d => desiredDriveTypes.Contains(d.DriveType))
-                    .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name))
+                    .Select(d => Create(EnumConverter.ToInternalDriveType(d.DriveType), d.Name) ?? new Drive())
                     .ToList();
             }
             catch

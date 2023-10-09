@@ -50,6 +50,7 @@
 - Fix null reference exception in disc type
 - Detected type and selected type are different
 - Remove message boxes from MainViewModel
+- Move MainViewModel to Core
 
 ### 2.6.6 (2023-10-04)
 

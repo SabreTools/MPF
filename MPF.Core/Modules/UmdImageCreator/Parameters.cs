@@ -61,7 +61,11 @@ namespace MPF.Core.Modules.UmdImageCreator
         }
 
         /// <inheritdoc/>
+#if NET48
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
+#else
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+#endif
         {
             // TODO: Determine if there's a UMDImageCreator version anywhere
             if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();

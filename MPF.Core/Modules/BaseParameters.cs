@@ -189,7 +189,11 @@ namespace MPF.Core.Modules
         /// <param name="basePath">Base filename and path to use for checking</param>
         /// <param name="drive">Drive representing the disc to get information from</param>
         /// <param name="includeArtifacts">True to include output files as encoded artifacts, false otherwise</param>
+#if NET48
         public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive drive, bool includeArtifacts);
+#else
+        public abstract void GenerateSubmissionInfo(SubmissionInfo submissionInfo, Options options, string basePath, Drive? drive, bool includeArtifacts);
+#endif
 
         #endregion
 

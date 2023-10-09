@@ -5,16 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BurnOutSharp;
-using MPF.Core;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 
-namespace MPF.UI.Core.ViewModels
+namespace MPF.Core.UI.ViewModels
 {
-    // TODO: Create internal Func for communicating to and from message boxes
     public class MainViewModel : INotifyPropertyChanged
     {
         #region Fields
@@ -22,7 +20,7 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Access to the current options
         /// </summary>
-        public MPF.Core.Data.Options Options
+        public Data.Options Options
         {
             get => _options;
             set
@@ -31,7 +29,7 @@ namespace MPF.UI.Core.ViewModels
                 OptionsLoader.SaveToConfig(_options);
             }
         }
-        private MPF.Core.Data.Options _options;
+        private Data.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
@@ -39,12 +37,20 @@ namespace MPF.UI.Core.ViewModels
         public bool CanExecuteSelectionChanged { get; private set; } = false;
 
         /// <inheritdoc/>
+#if NET48
         public event PropertyChangedEventHandler PropertyChanged;
+#else
+        public event PropertyChangedEventHandler? PropertyChanged;
+#endif
 
         /// <summary>
         /// Action to process logging statements
         /// </summary>
+#if NET48
         private Action<LogLevel, string> _logger;
+#else
+        private Action<LogLevel, string>? _logger;
+#endif
 
         /// <summary>
         /// Display a message to a user
@@ -56,7 +62,11 @@ namespace MPF.UI.Core.ViewModels
         /// T4 - true for inquiry, false otherwise
         /// TResult - true for positive, false for negative, null for neutral
         /// </remarks>
+#if NET48
         private Func<string, string, int, bool, bool?> _displayUserMessage;
+#else
+        private Func<string, string, int, bool, bool?>? _displayUserMessage;
+#endif
 
         /// <summary>
         /// Detected media type, distinct from the selected one
@@ -66,12 +76,20 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Current dumping environment
         /// </summary>
+#if NET48
         private DumpEnvironment _environment;
+#else
+        private DumpEnvironment? _environment;
+#endif
 
         /// <summary>
         /// Function to process user information
         /// </summary>
+#if NET48
         private Func<SubmissionInfo, (bool?, SubmissionInfo)> _processUserInfo;
+#else
+        private Func<SubmissionInfo?, (bool?, SubmissionInfo?)>? _processUserInfo;
+#endif
 
         #endregion
 
@@ -192,7 +210,11 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Currently selected drive value
         /// </summary>
+#if NET48
         public Drive CurrentDrive
+#else
+        public Drive? CurrentDrive
+#endif
         {
             get => _currentDrive;
             set
@@ -201,7 +223,11 @@ namespace MPF.UI.Core.ViewModels
                 TriggerPropertyChanged("CurrentDrive");
             }
         }
+#if NET48
         private Drive _currentDrive;
+#else
+        private Drive? _currentDrive;
+#endif
 
         /// <summary>
         /// Indicates the status of the drive combo box
@@ -337,7 +363,7 @@ namespace MPF.UI.Core.ViewModels
             get => _startStopButtonText;
             set
             {
-                _startStopButtonText = value as string;
+                _startStopButtonText = (value as string) ?? string.Empty;
                 TriggerPropertyChanged("StartStopButtonText");
             }
         }
@@ -448,7 +474,11 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Current list of supported media types
         /// </summary>
+#if NET48
         public List<Element<MediaType>> MediaTypes
+#else
+        public List<Element<MediaType>>? MediaTypes
+#endif
         {
             get => _mediaTypes;
             set
@@ -457,7 +487,11 @@ namespace MPF.UI.Core.ViewModels
                 TriggerPropertyChanged("MediaTypes");
             }
         }
+#if NET48
         private List<Element<MediaType>> _mediaTypes;
+#else
+        private List<Element<MediaType>>? _mediaTypes;
+#endif
 
         /// <summary>
         /// Current list of supported system profiles
@@ -496,6 +530,16 @@ namespace MPF.UI.Core.ViewModels
         {
             _options = OptionsLoader.LoadFromConfig();
 
+            // Added to clear warnings, all are set externally
+            _drives = new List<Drive>();
+            _driveSpeeds = new List<int>();
+            _internalPrograms = new List<Element<InternalProgram>>();
+            _outputPath = string.Empty;
+            _parameters = string.Empty;
+            _startStopButtonText = string.Empty;
+            _status = string.Empty;
+            _systems = new List<RedumpSystemComboBoxItem>();
+
             OptionsMenuItemEnabled = true;
             SystemTypeComboBoxEnabled = true;
             MediaTypeComboBoxEnabled = true;
@@ -518,7 +562,11 @@ namespace MPF.UI.Core.ViewModels
         public void Init(
             Action<LogLevel, string> loggerAction,
             Func<string, string, int, bool, bool?> displayUserMessage,
+#if NET48
             Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo)
+#else
+            Func<SubmissionInfo?, (bool?, SubmissionInfo?)> processUserInfo)
+#endif
         {
             // Set the callbacks
             _logger = loggerAction;
@@ -691,7 +739,7 @@ namespace MPF.UI.Core.ViewModels
         public void ChangeMediaType(System.Collections.IList removedItems, System.Collections.IList addedItems)
         {
             // Only change the media type if the selection and not the list has changed
-            if ((removedItems == null && addedItems == null) || (removedItems.Count == 1 && addedItems.Count == 1))
+            if ((removedItems == null || removedItems.Count == 1) && (addedItems == null || addedItems.Count == 1))
                 SetSupportedDriveSpeed();
 
             GetOutputNames(false);
@@ -712,9 +760,13 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Check for available updates
         /// </summary>
+#if NET48
         public (bool, string, string) CheckForUpdates()
+#else
+        public (bool, string, string?) CheckForUpdates()
+#endif
         {
-            (bool different, string message, string url) = Tools.CheckForNewVersion();
+            (bool different, string message, var url) = Tools.CheckForNewVersion();
 
             SecretLogLn(message);
             if (url == null)
@@ -903,18 +955,18 @@ namespace MPF.UI.Core.ViewModels
             else if (this.StartStopButtonText as string == Interface.StopDumping)
             {
                 VerboseLogLn("Canceling dumping process...");
-                _environment.CancelDumping();
+                _environment?.CancelDumping();
                 this.CopyProtectScanButtonEnabled = true;
 
-                if (_environment.Options.EjectAfterDump == true)
+                if (_environment != null && _environment.Options.EjectAfterDump)
                 {
-                    VerboseLogLn($"Ejecting disc in drive {_environment.Drive.Letter}");
+                    VerboseLogLn($"Ejecting disc in drive {_environment.Drive?.Letter}");
                     await _environment.EjectDisc();
                 }
 
-                if (this.Options.DICResetDriveAfterDump)
+                if (_environment != null && this.Options.DICResetDriveAfterDump)
                 {
-                    VerboseLogLn($"Resetting drive {_environment.Drive.Letter}");
+                    VerboseLogLn($"Resetting drive {_environment.Drive?.Letter}");
                     await _environment.ResetDrive();
                 }
             }
@@ -925,11 +977,11 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         /// <param name="savedSettings">Indicates if the settings were saved or not</param>
         /// <param name="newOptions">Options representing the new, saved values</param>
-        public void UpdateOptions(bool savedSettings, MPF.Core.Data.Options newOptions)
+        public void UpdateOptions(bool savedSettings, Data.Options newOptions)
         {
             if (savedSettings)
             {
-                this.Options = new MPF.Core.Data.Options(newOptions);
+                this.Options = new Data.Options(newOptions);
                 InitializeUIValues(removeEventHandlers: true, rescanDrives: true);
             }
         }
@@ -955,12 +1007,6 @@ namespace MPF.UI.Core.ViewModels
                 this.ParametersCheckBoxEnabled = false;
                 this.CanExecuteSelectionChanged = true;
             }
-
-            // Set the UI color scheme according to the options
-            if (this.Options.EnableDarkMode)
-                EnableDarkMode();
-            else
-                EnableLightMode();
 
             // Remove event handlers to ensure ordering
             if (removeEventHandlers)
@@ -1050,24 +1096,6 @@ namespace MPF.UI.Core.ViewModels
             CanExecuteSelectionChanged = false;
         }
 
-        /// <summary>
-        /// Recolor all UI elements for light mode
-        /// </summary>
-        private static void EnableLightMode()
-        {
-            var theme = new LightModeTheme();
-            theme.Apply();
-        }
-
-        /// <summary>
-        /// Recolor all UI elements for dark mode
-        /// </summary>
-        private static void EnableDarkMode()
-        {
-            var theme = new DarkModeTheme();
-            theme.Apply();
-        }
-
         #endregion
 
         #region Logging
@@ -1076,7 +1104,11 @@ namespace MPF.UI.Core.ViewModels
         /// Enqueue text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        private void Log(string text) => _logger(LogLevel.USER, text);
+        private void Log(string text)
+        {
+            if (_logger != null)
+                _logger(LogLevel.USER, text);
+        }
 
         /// <summary>
         /// Enqueue text with a newline to the log
@@ -1088,7 +1120,11 @@ namespace MPF.UI.Core.ViewModels
         /// Enqueue error text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        private void ErrorLog(string text) => _logger(LogLevel.ERROR, text);
+        private void ErrorLog(string text)
+        {
+            if (_logger != null)
+                _logger(LogLevel.ERROR, text);
+        }
 
         /// <summary>
         /// Enqueue error text with a newline to the log
@@ -1100,7 +1136,11 @@ namespace MPF.UI.Core.ViewModels
         /// Enqueue secret text to the log
         /// </summary>
         /// <param name="text">Text to write to the log</param>
-        private void SecretLog(string text) => _logger(LogLevel.SECRET, text);
+        private void SecretLog(string text)
+        {
+            if (_logger != null)
+                _logger(LogLevel.SECRET, text);
+        }
 
         /// <summary>
         /// Enqueue secret text with a newline to the log
@@ -1114,7 +1154,7 @@ namespace MPF.UI.Core.ViewModels
         /// <param name="text">Text to write to the log</param>
         private void VerboseLog(string text)
         {
-            if (Options.VerboseLogging)
+            if (_logger != null && Options.VerboseLogging)
                 _logger(LogLevel.VERBOSE, text);
         }
 
@@ -1156,7 +1196,7 @@ namespace MPF.UI.Core.ViewModels
             else if (this.CurrentDrive.MarkedActive)
             {
                 VerboseLog($"Trying to detect media type for drive {this.CurrentDrive.Letter} [{this.CurrentDrive.DriveFormat}] using size and filesystem.. ");
-                (MediaType? detectedMediaType, string errorMessage) = this.CurrentDrive.GetMediaType(this.CurrentSystem);
+                (MediaType? detectedMediaType, var errorMessage) = this.CurrentDrive.GetMediaType(this.CurrentSystem);
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null)
@@ -1298,7 +1338,7 @@ namespace MPF.UI.Core.ViewModels
             // If input params are not enabled, generate the full parameters from the environment
             if (!this.ParametersCheckBoxEnabled)
             {
-                string generated = _environment.GetFullParameters(this.DriveSpeed);
+                var generated = _environment.GetFullParameters(this.DriveSpeed);
                 if (generated != null)
                     this.Parameters = generated;
             }
@@ -1317,40 +1357,46 @@ namespace MPF.UI.Core.ViewModels
             }
 
             // Get the extension for the file for the next two statements
-            string extension = _environment?.Parameters?.GetDefaultExtension(this.CurrentMediaType);
+            var extension = _environment?.Parameters?.GetDefaultExtension(this.CurrentMediaType);
 
             // Set the output filename, if it's not already
             if (string.IsNullOrEmpty(this.OutputPath))
             {
-                string label = this.CurrentDrive?.FormattedVolumeLabel ?? this.CurrentSystem.LongName();
-                string directory = this.Options.DefaultOutputPath;
+                var label = this.CurrentDrive?.FormattedVolumeLabel ?? this.CurrentSystem.LongName();
+                var directory = this.Options.DefaultOutputPath;
                 string filename = $"{label}{extension ?? ".bin"}";
 
                 // If the path ends with the label already
-                if (directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
+                if (directory != null && label != null && directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
                     directory = Path.GetDirectoryName(directory);
 
-                this.OutputPath = Path.Combine(directory, label, filename);
+                if (directory != null && label != null)
+                    this.OutputPath = Path.Combine(directory, label, filename);
+                else
+                    this.OutputPath = filename;
             }
 
             // Set the output filename, if we changed drives
             else if (driveChanged)
             {
-                string label = this.CurrentDrive?.FormattedVolumeLabel ?? this.CurrentSystem.LongName();
+                var label = this.CurrentDrive?.FormattedVolumeLabel ?? this.CurrentSystem.LongName();
                 string oldPath = InfoTool.NormalizeOutputPaths(this.OutputPath, false);
                 string oldFilename = Path.GetFileNameWithoutExtension(oldPath);
-                string directory = Path.GetDirectoryName(oldPath);
+                var directory = Path.GetDirectoryName(oldPath);
                 string filename = $"{label}{extension ?? ".bin"}";
 
                 // If the previous path included the label
-                if (directory.EndsWith(oldFilename, StringComparison.OrdinalIgnoreCase))
+                if (directory != null && directory.EndsWith(oldFilename, StringComparison.OrdinalIgnoreCase))
                     directory = Path.GetDirectoryName(directory);
 
                 // If the path ends with the label already
-                if (directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
+                if (directory != null && label != null && directory.EndsWith(label, StringComparison.OrdinalIgnoreCase))
                     directory = Path.GetDirectoryName(directory);
 
-                this.OutputPath = Path.Combine(directory, label, filename);
+                if (directory != null && label != null)
+                    this.OutputPath = Path.Combine(directory, label, filename);
+                else
+                    this.OutputPath = filename;
             }
 
             // Otherwise, reset the extension of the currently set path
@@ -1358,10 +1404,13 @@ namespace MPF.UI.Core.ViewModels
             {
                 string oldPath = InfoTool.NormalizeOutputPaths(this.OutputPath, false);
                 string filename = Path.GetFileNameWithoutExtension(oldPath);
-                string directory = Path.GetDirectoryName(oldPath);
+                var directory = Path.GetDirectoryName(oldPath);
                 filename = $"{filename}{extension ?? ".bin"}";
 
-                this.OutputPath = Path.Combine(directory, filename);
+                if (directory != null)
+                    this.OutputPath = Path.Combine(directory, filename);
+                else
+                    this.OutputPath = filename;
             }
         }
 
@@ -1370,32 +1419,35 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         public void ProcessCustomParameters()
         {
-            _environment.SetParameters(this.Parameters);
-            if (_environment.Parameters == null)
+            _environment?.SetParameters(this.Parameters);
+            if (_environment?.Parameters == null)
                 return;
 
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(_environment.Parameters.InputPath[0]);
+                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(_environment.Parameters?.InputPath?[0] ?? default(char));
                 this.CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
             }
             catch { }
 
-            int driveSpeed = _environment.Parameters.Speed ?? -1;
+            int driveSpeed = _environment.Parameters?.Speed ?? -1;
             if (driveSpeed > 0)
                 this.DriveSpeed = driveSpeed;
-            else
+            else if (_environment.Parameters != null)
                 _environment.Parameters.Speed = this.DriveSpeed;
 
             // Disable change handling
             DisableEventHandlers();
 
-            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.Parameters.OutputPath, true);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.Parameters?.OutputPath, true);
 
-            MediaType? mediaType = _environment.Parameters.GetMediaType();
-            int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
-            this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
+            if (MediaTypes != null)
+            {
+                MediaType? mediaType = _environment.Parameters?.GetMediaType();
+                int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
+                this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
+            }
 
             // Reenable change handling
             EnableEventHandlers();
@@ -1404,7 +1456,11 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Scan and show copy protection for the current disc
         /// </summary>
+#if NET48
         public async Task<(string, string)> ScanAndShowProtection()
+#else
+        public async Task<(string?, string?)> ScanAndShowProtection()
+#endif
         {
             // Determine current environment, just in case
             if (_environment == null)
@@ -1425,8 +1481,8 @@ namespace MPF.UI.Core.ViewModels
 
             var progress = new Progress<ProtectionProgress>();
             progress.ProgressChanged += ProgressUpdated;
-            (var protections, string error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Letter + ":\\", this.Options, progress);
-            string output = Protection.FormatProtections(protections);
+            var (protections, error) = await Protection.RunProtectionScanOnPath(this.CurrentDrive.Letter + ":\\", this.Options, progress);
+            var output = Protection.FormatProtections(protections);
 
             // If SmartE is detected on the current disc, remove `/sf` from the flags for DIC only -- Disabled until further notice
             //if (Env.InternalProgram == InternalProgram.DiscImageCreator && output.Contains("SmartE"))
@@ -1539,10 +1595,10 @@ namespace MPF.UI.Core.ViewModels
             _environment = DetermineEnvironment();
 
             // Force an internal drive refresh in case the user entered things manually
-            _environment.Drive.RefreshDrive();
+            _environment.Drive?.RefreshDrive();
 
             // If still in custom parameter mode, check that users meant to continue or not
-            if (this.ParametersCheckBoxEnabled == true)
+            if (this.ParametersCheckBoxEnabled == true && _displayUserMessage != null)
             {
                 bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", 3, true);
                 if (result == true)
@@ -1591,7 +1647,7 @@ namespace MPF.UI.Core.ViewModels
                 Result result = await _environment.Run(resultProgress);
 
                 // If we didn't execute a dumping command we cannot get submission output
-                if (!_environment.Parameters.IsDumpingCommand())
+                if (_environment.Parameters?.IsDumpingCommand() != true)
                 {
                     LogLn("No dumping command was run, submission information will not be gathered.");
                     this.Status = "Execution complete!";
@@ -1664,15 +1720,16 @@ namespace MPF.UI.Core.ViewModels
         private bool ValidateBeforeDumping()
         {
             // Validate that we have an output path of any sort
-            if (string.IsNullOrWhiteSpace(_environment.OutputPath))
+            if (string.IsNullOrWhiteSpace(_environment?.OutputPath))
             {
-                _ = _displayUserMessage("Missing Path", "No output path was provided so dumping cannot continue.", 1, false);
+                if (_displayUserMessage != null)
+                    _ = _displayUserMessage("Missing Path", "No output path was provided so dumping cannot continue.", 1, false);
                 LogLn("Dumping aborted!");
                 return false;
             }
 
             // Validate that the user explicitly wants an inactive drive to be considered for dumping
-            if (!_environment.Drive.MarkedActive)
+            if (_environment.Drive?.MarkedActive != true && _displayUserMessage != null)
             {
                 string message = "The currently selected drive does not appear to contain a disc! "
                     + (!_environment.System.DetectedByWindows() ? $"This is normal for {_environment.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
@@ -1687,12 +1744,12 @@ namespace MPF.UI.Core.ViewModels
             }
 
             // Pre-split the output path
-            string outputDirectory = Path.GetDirectoryName(_environment.OutputPath);
+            var outputDirectory = Path.GetDirectoryName(_environment.OutputPath);
             string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete dump already exists
             (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, _environment.Parameters, true);
-            if (foundFiles)
+            if (foundFiles && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
                 if (mbresult != true)
@@ -1704,9 +1761,14 @@ namespace MPF.UI.Core.ViewModels
 
             // Validate that at least some space exists
             // TODO: Tie this to the size of the disc, type of disc, etc.
-            string fullPath = Path.GetFullPath(outputDirectory);
-            var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath));
-            if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30))
+            string fullPath;
+            if (string.IsNullOrWhiteSpace(outputDirectory))
+                fullPath = Path.GetFullPath(_environment.OutputPath);
+            else
+                fullPath = Path.GetFullPath(outputDirectory);
+
+            var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath) ?? string.Empty);
+            if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30) && _displayUserMessage != null)
             {
                 bool? mbresult = _displayUserMessage("Low Space", "There is less than 1gb of space left on the target drive. Are you sure you want to continue?", 2, true);
                 if (mbresult != true)
@@ -1727,7 +1789,11 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
+#if NET48
         private void ProgressUpdated(object sender, string value)
+#else
+        private void ProgressUpdated(object? sender, string value)
+#endif
         {
             try
             {
@@ -1740,27 +1806,35 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Handler for Result ProgressChanged event
         /// </summary>
+#if NET48
         private void ProgressUpdated(object sender, Result value)
+#else
+        private void ProgressUpdated(object? sender, Result value)
+#endif
         {
-            string message = value?.Message;
+            var message = value?.Message;
 
             // Update the label with only the first line of output
-            if (message.Contains("\n"))
-                this.Status = value.Message.Split('\n')[0] + " (See log output)";
+            if (message != null && message.Contains("\n"))
+                this.Status = value?.Message?.Split('\n')[0] + " (See log output)";
             else
-                this.Status = value.Message;
+                this.Status = value?.Message ?? string.Empty;
 
             // Log based on success or failure
-            if (value)
-                VerboseLogLn(message);
-            else if (!value)
-                ErrorLogLn(message);
+            if (value != null && value)
+                VerboseLogLn(message ?? string.Empty);
+            else if (value != null && !value)
+                ErrorLogLn(message ?? string.Empty);
         }
 
         /// <summary>
         /// Handler for ProtectionProgress ProgressChanged event
         /// </summary>
+#if NET48
         private void ProgressUpdated(object sender, ProtectionProgress value)
+#else
+        private void ProgressUpdated(object? sender, ProtectionProgress value)
+#endif
         {
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             this.Status = message;

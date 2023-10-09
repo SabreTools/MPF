@@ -319,7 +319,11 @@ namespace MPF.Core.Modules.Aaru
         }
 
         /// <inheritdoc/>
+#if NET48
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
+#else
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+#endif
         {
             // TODO: Fill in submission info specifics for Aaru
             var outputDirectory = Path.GetDirectoryName(basePath);
@@ -2328,7 +2332,7 @@ namespace MPF.Core.Modules.Aaru
             return true;
         }
 
-        #endregion
+#endregion
 
         #region Private Extra Methods
 

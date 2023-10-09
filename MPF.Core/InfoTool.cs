@@ -40,8 +40,12 @@ namespace MPF.Core
 #else
         public static async Task<SubmissionInfo?> ExtractOutputInformation(
 #endif
-        string outputPath,
+            string outputPath,
+#if NET48
             Drive drive,
+#else
+            Drive? drive,
+#endif
             RedumpSystem? system,
             MediaType? mediaType,
             Data.Options options,
@@ -1872,7 +1876,11 @@ namespace MPF.Core
         /// Normalize a split set of paths
         /// </summary>
         /// <param name="path">Path value to normalize</param>
+#if NET48
         public static string NormalizeOutputPaths(string path, bool getFullPath)
+#else
+        public static string NormalizeOutputPaths(string? path, bool getFullPath)
+#endif
         {
             // The easy way
             try
@@ -1907,7 +1915,7 @@ namespace MPF.Core
             }
             catch { }
 
-            return path;
+            return path ?? string.Empty;
         }
 
         #endregion

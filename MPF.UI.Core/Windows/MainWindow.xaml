@@ -6,7 +6,7 @@
                         xmlns:controls="clr-namespace:MPF.UI.Core.UserControls"
                         xmlns:core="clr-namespace:MPF.UI.Core"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows"
-                        xmlns:viewModels="clr-namespace:MPF.UI.Core.ViewModels"
+                        xmlns:viewModels="clr-namespace:MPF.Core.UI.ViewModels;assembly=MPF.Core"
                         mc:Ignorable="d"
                         Title="Media Preservation Frontend" Width="600" WindowStyle="None"
                         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"

@@ -283,7 +283,11 @@ namespace MPF.Core.Modules.Redumper
         }
 
         /// <inheritdoc/>
+#if NET48
         public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive drive, bool includeArtifacts)
+#else
+        public override void GenerateSubmissionInfo(SubmissionInfo info, Options options, string basePath, Drive? drive, bool includeArtifacts)
+#endif
         {
             // Get the dumping program and version
             if (info.DumpingInfo == null) info.DumpingInfo = new DumpingInfoSection();

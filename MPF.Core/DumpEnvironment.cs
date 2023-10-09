@@ -30,7 +30,11 @@ namespace MPF.Core
         /// <summary>
         /// Drive object representing the current drive
         /// </summary>
+#if NET48
         public Drive Drive { get; private set; }
+#else
+        public Drive? Drive { get; private set; }
+#endif
 
         /// <summary>
         /// Currently selected system
@@ -61,7 +65,7 @@ namespace MPF.Core
         public BaseParameters? Parameters { get; private set; }
 #endif
 
-        #endregion
+#endregion
 
         #region Event Handlers
 
@@ -111,7 +115,11 @@ namespace MPF.Core
         /// <param name="parameters"></param>
         public DumpEnvironment(Data.Options options,
             string outputPath,
+#if NET48
             Drive drive,
+#else
+            Drive? drive,
+#endif
             RedumpSystem? system,
             MediaType? type,
             InternalProgram? internalProgram,
@@ -405,14 +413,14 @@ namespace MPF.Core
             // Eject the disc automatically if configured to
             if (Options.EjectAfterDump == true)
             {
-                resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive.Letter}"));
+                resultProgress?.Report(Result.Success($"Ejecting disc in drive {Drive?.Letter}"));
                 await EjectDisc();
             }
 
             // Reset the drive automatically if configured to
             if (this.InternalProgram == InternalProgram.DiscImageCreator && Options.DICResetDriveAfterDump)
             {
-                resultProgress?.Report(Result.Success($"Resetting drive {Drive.Letter}"));
+                resultProgress?.Report(Result.Success($"Resetting drive {Drive?.Letter}"));
                 await ResetDrive();
             }
 
@@ -494,6 +502,10 @@ namespace MPF.Core
         /// <returns>True if the configuration is valid, false otherwise</returns>
         internal bool ParametersValid()
         {
+            // Missing drive means it can never be valid
+            if (Drive == null)
+                return false;
+
             bool parametersValid = Parameters?.IsValid() ?? false;
             bool floppyValid = !(Drive.InternalDriveType == InternalDriveType.Floppy ^ Type == MediaType.FloppyDisk);
 
@@ -561,7 +573,7 @@ namespace MPF.Core
             this.OutputPath = InfoTool.NormalizeOutputPaths(this.OutputPath, true);
 
             // Validate that the output path isn't on the dumping drive
-            if (this.OutputPath[0] == Drive.Letter)
+            if (Drive != null && this.OutputPath[0] == Drive.Letter)
                 return Result.Failure("Error! Cannot output to same drive that is being dumped!");
 
             // Validate that the required program exists
@@ -570,7 +582,7 @@ namespace MPF.Core
 
             // Validate that the dumping drive doesn't contain the executable
             string fullExecutablePath = Path.GetFullPath(Parameters.ExecutablePath);
-            if (fullExecutablePath[0] == Drive.Letter)
+            if (Drive != null && fullExecutablePath[0] == Drive.Letter)
                 return Result.Failure("Error! Cannot dump same drive that executable resides on!");
 
             // Validate that the current configuration is supported
@@ -610,7 +622,7 @@ namespace MPF.Core
                 return null;
 
             // Validate we're not trying to eject a non-optical
-            if (Drive.InternalDriveType != InternalDriveType.Optical)
+            if (Drive == null || Drive.InternalDriveType != InternalDriveType.Optical)
                 return null;
 
             CancelDumping();
