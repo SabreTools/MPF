@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using BurnOutSharp;
 using MPF.Core;
 using MPF.Core.Converters;
@@ -12,7 +11,6 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
-using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.ViewModels
 {
@@ -47,6 +45,18 @@ namespace MPF.UI.Core.ViewModels
         /// Action to process logging statements
         /// </summary>
         private Action<LogLevel, string> _logger;
+
+        /// <summary>
+        /// Display a message to a user
+        /// </summary>
+        /// <remarks>
+        /// T1 - Title to display to the user
+        /// T1 - Message to display to the user
+        /// T3 - Number of default options to display
+        /// T4 - true for inquiry, false otherwise
+        /// TResult - true for positive, false for negative, null for neutral
+        /// </remarks>
+        private Func<string, string, int, bool, bool?> _displayUserMessage;
 
         /// <summary>
         /// Detected media type, distinct from the selected one
@@ -505,10 +515,14 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Initialize the main window after loading
         /// </summary>
-        public void Init(Action<LogLevel, string> loggerAction, Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo)
+        public void Init(
+            Action<LogLevel, string> loggerAction,
+            Func<string, string, int, bool, bool?> displayUserMessage,
+            Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo)
         {
             // Set the callbacks
             _logger = loggerAction;
+            _displayUserMessage = displayUserMessage;
             _processUserInfo = processUserInfo;
 
             // Finish initializing the rest of the values
@@ -1530,17 +1544,17 @@ namespace MPF.UI.Core.ViewModels
             // If still in custom parameter mode, check that users meant to continue or not
             if (this.ParametersCheckBoxEnabled == true)
             {
-                MessageBoxResult result = CustomMessageBox.Show("It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", "Custom Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes)
+                bool? result = _displayUserMessage("Custom Changes", "It looks like you have custom parameters that have not been saved. Would you like to apply those changes before starting to dump?", 3, true);
+                if (result == true)
                 {
                     this.ParametersCheckBoxEnabled = false;
                     ProcessCustomParameters();
                 }
-                else if (result == MessageBoxResult.Cancel)
+                else if (result == null)
                 {
                     return;
                 }
-                // If "No", then we continue with the current known environment
+                // If false, then we continue with the current known environment
             }
 
             // Run path adjustments for DiscImageCreator -- Disabled until further notice
@@ -1652,7 +1666,7 @@ namespace MPF.UI.Core.ViewModels
             // Validate that we have an output path of any sort
             if (string.IsNullOrWhiteSpace(_environment.OutputPath))
             {
-                _ = CustomMessageBox.Show("No output path was provided so dumping cannot continue.", "Missing Path", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                _ = _displayUserMessage("Missing Path", "No output path was provided so dumping cannot continue.", 1, false);
                 LogLn("Dumping aborted!");
                 return false;
             }
@@ -1664,8 +1678,8 @@ namespace MPF.UI.Core.ViewModels
                     + (!_environment.System.DetectedByWindows() ? $"This is normal for {_environment.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
                     + "Do you want to continue?";
 
-                MessageBoxResult mbresult = CustomMessageBox.Show(message, "No Disc Detected", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                bool? mbresult = _displayUserMessage("No Disc Detected", message, 2, false);
+                if (mbresult != true)
                 {
                     LogLn("Dumping aborted!");
                     return false;
@@ -1680,8 +1694,8 @@ namespace MPF.UI.Core.ViewModels
             (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, _environment.Parameters, true);
             if (foundFiles)
             {
-                MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                bool? mbresult = _displayUserMessage("Overwrite?", "A complete dump already exists! Are you sure you want to overwrite?", 2, true);
+                if (mbresult != true)
                 {
                     LogLn("Dumping aborted!");
                     return false;
@@ -1694,8 +1708,8 @@ namespace MPF.UI.Core.ViewModels
             var driveInfo = new DriveInfo(Path.GetPathRoot(fullPath));
             if (driveInfo.AvailableFreeSpace < Math.Pow(2, 30))
             {
-                MessageBoxResult mbresult = CustomMessageBox.Show("There is less than 1gb of space left on the target drive. Are you sure you want to continue?", "Low Space", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
-                if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
+                bool? mbresult = _displayUserMessage("Low Space", "There is less than 1gb of space left on the target drive. Are you sure you want to continue?", 2, true);
+                if (mbresult != true)
                 {
                     LogLn("Dumping aborted!");
                     return false;

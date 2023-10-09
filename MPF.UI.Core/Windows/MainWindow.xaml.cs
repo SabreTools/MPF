@@ -42,7 +42,7 @@ namespace MPF.UI.Core.Windows
             if (MainViewModel.Options.ShowDebugViewMenuItem)
                 DebugViewMenuItem.Visibility = Visibility.Visible;
 
-            MainViewModel.Init(LogOutput.EnqueueLog, ShowDiscInformationWindow);
+            MainViewModel.Init(LogOutput.EnqueueLog, DisplayUserMessage, ShowDiscInformationWindow);
 
             // Check for updates, if necessary
             if (MainViewModel.Options.CheckForUpdatesOnStartup)
@@ -130,6 +130,57 @@ namespace MPF.UI.Core.Windows
 
             if (showIfSame || different)
                 CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+        }
+
+        /// <summary>
+        /// Display a user message using a CustomMessageBox
+        /// </summary>
+        /// <param name="title">Title to display to the user</param>
+        /// <param name="message">Message to display to the user</param>
+        /// <param name="optionCount">Number of options to display</param>
+        /// <param name="flag">true for inquiry, false otherwise</param>
+        /// <returns>true for positive, false for negative, null for neutral</returns>
+        public bool? DisplayUserMessage(string title, string message, int optionCount, bool flag)
+        {
+            // Set the correct button style
+            MessageBoxButton button;
+            switch (optionCount)
+            {
+                case 1:
+                    button = MessageBoxButton.OK;
+                    break;
+                case 2:
+                    button = MessageBoxButton.YesNo;
+                    break;
+                case 3:
+                    button = MessageBoxButton.YesNoCancel;
+                    break;
+
+                // This should not happen, but default to "OK"
+                default:
+                    button = MessageBoxButton.OK;
+                    break;
+            }
+
+            // Set the correct icon
+            MessageBoxImage image = flag ? MessageBoxImage.Question : MessageBoxImage.Exclamation;
+
+            // Display and get the result
+            MessageBoxResult result = CustomMessageBox.Show(this, message, title, button, image);
+            switch (result)
+            {
+                case MessageBoxResult.OK:
+                case MessageBoxResult.Yes:
+                    return true;
+
+                case MessageBoxResult.No:
+                    return false;
+
+                case MessageBoxResult.Cancel:
+                case MessageBoxResult.None:
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
