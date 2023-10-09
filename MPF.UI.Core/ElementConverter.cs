@@ -17,6 +17,8 @@ namespace MPF.UI.Core
                     return new Element<DiscCategory>(discCategory);
                 case InternalProgram internalProgram:
                     return new Element<InternalProgram>(internalProgram);
+                case MediaType mediaType:
+                    return new Element<MediaType>(mediaType);
                 case RedumpSystem redumpSystem:
                     return new RedumpSystemComboBoxItem(redumpSystem);
                 case Region region:
@@ -41,6 +43,8 @@ namespace MPF.UI.Core
                     return dcElement.Value;
                 case Element<InternalProgram> ipElement:
                     return ipElement.Value;
+                case Element<MediaType> mtElement:
+                    return mtElement.Value;
                 case RedumpSystemComboBoxItem rsElement:
                     return rsElement.Value;
                 case Element<Region> reValue:

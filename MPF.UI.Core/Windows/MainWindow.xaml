@@ -4,6 +4,7 @@
                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:controls="clr-namespace:MPF.UI.Core.UserControls"
+                        xmlns:core="clr-namespace:MPF.UI.Core"
                         xmlns:coreWindows="clr-namespace:MPF.UI.Core.Windows"
                         xmlns:viewModels="clr-namespace:MPF.UI.Core.ViewModels"
                         mc:Ignorable="d"
@@ -11,13 +12,15 @@
                         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" SizeToContent="Height"
                         BorderBrush="DarkGray" BorderThickness="2">
 
-    <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
-    </WindowChrome.WindowChrome>
-
     <Window.DataContext>
         <viewModels:MainViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <core:ElementConverter x:Key="ElementConverter" />
+    </Window.Resources>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="0" />
+    </WindowChrome.WindowChrome>
 
     <Grid>
         <StackPanel Orientation="Vertical">
@@ -123,7 +126,9 @@
                     </Grid.RowDefinitions>
 
                     <Label x:Name="SystemMediaTypeLabel" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="System/Media Type" />
-                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left" ItemsSource="{Binding Systems}" SelectedIndex="0" Style="{DynamicResource CustomComboBoxStyle}">
+                    <ComboBox x:Name="SystemTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding Systems}" SelectedItem="{Binding Path=CurrentSystem, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{DynamicResource CustomComboBoxStyle}">
                         <ComboBox.ItemContainerStyle>
                             <Style TargetType="{x:Type ComboBoxItem}">
                                 <Style.Triggers>
@@ -134,15 +139,20 @@
                             </Style>
                         </ComboBox.ItemContainerStyle>
                     </ComboBox>
-                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <ComboBox x:Name="MediaTypeComboBox" Grid.Row="0" Grid.Column="1" Height="22" Width="140" HorizontalAlignment="Right"
+                              ItemsSource="{Binding MediaTypes}" SelectedItem="{Binding Path=CurrentMediaType, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{DynamicResource CustomComboBoxStyle}" />
 
                     <Label x:Name="OutputPathLabel" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Output Path"/>
-                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                    <TextBox x:Name="OutputPathTextBox" Grid.Row="1" Grid.Column="1" Height="22" Width="345" HorizontalAlignment="Left" VerticalContentAlignment="Center"
+                             Text="{Binding OutputPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Button x:Name="OutputPathBrowseButton" Grid.Row="1" Grid.Column="1" Height="22" Width="50" HorizontalAlignment="Right" Content="Browse"
                             Style="{DynamicResource CustomButtonStyle}"/>
 
                     <Label x:Name="DriveLetterLabel" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Drive Letter"/>
-                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}">
+                    <ComboBox x:Name="DriveLetterComboBox" Grid.Row="2" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                              ItemsSource="{Binding Drives}" SelectedItem="{Binding Path=CurrentDrive, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{DynamicResource CustomComboBoxStyle}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Letter}" />
@@ -151,13 +161,18 @@
                     </ComboBox>
 
                     <Label x:Name="DriveSpeedLabel" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Content="Drive Speed"/>
-                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
+                    <ComboBox x:Name="DriveSpeedComboBox" Grid.Row="3" Grid.Column="1" Height="22" Width="60" HorizontalAlignment="Left"
+                              SelectedItem="{Binding Path=DriveSpeed, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{DynamicResource CustomComboBoxStyle}" />
 
                     <Label x:Name="DumpingProgramLabel" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Content="Dumping Program"/>
-                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left" Style="{DynamicResource CustomComboBoxStyle}" />
-                    
+                    <ComboBox x:Name="DumpingProgramComboBox" Grid.Row="4" Grid.Column="1" Height="22" Width="250" HorizontalAlignment="Left"
+                              ItemsSource="{Binding InternalPrograms}" SelectedItem="{Binding Path=CurrentProgram, Converter={StaticResource ElementConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Style="{DynamicResource CustomComboBoxStyle}" />
+
                     <Label x:Name="ParametersLabel" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Content="Parameters"/>
-                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center" />
+                    <TextBox x:Name="ParametersTextBox" Grid.Row="5" Grid.Column="1" Height="22" Width="370" HorizontalAlignment="Left" IsEnabled="False" VerticalContentAlignment="Center"
+                             Text="{Binding Parameters, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <CheckBox x:Name="EnableParametersCheckBox" Grid.Row="5" Grid.Column="1" Height="22" HorizontalAlignment="Right" IsChecked="False" />
                 </Grid>
             </GroupBox>
@@ -177,11 +192,13 @@
 
             <GroupBox Margin="5,5,5,5" HorizontalAlignment="Stretch" Header="Status">
                 <UniformGrid Margin="5,5,5,5" Grid.ColumnSpan="2">
-                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Waiting for media..." />
+                    <TextBlock x:Name="StatusLabel" VerticalAlignment="Center" HorizontalAlignment="Center"
+                               Text="{Binding Status, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </UniformGrid>
             </GroupBox>
 
-            <Expander Margin="5,5 5 5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel">
+            <Expander Margin="5,5 5 5" MaxHeight="300" HorizontalAlignment="Stretch" Header="Log Output" x:Name="LogPanel"
+                      IsExpanded="{Binding Options.OpenLogWindowAtStartup, Mode=OneWay}">
                 <controls:LogOutput x:Name="LogOutput"/>
             </Expander>
         </StackPanel>

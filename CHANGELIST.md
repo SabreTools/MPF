@@ -39,6 +39,7 @@
 - Refine info window bindings further
 - Move decoupled view models
 - Fix log output
+- Start migrating MainViewModel
 
 ### 2.6.6 (2023-10-04)
 
