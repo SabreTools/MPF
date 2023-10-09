@@ -52,6 +52,7 @@
 - Remove message boxes from MainViewModel
 - Move MainViewModel to Core
 - Remove LogOutputViewModel
+- Consolidate some constants
 
 ### 2.6.6 (2023-10-04)
 

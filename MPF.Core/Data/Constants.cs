@@ -16,12 +16,12 @@ namespace MPF.Core.Data
         // Byte arrays for signatures
         public static readonly byte[] SaturnSectorZeroStart = new byte[] { 0x53, 0x45, 0x47, 0x41, 0x20, 0x53, 0x45, 0x47, 0x41, 0x53, 0x41, 0x54, 0x55, 0x52, 0x4E, 0x20 };
 
-        // Private lists of known drive speed ranges
-        private static IReadOnlyList<int> CD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
-        private static IReadOnlyList<int> DVD { get; } = CD.Where(s => s <= 24).ToList();
-        private static IReadOnlyList<int> HDDVD { get; } = CD.Where(s => s <= 24).ToList();
-        private static IReadOnlyList<int> BD { get; } = CD.Where(s => s <= 16).ToList();
-        private static IReadOnlyList<int> Unknown { get; } = new List<int> { 1 };
+        // Lists of known drive speed ranges
+        public static IReadOnlyList<int> CD { get; } = new List<int> { 1, 2, 3, 4, 6, 8, 12, 16, 20, 24, 32, 40, 44, 48, 52, 56, 72 };
+        public static IReadOnlyList<int> DVD { get; } = CD.Where(s => s <= 24).ToList();
+        public static IReadOnlyList<int> HDDVD { get; } = CD.Where(s => s <= 24).ToList();
+        public static IReadOnlyList<int> BD { get; } = CD.Where(s => s <= 16).ToList();
+        public static IReadOnlyList<int> Unknown { get; } = new List<int> { 1 };
 
         /// <summary>
         /// Get list of all drive speeds for a given MediaType
