@@ -51,6 +51,7 @@
 - Detected type and selected type are different
 - Remove message boxes from MainViewModel
 - Move MainViewModel to Core
+- Remove LogOutputViewModel
 
 ### 2.6.6 (2023-10-04)
 
