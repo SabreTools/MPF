@@ -42,6 +42,7 @@
 - Start migrating MainViewModel
 - Perform most of MainViewModel changes
 - Small updtes to MainViewModel
+- Remove MainWindow from MainViewModel
 
 ### 2.6.6 (2023-10-04)
 

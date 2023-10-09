@@ -3,6 +3,8 @@ using System.Windows;
 using System.Windows.Controls;
 using MPF.Core;
 using MPF.UI.Core.ViewModels;
+using SabreTools.RedumpLib.Data;
+using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.Windows
 {
@@ -38,7 +40,7 @@ namespace MPF.UI.Core.Windows
             if (MainViewModel.Options.ShowDebugViewMenuItem)
                 DebugViewMenuItem.Visibility = Visibility.Visible;
 
-            MainViewModel.Init(this);
+            MainViewModel.Init(LogOutput, ShowDiscInformationWindow);
         }
 
         #region UI Functionality
@@ -80,8 +82,35 @@ namespace MPF.UI.Core.Windows
         public void ShowDebugDiscInfoWindow()
         {
             var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
-            var result = MainViewModel.ShowDiscInformationWindow(submissionInfo);
+            var result = ShowDiscInformationWindow(submissionInfo);
             InfoTool.ProcessSpecialFields(result.Item2);
+        }
+
+        /// <summary>
+        /// Show the disc information window
+        /// </summary>
+        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
+        /// <returns>Dialog open result</returns>
+        public (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
+        {
+            if (MainViewModel.Options.ShowDiscEjectReminder)
+                CustomMessageBox.Show("It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            var discInformationWindow = new DiscInformationWindow(MainViewModel.Options, submissionInfo)
+            {
+                Focusable = true,
+                Owner = this,
+                ShowActivated = true,
+                ShowInTaskbar = true,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            bool? result = discInformationWindow.ShowDialog();
+
+            // Copy back the submission info changes, if necessary
+            if (result == true)
+                submissionInfo = discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
+
+            return (result, submissionInfo);
         }
 
         /// <summary>

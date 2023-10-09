@@ -46,11 +46,6 @@ namespace MPF.UI.Core.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Parent MainWindow object
-        /// </summary>
-        private MainWindow _parent;
-
-        /// <summary>
         /// LogOutput to use for outputting
         /// </summary>
         private LogOutput _logger;
@@ -59,6 +54,11 @@ namespace MPF.UI.Core.ViewModels
         /// Current dumping environment
         /// </summary>
         private DumpEnvironment _environment;
+
+        /// <summary>
+        /// Function to process user information
+        /// </summary>
+        private Func<SubmissionInfo, (bool?, SubmissionInfo)> _processUserInfo;
 
         #endregion
 
@@ -501,17 +501,17 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Initialize the main window after loading
         /// </summary>
-        public void Init(MainWindow parent)
+        public void Init(LogOutput logger, Func<SubmissionInfo, (bool?, SubmissionInfo)> processUserInfo)
         {
             // Set the parent window
-            this._parent = parent;
-            this._logger = parent.LogOutput;
+            _logger = logger;
+            _processUserInfo = processUserInfo;
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
 
             // Check for updates, if necessary
-            if (this.Options.CheckForUpdatesOnStartup)
+            if (Options.CheckForUpdatesOnStartup)
                 CheckForUpdates(showIfSame: false);
         }
 
@@ -1530,33 +1530,6 @@ namespace MPF.UI.Core.ViewModels
         }
 
         /// <summary>
-        /// Show the disc information window
-        /// </summary>
-        /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
-        /// <returns>Dialog open result</returns>
-        public (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
-        {
-            if (this.Options.ShowDiscEjectReminder)
-                CustomMessageBox.Show("It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
-
-            var discInformationWindow = new DiscInformationWindow(this.Options, submissionInfo)
-            {
-                Focusable = true,
-                Owner = this._parent,
-                ShowActivated = true,
-                ShowInTaskbar = true,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            };
-            bool? result = discInformationWindow.ShowDialog();
-
-            // Copy back the submission info changes, if necessary
-            if (result == true)
-                submissionInfo = discInformationWindow.DiscInformationViewModel.SubmissionInfo.Clone() as SubmissionInfo;
-
-            return (result, submissionInfo);
-        }
-
-        /// <summary>
         /// Begin the dumping process using the given inputs
         /// </summary>
         public async void StartDumping()
@@ -1631,7 +1604,7 @@ namespace MPF.UI.Core.ViewModels
                 // Verify dump output and save it
                 if (result)
                 {
-                    result = await _environment.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, ShowDiscInformationWindow);
+                    result = await _environment.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, _processUserInfo);
                 }
                 else
                 {
