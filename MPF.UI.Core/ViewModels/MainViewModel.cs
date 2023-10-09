@@ -13,7 +13,6 @@ using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
-using WinForms = System.Windows.Forms;
 
 namespace MPF.UI.Core.ViewModels
 {
@@ -872,15 +871,6 @@ namespace MPF.UI.Core.ViewModels
         public static void ExitApplication() => Application.Current.Shutdown();
 
         /// <summary>
-        /// Set the output path from a dialog box
-        /// </summary>
-        public void SetOutputPath()
-        {
-            BrowseFile();
-            EnsureDiscInformation();
-        }
-
-        /// <summary>
         /// Show the About text popup
         /// </summary>
         public void ShowAboutText()
@@ -1140,40 +1130,6 @@ namespace MPF.UI.Core.ViewModels
         #endregion
 
         #region Helpers
-
-        /// <summary>
-        /// Browse for an output file path
-        /// </summary>
-        private void BrowseFile()
-        {
-            // Get the current path, if possible
-            string currentPath = this.OutputPath;
-            if (string.IsNullOrWhiteSpace(currentPath))
-                currentPath = Path.Combine(this.Options.DefaultOutputPath, "track.bin");
-            if (string.IsNullOrWhiteSpace(currentPath))
-                currentPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "track.bin");
-
-            // Get the full path
-            currentPath = Path.GetFullPath(currentPath);
-
-            // Get the directory
-            string directory = Path.GetDirectoryName(currentPath);
-
-            // Get the filename
-            string filename = Path.GetFileName(currentPath);
-
-            WinForms.FileDialog fileDialog = new WinForms.SaveFileDialog
-            {
-                FileName = filename,
-                InitialDirectory = directory,
-            };
-            WinForms.DialogResult result = fileDialog.ShowDialog();
-
-            if (result == WinForms.DialogResult.OK)
-            {
-                this.OutputPath = fileDialog.FileName;
-            }
-        }
 
         /// <summary>
         /// Cache the current disc type to internal variable

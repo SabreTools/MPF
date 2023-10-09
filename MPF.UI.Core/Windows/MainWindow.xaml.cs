@@ -1,10 +1,12 @@
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using MPF.Core;
 using MPF.UI.Core.ViewModels;
 using SabreTools.RedumpLib.Data;
 using WPFCustomMessageBox;
+using WinForms = System.Windows.Forms;
 
 namespace MPF.UI.Core.Windows
 {
@@ -74,6 +76,40 @@ namespace MPF.UI.Core.Windows
 
             // User Area TextChanged
             OutputPathTextBox.TextChanged += OutputPathTextBoxTextChanged;
+        }
+
+        /// <summary>
+        /// Browse for an output file path
+        /// </summary>
+        public void BrowseFile()
+        {
+            // Get the current path, if possible
+            string currentPath = MainViewModel.OutputPath;
+            if (string.IsNullOrWhiteSpace(currentPath))
+                currentPath = Path.Combine(MainViewModel.Options.DefaultOutputPath, "track.bin");
+            if (string.IsNullOrWhiteSpace(currentPath))
+                currentPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "track.bin");
+
+            // Get the full path
+            currentPath = Path.GetFullPath(currentPath);
+
+            // Get the directory
+            string directory = Path.GetDirectoryName(currentPath);
+
+            // Get the filename
+            string filename = Path.GetFileName(currentPath);
+
+            WinForms.FileDialog fileDialog = new WinForms.SaveFileDialog
+            {
+                FileName = filename,
+                InitialDirectory = directory,
+            };
+            WinForms.DialogResult result = fileDialog.ShowDialog();
+
+            if (result == WinForms.DialogResult.OK)
+            {
+                MainViewModel.OutputPath = fileDialog.FileName;
+            }
         }
 
         /// <summary>
@@ -240,8 +276,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Handler for OutputPathBrowseButton Click event
         /// </summary>
-        public void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.SetOutputPath();
+        public void OutputPathBrowseButtonClick(object sender, RoutedEventArgs e)
+        {
+            BrowseFile();
+            MainViewModel.EnsureDiscInformation();
+        }
 
         /// <summary>
         /// Handler for OutputPathTextBox TextChanged event

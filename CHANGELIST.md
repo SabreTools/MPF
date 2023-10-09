@@ -44,6 +44,7 @@
 - Small updtes to MainViewModel
 - Remove MainWindow from MainViewModel
 - Use callback for logging, fix Options window
+- Remove WinForms from MainViewModel
 
 ### 2.6.6 (2023-10-04)
 
