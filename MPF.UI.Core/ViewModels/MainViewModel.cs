@@ -16,6 +16,7 @@ using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.ViewModels
 {
+    // TODO: Create internal Func for communicating to and from message boxes
     public class MainViewModel : INotifyPropertyChanged
     {
         #region Fields
@@ -1293,7 +1294,7 @@ namespace MPF.UI.Core.ViewModels
         {
             if (Drives == null || Drives.Count == 0 || this.CurrentDrive == null)
             {
-                VerboseLog("Skipping output name building because no valid drives found!");
+                VerboseLogLn("Skipping output name building because no valid drives found!");
                 return;
             }
 
@@ -1436,6 +1437,10 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         private void SetCurrentDiscType()
         {
+            // If we don't have any selected media types, we don't care and return
+            if (MediaTypes == null)
+                return;
+
             // If we have an invalid current type, we don't care and return
             if (CurrentMediaType == null || CurrentMediaType == MediaType.NONE)
                 return;

@@ -47,6 +47,7 @@
 - Remove WinForms from MainViewModel
 - Remove some message boxes from MainViewModel
 - Remove more Windows from MainViewModel
+- Fix null reference exception in disc type
 
 ### 2.6.6 (2023-10-04)
 
