@@ -41,6 +41,7 @@
 - Fix log output
 - Start migrating MainViewModel
 - Perform most of MainViewModel changes
+- Small updtes to MainViewModel
 
 ### 2.6.6 (2023-10-04)
 

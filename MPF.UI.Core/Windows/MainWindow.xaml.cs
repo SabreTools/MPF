@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using MPF.Core;
 using MPF.UI.Core.ViewModels;
 
 namespace MPF.UI.Core.Windows
@@ -74,6 +75,16 @@ namespace MPF.UI.Core.Windows
         }
 
         /// <summary>
+        /// Build a dummy SubmissionInfo and display it for testing
+        /// </summary>
+        public void ShowDebugDiscInfoWindow()
+        {
+            var submissionInfo = MainViewModel.CreateDebugSubmissionInfo();
+            var result = MainViewModel.ShowDiscInformationWindow(submissionInfo);
+            InfoTool.ProcessSpecialFields(result.Item2);
+        }
+
+        /// <summary>
         /// Show the Options window
         /// </summary>
         public void ShowOptionsWindow()
@@ -118,7 +129,7 @@ namespace MPF.UI.Core.Windows
         /// Handler for DebugViewMenuItem Click event
         /// </summary>
         public void DebugViewClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.ShowDebugDiscInfoWindow();
+            ShowDebugDiscInfoWindow();
 
         /// <summary>
         /// Handler for OptionsMenuItem Click event

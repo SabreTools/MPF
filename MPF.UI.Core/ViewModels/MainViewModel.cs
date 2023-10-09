@@ -24,16 +24,6 @@ namespace MPF.UI.Core.ViewModels
         #region Fields
 
         /// <summary>
-        /// Parent MainWindow object
-        /// </summary>
-        public MainWindow Parent { get; private set; }
-
-        /// <summary>
-        /// LogViewModel associated with the parent window
-        /// </summary>
-        public LogOutput Logger { get; private set; }
-
-        /// <summary>
         /// Access to the current options
         /// </summary>
         public MPF.Core.Data.Options Options
@@ -45,24 +35,30 @@ namespace MPF.UI.Core.ViewModels
                 OptionsLoader.SaveToConfig(_options);
             }
         }
-
-        /// <summary>
-        /// Current dumping environment
-        /// </summary>
-        public DumpEnvironment Env { get; set; }
+        private MPF.Core.Data.Options _options;
 
         /// <summary>
         /// Indicates if SelectionChanged events can be executed
         /// </summary>
         public bool CanExecuteSelectionChanged { get; private set; } = false;
 
-        /// <summary>
-        /// Internal reference to Options
-        /// </summary>
-        private MPF.Core.Data.Options _options;
-
         /// <inheritdoc/>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Parent MainWindow object
+        /// </summary>
+        private MainWindow _parent;
+
+        /// <summary>
+        /// LogOutput to use for outputting
+        /// </summary>
+        private LogOutput _logger;
+
+        /// <summary>
+        /// Current dumping environment
+        /// </summary>
+        private DumpEnvironment _environment;
 
         #endregion
 
@@ -508,8 +504,8 @@ namespace MPF.UI.Core.ViewModels
         public void Init(MainWindow parent)
         {
             // Set the parent window
-            this.Parent = parent;
-            this.Logger = parent.LogOutput;
+            this._parent = parent;
+            this._logger = parent.LogOutput;
 
             // Finish initializing the rest of the values
             InitializeUIValues(removeEventHandlers: false, rescanDrives: true);
@@ -551,7 +547,7 @@ namespace MPF.UI.Core.ViewModels
             CanExecuteSelectionChanged = false;
 
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn("Scanning for drives..");
+                this._logger.VerboseLogLn("Scanning for drives..");
 
             // Always enable the media scan
             this.MediaScanButtonEnabled = true;
@@ -566,7 +562,7 @@ namespace MPF.UI.Core.ViewModels
             if (Drives.Count > 0)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
+                    this._logger.VerboseLogLn($"Found {Drives.Count} drives: {string.Join(", ", Drives.Select(d => d.Letter))}");
 
                 // Check for the last selected drive, if possible
                 int index = -1;
@@ -600,7 +596,7 @@ namespace MPF.UI.Core.ViewModels
             else
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn("Found no drives");
+                    this._logger.VerboseLogLn("Found no drives");
                 this.CurrentDrive = null;
                 this.Status = "No valid drive found!";
                 this.StartStopButtonEnabled = false;
@@ -624,7 +620,7 @@ namespace MPF.UI.Core.ViewModels
                 var mediaTypeValues = this.CurrentSystem.MediaTypes();
                 int index = mediaTypeValues.FindIndex(m => m == this.CurrentMediaType);
                 if (this.CurrentMediaType != null && index == -1 && this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
+                    this._logger.VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
                 MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
                 this.MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
@@ -677,7 +673,7 @@ namespace MPF.UI.Core.ViewModels
         public void ChangeDumpingProgram()
         {
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Changed dumping program to: {((InternalProgram?)this.CurrentProgram).LongName()}");
+                this._logger.VerboseLogLn($"Changed dumping program to: {((InternalProgram?)this.CurrentProgram).LongName()}");
             EnsureDiscInformation();
             GetOutputNames(false);
         }
@@ -703,7 +699,7 @@ namespace MPF.UI.Core.ViewModels
         public void ChangeSystem()
         {
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Changed system to: {this.CurrentSystem.LongName()}");
+                this._logger.VerboseLogLn($"Changed system to: {this.CurrentSystem.LongName()}");
             PopulateMediaType();
             GetOutputNames(false);
             EnsureDiscInformation();
@@ -721,7 +717,7 @@ namespace MPF.UI.Core.ViewModels
             if (different)
                 Clipboard.SetText(url);
 
-            this.Logger.SecretLogLn(message);
+            this._logger.SecretLogLn(message);
             if (url == null)
                 message = "An exception occurred while checking for versions, please try again later. See the log window for more details.";
 
@@ -730,44 +726,11 @@ namespace MPF.UI.Core.ViewModels
         }
 
         /// <summary>
-        /// Shutdown the current application
-        /// </summary>
-        public static void ExitApplication() => Application.Current.Shutdown();
-
-        /// <summary>
-        /// Set the output path from a dialog box
-        /// </summary>
-        public void SetOutputPath()
-        {
-            BrowseFile();
-            EnsureDiscInformation();
-        }
-
-        /// <summary>
-        /// Show the About text popup
-        /// </summary>
-        public void ShowAboutText()
-        {
-            string aboutText = $"Media Preservation Frontend (MPF)"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}A community preservation frontend developed in C#."
-                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
-                + $"{Environment.NewLine}Originally created to help the Redump project."
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
-                + $"{Environment.NewLine}"
-                + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
-
-            this.Logger.SecretLogLn(aboutText);
-            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        /// <summary>
         /// Build a dummy SubmissionInfo and display it for testing
         /// </summary>
-        public void ShowDebugDiscInfoWindow()
+        public SubmissionInfo CreateDebugSubmissionInfo()
         {
-            var submissionInfo = new SubmissionInfo()
+            return new SubmissionInfo()
             {
                 SchemaVersion = 1,
                 FullyMatchedID = 3,
@@ -908,9 +871,39 @@ namespace MPF.UI.Core.ViewModels
                     ["Sample Artifact"] = "Sample Data",
                 },
             };
+        }
 
-            var result = ShowDiscInformationWindow(submissionInfo);
-            InfoTool.ProcessSpecialFields(result.Item2);
+        /// <summary>
+        /// Shutdown the current application
+        /// </summary>
+        public static void ExitApplication() => Application.Current.Shutdown();
+
+        /// <summary>
+        /// Set the output path from a dialog box
+        /// </summary>
+        public void SetOutputPath()
+        {
+            BrowseFile();
+            EnsureDiscInformation();
+        }
+
+        /// <summary>
+        /// Show the About text popup
+        /// </summary>
+        public void ShowAboutText()
+        {
+            string aboutText = $"Media Preservation Frontend (MPF)"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}A community preservation frontend developed in C#."
+                + $"{Environment.NewLine}Supports Redumper, Aaru, and DiscImageCreator."
+                + $"{Environment.NewLine}Originally created to help the Redump project."
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}Thanks to everyone who has supported this project!"
+                + $"{Environment.NewLine}"
+                + $"{Environment.NewLine}Version {Tools.GetCurrentVersion()}";
+
+            this._logger.SecretLogLn(aboutText);
+            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -926,27 +919,27 @@ namespace MPF.UI.Core.ViewModels
             else if (this.StartStopButtonText as string == Interface.StopDumping)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn("Canceling dumping process...");
-                Env.CancelDumping();
+                    this._logger.VerboseLogLn("Canceling dumping process...");
+                _environment.CancelDumping();
                 this.CopyProtectScanButtonEnabled = true;
 
-                if (Env.Options.EjectAfterDump == true)
+                if (_environment.Options.EjectAfterDump == true)
                 {
                     if (this.Options.VerboseLogging)
-                        this.Logger.VerboseLogLn($"Ejecting disc in drive {Env.Drive.Letter}");
-                    await Env.EjectDisc();
+                        this._logger.VerboseLogLn($"Ejecting disc in drive {_environment.Drive.Letter}");
+                    await _environment.EjectDisc();
                 }
 
                 if (this.Options.DICResetDriveAfterDump)
                 {
                     if (this.Options.VerboseLogging)
-                        this.Logger.VerboseLogLn($"Resetting drive {Env.Drive.Letter}");
-                    await Env.ResetDrive();
+                        this._logger.VerboseLogLn($"Resetting drive {_environment.Drive.Letter}");
+                    await _environment.ResetDrive();
                 }
             }
 
             // Reset the progress bar
-            this.Logger.ResetProgressBar();
+            this._logger.ResetProgressBar();
         }
 
         /// <summary>
@@ -971,7 +964,7 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         /// <param name="removeEventHandlers">Whether event handlers need to be removed first</param>
         /// <param name="rescanDrives">Whether drives should be rescanned or not</param>
-        public async void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
+        public void InitializeUIValues(bool removeEventHandlers, bool rescanDrives)
         {
             // Disable the dumping button
             this.StartStopButtonEnabled = false;
@@ -1015,7 +1008,7 @@ namespace MPF.UI.Core.ViewModels
 
             // Set the initial environment and UI values
             SetSupportedDriveSpeed();
-            Env = DetermineEnvironment();
+            _environment = DetermineEnvironment();
             GetOutputNames(true);
             EnsureDiscInformation();
 
@@ -1051,7 +1044,7 @@ namespace MPF.UI.Core.ViewModels
             this.CurrentDrive?.RefreshDrive();
 
             // Set the initial environment and UI values
-            Env = DetermineEnvironment();
+            _environment = DetermineEnvironment();
             GetOutputNames(true);
             EnsureDiscInformation();
 
@@ -1152,31 +1145,31 @@ namespace MPF.UI.Core.ViewModels
             if (this.Options.SkipMediaTypeDetection)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
+                    this._logger.VerboseLogLn($"Media type detection disabled, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
             // If the drive is marked active, try to read from it
             else if (this.CurrentDrive.MarkedActive)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLog($"Trying to detect media type for drive {this.CurrentDrive.Letter} [{this.CurrentDrive.DriveFormat}] using size and filesystem.. ");
+                    this._logger.VerboseLog($"Trying to detect media type for drive {this.CurrentDrive.Letter} [{this.CurrentDrive.DriveFormat}] using size and filesystem.. ");
                 (MediaType? detectedMediaType, string errorMessage) = this.CurrentDrive.GetMediaType(this.CurrentSystem);
 
                 // If we got an error message, post it to the log
                 if (errorMessage != null && this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"Message from detecting media type: {errorMessage}");
+                    this._logger.VerboseLogLn($"Message from detecting media type: {errorMessage}");
 
                 // If we got either an error or no media, default to the current System default
                 if (detectedMediaType == null)
                 {
                     if (this.Options.VerboseLogging)
-                        this.Logger.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
+                        this._logger.VerboseLogLn($"Unable to detect, defaulting to {defaultMediaType.LongName()}.");
                     CurrentMediaType = defaultMediaType;
                 }
                 else
                 {
                     if (this.Options.VerboseLogging)
-                        this.Logger.VerboseLogLn($"Detected {detectedMediaType.LongName()}.");
+                        this._logger.VerboseLogLn($"Detected {detectedMediaType.LongName()}.");
                     CurrentMediaType = detectedMediaType;
                 }
             }
@@ -1185,7 +1178,7 @@ namespace MPF.UI.Core.ViewModels
             else
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
+                    this._logger.VerboseLogLn($"Drive marked as empty, defaulting to {defaultMediaType.LongName()}.");
                 CurrentMediaType = defaultMediaType;
             }
         }
@@ -1214,20 +1207,20 @@ namespace MPF.UI.Core.ViewModels
             if (Drives == null || Drives.Count == 0 || this.CurrentDrive == null)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn("Skipping system type detection because no valid drives found!");
+                    this._logger.VerboseLogLn("Skipping system type detection because no valid drives found!");
             }
             else if (this.CurrentDrive?.MarkedActive != true)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn("Skipping system type detection because drive not marked as active!");
+                    this._logger.VerboseLogLn("Skipping system type detection because drive not marked as active!");
             }
             else if (!this.Options.SkipSystemDetection)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLog($"Trying to detect system for drive {this.CurrentDrive.Letter}.. ");
+                    this._logger.VerboseLog($"Trying to detect system for drive {this.CurrentDrive.Letter}.. ");
                 var currentSystem = this.CurrentDrive?.GetRedumpSystem(this.Options.DefaultSystem) ?? this.Options.DefaultSystem;
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
+                    this._logger.VerboseLogLn(currentSystem == null ? "unable to detect." : ($"detected {currentSystem.LongName()}."));
 
                 if (currentSystem != null)
                 {
@@ -1239,7 +1232,7 @@ namespace MPF.UI.Core.ViewModels
             {
                 var currentSystem = this.Options.DefaultSystem;
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"System detection disabled, setting to default of {currentSystem.LongName()}.");
+                    this._logger.VerboseLogLn($"System detection disabled, setting to default of {currentSystem.LongName()}.");
                 int sysIndex = Systems.FindIndex(s => s == currentSystem);
                 this.CurrentSystem = Systems[sysIndex];
             }
@@ -1291,10 +1284,10 @@ namespace MPF.UI.Core.ViewModels
         public void EnsureDiscInformation()
         {
             // Get the current environment information
-            Env = DetermineEnvironment();
+            _environment = DetermineEnvironment();
 
             // Get the status to write out
-            Result result = Tools.GetSupportStatus(Env.System, Env.Type);
+            Result result = Tools.GetSupportStatus(_environment.System, _environment.Type);
             this.Status = result.Message;
 
             // Set the index for the current disc type
@@ -1304,12 +1297,12 @@ namespace MPF.UI.Core.ViewModels
             this.StartStopButtonEnabled = result && ShouldEnableDumpingButton();
 
             // If we're in a type that doesn't support drive speeds
-            this.DriveSpeedComboBoxEnabled = Env.Type.DoesSupportDriveSpeed();
+            this.DriveSpeedComboBoxEnabled = _environment.Type.DoesSupportDriveSpeed();
 
             // If input params are not enabled, generate the full parameters from the environment
             if (!this.ParametersCheckBoxEnabled)
             {
-                string generated = Env.GetFullParameters(this.DriveSpeed);
+                string generated = _environment.GetFullParameters(this.DriveSpeed);
                 if (generated != null)
                     this.Parameters = generated;
             }
@@ -1324,12 +1317,12 @@ namespace MPF.UI.Core.ViewModels
             if (Drives == null || Drives.Count == 0 || this.CurrentDrive == null)
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLog("Skipping output name building because no valid drives found!");
+                    this._logger.VerboseLog("Skipping output name building because no valid drives found!");
                 return;
             }
 
             // Get the extension for the file for the next two statements
-            string extension = Env?.Parameters?.GetDefaultExtension(this.CurrentMediaType);
+            string extension = _environment?.Parameters?.GetDefaultExtension(this.CurrentMediaType);
 
             // Set the output filename, if it's not already
             if (string.IsNullOrEmpty(this.OutputPath))
@@ -1382,30 +1375,30 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         public void ProcessCustomParameters()
         {
-            Env.SetParameters(this.Parameters);
-            if (Env.Parameters == null)
+            _environment.SetParameters(this.Parameters);
+            if (_environment.Parameters == null)
                 return;
 
             // Catch this in case there's an input path issue
             try
             {
-                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(Env.Parameters.InputPath[0]);
+                int driveIndex = Drives.Select(d => d.Letter).ToList().IndexOf(_environment.Parameters.InputPath[0]);
                 this.CurrentDrive = (driveIndex != -1 ? Drives[driveIndex] : Drives[0]);
             }
             catch { }
 
-            int driveSpeed = Env.Parameters.Speed ?? -1;
+            int driveSpeed = _environment.Parameters.Speed ?? -1;
             if (driveSpeed > 0)
                 this.DriveSpeed = driveSpeed;
             else
-                Env.Parameters.Speed = this.DriveSpeed;
+                _environment.Parameters.Speed = this.DriveSpeed;
 
             // Disable change handling
             DisableEventHandlers();
 
-            this.OutputPath = InfoTool.NormalizeOutputPaths(Env.Parameters.OutputPath, true);
+            this.OutputPath = InfoTool.NormalizeOutputPaths(_environment.Parameters.OutputPath, true);
 
-            MediaType? mediaType = Env.Parameters.GetMediaType();
+            MediaType? mediaType = _environment.Parameters.GetMediaType();
             int mediaTypeIndex = MediaTypes.FindIndex(m => m == mediaType);
             this.CurrentMediaType = (mediaTypeIndex > -1 ? MediaTypes[mediaTypeIndex] : MediaTypes[0]);
 
@@ -1419,14 +1412,14 @@ namespace MPF.UI.Core.ViewModels
         public async void ScanAndShowProtection()
         {
             // Determine current environment, just in case
-            if (Env == null)
-                Env = DetermineEnvironment();
+            if (_environment == null)
+                _environment = DetermineEnvironment();
 
             // Pull the drive letter from the UI directly, just in case
             if (this.CurrentDrive != null && this.CurrentDrive.Letter != default(char))
             {
                 if (this.Options.VerboseLogging)
-                    this.Logger.VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Letter}");
+                    this._logger.VerboseLogLn($"Scanning for copy protection in {this.CurrentDrive.Letter}");
 
                 var tempContent = this.Status;
                 this.Status = "Scanning for copy protection... this might take a while!";
@@ -1457,9 +1450,9 @@ namespace MPF.UI.Core.ViewModels
                 }
 
                 if (string.IsNullOrEmpty(error))
-                    this.Logger.LogLn($"Detected the following protections in {this.CurrentDrive.Letter}:\r\n\r\n{output}");
+                    this._logger.LogLn($"Detected the following protections in {this.CurrentDrive.Letter}:\r\n\r\n{output}");
                 else
-                    this.Logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
+                    this._logger.ErrorLogLn($"Path could not be scanned! Exception information:\r\n\r\n{error}");
 
                 this.Status = tempContent;
                 this.StartStopButtonEnabled = ShouldEnableDumpingButton();
@@ -1481,7 +1474,7 @@ namespace MPF.UI.Core.ViewModels
             // Now set the selected item, if possible
             int index = MediaTypes.FindIndex(kvp => kvp.Value == CurrentMediaType);
             if (this.CurrentMediaType != null && index == -1 && this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
+                this._logger.VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
             this.CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
         }
@@ -1494,7 +1487,7 @@ namespace MPF.UI.Core.ViewModels
             // Set the drive speed list that's appropriate
             this.DriveSpeeds = (List<int>)Interface.GetSpeedsForMediaType(CurrentMediaType);
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds)}");
+                this._logger.VerboseLogLn($"Supported media speeds: {string.Join(", ", this.DriveSpeeds)}");
 
             // Set the selected speed
             int speed;
@@ -1521,7 +1514,7 @@ namespace MPF.UI.Core.ViewModels
             }
 
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn($"Setting drive speed to: {speed}");
+                this._logger.VerboseLogLn($"Setting drive speed to: {speed}");
             this.DriveSpeed = speed;
         }
 
@@ -1541,7 +1534,7 @@ namespace MPF.UI.Core.ViewModels
         /// </summary>
         /// <param name="submissionInfo">SubmissionInfo object to display and possibly change</param>
         /// <returns>Dialog open result</returns>
-        private (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
+        public (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
             if (this.Options.ShowDiscEjectReminder)
                 CustomMessageBox.Show("It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1549,7 +1542,7 @@ namespace MPF.UI.Core.ViewModels
             var discInformationWindow = new DiscInformationWindow(this.Options, submissionInfo)
             {
                 Focusable = true,
-                Owner = this.Parent,
+                Owner = this._parent,
                 ShowActivated = true,
                 ShowInTaskbar = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -1569,10 +1562,10 @@ namespace MPF.UI.Core.ViewModels
         public async void StartDumping()
         {
             // One last check to determine environment, just in case
-            Env = DetermineEnvironment();
+            _environment = DetermineEnvironment();
 
             // Force an internal drive refresh in case the user entered things manually
-            Env.Drive.RefreshDrive();
+            _environment.Drive.RefreshDrive();
 
             // If still in custom parameter mode, check that users meant to continue or not
             if (this.ParametersCheckBoxEnabled == true)
@@ -1603,31 +1596,31 @@ namespace MPF.UI.Core.ViewModels
                 DisableAllUIElements();
 
                 // Refresh the drive, if it wasn't null
-                Env.Drive?.RefreshDrive();
+                _environment.Drive?.RefreshDrive();
 
                 // Output to the label and log
                 this.Status = "Starting dumping process... Please wait!";
-                this.Logger.LogLn("Starting dumping process... Please wait!");
+                this._logger.LogLn("Starting dumping process... Please wait!");
                 if (this.Options.ToolsInSeparateWindow)
-                    this.Logger.LogLn("Look for the separate command window for more details");
+                    this._logger.LogLn("Look for the separate command window for more details");
                 else
-                    this.Logger.LogLn("Program outputs may be slow to populate in the log window");
+                    this._logger.LogLn("Program outputs may be slow to populate in the log window");
 
                 // Get progress indicators
                 var resultProgress = new Progress<Result>();
                 resultProgress.ProgressChanged += ProgressUpdated;
                 var protectionProgress = new Progress<ProtectionProgress>();
                 protectionProgress.ProgressChanged += ProgressUpdated;
-                Env.ReportStatus += ProgressUpdated;
+                _environment.ReportStatus += ProgressUpdated;
 
                 // Run the program with the parameters
-                Result result = await Env.Run(resultProgress);
-                this.Logger.ResetProgressBar();
+                Result result = await _environment.Run(resultProgress);
+                this._logger.ResetProgressBar();
 
                 // If we didn't execute a dumping command we cannot get submission output
-                if (!Env.Parameters.IsDumpingCommand())
+                if (!_environment.Parameters.IsDumpingCommand())
                 {
-                    this.Logger.LogLn("No dumping command was run, submission information will not be gathered.");
+                    this._logger.LogLn("No dumping command was run, submission information will not be gathered.");
                     this.Status = "Execution complete!";
 
                     // Reset all UI elements
@@ -1638,17 +1631,17 @@ namespace MPF.UI.Core.ViewModels
                 // Verify dump output and save it
                 if (result)
                 {
-                    result = await Env.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, ShowDiscInformationWindow);
+                    result = await _environment.VerifyAndSaveDumpOutput(resultProgress, protectionProgress, ShowDiscInformationWindow);
                 }
                 else
                 {
-                    this.Logger.ErrorLogLn(result.Message);
+                    this._logger.ErrorLogLn(result.Message);
                     this.Status = "Execution failed!";
                 }
             }
             catch (Exception ex)
             {
-                this.Logger.ErrorLogLn(ex.ToString());
+                this._logger.ErrorLogLn(ex.ToString());
                 this.Status = "An exception occurred!";
             }
             finally
@@ -1698,40 +1691,40 @@ namespace MPF.UI.Core.ViewModels
         private bool ValidateBeforeDumping()
         {
             // Validate that we have an output path of any sort
-            if (string.IsNullOrWhiteSpace(Env.OutputPath))
+            if (string.IsNullOrWhiteSpace(_environment.OutputPath))
             {
                 _ = CustomMessageBox.Show("No output path was provided so dumping cannot continue.", "Missing Path", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                this.Logger.LogLn("Dumping aborted!");
+                this._logger.LogLn("Dumping aborted!");
                 return false;
             }
 
             // Validate that the user explicitly wants an inactive drive to be considered for dumping
-            if (!Env.Drive.MarkedActive)
+            if (!_environment.Drive.MarkedActive)
             {
                 string message = "The currently selected drive does not appear to contain a disc! "
-                    + (!Env.System.DetectedByWindows() ? $"This is normal for {Env.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
+                    + (!_environment.System.DetectedByWindows() ? $"This is normal for {_environment.System.LongName()} as the discs may not be readable on Windows. " : string.Empty)
                     + "Do you want to continue?";
 
                 MessageBoxResult mbresult = CustomMessageBox.Show(message, "No Disc Detected", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                 {
-                    this.Logger.LogLn("Dumping aborted!");
+                    this._logger.LogLn("Dumping aborted!");
                     return false;
                 }
             }
 
             // Pre-split the output path
-            string outputDirectory = Path.GetDirectoryName(Env.OutputPath);
-            string outputFilename = Path.GetFileName(Env.OutputPath);
+            string outputDirectory = Path.GetDirectoryName(_environment.OutputPath);
+            string outputFilename = Path.GetFileName(_environment.OutputPath);
 
             // If a complete dump already exists
-            (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, Env.Parameters, true);
+            (bool foundFiles, List<string> _) = InfoTool.FoundAllFiles(outputDirectory, outputFilename, _environment.Parameters, true);
             if (foundFiles)
             {
                 MessageBoxResult mbresult = CustomMessageBox.Show("A complete dump already exists! Are you sure you want to overwrite?", "Overwrite?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                 {
-                    this.Logger.LogLn("Dumping aborted!");
+                    this._logger.LogLn("Dumping aborted!");
                     return false;
                 }
             }
@@ -1745,7 +1738,7 @@ namespace MPF.UI.Core.ViewModels
                 MessageBoxResult mbresult = CustomMessageBox.Show("There is less than 1gb of space left on the target drive. Are you sure you want to continue?", "Low Space", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
                 if (mbresult == MessageBoxResult.No || mbresult == MessageBoxResult.Cancel || mbresult == MessageBoxResult.None)
                 {
-                    this.Logger.LogLn("Dumping aborted!");
+                    this._logger.LogLn("Dumping aborted!");
                     return false;
                 }
             }
@@ -1774,7 +1767,7 @@ namespace MPF.UI.Core.ViewModels
             try
             {
                 value = value ?? string.Empty;
-                this.Logger.LogLn(value);
+                this._logger.LogLn(value);
             }
             catch { }
         }
@@ -1794,9 +1787,9 @@ namespace MPF.UI.Core.ViewModels
 
             // Log based on success or failure
             if (value && this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn(message);
+                this._logger.VerboseLogLn(message);
             else if (!value)
-                this.Logger.ErrorLogLn(message);
+                this._logger.ErrorLogLn(message);
         }
 
         /// <summary>
@@ -1807,7 +1800,7 @@ namespace MPF.UI.Core.ViewModels
             string message = $"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}";
             this.Status = message;
             if (this.Options.VerboseLogging)
-                this.Logger.VerboseLogLn(message);
+                this._logger.VerboseLogLn(message);
         }
 
         #endregion
