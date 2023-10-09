@@ -40,7 +40,7 @@ namespace MPF.UI.Core.Windows
             if (MainViewModel.Options.ShowDebugViewMenuItem)
                 DebugViewMenuItem.Visibility = Visibility.Visible;
 
-            MainViewModel.Init(LogOutput, ShowDiscInformationWindow);
+            MainViewModel.Init(LogOutput.EnqueueLog, ShowDiscInformationWindow);
         }
 
         #region UI Functionality
@@ -126,13 +126,23 @@ namespace MPF.UI.Core.Windows
                 ShowInTaskbar = true,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
             };
-            optionsWindow.Closed += MainViewModel.OnOptionsUpdated;
+            optionsWindow.Closed += OnOptionsUpdated;
             optionsWindow.Show();
         }
 
         #endregion
 
         #region Event Handlers
+
+        /// <summary>
+        /// Handler for OptionsWindow OnUpdated event
+        /// </summary>
+        public void OnOptionsUpdated(object sender, EventArgs e)
+        {
+            bool savedSettings = (sender as OptionsWindow)?.OptionsViewModel?.SavedSettings ?? false;
+            var options = (sender as OptionsWindow).OptionsViewModel.Options;
+            MainViewModel.UpdateOptions(savedSettings, options);
+        }
 
         #region Menu Bar
 

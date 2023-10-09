@@ -43,6 +43,7 @@
 - Perform most of MainViewModel changes
 - Small updtes to MainViewModel
 - Remove MainWindow from MainViewModel
+- Use callback for logging, fix Options window
 
 ### 2.6.6 (2023-10-04)
 

@@ -31,71 +31,11 @@ namespace MPF.UI.Core.UserControls
         #region Logging
 
         /// <summary>
-        /// Enqueue text to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void Log(string text) => LogInternal(text, LogLevel.USER);
-
-        /// <summary>
-        /// Enqueue text with a newline to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void LogLn(string text) => Log(text + "\n");
-
-        /// <summary>
-        /// Enqueue error text to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void ErrorLog(string text) => LogInternal(text, LogLevel.ERROR);
-
-        /// <summary>
-        /// Enqueue error text with a newline to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void ErrorLogLn(string text) => ErrorLog(text + "\n");
-
-        /// <summary>
-        /// Enqueue secret text to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void SecretLog(string text) => LogInternal(text, LogLevel.SECRET);
-
-        /// <summary>
-        /// Enqueue secret text with a newline to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void SecretLogLn(string text) => SecretLog(text + "\n");
-
-        /// <summary>
-        /// Enqueue verbose text to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void VerboseLog(string text) => LogInternal(text, LogLevel.VERBOSE);
-
-        /// <summary>
-        /// Enqueue verbose text with a newline to the log
-        /// </summary>
-        /// <param name="text">Text to write to the log</param>
-        public void VerboseLogLn(string text) => VerboseLog(text + "\n");
-
-        /// <summary>
-        /// Reset the progress bar state
-        /// </summary>
-        public void ResetProgressBar()
-        {
-            Dispatcher.Invoke(() =>
-            {
-                ProgressBar.Value = 0;
-                ProgressLabel.Text = string.Empty;
-            });
-        }
-
-        /// <summary>
         /// Enqueue text to the log with formatting
         /// </summary>
-        /// <param name="text">Text to write to the log</param>
         /// <param name="logLevel">LogLevel for the log</param>
-        private void LogInternal(string text, LogLevel logLevel)
+        /// <param name="text">Text to write to the log</param>
+        public void EnqueueLog(LogLevel logLevel, string text)
         {
             // Null text gets ignored
             if (text == null)
@@ -121,7 +61,6 @@ namespace MPF.UI.Core.UserControls
         private void OnClearButton(object sender, EventArgs e)
         {
             LogOutputViewModel.ClearInlines();
-            ResetProgressBar();
         }
 
         private void OnSaveButton(object sender, EventArgs e)
