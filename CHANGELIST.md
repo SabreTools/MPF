@@ -46,6 +46,7 @@
 - Use callback for logging, fix Options window
 - Remove WinForms from MainViewModel
 - Remove some message boxes from MainViewModel
+- Remove more Windows from MainViewModel
 
 ### 2.6.6 (2023-10-04)
 

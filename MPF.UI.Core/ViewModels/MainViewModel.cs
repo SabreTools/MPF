@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using BurnOutSharp;
 using MPF.Core;
 using MPF.Core.Converters;
@@ -12,7 +12,6 @@ using MPF.Core.Data;
 using MPF.Core.Utilities;
 using MPF.Core.UI.ComboBoxItems;
 using SabreTools.RedumpLib.Data;
-using System.Threading.Tasks;
 using WPFCustomMessageBox;
 
 namespace MPF.UI.Core.ViewModels
@@ -628,7 +627,7 @@ namespace MPF.UI.Core.ViewModels
             CanExecuteSelectionChanged = true;
 
             // Force an update of the media type
-            this.ChangeMediaType(null);
+            this.ChangeMediaType(null, null);
         }
 
         /// <summary>
@@ -671,13 +670,11 @@ namespace MPF.UI.Core.ViewModels
         /// <summary>
         /// Change the currently selected media type
         /// </summary>
-        public void ChangeMediaType(SelectionChangedEventArgs e)
+        public void ChangeMediaType(System.Collections.IList removedItems, System.Collections.IList addedItems)
         {
             // Only change the media type if the selection and not the list has changed
-            if (e == null || (e.RemovedItems.Count == 1 && e.AddedItems.Count == 1))
-            {
+            if ((removedItems == null && addedItems == null) || (removedItems.Count == 1 && addedItems.Count == 1))
                 SetSupportedDriveSpeed();
-            }
 
             GetOutputNames(false);
             EnsureDiscInformation();
@@ -874,11 +871,6 @@ namespace MPF.UI.Core.ViewModels
                 },
             };
         }
-
-        /// <summary>
-        /// Shutdown the current application
-        /// </summary>
-        public static void ExitApplication() => Application.Current.Shutdown();
 
         /// <summary>
         /// Toggle the Start/Stop button

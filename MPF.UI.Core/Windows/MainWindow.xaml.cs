@@ -215,7 +215,7 @@ namespace MPF.UI.Core.Windows
         /// Handler for AppExitMenuItem Click event
         /// </summary>
         public void AppExitClick(object sender, RoutedEventArgs e) =>
-            MainViewModel.ExitApplication();
+            Application.Current.Shutdown();
 
         /// <summary>
         /// Handler for CheckForUpdatesMenuItem Click event
@@ -303,7 +303,7 @@ namespace MPF.UI.Core.Windows
         public void MediaTypeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (MainViewModel.CanExecuteSelectionChanged)
-                MainViewModel.ChangeMediaType(e);
+                MainViewModel.ChangeMediaType(e.RemovedItems, e.AddedItems);
         }
 
         /// <summary>
