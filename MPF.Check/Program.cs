@@ -2,7 +2,6 @@
 using System.IO;
 using BurnOutSharp;
 using MPF.Core;
-using MPF.Core.Converters;
 using MPF.Core.Data;
 using MPF.Core.Utilities;
 using SabreTools.RedumpLib.Data;
@@ -15,13 +14,19 @@ namespace MPF.Check
         public static void Main(string[] args)
         {
             // Try processing the standalone arguments
-            if (ProcessStandaloneArguments(args))
+            if (!OptionsLoader.ProcessStandaloneArguments(args))
+            {
+                DisplayHelp();
                 return;
+            }
 
             // Try processing the common arguments
-            (bool success, MediaType mediaType, RedumpSystem? knownSystem) = ProcessCommonArguments(args);
+            (bool success, MediaType mediaType, RedumpSystem? knownSystem, string error) = OptionsLoader.ProcessCommonArguments(args);
             if (!success)
+            {
+                DisplayHelp(error);
                 return;
+            }
 
             // Loop through and process options
             (Core.Data.Options options, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
@@ -33,9 +38,9 @@ namespace MPF.Check
 
             // Make new Progress objects
             var resultProgress = new Progress<Result>();
-            resultProgress.ProgressChanged += ProgressUpdated;
+            resultProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
             var protectionProgress = new Progress<ProtectionProgress>();
-            protectionProgress.ProgressChanged += ProgressUpdated;
+            protectionProgress.ProgressChanged += ConsoleLogger.ProgressUpdated;
 
             // Validate the supplied credentials
 #if NET48
@@ -98,102 +103,6 @@ namespace MPF.Check
                 Console.WriteLine(argument);
             }
             Console.WriteLine();
-        }
-
-        /// <summary>
-        /// Process common arguments for all functionality
-        /// </summary>
-        /// <returns>True if all arguments pass, false otherwise</returns>
-        private static (bool, MediaType, RedumpSystem?) ProcessCommonArguments(string[] args)
-        {
-            // All other use requires at least 3 arguments
-            if (args.Length < 3)
-            {
-                DisplayHelp("Invalid number of arguments");
-                return (false, MediaType.NONE, null);
-            }
-
-            // Check the MediaType
-            var mediaType = EnumConverter.ToMediaType(args[0].Trim('"'));
-            if (mediaType == MediaType.NONE)
-            {
-                DisplayHelp($"{args[0]} is not a recognized media type");
-                return (false, MediaType.NONE, null);
-            }
-
-            // Check the RedumpSystem
-            var knownSystem = Extensions.ToRedumpSystem(args[1].Trim('"'));
-            if (knownSystem == null)
-            {
-                DisplayHelp($"{args[1]} is not a recognized system");
-                return (false, MediaType.NONE, null);
-            }
-
-            return (true, mediaType, knownSystem);
-        }
-
-        /// <summary>
-        /// Process any standalone arguments for the program
-        /// </summary>
-        /// <returns>True if one of the arguments was processed, false otherwise</returns>
-        private static bool ProcessStandaloneArguments(string[] args)
-        {
-            // Help options
-            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
-            {
-                DisplayHelp();
-                return true;
-            }
-
-            // List options
-            if (args[0] == "-lm" || args[0] == "--listmedia")
-            {
-                Console.WriteLine("Supported Media Types:");
-                foreach (string mediaType in Extensions.ListMediaTypes())
-                {
-                    Console.WriteLine(mediaType);
-                }
-                Console.ReadLine();
-                return true;
-            }
-            else if (args[0] == "-lp" || args[0] == "--listprograms")
-            {
-                Console.WriteLine("Supported Programs:");
-                foreach (string program in EnumExtensions.ListPrograms())
-                {
-                    Console.WriteLine(program);
-                }
-                Console.ReadLine();
-                return true;
-            }
-            else if (args[0] == "-ls" || args[0] == "--listsystems")
-            {
-                Console.WriteLine("Supported Systems:");
-                foreach (string system in Extensions.ListSystems())
-                {
-                    Console.WriteLine(system);
-                }
-                Console.ReadLine();
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Simple process counter to write to console
-        /// </summary>
-        private static void ProgressUpdated(object sender, Result value)
-        {
-            Console.WriteLine(value.Message);
-        }
-
-        /// <summary>
-        /// Simple process counter to write to console
-        /// </summary>
-        private static void ProgressUpdated(object sender, ProtectionProgress value)
-        {
-            Console.WriteLine($"{value.Percentage * 100:N2}%: {value.Filename} - {value.Protection}");
         }
     }
 }
