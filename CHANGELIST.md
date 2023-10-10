@@ -54,6 +54,7 @@
 - Remove LogOutputViewModel
 - Consolidate some constants
 - Fix media type ordering
+- Fix dumping button not enabling
 
 ### 2.6.6 (2023-10-04)
 

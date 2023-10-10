@@ -1583,7 +1583,7 @@ namespace MPF.Core.UI.ViewModels
             return Drives != null
                 && Drives.Count > 0
                 && this.CurrentSystem != null
-                && !string.IsNullOrEmpty(this.Parameters);
+                && this.CurrentMediaType != null;
         }
 
         /// <summary>
