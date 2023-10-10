@@ -1522,6 +1522,8 @@ namespace MPF.Core.UI.ViewModels
                 if (detectedIndex > -1)
                 {
                     CurrentMediaType = _detectedMediaType;
+                    // Clear detected media type after first use, so combo box may be changed
+                    _detectedMediaType = null;
                     return;
                 }
             }
