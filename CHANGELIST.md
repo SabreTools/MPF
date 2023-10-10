@@ -53,6 +53,7 @@
 - Move MainViewModel to Core
 - Remove LogOutputViewModel
 - Consolidate some constants
+- Fix media type ordering
 
 ### 2.6.6 (2023-10-04)
 

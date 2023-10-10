@@ -681,7 +681,7 @@ namespace MPF.Core.UI.ViewModels
                 if (this.CurrentMediaType != null && index == -1)
                     VerboseLogLn($"Disc of type '{CurrentMediaType.LongName()}' found, but the current system does not support it!");
 
-                MediaTypes = Element<MediaType>.GenerateElements().Where(m => mediaTypeValues.Contains(m.Value)).ToList();
+                MediaTypes = mediaTypeValues.Select(m => new Element<MediaType>(m ?? MediaType.NONE)).ToList();
                 this.MediaTypeComboBoxEnabled = MediaTypes.Count > 1;
                 this.CurrentMediaType = (index > -1 ? MediaTypes[index] : MediaTypes[0]);
             }
