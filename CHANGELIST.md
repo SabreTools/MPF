@@ -56,6 +56,7 @@
 - Fix media type ordering
 - Fix dumping button not enabling
 - Recentralize some Check functionality
+- Fix media combobox not updating (Deterous)
 
 ### 2.6.6 (2023-10-04)
 
