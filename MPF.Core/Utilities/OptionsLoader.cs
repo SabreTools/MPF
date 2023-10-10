@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using MPF.Core.Converters;
 using MPF.Core.Data;
 using Newtonsoft.Json;
+using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Utilities
 {
@@ -11,6 +13,78 @@ namespace MPF.Core.Utilities
         private const string ConfigurationPath = "config.json";
 
         #region Arguments
+
+        /// <summary>
+        /// Process any standalone arguments for the program
+        /// </summary>
+        /// <returns>True if one of the arguments was processed, false otherwise</returns>
+        public static bool ProcessStandaloneArguments(string[] args)
+        {
+            // Help options
+            if (args.Length == 0 || args[0] == "-h" || args[0] == "-?")
+                return false;
+
+            // List options
+            if (args[0] == "-lm" || args[0] == "--listmedia")
+            {
+                Console.WriteLine("Supported Media Types:");
+                foreach (string mediaType in Extensions.ListMediaTypes())
+                {
+                    Console.WriteLine(mediaType);
+                }
+                Console.ReadLine();
+                return true;
+            }
+            else if (args[0] == "-lp" || args[0] == "--listprograms")
+            {
+                Console.WriteLine("Supported Programs:");
+                foreach (string program in EnumExtensions.ListPrograms())
+                {
+                    Console.WriteLine(program);
+                }
+                Console.ReadLine();
+                return true;
+            }
+            else if (args[0] == "-ls" || args[0] == "--listsystems")
+            {
+                Console.WriteLine("Supported Systems:");
+                foreach (string system in Extensions.ListSystems())
+                {
+                    Console.WriteLine(system);
+                }
+                Console.ReadLine();
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Process common arguments for all functionality
+        /// </summary>
+        /// <returns>True if all arguments pass, false otherwise</returns>
+#if NET48
+        public static (bool, MediaType, RedumpSystem?, string) ProcessCommonArguments(string[] args)
+#else
+        public static (bool, MediaType, RedumpSystem?, string?) ProcessCommonArguments(string[] args)
+#endif
+        {
+            // All other use requires at least 3 arguments
+            if (args.Length < 3)
+                return (false, MediaType.NONE, null, "Invalid number of arguments");
+
+            // Check the MediaType
+            var mediaType = EnumConverter.ToMediaType(args[0].Trim('"'));
+            if (mediaType == MediaType.NONE)
+                return (false, MediaType.NONE, null, $"{args[0]} is not a recognized media type");
+
+            // Check the RedumpSystem
+            var knownSystem = Extensions.ToRedumpSystem(args[1].Trim('"'));
+            if (knownSystem == null)
+                return (false, MediaType.NONE, null, $"{args[1]} is not a recognized system");
+
+            return (true, mediaType, knownSystem, null);
+        }
 
         /// <summary>
         /// Load the current set of options from application arguments
@@ -145,7 +219,7 @@ namespace MPF.Core.Utilities
             return supportedArguments;
         }
 
-        #endregion
+#endregion
 
         #region Configuration
 
