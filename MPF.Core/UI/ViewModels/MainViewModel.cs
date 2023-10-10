@@ -1326,9 +1326,6 @@ namespace MPF.Core.UI.ViewModels
             Result result = Tools.GetSupportStatus(_environment.System, _environment.Type);
             this.Status = result.Message;
 
-            // Set the index for the current disc type
-            SetCurrentDiscType();
-
             // Enable or disable the button
             this.StartStopButtonEnabled = result && ShouldEnableDumpingButton();
 
