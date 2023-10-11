@@ -135,7 +135,7 @@ namespace MPF.UI.Core.Windows
                 Clipboard.SetText(url);
 
             if (showIfSame || different)
-                CustomMessageBox.Show(message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
+                CustomMessageBox.Show(this, message, "Version Update Check", MessageBoxButton.OK, different ? MessageBoxImage.Exclamation : MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace MPF.UI.Core.Windows
         public (bool?, SubmissionInfo) ShowDiscInformationWindow(SubmissionInfo submissionInfo)
         {
             if (MainViewModel.Options.ShowDiscEjectReminder)
-                CustomMessageBox.Show("It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
+                CustomMessageBox.Show(this, "It is now safe to eject the disc", "Eject", MessageBoxButton.OK, MessageBoxImage.Information);
 
             var discInformationWindow = new DiscInformationWindow(MainViewModel.Options, submissionInfo)
             {
@@ -283,7 +283,7 @@ namespace MPF.UI.Core.Windows
         public void AboutClick(object sender, RoutedEventArgs e)
         {
             string aboutText = MainViewModel.CreateAboutText();
-            CustomMessageBox.Show(aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
+            CustomMessageBox.Show(this, aboutText, "About", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         /// <summary>
@@ -324,9 +324,9 @@ namespace MPF.UI.Core.Windows
             if (!MainViewModel.LogPanelExpanded)
             {
                 if (string.IsNullOrEmpty(error))
-                    CustomMessageBox.Show(output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
+                    CustomMessageBox.Show(this, output, "Detected Protection(s)", MessageBoxButton.OK, MessageBoxImage.Information);
                 else
-                    CustomMessageBox.Show("An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    CustomMessageBox.Show(this, "An exception occurred, see the log for details", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
