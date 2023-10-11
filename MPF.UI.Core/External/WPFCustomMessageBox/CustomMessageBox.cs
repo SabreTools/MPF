@@ -18,7 +18,7 @@ namespace WPFCustomMessageBox
         /// Global parameter to enable (true) or disable (false) the removal of the title bar icon.
         /// If you are using a custom window style, the icon removal may cause issues like displaying two title bar (the default windows one and the custom one). 
         /// </summary>
-        public static bool RemoveTitleBarIcon = true;
+        private static readonly bool RemoveTitleBarIcon = true;
 
         /// <summary>
         /// Displays a message box that has a message and returns a result.
@@ -578,7 +578,7 @@ namespace WPFCustomMessageBox
         {
             if (timeout.HasValue && timeout.Value <= 0)
             {
-                throw new ArgumentOutOfRangeException("timeout", string.Format("Timeout must be greater than 0."));
+                throw new ArgumentOutOfRangeException(nameof(timeout), string.Format("Timeout must be greater than 0."));
             }
 
             if (timeout.HasValue)

@@ -115,9 +115,9 @@ namespace MPF.UI.Core.Windows
         /// <param name="name">Setting name to find</param>
         /// <returns>TextBox for that setting</returns>
 #if NET48
-        private System.Windows.Controls.TextBox TextBoxForPathSetting(Window parent, string name) =>
+        private static System.Windows.Controls.TextBox TextBoxForPathSetting(Window parent, string name) =>
 #else
-        private System.Windows.Controls.TextBox? TextBoxForPathSetting(Window parent, string name) =>
+        private static System.Windows.Controls.TextBox? TextBoxForPathSetting(Window parent, string name) =>
 #endif
             parent.FindName(name + "TextBox") as System.Windows.Controls.TextBox;
 

@@ -104,7 +104,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _optionsMenuItemEnabled = value;
-                TriggerPropertyChanged("OptionsMenuItemEnabled");
+                TriggerPropertyChanged(nameof(OptionsMenuItemEnabled));
             }
         }
         private bool _optionsMenuItemEnabled;
@@ -118,7 +118,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _currentSystem = value;
-                TriggerPropertyChanged("CurrentSystem");
+                TriggerPropertyChanged(nameof(CurrentSystem));
             }
         }
         private RedumpSystem? _currentSystem;
@@ -132,7 +132,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _systemTypeComboBoxEnabled = value;
-                TriggerPropertyChanged("SystemTypeComboBoxEnabled");
+                TriggerPropertyChanged(nameof(SystemTypeComboBoxEnabled));
             }
         }
         private bool _systemTypeComboBoxEnabled;
@@ -146,7 +146,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _currentMediaType = value;
-                TriggerPropertyChanged("CurrentMediaType");
+                TriggerPropertyChanged(nameof(CurrentMediaType));
             }
         }
         private MediaType? _currentMediaType;
@@ -160,7 +160,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _mediaTypeComboBoxEnabled = value;
-                TriggerPropertyChanged("MediaTypeComboBoxEnabled");
+                TriggerPropertyChanged(nameof(MediaTypeComboBoxEnabled));
             }
         }
         private bool _mediaTypeComboBoxEnabled;
@@ -174,7 +174,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _outputPath = value;
-                TriggerPropertyChanged("OutputPath");
+                TriggerPropertyChanged(nameof(OutputPath));
             }
         }
         private string _outputPath;
@@ -188,7 +188,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _outputPathTextBoxEnabled = value;
-                TriggerPropertyChanged("OutputPathTextBoxEnabled");
+                TriggerPropertyChanged(nameof(OutputPathTextBoxEnabled));
             }
         }
         private bool _outputPathTextBoxEnabled;
@@ -202,7 +202,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _outputPathBrowseButtonEnabled = value;
-                TriggerPropertyChanged("OutputPathBrowseButtonEnabled");
+                TriggerPropertyChanged(nameof(OutputPathBrowseButtonEnabled));
             }
         }
         private bool _outputPathBrowseButtonEnabled;
@@ -220,7 +220,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _currentDrive = value;
-                TriggerPropertyChanged("CurrentDrive");
+                TriggerPropertyChanged(nameof(CurrentDrive));
             }
         }
 #if NET48
@@ -238,7 +238,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _driveLetterComboBoxEnabled = value;
-                TriggerPropertyChanged("DriveLetterComboBoxEnabled");
+                TriggerPropertyChanged(nameof(DriveLetterComboBoxEnabled));
             }
         }
         private bool _driveLetterComboBoxEnabled;
@@ -252,7 +252,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _driveSpeed = value;
-                TriggerPropertyChanged("DriveSpeed");
+                TriggerPropertyChanged(nameof(DriveSpeed));
             }
         }
         private int _driveSpeed;
@@ -266,7 +266,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _driveSpeedComboBoxEnabled = value;
-                TriggerPropertyChanged("DriveSpeedComboBoxEnabled");
+                TriggerPropertyChanged(nameof(DriveSpeedComboBoxEnabled));
             }
         }
         private bool _driveSpeedComboBoxEnabled;
@@ -280,7 +280,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _currentProgram = value;
-                TriggerPropertyChanged("CurrentProgram");
+                TriggerPropertyChanged(nameof(CurrentProgram));
             }
         }
         private InternalProgram _currentProgram;
@@ -294,7 +294,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _dumpingProgramComboBoxEnabled = value;
-                TriggerPropertyChanged("DumpingProgramComboBoxEnabled");
+                TriggerPropertyChanged(nameof(DumpingProgramComboBoxEnabled));
             }
         }
         private bool _dumpingProgramComboBoxEnabled;
@@ -308,7 +308,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _parameters = value;
-                TriggerPropertyChanged("Parameters");
+                TriggerPropertyChanged(nameof(Parameters));
             }
         }
         private string _parameters;
@@ -322,7 +322,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _parametersCheckBoxEnabled = value;
-                TriggerPropertyChanged("ParametersCheckBoxEnabled");
+                TriggerPropertyChanged(nameof(ParametersCheckBoxEnabled));
             }
         }
         private bool _parametersCheckBoxEnabled;
@@ -336,7 +336,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _enableParametersCheckBoxEnabled = value;
-                TriggerPropertyChanged("EnableParametersCheckBoxEnabled");
+                TriggerPropertyChanged(nameof(EnableParametersCheckBoxEnabled));
             }
         }
         private bool _enableParametersCheckBoxEnabled;
@@ -350,7 +350,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _startStopButtonEnabled = value;
-                TriggerPropertyChanged("StartStopButtonEnabled");
+                TriggerPropertyChanged(nameof(StartStopButtonEnabled));
             }
         }
         private bool _startStopButtonEnabled;
@@ -364,7 +364,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _startStopButtonText = (value as string) ?? string.Empty;
-                TriggerPropertyChanged("StartStopButtonText");
+                TriggerPropertyChanged(nameof(StartStopButtonText));
             }
         }
         private string _startStopButtonText;
@@ -378,7 +378,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _mediaScanButtonEnabled = value;
-                TriggerPropertyChanged("MediaScanButtonEnabled");
+                TriggerPropertyChanged(nameof(MediaScanButtonEnabled));
             }
         }
         private bool _mediaScanButtonEnabled;
@@ -392,7 +392,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _updateVolumeLabelEnabled = value;
-                TriggerPropertyChanged("UpdateVolumeLabelEnabled");
+                TriggerPropertyChanged(nameof(UpdateVolumeLabelEnabled));
             }
         }
         private bool _updateVolumeLabelEnabled;
@@ -406,7 +406,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _copyProtectScanButtonEnabled = value;
-                TriggerPropertyChanged("CopyProtectScanButtonEnabled");
+                TriggerPropertyChanged(nameof(CopyProtectScanButtonEnabled));
             }
         }
         private bool _copyProtectScanButtonEnabled;
@@ -420,7 +420,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _status = value;
-                TriggerPropertyChanged("Status");
+                TriggerPropertyChanged(nameof(Status));
             }
         }
         private string _status;
@@ -434,7 +434,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _logPanelExpanded = value;
-                TriggerPropertyChanged("LogPanelExpanded");
+                TriggerPropertyChanged(nameof(LogPanelExpanded));
             }
         }
         private bool _logPanelExpanded;
@@ -452,7 +452,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _drives = value;
-                TriggerPropertyChanged("Drives");
+                TriggerPropertyChanged(nameof(Drives));
             }
         }
         private List<Drive> _drives;
@@ -466,7 +466,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _driveSpeeds = value;
-                TriggerPropertyChanged("DriveSpeeds");
+                TriggerPropertyChanged(nameof(DriveSpeeds));
             }
         }
         private List<int> _driveSpeeds;
@@ -484,7 +484,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _mediaTypes = value;
-                TriggerPropertyChanged("MediaTypes");
+                TriggerPropertyChanged(nameof(MediaTypes));
             }
         }
 #if NET48
@@ -502,7 +502,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _systems = value;
-                TriggerPropertyChanged("Systems");
+                TriggerPropertyChanged(nameof(Systems));
             }
         }
         private List<RedumpSystemComboBoxItem> _systems;
@@ -516,7 +516,7 @@ namespace MPF.Core.UI.ViewModels
             set
             {
                 _internalPrograms = value;
-                TriggerPropertyChanged("InternalPrograms");
+                TriggerPropertyChanged(nameof(InternalPrograms));
             }
         }
         private List<Element<InternalProgram>> _internalPrograms;
@@ -801,7 +801,7 @@ namespace MPF.Core.UI.ViewModels
         /// <summary>
         /// Build a dummy SubmissionInfo
         /// </summary>
-        public SubmissionInfo CreateDebugSubmissionInfo()
+        public static SubmissionInfo CreateDebugSubmissionInfo()
         {
             return new SubmissionInfo()
             {
@@ -994,7 +994,7 @@ namespace MPF.Core.UI.ViewModels
             }
         }
 
-#endregion
+        #endregion
 
         #region UI Functionality
 
@@ -1822,7 +1822,11 @@ namespace MPF.Core.UI.ViewModels
             var message = value?.Message;
 
             // Update the label with only the first line of output
+#if NET48
             if (message != null && message.Contains("\n"))
+#else
+            if (message != null && message.Contains('\n'))
+#endif
                 this.Status = value?.Message?.Split('\n')[0] + " (See log output)";
             else
                 this.Status = value?.Message ?? string.Empty;
@@ -1848,6 +1852,6 @@ namespace MPF.Core.UI.ViewModels
             VerboseLogLn(message);
         }
 
-        #endregion
+#endregion
     }
 }

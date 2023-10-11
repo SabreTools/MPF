@@ -37,8 +37,7 @@ namespace MPF.UI.Core
 #endif
         {
             // If it's an IElement but ends up null
-            var element = value as IElement;
-            if (element == null)
+            if (!(value is IElement element))
                 return null;
 
             switch (element)

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MPF.Core.Data;
 using MPF.Core.Modules.DiscImageCreator;
 using SabreTools.RedumpLib.Data;
@@ -33,7 +34,7 @@ namespace MPF.Test.Modules
             var options = new Options();
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
-            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
             Assert.Equal(expectedSet, actualSet);
         }
@@ -46,7 +47,7 @@ namespace MPF.Test.Modules
             var options = new Options { DICRereadCount = rereadC2 };
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
-            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
 
             Assert.Equal(expectedSet, actualSet);
@@ -66,7 +67,7 @@ namespace MPF.Test.Modules
             var options = new Options { DICDVDRereadCount = rereadDVDBD };
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
-            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
 
             Assert.Equal(expectedSet, actualSet);
@@ -90,7 +91,7 @@ namespace MPF.Test.Modules
             var options = new Options { DICMultiSectorRead = multiSectorRead };
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
-            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
             Assert.Equal(expectedSet, actualSet);
             if (expectedSet.Count != 1 && multiSectorRead)
@@ -111,7 +112,7 @@ namespace MPF.Test.Modules
             var options = new Options { DICParanoidMode = paranoidMode };
             var actual = new Parameters(knownSystem, mediaType, 'D', "disc.bin", 16, options);
 
-            HashSet<string> expectedSet = new HashSet<string>(expected ?? new string[0]);
+            HashSet<string> expectedSet = new HashSet<string>(expected ?? Array.Empty<string>());
             HashSet<string> actualSet = GenerateUsedKeys(actual);
             Assert.Equal(expectedSet, actualSet);
             if (paranoidMode)

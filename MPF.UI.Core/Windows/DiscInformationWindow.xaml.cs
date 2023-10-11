@@ -151,43 +151,43 @@ namespace MPF.UI.Core.Windows
                 ErrorsCount.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.CommonDiscInfo?.EXEDateBuildDate))
                 EXEDateBuildDate.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.Filename) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.Filename) != true)
                 Filename.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.Header))
                 Header.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.InternalName) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.InternalName) != true)
                 InternalName.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.InternalSerialName) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.InternalSerialName) != true)
                 InternalSerialName.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.Multisession) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.Multisession) != true)
                 Multisession.Visibility = Visibility.Collapsed;
             if (submissionInfo.CopyProtection?.LibCrypt == null)
                 LibCrypt.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.CopyProtection?.LibCryptData))
                 LibCryptData.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.PFIHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.PFIHash) != true)
                 PFIHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.PIC))
                 PIC.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.PVD))
                 PVD.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.RingNonZeroDataStart) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.RingNonZeroDataStart) != true)
                 RingNonZeroDataStart.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.CopyProtection?.SecuROMData))
                 SecuROMData.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.SSHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSHash) != true)
                 SSHash.Visibility = Visibility.Collapsed;
             if (string.IsNullOrWhiteSpace(submissionInfo.Extras?.SecuritySectorRanges))
                 SecuritySectorRanges.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.SSVersion) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.SSVersion) != true)
                 SSVersion.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.UniversalHash) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.UniversalHash) != true)
                 UniversalHash.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.VolumeLabel) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.VolumeLabel) != true)
                 VolumeLabel.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.XeMID) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.XeMID) != true)
                 XeMID.Visibility = Visibility.Collapsed;
-            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.Keys.Contains(SiteCode.XMID) != true)
+            if (submissionInfo.CommonDiscInfo?.CommentsSpecialFields?.ContainsKey(SiteCode.XMID) != true)
                 XMID.Visibility = Visibility.Collapsed;
         }
 

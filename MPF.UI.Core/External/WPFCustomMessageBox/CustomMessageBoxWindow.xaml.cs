@@ -10,7 +10,7 @@ namespace WPFCustomMessageBox
     /// </summary>
     internal partial class CustomMessageBoxWindow : Window
     {
-        private bool _removeTitleBarIcon = true;
+        private readonly bool _removeTitleBarIcon = true;
 
 #if NET48
         public string Caption

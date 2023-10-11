@@ -4,11 +4,7 @@ using SabreTools.RedumpLib.Data;
 
 namespace MPF.Core.Data
 {
-#if NET48
     public class Options
-#else
-    public class Options
-#endif
     {
         /// <summary>
         /// All settings in the form of a dictionary
@@ -664,9 +660,9 @@ namespace MPF.Core.Data
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
 #if NET48
-        private bool GetBooleanSetting(Dictionary<string, string> settings, string key, bool defaultValue)
+        private static bool GetBooleanSetting(Dictionary<string, string> settings, string key, bool defaultValue)
 #else
-        private bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
+        private static bool GetBooleanSetting(Dictionary<string, string?> settings, string key, bool defaultValue)
 #endif
         {
             if (settings.ContainsKey(key))
@@ -690,9 +686,9 @@ namespace MPF.Core.Data
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
 #if NET48
-        private int GetInt32Setting(Dictionary<string, string> settings, string key, int defaultValue)
+        private static int GetInt32Setting(Dictionary<string, string> settings, string key, int defaultValue)
 #else
-        private int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
+        private static int GetInt32Setting(Dictionary<string, string?> settings, string key, int defaultValue)
 #endif
         {
             if (settings.ContainsKey(key))
@@ -716,9 +712,9 @@ namespace MPF.Core.Data
         /// <param name="defaultValue">Default value to return if no value is found</param>
         /// <returns>Setting value if possible, default value otherwise</returns>
 #if NET48
-        private string GetStringSetting(Dictionary<string, string> settings, string key, string defaultValue)
+        private static string GetStringSetting(Dictionary<string, string> settings, string key, string defaultValue)
 #else
-        private string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
+        private static string? GetStringSetting(Dictionary<string, string?> settings, string key, string? defaultValue)
 #endif
         {
             if (settings.ContainsKey(key))
