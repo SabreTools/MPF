@@ -15,6 +15,10 @@
     <InternalsVisibleTo>MPF.Test</InternalsVisibleTo>
   </PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'!='net48'">
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
   <ItemGroup>
     <Resource Include="Images\Icon.ico" />
   </ItemGroup>

@@ -10,6 +10,7 @@
 - Enable nullability in Check
 - Remove all but .NET 6 for AppVeyor packaging
 - Place message boxes at center of main window (Deterous)
+- Enable nullability in MPF
 
 ### 2.7.0 (2023-10-11)
 
