@@ -21,7 +21,7 @@ namespace MPF.Check
             }
 
             // Try processing the common arguments
-            (bool success, MediaType mediaType, RedumpSystem? knownSystem, string error) = OptionsLoader.ProcessCommonArguments(args);
+            (bool success, MediaType mediaType, RedumpSystem? knownSystem, var error) = OptionsLoader.ProcessCommonArguments(args);
             if (!success)
             {
                 DisplayHelp(error);
@@ -29,11 +29,7 @@ namespace MPF.Check
             }
 
             // Loop through and process options
-#if NET48
-            (Core.Data.Options options, SubmissionInfo seedInfo, string path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
-#else
-            (Core.Data.Options options, SubmissionInfo? seedInfo, string? path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
-#endif
+            (var options, var seedInfo, var path, int startIndex) = OptionsLoader.LoadFromArguments(args, startIndex: 2);
             if (options.InternalProgram == InternalProgram.NONE)
             {
                 DisplayHelp("A program name needs to be provided");
@@ -50,7 +46,7 @@ namespace MPF.Check
 #if NET48
             (bool? _, string message) = RedumpWebClient.ValidateCredentials(options?.RedumpUsername, options?.RedumpPassword);
 #else
-            (bool? _, string message) = RedumpHttpClient.ValidateCredentials(options?.RedumpUsername, options?.RedumpPassword).ConfigureAwait(false).GetAwaiter().GetResult();
+            (bool? _, string? message) = RedumpHttpClient.ValidateCredentials(options.RedumpUsername ?? string.Empty, options.RedumpPassword ?? string.Empty).ConfigureAwait(false).GetAwaiter().GetResult();
 #endif
             if (!string.IsNullOrWhiteSpace(message))
                 Console.WriteLine(message);
@@ -69,7 +65,11 @@ namespace MPF.Check
                 string filepath = Path.GetFullPath(args[i].Trim('"'));
 
                 // Now populate an environment
+#if NET48
                 Drive drive = null;
+#else
+                Drive? drive = null;
+#endif
                 if (!string.IsNullOrWhiteSpace(path))
                     drive = Drive.Create(null, path);
 
@@ -85,7 +85,11 @@ namespace MPF.Check
         /// Display help for MPF.Check
         /// </summary>
         /// <param name="error">Error string to prefix the help text with</param>
+#if NET48
         private static void DisplayHelp(string error = null)
+#else
+        private static void DisplayHelp(string? error = null)
+#endif
         {
             if (error != null)
                 Console.WriteLine(error);

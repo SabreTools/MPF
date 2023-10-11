@@ -7,6 +7,7 @@
 - Add generic drive flag for Redumper
 - Handle numeric disc titles as issue numbers
 - Unify handling of enable/disable events
+- Enable nullability in Check
 
 ### 2.7.0 (2023-10-11)
 

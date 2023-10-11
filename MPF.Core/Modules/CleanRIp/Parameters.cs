@@ -22,7 +22,11 @@ namespace MPF.Core.Modules.CleanRip
         #endregion
 
         /// <inheritdoc/>
+#if NET48
         public Parameters(string parameters) : base(parameters) { }
+#else
+        public Parameters(string? parameters) : base(parameters) { }
+#endif
 
         /// <inheritdoc/>
         public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)

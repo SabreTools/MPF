@@ -11,6 +11,10 @@
     <VersionPrefix>2.7.0</VersionPrefix>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)'!='net48'">
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>

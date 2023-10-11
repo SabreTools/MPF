@@ -256,7 +256,11 @@ namespace MPF.Core.Modules.Aaru
         #endregion
 
         /// <inheritdoc/>
+#if NET48
         public Parameters(string parameters) : base(parameters) { }
+#else
+        public Parameters(string? parameters) : base(parameters) { }
+#endif
 
         /// <inheritdoc/>
         public Parameters(RedumpSystem? system, MediaType? type, char driveLetter, string filename, int? driveSpeed, Options options)
@@ -1814,7 +1818,11 @@ namespace MPF.Core.Modules.Aaru
         }
 
         /// <inheritdoc/>
+#if NET48
         protected override bool ValidateAndSetParameters(string parameters)
+#else
+        protected override bool ValidateAndSetParameters(string? parameters)
+#endif
         {
             BaseCommand = CommandStrings.NONE;
 

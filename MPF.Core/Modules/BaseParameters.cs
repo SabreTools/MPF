@@ -148,7 +148,11 @@ namespace MPF.Core.Modules
         /// Populate a Parameters object from a param string
         /// </summary>
         /// <param name="parameters">String possibly representing a set of parameters</param>
+#if NET48
         public BaseParameters(string parameters)
+#else
+        public BaseParameters(string? parameters)
+#endif
         {
             // If any parameters are not valid, wipe out everything
             if (!ValidateAndSetParameters(parameters))
@@ -290,7 +294,11 @@ namespace MPF.Core.Modules
         /// </summary>
         /// <param name="parameters">String possibly representing parameters</param>
         /// <returns>True if the parameters were set correctly, false otherwise</returns>
+#if NET48
         protected virtual bool ValidateAndSetParameters(string parameters) => !string.IsNullOrWhiteSpace(parameters);
+#else
+        protected virtual bool ValidateAndSetParameters(string? parameters) => !string.IsNullOrWhiteSpace(parameters);
+#endif
 
         #endregion
 

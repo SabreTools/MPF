@@ -123,7 +123,11 @@ namespace MPF.Core
             RedumpSystem? system,
             MediaType? type,
             InternalProgram? internalProgram,
+#if NET48
             string parameters)
+#else
+            string? parameters)
+#endif
         {
             // Set options object
             this.Options = options;
@@ -194,7 +198,11 @@ namespace MPF.Core
         /// Set the parameters object based on the internal program and parameters string
         /// </summary>
         /// <param name="parameters">String representation of the parameters</param>
+#if NET48
         public void SetParameters(string parameters)
+#else
+        public void SetParameters(string? parameters)
+#endif
         {
             switch (this.InternalProgram)
             {
@@ -284,7 +292,7 @@ namespace MPF.Core
             return null;
         }
 
-        #endregion
+#endregion
 
         #region Dumping
 
