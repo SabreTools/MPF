@@ -37,7 +37,11 @@ namespace MPF.UI.Core
 #endif
         {
             // If it's an IElement but ends up null
+#if NET48
             if (!(value is IElement element))
+#else
+            if (value is not IElement element)
+#endif
                 return null;
 
             switch (element)

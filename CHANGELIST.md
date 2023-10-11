@@ -15,6 +15,7 @@
 - Enable nullability in MPF.Test
 - Handle some suggested changes
 - Var-ify many instances
+- Version-gate some newer syntax
 
 ### 2.7.0 (2023-10-11)
 

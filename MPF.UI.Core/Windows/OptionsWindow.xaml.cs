@@ -57,7 +57,11 @@ namespace MPF.UI.Core.Windows
                 return;
 
             // Strips button prefix to obtain the setting name
+#if NET48
             string pathSettingName = button.Name.Substring(0, button.Name.IndexOf("Button"));
+#else
+            string pathSettingName = button.Name[..button.Name.IndexOf("Button")];
+#endif
 
             // TODO: hack for now, then we'll see
             bool shouldBrowseForPath = pathSettingName == "DefaultOutputPath";
@@ -124,7 +128,11 @@ namespace MPF.UI.Core.Windows
         /// <summary>
         /// Create an open folder dialog box
         /// </summary>
+#if NET48
         private static FolderBrowserDialog CreateFolderBrowserDialog() => new FolderBrowserDialog();
+#else
+        private static FolderBrowserDialog CreateFolderBrowserDialog() => new();
+#endif
 
         /// <summary>
         /// Create an open file dialog box

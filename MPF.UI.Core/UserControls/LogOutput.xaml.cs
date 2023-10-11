@@ -168,13 +168,17 @@ namespace MPF.UI.Core.UserControls
         {
             Dispatcher.Invoke(() =>
             {
+#if NET48
                 if (lastLine == null) lastLine = new Run();
+#else
+                lastLine ??= new Run();
+#endif
                 lastLine.Text = logLine.Text;
                 lastLine.Foreground = logLine.GetForegroundColor();
             });
         }
 
-        #endregion
+#endregion
 
         #region Helpers
 
