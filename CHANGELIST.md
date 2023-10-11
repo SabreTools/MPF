@@ -1,4 +1,4 @@
-### WIP (xxxx-xx-xx)
+### 2.7.0 (2023-10-11)
 
 - Attempt to replace NRT
 - Try alternate archive naming

@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
-    <VersionPrefix>2.6.6</VersionPrefix>
+    <VersionPrefix>2.7.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
