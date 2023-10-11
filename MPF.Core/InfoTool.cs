@@ -2196,6 +2196,10 @@ namespace MPF.Core
                         if (subMatchValue.StartsWith("Disc"))
                             info.CommonDiscInfo.DiscNumberLetter = subMatchValue.Remove(0, "Disc ".Length);
 
+                        // Issue number
+                        else if (subMatchValue.All(c => char.IsNumber(c)))
+                            info.CommonDiscInfo.Title += $" ({subMatchValue})";
+
                         // Disc title
                         else
                             info.CommonDiscInfo.DiscTitle = subMatchValue;

@@ -5,6 +5,7 @@
 - Allow user-supplied information in Check
 - Add BE read flag for Redumper
 - Add generic drive flag for Redumper
+- Handle numeric disc titles as issue numbers
 
 ### 2.7.0 (2023-10-11)
 
