@@ -7,7 +7,7 @@
     <UseWPF>true</UseWPF>
     <Authors>Matt Nadareski;ReignStumble;Jakz</Authors>
     <Copyright>Copyright (c)2019-2023</Copyright>
-    <VersionPrefix>2.7.0</VersionPrefix>
+    <VersionPrefix>2.7.1</VersionPrefix>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)'!='net48'">
