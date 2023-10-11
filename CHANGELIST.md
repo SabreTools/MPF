@@ -12,6 +12,7 @@
 - Place message boxes at center of main window (Deterous)
 - Enable nullability in MPF
 - Enable nullability in MPF.UI.Core
+- Enable nullability in MPF.Test
 
 ### 2.7.0 (2023-10-11)
 
