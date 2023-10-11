@@ -390,6 +390,12 @@
                             IsChecked="{Binding Options.RedumperEnableVerbose}"
                             ToolTip="Enable verbose output in logs" Margin="0,4"
                             />
+
+                        <CheckBox VerticalAlignment="Center" Content="Enable BE drive reading"
+                            IsChecked="{Binding Options.RedumperUseBEReading}"
+                            ToolTip="Enable setting drive read method to BE_CDDA by default" Margin="0,4"
+                            />
+                        <Label/> <!-- Empty label for padding -->
                         
                         <Label Content="Reread Tries:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                         <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center"

@@ -341,6 +341,15 @@ namespace MPF.Core.Data
         }
 
         /// <summary>
+        /// Enable BE reading by default with Redumper
+        /// </summary>
+        public bool RedumperUseBEReading
+        {
+            get { return GetBooleanSetting(Settings, "RedumperUseBEReading", false); }
+            set { Settings["RedumperUseBEReading"] = value.ToString(); }
+        }
+
+        /// <summary>
         /// Default number of rereads
         /// </summary>
         public int RedumperRereadCount

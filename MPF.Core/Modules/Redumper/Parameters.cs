@@ -1026,6 +1026,11 @@ namespace MPF.Core.Modules.Redumper
                 this[FlagStrings.Verbose] = options.RedumperEnableVerbose;
             if (options.RedumperEnableDebug)
                 this[FlagStrings.Debug] = options.RedumperEnableDebug;
+            if (options.RedumperUseBEReading)
+            {
+                this[FlagStrings.DriveReadMethod] = true;
+                DriveReadMethodValue = "BE_CDDA";
+            }
 
             // Set the output paths
             if (!string.IsNullOrWhiteSpace(filename))
