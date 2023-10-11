@@ -188,12 +188,12 @@ namespace MPF.UI.Core.UserControls
         /// </summary>
         private void SaveInlines()
         {
-            using (StreamWriter tw = new StreamWriter(File.OpenWrite("console.log")))
+            using (var sw = new StreamWriter(File.OpenWrite("console.log")))
             {
                 foreach (var inline in _paragraph.Inlines)
                 {
                     if (inline is Run run)
-                        tw.Write(run.Text);
+                        sw.Write(run.Text);
                 }
             }
         }

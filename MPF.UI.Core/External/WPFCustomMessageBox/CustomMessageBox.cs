@@ -527,7 +527,7 @@ namespace WPFCustomMessageBox
         {
             MessageBoxButton buttonLayout = string.IsNullOrEmpty(cancelButtonText) ? MessageBoxButton.OK : MessageBoxButton.OKCancel;
 
-            CustomMessageBoxWindow msg = new CustomMessageBoxWindow(owner, messageBoxText, caption, buttonLayout, icon, RemoveTitleBarIcon);
+            var msg = new CustomMessageBoxWindow(owner, messageBoxText, caption, buttonLayout, icon, RemoveTitleBarIcon);
             if (!string.IsNullOrEmpty(okButtonText))
                 msg.OkButtonText = okButtonText;
             if (!string.IsNullOrEmpty(cancelButtonText))
@@ -561,7 +561,7 @@ namespace WPFCustomMessageBox
         {
             MessageBoxButton buttonLayout = string.IsNullOrEmpty(cancelButtonText) ? MessageBoxButton.YesNo : MessageBoxButton.YesNoCancel;
 
-            CustomMessageBoxWindow msg = new CustomMessageBoxWindow(owner, messageBoxText, caption, buttonLayout, icon, RemoveTitleBarIcon);
+            var msg = new CustomMessageBoxWindow(owner, messageBoxText, caption, buttonLayout, icon, RemoveTitleBarIcon);
             if (!string.IsNullOrEmpty(yesButtonText))
                 msg.YesButtonText = yesButtonText;
             if (!string.IsNullOrEmpty(noButtonText))
@@ -585,7 +585,7 @@ namespace WPFCustomMessageBox
             {
                 //System.Threading.Timer timer = null;
                 //timer = new System.Threading.Timer(s => { msg.Close(); timer.Dispose(); }, null, timeout.Value, System.Threading.Timeout.Infinite);
-                System.Timers.Timer timer = new System.Timers.Timer(timeout.Value) { AutoReset = false };
+                var timer = new System.Timers.Timer(timeout.Value) { AutoReset = false };
                 timer.Elapsed += delegate {
                     Application.Current.Dispatcher.Invoke(new Action(() =>
                     {

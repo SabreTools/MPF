@@ -79,7 +79,7 @@ namespace MPF.Test.Library
         public void ProcessSpecialFieldsCompleteTest()
         {
             // Create a new SubmissionInfo object
-            SubmissionInfo info = new SubmissionInfo()
+            var info = new SubmissionInfo()
             {
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
@@ -127,7 +127,7 @@ namespace MPF.Test.Library
         public void ProcessSpecialFieldsNullObjectTest()
         {
             // Create a new SubmissionInfo object
-            SubmissionInfo info = new SubmissionInfo()
+            var info = new SubmissionInfo()
             {
                 CommonDiscInfo = null,
             };
@@ -143,7 +143,7 @@ namespace MPF.Test.Library
         public void ProcessSpecialFieldsNullCommentsContentsTest()
         {
             // Create a new SubmissionInfo object
-            SubmissionInfo info = new SubmissionInfo()
+            var info = new SubmissionInfo()
             {
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
@@ -191,7 +191,7 @@ namespace MPF.Test.Library
         public void ProcessSpecialFieldsNullDictionariesTest()
         {
             // Create a new SubmissionInfo object
-            SubmissionInfo info = new SubmissionInfo()
+            var info = new SubmissionInfo()
             {
                 CommonDiscInfo = new CommonDiscInfoSection()
                 {
